@@ -1,23 +1,34 @@
+//--------------------------------------!!!NOTE!!!---------------------------------------
+//For thi exaple, on Arduino IDE You should a few things:
+//Tools->Board->ESP32 WROVER Module
+//Tools->Partition Scheme->Huge APP (3MB No OTA/1MB SPIFFS)
+//Otherwise this example won't compile or won't work properly!
+//--------------------------------------------------------------------------------------
+
 #include "Inkplate.h"
 #include "image1.h"
 #include "image2.h"
 #include "picture1.h"
 #include "picture2.h" https://www.canva.com/photos/MADGwF-1B54-grayscale-photography-of-concrete-buildings/
+#include "picture3.h"
+#include "picture4.h"
+#include "picture5.h"
+#include "picture6.h"
+#include "picture7.h"
 #include "driver/rtc_io.h"
 
 #define uS_TO_S_FACTOR 1000000  	//Conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  20       	//Time ESP32 will go to sleep (in seconds) */
+#define TIME_TO_SLEEP  10       	//Time ESP32 will go to sleep (in seconds) */
 RTC_DATA_ATTR int slide = 0;
 
 Inkplate display(INKPLATE_1BIT);	//Set library to be in 1 Bit display mode by default
-
 /*To convert image to bitmap (Array like this one) use LCD image converter program set to 4 bit grayscale. You can use 4 bit bitmap and display library will scale it to 3 bit bitmap and display it.
-* Converting image to bitmap:
-* Open lcd-image-converter.exe, when it opens click on New Image, than click OK. Go to Image -> Import... and browse image.
-* Click on Options -> Conversion... than select next: Preset: Grayscale 4, on Prepare tab select Type: Grayscale, Main Scan Direction: Top to Bottom, Line Scan Direction: Forward
-* On Image tab select Block Size: 8 Bits, Byte Order: Little-Endian
-* At the end click on Show Preview and copy all HEX data.
-* Paste it inside array (beetwen curly brackets) with type: static const uint8_t picture_name[] PROGMEM = {};, where "picture_name" is name of your array that represents picture.
+  Converting image to bitmap:
+  Open lcd-image-converter.exe, when it opens click on New Image, than click OK. Go to Image -> Import... and browse image.
+  Click on Options -> Conversion... than select next: Preset: Grayscale 4, on Prepare tab select Type: Grayscale, Main Scan Direction: Top to Bottom, Line Scan Direction: Forward
+  On Image tab select Block Size: 8 Bits, Byte Order: Little-Endian
+  At the end click on Show Preview and copy all HEX data.
+  Paste it inside array (beetwen curly brackets) with type: static const uint8_t picture_name[] PROGMEM = {};, where "picture_name" is name of your array that represents picture.
 */
 static const uint8_t smile[] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3f,
@@ -73,7 +84,6 @@ static const uint8_t smile[] PROGMEM = {
 };
 
 void setup() {
-  display.einkOn();
   display.begin();
   switch (slide) {
 
@@ -211,18 +221,61 @@ void setup() {
       display.selectDisplayMode(INKPLATE_3BIT);
       display.drawBitmap3Bit(0, 0, pic2, 800, 600);
       break;
+
+    case 5:
+      display.selectDisplayMode(INKPLATE_3BIT);
+      display.drawBitmap3Bit(0, 0, pic3, 800, 600);
+      break;
+
+    case 6:
+      display.selectDisplayMode(INKPLATE_3BIT);
+      display.drawBitmap3Bit(0, 0, pic4, 800, 600);
+      break;
+
+    case 7:
+      display.selectDisplayMode(INKPLATE_3BIT);
+      display.drawBitmap3Bit(0, 0, pic5, 800, 600);
+      break;
+
+    case 8:
+      display.selectDisplayMode(INKPLATE_3BIT);
+      display.drawBitmap3Bit(0, 0, pic6, 800, 600);
+      break;
+
+    case 9:
+      display.selectDisplayMode(INKPLATE_3BIT);
+      display.drawBitmap3Bit(0, 0, pic7, 800, 600);
+      break;
   }
-  
-  //IMPORTANT!!! Always clean screen before writing new picture to it!
-  //There is also similar function called clearDisplay() but this only clear buffer.
-  //Since we are using deep sleep of ESP32, ESP32 resets after every wake up, so buffer is clean and there is not any data to clean, so there is no reason to use clearDisplay().
-  display.clean();
+
+  //Display content from buffer to panel
   display.display();
+
+  //Activate wake-up timer
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+
+  //Increment variable that determines what is going to be on screen
   slide++;
-  if (slide > 4) slide = 0;
-  //This is to reduce current consumption of ESP32 in deep sleep mode. Otherwise, you don't need to use this.
+  if (slide > 9) slide = 0;
+
+  //Isolate/disable GPIO12 on ESP32 (to reduce power consumption in sleep)
   rtc_gpio_isolate(GPIO_NUM_12);
+
+  //Wait for one seconds
+  delay(1000);
+
+  //Set new text size and position
+  display.setTextSize(3);
+  display.setCursor(0, 550);
+
+  //Write some text
+  display.print("Going to sleeep....");
+
+  //Partialy update screen
+  //NOTE!!! Works only for 1 bit mode (monochrome)
+  display.partialUpdate();
+
+  //Put ESP32 into deep sleep
   esp_deep_sleep_start();
 }
 
