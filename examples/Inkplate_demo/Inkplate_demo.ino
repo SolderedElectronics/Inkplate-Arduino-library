@@ -3,6 +3,12 @@
 //Tools->Board->ESP32 WROVER Module
 //Tools->Partition Scheme->Huge APP (3MB No OTA/1MB SPIFFS)
 //Otherwise this example won't compile or won't work properly!
+//
+// WARNING!!
+// Please do not refresh the screen too often at this moment. Library is still in development.
+// Do not refresh more often than every 10 seconds.
+// If you need to refesh faster, please use partial update. 
+//
 //--------------------------------------------------------------------------------------
 
 #include "Inkplate.h"
