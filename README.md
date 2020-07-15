@@ -5,7 +5,7 @@
 
 Arduino library for all-in-one e-paper display Inkplate 6 can be found in this repo. Inkplate 6 is a powerful, Wi-Fi enabled ESP32 based six-inch e-paper display – recycled from a Kindle e-reader. Its main feature is simplicity. Just plug in a USB cable, open Arduino IDE, and change the contents of the screen with few lines of code. Learn more about Inkplate 6 on [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6). 
 
-#### Setting up Inkplate 6 in Arduino IDE
+### Setting up Inkplate 6 in Arduino IDE
 In order to get a head start with Inkplate 6, follow these steps:
 1. [Install Inkplate 6 board definition](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/) - add Inkplate 6 as a board into your Arduino IDE. Follow the instructions on the [link](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/). 
 2. Install CH340 drivers (if you don't have them yet) - instructions [here](https://e-radionica.com/en/blog/ch340-driver-installation-croduino-basic3-nova2/)
@@ -14,7 +14,7 @@ In order to get a head start with Inkplate 6, follow these steps:
 
 Optional: if you are planning to use the SD card funcionality,  install [custom SdFat library](https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library) into your Arduino IDE. 
 
-#### Code examples
+### Code examples
 There are many examples in the library that you demonstrate how to use any of the Inkplate functionality. 
 
 1. **Basic Inkplate Functionality**
@@ -51,7 +51,7 @@ There are many examples in the library that you demonstrate how to use any of th
 
   3.1. Slave Mode - mode that enables control of the screen from any external device using UART
 
-#### Misc
+### Misc
 Inkplate 6 is available for purchase via:
 - [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6)
 - [Mouser](https://hr.mouser.com/Search/Refine?Keyword=inkplate)
