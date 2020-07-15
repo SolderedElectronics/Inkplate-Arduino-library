@@ -13,6 +13,27 @@ In order to get a head start with Inkplate 6, follow these steps:
 4. You are ready to get started! Select Tools -> Board -> Inkplate 6, as well as correct COM port and upload! 
 
 Optional: if you are planning to use the SD card funcionality,  install [custom SdFat library](https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library) into your Arduino IDE. 
+
+#### Code examples
+There are many examples in the library that you demonstrate how to use any of the Inkplate functionality. 
+1. Basic Inkplate Functionality
+1.1. Basic Monochrome - use the screen in monochrome mode (graphics & text)
+1.2. Basic Grayscale - use the screen in grayscale mode (graphics & text)
+1.3. Basic Partial Update - do a partial update of the screen on Inkplate 6
+1.4. Basic Custom Fonts - add custom fonts and use them to write text on the screen
+2. Advanced Inkplate Functionality
+2.1. WiFi HTTP Request - make HTTP request while connected too WiFi
+2.2. Low Power - put Inkplate in sleep in order to save battery
+2.3. Battery Voltage And Temperature - measure battery voltage and temperature of the board
+2.4. Touchpads - get readings from onboard touch pads
+2.5. SD BMP Pictures - show .bmp images from the SD card on the screen
+2.6. Inkplate SD TXT File - read .txt file from the SD card and show it on the screen
+2.7. easyC - use easyC ecosystem (I2C) and read a sensor value
+2.8. MCP23017 Expander - use onboard MCP23017 expander for your own external devices
+2.9. Web Server - make Inkplate a web server
+3. Others
+3.1. Slave Mode - mode that enables control of the screen from any external device using UART
+
 #### Misc
 Inkplate 6 is available for purchase via:
 - [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6)
