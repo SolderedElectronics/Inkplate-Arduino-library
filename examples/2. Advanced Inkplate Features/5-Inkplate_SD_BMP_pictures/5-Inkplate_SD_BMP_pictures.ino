@@ -5,6 +5,9 @@
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it: 
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   To work with SD card on Inkplate, you will need to add one extra library.
+   Download and install it from here: https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
    
    You can open .bmp files that have color depth of 1 bit (monochrome bitmap) and 
    24 bit AND have resoluton smaller than 800x600 or otherwise it won't fit on screen.
@@ -18,6 +21,7 @@
 */
 
 #include "Inkplate.h"               //Include Inkplate library to the sketch
+#include "SdFat.h"                  //Include library for SD card
 Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
 SdFile file;                        //Create SdFile object used for accessing files on SD card
 
