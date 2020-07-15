@@ -1,3 +1,12 @@
+Slave mode for Inkplate 6 by e-radionica.com
+Slave mode is uploaded to each Inkplate 6. It enables you to use the board
+without reprogramming. You just need to send commands via UART and it will
+show contents on its screen. 
+You can send commands via USB port or by directly connecting to ESP32 TX and RX pins.
+
+Settings are:
+115200 baud, standard parity, ending with \n\r
+
 echo:			#?*
 Check if the Inkplate receives commands on UART
 response:		OK
@@ -161,4 +170,4 @@ panelSupply(einkOff/on):#Q(S)*
 S - State of panel power supply (S = 1 -> panel has power supply, S = 0 -> panel power supply has benn turned off)
 
 getPanelState:		#R(?)*
-response:		#R(1)* - panel has power supply or #R(0)* - panel supply has been turned of
+response:		#R(1)* - panel has power supply or #R(0)* - panel supply has been turned off

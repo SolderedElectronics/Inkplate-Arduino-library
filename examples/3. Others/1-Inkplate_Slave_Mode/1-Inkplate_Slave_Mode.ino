@@ -15,6 +15,9 @@
 
    Learn more about Slave Mode in this update: https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates
 
+   UART settings are: 115200 baud, standard parity, ending with "\n\r" (both)
+   You can send commands via USB port or by directly connecting to ESP32 TX and RX pins.
+
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
    15 July 2020 by e-radionica.com
