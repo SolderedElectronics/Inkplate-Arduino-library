@@ -1,3 +1,4 @@
+
 # Inkplate 6 Arduino library
 
 ![](https://www.crowdsupply.com/img/040a/inkplate-6-angle-01_png_project-main.jpg)
@@ -8,14 +9,14 @@ Arduino library for all-in-one e-paper display Inkplate 6 can be found in this r
 In order to get a head start with Inkplate 6, follow these steps:
 1. [Install Inkplate 6 board definition](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/) - add Inkplate 6 as a board into your Arduino IDE. Follow the instructions on the [link](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/). 
 2. Install CH340 drivers (if you don't have them yet) - instructions [here](https://e-radionica.com/en/blog/ch340-driver-installation-croduino-basic3-nova2/)
-3. Install Inkplate 6 Arduino library - install library from this repo into your Arduino IDE. If you don't know how, check our [tutorial](https://e-radionica.com/en/blog/arduino-library/#Kako%20instaliraty%20library?).
+3. Install Inkplate 6 Arduino library - install the library from this repo into your Arduino IDE. If you don't know how, check our [tutorial](https://e-radionica.com/en/blog/arduino-library/#Kako%20instaliraty%20library?).
 4. You are ready to get started! Select Tools -> Board -> Inkplate 6, as well as correct COM port and upload! 
 
-Extra: if you are planning to use the SD card funcionality,  install [custom SdFat library](https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library) into your Arduino IDE. 
+Optional: if you are planning to use the SD card funcionality,  install [custom SdFat library](https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library) into your Arduino IDE. 
 #### Misc
 Inkplate 6 is available for purchase via:
 - [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6)
-- more distributors coming soon (e-radionica.com, Mouser, etc)
+- [Mouser](https://hr.mouser.com/Search/Refine?Keyword=inkplate)
 
 Inkplate 6 is open-source. If you are looking for hardware design of the board, check the [Hardware repo](https://github.com/e-radionicacom/Inkplate-6-hardware). You will find 3D printable [enclosure](https://github.com/e-radionicacom/Inkplate-6-hardware/tree/master/3D%20printable%20case) there, as well as [detailed dimensions](https://github.com/e-radionicacom/Inkplate-6-hardware/tree/master/Technical%20drawings). In this repo you will find code for driving the ED060SC7 e-paper display used by Inkplate.
 
