@@ -1,0 +1,164 @@
+echo:			#?*
+Check if the Inkplate receives commands on UART
+response:		OK
+
+drawPixel:		#0(XXX,YYY,CC)*
+XXX - X coordinate (with leading zeros)
+YYY - Y coordinate (with leading zeros)
+CC - Color (with leading zeros)
+example #0(001,005,04)*
+
+drawLine:		#1(XXX,YYY,III,JJJ,CC)*
+XXX - Start x coordinate (with leading zeros)
+YYY - Start y coordinate (with leading zeros)
+III - End x coordinate (with leading zeros)
+JJJ - End y coordinate (with leading zeros)
+CC - Color (with leading zeros)
+example #1(001,004,010,123,01)*
+
+drawFastVLine:		#2(XXX,YYY,LLL,CC)*
+XXX - Start x coordinate (with leading zeros)
+YYY - Start y coordinate (with leading zeros)
+LLL - Length of line (with leading zeros)
+CC - Solor (with leading zeros)
+example #2(142,425,040,05)*
+
+drawFastHLine:		#3(XXX,YYY,LLL,CC)*
+XXX - Start x coordinate (with leading zeros)
+YYY - Start y coordinate (with leading zeros)
+LLL - Length of line (with leading zeros)
+CC - Color (with leading zeros)
+example #3(123,014,100,03)*
+
+drawRect:		#4(XXX,YYY,WWW,HHH,CC)*
+XXX - Start x coordinate (with leading zeros)
+YYY - Start y coordinate (with leading zeros)
+WWW - Width of rect. (with leading zeros)
+HHH - Height of rect. (with leading zeros)
+CC - Color (with leading zeros)
+example #4(123,014,050,010,01)*
+
+drawCircle:		#5(XXX,YYY,RRR,CC)*
+XXX - Start x coordinate (with leading zeros)
+YYY - Start y coordinate (with leading zeros)
+RRR - Radius of circle (with leading zeros)
+CC - Color (with leading zeros)
+example #5(050,100,040,01)*
+
+drawTriangle:		#6(XX1,YY1,XX2,YY2,XX3,YY3,CC)*
+XX1 - X coordinate of first corner (with leading zeros)
+YY1 - Y coordinate of first corner (with leading zeros)
+XX2 - X coordinate of second corner (with leading zeros)
+YY2 - Y coordinate of second corner (with leading zeros)
+XX3 - X coordinate of third corner (with leading zeros)
+YY3 - Y coordinate of third corner (with leading zeros)
+CC - Color (with leading zeros)
+example #6(250,250,100,400,375,450,04)*
+
+drawRoudRect:		#7(XXX,YYY,WWW,HHH,RRR,CC)*
+XXX - Start x coordinate (with leading zeros)
+YYY - Start y coordinate (with leading zeros)
+WWW - Width of rect. (with leading zeros)
+HHH - Height of rect. (with leading zeros)
+RRR - Radius (with leading zeros)
+CC - Color (with leading zeros)
+example #7(123,014,050,010,005,00)*
+
+fillRect:		#8(XXX,YYY,WWW,HHH,CC)*
+XXX - Start x coordinate (with leading zeros)
+YYY - Start y coordinate (with leading zeros)
+WWW - Width of rect. (with leading zeros)
+HHH - Height of rect. (with leading zeros)
+CC - Color (with leading zeros)
+example #8(123,014,050,010,01)*
+
+fillCircle:		#9(XXX,YYY,RRR,CC)*
+XXX - Start x coordinate (with leading zeros)
+YYY - Start y coordinate (with leading zeros)
+RRR - Radius of circle (with leading zeros)
+CC - Color (with leading zeros)
+example #9(050,100,040,01)*
+
+fillTriangle:		#A(XX1,YY1,XX2,YY2,XX3,YY3,CC)*
+XX1 - X coordinate of first corner (with leading zeros)
+YY1 - Y coordinate of first corner (with leading zeros)
+XX2 - X coordinate of second corner (with leading zeros)
+YY2 - Y coordinate of second corner (with leading zeros)
+XX3 - X coordinate of third corner (with leading zeros)
+YY3 - Y coordinate of third corner (with leading zeros)
+CC - Color (with leading zeros)
+example #A(250,250,100,400,375,450,04)*
+
+fillRoudRect:		#B(XXX,YYY,WWW,HHH,RRR,CC)*
+XXX - Start x coordinate (with leading zeros)
+YYY - Start y coordinate (with leading zeros)
+WWW - Width of rect. (with leading zeros)
+HHH - Height of rect. (with leading zeros)
+RRR - Radius (with leading zeros)
+CC - Color (with leading zeros)
+example #B(123,014,050,010,005,00)*
+
+print:			#C("STRING")*
+STRING - Text/Strig coded in HEX Char (example: HELLO WORLD would be coded like 48454c4c4f20574f524c44, where 48 means 0x48 which is H in ASCII table)
+example for HELLO WORLD #C("48454c4c4f20574f524c44")*
+
+setTextSize:		#D(NN)*
+NNN - Text scaling (with leading zeros)
+example #D(02)*
+
+setCursor:		#E(XXX,YYY)*
+XXX - X position of text cursor (with leading zeros)
+YYY - Y position of text cursor (with leading zeros)
+example #E(002,010)*
+
+setTextWrap:		#F(T/F)*
+T - True if enable text wraping
+F - False if disable text wraping
+example #F(T)* or #F(F)*
+
+setRotation:		#G(RRR)*
+RRR - Sets rotation (0-3, where each increment rotates whole screen by 90 deg)
+example #G(003)*
+
+drawBitmap:		#H(XXX,YYY,"PATH")*
+XXX - X position of bitmap on display
+YYY - Y position of bitmap on display
+PATH - path to bitmap image on SD card
+example: #H(000,000,"/bitmapName.bmp")*
+response:		#H(1)* - Image loaded succesfully
+			#H(0)* - Image load failed
+			#H(-1)* - SD Card Init Error
+
+setDisplayMode:		#I(D)*
+D - Display Mode (D = 3 -> 3 bit mode, D = 1 -> 1 bit mode)
+example: #I(3)* or #I(1)*
+
+getDisplayMode:		#J(?)*
+Response:		#J(1)* - 3 bit mode
+			#J(0)* - 1 bit mode
+
+clearDisplay:		#K(1)*
+
+display:		#L(1)*
+
+partialUpdate:		#M(YY1, XX2, YY2)*
+YY1 - Start Y position of part of the screen that will be updated
+XX2 - End X position of part of the screen that will be updated
+YY2 - End Y position of part of the screen that will be updated
+example: #M(005,400,040)*
+
+readTemperature:	#N(?)*
+response:		#N(23)* - 23 Celsius degrees
+
+readTouchpad:		#O(P)*
+P - Name of pad that needs to be read (1, 2 or 3)
+resposne:		#O(1)* for high state of pad or #O(0)* for low state of pad
+
+readBattery:		#P(?)*
+response:		#P(3.65)* - Measured voltage on battery is 3.65VDC
+
+panelSupply(einkOff/on):#Q(S)*
+S - State of panel power supply (S = 1 -> panel has power supply, S = 0 -> panel power supply has benn turned off)
+
+getPanelState:		#R(?)*
+response:		#R(1)* - panel has power supply or #R(0)* - panel supply has been turned of
