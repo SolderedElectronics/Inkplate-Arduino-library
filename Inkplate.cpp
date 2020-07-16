@@ -3,15 +3,32 @@
 #include "Adafruit_GFX.h"
 #include "Inkplate.h"
 Adafruit_MCP23017 mcp;
+SPIClass spi2(HSPI);
+SdFat sd(&spi2);
 
+//--------------------------STATIC FUNCTIONS--------------------------------------------
+//For precise 1uS timing, we cannot use delayMicroseconds(), instead we use ASM with nop command. Initial Z value will be difeerent on different CPU speeds! (for 240 MHz CPU Clock z = 25)
+void usleep1() {
+  int z = 25;
+  while (z--) {
+    asm("NOP");
+  };
+}
+
+void ckvClock() {
+  CKV_CLEAR;
+  usleep1();
+  CKV_SET;
+  usleep1();
+}
+
+//--------------------------USER FUNCTIONS--------------------------------------------
 Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT) {
   _displayMode = _mode;
 }
 
-Inkplate::Inkplate() : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT) {
-}
-
 void Inkplate::begin(void) {
+  if(_beginDone == 1) return;
   Wire.begin();
   mcp.begin(0);
   mcp.pinMode(VCOM, OUTPUT);
@@ -28,6 +45,7 @@ void Inkplate::begin(void) {
   mcp.pinMode(OE, OUTPUT);
   mcp.pinMode(GMOD, OUTPUT);
   mcp.pinMode(SPV, OUTPUT);
+  //pinMode(SPV, OUTPUT);
 
   //DATA PINS
   pinMode(4, OUTPUT); //D0
@@ -47,202 +65,23 @@ void Inkplate::begin(void) {
   //Battery voltage Switch MOSFET
   mcp.pinMode(9, OUTPUT);
   
-  //1 bit per pixel mode (monochrome mode)
-  if (_displayMode == 0) {
-    D_memory_new = (uint8_t*)ps_malloc(600 * 100);
-	_partial = (uint8_t*)ps_malloc(600*100);
-	_pBuffer = (uint8_t*) ps_malloc(120000);
-    if (D_memory_new == NULL || _partial == NULL || _pBuffer == NULL) {
-      do {
-        delay(100);
-      } while (true);
-    }
-    memset(D_memory_new, 0, 60000);
-	memset(_partial, 0, 60000);
+  D_memory_new = (uint8_t*)ps_malloc(600 * 100);
+  _partial = (uint8_t*)ps_malloc(600*100);
+  _pBuffer = (uint8_t*) ps_malloc(120000);
+  D_memory4Bit = (uint8_t*)ps_malloc(240000);
+  if (D_memory_new == NULL || _partial == NULL || _pBuffer == NULL || D_memory4Bit == NULL) {
+    do {
+      delay(100);
+    } while (true);
   }
-
-  //3 bit per pixel mode (8 level grayscale mode)
-  if (_displayMode == 1) {
-    D_memory4Bit = (uint8_t*)ps_malloc(240000);
-    if (D_memory4Bit == NULL ) {
-      do {
-        delay(100);
-      } while (true);
-    }
-    memset(D_memory4Bit, 255, 240000);
-  }
-}
-
-void Inkplate::clearDisplay() {
-  //Clear 1 bit per pixel display buffer
-  if (_displayMode == 0) memset(_partial, 0, 60000);
-
-  //Clear 3 bit per pixel display buffer
-  if (_displayMode == 1) memset(D_memory4Bit, 255, 240000);
-}
-
-void Inkplate::draw_mode_on() {
-  einkOn();
-  SPH_SET;
-  SPV_SET;
-  delay(1);
-  OE_SET;
-  delay(1);
-  GMOD_SET;
-  CKV_SET;
-  delay(5);
-}
-
-void Inkplate::draw_mode_off() {
-  CKV_CLOCK;
-  GMOD_CLEAR;
-  CKV_CLOCK;
-  GPIO.out &= ~DATA;
-  CL_CLEAR;
-  LE_CLEAR;
-  OE_CLEAR;
-  SPV_CLEAR;
-  CKV_CLEAR;
-  SPH_CLEAR;
-  einkOff();
-}
-
-void Inkplate::advance_line() {
-  CKV_CLEAR;
-  usleep1();
-  CKV_SET;
-  usleep1();
-}
-
-void Inkplate::begin_frame() {
-	
-  SPV_SET;
-  delayMicroseconds(100); //usleep(500);
-  SPV_CLEAR;
-  //usleep1();
-  CKV_CLEAR;
-  usleep1();
-  //delayMicroseconds(20); //usleep(25);
-  CKV_SET
-  usleep1();
-  SPV_SET;
-  usleep1();
-  //delayMicroseconds(20); //usleep(25);
+  memset(D_memory_new, 0, 60000);
+  memset(_partial, 0, 60000);
+  memset(_pBuffer, 0, 120000);
+  memset(D_memory4Bit, 255, 240000);
   
-  
-  //SPV_SET; //STV=1
-  //int loop = 2;
-  //while(loop--)
-  //{
-  //  CKV_CLEAR; //CPV=0
-  //  usleep1();
-  //  CKV_SET; //CPV=1
-  //  usleep1();
-  //}
-  //SPV_CLEAR; //STV=0
-  //loop = 2;
-  //while(loop--)
-  //{
-  //  CKV_CLEAR; //CPV=0
-  //  usleep1();
-  //  CKV_SET; //CPV=1
-  //  usleep1();
-  //}
-  //SPV_SET; //STV=1
-  //loop = 2;
-  //while(loop--)
-  //{
-  //  CKV_CLEAR; //CPV=0
-  //  usleep1();
-  //  CKV_SET; //CPV=1
-  //  usleep1();
-  //}
-
-  //Skip three lines to get to the start of the screen
-  advance_line();
-  advance_line();
-  advance_line();
-}
-
-void Inkplate::end_frame() {
-
-}
-
-void Inkplate::begin_line() {
-  SPH_CLEAR;
-  usleep1();
-//  LE_SET; //LE =1
-//CL_CLEAR; //CL=0
-//CL_SET; //CL=1
-//CL_CLEAR; //CL=0
-//CL_SET; //CL=1
-//LE_CLEAR; //LE=0
-//CL_CLEAR; //CL=0
-//CL_SET; //CL=1
-//CL_CLEAR; //CL=0
-//CL_SET; //CL=1
-//EPD_OE_H; //OE =1
-//CL_CLEAR; //CL=0
-//CL_SET; //CL=1
-//CL_CLEAR; //CL=0
-//CL_SET; //CL=1
-//SPH_CLEAR; //SPH=0
-}
-
-void Inkplate::end_line() {
-
-  SPH_SET;
-  //usleep1();
-
-  CKV_CLEAR;
-  //CL_SET;
-  usleep1();
-  CL_CLEAR;
-  //usleep1();
-  CKV_SET;
-  usleep1();
-  LE_SET;
-  //usleep1();
-  LE_CLEAR;
-  //usleep1();
- 
-  
-//  SPH_SET; //STH=1
-//CL_CLEAR; //CL=0
-//CL_SET; //CL=1
-//CL_CLEAR; //CL=0
-//CL_SET; //CL=1
-//CKV_CLEAR; //CPV=0 – zegar taktujacy bufor GATE
-//EPD_OE_L; //OE =0
-//CL_CLEAR; //CL=0
-//CL_SET; //CL=1
-//CL_CLEAR; //CL=0
-//CL_SET; //CL=1
-//CKV_SET; //CPV=1
-}
-
-void Inkplate::end_line_slow() {
-  SPH_SET;
-  //usleep1();
-  CKV_CLEAR;
-  CL_SET;
-  delayMicroseconds(20);
-  //usleep1();
-  CL_CLEAR;
-  CKV_SET;
-  delayMicroseconds(4);
-  LE_SET;
-  //usleep1();
-  LE_CLEAR;
-  //usleep1();
-}
-
-//For precise 1uS timing, we cannot use delayMicroseconds(), instead we use ASM with nop command. Initial Z value will be difeerent on different CPU speeds! (for 240 MHz CPU Clock z = 25)
-void usleep1() {
-  int z = 27;
-  while (z--) {
-    asm("NOP");
-  };
+  //precalculateGamma(gammaLUT, INKPLATE_GAMMA);
+  precalculateGamma(gammaLUT, 1);
+  _beginDone = 1;
 }
 
 //Draw function, used by Adafruit GFX.
@@ -267,8 +106,7 @@ void Inkplate::drawPixel(int16_t x0, int16_t y0, uint16_t color) {
   if (_displayMode == 0) {
     int x = x0 / 8;
     int x_sub = x0 % 8;
-    uint8_t temp = *(_partial + 100 * y0 + x); //D_memory_new[99 * y0 + x];                     //-->> Doesn't work with index
-    //D_memory_new[100 * y0 + x] = ~pixelMaskLUT[x_sub] & temp | (color ? pixelMaskLUT[x_sub] : 0); //-->> Doesn't work with index
+    uint8_t temp = *(_partial + 100 * y0 + x); //D_memory_new[99 * y0 + x];
     *(_partial + 100 * y0 + x) = ~pixelMaskLUT[x_sub] & temp | (color ? pixelMaskLUT[x_sub] : 0);
   } else {
     color &= 7;
@@ -280,7 +118,13 @@ void Inkplate::drawPixel(int16_t x0, int16_t y0, uint16_t color) {
   }
 }
 
+void Inkplate::clearDisplay() {
+  //Clear 1 bit per pixel display buffer
+  if (_displayMode == 0) memset(_partial, 0, 60000);
 
+  //Clear 3 bit per pixel display buffer
+  if (_displayMode == 1) memset(D_memory4Bit, 255, 240000);
+}
 
 //Function that displays content from RAM to screen
 void Inkplate::display() {
@@ -288,95 +132,15 @@ void Inkplate::display() {
   if (_displayMode == 1) display3b();
 }
 
-//Display content from RAM to display (1 bit per pixel,. monochrome picture).
-void Inkplate::display1b() {
-  for(int i = 0; i<60000; i++) {
-	  *(D_memory_new+i) &= *(_partial+i);
-	  *(D_memory_new+i) |= (*(_partial+i));
-  }
-  uint16_t _pos;
-  uint32_t _send;
-  uint8_t data;
-  draw_mode_on();
-  SPV_SET;
-  delayMicroseconds(500);
-
-  //cleanFast(2);
-  cleanFast(2);
-  for(int i = 0; i<8; i++) {
-	  cleanFast(0);
-	  delayMicroseconds(500);
-  }
-  for(int i = 0; i<8; i++) {
-	  cleanFast(1);
-	  delayMicroseconds(500);
-  }
-  for(int i = 0; i<8; i++) {
-	  cleanFast(0);
-	  delayMicroseconds(500);
-  }
-  //for(int i = 0; i<2; i++) {
-	  //cleanFast(2);
-  //}
-  //for (int i = 0; i < 6; i++) {
-  //  cleanFast(1);
-  //  delayMicroseconds(500);
-  //}
-
-  //for (int i = 0; i < 6; i++) {
-  //  cleanFast(0);
-  //  delayMicroseconds(500);
-  //}
-
-  //for (int i = 0; i < 1; i++) {
-  //  cleanFast(1);
-    //delayMicroseconds(500);
-  //}
-	
-  for (int k = 0; k < 6; k++) {
-    begin_frame();
-	_pos = 59999;
-    for (int i = 0; i < 600; i++) {
-      //data = 10101010;
-      //_send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-      GPIO.out_w1tc = DATA;
-      //GPIO.out_w1ts = _send;
-      //CL_SET;
-      CL_CLEAR;
-      begin_line();
-      for (int j = 0; j < 100; j++) {
-        data = LUTB[(*(D_memory_new + _pos) >> 4)];
-        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-          GPIO.out_w1tc = DATA | CL;
-          GPIO.out_w1ts = (_send) | CL;
-        data = LUTB[*(D_memory_new + _pos) & 0x0F];
-        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-          GPIO.out_w1tc = DATA | CL;
-          GPIO.out_w1ts = (_send) | CL;
-		_pos--;
-      }
-      end_line();
-    }
-    end_frame();
-    delayMicroseconds(500);
-  }
-  cleanFast(2);
-  cleanFast(2);
-  delayMicroseconds(500);
-  draw_mode_off();
-}
-
 void Inkplate::partialUpdate() {
   if(_displayMode == 1) return;
+  if(_blockPartial == 1) display1b();
   uint16_t _pos = 59999;
   uint32_t _send;
   uint8_t data;
   uint8_t diffw, diffb;
   uint32_t n = 119999;
-  
-  draw_mode_on();
-  SPV_SET;
-  delayMicroseconds(500);
+  uint8_t dram;
   
    for (int i = 0; i < 600; i++) {
       for (int j = 0; j < 100; j++) {
@@ -390,174 +154,68 @@ void Inkplate::partialUpdate() {
 	  }
    }	  
    
-  for (int k = 0; k < 7; k++) {
-    begin_frame();
-   n = 119999;
+  einkOn();
+  for (int k = 0; k < 5; k++) {
+    vscan_start();
+    n = 119999;
     for (int i = 0; i < 600; i++) {
-      //data = 10101010;
-      //_send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-      GPIO.out_w1tc = DATA;
-      //GPIO.out_w1ts = _send;
-      //CL_SET;
-      CL_CLEAR;
-      begin_line();
-      for (int j = 0; j < 200; j++) {
-        //_pos = i * 200 + j;
-		////diffw = ((*(D_memory_new+_pos))^(*(_partial+_pos)))&(~(*(_partial+_pos)));
-		////diffb = ((*(D_memory_new+_pos))^(*(_partial+_pos)))&((*(_partial+_pos)));
-		////data = LUTW[diffw>>4] & (LUTB[diffb>>4]);
-        //data = LUT2[(*(D_memory_new + _pos) >> 4)];
 		data = *(_pBuffer + n);
         _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-          GPIO.out_w1tc = DATA | CL;
+		hscan_start(_send);
+		n--;
+      for (int j = 0; j < 199; j++) {
+		data = *(_pBuffer + n);
+        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
           GPIO.out_w1ts = (_send) | CL;
-        //data = LUT2[*(D_memory_new + _pos) & 0x0F];
-		////data = LUTW[diffw&0x0F] & (LUTB[diffb&0x0F]);
-        ////_send = ((_pBuffer & B00000011) << 4) | (((_pBuffer & B00001100) >> 2) << 18) | (((_pBuffer & B00010000) >> 4) << 23) | (((_pBuffer & B11100000) >> 5) << 25);
-        ////GPIO.out_w1tc = DATA | CL;
-        ////GPIO.out_w1ts = _send;
-        ////GPIO.out_w1ts = CL;
+          GPIO.out_w1tc = DATA | CL;
 		n--;
       }
-      end_line();
+	  GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1tc = DATA | CL;
+	  vscan_end();
     }
-    end_frame();
-    delayMicroseconds(500);
+    delayMicroseconds(230);
   }
+  /*
+    for (int k = 0; k < 1; k++) {
+    vscan_start();
+	_pos = 59999;
+    for (int i = 0; i < 600; i++) {
+	  data = discharge[(*(D_memory_new + _pos) >> 4)];
+      _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+	  hscan_start(_send);
+	  data = discharge[*(D_memory_new + _pos) & 0x0F];
+      _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+      GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1tc = DATA | CL;
+	  _pos--;
+      for (int j = 0; j < 99; j++) {
+        data = discharge[(*(D_memory_new + _pos) >> 4)];
+        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+          GPIO.out_w1ts = (_send) | CL;
+          GPIO.out_w1tc = DATA | CL;
+        data = discharge[*(D_memory_new + _pos) & 0x0F];
+        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+          GPIO.out_w1ts = (_send) | CL;
+          GPIO.out_w1tc = DATA | CL;
+		_pos--;
+      }
+	  GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1tc = DATA | CL;
+	  vscan_end();
+    }
+    delayMicroseconds(230);
+  }
+  */
+  cleanFast(2, 2);
+  cleanFast(3, 1);
+  vscan_start();
+  einkOff();
+  einkOff();
   for(int i = 0; i<60000; i++) {
 	  *(D_memory_new+i) &= *(_partial+i);
 	  *(D_memory_new+i) |= (*(_partial+i));
   }
-  
-  cleanFast(2);
-  delayMicroseconds(500);
-  draw_mode_off();
-}
-
-//Display content from RAM to display (3 bit per pixel,. 8 level of grayscale, STILL IN PROGRESSS, we need correct wavefrom to get good picture, use it only for pictures not for GFX).
-void Inkplate::display3b() {
-  draw_mode_on();
-  SPV_SET;
-  delayMicroseconds(500);
-  cleanFast(2);
-  //cleanFast(2);
-  //for(int i = 0; i<5; i++) {
-  //	cleanFast(0);
-  //}
-  for(int i = 0; i<5; i++) {
-	  cleanFast(0);
-	  //delay(1);
-  } 
-  delay(5);
-  for(int i = 0; i<5; i++) {
-	  cleanFast(0);
-	  //delay(1);
-  } 
-  delay(5);
-  for(int i = 0; i<7; i++) {
-	  cleanFast(1);
-	  //delay(1);
-  }
-  delay(5);
-  for(int i = 0; i<7; i++) {
-	  cleanFast(0);
-	  //delay(1);
-  }
-  delay(5);
-  //cleanFast(1);
-  cleanFast(2);
-  //cleanFast(0);
-  //for(int i = 0; i<3; i++) {
-  //	  cleanFast(2);
-  //}
-  
-  for (int k = 0; k < 12; k++) {
-  //for (int k = 0; k < sz_contrast_cycles; ++k) {
-    //for (int contrast_cnt = 0; contrast_cnt < contrast_cycles[k]; ++contrast_cnt) {
-      begin_frame();
-      uint8_t *dp = D_memory4Bit + 239999;
-      uint32_t _send;
-      uint8_t pix1;
-      uint8_t pix2;
-      uint8_t pix3;
-      uint8_t pix4;
-
-      for (int i = 0; i < 600; i++) {
-		//CL_SET;
-        //GPIO.out_w1tc = DATA;
-        //CL_CLEAR;
-        begin_line();
-		//portDISABLE_INTERRUPTS();
-        for (int j = 0; j < 100; j++) {
-
-          uint8_t pixel = 0B00000000;
-          uint8_t pixel2 = 0B00000000;
-
-          //4 bit mode (non-reversed bits)
-          //pix1 = (*(dp) >> k) & 1;  //4, 5, 6, 7
-          //pix2 = (*(dp--) >> k + 4) & 1; //0, 1, 2, 3
-          //pix3 = (*(dp) >> k) & 1;
-          //pix4 = (*(dp--) >> k + 4) & 1;
-		  
-		  //pix1 = (*(dp)) & 0x07;  //4, 5, 6, 7
-          //pix2 = (*(dp--) >> 4)& 0x07; //0, 1, 2, 3
-          //pix3 = (*(dp)) & 0x07;
-          //pix4 = (*(dp--) >> 4)& 0x07;
-		  pix1 = *(dp--);
-          pix2 = *(dp--);
-		  pix3 = *(dp--);
-          pix4 = *(dp--);
-          //pixel |= ( pixel_to_epd_cmd[pix1] << 6) | ( pixel_to_epd_cmd[pix2] << 4) | ( pixel_to_epd_cmd[pix3] << 2) | ( pixel_to_epd_cmd[pix4] << 0);
-		  //pixel |= ( waveform3Bit[pix1][k] << 6) | ( waveform3Bit[pix2][k] << 4) | ( waveform3Bit[pix3][k] << 2) | ( waveform3Bit[pix4][k] << 0);
-		  pixel |= ( waveform3Bit[pix1&0x07][k] << 6) | ( waveform3Bit[(pix1>>4)&0x07][k] << 4) | ( waveform3Bit[pix2&0x07][k] << 2) | ( waveform3Bit[(pix2>>4)&0x07][k] << 0);
-		  pixel2 |= ( waveform3Bit[pix3&0x07][k] << 6) | ( waveform3Bit[(pix3>>4)&0x07][k] << 4) | ( waveform3Bit[pix4&0x07][k] << 2) | ( waveform3Bit[(pix4>>4)&0x07][k] << 0);
-
-          _send = ((pixel & B00000011) << 4) | (((pixel & B00001100) >> 2) << 18) | (((pixel & B00010000) >> 4) << 23) | (((pixel & B11100000) >> 5) << 25);
-          GPIO.out_w1tc = DATA | CL;
-          GPIO.out_w1ts = (_send) | CL;
-          //GPIO.out_w1ts = CL;
-
-          //4 bit mode (non-reversed bits)
-          //pix1 = (*(dp) >> k) & 1;  //4, 5, 6, 7
-          //pix2 = (*(dp--) >> k + 4) & 1; //0, 1, 2, 3
-          //pix3 = (*(dp) >> k) & 1;
-          //pix4 = (*(dp--) >> k + 4) & 1;
-
-          //pixel2 |= ( pixel_to_epd_cmd[pix1] << 6);
-          //pixel2 |= ( pixel_to_epd_cmd[pix2] << 4);
-          //pixel2 |= ( pixel_to_epd_cmd[pix3] << 2);
-          //pixel2 |= ( pixel_to_epd_cmd[pix4] << 0);
-		  
-		  //pix1 = (*(dp)) & 0x07;  //4, 5, 6, 7
-          //pix2 = (*(dp--) >> 4)& 0x07; //0, 1, 2, 3
-          //pix3 = (*(dp)) & 0x07;
-          //pix4 = (*(dp--) >> 4)& 0x07;
-
-          //pixel |= ( pixel_to_epd_cmd[pix1] << 6) | ( pixel_to_epd_cmd[pix2] << 4) | ( pixel_to_epd_cmd[pix3] << 2) | ( pixel_to_epd_cmd[pix4] << 0);
-		  //pixel2 |= ( waveform3Bit[pix1][k] << 6) | ( waveform3Bit[pix2][k] << 4) | ( waveform3Bit[pix3][k] << 2) | ( waveform3Bit[pix4][k] << 0);
-
-          _send = ((pixel2 & B00000011) << 4) | (((pixel2 & B00001100) >> 2) << 18) | (((pixel2 & B00010000) >> 4) << 23) | (((pixel2 & B11100000) >> 5) << 25);
-          GPIO.out_w1tc = DATA | CL;
-          GPIO.out_w1ts = (_send) | CL;
-          //GPIO.out_w1ts = CL;
-        }
-		//portENABLE_INTERRUPTS();
-        end_line();
-      }
-      end_frame();
-    //}
-  }
-  
-  cleanFast(2);
-  delayMicroseconds(500);
-  draw_mode_off();
-}
-
-void ckvClock() {
-  CKV_CLEAR;
-  usleep1();
-  CKV_SET;
-  usleep1();
 }
 
 void Inkplate::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char* _p, int16_t _w, int16_t _h) {
@@ -565,12 +223,6 @@ void Inkplate::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char* _p, i
   uint8_t  _rem = _w % 2;
   int i, j;
   int xSize = _w / 2 + _rem;
-
-  //if (_shiftX == 0) {
-  //  for (int i = _y; i < _y + _h; i++) {
-  //    memcpy(D_memory4Bit + (400 * i) + _x/2, _p + _w/2 * (i-_y), _w / 2);
-  //  }
-  //}
 
   for (i = 0; i < _h; i++) {
     for (j = 0; j < xSize - 1; j++) {
@@ -580,176 +232,6 @@ void Inkplate::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char* _p, i
     drawPixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4)>>1);
     if (_rem == 0) drawPixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff)>>1);
   }
-}
-
-//Clears contenst from display (slower, some epaper panels needs slower cleaning process from others).
-void Inkplate::fillScreen(uint8_t c) {
-  uint8_t data = c == 0 ? B10101010 : B01010101;
-  uint32_t _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-  draw_mode_on();
-  SPV_SET;
-  delayMicroseconds(500); //usleep(500);
-  for (int k = 0; k < REF_RATE; k++) {
-    begin_frame();
-    for (int i = 0; i < 600; i++) {
-
-      begin_line();
-      for (int j = 0; j < 100; j++) {
-        GPIO.out &= ~DATA;
-        GPIO.out |= _send;
-        CL_SET;
-        CL_CLEAR;
-        GPIO.out &= ~DATA;
-        GPIO.out |= _send;
-        CL_SET;
-        CL_CLEAR;
-      }
-      end_line();
-    }
-    end_frame();
-  }
-  draw_mode_off();
-}
-
-//Clear screan before new screen update using waveform
-void Inkplate::clean() {
-  draw_mode_on();
-  SPV_SET; //dspv_gpio::set::set(1 << DSPV_BIT);
-  delayMicroseconds(500); //usleep(500);
-  int m = 0;
-  cleanFast(0); //white
-  m++;
-  for (int i = 0; i < 8; i++) {
-    cleanFast((waveform[m] >> 30) & 3); //White to white
-    m++;
-	delay(1);
-  }
-  //cleanFast(0);
-  cleanFast((waveform[m] >> 24) & 3); //white to black
-  m++;
-  for (int i = 0; i < 8; i++) {
-    cleanFast((waveform[m]) & 3); //Black to black
-    m++;
-	delay(1);
-  }
-  cleanFast((waveform[m] >> 6) & 3); //Black to white
-  m++;
-  for (int i = 0; i < 8; i++) {
-    cleanFast((waveform[m] >> 30) & 3); //White to white
-    m++;
-	delay(1);
-  }
-  //cleanFast(2);
-  //delay(1);
-  draw_mode_off();
-}
-
-//Clears content from epaper diplay as fast as ESP32 can.
-void Inkplate::cleanFast(uint8_t c) {
-  uint8_t data;
-  if (c == 0) {
-    data = B10101010;     //White
-  } else if (c == 1) {
-    data = B01010101;     //Black
-  } else if (c == 2) {
-    data = B00000000;     //Discharge
-  }
-  uint32_t _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-  begin_frame();
-  for (int i = 0; i < 600; i++) {
-
-    begin_line();
-    for (int j = 0; j < 100; j++) {
-      GPIO.out_w1tc = DATA | CL;
-      GPIO.out_w1ts = (_send) | CL;
-      //GPIO.out_w1ts = CL;
-      GPIO.out_w1tc = DATA | CL;
-      GPIO.out_w1ts = (_send) | CL;
-      //GPIO.out_w1ts = CL;
-    }
-    end_line();
-  }
-  end_frame();
-}
-
-//Turn on supply for epaper display (TPS65186) [+15 VDC, -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
-void Inkplate::einkOn() {
-    _panelOn = 1;
-  pinsAsOutputs();
-  WAKEUP_SET;
-  PWRUP_SET;
-  //Enable all rails
-  Wire.beginTransmission(0x48);
-  Wire.write(0x01);
-  Wire.write(B00111111);
-  Wire.endTransmission();
-  //Set out voltage on LDO outputs
-  Wire.beginTransmission(0x48);
-  Wire.write(0x02);
-  Wire.write(B00100011);
-  Wire.endTransmission();
-  //Set VCOM Voltage
-  Wire.beginTransmission(0x48);
-  Wire.write(0x03);
-  Wire.write(150);
-  Wire.endTransmission();
-  //Set power up times (all on 3mS)
-  Wire.beginTransmission(0x48);
-  Wire.write(0x0A);
-  Wire.write(0);
-  Wire.endTransmission();
-  //Set Power Down Seq.
-  Wire.beginTransmission(0x48);
-  Wire.write(0x0B);
-  Wire.write(B00011011);
-  Wire.endTransmission();
-  //Set Power Down Times (all on 6mS)
-  Wire.beginTransmission(0x48);
-  Wire.write(0x0C);
-  Wire.write(0);
-  Wire.endTransmission();
-  
-  delay(20);
-  
-  VCOM_SET;
-  
-  Wire.beginTransmission(0x48);
-  Wire.write(0x0D);
-  Wire.write(B10000000);
-  Wire.endTransmission();
-  
-  delay(2);
-  
-  Wire.beginTransmission(0x48);
-  Wire.write(0x00);
-  Wire.endTransmission();
-  
-  Wire.requestFrom(0x48, 1);
-  _temperature = Wire.read();
-
-
-}
-
-//Turn off epapewr supply and put all digital IO pins in high Z state
-void Inkplate::einkOff() {
-  _panelOn = 0;
-  GPIO.out &= ~(DATA | CL | LE);
-  SPH_CLEAR;
-  OE_CLEAR;
-  GMOD_CLEAR;
-  SPV_CLEAR;
-
-  PWRUP_CLEAR;
-  //Enable all rails
-  Wire.beginTransmission(0x48);
-  Wire.write(0x01);
-  Wire.write(B00000000);
-  Wire.endTransmission();
-  //delay(250);
-  WAKEUP_CLEAR;
-  VCOM_CLEAR;
-
-  pinsZstate();
 }
 
 void Inkplate::setRotation(uint8_t r) {
@@ -774,8 +256,284 @@ void Inkplate::setRotation(uint8_t r) {
   }
 }
 
+//Turn off epapewr supply and put all digital IO pins in high Z state
+void Inkplate::einkOff() {
+  if(_panelOn == 0) return;
+  _panelOn = 0;
+  GMOD_CLEAR;
+  OE_CLEAR;
+  GPIO.out &= ~(DATA | CL | LE);
+  SPH_CLEAR;
+  SPV_CLEAR;
+
+  PWRUP_CLEAR;
+  WAKEUP_CLEAR;
+  VCOM_CLEAR;
+
+  pinsZstate();
+}
+
+//Turn on supply for epaper display (TPS65186) [+15 VDC, -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
+void Inkplate::einkOn() {
+  if(_panelOn == 1) return;
+  _panelOn = 1;
+  pinsAsOutputs();
+  WAKEUP_SET;
+  PWRUP_SET;
+  VCOM_SET;
+  //Enable all rails
+  Wire.beginTransmission(0x48);
+  Wire.write(0x01);
+  Wire.write(B00111111);
+  Wire.endTransmission();
+  
+  delay(40);
+  
+  Wire.beginTransmission(0x48);
+  Wire.write(0x0D);
+  Wire.write(B10000000);
+  Wire.endTransmission();
+  
+  delay(2);
+  
+  Wire.beginTransmission(0x48);
+  Wire.write(0x00);
+  Wire.endTransmission();
+  
+  Wire.requestFrom(0x48, 1);
+  _temperature = Wire.read();
+
+  LE_CLEAR; //setpin_le(FALSE);
+  OE_CLEAR; //setpin_oe(FALSE);
+  CL_CLEAR;   //setpin_cl(FALSE);
+  SPH_SET;   //setpin_sph(FALSE);
+  GMOD_SET;   //setpin_gmode(FALSE);
+  SPV_SET;   //setpin_spv(FALSE);
+  CKV_CLEAR;   //setpin_ckv(FALSE);
+  OE_SET;
+}
+
+void Inkplate::selectDisplayMode(uint8_t _mode) {
+	if(_mode != _displayMode) {
+		_displayMode = _mode&1;
+		memset(D_memory_new, 0, 60000);
+		memset(_partial, 0, 60000);
+		memset(_pBuffer, 0, 120000);
+		memset(D_memory4Bit, 255, 240000);
+		_blockPartial = 1;
+	}
+}
+
+uint8_t Inkplate::getDisplayMode() {
+  return _displayMode;
+}
+
+int Inkplate::drawBitmapFromSD(SdFile* p, int x, int y) {
+	if(sdCardOk == 0) return 0;
+	struct bitmapHeader bmpHeader;
+	readBmpHeader(p, &bmpHeader);
+	if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 || !(bmpHeader.color == 1 || bmpHeader.color == 24)) return 0;
+
+	if ((bmpHeader.color == 24 || bmpHeader.color == 32) && getDisplayMode() != INKPLATE_3BIT) {
+		selectDisplayMode(INKPLATE_3BIT);
+	}
+
+	if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT) {
+		selectDisplayMode(INKPLATE_1BIT);
+	}
+  
+	if (bmpHeader.color == 1) drawMonochromeBitmap(p, bmpHeader, x, y);
+	if (bmpHeader.color == 24) drawGrayscaleBitmap24(p, bmpHeader, x, y);
+
+  return 1;
+}
+
+int Inkplate::drawBitmapFromSD(char* fileName, int x, int y) {
+  if(sdCardOk == 0) return 0;
+  SdFile dat;
+  if (dat.open(fileName, O_RDONLY)) {
+    return drawBitmapFromSD(&dat, x, y);
+  } else {
+    return 0;
+  }
+}
+
+int Inkplate::sdCardInit() {
+	spi2.begin(14, 12, 13, 15);
+	sdCardOk = sd.begin(15, SD_SCK_MHZ(25));
+	return sdCardOk;
+}
+
+SdFat Inkplate::getSdFat() {
+	return sd;
+}
+
+SPIClass Inkplate::getSPI() {
+	return spi2;
+}
+
 uint8_t Inkplate::getPanelState() {
   return _panelOn;
+}
+
+uint8_t Inkplate::readTouchpad(uint8_t _pad) {
+  return mcp.digitalRead((_pad&3)+10);
+}
+
+int8_t Inkplate::readTemperature() {
+  return _temperature;
+}
+
+double Inkplate::readBattery() {
+  mcp.digitalWrite(9, HIGH);
+  delay(1);
+  int adc = analogRead(35);
+  mcp.digitalWrite(9, LOW);
+  return (double(adc) / 4095 * 3.3 * 2);
+}
+
+//--------------------------LOW LEVEL STUFF--------------------------------------------
+void Inkplate::vscan_start()
+{
+  CKV_SET;
+  delayMicroseconds(7);
+  SPV_CLEAR;
+  delayMicroseconds(10);
+  CKV_CLEAR;
+  delayMicroseconds(0); //usleep1();
+  CKV_SET;
+  delayMicroseconds(8);
+  SPV_SET;
+  delayMicroseconds(10);
+  CKV_CLEAR;
+  delayMicroseconds(0); //usleep1();
+  CKV_SET;
+  delayMicroseconds(18);
+  CKV_CLEAR;
+  delayMicroseconds(0); //usleep1();
+  CKV_SET;
+  delayMicroseconds(18);
+  CKV_CLEAR;
+  delayMicroseconds(0); //usleep1();
+  CKV_SET;
+  //delayMicroseconds(18);
+}
+
+void Inkplate::vscan_write()
+{
+  CKV_CLEAR;
+  LE_SET;
+  LE_CLEAR;
+  delayMicroseconds(0);
+  SPH_CLEAR;
+  CL_SET;
+  CL_CLEAR;
+  SPH_SET;
+  CKV_SET;
+}
+
+void Inkplate::hscan_start(uint32_t _d)
+{
+  SPH_CLEAR;
+      GPIO.out_w1ts = (_d) | CL;
+	  GPIO.out_w1tc = DATA | CL;
+  //CL_SET;
+  //CL_CLEAR;
+  SPH_SET;
+}
+
+void Inkplate::vscan_end() {
+  CKV_CLEAR;
+  LE_SET;
+  LE_CLEAR;
+  delayMicroseconds(1);
+  CKV_SET;
+}
+
+//Clear screan before new screen update using waveform
+void Inkplate::clean() {
+  einkOn();
+  int m = 0;
+  cleanFast(0, 1); //white
+  m++;
+  cleanFast((waveform[m] >> 30) & 3, 8); //White to white
+  m++;
+  cleanFast((waveform[m] >> 24) & 3, 1); //white to black
+  m++;
+  cleanFast((waveform[m]) & 3, 8); //Black to black
+  m++;
+  cleanFast((waveform[m] >> 6) & 3, 1); //Black to white
+  m++;
+  cleanFast((waveform[m] >> 30) & 3, 10); //White to white
+}
+
+//Clears content from epaper diplay as fast as ESP32 can.
+void Inkplate::cleanFast(uint8_t c, uint8_t rep) {
+  einkOn();
+  uint8_t data;
+  if (c == 0) {
+    data = B10101010;     //White
+  } else if (c == 1) {
+    data = B01010101;     //Black
+  } else if (c == 2) {
+    data = B00000000;     //Discharge
+  } else if (c == 3) {
+	data = B11111111;	  //Skip
+  }
+
+  uint32_t _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+  for (int i = 0; i < rep; i++) {
+    unsigned int x, y;
+    vscan_start();
+    for (y = 0; y < 600; y++) {
+	  hscan_start(_send);
+      for (x = 0; x < 100; x++) {
+        GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1tc = DATA | CL;
+        GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1tc = DATA | CL;
+      }
+      GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1tc = DATA | CL;
+	  vscan_end();
+    }
+    delayMicroseconds(230);
+  }
+}
+
+void Inkplate::cleanFast2(uint8_t c, uint8_t n, uint16_t d) {
+	/*
+  uint8_t data;
+  if (c == 0) {
+    data = B10101010;     //White
+  } else if (c == 1) {
+    data = B01010101;     //Black
+  } else if (c == 2) {
+    data = B00000000;     //Discharge
+  } else if (c == 3) {
+    data = B11111111;   //Skip
+  }
+  uint32_t _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+  begin_frame();
+  for (int k = 0; k < n; k++) {
+
+    for (int i = 0; i < 600; i++) {
+      begin_line();
+      if (k == 0) {
+
+        for (int j = 0; j < 100; j++) {
+          GPIO.out_w1tc = DATA | CL;
+          GPIO.out_w1ts = (_send) | CL;
+          GPIO.out_w1tc = DATA | CL;
+          GPIO.out_w1ts = (_send) | CL;
+        }
+      }
+      end_line();
+    }
+    end_frame();
+	delayMicroseconds(d);
+  }
+  */
 }
 
 void Inkplate::pinsZstate() {
@@ -820,58 +578,269 @@ void Inkplate::pinsAsOutputs() {
   pinMode(27, OUTPUT); //D7
 }
 
-void Inkplate::selectDisplayMode(uint8_t _mode) {
-  if (_mode == INKPLATE_1BIT) {
-	if (D_memory_new != NULL) return;
-    if (D_memory4Bit != NULL) free(D_memory4Bit);
-    //1 bit per pixel mode (monochrome mode)
-    D_memory_new = (uint8_t*)ps_malloc(600 * 100);
-	_partial = (uint8_t*)ps_malloc(600 * 100);
-	_pBuffer = (uint8_t*) ps_malloc(120000);
-    if (D_memory_new == NULL || _partial == NULL || _pBuffer == NULL) {
-      do {
-        delay(100);
-      } while (true);
-    }
-    memset(D_memory_new, 0, 60000);
-    _displayMode = INKPLATE_1BIT;
+//--------------------------PRIVATE FUNCTIONS--------------------------------------------
+//Display content from RAM to display (1 bit per pixel,. monochrome picture).
+void Inkplate::display1b() {
+  for(int i = 0; i<60000; i++) {
+	  *(D_memory_new+i) &= *(_partial+i);
+	  *(D_memory_new+i) |= (*(_partial+i));
   }
-
-  if (_mode == INKPLATE_3BIT) {
-	if (D_memory4Bit != NULL) return;
-    if (D_memory_new != NULL) {
-		free(D_memory_new);
-		free(_partial);
-		free(_pBuffer);
-	}
-    //3 bit per pixel mode (8 level grayscale mode)
-    D_memory4Bit = (uint8_t*)ps_malloc(240000);
-    if (D_memory4Bit == NULL ) {
-      do {
-        delay(100);
-      } while (true);
+  uint16_t _pos;
+  uint32_t _send;
+  uint8_t data;
+  uint8_t dram;
+  einkOn();
+  //clean();
+  cleanFast(0, 1);
+  cleanFast(1, 12);
+  cleanFast(2, 1);
+  cleanFast(0, 11);
+  cleanFast(2, 1);
+  cleanFast(1, 12);
+  cleanFast(2, 1);
+  cleanFast(0, 11);
+  for (int k = 0; k < 5; k++) {
+	_pos = 59999;
+    vscan_start();
+    for (int i = 0; i < 600; i++) {
+	  dram = *(D_memory_new + _pos);
+      data = LUTB[(dram >> 4)&0x0F];
+      _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+	  hscan_start(_send);
+	  data = LUTB[dram & 0x0F];
+      _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+	  GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1tc = DATA | CL;
+	  _pos--;
+      for (int j = 0; j < 99; j++) {
+		dram = *(D_memory_new + _pos);
+        data = LUTB[(dram >> 4)&0x0F];
+        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+		GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1tc = DATA | CL;
+        data = LUTB[dram & 0x0F];
+        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+		GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1tc = DATA | CL;
+		_pos--;
+      }
+	  GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1tc = DATA | CL;
+	  vscan_end();
     }
-    memset(D_memory4Bit, 255, 240000);
-    _displayMode = INKPLATE_3BIT;
+    delayMicroseconds(230);
+  }
+  
+	_pos = 59999;
+    vscan_start();
+    for (int i = 0; i < 600; i++) {
+	  dram = *(D_memory_new + _pos);
+      data = LUT2[(dram >> 4)&0x0F];
+      _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+	  hscan_start(_send);
+	  data = LUT2[dram & 0x0F];
+      _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+	  GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1tc = DATA | CL;
+	  _pos--;
+      for (int j = 0; j < 99; j++) {
+		dram = *(D_memory_new + _pos);
+        data = LUT2[(dram >> 4)&0x0F];
+        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+		GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1tc = DATA | CL;
+        data = LUT2[dram & 0x0F];
+        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+		GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1tc = DATA | CL;
+		_pos--;
+      }
+	  GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1tc = DATA | CL;
+	  vscan_end();
+    }
+    delayMicroseconds(230);
+  /*
+  for (int k = 0; k < 1; k++) {
+    vscan_start();
+    hscan_start();
+	_pos = 59999;
+    for (int i = 0; i < 600; i++) {
+      for (int j = 0; j < 100; j++) {
+        data = discharge[(*(D_memory_new + _pos) >> 4)];
+        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+        GPIO.out_w1tc = DATA | CL;
+        GPIO.out_w1ts = (_send) | CL;
+        data = discharge[*(D_memory_new + _pos) & 0x0F];
+        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+        GPIO.out_w1tc = DATA | CL;
+        GPIO.out_w1ts = (_send) | CL;
+		_pos--;
+      }
+      vscan_write();
+    }
+    CKV_CLEAR;
+    delayMicroseconds(230);
+  }
+  */
+  cleanFast(2, 2);
+  cleanFast(3, 1);
+  vscan_start();
+  einkOff();
+  _blockPartial = 0;
+}
+
+//Display content from RAM to display (3 bit per pixel,. 8 level of grayscale, STILL IN PROGRESSS, we need correct wavefrom to get good picture, use it only for pictures not for GFX).
+void Inkplate::display3b() {
+  einkOn();
+  cleanFast(0, 1);
+  cleanFast(1, 12);
+  cleanFast(2, 1);
+  cleanFast(0, 11);
+  cleanFast(2, 1);
+  cleanFast(1, 12);
+  cleanFast(2, 1);
+  cleanFast(0, 11);
+  
+  for (int k = 0; k < 7; k++) {
+      uint8_t *dp = D_memory4Bit + 239999;
+      uint32_t _send;
+      uint8_t pix1;
+      uint8_t pix2;
+      uint8_t pix3;
+      uint8_t pix4;
+	  uint8_t pixel;
+      uint8_t pixel2;
+	  
+      vscan_start();
+      for (int i = 0; i < 600; i++) {
+		pixel = 0B00000000;
+        pixel2 = 0B00000000;
+		pix1 = *(dp--);
+        pix2 = *(dp--);
+		pix3 = *(dp--);
+        pix4 = *(dp--);
+		pixel |= ( waveform3Bit[pix1&0x07][k] << 6) | ( waveform3Bit[(pix1>>4)&0x07][k] << 4) | ( waveform3Bit[pix2&0x07][k] << 2) | ( waveform3Bit[(pix2>>4)&0x07][k] << 0);
+		pixel2 |= ( waveform3Bit[pix3&0x07][k] << 6) | ( waveform3Bit[(pix3>>4)&0x07][k] << 4) | ( waveform3Bit[pix4&0x07][k] << 2) | ( waveform3Bit[(pix4>>4)&0x07][k] << 0);
+
+        _send = ((pixel & B00000011) << 4) | (((pixel & B00001100) >> 2) << 18) | (((pixel & B00010000) >> 4) << 23) | (((pixel & B11100000) >> 5) << 25);
+		hscan_start(_send);
+        _send = ((pixel2 & B00000011) << 4) | (((pixel2 & B00001100) >> 2) << 18) | (((pixel2 & B00010000) >> 4) << 23) | (((pixel2 & B11100000) >> 5) << 25);
+        GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1tc = DATA | CL;
+		
+        for (int j = 0; j < 99; j++) {
+
+          pixel = 0B00000000;
+          pixel2 = 0B00000000;
+		  pix1 = *(dp--);
+          pix2 = *(dp--);
+		  pix3 = *(dp--);
+          pix4 = *(dp--);
+		  pixel |= ( waveform3Bit[pix1&0x07][k] << 6) | ( waveform3Bit[(pix1>>4)&0x07][k] << 4) | ( waveform3Bit[pix2&0x07][k] << 2) | ( waveform3Bit[(pix2>>4)&0x07][k] << 0);
+		  pixel2 |= ( waveform3Bit[pix3&0x07][k] << 6) | ( waveform3Bit[(pix3>>4)&0x07][k] << 4) | ( waveform3Bit[pix4&0x07][k] << 2) | ( waveform3Bit[(pix4>>4)&0x07][k] << 0);
+
+          _send = ((pixel & B00000011) << 4) | (((pixel & B00001100) >> 2) << 18) | (((pixel & B00010000) >> 4) << 23) | (((pixel & B11100000) >> 5) << 25);
+		  GPIO.out_w1ts = (_send) | CL;
+          GPIO.out_w1tc = DATA | CL;
+
+          _send = ((pixel2 & B00000011) << 4) | (((pixel2 & B00001100) >> 2) << 18) | (((pixel2 & B00010000) >> 4) << 23) | (((pixel2 & B11100000) >> 5) << 25);
+          GPIO.out_w1ts = (_send) | CL;
+          GPIO.out_w1tc = DATA | CL;
+        }
+	    GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1tc = DATA | CL;
+	    vscan_end();
+      }
+      delayMicroseconds(230);
+  }
+  cleanFast(2, 1);
+  cleanFast(3, 1);
+  vscan_start();
+  einkOff();
+}
+
+uint32_t Inkplate::read32(uint8_t* c) {
+  return (*(c) | (*(c + 1) << 8) | (*(c + 2) << 16) | (*(c + 3) << 24));
+}
+
+uint16_t Inkplate::read16(uint8_t* c) {
+  return (*(c) | (*(c + 1) << 8));
+}
+
+void Inkplate::readBmpHeader(SdFile *_f, struct bitmapHeader *_h) {
+  uint8_t header[100];
+  _f->rewind();
+  _f->read(header, 100);
+  _h->signature = read16(header + 0);
+  _h->fileSize = read32(header + 2);
+  _h->startRAW = read32(header + 10);
+  _h->dibHeaderSize = read32(header + 14);
+  _h->width = read32(header + 18);
+  _h->height = read32(header + 22);
+  _h->color = read16(header + 28);
+  _h->compression = read32(header + 30);
+  return;
+}
+
+int Inkplate::drawMonochromeBitmap(SdFile *f, struct bitmapHeader bmpHeader, int x, int y) {
+  int w = bmpHeader.width;
+  int h = bmpHeader.height;
+  uint8_t paddingBits = w % 32;
+  w /= 32;
+
+  f->seekSet(bmpHeader.startRAW);
+  int i, j;
+  for (j = 0; j < h; j++) {
+    for (i = 0; i < w; i++) {
+      uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
+      for (int n = 0; n < 32; n++) {
+        drawPixel((i * 32) + n + x, h - j + y, !(pixelRow & (1ULL << (31 - n))));
+      }
+    }
+    if (paddingBits) {
+      uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
+      for (int n = 0; n < paddingBits; n++) {
+        drawPixel((i * 32) + n + x, h - j + y, !(pixelRow & (1ULL << (31 - n))));
+      }
+    }
+  }
+  f->close();
+  return 1;
+}
+
+int Inkplate::drawGrayscaleBitmap24(SdFile *f, struct bitmapHeader bmpHeader, int x, int y) {
+  int w = bmpHeader.width;
+  int h = bmpHeader.height;
+  char padding = w % 4;
+  f->seekSet(bmpHeader.startRAW);
+  int i, j;
+  for (j = 0; j < h; j++) {
+    for (i = 0; i < w; i++) {
+      //This is the proper way of converting True Color (24 Bit RGB) bitmap file into grayscale, but it takes waaay too much time (full size picture takes about 17s to decode!)
+      //float px = (0.2126 * (readByteFromSD(&file) / 255.0)) + (0.7152 * (readByteFromSD(&file) / 255.0)) + (0.0722 * (readByteFromSD(&file) / 255.0));
+      //px = pow(px, 1.5);
+      //display.drawPixel(i + x, h - j + y, (uint8_t)(px*7));
+
+      //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
+      uint8_t px = (f->read() * 2126 / 10000) + (f->read() * 7152 / 10000) + (f->read() * 722 / 10000);
+      //drawPixel(i + x, h - j + y, gammaLUT[px]);
+	  drawPixel(i + x, h - j + y, px>>5);
+	  //drawPixel(i + x, h - j + y, px/32);
+    }
+    if (padding) {
+      for (int p = 0; p < padding; p++) {
+        f->read();
+      }
+    }
+  }
+  f->close();
+  return 1;
+}
+
+void Inkplate::precalculateGamma(uint8_t* c, float gamma) {
+  for (int i = 0; i < 256; i++) {
+    c[i] = int(round((pow(i / 255.0, gamma)) * 15));
   }
 }
 
-uint8_t Inkplate::getDisplayMode() {
-  return _displayMode;
-}
-
-uint8_t Inkplate::readTouchpad(uint8_t _pad) {
-  return mcp.digitalRead((_pad&3)+10);
-}
-
-int8_t Inkplate::readTemperature() {
-  return _temperature;
-}
-
-double Inkplate::readBattery() {
-  mcp.digitalWrite(9, HIGH);
-  delay(1);
-  int adc = analogRead(35);
-  mcp.digitalWrite(9, LOW);
-  return (double(adc) / 4095 * 3.3 * 2);
-}
