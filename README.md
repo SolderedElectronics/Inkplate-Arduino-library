@@ -50,6 +50,8 @@ There are many examples in the library that you demonstrate how to use any of th
 3. **Others**
 
   3.1. Slave Mode - mode that enables control of the screen from any external device using UART
+  
+  3.2. Screen Cleaning - clean the screen in case of image burn-in
 
 ### Misc
 Inkplate 6 is available for purchase via:
