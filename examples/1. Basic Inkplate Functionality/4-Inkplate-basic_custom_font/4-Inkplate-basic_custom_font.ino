@@ -39,7 +39,7 @@ void setup() {
   display.setFont(&DSEG14Classic_Regular20pt7b);  //Select second font
   display.setCursor(0, 250);                      //Set print position on X = 0, Y = 250
   display.println("Some old-school 14 segment");  //Print text
-  display.println("display font on e-papaer");
+  display.println("display font on e-paper");
   display.print("display");
 
   display.setFont();                      //Use original 5x7 pixel fonts

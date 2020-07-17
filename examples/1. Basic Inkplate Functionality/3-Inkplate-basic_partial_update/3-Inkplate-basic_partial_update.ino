@@ -39,7 +39,7 @@ void loop() {
   display.clearDisplay();             //Clear content in frame buffer
   display.setCursor(offset, 300);     //Set new position for text
   display.print(text);                //Write text at new position
-  if(n>9) {                          //Check if you need to do full refresh or you can do partial update
+  if(n>9) {                           //Check if you need to do full refresh or you can do partial update
     display.display();                //Do a full refresh
     n = 0;
   }else{
