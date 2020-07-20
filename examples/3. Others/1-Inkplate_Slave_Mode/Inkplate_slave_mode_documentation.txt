@@ -4,6 +4,8 @@ without reprogramming. You just need to send commands via UART and it will
 show contents on its screen. 
 You can send commands via USB port or by directly connecting to ESP32 TX and RX pins.
 
+Don't forget you need to send #L(1)* after each command to show it on the display (equal to display.display()). 
+
 Settings are:
 115200 baud, standard parity, ending with \n\r
 
