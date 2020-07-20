@@ -17,6 +17,8 @@
 
    UART settings are: 115200 baud, standard parity, ending with "\n\r" (both)
    You can send commands via USB port or by directly connecting to ESP32 TX and RX pins.
+   Don't forget you need to send #L(1)* after each command to show it on the display 
+   (equal to display.display()). 
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
