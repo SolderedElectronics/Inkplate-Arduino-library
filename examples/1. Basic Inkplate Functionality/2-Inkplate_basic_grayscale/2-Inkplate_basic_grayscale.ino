@@ -7,7 +7,7 @@
    
    This example will show you how you can draw some simple graphics using 
    Adafruit GFX functions. Yes, Inkplate library is 100% compatible with GFX lib!
-   Learn more about Adafruit GFX: https://learn.adafruit.com/adafruit-gfx-graphics-library )
+   Learn more about Adafruit GFX: https://learn.adafruit.com/adafruit-gfx-graphics-library
    Inkplate will be used in grayscale mode which is 3 bit, so you can have up to 8 different colors (black, 6 gray colors and white)
    Color is represented by number, where number 0 means black and number 7 means white, while everything in between are shades of gray. 
 
