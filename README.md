@@ -66,6 +66,7 @@ If you are looking for micropython support, it is still work in progress - we ar
 
 ### Misc
 Inkplate 6 is available for purchase via:
+- [e-radionica.com](https://e-radionica.com/en/inkplate.html)
 - [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6)
 - [Mouser](https://hr.mouser.com/Search/Refine?Keyword=inkplate)
 
