@@ -64,7 +64,7 @@ Inkplate 6 has two options for powering it. First one is obvious - USB port at s
 ### Micropython
 If you are looking for micropython support, it is still work in progress - we are new with it! :) When it's ready, we will let you know with new project update. 
 
-### Misc
+### Where to buy & other
 Inkplate 6 is available for purchase via:
 - [e-radionica.com](https://e-radionica.com/en/inkplate.html)
 - [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6)
