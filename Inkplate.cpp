@@ -381,19 +381,28 @@ int Inkplate::drawBitmapFromWeb(WiFiClient* s, int x, int y, int len) {
 
 int Inkplate::drawBitmapFromWeb(char* url, int x, int y) {
   if (WiFi.status() != WL_CONNECTED) return 0;
+  int ret = 0;
+
+  bool sleep = WiFi.getSleep();
+  WiFi.setSleep(false);
+
   HTTPClient http;
-
   http.getStream().setNoDelay(true);
-  http.getStream().setTimeout(10);
+  http.getStream().setTimeout(1);
   http.begin(url);
+
   int httpCode = http.GET();
-  if (httpCode != 200) return 0;
-
-  int32_t len = http.getSize();
-  if (len <= 0) return 0;
-
-  WiFiClient * dat = http.getStreamPtr();
-  return drawBitmapFromWeb(dat, x, y, len);
+  if (httpCode == 200) {
+    int32_t len = http.getSize();
+    if (len > 0) {
+      WiFiClient * dat = http.getStreamPtr();
+      ret = drawBitmapFromWeb(dat, x, y, len);
+    }
+  }
+  
+  http.end();
+  WiFi.setSleep(sleep);
+  return ret;
 }
 
 int Inkplate::sdCardInit() {
@@ -894,25 +903,51 @@ int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHead
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   uint8_t paddingBits = w % 32;
+  int total = len - 34;
   w /= 32;
 
-  uint8_t buffer[100];
-  s->readBytes(buffer, bmpHeader.startRAW);
-  int i, j;
+  uint8_t* buf = (uint8_t*) ps_malloc(total);
+  if (buf == NULL)
+    return 0;
+
+  int pnt = 0;
+  while (pnt < total) {
+    int toread = s->available();
+    if (toread > 0) {
+      int read = s->read(buf+pnt, toread);
+      if (read > 0)
+        pnt += read;
+    }
+  }
+
+  int i, j, k = bmpHeader.startRAW - 34;
   for (j = 0; j < h; j++) {
     for (i = 0; i < w; i++) {
-      uint32_t pixelRow = s->read() << 24 | s->read() << 16 | s->read() << 8 | s->read();
+      uint8_t a = buf[k++];
+      uint8_t b = buf[k++];
+      uint8_t c = buf[k++];
+      uint8_t d = buf[k++];
+      uint32_t pixelRow = a << 24 | b << 16 | c << 8 | d;
+      pixelRow = ~pixelRow;
       for (int n = 0; n < 32; n++) {
         drawPixel((i * 32) + n + x, h - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
     }
     if (paddingBits) {
-      uint32_t pixelRow = s->read() << 24 | s->read() << 16 | s->read() << 8 | s->read();
+      uint8_t a = buf[k++];
+      uint8_t b = buf[k++];
+      uint8_t c = buf[k++];
+      uint8_t d = buf[k++];
+      uint32_t pixelRow = a << 24 | b << 16 | c << 8 | d;
+      pixelRow = ~pixelRow;
       for (int n = 0; n < paddingBits; n++) {
         drawPixel((i * 32) + n + x, h - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
     }
   }
+
+  free(buf);
+  
   return 1;
 }
 
@@ -920,63 +955,21 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   char padding = w % 4;
-
-  //Serial.println(len);
-  //Serial.println(bmpHeader.startRAW);
-
   int total = len - 34;
 
   uint8_t* buf = (uint8_t*) ps_malloc(total);
   if (buf == NULL)
     return 0;
 
-  Serial.println("Starting data read!");
-
-  long t_start = millis();
-  //int i, j;
-  //size_t read = s->read(buf, len - 34);
-  //for (i = 0; i < len - 34; i++)
-  //  s->read();
-  //int read;
   int pnt = 0;
-  //int cnk = 512;
-  //while (pnt < total) {
-  //  if (total - pnt < cnk)
-  //    cnk = total - pnt;
-  //  read = s->read(buf+pnt, cnk);
-  //  if (read > 0) {
-  //    pnt += read;
-  //    Serial.println(" Read: " + String(read));
-  //  }
-  //  //delay(10);
-  //}
-
   while (pnt < total) {
     int toread = s->available();
     if (toread > 0) {
       int read = s->read(buf+pnt, toread);
-      if (read > 0) {
+      if (read > 0)
         pnt += read;
-        Serial.println(" Read: " + String(read) + " Total: " + String(pnt) + "/" + String(total));
-      }
     }
   }
-
-  //while (pnt < total) {
-  //  if (total - pnt < cnk)
-  //    cnk = total - pnt;
-  //  s->read(buf+pnt, cnk);
-  //  pnt += cnk;
-  //  Serial.println(" Read: " + String(cnk));
-  //}
-  //for (j = 0; j < h; j++) {
-  //  size_t read = s->read(buf, 64);
-  //  Serial.println(" Read: " + String(read));
-  //  delay(1);
-  //}
-  long t_stop = millis();
-
-  Serial.println("Time: " + String((float)(t_stop - t_start)/1000) + "s");
 
   int i, j, k = bmpHeader.startRAW - 34;
   for (j = 0; j < h; j++) {
