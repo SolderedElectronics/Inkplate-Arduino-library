@@ -360,7 +360,7 @@ int Inkplate::drawBitmapFromSD(char* fileName, int x, int y) {
   }
 }
 
-int Inkplate::drawBitmapFromWeb(WiFiClient* s, int x, int y, int len) {
+int Inkplate::drawBitmapFromWeb(WiFiClient* s, int x, int y, int len, bool invert) {
   struct bitmapHeader bmpHeader;
   readBmpHeaderWeb(s, &bmpHeader);
   if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 || !(bmpHeader.color == 1 || bmpHeader.color == 24)) return 0;
@@ -373,13 +373,13 @@ int Inkplate::drawBitmapFromWeb(WiFiClient* s, int x, int y, int len) {
     selectDisplayMode(INKPLATE_1BIT);
   }
   
-  if (bmpHeader.color == 1) drawMonochromeBitmapWeb(s, bmpHeader, x, y, len);
-  if (bmpHeader.color == 24) drawGrayscaleBitmap24Web(s, bmpHeader, x, y, len);
+  if (bmpHeader.color == 1) drawMonochromeBitmapWeb(s, bmpHeader, x, y, len, invert);
+  if (bmpHeader.color == 24) drawGrayscaleBitmap24Web(s, bmpHeader, x, y, len, invert);
 
   return 1;
 }
 
-int Inkplate::drawBitmapFromWeb(char* url, int x, int y) {
+int Inkplate::drawBitmapFromWeb(char* url, int x, int y, bool invert) {
   if (WiFi.status() != WL_CONNECTED) return 0;
   int ret = 0;
 
@@ -396,7 +396,7 @@ int Inkplate::drawBitmapFromWeb(char* url, int x, int y) {
     int32_t len = http.getSize();
     if (len > 0) {
       WiFiClient * dat = http.getStreamPtr();
-      ret = drawBitmapFromWeb(dat, x, y, len);
+      ret = drawBitmapFromWeb(dat, x, y, len, invert);
     }
   }
   
@@ -899,7 +899,7 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
   return 1;
 }
 
-int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len) {
+int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert) {
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   uint8_t paddingBits = w % 32;
@@ -928,7 +928,8 @@ int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHead
       uint8_t c = buf[k++];
       uint8_t d = buf[k++];
       uint32_t pixelRow = a << 24 | b << 16 | c << 8 | d;
-      pixelRow = ~pixelRow;
+      if (invert)
+        pixelRow = ~pixelRow;
       for (int n = 0; n < 32; n++) {
         drawPixel((i * 32) + n + x, h - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
@@ -939,7 +940,8 @@ int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHead
       uint8_t c = buf[k++];
       uint8_t d = buf[k++];
       uint32_t pixelRow = a << 24 | b << 16 | c << 8 | d;
-      pixelRow = ~pixelRow;
+      if (invert)
+        pixelRow = ~pixelRow;
       for (int n = 0; n < paddingBits; n++) {
         drawPixel((i * 32) + n + x, h - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
@@ -947,11 +949,11 @@ int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHead
   }
 
   free(buf);
-  
+
   return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len) {
+int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert) {
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   char padding = w % 4;
@@ -977,6 +979,11 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
       uint8_t r = buf[k++];
       uint8_t g = buf[k++];
       uint8_t b = buf[k++];
+      if (invert) {
+        r = 255 - r;
+        g = 255 - g;
+        b = 255 - b;
+      }
       //This is the proper way of converting True Color (24 Bit RGB) bitmap file into grayscale, but it takes waaay too much time (full size picture takes about 17s to decode!)
       //float px = (0.2126 * (readByteFromSD(&file) / 255.0)) + (0.7152 * (readByteFromSD(&file) / 255.0)) + (0.0722 * (readByteFromSD(&file) / 255.0));
       //px = pow(px, 1.5);

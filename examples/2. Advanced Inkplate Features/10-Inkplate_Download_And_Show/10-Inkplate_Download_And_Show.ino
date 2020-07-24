@@ -25,8 +25,8 @@
 Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
 SdFile file;                        //Create SdFile object used for accessing files on SD card
 
-const char* ssid     = "ssid";      //Your WiFi SSID
-const char* password = "password";  //Your WiFi password
+const char* ssid     = "YourWiFiSSID"; //Your WiFi SSID
+const char* password = "YourPass";     //Your WiFi password
 
 void setup() {
   display.begin();        //Init Inkplate library (you should call this function ONLY ONCE)
@@ -48,9 +48,10 @@ void setup() {
   display.partialUpdate();
 
   //Draw the first image from web.
-  //24 bit example, will take around 20 secs to load.
+  //Monochromatic bitmap with 1 bit depth. Images like this load quickest.
+  //The parameter set to true at the end may be used to swap the back and white channels.
   //Photo taken by: Roberto Fernandez
-  if(!display.drawBitmapFromWeb("https://varipass.org/neowise.bmp", 0, 0)) {
+  if(!display.drawBitmapFromWeb("https://varipass.org/neowise_mono.bmp", 0, 0, true)) {
     //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
     //REMEMBER! You can only use Windows Bitmap file with color depth of 1 or 24 bits with no compression! 
     display.println("Image open error");
@@ -58,12 +59,10 @@ void setup() {
   }
   display.display();
 
-  delay(5000);
-
   //Draw the second image from web.
-  //1 bit example, will load very quickly.
+  //Full color 24 bit images are large and take a long time to load, will take around 20 secs.
   //Photo taken by: Roberto Fernandez
-  if(!display.drawBitmapFromWeb("https://varipass.org/neowise_mono.bmp", 0, 0)) {
+  if(!display.drawBitmapFromWeb("https://varipass.org/neowise.bmp", 0, 0)) {
     //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
     //REMEMBER! You can only use Windows Bitmap file with color depth of 1 or 24 bits with no compression! 
     display.println("Image open error");
