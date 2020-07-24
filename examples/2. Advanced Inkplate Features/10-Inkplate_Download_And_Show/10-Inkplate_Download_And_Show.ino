@@ -44,8 +44,9 @@ void setup() {
   display.partialUpdate();
 
   //Connect to the WiFi network.
-  WiFi.begin(ssid, password);
+  WiFi.mode(WIFI_MODE_STA);
   WiFi.setSleep(false);
+  WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");

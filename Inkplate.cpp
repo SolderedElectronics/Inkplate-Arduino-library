@@ -384,7 +384,7 @@ int Inkplate::drawBitmapFromWeb(char* url, int x, int y) {
   HTTPClient http;
 
   http.getStream().setNoDelay(true);
-  //http.getStream().setTimeout(1);
+  http.getStream().setTimeout(10);
   http.begin(url);
   int httpCode = http.GET();
   if (httpCode != 200) return 0;
@@ -393,8 +393,6 @@ int Inkplate::drawBitmapFromWeb(char* url, int x, int y) {
   if (len <= 0) return 0;
 
   WiFiClient * dat = http.getStreamPtr();
-  //dat->setTimeout(20);
-  //dat->setNoDelay(true);
   return drawBitmapFromWeb(dat, x, y, len);
 }
 
@@ -923,8 +921,8 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
   int h = bmpHeader.height;
   char padding = w % 4;
 
-  Serial.println(len);
-  Serial.println(bmpHeader.startRAW);
+  //Serial.println(len);
+  //Serial.println(bmpHeader.startRAW);
 
   int total = len - 34;
 
@@ -932,23 +930,36 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
   if (buf == NULL)
     return 0;
 
+  Serial.println("Starting data read!");
+
   long t_start = millis();
   //int i, j;
   //size_t read = s->read(buf, len - 34);
   //for (i = 0; i < len - 34; i++)
   //  s->read();
-  int read;
+  //int read;
   int pnt = 0;
-  int cnk = 512;
+  //int cnk = 512;
+  //while (pnt < total) {
+  //  if (total - pnt < cnk)
+  //    cnk = total - pnt;
+  //  read = s->read(buf+pnt, cnk);
+  //  if (read > 0) {
+  //    pnt += read;
+  //    Serial.println(" Read: " + String(read));
+  //  }
+  //  //delay(10);
+  //}
+
   while (pnt < total) {
-    if (total - pnt < cnk)
-      cnk = total - pnt;
-    read = s->read(buf+pnt, cnk);
-    if (read > 0) {
-      pnt += read;
-      Serial.println(" Read: " + String(read));
+    int toread = s->available();
+    if (toread > 0) {
+      int read = s->read(buf+pnt, toread);
+      if (read > 0) {
+        pnt += read;
+        Serial.println(" Read: " + String(read) + " Total: " + String(pnt) + "/" + String(total));
+      }
     }
-    //delay(10);
   }
 
   //while (pnt < total) {
@@ -965,7 +976,7 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
   //}
   long t_stop = millis();
 
-  Serial.println("Time: " + String(t_stop - t_start));
+  Serial.println("Time: " + String((float)(t_stop - t_start)/1000) + "s");
 
   int i, j, k = bmpHeader.startRAW - 34;
   for (j = 0; j < h; j++) {
