@@ -856,13 +856,13 @@ int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, i
     for (i = 0; i < w; i++) {
       uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
       for (int n = 0; n < 32; n++) {
-        drawPixel((i * 32) + n + x, h - j + y, !(pixelRow & (1ULL << (31 - n))));
+        drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
     }
     if (paddingBits) {
       uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
       for (int n = 0; n < paddingBits; n++) {
-        drawPixel((i * 32) + n + x, h - j + y, !(pixelRow & (1ULL << (31 - n))));
+        drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
     }
   }
@@ -886,7 +886,7 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
       //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
       uint8_t px = (f->read() * 2126 / 10000) + (f->read() * 7152 / 10000) + (f->read() * 722 / 10000);
       //drawPixel(i + x, h - j + y, gammaLUT[px]);
-	  drawPixel(i + x, h - j + y, px>>5);
+	  drawPixel(i + x, h - 1 - j + y, px>>5);
 	  //drawPixel(i + x, h - j + y, px/32);
     }
     if (padding) {
@@ -931,7 +931,7 @@ int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHead
       if (invert)
         pixelRow = ~pixelRow;
       for (int n = 0; n < 32; n++) {
-        drawPixel((i * 32) + n + x, h - j + y, !(pixelRow & (1ULL << (31 - n))));
+        drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
     }
     if (paddingBits) {
@@ -943,7 +943,7 @@ int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHead
       if (invert)
         pixelRow = ~pixelRow;
       for (int n = 0; n < paddingBits; n++) {
-        drawPixel((i * 32) + n + x, h - j + y, !(pixelRow & (1ULL << (31 - n))));
+        drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
     }
   }
@@ -992,7 +992,7 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
       //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
       uint8_t px = (r * 2126 / 10000) + (g * 7152 / 10000) + (b * 722 / 10000);
       //drawPixel(i + x, h - j + y, gammaLUT[px]);
-    drawPixel(i + x, h - j + y, px>>5);
+    drawPixel(i + x, h - 1 - j + y, px>>5);
     //drawPixel(i + x, h - j + y, px/32);
     }
     if (padding) {
