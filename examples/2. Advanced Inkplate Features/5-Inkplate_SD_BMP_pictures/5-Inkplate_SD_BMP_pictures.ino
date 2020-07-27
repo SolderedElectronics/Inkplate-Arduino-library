@@ -41,7 +41,7 @@ void setup() {
     //certain softwares.
     if(!display.drawBitmapFromSD("image1.bmp", 0, 0)) {
       //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-      //REMEMBER! You can only use Windows Bitmap file with color depth of 1 or 24 bits with no compression! 
+      //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression! 
       display.println("Image open error");
       display.display();
     }

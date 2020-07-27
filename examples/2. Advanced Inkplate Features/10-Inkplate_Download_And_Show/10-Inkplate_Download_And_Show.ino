@@ -51,7 +51,7 @@ void setup() {
   //Photo taken by: Roberto Fernandez
   if(!display.drawBitmapFromWeb("https://varipass.org/neowise_mono.bmp", 0, 0, true)) {
     //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-    //REMEMBER! You can only use Windows Bitmap file with color depth of 1 or 24 bits with no compression! 
+    //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression! 
     display.println("Image open error");
     display.display();
   }
@@ -75,7 +75,7 @@ void setup() {
     if (len > 0) {
       if(!display.drawBitmapFromWeb(http.getStreamPtr(), 0, 0, len)) {
         //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-        //REMEMBER! You can only use Windows Bitmap file with color depth of 1 or 24 bits with no compression! 
+        //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression! 
         display.println("Image open error");
         display.display();
       }

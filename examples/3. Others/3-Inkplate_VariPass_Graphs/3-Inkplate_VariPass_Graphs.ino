@@ -60,8 +60,6 @@ void setup() {
   //  eink   - Should be set to true to generate a monochrome 1 bit bitmap better suitable for Inkplate.
   // For more detailed explanation and more parameters, please visit the docs page: https://varipass.org/docs/ 
   if(!display.drawBitmapFromWeb("https://api.varipass.org/?action=sgraph&id=kbg3eQfA&width=400&height=300&eink=true", 200, 150)) {
-    //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-    //REMEMBER! You can only use Windows Bitmap file with color depth of 1 or 24 bits with no compression! 
     display.println("Image open error");
     display.partialUpdate();
   }
