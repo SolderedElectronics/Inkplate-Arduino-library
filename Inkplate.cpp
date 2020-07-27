@@ -334,9 +334,9 @@ int Inkplate::drawBitmapFromSD(SdFile* p, int x, int y, bool invert) {
 	if(sdCardOk == 0) return 0;
 	struct bitmapHeader bmpHeader;
 	readBmpHeaderSd(p, &bmpHeader);
-	if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 || !(bmpHeader.color == 1 || bmpHeader.color == 24)) return 0;
+	if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 || !(bmpHeader.color == 1 || bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24)) return 0;
 
-	if ((bmpHeader.color == 24 || bmpHeader.color == 32) && getDisplayMode() != INKPLATE_3BIT) {
+	if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24 || bmpHeader.color == 32) && getDisplayMode() != INKPLATE_3BIT) {
 		selectDisplayMode(INKPLATE_3BIT);
 	}
 
@@ -345,6 +345,8 @@ int Inkplate::drawBitmapFromSD(SdFile* p, int x, int y, bool invert) {
 	}
   
 	if (bmpHeader.color == 1) drawMonochromeBitmapSd(p, bmpHeader, x, y, invert);
+  if (bmpHeader.color == 4) drawGrayscaleBitmap4Sd(p, bmpHeader, x, y, invert);
+  if (bmpHeader.color == 8) drawGrayscaleBitmap8Sd(p, bmpHeader, x, y, invert);
 	if (bmpHeader.color == 24) drawGrayscaleBitmap24Sd(p, bmpHeader, x, y, invert);
 
   return 1;
@@ -869,6 +871,61 @@ int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, i
         pixelRow = ~pixelRow;
       for (int n = 0; n < paddingBits; n++) {
         drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
+      }
+    }
+  }
+  f->close();
+  return 1;
+}
+
+int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert) {
+  int w = bmpHeader.width;
+  int h = bmpHeader.height;
+  uint8_t paddingBits = w % 8;
+  w /= 8;
+
+  f->seekSet(bmpHeader.startRAW);
+  int i, j;
+  for (j = 0; j < h; j++) {
+    for (i = 0; i < w; i++) {
+      uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
+      if (invert)
+        pixelRow = ~pixelRow;
+      for (int n = 0; n < 8; n++) {
+        drawPixel((i * 8) + n + x, h - 1 - j + y, (pixelRow & (0xFULL << (28 - n*4))) >> (28 - n*4 + 1));
+      }
+    }
+    if (paddingBits) {
+      uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
+      if (invert)
+        pixelRow = ~pixelRow;
+      for (int n = 0; n < paddingBits; n++) {
+        drawPixel((i * 8) + n + x, h - 1 - j + y, ((pixelRow & (0xFULL << (28 - n*4)))) >> (28 - n*4 + 1));
+      }
+    }
+  }
+  f->close();
+  return 1;
+}
+
+int Inkplate::drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert) {
+  int w = bmpHeader.width;
+  int h = bmpHeader.height;
+  char padding = w % 4;
+  f->seekSet(bmpHeader.startRAW);
+  int i, j;
+  for (j = 0; j < h; j++) {
+    for (i = 0; i < w; i++) {
+      uint8_t px = 0;
+      if (invert)
+        px = 255-f->read();
+      else
+        px = f->read();
+      drawPixel(i + x, h - 1 - j + y, px>>5);
+    }
+    if (padding) {
+      for (int p = 0; p < 4-padding; p++) {
+        f->read();
       }
     }
   }
