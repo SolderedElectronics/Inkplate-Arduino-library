@@ -49,7 +49,9 @@ void setup() {
 
   //Draw the first image from web.
   //Monochromatic bitmap with 1 bit depth. Images like this load quickest.
-  //The parameter set to true at the end may be used to swap the black and white channels.
+  //NOTE: Both drawBitmapFromWeb methods allow for an optional fourth "invert" parameter. Setting this parameter to true
+  //will flip all colors on the image, making black white and white black. This may be necessary when exporting bitmaps from
+  //certain softwares.
   //Photo taken by: Roberto Fernandez
   if(!display.drawBitmapFromWeb("https://varipass.org/neowise_mono.bmp", 0, 0, true)) {
     //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.

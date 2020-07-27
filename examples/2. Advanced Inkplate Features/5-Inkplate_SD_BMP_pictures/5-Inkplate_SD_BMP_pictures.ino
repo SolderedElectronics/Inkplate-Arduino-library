@@ -36,6 +36,9 @@ void setup() {
     display.partialUpdate();
 
     //If card is properly init, try to load image and display it on e-paper at position X=0, Y=0
+    //NOTE: Both drawBitmapFromSD methods allow for an optional fourth "invert" parameter. Setting this parameter to true
+    //will flip all colors on the image, making black white and white black. This may be necessary when exporting bitmaps from
+    //certain softwares.
     if(!display.drawBitmapFromSD("image1.bmp", 0, 0)) {
       //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
       //REMEMBER! You can only use Windows Bitmap file with color depth of 1 or 24 bits with no compression! 

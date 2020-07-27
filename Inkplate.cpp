@@ -330,7 +330,7 @@ uint8_t Inkplate::getDisplayMode() {
   return _displayMode;
 }
 
-int Inkplate::drawBitmapFromSD(SdFile* p, int x, int y) {
+int Inkplate::drawBitmapFromSD(SdFile* p, int x, int y, bool invert) {
 	if(sdCardOk == 0) return 0;
 	struct bitmapHeader bmpHeader;
 	readBmpHeaderSd(p, &bmpHeader);
@@ -344,17 +344,17 @@ int Inkplate::drawBitmapFromSD(SdFile* p, int x, int y) {
 		selectDisplayMode(INKPLATE_1BIT);
 	}
   
-	if (bmpHeader.color == 1) drawMonochromeBitmapSd(p, bmpHeader, x, y);
-	if (bmpHeader.color == 24) drawGrayscaleBitmap24Sd(p, bmpHeader, x, y);
+	if (bmpHeader.color == 1) drawMonochromeBitmapSd(p, bmpHeader, x, y, invert);
+	if (bmpHeader.color == 24) drawGrayscaleBitmap24Sd(p, bmpHeader, x, y, invert);
 
   return 1;
 }
 
-int Inkplate::drawBitmapFromSD(char* fileName, int x, int y) {
+int Inkplate::drawBitmapFromSD(char* fileName, int x, int y, bool invert) {
   if(sdCardOk == 0) return 0;
   SdFile dat;
   if (dat.open(fileName, O_RDONLY)) {
-    return drawBitmapFromSD(&dat, x, y);
+    return drawBitmapFromSD(&dat, x, y, invert);
   } else {
     return 0;
   }
@@ -844,7 +844,7 @@ void Inkplate::readBmpHeaderWeb(WiFiClient *_s, struct bitmapHeader *_h) {
   return;
 }
 
-int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y) {
+int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert) {
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   uint8_t paddingBits = w % 32;
@@ -855,12 +855,16 @@ int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, i
   for (j = 0; j < h; j++) {
     for (i = 0; i < w; i++) {
       uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
+      if (invert)
+        pixelRow = ~pixelRow;
       for (int n = 0; n < 32; n++) {
         drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
     }
     if (paddingBits) {
       uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
+      if (invert)
+        pixelRow = ~pixelRow;
       for (int n = 0; n < paddingBits; n++) {
         drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
@@ -870,7 +874,7 @@ int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, i
   return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y) {
+int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert) {
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   char padding = w % 4;
@@ -884,10 +888,14 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
       //display.drawPixel(i + x, h - j + y, (uint8_t)(px*7));
 
       //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
-      uint8_t px = (f->read() * 2126 / 10000) + (f->read() * 7152 / 10000) + (f->read() * 722 / 10000);
+      uint8_t px = 0;
+      if (invert)
+        px = ((255-f->read()) * 2126 / 10000) + ((255-f->read()) * 7152 / 10000) + ((255-f->read()) * 722 / 10000);
+      else
+        px = (f->read() * 2126 / 10000) + (f->read() * 7152 / 10000) + (f->read() * 722 / 10000);
       //drawPixel(i + x, h - j + y, gammaLUT[px]);
-	  drawPixel(i + x, h - 1 - j + y, px>>5);
-	  //drawPixel(i + x, h - j + y, px/32);
+	    drawPixel(i + x, h - 1 - j + y, px>>5);
+	    //drawPixel(i + x, h - j + y, px/32);
     }
     if (padding) {
       for (int p = 0; p < padding; p++) {
@@ -976,24 +984,20 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
   int i, j, k = bmpHeader.startRAW - 34;
   for (j = 0; j < h; j++) {
     for (i = 0; i < w; i++) {
-      uint8_t r = buf[k++];
-      uint8_t g = buf[k++];
-      uint8_t b = buf[k++];
-      if (invert) {
-        r = 255 - r;
-        g = 255 - g;
-        b = 255 - b;
-      }
       //This is the proper way of converting True Color (24 Bit RGB) bitmap file into grayscale, but it takes waaay too much time (full size picture takes about 17s to decode!)
       //float px = (0.2126 * (readByteFromSD(&file) / 255.0)) + (0.7152 * (readByteFromSD(&file) / 255.0)) + (0.0722 * (readByteFromSD(&file) / 255.0));
       //px = pow(px, 1.5);
       //display.drawPixel(i + x, h - j + y, (uint8_t)(px*7));
 
       //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
-      uint8_t px = (r * 2126 / 10000) + (g * 7152 / 10000) + (b * 722 / 10000);
+      uint8_t px = 0;
+      if (invert)
+        px = ((255-buf[k++]) * 2126 / 10000) + ((255-buf[k++]) * 7152 / 10000) + ((255-buf[k++]) * 722 / 10000);
+      else
+        px = (buf[k++] * 2126 / 10000) + (buf[k++] * 7152 / 10000) + (buf[k++] * 722 / 10000);
       //drawPixel(i + x, h - j + y, gammaLUT[px]);
-    drawPixel(i + x, h - 1 - j + y, px>>5);
-    //drawPixel(i + x, h - j + y, px/32);
+      drawPixel(i + x, h - 1 - j + y, px>>5);
+      //drawPixel(i + x, h - j + y, px/32);
     }
     if (padding) {
       for (int p = 0; p < padding; p++) {
