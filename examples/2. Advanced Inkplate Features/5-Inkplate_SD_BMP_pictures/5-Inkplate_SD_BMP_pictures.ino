@@ -9,7 +9,7 @@
    To work with SD card on Inkplate, you will need to add one extra library.
    Download and install it from here: https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
    
-   You can open .bmp files that have color depth of 1 bit (monochrome bitmap) and 
+   You can open .bmp files that have color depth of 1 bit (monochrome bitmap), 4 bit, 8 bit and 
    24 bit AND have resoluton smaller than 800x600 or otherwise it won't fit on screen.
 
    This example will show you how you can read .bmp files (pictures) from SD card and 
@@ -36,9 +36,12 @@ void setup() {
     display.partialUpdate();
 
     //If card is properly init, try to load image and display it on e-paper at position X=0, Y=0
+    //NOTE: Both drawBitmapFromSD methods allow for an optional fourth "invert" parameter. Setting this parameter to true
+    //will flip all colors on the image, making black white and white black. This may be necessary when exporting bitmaps from
+    //certain softwares.
     if(!display.drawBitmapFromSD("image1.bmp", 0, 0)) {
       //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-      //REMEMBER! You can only use Windows Bitmap file with color depth of 1 or 24 bits with no compression! 
+      //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression! 
       display.println("Image open error");
       display.display();
     }

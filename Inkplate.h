@@ -131,8 +131,8 @@ class Inkplate : public Adafruit_GFX {
     void einkOn(void);
     void selectDisplayMode(uint8_t _mode);
 	uint8_t getDisplayMode();
-	int drawBitmapFromSD(SdFile* p, int x, int y);
-	int drawBitmapFromSD(char* fileName, int x, int y);
+	int drawBitmapFromSD(SdFile* p, int x, int y, bool invert = false);
+	int drawBitmapFromSD(char* fileName, int x, int y, bool invert = false);
     int drawBitmapFromWeb(WiFiClient* s, int x, int y, int len, bool invert = false);
     int drawBitmapFromWeb(char* url, int x, int y, bool invert = false);
 	int sdCardInit();
@@ -168,9 +168,13 @@ class Inkplate : public Adafruit_GFX {
 	uint16_t read16(uint8_t* c);
 	void readBmpHeaderSd(SdFile *_f, struct bitmapHeader *_h);
     void readBmpHeaderWeb(WiFiClient *_s, struct bitmapHeader *_h);
-	int drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y);
-	int drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y);
+	int drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
+    int drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
+    int drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
+	int drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
     int drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
+    int drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
+    int drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
     int drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
 	void precalculateGamma(uint8_t* c, float gamma);
 };
