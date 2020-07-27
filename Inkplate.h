@@ -15,6 +15,7 @@
 #include "SPI.h"
 #include "Adafruit_MCP23017.h"
 #include "SdFat.h"
+#include "WiFiClient.h"
 
 #define INKPLATE_GAMMA		1.45
 #define E_INK_WIDTH 		800
@@ -132,6 +133,8 @@ class Inkplate : public Adafruit_GFX {
 	uint8_t getDisplayMode();
 	int drawBitmapFromSD(SdFile* p, int x, int y);
 	int drawBitmapFromSD(char* fileName, int x, int y);
+    int drawBitmapFromWeb(WiFiClient* s, int x, int y, int len, bool invert = false);
+    int drawBitmapFromWeb(char* url, int x, int y, bool invert = false);
 	int sdCardInit();
 	SdFat getSdFat();
 	SPIClass getSPI();
@@ -163,9 +166,12 @@ class Inkplate : public Adafruit_GFX {
     void display3b();
 	uint32_t read32(uint8_t* c);
 	uint16_t read16(uint8_t* c);
-	void readBmpHeader(SdFile *_f, struct bitmapHeader *_h);
-	int drawMonochromeBitmap(SdFile *f, struct bitmapHeader bmpHeader, int x, int y);
-	int drawGrayscaleBitmap24(SdFile *f, struct bitmapHeader bmpHeader, int x, int y);
+	void readBmpHeaderSd(SdFile *_f, struct bitmapHeader *_h);
+    void readBmpHeaderWeb(WiFiClient *_s, struct bitmapHeader *_h);
+	int drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y);
+	int drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y);
+    int drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
+    int drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
 	void precalculateGamma(uint8_t* c, float gamma);
 };
 
