@@ -1,18 +1,14 @@
 /*
    10_Inkplate_Download_And_Show example for e-radionica Inkplate6
-   For this example you will need a micro USB cable, Inkplate6, an SD card and an
-   available WiFi connection.
+   For this example you will need a micro USB cable, Inkplate6, and an available WiFi connection.
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it: 
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
-
-   To work with SD card on Inkplate, you will need to add one extra library.
-   Download and install it from here: https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
    
-   You can open .bmp files that have color depth of 1 bit (monochrome bitmap) and 
+   You can open .bmp files that have color depth of 1 bit (monochrome bitmap), 4 bit, 8 bit and 
    24 bit AND have resoluton smaller than 800x600 or otherwise it won't fit on screen.
 
-   This example will show you how you can download a .bmp file (picture) from the web to the SD card and 
+   This example will show you how you can download a .bmp file (picture) from the web and 
    display that image on e-paper display.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
