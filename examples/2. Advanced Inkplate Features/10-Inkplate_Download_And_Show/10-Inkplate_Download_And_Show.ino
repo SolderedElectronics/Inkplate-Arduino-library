@@ -24,7 +24,6 @@
 #include "HTTPClient.h"             //Include library for HTTPClient
 #include "WiFi.h"                   //Include library for WiFi
 Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
-SdFile file;                        //Create SdFile object used for accessing files on SD card
 
 const char* ssid     = "YourWiFiSSID"; //Your WiFi SSID
 const char* password = "YourPass";     //Your WiFi password
@@ -68,7 +67,7 @@ void setup() {
   //Set parameters to speed up the download process.
   http.getStream().setNoDelay(true);
   http.getStream().setTimeout(1);
-  
+
   //Photo taken by: Roberto Fernandez
   http.begin("https://varipass.org/neowise.bmp");
 

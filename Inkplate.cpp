@@ -363,9 +363,9 @@ int Inkplate::drawBitmapFromSD(char* fileName, int x, int y, bool invert) {
 int Inkplate::drawBitmapFromWeb(WiFiClient* s, int x, int y, int len, bool invert) {
   struct bitmapHeader bmpHeader;
   readBmpHeaderWeb(s, &bmpHeader);
-  if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 || !(bmpHeader.color == 1 || bmpHeader.color == 24)) return 0;
+  if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 || !(bmpHeader.color == 1 || bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24)) return 0;
 
-  if ((bmpHeader.color == 24 || bmpHeader.color == 32) && getDisplayMode() != INKPLATE_3BIT) {
+  if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24 || bmpHeader.color == 32) && getDisplayMode() != INKPLATE_3BIT) {
     selectDisplayMode(INKPLATE_3BIT);
   }
 
@@ -374,6 +374,8 @@ int Inkplate::drawBitmapFromWeb(WiFiClient* s, int x, int y, int len, bool inver
   }
   
   if (bmpHeader.color == 1) drawMonochromeBitmapWeb(s, bmpHeader, x, y, len, invert);
+  if (bmpHeader.color == 4) drawGrayscaleBitmap4Web(s, bmpHeader, x, y, len, invert);
+  if (bmpHeader.color == 8) drawGrayscaleBitmap8Web(s, bmpHeader, x, y, len, invert);
   if (bmpHeader.color == 24) drawGrayscaleBitmap24Web(s, bmpHeader, x, y, len, invert);
 
   return 1;
@@ -931,11 +933,7 @@ int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHead
   int i, j, k = bmpHeader.startRAW - 34;
   for (j = 0; j < h; j++) {
     for (i = 0; i < w; i++) {
-      uint8_t a = buf[k++];
-      uint8_t b = buf[k++];
-      uint8_t c = buf[k++];
-      uint8_t d = buf[k++];
-      uint32_t pixelRow = a << 24 | b << 16 | c << 8 | d;
+      uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
       if (invert)
         pixelRow = ~pixelRow;
       for (int n = 0; n < 32; n++) {
@@ -943,15 +941,99 @@ int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHead
       }
     }
     if (paddingBits) {
-      uint8_t a = buf[k++];
-      uint8_t b = buf[k++];
-      uint8_t c = buf[k++];
-      uint8_t d = buf[k++];
-      uint32_t pixelRow = a << 24 | b << 16 | c << 8 | d;
+      uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
       if (invert)
         pixelRow = ~pixelRow;
       for (int n = 0; n < paddingBits; n++) {
         drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
+      }
+    }
+  }
+
+  free(buf);
+
+  return 1;
+}
+
+int Inkplate::drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert) {
+  int w = bmpHeader.width;
+  int h = bmpHeader.height;
+  char paddingBits = w % 8;
+  int total = len - 34;
+  w /= 8;
+
+  uint8_t* buf = (uint8_t*) ps_malloc(total);
+  if (buf == NULL)
+    return 0;
+
+  int pnt = 0;
+  while (pnt < total) {
+    int toread = s->available();
+    if (toread > 0) {
+      int read = s->read(buf+pnt, toread);
+      if (read > 0)
+        pnt += read;
+    }
+  }
+
+  int i, j, k = bmpHeader.startRAW - 34;
+  for (j = 0; j < h; j++) {
+    for (i = 0; i < w; i++) {
+      uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
+      if (invert)
+        pixelRow = ~pixelRow;
+      for (int n = 0; n < 8; n++) {
+        drawPixel((i * 8) + n + x, h - 1 - j + y, (pixelRow & (0xFULL << (28 - n*4))) >> (28 - n*4 + 1));
+      }
+    }
+    if (paddingBits) {
+      uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
+      if (invert)
+        pixelRow = ~pixelRow;
+      for (int n = 0; n < paddingBits; n++) {
+        drawPixel((i * 8) + n + x, h - 1 - j + y, ((pixelRow & (0xFULL << (28 - n*4)))) >> (28 - n*4 + 1));
+      }
+    }
+  }
+
+  free(buf);
+
+  return 1;
+}
+
+int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert) {
+  int w = bmpHeader.width;
+  int h = bmpHeader.height;
+  char padding = w % 4;
+  int total = len - 34;
+
+  uint8_t* buf = (uint8_t*) ps_malloc(total);
+  if (buf == NULL)
+    return 0;
+
+  int pnt = 0;
+  while (pnt < total) {
+    int toread = s->available();
+    if (toread > 0) {
+      int read = s->read(buf+pnt, toread);
+      if (read > 0)
+        pnt += read;
+    }
+  }
+
+  int i, j, k = bmpHeader.startRAW - 34;
+  for (j = 0; j < h; j++) {
+    for (i = 0; i < w; i++) {
+      uint8_t px = 0;
+      if (invert)
+        px = 255-buf[k++];
+      else
+        px = buf[k++];
+      drawPixel(i + x, h - 1 - j + y, px>>5);
+    }
+    if (padding) {
+      for (int p = 0; p < 4-padding; p++) {
+        k++;
       }
     }
   }

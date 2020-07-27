@@ -171,6 +171,8 @@ class Inkplate : public Adafruit_GFX {
 	int drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
 	int drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
     int drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
+    int drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
+    int drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
     int drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
 	void precalculateGamma(uint8_t* c, float gamma);
 };
