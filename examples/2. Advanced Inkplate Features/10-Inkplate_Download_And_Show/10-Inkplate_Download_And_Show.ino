@@ -21,6 +21,7 @@
 */
 
 #include "Inkplate.h"               //Include Inkplate library to the sketch
+#include "HTTPClient.h"             //Include library for HTTPClient
 #include "WiFi.h"                   //Include library for WiFi
 Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
 SdFile file;                        //Create SdFile object used for accessing files on SD card
@@ -61,16 +62,41 @@ void setup() {
   }
   display.display();
 
-  //Draw the second image from web.
+  //Draw the second image from web, this time using a HTTPClient to fetch the response manually.
   //Full color 24 bit images are large and take a long time to load, will take around 20 secs.
+  HTTPClient http;
+  //Set parameters to speed up the download process.
+  http.getStream().setNoDelay(true);
+  http.getStream().setTimeout(1);
+  
   //Photo taken by: Roberto Fernandez
-  if(!display.drawBitmapFromWeb("https://varipass.org/neowise.bmp", 0, 0)) {
-    //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-    //REMEMBER! You can only use Windows Bitmap file with color depth of 1 or 24 bits with no compression! 
-    display.println("Image open error");
+  http.begin("https://varipass.org/neowise.bmp");
+
+  //Check response code.
+  int httpCode = http.GET();
+  if (httpCode == 200) {
+    //Get the response length and make sure it is not 0.
+    int32_t len = http.getSize();
+    if (len > 0) {
+      if(!display.drawBitmapFromWeb(http.getStreamPtr(), 0, 0, len)) {
+        //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
+        //REMEMBER! You can only use Windows Bitmap file with color depth of 1 or 24 bits with no compression! 
+        display.println("Image open error");
+        display.display();
+      }
+      display.display();
+    }
+    else {
+      display.println("Invalid response length");
+      display.display();
+    }
+  }
+  else {
+    display.println("HTTP error");
     display.display();
   }
-  display.display();
+  
+  http.end();
 
   WiFi.mode(WIFI_OFF);
 }
