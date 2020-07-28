@@ -134,8 +134,8 @@ example #G(003)*
 drawBitmap:		#H(XXX,YYY,"PATH")*
 XXX - X position of bitmap on display
 YYY - Y position of bitmap on display
-PATH - path to bitmap image on SD card
-example: #H(000,000,"/bitmapName.bmp")*
+PATH - path to bitmap image on SD card, where path should be sent as HEX Char (same as for print command). Example: /image1.bmp should be sent as 2f696d616765312e626d70
+example: #H(000,000,"2f696d616765312e626d70")* where 2f696d616765312e626d70 means /image1.bmp
 response:		#H(1)* - Image loaded succesfully
 			#H(0)* - Image load failed
 			#H(-1)* - SD Card Init Error
