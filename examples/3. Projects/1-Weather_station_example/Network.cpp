@@ -1,4 +1,5 @@
-// defines in header for readability
+// Network.cpp contains various functions and classes that enable Weather station
+// They have been declared in seperate file to increase readability
 #include "Network.h"
 
 #include <WiFi.h>
@@ -14,7 +15,7 @@ WiFiMulti WiFiMulti;
 // Static Json from ArduinoJson library
 StaticJsonDocument<6000> doc;
 
-// declared week days
+// Declared week days
 char weekDays[8][8] = {
     "Mon",
     "Tue",
@@ -27,91 +28,89 @@ char weekDays[8][8] = {
 
 void Network::begin(char *city)
 {
-    // initiating wifi, like in BasicHttpClient example
+    // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
     WiFiMulti.addAP(ssid, pass);
 
     Serial.print(F("Waiting for WiFi to connect..."));
     while ((WiFiMulti.run() != WL_CONNECTED))
     {
+        // Printing a dot to Serial monitor every second while waiting to connect
         Serial.print(F("."));
         delay(1000);
     }
     Serial.println(F(" connected"));
 
-    // find internet time
+    // Find internet time
     setTime();
 
-    // search for given cities woeid
+    // Search for given cities woeid
     findCity(city);
+
+    // reduce power by making WiFi module sleep
+    WiFi.setSleep(1);
 }
 
-// gets time from ntp server
+// Gets time from ntp server
 void Network::getTime(char *timeStr)
 {
-    // get seconds since 1.1.1970.
+    // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr);
 
-    // used to store time
+    // Used to store time
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
 
-    //copies time string into timeStr
+    //Copies time string into timeStr
     strncpy(timeStr, asctime(&timeinfo) + 11, 5);
 
-    // setting time string timezone
+    // Setting time string timezone
     int hr = 10 * timeStr[0] + timeStr[1] + timeZone;
 
-    // better defined modulo, in case timezone makes hours to go below 0
+    // Better defined modulo, in case timezone makes hours to go below 0
     hr = (hr % 24 + 24) % 24;
 
-    // adding time to '0' char makes it into whatever time char, for both digits
+    // Adding time to '0' char makes it into whatever time char, for both digits
     timeStr[0] = hr / 10 + '0';
     timeStr[1] = hr % 10 + '0';
 }
 
 void formatTemp(char *str, float temp)
 {
-    // built in function for float to char* conversion
+    // Built in function for float to char* conversion
     dtostrf(temp, 2, 0, str);
-
-    // concat "C" to end
-    strcat(str, "C");
 }
 
 void formatWind(char *str, float wind)
 {
-    // built in function for float to char* conversion
-    dtostrf(14.0, 2, 0, str);
-
-    // concat m/s to end
-    strcat(str, "m/s");
+    // Built in function for float to char* conversion
+    dtostrf(wind, 2, 0, str);
 }
 
 void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr)
 {
-    // return if wifi isn't connected
+    // Return if wifi isn't connected
     if (WiFi.status() != WL_CONNECTED)
         return;
 
-    // wake up if sleeping and save inital state
+    // Wake up if sleeping and save inital state
     bool sleep = WiFi.getSleep();
     WiFi.setSleep(false);
 
-    // http object used to make get request
+    // Http object used to make get request
     HTTPClient http;
 
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1);
 
-    // add woeid to api call
+    // Add woeid to api call
     char url[256];
     sprintf(url, "https://www.metaweather.com/api/location/%d/", location);
 
-    // initiate http
+    // Initiate http
     http.begin(url);
 
-    // actually do request
+    // Actually do request
     int httpCode = http.GET();
     if (httpCode == 200)
     {
@@ -119,9 +118,10 @@ void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
 
         if (len > 0)
         {
-            // try parsing JSON object
+            // Try parsing JSON object
             DeserializationError error = deserializeJson(doc, http.getStream());
 
+            // If an error happens print it to Serial monitor
             if (error)
             {
                 Serial.print(F("deserializeJson() failed: "));
@@ -129,8 +129,8 @@ void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
             }
             else
             {
-                // set all data got from internet using formatTemp and formatWind defined above
-                // this part relies heavily on ArduinoJson library
+                // Set all data got from internet using formatTemp and formatWind defined above
+                // This part relies heavily on ArduinoJson library
                 formatTemp(currentTemp, doc["consolidated_weather"][0][F("the_temp")].as<float>());
                 formatWind(currentWind, doc["consolidated_weather"][0][F("wind_speed")].as<float>());
 
@@ -146,23 +146,24 @@ void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
         }
     }
 
-    // clear document and end http
+    // Clear document and end http
     doc.clear();
     http.end();
 
-    // return to initial state
+    // Return to initial state
     WiFi.setSleep(sleep);
 }
 
 void Network::setTime()
 {
-    // used for setting correct time
+    // Used for setting correct time
     configTime(0, 0, "pool.ntp.org", "time.nist.gov");
 
     Serial.print(F("Waiting for NTP time sync: "));
     time_t nowSecs = time(nullptr);
     while (nowSecs < 8 * 3600 * 2)
     {
+        // Print a dot every half a second while time is not set
         delay(500);
         Serial.print(F("."));
         yield();
@@ -171,7 +172,7 @@ void Network::setTime()
 
     Serial.println();
 
-    // used to store time info
+    // Used to store time info
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
 
@@ -181,17 +182,17 @@ void Network::setTime()
 
 void Network::getDays(char *day, char *day1, char *day2, char *day3)
 {
-    // seconds since 1.1.1970.
+    // Seconds since 1.1.1970.
     time_t nowSecs = time(nullptr);
 
-    // find weekday
+    // Find weekday
 
-    // we get seconds since 1970, add 3600 (1 hour) times the time zone and add 3 to
+    // We get seconds since 1970, add 3600 (1 hour) times the time zone and add 3 to
     // make monday the first day of the week, as 1.1.1970. was a thursday
     // finally do mod 7 to insure our day is within [0, 6]
     int dayWeek = ((long)((nowSecs + 3600L * timeZone) / 86400L) + 3) % 7;
 
-    // copy day data to globals in main file
+    // Copy day data to globals in main file
     strncpy(day, weekDays[dayWeek], 3);
     strncpy(day1, weekDays[(dayWeek + 1) % 7], 3);
     strncpy(day2, weekDays[(dayWeek + 2) % 7], 3);
@@ -200,29 +201,29 @@ void Network::getDays(char *day, char *day1, char *day2, char *day3)
 
 void Network::findCity(char *city)
 {
-    // if not connected to wifi, return
+    // If not connected to wifi, return
     if (WiFi.status() != WL_CONNECTED)
         return;
 
-    // wake wifi module and save initial state
+    // Wake wifi module and save initial state
     bool sleep = WiFi.getSleep();
     WiFi.setSleep(false);
 
-    // http object
+    // Http object
     HTTPClient http;
 
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1);
 
-    // add query param to url
+    // Add query param to url
     char url[256];
     strcpy(url, "https://www.metaweather.com/api/location/search/?query=");
     strcat(url, city);
 
-    // initiate http
+    // Initiate http
     http.begin(url);
 
-    // do get request
+    // Do get request
     int httpCode = http.GET();
     if (httpCode == 200) // 200: http success
     {
@@ -230,9 +231,10 @@ void Network::findCity(char *city)
 
         if (len > 0)
         {
-            // try to parse JSON object
+            // Try to parse JSON object
             DeserializationError error = deserializeJson(doc, http.getStream());
 
+            // Print error to Serial monitor if one exsists
             if (error)
             {
                 Serial.print(F("deserializeJson() failed: "));
@@ -240,14 +242,14 @@ void Network::findCity(char *city)
             }
             else
             {
-                // empty list means no matches
+                // Empty list means no matches
                 if (doc.size() == 0)
                 {
                     Serial.println(F("City not found"));
                 }
                 else
                 {
-                    // woeid id used for fetching data later on
+                    // Woeid id used for fetching data later on
                     location = doc[0]["woeid"].as<int>();
 
                     Serial.println(F("Found city, woied:"));
@@ -257,10 +259,10 @@ void Network::findCity(char *city)
         }
     }
 
-    // clear document and end http
+    // Clear document and end http
     doc.clear();
     http.end();
 
-    // return module to initial state
+    // Return module to initial state
     WiFi.setSleep(sleep);
 };

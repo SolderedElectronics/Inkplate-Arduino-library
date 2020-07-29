@@ -1,3 +1,12 @@
+# -----------
+# Simple python script to
+# create icon header files for Inkplate 6
+# Arduino sketches
+#
+# Takes all files from /icons and saves them to /binary_icons
+#
+# -----------
+
 from PIL import Image
 import os, sys
 
