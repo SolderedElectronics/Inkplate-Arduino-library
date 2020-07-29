@@ -221,16 +221,20 @@ void drawTemps()
     display.setTextColor(WHITE, BLACK);
 
     display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, 300 + textMargin + 70);
-    display.println(days[0]);
+    display.print(days[0]);
+    display.println(F("C"));
 
     display.setCursor(2 * rectSpacing + 1 * rectWidth + textMargin, 300 + textMargin + 70);
-    display.println(days[1]);
+    display.print(days[1]);
+    display.println(F("C"));
 
     display.setCursor(3 * rectSpacing + 2 * rectWidth + textMargin, 300 + textMargin + 70);
-    display.println(days[2]);
+    display.print(days[2]);
+    display.println(F("C"));
 
     display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, 300 + textMargin + 70);
-    display.println(days[3]);
+    display.print(days[3]);
+    display.println(F("C"));
 
     // Drawing temperature values into black rectangles
     display.setFont(&Roboto_Light_48);
