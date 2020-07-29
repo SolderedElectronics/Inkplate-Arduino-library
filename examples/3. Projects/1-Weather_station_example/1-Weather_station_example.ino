@@ -221,20 +221,16 @@ void drawTemps()
     display.setTextColor(WHITE, BLACK);
 
     display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, 300 + textMargin + 70);
-    display.print(days[0]);
-    display.println(F("C"));
+    display.println(days[0]);
 
     display.setCursor(2 * rectSpacing + 1 * rectWidth + textMargin, 300 + textMargin + 70);
-    display.print(days[1]);
-    display.println(F("C"));
+    display.println(days[1]);
 
     display.setCursor(3 * rectSpacing + 2 * rectWidth + textMargin, 300 + textMargin + 70);
-    display.print(days[2]);
-    display.println(F("C"));
+    display.println(days[2]);
 
     display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, 300 + textMargin + 70);
-    display.print(days[3]);
-    display.println(F("C"));
+    display.println(days[3]);
 
     // Drawing temperature values into black rectangles
     display.setFont(&Roboto_Light_48);
@@ -242,16 +238,20 @@ void drawTemps()
     display.setTextColor(WHITE, BLACK);
 
     display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, 300 + textMargin + 160);
-    display.println(temps[0]);
+    display.print(temps[0]);
+    display.println(F("C"));
 
     display.setCursor(2 * rectSpacing + 1 * rectWidth + textMargin, 300 + textMargin + 160);
-    display.println(temps[1]);
+    display.print(temps[1]);
+    display.println(F("C"));
 
     display.setCursor(3 * rectSpacing + 2 * rectWidth + textMargin, 300 + textMargin + 160);
-    display.println(temps[2]);
+    display.print(temps[2]);
+    display.println(F("C"));
 
     display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, 300 + textMargin + 160);
-    display.println(temps[3]);
+    display.print(temps[3]);
+    display.println(F("C"));
 }
 
 // Current weather drawing function
