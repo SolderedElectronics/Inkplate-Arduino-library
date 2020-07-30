@@ -11,6 +11,7 @@
    
    You can open .bmp files that have color depth of 1 bit (monochrome bitmap), 4 bit, 8 bit and 
    24 bit AND have resoluton smaller than 800x600 or otherwise it won't fit on screen.
+   Format your SD card in standard FAT fileformat.
 
    This example will show you how you can read .bmp files (pictures) from SD card and 
    display that image on e-paper display.
