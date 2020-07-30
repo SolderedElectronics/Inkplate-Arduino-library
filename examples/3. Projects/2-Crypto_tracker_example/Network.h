@@ -22,7 +22,7 @@ public:
     // Functions we can access in main file
     void begin();
     void getTime(char *timeStr);
-    bool getData(float *data);
+    bool getData(double *data);
 
 private:
     // Functions called from within our class

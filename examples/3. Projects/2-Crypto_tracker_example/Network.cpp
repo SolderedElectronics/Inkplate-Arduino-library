@@ -5,6 +5,8 @@
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
 
+#include "Inkplate.h"
+
 // Must be installed for this example to work
 #include <ArduinoJson.h>
 
@@ -12,6 +14,8 @@
 extern char *ssid;
 extern char *pass;
 extern char *currency;
+
+extern Inkplate display;
 
 // WiFiMulti object declaration
 WiFiMulti WiFiMulti;
@@ -61,7 +65,7 @@ void Network::getTime(char *timeStr)
     timeStr[8] = hr % 10 + '0';
 }
 
-bool Network::getData(float *data)
+bool Network::getData(double *data)
 {
     bool f = 0;
 
@@ -111,10 +115,22 @@ bool Network::getData(float *data)
             // Save our data to data pointer from main file
             for (int i = 0; i < 31; ++i)
             {
-                data[i] = doc["prices"][92 - 31 + i][1].as<float>();
+                data[i] = doc["prices"][92 - 31 + i][1].as<double>();
                 //Serial.println(data[i]);
             }
+            f = 0;
         }
+    }
+    else if (httpCode == 404)
+    {
+        // Coin id not found
+        display.clearDisplay();
+        display.setCursor(50, 230);
+        display.setTextSize(2);
+        display.println(F("Your entered coin does not exsist!"));
+        display.display();
+        while (1)
+            ;
     }
     else
     {
