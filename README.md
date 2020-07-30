@@ -64,11 +64,15 @@ Inkplate 6 has two options for powering it. First one is obvious - USB port at s
 ### Micropython
 If you are looking for micropython support, it is still work in progress - we are new with it! :) When it's ready, we will let you know with new project update. 
 
+### License
+This repo uses the source code from Adafruit libraries: [MCP23018](https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library), [Adafruit GFX](https://github.com/adafruit/Adafruit-GFX-Library).
+
 ### Where to buy & other
 Inkplate 6 is available for purchase via:
 - [e-radionica.com](https://e-radionica.com/en/inkplate.html)
 - [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6)
 - [Mouser](https://hr.mouser.com/Search/Refine?Keyword=inkplate)
+- [Sparkfun](https://www.sparkfun.com/search/results?term=inkplate)
 
 Inkplate 6 is open-source. If you are looking for hardware design of the board, check the [Hardware repo](https://github.com/e-radionicacom/Inkplate-6-hardware). You will find 3D printable [enclosure](https://github.com/e-radionicacom/Inkplate-6-hardware/tree/master/3D%20printable%20case) there, as well as [detailed dimensions](https://github.com/e-radionicacom/Inkplate-6-hardware/tree/master/Technical%20drawings). In this repo you will find code for driving the ED060SC7 e-paper display used by Inkplate.
 
