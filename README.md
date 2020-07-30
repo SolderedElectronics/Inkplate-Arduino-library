@@ -65,7 +65,7 @@ Inkplate 6 has two options for powering it. First one is obvious - USB port at s
 If you are looking for micropython support, it is still work in progress - we are new with it! :) When it's ready, we will let you know with new project update. 
 
 ### License
-This repo uses the source code from Adafruit libraries: [MCP23018](https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library), [Adafruit GFX](https://github.com/adafruit/Adafruit-GFX-Library).
+This repo uses the source code from Adafruit libraries: [MCP23017](https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library), [Adafruit GFX](https://github.com/adafruit/Adafruit-GFX-Library).
 
 ### Where to buy & other
 Inkplate 6 is available for purchase via:
