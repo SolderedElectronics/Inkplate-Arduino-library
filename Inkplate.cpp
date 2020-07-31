@@ -97,14 +97,14 @@ void Inkplate::begin(void)
 //Draw function, used by Adafruit GFX.
 void Inkplate::drawPixel(int16_t x0, int16_t y0, uint16_t color)
 {
-  if (x0 > 799 || y0 > 599 || x0 < 0 || y0 < 0)
+  if (x0 > _width - 1 || y0 > _height - 1 || x0 < 0 || y0 < 0)
     return;
 
   switch (_rotation)
   {
   case 1:
     _swap_int16_t(x0, y0);
-    x0 = _width - x0 - 1;
+    x0 = _height - x0 - 1;
     break;
   case 2:
     x0 = _width - x0 - 1;
@@ -273,7 +273,7 @@ void Inkplate::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, i
 void Inkplate::setRotation(uint8_t r)
 {
   _rotation = r % 4;
-  switch (rotation)
+  switch (_rotation)
   {
   case 0:
     _width = E_INK_WIDTH;
