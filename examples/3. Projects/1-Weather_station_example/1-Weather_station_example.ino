@@ -24,11 +24,11 @@
 
 int timeZone = 2; //Update your timezone here. 2 means UTC+2
 
-char city[128] = "SHENZHEN"; //Enter city name you wish to get forecast for
+char city[128] = "ZAGREB"; //Enter city name you wish to get forecast for
 
 // Change to your WiFi SSID and password
-char *ssid = "e-radionica.com";
-char *pass = "crodusino";
+char *ssid = "";
+char *pass = "";
 
 #define DELAY_MS 15000 //Delay between screen refreshes goes here
 
