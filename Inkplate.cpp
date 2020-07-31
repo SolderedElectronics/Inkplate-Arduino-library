@@ -10,14 +10,17 @@ SdFat sd(&spi2);
 
 //--------------------------STATIC FUNCTIONS--------------------------------------------
 //For precise 1uS timing, we cannot use delayMicroseconds(), instead we use ASM with nop command. Initial Z value will be difeerent on different CPU speeds! (for 240 MHz CPU Clock z = 25)
-void usleep1() {
+void usleep1()
+{
   int z = 25;
-  while (z--) {
+  while (z--)
+  {
     asm("NOP");
   };
 }
 
-void ckvClock() {
+void ckvClock()
+{
   CKV_CLEAR;
   usleep1();
   CKV_SET;
@@ -25,12 +28,15 @@ void ckvClock() {
 }
 
 //--------------------------USER FUNCTIONS--------------------------------------------
-Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT) {
+Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT)
+{
   _displayMode = _mode;
 }
 
-void Inkplate::begin(void) {
-  if(_beginDone == 1) return;
+void Inkplate::begin(void)
+{
+  if (_beginDone == 1)
+    return;
   Wire.begin();
   mcp.begin(0);
   mcp.pinMode(VCOM, OUTPUT);
@@ -58,21 +64,23 @@ void Inkplate::begin(void) {
   pinMode(25, OUTPUT);
   pinMode(26, OUTPUT);
   pinMode(27, OUTPUT); //D7
-  
+
   //TOUCHPAD PINS
   mcp.pinMode(10, INPUT);
   mcp.pinMode(11, INPUT);
   mcp.pinMode(12, INPUT);
-  
+
   //Battery voltage Switch MOSFET
   mcp.pinMode(9, OUTPUT);
-  
-  D_memory_new = (uint8_t*)ps_malloc(600 * 100);
-  _partial = (uint8_t*)ps_malloc(600*100);
-  _pBuffer = (uint8_t*) ps_malloc(120000);
-  D_memory4Bit = (uint8_t*)ps_malloc(240000);
-  if (D_memory_new == NULL || _partial == NULL || _pBuffer == NULL || D_memory4Bit == NULL) {
-    do {
+
+  D_memory_new = (uint8_t *)ps_malloc(600 * 100);
+  _partial = (uint8_t *)ps_malloc(600 * 100);
+  _pBuffer = (uint8_t *)ps_malloc(120000);
+  D_memory4Bit = (uint8_t *)ps_malloc(240000);
+  if (D_memory_new == NULL || _partial == NULL || _pBuffer == NULL || D_memory4Bit == NULL)
+  {
+    do
+    {
       delay(100);
     } while (true);
   }
@@ -80,37 +88,43 @@ void Inkplate::begin(void) {
   memset(_partial, 0, 60000);
   memset(_pBuffer, 0, 120000);
   memset(D_memory4Bit, 255, 240000);
-  
+
   //precalculateGamma(gammaLUT, INKPLATE_GAMMA);
   precalculateGamma(gammaLUT, 1);
   _beginDone = 1;
 }
 
 //Draw function, used by Adafruit GFX.
-void Inkplate::drawPixel(int16_t x0, int16_t y0, uint16_t color) {
-  if (x0 > 799 || y0 > 599 || x0 < 0 || y0 < 0) return;
+void Inkplate::drawPixel(int16_t x0, int16_t y0, uint16_t color)
+{
+  if (x0 > 799 || y0 > 599 || x0 < 0 || y0 < 0)
+    return;
 
-  switch (_rotation) {
-    case 1:
-      _swap_int16_t(x0, y0);
-      x0 = _width - x0 - 1;
-      break;
-    case 2:
-      x0 = _width - x0 - 1;
-      y0 = _height - y0 - 1;
-      break;
-    case 3:
-      _swap_int16_t(x0, y0);
-      y0 = _width - y0 - 1;
-      break;
+  switch (_rotation)
+  {
+  case 1:
+    _swap_int16_t(x0, y0);
+    x0 = _width - x0 - 1;
+    break;
+  case 2:
+    x0 = _width - x0 - 1;
+    y0 = _height - y0 - 1;
+    break;
+  case 3:
+    _swap_int16_t(x0, y0);
+    y0 = _width - y0 - 1;
+    break;
   }
 
-  if (_displayMode == 0) {
+  if (_displayMode == 0)
+  {
     int x = x0 / 8;
     int x_sub = x0 % 8;
     uint8_t temp = *(_partial + 100 * y0 + x); //D_memory_new[99 * y0 + x];
     *(_partial + 100 * y0 + x) = ~pixelMaskLUT[x_sub] & temp | (color ? pixelMaskLUT[x_sub] : 0);
-  } else {
+  }
+  else
+  {
     color &= 7;
     int x = x0 / 2;
     int x_sub = x0 % 2;
@@ -120,61 +134,75 @@ void Inkplate::drawPixel(int16_t x0, int16_t y0, uint16_t color) {
   }
 }
 
-void Inkplate::clearDisplay() {
+void Inkplate::clearDisplay()
+{
   //Clear 1 bit per pixel display buffer
-  if (_displayMode == 0) memset(_partial, 0, 60000);
+  if (_displayMode == 0)
+    memset(_partial, 0, 60000);
 
   //Clear 3 bit per pixel display buffer
-  if (_displayMode == 1) memset(D_memory4Bit, 255, 240000);
+  if (_displayMode == 1)
+    memset(D_memory4Bit, 255, 240000);
 }
 
 //Function that displays content from RAM to screen
-void Inkplate::display() {
-  if (_displayMode == 0) display1b();
-  if (_displayMode == 1) display3b();
+void Inkplate::display()
+{
+  if (_displayMode == 0)
+    display1b();
+  if (_displayMode == 1)
+    display3b();
 }
 
-void Inkplate::partialUpdate() {
-  if(_displayMode == 1) return;
-  if(_blockPartial == 1) display1b();
+void Inkplate::partialUpdate()
+{
+  if (_displayMode == 1)
+    return;
+  if (_blockPartial == 1)
+    display1b();
   uint16_t _pos = 59999;
   uint32_t _send;
   uint8_t data;
   uint8_t diffw, diffb;
   uint32_t n = 119999;
   uint8_t dram;
-  
-   for (int i = 0; i < 600; i++) {
-      for (int j = 0; j < 100; j++) {
-		diffw = ((*(D_memory_new+_pos))^(*(_partial+_pos)))&(~(*(_partial+_pos)));
-		diffb = ((*(D_memory_new+_pos))^(*(_partial+_pos)))&((*(_partial+_pos)));
-		_pos--;
-		*(_pBuffer+n) = LUTW[diffw>>4] & (LUTB[diffb>>4]);
-		n--;
-		*(_pBuffer+n) = LUTW[diffw&0x0F] & (LUTB[diffb&0x0F]);
-		n--;
-	  }
-   }	  
-   
+
+  for (int i = 0; i < 600; i++)
+  {
+    for (int j = 0; j < 100; j++)
+    {
+      diffw = ((*(D_memory_new + _pos)) ^ (*(_partial + _pos))) & (~(*(_partial + _pos)));
+      diffb = ((*(D_memory_new + _pos)) ^ (*(_partial + _pos))) & ((*(_partial + _pos)));
+      _pos--;
+      *(_pBuffer + n) = LUTW[diffw >> 4] & (LUTB[diffb >> 4]);
+      n--;
+      *(_pBuffer + n) = LUTW[diffw & 0x0F] & (LUTB[diffb & 0x0F]);
+      n--;
+    }
+  }
+
   einkOn();
-  for (int k = 0; k < 5; k++) {
+  for (int k = 0; k < 5; k++)
+  {
     vscan_start();
     n = 119999;
-    for (int i = 0; i < 600; i++) {
-		data = *(_pBuffer + n);
+    for (int i = 0; i < 600; i++)
+    {
+      data = *(_pBuffer + n);
+      _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+      hscan_start(_send);
+      n--;
+      for (int j = 0; j < 199; j++)
+      {
+        data = *(_pBuffer + n);
         _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-		hscan_start(_send);
-		n--;
-      for (int j = 0; j < 199; j++) {
-		data = *(_pBuffer + n);
-        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-          GPIO.out_w1ts = (_send) | CL;
-          GPIO.out_w1tc = DATA | CL;
-		n--;
+        GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1tc = DATA | CL;
+        n--;
       }
-	  GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1ts = (_send) | CL;
       GPIO.out_w1tc = DATA | CL;
-	  vscan_end();
+      vscan_end();
     }
     delayMicroseconds(230);
   }
@@ -214,53 +242,63 @@ void Inkplate::partialUpdate() {
   vscan_start();
   einkOff();
   einkOff();
-  for(int i = 0; i<60000; i++) {
-	  *(D_memory_new+i) &= *(_partial+i);
-	  *(D_memory_new+i) |= (*(_partial+i));
+  for (int i = 0; i < 60000; i++)
+  {
+    *(D_memory_new + i) &= *(_partial + i);
+    *(D_memory_new + i) |= (*(_partial + i));
   }
 }
 
-void Inkplate::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char* _p, int16_t _w, int16_t _h) {
-  if (_displayMode != INKPLATE_3BIT) return;
-  uint8_t  _rem = _w % 2;
+void Inkplate::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)
+{
+  if (_displayMode != INKPLATE_3BIT)
+    return;
+  uint8_t _rem = _w % 2;
   int i, j;
   int xSize = _w / 2 + _rem;
 
-  for (i = 0; i < _h; i++) {
-    for (j = 0; j < xSize - 1; j++) {
-      drawPixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4)>>1);
-      drawPixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff)>>1);
+  for (i = 0; i < _h; i++)
+  {
+    for (j = 0; j < xSize - 1; j++)
+    {
+      drawPixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4) >> 1);
+      drawPixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
     }
-    drawPixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4)>>1);
-    if (_rem == 0) drawPixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff)>>1);
+    drawPixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4) >> 1);
+    if (_rem == 0)
+      drawPixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
   }
 }
 
-void Inkplate::setRotation(uint8_t r) {
+void Inkplate::setRotation(uint8_t r)
+{
   _rotation = r % 4;
-  switch (rotation) {
-    case 0:
-      _width  = E_INK_WIDTH;
-      _height = E_INK_HEIGHT;
-      break;
-    case 1:
-      _width  = E_INK_HEIGHT;
-      _height = E_INK_WIDTH;
-      break;
-    case 2:
-      _width  = E_INK_WIDTH;
-      _height = E_INK_HEIGHT;
-      break;
-    case 3:
-      _width  = E_INK_HEIGHT;
-      _height = E_INK_WIDTH;
-      break;
+  switch (rotation)
+  {
+  case 0:
+    _width = E_INK_WIDTH;
+    _height = E_INK_HEIGHT;
+    break;
+  case 1:
+    _width = E_INK_HEIGHT;
+    _height = E_INK_WIDTH;
+    break;
+  case 2:
+    _width = E_INK_WIDTH;
+    _height = E_INK_HEIGHT;
+    break;
+  case 3:
+    _width = E_INK_HEIGHT;
+    _height = E_INK_WIDTH;
+    break;
   }
 }
 
 //Turn off epapewr supply and put all digital IO pins in high Z state
-void Inkplate::einkOff() {
-  if(_panelOn == 0) return;
+void Inkplate::einkOff()
+{
+  if (_panelOn == 0)
+    return;
   _panelOn = 0;
   GMOD_CLEAR;
   OE_CLEAR;
@@ -276,8 +314,10 @@ void Inkplate::einkOff() {
 }
 
 //Turn on supply for epaper display (TPS65186) [+15 VDC, -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
-void Inkplate::einkOn() {
-  if(_panelOn == 1) return;
+void Inkplate::einkOn()
+{
+  if (_panelOn == 1)
+    return;
   _panelOn = 1;
   pinsAsOutputs();
   WAKEUP_SET;
@@ -288,103 +328,130 @@ void Inkplate::einkOn() {
   Wire.write(0x01);
   Wire.write(B00111111);
   Wire.endTransmission();
-  
+
   delay(40);
-  
+
   Wire.beginTransmission(0x48);
   Wire.write(0x0D);
   Wire.write(B10000000);
   Wire.endTransmission();
-  
+
   delay(2);
-  
+
   Wire.beginTransmission(0x48);
   Wire.write(0x00);
   Wire.endTransmission();
-  
+
   Wire.requestFrom(0x48, 1);
   _temperature = Wire.read();
 
-  LE_CLEAR; //setpin_le(FALSE);
-  OE_CLEAR; //setpin_oe(FALSE);
-  CL_CLEAR;   //setpin_cl(FALSE);
+  LE_CLEAR;  //setpin_le(FALSE);
+  OE_CLEAR;  //setpin_oe(FALSE);
+  CL_CLEAR;  //setpin_cl(FALSE);
   SPH_SET;   //setpin_sph(FALSE);
-  GMOD_SET;   //setpin_gmode(FALSE);
+  GMOD_SET;  //setpin_gmode(FALSE);
   SPV_SET;   //setpin_spv(FALSE);
-  CKV_CLEAR;   //setpin_ckv(FALSE);
+  CKV_CLEAR; //setpin_ckv(FALSE);
   OE_SET;
 }
 
-void Inkplate::selectDisplayMode(uint8_t _mode) {
-	if(_mode != _displayMode) {
-		_displayMode = _mode&1;
-		memset(D_memory_new, 0, 60000);
-		memset(_partial, 0, 60000);
-		memset(_pBuffer, 0, 120000);
-		memset(D_memory4Bit, 255, 240000);
-		_blockPartial = 1;
-	}
+void Inkplate::selectDisplayMode(uint8_t _mode)
+{
+  if (_mode != _displayMode)
+  {
+    _displayMode = _mode & 1;
+    memset(D_memory_new, 0, 60000);
+    memset(_partial, 0, 60000);
+    memset(_pBuffer, 0, 120000);
+    memset(D_memory4Bit, 255, 240000);
+    _blockPartial = 1;
+  }
 }
 
-uint8_t Inkplate::getDisplayMode() {
+uint8_t Inkplate::getDisplayMode()
+{
   return _displayMode;
 }
 
-int Inkplate::drawBitmapFromSD(SdFile* p, int x, int y, bool invert) {
-	if(sdCardOk == 0) return 0;
-	struct bitmapHeader bmpHeader;
-	readBmpHeaderSd(p, &bmpHeader);
-	if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 || !(bmpHeader.color == 1 || bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24)) return 0;
+int Inkplate::drawBitmapFromSD(SdFile *p, int x, int y, bool invert)
+{
+  if (sdCardOk == 0)
+    return 0;
+  struct bitmapHeader bmpHeader;
+  readBmpHeaderSd(p, &bmpHeader);
+  if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 || !(bmpHeader.color == 1 || bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24))
+    return 0;
 
-	if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24 || bmpHeader.color == 32) && getDisplayMode() != INKPLATE_3BIT) {
-		selectDisplayMode(INKPLATE_3BIT);
-	}
+  if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24 || bmpHeader.color == 32) && getDisplayMode() != INKPLATE_3BIT)
+  {
+    selectDisplayMode(INKPLATE_3BIT);
+  }
 
-	if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT) {
-		selectDisplayMode(INKPLATE_1BIT);
-	}
-  
-	if (bmpHeader.color == 1) drawMonochromeBitmapSd(p, bmpHeader, x, y, invert);
-  if (bmpHeader.color == 4) drawGrayscaleBitmap4Sd(p, bmpHeader, x, y, invert);
-  if (bmpHeader.color == 8) drawGrayscaleBitmap8Sd(p, bmpHeader, x, y, invert);
-	if (bmpHeader.color == 24) drawGrayscaleBitmap24Sd(p, bmpHeader, x, y, invert);
+  if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT)
+  {
+    selectDisplayMode(INKPLATE_1BIT);
+  }
+
+  if (bmpHeader.color == 1)
+    drawMonochromeBitmapSd(p, bmpHeader, x, y, invert);
+  if (bmpHeader.color == 4)
+    drawGrayscaleBitmap4Sd(p, bmpHeader, x, y, invert);
+  if (bmpHeader.color == 8)
+    drawGrayscaleBitmap8Sd(p, bmpHeader, x, y, invert);
+  if (bmpHeader.color == 24)
+    drawGrayscaleBitmap24Sd(p, bmpHeader, x, y, invert);
 
   return 1;
 }
 
-int Inkplate::drawBitmapFromSD(char* fileName, int x, int y, bool invert) {
-  if(sdCardOk == 0) return 0;
+int Inkplate::drawBitmapFromSD(char *fileName, int x, int y, bool invert)
+{
+  if (sdCardOk == 0)
+    return 0;
   SdFile dat;
-  if (dat.open(fileName, O_RDONLY)) {
+  if (dat.open(fileName, O_RDONLY))
+  {
     return drawBitmapFromSD(&dat, x, y, invert);
-  } else {
+  }
+  else
+  {
     return 0;
   }
 }
 
-int Inkplate::drawBitmapFromWeb(WiFiClient* s, int x, int y, int len, bool invert) {
+int Inkplate::drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool invert)
+{
   struct bitmapHeader bmpHeader;
   readBmpHeaderWeb(s, &bmpHeader);
-  if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 || !(bmpHeader.color == 1 || bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24)) return 0;
+  if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 || !(bmpHeader.color == 1 || bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24))
+    return 0;
 
-  if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24 || bmpHeader.color == 32) && getDisplayMode() != INKPLATE_3BIT) {
+  if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 24 || bmpHeader.color == 32) && getDisplayMode() != INKPLATE_3BIT)
+  {
     selectDisplayMode(INKPLATE_3BIT);
   }
 
-  if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT) {
+  if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT)
+  {
     selectDisplayMode(INKPLATE_1BIT);
   }
-  
-  if (bmpHeader.color == 1) drawMonochromeBitmapWeb(s, bmpHeader, x, y, len, invert);
-  if (bmpHeader.color == 4) drawGrayscaleBitmap4Web(s, bmpHeader, x, y, len, invert);
-  if (bmpHeader.color == 8) drawGrayscaleBitmap8Web(s, bmpHeader, x, y, len, invert);
-  if (bmpHeader.color == 24) drawGrayscaleBitmap24Web(s, bmpHeader, x, y, len, invert);
+
+  if (bmpHeader.color == 1)
+    drawMonochromeBitmapWeb(s, bmpHeader, x, y, len, invert);
+  if (bmpHeader.color == 4)
+    drawGrayscaleBitmap4Web(s, bmpHeader, x, y, len, invert);
+  if (bmpHeader.color == 8)
+    drawGrayscaleBitmap8Web(s, bmpHeader, x, y, len, invert);
+  if (bmpHeader.color == 24)
+    drawGrayscaleBitmap24Web(s, bmpHeader, x, y, len, invert);
 
   return 1;
 }
 
-int Inkplate::drawBitmapFromWeb(char* url, int x, int y, bool invert) {
-  if (WiFi.status() != WL_CONNECTED) return 0;
+int Inkplate::drawBitmapFromWeb(char *url, int x, int y, bool invert)
+{
+  if (WiFi.status() != WL_CONNECTED)
+    return 0;
   int ret = 0;
 
   bool sleep = WiFi.getSleep();
@@ -396,46 +463,101 @@ int Inkplate::drawBitmapFromWeb(char* url, int x, int y, bool invert) {
   http.begin(url);
 
   int httpCode = http.GET();
-  if (httpCode == 200) {
+  if (httpCode == 200)
+  {
     int32_t len = http.getSize();
-    if (len > 0) {
-      WiFiClient * dat = http.getStreamPtr();
+    if (len > 0)
+    {
+      WiFiClient *dat = http.getStreamPtr();
       ret = drawBitmapFromWeb(dat, x, y, len, invert);
     }
   }
-  
+
   http.end();
   WiFi.setSleep(sleep);
   return ret;
 }
 
-int Inkplate::sdCardInit() {
-	spi2.begin(14, 12, 13, 15);
-	sdCardOk = sd.begin(15, SD_SCK_MHZ(25));
-	return sdCardOk;
+void Inkplate::drawThickLine(int x1, int y1, int x2, int y2, int color, float thickness)
+{
+  float deg = atan2f((float)(y2 - y1), (float)(x2 - x1));
+
+  float l1 = tan(deg);
+  float k1 = (float)y1 - l1 * (float)x1;
+
+  float degShift = (l1 < 0 ? M_PI_2 : -M_PI_2);
+
+  int x3 = (int)round((float)x1 + thickness / 2.0 * cos(deg + degShift));
+  int y3 = (int)round((float)y1 + thickness / 2.0 * sin(deg + degShift));
+
+  int x4 = (int)round((float)x2 + thickness / 2.0 * cos(deg + degShift));
+  int y4 = (int)round((float)y2 + thickness / 2.0 * sin(deg + degShift));
+
+  x1 = (int)round((float)x1 + thickness / 2.0 * cos(deg - degShift));
+  y1 = (int)round((float)y1 + thickness / 2.0 * sin(deg - degShift));
+
+  x2 = (int)round((float)x2 + thickness / 2.0 * cos(deg - degShift));
+  y2 = (int)round((float)y2 + thickness / 2.0 * sin(deg - degShift));
+
+  fillTriangle(x1, y1, x2, y2, x3, y3, color);
+  fillTriangle(x2, y2, x4, y4, x3, y3, color);
 }
 
-SdFat Inkplate::getSdFat() {
-	return sd;
+void Inkplate::drawGradientLine(int x1, int y1, int x2, int y2, int color1, int color2, float thickness)
+{
+  int n = color2 - color1;
+
+  float px = (float)(x2 - x1) / (float)n;
+  float py = (float)(y2 - y1) / (float)n;
+
+  for (int i = 0; i < n; ++i)
+  {
+    if (abs(thickness + 1) < 0.1)
+      drawLine((int)((float)x1 + (float)i * px), (int)((float)y1 + (float)i * py),
+               (int)((float)x1 + (float)(i + 1) * px), (int)((float)y1 + (float)(i + 1) * py),
+               color1 + i);
+    else
+      drawThickLine((int)((float)x1 + (float)i * px), (int)((float)y1 + (float)i * py),
+                    (int)((float)x1 + (float)(i + 1) * px), (int)((float)y1 + (float)(i + 1) * py),
+                    color1 + i,
+                    thickness);
+  }
 }
 
-SPIClass Inkplate::getSPI() {
-	return spi2;
+int Inkplate::sdCardInit()
+{
+  spi2.begin(14, 12, 13, 15);
+  sdCardOk = sd.begin(15, SD_SCK_MHZ(25));
+  return sdCardOk;
 }
 
-uint8_t Inkplate::getPanelState() {
+SdFat Inkplate::getSdFat()
+{
+  return sd;
+}
+
+SPIClass Inkplate::getSPI()
+{
+  return spi2;
+}
+
+uint8_t Inkplate::getPanelState()
+{
   return _panelOn;
 }
 
-uint8_t Inkplate::readTouchpad(uint8_t _pad) {
-  return mcp.digitalRead((_pad&3)+10);
+uint8_t Inkplate::readTouchpad(uint8_t _pad)
+{
+  return mcp.digitalRead((_pad & 3) + 10);
 }
 
-int8_t Inkplate::readTemperature() {
+int8_t Inkplate::readTemperature()
+{
   return _temperature;
 }
 
-double Inkplate::readBattery() {
+double Inkplate::readBattery()
+{
   mcp.digitalWrite(9, HIGH);
   delay(1);
   int adc = analogRead(35);
@@ -486,14 +608,15 @@ void Inkplate::vscan_write()
 void Inkplate::hscan_start(uint32_t _d)
 {
   SPH_CLEAR;
-      GPIO.out_w1ts = (_d) | CL;
-	  GPIO.out_w1tc = DATA | CL;
+  GPIO.out_w1ts = (_d) | CL;
+  GPIO.out_w1tc = DATA | CL;
   //CL_SET;
   //CL_CLEAR;
   SPH_SET;
 }
 
-void Inkplate::vscan_end() {
+void Inkplate::vscan_end()
+{
   CKV_CLEAR;
   LE_SET;
   LE_CLEAR;
@@ -502,7 +625,8 @@ void Inkplate::vscan_end() {
 }
 
 //Clear screan before new screen update using waveform
-void Inkplate::clean() {
+void Inkplate::clean()
+{
   einkOn();
   int m = 0;
   cleanFast(0, 1); //white
@@ -519,26 +643,37 @@ void Inkplate::clean() {
 }
 
 //Clears content from epaper diplay as fast as ESP32 can.
-void Inkplate::cleanFast(uint8_t c, uint8_t rep) {
+void Inkplate::cleanFast(uint8_t c, uint8_t rep)
+{
   einkOn();
   uint8_t data;
-  if (c == 0) {
-    data = B10101010;     //White
-  } else if (c == 1) {
-    data = B01010101;     //Black
-  } else if (c == 2) {
-    data = B00000000;     //Discharge
-  } else if (c == 3) {
-	data = B11111111;	  //Skip
+  if (c == 0)
+  {
+    data = B10101010; //White
+  }
+  else if (c == 1)
+  {
+    data = B01010101; //Black
+  }
+  else if (c == 2)
+  {
+    data = B00000000; //Discharge
+  }
+  else if (c == 3)
+  {
+    data = B11111111; //Skip
   }
 
   uint32_t _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-  for (int i = 0; i < rep; i++) {
+  for (int i = 0; i < rep; i++)
+  {
     unsigned int x, y;
     vscan_start();
-    for (y = 0; y < 600; y++) {
-	  hscan_start(_send);
-      for (x = 0; x < 100; x++) {
+    for (y = 0; y < 600; y++)
+    {
+      hscan_start(_send);
+      for (x = 0; x < 100; x++)
+      {
         GPIO.out_w1ts = (_send) | CL;
         GPIO.out_w1tc = DATA | CL;
         GPIO.out_w1ts = (_send) | CL;
@@ -546,14 +681,15 @@ void Inkplate::cleanFast(uint8_t c, uint8_t rep) {
       }
       GPIO.out_w1ts = (_send) | CL;
       GPIO.out_w1tc = DATA | CL;
-	  vscan_end();
+      vscan_end();
     }
     delayMicroseconds(230);
   }
 }
 
-void Inkplate::cleanFast2(uint8_t c, uint8_t n, uint16_t d) {
-	/*
+void Inkplate::cleanFast2(uint8_t c, uint8_t n, uint16_t d)
+{
+  /*
   uint8_t data;
   if (c == 0) {
     data = B10101010;     //White
@@ -587,7 +723,8 @@ void Inkplate::cleanFast2(uint8_t c, uint8_t n, uint16_t d) {
   */
 }
 
-void Inkplate::pinsZstate() {
+void Inkplate::pinsZstate()
+{
   //CONTROL PINS
   pinMode(0, INPUT);
   pinMode(2, INPUT);
@@ -608,7 +745,8 @@ void Inkplate::pinsZstate() {
   pinMode(27, INPUT); //D7
 }
 
-void Inkplate::pinsAsOutputs() {
+void Inkplate::pinsAsOutputs()
+{
   //CONTROL PINS
   pinMode(0, OUTPUT);
   pinMode(2, OUTPUT);
@@ -631,10 +769,12 @@ void Inkplate::pinsAsOutputs() {
 
 //--------------------------PRIVATE FUNCTIONS--------------------------------------------
 //Display content from RAM to display (1 bit per pixel,. monochrome picture).
-void Inkplate::display1b() {
-  for(int i = 0; i<60000; i++) {
-	  *(D_memory_new+i) &= *(_partial+i);
-	  *(D_memory_new+i) |= (*(_partial+i));
+void Inkplate::display1b()
+{
+  for (int i = 0; i < 60000; i++)
+  {
+    *(D_memory_new + i) &= *(_partial + i);
+    *(D_memory_new + i) |= (*(_partial + i));
   }
   uint16_t _pos;
   uint32_t _send;
@@ -650,67 +790,72 @@ void Inkplate::display1b() {
   cleanFast(1, 12);
   cleanFast(2, 1);
   cleanFast(0, 11);
-  for (int k = 0; k < 5; k++) {
-	_pos = 59999;
+  for (int k = 0; k < 5; k++)
+  {
+    _pos = 59999;
     vscan_start();
-    for (int i = 0; i < 600; i++) {
-	  dram = *(D_memory_new + _pos);
-      data = LUTB[(dram >> 4)&0x0F];
+    for (int i = 0; i < 600; i++)
+    {
+      dram = *(D_memory_new + _pos);
+      data = LUTB[(dram >> 4) & 0x0F];
       _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-	  hscan_start(_send);
-	  data = LUTB[dram & 0x0F];
+      hscan_start(_send);
+      data = LUTB[dram & 0x0F];
       _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-	  GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1ts = (_send) | CL;
       GPIO.out_w1tc = DATA | CL;
-	  _pos--;
-      for (int j = 0; j < 99; j++) {
-		dram = *(D_memory_new + _pos);
-        data = LUTB[(dram >> 4)&0x0F];
+      _pos--;
+      for (int j = 0; j < 99; j++)
+      {
+        dram = *(D_memory_new + _pos);
+        data = LUTB[(dram >> 4) & 0x0F];
         _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-		GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1ts = (_send) | CL;
         GPIO.out_w1tc = DATA | CL;
         data = LUTB[dram & 0x0F];
         _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-		GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1ts = (_send) | CL;
         GPIO.out_w1tc = DATA | CL;
-		_pos--;
+        _pos--;
       }
-	  GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1ts = (_send) | CL;
       GPIO.out_w1tc = DATA | CL;
-	  vscan_end();
+      vscan_end();
     }
     delayMicroseconds(230);
   }
-  
-	_pos = 59999;
-    vscan_start();
-    for (int i = 0; i < 600; i++) {
-	  dram = *(D_memory_new + _pos);
-      data = LUT2[(dram >> 4)&0x0F];
+
+  _pos = 59999;
+  vscan_start();
+  for (int i = 0; i < 600; i++)
+  {
+    dram = *(D_memory_new + _pos);
+    data = LUT2[(dram >> 4) & 0x0F];
+    _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+    hscan_start(_send);
+    data = LUT2[dram & 0x0F];
+    _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
+    GPIO.out_w1ts = (_send) | CL;
+    GPIO.out_w1tc = DATA | CL;
+    _pos--;
+    for (int j = 0; j < 99; j++)
+    {
+      dram = *(D_memory_new + _pos);
+      data = LUT2[(dram >> 4) & 0x0F];
       _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-	  hscan_start(_send);
-	  data = LUT2[dram & 0x0F];
+      GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1tc = DATA | CL;
+      data = LUT2[dram & 0x0F];
       _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-	  GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1ts = (_send) | CL;
       GPIO.out_w1tc = DATA | CL;
-	  _pos--;
-      for (int j = 0; j < 99; j++) {
-		dram = *(D_memory_new + _pos);
-        data = LUT2[(dram >> 4)&0x0F];
-        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-		GPIO.out_w1ts = (_send) | CL;
-        GPIO.out_w1tc = DATA | CL;
-        data = LUT2[dram & 0x0F];
-        _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) | (((data & B11100000) >> 5) << 25);
-		GPIO.out_w1ts = (_send) | CL;
-        GPIO.out_w1tc = DATA | CL;
-		_pos--;
-      }
-	  GPIO.out_w1ts = (_send) | CL;
-      GPIO.out_w1tc = DATA | CL;
-	  vscan_end();
+      _pos--;
     }
-    delayMicroseconds(230);
+    GPIO.out_w1ts = (_send) | CL;
+    GPIO.out_w1tc = DATA | CL;
+    vscan_end();
+  }
+  delayMicroseconds(230);
   /*
   for (int k = 0; k < 1; k++) {
     vscan_start();
@@ -742,7 +887,8 @@ void Inkplate::display1b() {
 }
 
 //Display content from RAM to display (3 bit per pixel,. 8 level of grayscale, STILL IN PROGRESSS, we need correct wavefrom to get good picture, use it only for pictures not for GFX).
-void Inkplate::display3b() {
+void Inkplate::display3b()
+{
   einkOn();
   cleanFast(0, 1);
   cleanFast(1, 12);
@@ -752,58 +898,61 @@ void Inkplate::display3b() {
   cleanFast(1, 12);
   cleanFast(2, 1);
   cleanFast(0, 11);
-  
-  for (int k = 0; k < 7; k++) {
-      uint8_t *dp = D_memory4Bit + 239999;
-      uint32_t _send;
-      uint8_t pix1;
-      uint8_t pix2;
-      uint8_t pix3;
-      uint8_t pix4;
-	  uint8_t pixel;
-      uint8_t pixel2;
-	  
-      vscan_start();
-      for (int i = 0; i < 600; i++) {
-		pixel = 0B00000000;
+
+  for (int k = 0; k < 7; k++)
+  {
+    uint8_t *dp = D_memory4Bit + 239999;
+    uint32_t _send;
+    uint8_t pix1;
+    uint8_t pix2;
+    uint8_t pix3;
+    uint8_t pix4;
+    uint8_t pixel;
+    uint8_t pixel2;
+
+    vscan_start();
+    for (int i = 0; i < 600; i++)
+    {
+      pixel = 0B00000000;
+      pixel2 = 0B00000000;
+      pix1 = *(dp--);
+      pix2 = *(dp--);
+      pix3 = *(dp--);
+      pix4 = *(dp--);
+      pixel |= (waveform3Bit[pix1 & 0x07][k] << 6) | (waveform3Bit[(pix1 >> 4) & 0x07][k] << 4) | (waveform3Bit[pix2 & 0x07][k] << 2) | (waveform3Bit[(pix2 >> 4) & 0x07][k] << 0);
+      pixel2 |= (waveform3Bit[pix3 & 0x07][k] << 6) | (waveform3Bit[(pix3 >> 4) & 0x07][k] << 4) | (waveform3Bit[pix4 & 0x07][k] << 2) | (waveform3Bit[(pix4 >> 4) & 0x07][k] << 0);
+
+      _send = ((pixel & B00000011) << 4) | (((pixel & B00001100) >> 2) << 18) | (((pixel & B00010000) >> 4) << 23) | (((pixel & B11100000) >> 5) << 25);
+      hscan_start(_send);
+      _send = ((pixel2 & B00000011) << 4) | (((pixel2 & B00001100) >> 2) << 18) | (((pixel2 & B00010000) >> 4) << 23) | (((pixel2 & B11100000) >> 5) << 25);
+      GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1tc = DATA | CL;
+
+      for (int j = 0; j < 99; j++)
+      {
+
+        pixel = 0B00000000;
         pixel2 = 0B00000000;
-		pix1 = *(dp--);
+        pix1 = *(dp--);
         pix2 = *(dp--);
-		pix3 = *(dp--);
+        pix3 = *(dp--);
         pix4 = *(dp--);
-		pixel |= ( waveform3Bit[pix1&0x07][k] << 6) | ( waveform3Bit[(pix1>>4)&0x07][k] << 4) | ( waveform3Bit[pix2&0x07][k] << 2) | ( waveform3Bit[(pix2>>4)&0x07][k] << 0);
-		pixel2 |= ( waveform3Bit[pix3&0x07][k] << 6) | ( waveform3Bit[(pix3>>4)&0x07][k] << 4) | ( waveform3Bit[pix4&0x07][k] << 2) | ( waveform3Bit[(pix4>>4)&0x07][k] << 0);
+        pixel |= (waveform3Bit[pix1 & 0x07][k] << 6) | (waveform3Bit[(pix1 >> 4) & 0x07][k] << 4) | (waveform3Bit[pix2 & 0x07][k] << 2) | (waveform3Bit[(pix2 >> 4) & 0x07][k] << 0);
+        pixel2 |= (waveform3Bit[pix3 & 0x07][k] << 6) | (waveform3Bit[(pix3 >> 4) & 0x07][k] << 4) | (waveform3Bit[pix4 & 0x07][k] << 2) | (waveform3Bit[(pix4 >> 4) & 0x07][k] << 0);
 
         _send = ((pixel & B00000011) << 4) | (((pixel & B00001100) >> 2) << 18) | (((pixel & B00010000) >> 4) << 23) | (((pixel & B11100000) >> 5) << 25);
-		hscan_start(_send);
+        GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1tc = DATA | CL;
+
         _send = ((pixel2 & B00000011) << 4) | (((pixel2 & B00001100) >> 2) << 18) | (((pixel2 & B00010000) >> 4) << 23) | (((pixel2 & B11100000) >> 5) << 25);
         GPIO.out_w1ts = (_send) | CL;
         GPIO.out_w1tc = DATA | CL;
-		
-        for (int j = 0; j < 99; j++) {
-
-          pixel = 0B00000000;
-          pixel2 = 0B00000000;
-		  pix1 = *(dp--);
-          pix2 = *(dp--);
-		  pix3 = *(dp--);
-          pix4 = *(dp--);
-		  pixel |= ( waveform3Bit[pix1&0x07][k] << 6) | ( waveform3Bit[(pix1>>4)&0x07][k] << 4) | ( waveform3Bit[pix2&0x07][k] << 2) | ( waveform3Bit[(pix2>>4)&0x07][k] << 0);
-		  pixel2 |= ( waveform3Bit[pix3&0x07][k] << 6) | ( waveform3Bit[(pix3>>4)&0x07][k] << 4) | ( waveform3Bit[pix4&0x07][k] << 2) | ( waveform3Bit[(pix4>>4)&0x07][k] << 0);
-
-          _send = ((pixel & B00000011) << 4) | (((pixel & B00001100) >> 2) << 18) | (((pixel & B00010000) >> 4) << 23) | (((pixel & B11100000) >> 5) << 25);
-		  GPIO.out_w1ts = (_send) | CL;
-          GPIO.out_w1tc = DATA | CL;
-
-          _send = ((pixel2 & B00000011) << 4) | (((pixel2 & B00001100) >> 2) << 18) | (((pixel2 & B00010000) >> 4) << 23) | (((pixel2 & B11100000) >> 5) << 25);
-          GPIO.out_w1ts = (_send) | CL;
-          GPIO.out_w1tc = DATA | CL;
-        }
-	    GPIO.out_w1ts = (_send) | CL;
-        GPIO.out_w1tc = DATA | CL;
-	    vscan_end();
       }
-      delayMicroseconds(230);
+      GPIO.out_w1ts = (_send) | CL;
+      GPIO.out_w1tc = DATA | CL;
+      vscan_end();
+    }
+    delayMicroseconds(230);
   }
   cleanFast(2, 1);
   cleanFast(3, 1);
@@ -811,15 +960,18 @@ void Inkplate::display3b() {
   einkOff();
 }
 
-uint32_t Inkplate::read32(uint8_t* c) {
+uint32_t Inkplate::read32(uint8_t *c)
+{
   return (*(c) | (*(c + 1) << 8) | (*(c + 2) << 16) | (*(c + 3) << 24));
 }
 
-uint16_t Inkplate::read16(uint8_t* c) {
+uint16_t Inkplate::read16(uint8_t *c)
+{
   return (*(c) | (*(c + 1) << 8));
 }
 
-void Inkplate::readBmpHeaderSd(SdFile *_f, struct bitmapHeader *_h) {
+void Inkplate::readBmpHeaderSd(SdFile *_f, struct bitmapHeader *_h)
+{
   uint8_t header[100];
   _f->rewind();
   _f->read(header, 100);
@@ -834,7 +986,8 @@ void Inkplate::readBmpHeaderSd(SdFile *_f, struct bitmapHeader *_h) {
   return;
 }
 
-void Inkplate::readBmpHeaderWeb(WiFiClient *_s, struct bitmapHeader *_h) {
+void Inkplate::readBmpHeaderWeb(WiFiClient *_s, struct bitmapHeader *_h)
+{
   uint8_t header[34];
   _s->read(header, 34);
   _h->signature = read16(header + 0);
@@ -848,7 +1001,8 @@ void Inkplate::readBmpHeaderWeb(WiFiClient *_s, struct bitmapHeader *_h) {
   return;
 }
 
-int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert) {
+int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert)
+{
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   uint8_t paddingBits = w % 32;
@@ -856,20 +1010,25 @@ int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, i
 
   f->seekSet(bmpHeader.startRAW);
   int i, j;
-  for (j = 0; j < h; j++) {
-    for (i = 0; i < w; i++) {
+  for (j = 0; j < h; j++)
+  {
+    for (i = 0; i < w; i++)
+    {
       uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
       if (invert)
         pixelRow = ~pixelRow;
-      for (int n = 0; n < 32; n++) {
+      for (int n = 0; n < 32; n++)
+      {
         drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
     }
-    if (paddingBits) {
+    if (paddingBits)
+    {
       uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
       if (invert)
         pixelRow = ~pixelRow;
-      for (int n = 0; n < paddingBits; n++) {
+      for (int n = 0; n < paddingBits; n++)
+      {
         drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
     }
@@ -878,7 +1037,8 @@ int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, i
   return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert) {
+int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert)
+{
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   uint8_t paddingBits = w % 8;
@@ -886,21 +1046,26 @@ int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, i
 
   f->seekSet(bmpHeader.startRAW);
   int i, j;
-  for (j = 0; j < h; j++) {
-    for (i = 0; i < w; i++) {
+  for (j = 0; j < h; j++)
+  {
+    for (i = 0; i < w; i++)
+    {
       uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
       if (invert)
         pixelRow = ~pixelRow;
-      for (int n = 0; n < 8; n++) {
-        drawPixel((i * 8) + n + x, h - 1 - j + y, (pixelRow & (0xFULL << (28 - n*4))) >> (28 - n*4 + 1));
+      for (int n = 0; n < 8; n++)
+      {
+        drawPixel((i * 8) + n + x, h - 1 - j + y, (pixelRow & (0xFULL << (28 - n * 4))) >> (28 - n * 4 + 1));
       }
     }
-    if (paddingBits) {
+    if (paddingBits)
+    {
       uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
       if (invert)
         pixelRow = ~pixelRow;
-      for (int n = 0; n < paddingBits; n++) {
-        drawPixel((i * 8) + n + x, h - 1 - j + y, ((pixelRow & (0xFULL << (28 - n*4)))) >> (28 - n*4 + 1));
+      for (int n = 0; n < paddingBits; n++)
+      {
+        drawPixel((i * 8) + n + x, h - 1 - j + y, ((pixelRow & (0xFULL << (28 - n * 4)))) >> (28 - n * 4 + 1));
       }
     }
   }
@@ -908,23 +1073,28 @@ int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, i
   return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert) {
+int Inkplate::drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert)
+{
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   char padding = w % 4;
   f->seekSet(bmpHeader.startRAW);
   int i, j;
-  for (j = 0; j < h; j++) {
-    for (i = 0; i < w; i++) {
+  for (j = 0; j < h; j++)
+  {
+    for (i = 0; i < w; i++)
+    {
       uint8_t px = 0;
       if (invert)
-        px = 255-f->read();
+        px = 255 - f->read();
       else
         px = f->read();
-      drawPixel(i + x, h - 1 - j + y, px>>5);
+      drawPixel(i + x, h - 1 - j + y, px >> 5);
     }
-    if (padding) {
-      for (int p = 0; p < 4-padding; p++) {
+    if (padding)
+    {
+      for (int p = 0; p < 4 - padding; p++)
+      {
         f->read();
       }
     }
@@ -933,14 +1103,17 @@ int Inkplate::drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, i
   return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert) {
+int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert)
+{
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   char padding = w % 4;
   f->seekSet(bmpHeader.startRAW);
   int i, j;
-  for (j = 0; j < h; j++) {
-    for (i = 0; i < w; i++) {
+  for (j = 0; j < h; j++)
+  {
+    for (i = 0; i < w; i++)
+    {
       //This is the proper way of converting True Color (24 Bit RGB) bitmap file into grayscale, but it takes waaay too much time (full size picture takes about 17s to decode!)
       //float px = (0.2126 * (readByteFromSD(&file) / 255.0)) + (0.7152 * (readByteFromSD(&file) / 255.0)) + (0.0722 * (readByteFromSD(&file) / 255.0));
       //px = pow(px, 1.5);
@@ -949,15 +1122,17 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
       //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
       uint8_t px = 0;
       if (invert)
-        px = ((255-f->read()) * 2126 / 10000) + ((255-f->read()) * 7152 / 10000) + ((255-f->read()) * 722 / 10000);
+        px = ((255 - f->read()) * 2126 / 10000) + ((255 - f->read()) * 7152 / 10000) + ((255 - f->read()) * 722 / 10000);
       else
         px = (f->read() * 2126 / 10000) + (f->read() * 7152 / 10000) + (f->read() * 722 / 10000);
       //drawPixel(i + x, h - j + y, gammaLUT[px]);
-	    drawPixel(i + x, h - 1 - j + y, px>>5);
-	    //drawPixel(i + x, h - j + y, px/32);
+      drawPixel(i + x, h - 1 - j + y, px >> 5);
+      //drawPixel(i + x, h - j + y, px/32);
     }
-    if (padding) {
-      for (int p = 0; p < padding; p++) {
+    if (padding)
+    {
+      for (int p = 0; p < padding; p++)
+      {
         f->read();
       }
     }
@@ -966,42 +1141,50 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
   return 1;
 }
 
-int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert) {
+int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert)
+{
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   uint8_t paddingBits = w % 32;
   int total = len - 34;
   w /= 32;
 
-  uint8_t* buf = (uint8_t*) ps_malloc(total);
+  uint8_t *buf = (uint8_t *)ps_malloc(total);
   if (buf == NULL)
     return 0;
 
   int pnt = 0;
-  while (pnt < total) {
+  while (pnt < total)
+  {
     int toread = s->available();
-    if (toread > 0) {
-      int read = s->read(buf+pnt, toread);
+    if (toread > 0)
+    {
+      int read = s->read(buf + pnt, toread);
       if (read > 0)
         pnt += read;
     }
   }
 
   int i, j, k = bmpHeader.startRAW - 34;
-  for (j = 0; j < h; j++) {
-    for (i = 0; i < w; i++) {
+  for (j = 0; j < h; j++)
+  {
+    for (i = 0; i < w; i++)
+    {
       uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
       if (invert)
         pixelRow = ~pixelRow;
-      for (int n = 0; n < 32; n++) {
+      for (int n = 0; n < 32; n++)
+      {
         drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
     }
-    if (paddingBits) {
+    if (paddingBits)
+    {
       uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
       if (invert)
         pixelRow = ~pixelRow;
-      for (int n = 0; n < paddingBits; n++) {
+      for (int n = 0; n < paddingBits; n++)
+      {
         drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
       }
     }
@@ -1012,43 +1195,51 @@ int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHead
   return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert) {
+int Inkplate::drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert)
+{
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   char paddingBits = w % 8;
   int total = len - 34;
   w /= 8;
 
-  uint8_t* buf = (uint8_t*) ps_malloc(total);
+  uint8_t *buf = (uint8_t *)ps_malloc(total);
   if (buf == NULL)
     return 0;
 
   int pnt = 0;
-  while (pnt < total) {
+  while (pnt < total)
+  {
     int toread = s->available();
-    if (toread > 0) {
-      int read = s->read(buf+pnt, toread);
+    if (toread > 0)
+    {
+      int read = s->read(buf + pnt, toread);
       if (read > 0)
         pnt += read;
     }
   }
 
   int i, j, k = bmpHeader.startRAW - 34;
-  for (j = 0; j < h; j++) {
-    for (i = 0; i < w; i++) {
+  for (j = 0; j < h; j++)
+  {
+    for (i = 0; i < w; i++)
+    {
       uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
       if (invert)
         pixelRow = ~pixelRow;
-      for (int n = 0; n < 8; n++) {
-        drawPixel((i * 8) + n + x, h - 1 - j + y, (pixelRow & (0xFULL << (28 - n*4))) >> (28 - n*4 + 1));
+      for (int n = 0; n < 8; n++)
+      {
+        drawPixel((i * 8) + n + x, h - 1 - j + y, (pixelRow & (0xFULL << (28 - n * 4))) >> (28 - n * 4 + 1));
       }
     }
-    if (paddingBits) {
+    if (paddingBits)
+    {
       uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
       if (invert)
         pixelRow = ~pixelRow;
-      for (int n = 0; n < paddingBits; n++) {
-        drawPixel((i * 8) + n + x, h - 1 - j + y, ((pixelRow & (0xFULL << (28 - n*4)))) >> (28 - n*4 + 1));
+      for (int n = 0; n < paddingBits; n++)
+      {
+        drawPixel((i * 8) + n + x, h - 1 - j + y, ((pixelRow & (0xFULL << (28 - n * 4)))) >> (28 - n * 4 + 1));
       }
     }
   }
@@ -1058,38 +1249,45 @@ int Inkplate::drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHead
   return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert) {
+int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert)
+{
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   char padding = w % 4;
   int total = len - 34;
 
-  uint8_t* buf = (uint8_t*) ps_malloc(total);
+  uint8_t *buf = (uint8_t *)ps_malloc(total);
   if (buf == NULL)
     return 0;
 
   int pnt = 0;
-  while (pnt < total) {
+  while (pnt < total)
+  {
     int toread = s->available();
-    if (toread > 0) {
-      int read = s->read(buf+pnt, toread);
+    if (toread > 0)
+    {
+      int read = s->read(buf + pnt, toread);
       if (read > 0)
         pnt += read;
     }
   }
 
   int i, j, k = bmpHeader.startRAW - 34;
-  for (j = 0; j < h; j++) {
-    for (i = 0; i < w; i++) {
+  for (j = 0; j < h; j++)
+  {
+    for (i = 0; i < w; i++)
+    {
       uint8_t px = 0;
       if (invert)
-        px = 255-buf[k++];
+        px = 255 - buf[k++];
       else
         px = buf[k++];
-      drawPixel(i + x, h - 1 - j + y, px>>5);
+      drawPixel(i + x, h - 1 - j + y, px >> 5);
     }
-    if (padding) {
-      for (int p = 0; p < 4-padding; p++) {
+    if (padding)
+    {
+      for (int p = 0; p < 4 - padding; p++)
+      {
         k++;
       }
     }
@@ -1100,29 +1298,34 @@ int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHead
   return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert) {
+int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert)
+{
   int w = bmpHeader.width;
   int h = bmpHeader.height;
   char padding = w % 4;
   int total = len - 34;
 
-  uint8_t* buf = (uint8_t*) ps_malloc(total);
+  uint8_t *buf = (uint8_t *)ps_malloc(total);
   if (buf == NULL)
     return 0;
 
   int pnt = 0;
-  while (pnt < total) {
+  while (pnt < total)
+  {
     int toread = s->available();
-    if (toread > 0) {
-      int read = s->read(buf+pnt, toread);
+    if (toread > 0)
+    {
+      int read = s->read(buf + pnt, toread);
       if (read > 0)
         pnt += read;
     }
   }
 
   int i, j, k = bmpHeader.startRAW - 34;
-  for (j = 0; j < h; j++) {
-    for (i = 0; i < w; i++) {
+  for (j = 0; j < h; j++)
+  {
+    for (i = 0; i < w; i++)
+    {
       //This is the proper way of converting True Color (24 Bit RGB) bitmap file into grayscale, but it takes waaay too much time (full size picture takes about 17s to decode!)
       //float px = (0.2126 * (readByteFromSD(&file) / 255.0)) + (0.7152 * (readByteFromSD(&file) / 255.0)) + (0.0722 * (readByteFromSD(&file) / 255.0));
       //px = pow(px, 1.5);
@@ -1131,15 +1334,17 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
       //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
       uint8_t px = 0;
       if (invert)
-        px = ((255-buf[k++]) * 2126 / 10000) + ((255-buf[k++]) * 7152 / 10000) + ((255-buf[k++]) * 722 / 10000);
+        px = ((255 - buf[k++]) * 2126 / 10000) + ((255 - buf[k++]) * 7152 / 10000) + ((255 - buf[k++]) * 722 / 10000);
       else
         px = (buf[k++] * 2126 / 10000) + (buf[k++] * 7152 / 10000) + (buf[k++] * 722 / 10000);
       //drawPixel(i + x, h - j + y, gammaLUT[px]);
-      drawPixel(i + x, h - 1 - j + y, px>>5);
+      drawPixel(i + x, h - 1 - j + y, px >> 5);
       //drawPixel(i + x, h - j + y, px/32);
     }
-    if (padding) {
-      for (int p = 0; p < padding; p++) {
+    if (padding)
+    {
+      for (int p = 0; p < padding; p++)
+      {
         k++;
       }
     }
@@ -1150,8 +1355,10 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
   return 1;
 }
 
-void Inkplate::precalculateGamma(uint8_t* c, float gamma) {
-  for (int i = 0; i < 256; i++) {
+void Inkplate::precalculateGamma(uint8_t *c, float gamma)
+{
+  for (int i = 0; i < 256; i++)
+  {
     c[i] = int(round((pow(i / 255.0, gamma)) * 15));
   }
 }
