@@ -5,6 +5,8 @@
 #
 # Takes all files from /icons and saves them to /binary_icons
 #
+#July 2020 by e-radionica.com
+#
 # -----------
 
 from PIL import Image
