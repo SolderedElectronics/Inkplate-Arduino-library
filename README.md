@@ -10,9 +10,9 @@ In order to get a head start with Inkplate 6, follow these steps:
 1. [Install Inkplate 6 board definition](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/) - add Inkplate 6 as a board into your Arduino IDE. Follow the instructions on the [link](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/). 
 2. Install CH340 drivers (if you don't have them yet) - instructions [here](https://e-radionica.com/en/blog/ch340-driver-installation-croduino-basic3-nova2/)
 3. Install Inkplate 6 Arduino library - install the library from this repo into your Arduino IDE. If you don't know how, check our [tutorial](https://e-radionica.com/en/blog/arduino-library/#Kako%20instaliraty%20library?).
-4. You are ready to get started! Select Tools -> Board -> Inkplate 6, as well as correct COM port and upload! 
+4. Install [custom SdFat library](https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library) into your Arduino IDE. 
+5. You are ready to get started! Select Tools -> Board -> Inkplate 6, as well as correct COM port and upload! 
 
-Optional: if you are planning to use the SD card funcionality,  install [custom SdFat library](https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library) into your Arduino IDE. 
 
 ### Code examples
 There are many examples in the library that you demonstrate how to use any of the Inkplate functionality. 
