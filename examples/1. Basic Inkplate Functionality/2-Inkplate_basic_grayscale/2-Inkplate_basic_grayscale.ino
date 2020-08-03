@@ -97,7 +97,7 @@ void loop()
     int endColor = random(startColor, 7);
     display.drawGradientLine(random(0, 799), random(0, 599), random(0, 799), random(0, 599), startColor, endColor, (float)random(1, 20));
   }
-  displayCurrentAction("Drawing 50 random lines in random colors and thickness");
+  displayCurrentAction("Drawing 50 random gradient lines in random colors and thickness");
   display.display();
   delay(DELAY_MS);
 

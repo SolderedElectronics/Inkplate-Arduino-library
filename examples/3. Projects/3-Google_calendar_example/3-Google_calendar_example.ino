@@ -1,3 +1,29 @@
+/*
+   3-Google_calendar_example for e-radionica.com Inkplate 6
+   For this example you will need only USB cable and Inkplate 6.
+   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   This project shows you how Inkplate 6 can be used to display 
+   events in your Google Calendar using their provided API
+
+   For this to work you need to change your timezone, wifi credentials and your private calendar url
+   which you can find following these steps:
+
+    1. Open your google calender
+    2. Click the 3 menu dots of the calender you want to access
+    3. Click 'Settings and sharing'
+    4. Navigate to 'Integrate Calender'
+    5. Take the 'Secret address in iCal format'
+   
+   (https://support.google.com/calendar/thread/2408874?hl=en)
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   3 August 2020 by e-radionica.com
+*/
+
 // Include Inkplate library to the sketch
 #include "Inkplate.h"
 
@@ -10,10 +36,14 @@
 #include <algorithm>
 #include "Network.h"
 
-char *ssid = "e-radionica.com";
-char *pass = "croduino";
-char *calendarURL = "https://calendar.google.com/calendar/ical/zvonimir3000%40gmail.com/private-bd11c7f112609813c4cd8e602de42f93/basic.ics";
+// CHANGE HERE ---------------
+
+char *ssid = "";
+char *pass = "";
+char *calendarURL = "";
 int timeZone = 2;
+
+// ---------------------------
 
 // Delay between API calls
 #define DELAY_MS 5000
