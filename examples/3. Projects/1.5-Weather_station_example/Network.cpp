@@ -89,6 +89,8 @@ void formatWind(char *str, float wind)
 
 bool Network::getCurrentData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr)
 {
+    doc.clear();
+
     bool f = 0;
     // Return if wifi isn't connected
     if (WiFi.status() != WL_CONNECTED)
@@ -111,6 +113,8 @@ bool Network::getCurrentData(char *city, char *temp1, char *temp2, char *temp3, 
 
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1);
+
+    Serial.println(url);
 
     // Initiate http
     http.begin(url);
@@ -140,12 +144,12 @@ bool Network::getCurrentData(char *city, char *temp1, char *temp2, char *temp3, 
             // Set all data got from internet using formatTemp and formatWind defined above
             // This part relies heavily on ArduinoJson library
 
-            formatTemp(currentTemp, doc[F("current")][F("temperature")].as<float>());
-            formatWind(currentWind, doc[F("current")][F("wind_speed")].as<int>());
+            formatTemp(currentTemp, doc["current"]["temperature"].as<float>());
+            formatWind(currentWind, (float)doc["current"]["wind_speed"].as<int>());
 
             //strcpy(city, doc["title"].as<char *>());
 
-            strcpy(currentWeather, doc[F("current")][F("weather_descriptions")][0].as<char *>());
+            strcpy(currentWeather, doc["current"]["weather_descriptions"][0].as<char *>());
             //strcpy(currentWeatherAbbr, doc["consolidated_weather"][0]["weather_state_abbr"].as<char *>());
 
             // formatTemp(temp1, doc["consolidated_weather"][0][F("the_temp")].as<float>());
