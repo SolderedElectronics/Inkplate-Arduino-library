@@ -87,6 +87,7 @@ void formatWind(char *str, float wind)
     dtostrf(wind, 2, 0, str);
 }
 
+// Upgrade to our inital example, uses a different API to get current real time data
 bool Network::getCurrentData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr)
 {
     doc.clear();
@@ -109,6 +110,7 @@ bool Network::getCurrentData(char *city, char *temp1, char *temp2, char *temp3, 
     // Do another request for real-time current data
     char url[256];
 
+    // Copies our api key and city into url get parameters
     sprintf(url, "http://api.weatherstack.com/current?access_key=%s&query=%s", weatherStackKey, city);
 
     http.getStream().setNoDelay(true);

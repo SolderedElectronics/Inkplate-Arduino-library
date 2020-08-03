@@ -156,6 +156,7 @@ void drawGrid()
         network.getTime(temp, i * 3600L * 24);
         temp[10] = 0;
 
+        // calculate where to put text and print it
         display.setCursor((int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m) + 15, y1 + header - 6);
         display.println(temp);
     }
@@ -217,6 +218,7 @@ void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp)
 
     *timeStamp = epoch;
 
+    // Getting the time from our function in Network.cpp
     network.getTime(temp);
     if (strncmp(day0, asctime(&event), 10) == 0)
         *day = 0;
@@ -238,6 +240,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
     // Setting text font
     display.setFont(&FreeSans12pt7b);
 
+    // Some temporary variables
     int n = 0;
     char line[128];
 
@@ -246,7 +249,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
     display.setCursor(x1, beginY + 22);
     for (int i = 0; i < min((size_t)64, strlen(event->name)); ++i)
     {
-
+        // Copy name letter by letter and check if it overflows space given
         line[n] = event->name[i];
         if (line[n] == ' ')
             lastSpace = n;
@@ -255,6 +258,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
         int16_t xt1, yt1;
         uint16_t w, h;
 
+        // Gets text bounds
         display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
 
         // Char out of bounds, put in next line
@@ -267,9 +271,11 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
                 line[lastSpace] = 0;
             }
 
+            // Print text line
             display.setCursor(x1, display.getCursorY());
             display.println(line);
 
+            // Clears line (null termination on first charachter)
             line[0] = 0;
             n = 0;
         }
@@ -279,6 +285,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
     display.setCursor(x1, display.getCursorY());
     display.println(line);
 
+    // Set cursor on same y but change x
     display.setCursor(x1, display.getCursorY());
     display.setFont(&FreeSans9pt7b);
 
@@ -306,10 +313,9 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
     return display.getCursorY() < maxHeigth - 5;
 }
 
-// Struct event comparison function, by timestamp
+// Struct event comparison function, by timestamp, used for qsort later on
 int cmp(const void *a, const void *b)
 {
-
     entry *entryA = (entry *)a;
     entry *entryB = (entry *)b;
 
@@ -394,6 +400,7 @@ void drawData()
     {
         if (clogged[i])
         {
+            // Draw notification showing that there are more events than drawn ones
             display.fillRoundRect(6 + i * (594 / 3), 800 - 24, (594 / 3) - 5, 20, 10, 0);
             display.setCursor(10, 800 - 6);
             display.setTextColor(7, 0);

@@ -17,6 +17,7 @@ void Network::begin()
     Serial.print(F("Waiting for WiFi to connect..."));
     while ((WiFiMulti.run() != WL_CONNECTED))
     {
+        // Prints a dot every second that wifi isn't connected
         Serial.print(F("."));
         delay(1000);
     }
@@ -40,8 +41,10 @@ void Network::getTime(char *timeStr, long offSet)
     strcpy(timeStr, asctime(&timeinfo));
 }
 
+// Function to get all war data from web
 bool Network::getData(char *data)
 {
+    // Variable to store fail
     bool f = 0;
 
     // Return if wifi isn't connected
@@ -58,6 +61,7 @@ bool Network::getData(char *data)
     http.getStream().setTimeout(10);
     http.getStream().flush();
 
+    // Begin http by passing url to it
     http.begin(calendarURL);
 
     delay(300);
