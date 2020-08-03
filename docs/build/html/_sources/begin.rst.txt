@@ -3,27 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Inkplate 6's documentation!
-======================================
+*************
+.begin method
+*************
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   begin
 
 *************
 What is this?
 *************
-Here you can find descriptions of all Inkplate 6 library functions.
 
-For these examples to work you first need to include our header file on top of your code, like this:
-
-.. code-block:: c
-
-   #include "Inkplate.h"
-
-
+Used to intiate Inkplate
 
 Indices and tables
 ==================

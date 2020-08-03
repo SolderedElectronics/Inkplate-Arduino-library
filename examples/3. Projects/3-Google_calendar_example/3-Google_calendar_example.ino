@@ -296,7 +296,29 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
         display.println(event->time);
 
         display.setCursor(x1, display.getCursorY());
-        display.print(event->location);
+
+        char line[128] = {0};
+
+        for (int i = 0; i < strlen(event->location); ++i)
+        {
+            line[i] = event->location[i];
+            line[i + 1] = 0;
+
+            int16_t xt1, yt1;
+            uint16_t w, h;
+
+            // Gets text bounds
+            display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
+
+            if (w > (594 / 3))
+            {
+                for (int j = i - 1; j > max(-1, i - 4); --j)
+                    line[j] = '.';
+                line[i] = 0;
+            }
+        }
+
+        display.print(line);
     }
     else
     {
