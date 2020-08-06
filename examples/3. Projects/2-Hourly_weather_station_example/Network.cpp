@@ -3,14 +3,10 @@
 #include "Network.h"
 
 #include <WiFi.h>
-#include <WiFiMulti.h>
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
 
 #include <ArduinoJson.h>
-
-//WiFiMulti object declaration
-WiFiMulti WiFiMulti;
 
 //Static Json from ArduinoJson library
 StaticJsonDocument<32000> doc;
@@ -19,10 +15,10 @@ void Network::begin(char *city)
 {
     //Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
-    WiFiMulti.addAP(ssid, pass);
+    WiFi.begin(ssid, pass);
 
     Serial.print(F("Waiting for WiFi to connect..."));
-    while ((WiFiMulti.run() != WL_CONNECTED))
+    while ((WiFi.status() != WL_CONNECTED))
     {
         //Printing a dot to Serial monitor every second while waiting to connect
         Serial.print(F("."));
@@ -76,10 +72,20 @@ void formatWind(char *str, float wind)
 bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1, char *abbr2, char *abbr3, char *abbr4)
 {
     bool f = 0;
+    // If not connected to wifi reconnect wifi
+    if (WiFi.status() != WL_CONNECTED) {
+        WiFi.reconnect();
 
-    //Return if wifi isn't connected
-    if (WiFi.status() != WL_CONNECTED)
-        return 0;
+        delay(5000);
+
+        Serial.println(F("Waiting for WiFi to reconnect..."));
+        while ((WiFi.status() != WL_CONNECTED))
+        {
+            // Prints a dot every second that wifi isn't connected
+            Serial.print(F("."));
+            delay(1000);
+        }
+    }
 
     //Wake up if sleeping and save inital state
     bool sleep = WiFi.getSleep();

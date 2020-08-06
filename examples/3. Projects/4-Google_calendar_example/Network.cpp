@@ -1,21 +1,18 @@
 #include "Network.h"
 
 #include <WiFi.h>
-#include <WiFiMulti.h>
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
 
-// WiFiMulti object declaration
-WiFiMulti WiFiMulti;
 
 void Network::begin()
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
-    WiFiMulti.addAP(ssid, pass);
+    WiFi.begin(ssid, pass);
 
     Serial.print(F("Waiting for WiFi to connect..."));
-    while ((WiFiMulti.run() != WL_CONNECTED))
+    while ((WiFi.status() != WL_CONNECTED))
     {
         // Prints a dot every second that wifi isn't connected
         Serial.print(F("."));
@@ -46,14 +43,20 @@ bool Network::getData(char *data)
 {
     // Variable to store fail
     bool f = 0;
+    // If not connected to wifi reconnect wifi
+    if (WiFi.status() != WL_CONNECTED) {
+        WiFi.reconnect();
 
-    // Return if wifi isn't connected
-    if (WiFi.status() != WL_CONNECTED)
-        return 0;
+        delay(5000);
 
-    // Wake up if sleeping and save inital state
-    bool sleep = WiFi.getSleep();
-    WiFi.setSleep(false);
+        Serial.println(F("Waiting for WiFi to reconnect..."));
+        while ((WiFi.status() != WL_CONNECTED))
+        {
+            // Prints a dot every second that wifi isn't connected
+            Serial.print(F("."));
+            delay(1000);
+        }
+    }
 
     // Http object used to make get request
     HTTPClient http;
@@ -68,22 +71,22 @@ bool Network::getData(char *data)
 
     // Actually do request
     int httpCode = http.GET();
+
     if (httpCode == 200)
     {
         long n = 0;
         while (http.getStream().available())
             data[n++] = http.getStream().read();
+        data[n++]= 0;
     }
     else
     {
+        Serial.println(httpCode);
         f = 1;
     }
 
     // end http
     http.end();
-
-    // Return to initial state
-    WiFi.setSleep(sleep);
 
     return !f;
 }

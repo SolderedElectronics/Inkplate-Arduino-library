@@ -63,8 +63,8 @@ Inkplate display(INKPLATE_1BIT);
 Network network;
 
 //Contants used for drawing icons
-char abbrs[32][32] = {"01d", "02d", "03d", "04d", "09d", "10d", "11d", "13d", "50d", "01n", "02n", "03n", "04n", "09n", "10n", "11n", "13n", "50n"};
-const uint8_t *logos[18] = {
+char abbrs[32][32] ={ "01d", "02d", "03d", "04d", "09d", "10d", "11d", "13d", "50d", "01n", "02n", "03n", "04n", "09n", "10n", "11n", "13n", "50n" };
+const uint8_t *logos[18] ={
     icon_01d,
     icon_02d,
     icon_03d,
@@ -85,7 +85,7 @@ const uint8_t *logos[18] = {
     icon_50n,
 };
 
-const uint8_t *s_logos[18] = {
+const uint8_t *s_logos[18] ={
     icon_s_01d,
     icon_s_02d,
     icon_s_03d,
@@ -107,7 +107,7 @@ const uint8_t *s_logos[18] = {
 };
 
 //Variables for storing temperature
-char temps[8][4] = {
+char temps[8][4] ={
     "0F",
     "0F",
     "0F",
@@ -115,7 +115,7 @@ char temps[8][4] = {
 };
 
 //Variables for storing hour strings
-char hours[8][4] = {
+char hours[8][4] ={
     "",
     "",
     "",

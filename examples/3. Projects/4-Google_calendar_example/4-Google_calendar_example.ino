@@ -5,7 +5,7 @@
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This project shows you how Inkplate 6 can be used to display 
+   This project shows you how Inkplate 6 can be used to display
    events in your Google Calendar using their provided API
 
    For this to work you need to change your timezone, wifi credentials and your private calendar url
@@ -16,7 +16,7 @@
     3. Click 'Settings and sharing'
     4. Navigate to 'Integrate Calendar'
     5. Take the 'Secret address in iCal format'
-   
+
    (https://support.google.com/calendar/thread/2408874?hl=en)
 
    Want to learn more about Inkplate? Visit www.inkplate.io
@@ -110,8 +110,6 @@ void setup()
     display.display();
 
     delay(5000);
-    network.begin();
-    //Our begin function
     network.begin();
 }
 
@@ -238,7 +236,7 @@ void drawGrid()
 void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp)
 {
     //ANSI C time struct
-    struct tm ltm = {0}, ltm2 = {0};
+    struct tm ltm ={ 0 }, ltm2 ={ 0 };
     char temp[128], temp2[128];
     strncpy(temp, from, 16);
     temp[16] = 0;
@@ -369,7 +367,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
 
         display.setCursor(x1 + 5, display.getCursorY());
 
-        char line[128] = {0};
+        char line[128] ={ 0 };
 
         for (int i = 0; i < strlen(event->location); ++i)
         {
@@ -465,14 +463,14 @@ void drawData()
 
     //Sort entries by time
     qsort(entries,
-          entriesNum,
-          sizeof(entry),
-          cmp);
+        entriesNum,
+        sizeof(entry),
+        cmp);
 
     //Events displayed and overflown counters
-    int columns[3] = {0};
-    bool clogged[3] = {0};
-    int cloggedCount[3] = {0};
+    int columns[3] ={ 0 };
+    bool clogged[3] ={ 0 };
+    int cloggedCount[3] ={ 0 };
 
     //Displaying events one by one
     for (int i = 0; i < entriesNum; ++i)

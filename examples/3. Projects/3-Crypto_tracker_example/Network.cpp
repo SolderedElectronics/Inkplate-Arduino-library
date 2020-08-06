@@ -1,7 +1,6 @@
 #include "Network.h"
 
 #include <WiFi.h>
-#include <WiFiMulti.h>
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
 
@@ -18,9 +17,6 @@ extern char *currency;
 //Get our Inkplate object from main file to draw debug info on
 extern Inkplate display;
 
-//WiFiMulti object declaration
-WiFiMulti WiFiMulti;
-
 //Static Json from ArduinoJson library
 StaticJsonDocument<30000> doc;
 
@@ -28,10 +24,10 @@ void Network::begin()
 {
     //Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
-    WiFiMulti.addAP(ssid, pass);
+    WiFi.begin(ssid, pass);
 
     Serial.print(F("Waiting for WiFi to connect..."));
-    while ((WiFiMulti.run() != WL_CONNECTED))
+    while ((WiFi.status() != WL_CONNECTED))
     {
         Serial.print(F("."));
         delay(1000);
@@ -70,9 +66,20 @@ bool Network::getData(double *data)
 {
     bool f = 0;
 
-    //Return if wifi isn't connected
-    if (WiFi.status() != WL_CONNECTED)
-        return 0;
+    // If not connected to wifi reconnect wifi
+    if (WiFi.status() != WL_CONNECTED) {
+        WiFi.reconnect();
+
+        delay(5000);
+
+        Serial.println(F("Waiting for WiFi to reconnect..."));
+        while ((WiFi.status() != WL_CONNECTED))
+        {
+            // Prints a dot every second that wifi isn't connected
+            Serial.print(F("."));
+            delay(1000);
+        }
+    }
 
     //Wake up if sleeping and save inital state
     bool sleep = WiFi.getSleep();
