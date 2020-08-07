@@ -42,9 +42,10 @@ void setup() {
         //NOTE: Both drawBitmapFromSD methods allow for an optional fourth "invert" parameter. Setting this parameter to true
         //will flip all colors on the image, making black white and white black. This may be necessary when exporting bitmaps from
         //certain softwares.
-        if (!display.drawBitmapFromSD("image1.bmp", 0, 0)) {
+        if (!display.drawBitmapFromSD("image1.bmp", 0, 0, 1)) {
             //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
             //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression! 
+            //You can turn of dithering for somewhat faster image load by changing the last 1 to 0, or removing the 1 argument completely
             display.println("Image open error");
             display.display();
         }
