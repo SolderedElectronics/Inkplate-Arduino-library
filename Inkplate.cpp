@@ -1012,9 +1012,11 @@ int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, i
     int i, j;
     for (j = 0; j < h; j++)
     {
+        uint8_t *bufferPtr = pixelBuffer;
+        f->read(pixelBuffer, w * 4);
         for (i = 0; i < w; i++)
         {
-            uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
+            uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
             if (invert)
                 pixelRow = ~pixelRow;
             for (int n = 0; n < 32; n++)
@@ -1048,9 +1050,11 @@ int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, i
     int i, j;
     for (j = 0; j < h; j++)
     {
+        uint8_t *bufferPtr = pixelBuffer;
+        f->read(pixelBuffer, w * 4);
         for (i = 0; i < w; i++)
         {
-            uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
+            uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
             if (invert)
                 pixelRow = ~pixelRow;
             for (int n = 0; n < 8; n++)
@@ -1082,13 +1086,15 @@ int Inkplate::drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, i
     int i, j;
     for (j = 0; j < h; j++)
     {
+        uint8_t *bufferPtr = pixelBuffer;
+        f->read(pixelBuffer, w);
         for (i = 0; i < w; i++)
         {
             uint8_t px = 0;
             if (invert)
-                px = 255 - f->read();
+                px = 255 - *(bufferPtr++);
             else
-                px = f->read();
+                px = *(bufferPtr++);
             drawPixel(i + x, h - 1 - j + y, px >> 5);
         }
         if (padding)
@@ -1112,6 +1118,8 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
     int i, j;
     for (j = 0; j < h; j++)
     {
+        uint8_t *bufferPtr = pixelBuffer;
+        f->read(pixelBuffer, w * 3);
         for (i = 0; i < w; i++)
         {
             //This is the proper way of converting True Color (24 Bit RGB) bitmap file into grayscale, but it takes waaay too much time (full size picture takes about 17s to decode!)
@@ -1119,12 +1127,12 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
             //px = pow(px, 1.5);
             //display.drawPixel(i + x, h - j + y, (uint8_t)(px*7));
 
-            //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
             uint8_t px = 0;
+            //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
             if (invert)
-                px = ((255 - f->read()) * 2126 / 10000) + ((255 - f->read()) * 7152 / 10000) + ((255 - f->read()) * 722 / 10000);
+                px = ((255 - *(bufferPtr++)) * 2126 / 10000) + ((255 - *(bufferPtr++)) * 7152 / 10000) + ((255 - *(bufferPtr++)) * 722 / 10000);
             else
-                px = (f->read() * 2126 / 10000) + (f->read() * 7152 / 10000) + (f->read() * 722 / 10000);
+                px = (*(bufferPtr++) * 2126 / 10000) + (*(bufferPtr++) * 7152 / 10000) + (*(bufferPtr++) * 722 / 10000);
             //drawPixel(i + x, h - j + y, gammaLUT[px]);
             drawPixel(i + x, h - 1 - j + y, px >> 5);
             //drawPixel(i + x, h - j + y, px/32);

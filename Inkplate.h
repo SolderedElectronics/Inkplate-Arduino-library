@@ -223,6 +223,7 @@ public:
 
 private:
     uint8_t gammaLUT[256];
+    uint8_t pixelBuffer[800 * 3 + 5];
     int8_t _temperature;
     uint8_t _panelOn = 0;
     uint8_t _rotation = 0;
