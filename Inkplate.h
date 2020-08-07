@@ -188,6 +188,7 @@ public:
 
     Inkplate(uint8_t _mode);
     void begin(void);
+    uint16_t getPixel(int16_t x0, int16_t y0);
     void drawPixel(int16_t x0, int16_t y0, uint16_t color);
     void clearDisplay();
     void display();
@@ -198,8 +199,8 @@ public:
     void einkOn(void);
     void selectDisplayMode(uint8_t _mode);
     uint8_t getDisplayMode();
-    int drawBitmapFromSD(SdFile *p, int x, int y, bool invert = false);
-    int drawBitmapFromSD(char *fileName, int x, int y, bool invert = false);
+    int drawBitmapFromSD(SdFile *p, int x, int y, bool dither = false, bool invert = false);
+    int drawBitmapFromSD(char *fileName, int x, int y, bool dither = false, bool invert = false);
     int drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool invert = false);
     int drawBitmapFromWeb(char *url, int x, int y, bool invert = false);
     void drawThickLine(int x1, int y1, int x2, int y2, int color, float thickness);
@@ -224,6 +225,7 @@ public:
 private:
     uint8_t gammaLUT[256];
     uint8_t pixelBuffer[800 * 3 + 5];
+    uint8_t ditherBuffer[800 * 3 + 5][2];
     int8_t _temperature;
     uint8_t _panelOn = 0;
     uint8_t _rotation = 0;
@@ -236,12 +238,16 @@ private:
     void display3b();
     uint32_t read32(uint8_t *c);
     uint16_t read16(uint8_t *c);
+    void ditherStart(uint8_t *pixelBuffer, uint8_t* bufferPtr, int w, bool invert, uint8_t bits);
+    void ditherLoadNextLine(uint8_t *pixelBuffer, uint8_t* bufferPtr, int w, bool invert, uint8_t bits);
+    uint8_t ditherGetPixel(int i, int j, int w, int h);
+    uint8_t ditherSwap(int w);
     void readBmpHeaderSd(SdFile *_f, struct bitmapHeader *_h);
     void readBmpHeaderWeb(WiFiClient *_s, struct bitmapHeader *_h);
     int drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
     int drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
-    int drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
-    int drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
+    int drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool dither, bool invert);
+    int drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool dither, bool invert);
     int drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
     int drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
     int drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);

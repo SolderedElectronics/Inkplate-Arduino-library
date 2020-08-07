@@ -134,6 +134,43 @@ void Inkplate::drawPixel(int16_t x0, int16_t y0, uint16_t color)
     }
 }
 
+//Get pixel color function.
+uint16_t Inkplate::getPixel(int16_t x0, int16_t y0)
+{
+    if (x0 > _width - 1 || y0 > _height - 1 || x0 < 0 || y0 < 0)
+        return 0;
+
+    switch (_rotation)
+    {
+    case 1:
+        _swap_int16_t(x0, y0);
+        x0 = _height - x0 - 1;
+        break;
+    case 2:
+        x0 = _width - x0 - 1;
+        y0 = _height - y0 - 1;
+        break;
+    case 3:
+        _swap_int16_t(x0, y0);
+        y0 = _width - y0 - 1;
+        break;
+    }
+
+    if (_displayMode == 0)
+    {
+        int x = x0 / 8;
+        int x_sub = x0 % 8;
+        return *(_partial + 100 * y0 + x) & pixelMaskLUT[x_sub] * 7;
+    }
+    else
+    {
+        int x = x0 >> 1;
+        int x_sub = x0 & 1;
+        uint8_t temp;
+        return (*(D_memory4Bit + 400 * y0 + x) & pixelMaskGLUT[x_sub]) >> (x_sub ? 4 : 0);
+    }
+}
+
 void Inkplate::clearDisplay()
 {
     //Clear 1 bit per pixel display buffer
@@ -373,7 +410,7 @@ uint8_t Inkplate::getDisplayMode()
     return _displayMode;
 }
 
-int Inkplate::drawBitmapFromSD(SdFile *p, int x, int y, bool invert)
+int Inkplate::drawBitmapFromSD(SdFile *p, int x, int y, bool dither, bool invert)
 {
     if (sdCardOk == 0)
         return 0;
@@ -397,21 +434,21 @@ int Inkplate::drawBitmapFromSD(SdFile *p, int x, int y, bool invert)
     if (bmpHeader.color == 4)
         drawGrayscaleBitmap4Sd(p, bmpHeader, x, y, invert);
     if (bmpHeader.color == 8)
-        drawGrayscaleBitmap8Sd(p, bmpHeader, x, y, invert);
+        drawGrayscaleBitmap8Sd(p, bmpHeader, x, y, dither, invert);
     if (bmpHeader.color == 24)
-        drawGrayscaleBitmap24Sd(p, bmpHeader, x, y, invert);
+        drawGrayscaleBitmap24Sd(p, bmpHeader, x, y, dither, invert);
 
     return 1;
 }
 
-int Inkplate::drawBitmapFromSD(char *fileName, int x, int y, bool invert)
+int Inkplate::drawBitmapFromSD(char *fileName, int x, int y, bool dither, bool invert)
 {
     if (sdCardOk == 0)
         return 0;
     SdFile dat;
     if (dat.open(fileName, O_RDONLY))
     {
-        return drawBitmapFromSD(&dat, x, y, invert);
+        return drawBitmapFromSD(&dat, x, y, dither, invert);
     }
     else
     {
@@ -1051,7 +1088,7 @@ int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, i
     for (j = 0; j < h; j++)
     {
         uint8_t *bufferPtr = pixelBuffer;
-        f->read(pixelBuffer, w * 4);
+        f->read(pixelBuffer, w * 4 + (paddingBits? 4 : 0));
         for (i = 0; i < w; i++)
         {
             uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
@@ -1064,7 +1101,7 @@ int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, i
         }
         if (paddingBits)
         {
-            uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
+            uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
             if (invert)
                 pixelRow = ~pixelRow;
             for (int n = 0; n < paddingBits; n++)
@@ -1077,49 +1114,87 @@ int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, i
     return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert)
+int Inkplate::drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool dither, bool invert)
 {
     int w = bmpHeader.width;
     int h = bmpHeader.height;
-    char padding = w % 4;
+    char padding = w & 3;
     f->seekSet(bmpHeader.startRAW);
     int i, j;
+
+    uint8_t *bufferPtr;
+
+    if (dither) {
+        bufferPtr = pixelBuffer;
+        f->read(pixelBuffer, w);
+
+        ditherStart(pixelBuffer, bufferPtr, w, invert, 8);
+    }
+
     for (j = 0; j < h; j++)
     {
-        uint8_t *bufferPtr = pixelBuffer;
+        bufferPtr = pixelBuffer;
         f->read(pixelBuffer, w);
+
+        if (dither && j != h - 1) {
+            ditherLoadNextLine(pixelBuffer, bufferPtr, w, invert, 8);
+        }
+
         for (i = 0; i < w; i++)
         {
-            uint8_t px = 0;
-            if (invert)
-                px = 255 - *(bufferPtr++);
-            else
-                px = *(bufferPtr++);
-            drawPixel(i + x, h - 1 - j + y, px >> 5);
-        }
-        if (padding)
-        {
-            for (int p = 0; p < 4 - padding; p++)
-            {
-                f->read();
+            if (dither)
+                drawPixel(i + x, h - 1 - j + y, ditherGetPixel(i, j, w, h) >> 5);
+            else {
+                uint8_t px = 0;
+                if (invert)
+                    px = 255 - *(bufferPtr++);
+                else
+                    px = *(bufferPtr++);
+                drawPixel(i + x, h - 1 - j + y, px >> 5);
             }
+        }
+    }
+
+    if (dither)
+        ditherSwap(w);
+
+    if (padding)
+    {
+        for (int p = 0; p < 4 - padding; p++)
+        {
+            f->read();
         }
     }
     f->close();
     return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert)
+int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool dither, bool invert)
 {
     int w = bmpHeader.width;
     int h = bmpHeader.height;
-    char padding = w % 4;
+    char padding = w & 3;
     f->seekSet(bmpHeader.startRAW);
     int i, j;
+
+    uint8_t *bufferPtr;
+
+    if (dither) {
+        bufferPtr = pixelBuffer;
+        f->read(pixelBuffer, w * 3);
+
+        ditherStart(pixelBuffer, bufferPtr, w, invert, 24);
+    }
+
     for (j = 0; j < h; j++)
     {
-        uint8_t *bufferPtr = pixelBuffer;
+        bufferPtr = pixelBuffer;
         f->read(pixelBuffer, w * 3);
+
+        if (dither && j != h - 1) {
+            ditherLoadNextLine(pixelBuffer, bufferPtr, w, invert, 24);
+        }
+
         for (i = 0; i < w; i++)
         {
             //This is the proper way of converting True Color (24 Bit RGB) bitmap file into grayscale, but it takes waaay too much time (full size picture takes about 17s to decode!)
@@ -1127,16 +1202,25 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
             //px = pow(px, 1.5);
             //display.drawPixel(i + x, h - j + y, (uint8_t)(px*7));
 
-            uint8_t px = 0;
-            //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
-            if (invert)
-                px = ((255 - *(bufferPtr++)) * 2126 / 10000) + ((255 - *(bufferPtr++)) * 7152 / 10000) + ((255 - *(bufferPtr++)) * 722 / 10000);
-            else
-                px = (*(bufferPtr++) * 2126 / 10000) + (*(bufferPtr++) * 7152 / 10000) + (*(bufferPtr++) * 722 / 10000);
+            if (dither)
+                drawPixel(i + x, h - 1 - j + y, ditherGetPixel(i, j, w, h) >> 5);
+            else {
+                uint8_t px = 0;
+                //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
+                if (invert)
+                    px = ((255 - *(bufferPtr++)) * 2126 / 10000) + ((255 - *(bufferPtr++)) * 7152 / 10000) + ((255 - *(bufferPtr++)) * 722 / 10000);
+                else
+                    px = (*(bufferPtr++) * 2126 / 10000) + (*(bufferPtr++) * 7152 / 10000) + (*(bufferPtr++) * 722 / 10000);
+                drawPixel(i + x, h - 1 - j + y, px >> 5);
+            }
+
             //drawPixel(i + x, h - j + y, gammaLUT[px]);
-            drawPixel(i + x, h - 1 - j + y, px >> 5);
             //drawPixel(i + x, h - j + y, px/32);
         }
+
+        if (dither)
+            ditherSwap(w);
+
         if (padding)
         {
             for (int p = 0; p < padding; p++)
@@ -1147,6 +1231,70 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
     }
     f->close();
     return 1;
+}
+
+//Loads first line in current dither buffer
+void Inkplate::ditherStart(uint8_t *pixelBuffer, uint8_t* bufferPtr, int w, bool invert, uint8_t bits) {
+    for (int i = 0; i < w; ++i)
+        if (bits == 24) {
+            if (invert)
+                ditherBuffer[0][i] = ((255 - *(bufferPtr++)) * 2126 / 10000) + ((255 - *(bufferPtr++)) * 7152 / 10000) + ((255 - *(bufferPtr++)) * 722 / 10000);
+            else
+                ditherBuffer[0][i] = (*(bufferPtr++) * 2126 / 10000) + (*(bufferPtr++) * 7152 / 10000) + (*(bufferPtr++) * 722 / 10000);
+        }
+        else if (bits == 8) {
+            if (invert)
+                ditherBuffer[0][i] = 255 - *(bufferPtr++);
+            else
+                ditherBuffer[0][i] = *(bufferPtr++);
+        }
+}
+
+//Loads next line, after this ditherGetPixel can be called and alters values in next line
+void Inkplate::ditherLoadNextLine(uint8_t *pixelBuffer, uint8_t* bufferPtr, int w, bool invert, uint8_t bits) {
+    for (int i = 0; i < w; ++i)
+    {
+        if (bits == 24) {
+            if (invert)
+                ditherBuffer[1][i] = ((255 - *(bufferPtr++)) * 2126 / 10000) + ((255 - *(bufferPtr++)) * 7152 / 10000) + ((255 - *(bufferPtr++)) * 722 / 10000);
+            else
+                ditherBuffer[1][i] = (*(bufferPtr++) * 2126 / 10000) + (*(bufferPtr++) * 7152 / 10000) + (*(bufferPtr++) * 722 / 10000);
+        }
+        else if (bits == 8) {
+            if (invert)
+                ditherBuffer[1][i] = 255 - *(bufferPtr++);
+            else
+                ditherBuffer[1][i] = *(bufferPtr++);
+        }
+    }
+
+}
+
+//Gets specific pixel, mainly at i, j is just used for bound checking when changing next line values
+uint8_t Inkplate::ditherGetPixel(int i, int j, int w, int h) {
+    uint8_t oldpixel = ditherBuffer[0][i];
+    uint8_t newpixel = (oldpixel & B11100000);
+
+    ditherBuffer[0][i] = newpixel;
+
+    uint8_t quant_error = oldpixel - newpixel;
+
+    if (i + 1 < w)
+        ditherBuffer[0][i + 1] = min(255, (int)ditherBuffer[0][i + 1] + (((int)quant_error * 7) >> 4));
+    if (j + 1 < h && 0 <= i - 1)
+        ditherBuffer[1][i - 1] = min(255, (int)ditherBuffer[1][i - 1] + (((int)quant_error * 3) >> 4));
+    if (j + 1 < h)
+        ditherBuffer[1][i + 0] = min(255, (int)ditherBuffer[1][i + 0] + (((int)quant_error * 5) >> 4));
+    if (j + 1 < h && i + 1 < w)
+        ditherBuffer[1][i + 1] = min(255, (int)ditherBuffer[1][i + 1] + (((int)quant_error * 1) >> 4));
+
+    return newpixel;
+}
+
+//Swaps current and next line, for next one to be overwritten
+uint8_t Inkplate::ditherSwap(int w) {
+    for (int i = 0; i < w; ++i)
+        ditherBuffer[0][i] = ditherBuffer[1][i];
 }
 
 int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert)
