@@ -201,8 +201,8 @@ public:
     uint8_t getDisplayMode();
     int drawBitmapFromSD(SdFile *p, int x, int y, bool dither = false, bool invert = false);
     int drawBitmapFromSD(char *fileName, int x, int y, bool dither = false, bool invert = false);
-    int drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool invert = false);
-    int drawBitmapFromWeb(char *url, int x, int y, bool invert = false);
+    int drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool dither = false, bool invert = false);
+    int drawBitmapFromWeb(char *url, int x, int y, bool dither = false, bool invert = false);
     void drawThickLine(int x1, int y1, int x2, int y2, int color, float thickness);
     void drawGradientLine(int x1, int y1, int x2, int y2, int color1, int color2, float thickness = -1);
     int sdCardInit();
@@ -250,8 +250,8 @@ private:
     int drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool dither, bool invert);
     int drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
     int drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
-    int drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
-    int drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
+    int drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool dither, bool invert);
+    int drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool dither, bool invert);
     void precalculateGamma(uint8_t *c, float gamma);
 };
 

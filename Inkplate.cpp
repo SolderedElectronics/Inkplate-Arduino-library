@@ -456,7 +456,7 @@ int Inkplate::drawBitmapFromSD(char *fileName, int x, int y, bool dither, bool i
     }
 }
 
-int Inkplate::drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool invert)
+int Inkplate::drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool dither, bool invert)
 {
     struct bitmapHeader bmpHeader;
     readBmpHeaderWeb(s, &bmpHeader);
@@ -478,14 +478,14 @@ int Inkplate::drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool inver
     if (bmpHeader.color == 4)
         drawGrayscaleBitmap4Web(s, bmpHeader, x, y, len, invert);
     if (bmpHeader.color == 8)
-        drawGrayscaleBitmap8Web(s, bmpHeader, x, y, len, invert);
+        drawGrayscaleBitmap8Web(s, bmpHeader, x, y, len, dither, invert);
     if (bmpHeader.color == 24)
-        drawGrayscaleBitmap24Web(s, bmpHeader, x, y, len, invert);
+        drawGrayscaleBitmap24Web(s, bmpHeader, x, y, len, dither, invert);
 
     return 1;
 }
 
-int Inkplate::drawBitmapFromWeb(char *url, int x, int y, bool invert)
+int Inkplate::drawBitmapFromWeb(char *url, int x, int y, bool dither, bool invert)
 {
     if (WiFi.status() != WL_CONNECTED)
         return 0;
@@ -506,7 +506,7 @@ int Inkplate::drawBitmapFromWeb(char *url, int x, int y, bool invert)
         if (len > 0)
         {
             WiFiClient *dat = http.getStreamPtr();
-            ret = drawBitmapFromWeb(dat, x, y, len, invert);
+            ret = drawBitmapFromWeb(dat, x, y, len, dither, invert);
         }
     }
 
@@ -1405,7 +1405,7 @@ int Inkplate::drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHead
     return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert)
+int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool dither, bool invert)
 {
     int w = bmpHeader.width;
     int h = bmpHeader.height;
@@ -1416,7 +1416,7 @@ int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHead
     if (buf == NULL)
         return 0;
 
-    int pnt = 0;
+    uint32_t pnt = 0;
     while (pnt < total)
     {
         int toread = s->available();
@@ -1428,23 +1428,51 @@ int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHead
         }
     }
 
-    int i, j, k = bmpHeader.startRAW - 34;
+    uint8_t *bufferPtr;
+    uint8_t *f_pointer = buf + (bmpHeader.startRAW - 34);
+
+    int i, j;
+
+    if (dither) {
+        bufferPtr = pixelBuffer;
+        for (i = 0; i < w; i++)
+            pixelBuffer[i] = *(f_pointer++);
+
+        ditherStart(buf, bufferPtr, w, invert, 8);
+    }
+
     for (j = 0; j < h; j++)
     {
+        bufferPtr = pixelBuffer;
+        for (i = 0; i < w; i++)
+            pixelBuffer[i] = *(f_pointer++);
+
+        if (dither && j != h - 1) {
+            ditherLoadNextLine(buf, bufferPtr, w, invert, 8);
+        }
+
         for (i = 0; i < w; i++)
         {
-            uint8_t px = 0;
-            if (invert)
-                px = 255 - buf[k++];
-            else
-                px = buf[k++];
-            drawPixel(i + x, h - 1 - j + y, px >> 5);
+            if (dither)
+                drawPixel(i + x, h - 1 - j + y, ditherGetPixel(i, j, w, h) >> 5);
+            else {
+                uint8_t px = 0;
+                if (invert)
+                    px = 255 - *(bufferPtr++);
+                else
+                    px = *(bufferPtr++);
+                drawPixel(i + x, h - 1 - j + y, px >> 5);
+            }
         }
+
+        if (dither)
+            ditherSwap(w);
+
         if (padding)
         {
             for (int p = 0; p < 4 - padding; p++)
             {
-                k++;
+                ++bufferPtr;
             }
         }
     }
@@ -1454,7 +1482,7 @@ int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHead
     return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert)
+int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool dither, bool invert)
 {
     int w = bmpHeader.width;
     int h = bmpHeader.height;
@@ -1477,9 +1505,29 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
         }
     }
 
-    int i, j, k = bmpHeader.startRAW - 34;
+    uint8_t *bufferPtr;
+    uint8_t *f_pointer = buf + (bmpHeader.startRAW - 34);
+
+    int i, j;
+
+    if (dither) {
+        bufferPtr = pixelBuffer;
+        for (i = 0; i < w; i++)
+            pixelBuffer[i] = *(f_pointer++);
+
+        ditherStart(buf, bufferPtr, w, invert, 8);
+    }
+
     for (j = 0; j < h; j++)
     {
+        bufferPtr = pixelBuffer;
+        for (i = 0; i < w; i++)
+            pixelBuffer[i] = *(f_pointer++);
+
+        if (dither && j != h - 1) {
+            ditherLoadNextLine(buf, bufferPtr, w, invert, 8);
+        }
+
         for (i = 0; i < w; i++)
         {
             //This is the proper way of converting True Color (24 Bit RGB) bitmap file into grayscale, but it takes waaay too much time (full size picture takes about 17s to decode!)
@@ -1488,20 +1536,28 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
             //display.drawPixel(i + x, h - j + y, (uint8_t)(px*7));
 
             //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
-            uint8_t px = 0;
-            if (invert)
-                px = ((255 - buf[k++]) * 2126 / 10000) + ((255 - buf[k++]) * 7152 / 10000) + ((255 - buf[k++]) * 722 / 10000);
-            else
-                px = (buf[k++] * 2126 / 10000) + (buf[k++] * 7152 / 10000) + (buf[k++] * 722 / 10000);
-            //drawPixel(i + x, h - j + y, gammaLUT[px]);
-            drawPixel(i + x, h - 1 - j + y, px >> 5);
-            //drawPixel(i + x, h - j + y, px/32);
+            if (dither)
+                drawPixel(i + x, h - 1 - j + y, ditherGetPixel(i, j, w, h) >> 5);
+            else {
+                uint8_t px = 0;
+                if (invert)
+                    px = ((255 - *(bufferPtr++)) * 2126 / 10000) + ((255 - *(bufferPtr++)) * 7152 / 10000) + ((255 - *(bufferPtr++)) * 722 / 10000);
+                else
+                    px = (*(bufferPtr++) * 2126 / 10000) + (*(bufferPtr++) * 7152 / 10000) + (*(bufferPtr++) * 722 / 10000);
+                //drawPixel(i + x, h - j + y, gammaLUT[px]);
+                drawPixel(i + x, h - 1 - j + y, px >> 5);
+                //drawPixel(i + x, h - j + y, px/32);
+            }
         }
+
+        if (dither)
+            ditherSwap(w);
+
         if (padding)
         {
             for (int p = 0; p < padding; p++)
             {
-                k++;
+                ++bufferPtr;
             }
         }
     }
