@@ -1512,20 +1512,20 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
 
     if (dither) {
         bufferPtr = pixelBuffer;
-        for (i = 0; i < w; i++)
+        for (i = 0; i < w * 3; i++)
             pixelBuffer[i] = *(f_pointer++);
 
-        ditherStart(buf, bufferPtr, w, invert, 8);
+        ditherStart(buf, bufferPtr, w, invert, 24);
     }
 
     for (j = 0; j < h; j++)
     {
         bufferPtr = pixelBuffer;
-        for (i = 0; i < w; i++)
+        for (i = 0; i < w * 3; i++)
             pixelBuffer[i] = *(f_pointer++);
 
         if (dither && j != h - 1) {
-            ditherLoadNextLine(buf, bufferPtr, w, invert, 8);
+            ditherLoadNextLine(buf, bufferPtr, w, invert, 24);
         }
 
         for (i = 0; i < w; i++)
