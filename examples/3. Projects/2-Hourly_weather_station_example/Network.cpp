@@ -152,6 +152,14 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
             f = 0;
         }
     }
+    else if (httpCode == 401) {
+        display.setCursor(50, 290);
+        display.setTextSize(3);
+        display.print(F("Network error, probably wrong api key"));
+        display.display();
+        while (1)
+            ;
+    }
 
     //Stop http and clear document
     doc.clear();

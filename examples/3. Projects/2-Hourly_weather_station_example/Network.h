@@ -1,5 +1,6 @@
 #include "Arduino.h"
 
+#include "Inkplate.h"
 #include <WiFi.h>
 
 #include <HTTPClient.h>
@@ -17,6 +18,8 @@ extern char *lon;
 extern char *lat;
 
 extern char *apiKey;
+
+extern Inkplate display;
 
 #ifndef NETWORK_H
 #define NETWORK_H

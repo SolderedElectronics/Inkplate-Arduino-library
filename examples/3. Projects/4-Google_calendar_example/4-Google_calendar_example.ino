@@ -63,7 +63,7 @@ Network network;
 
 //Variables for time and raw event info
 char date[64];
-char data[32000];
+char* data;
 
 //Struct for storing calender event info
 struct entry
@@ -91,6 +91,8 @@ void drawData();
 void setup()
 {
     Serial.begin(115200);
+
+    data = (char*)ps_malloc(100000);
 
     //Initial display settings
     display.begin();

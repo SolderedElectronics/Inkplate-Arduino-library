@@ -84,7 +84,7 @@ void formatWind(char *str, float wind)
     dtostrf(wind, 2, 0, str);
 }
 
-void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr)
+void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char* abbr1, char* abbr2, char* abbr3, char* abbr4)
 {
     // Reconnect if wifi isn't connected
     if (WiFi.status() != WL_CONNECTED) {
@@ -145,6 +145,11 @@ void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
                 strcpy(city, doc["title"].as<char *>());
                 strcpy(currentWeather, doc["consolidated_weather"][0]["weather_state_name"].as<char *>());
                 strcpy(currentWeatherAbbr, doc["consolidated_weather"][0]["weather_state_abbr"].as<char *>());
+
+                strcpy(abbr1, doc["consolidated_weather"][0]["weather_state_abbr"].as<char *>());
+                strcpy(abbr2, doc["consolidated_weather"][1]["weather_state_abbr"].as<char *>());
+                strcpy(abbr3, doc["consolidated_weather"][2]["weather_state_abbr"].as<char *>());
+                strcpy(abbr4, doc["consolidated_weather"][3]["weather_state_abbr"].as<char *>());
 
                 formatTemp(temp1, doc["consolidated_weather"][0][F("the_temp")].as<float>());
                 formatTemp(temp2, doc["consolidated_weather"][1][F("the_temp")].as<float>());
