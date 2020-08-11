@@ -432,7 +432,7 @@ int Inkplate::drawBitmapFromSD(SdFile *p, int x, int y, bool dither, bool invert
     if (bmpHeader.color == 1)
         drawMonochromeBitmapSd(p, bmpHeader, x, y, invert);
     if (bmpHeader.color == 4)
-        drawGrayscaleBitmap4Sd(p, bmpHeader, x, y, invert);
+        drawGrayscaleBitmap4Sd(p, bmpHeader, x, y, dither, invert);
     if (bmpHeader.color == 8)
         drawGrayscaleBitmap8Sd(p, bmpHeader, x, y, dither, invert);
     if (bmpHeader.color == 24)
@@ -476,7 +476,7 @@ int Inkplate::drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool dithe
     if (bmpHeader.color == 1)
         drawMonochromeBitmapWeb(s, bmpHeader, x, y, len, invert);
     if (bmpHeader.color == 4)
-        drawGrayscaleBitmap4Web(s, bmpHeader, x, y, len, invert);
+        drawGrayscaleBitmap4Web(s, bmpHeader, x, y, len, dither, invert);
     if (bmpHeader.color == 8)
         drawGrayscaleBitmap8Web(s, bmpHeader, x, y, len, dither, invert);
     if (bmpHeader.color == 24)
@@ -1076,7 +1076,7 @@ int Inkplate::drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, i
     return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert)
+int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool dither, bool invert)
 {
     int w = bmpHeader.width;
     int h = bmpHeader.height;
@@ -1085,30 +1085,64 @@ int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, i
 
     f->seekSet(bmpHeader.startRAW);
     int i, j;
+
+    uint8_t *bufferPtr;
+
+    if (dither) {
+        bufferPtr = pixelBuffer;
+        f->read(pixelBuffer, w * 4 + (paddingBits? 4 : 0));
+
+        ditherStart(pixelBuffer, bufferPtr, w * 8 + (paddingBits? 4 : 0), invert, 4);
+    }
+
     for (j = 0; j < h; j++)
     {
-        uint8_t *bufferPtr = pixelBuffer;
+        bufferPtr = pixelBuffer;
         f->read(pixelBuffer, w * 4 + (paddingBits? 4 : 0));
+
+        if (dither && j != h - 1) {
+            ditherLoadNextLine(pixelBuffer, bufferPtr, w * 8 + (paddingBits? 4 : 0), invert, 4);
+        }
+
         for (i = 0; i < w; i++)
         {
-            uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
-            if (invert)
-                pixelRow = ~pixelRow;
-            for (int n = 0; n < 8; n++)
-            {
-                drawPixel((i * 8) + n + x, h - 1 - j + y, (pixelRow & (0xFULL << (28 - n * 4))) >> (28 - n * 4 + 1));
+            if (dither) {
+
+                for (int n = 0; n < 8; n++)
+                {
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits? 4 : 0), h) >> 5);
+                }
+            }
+            else {
+                uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
+                if (invert)
+                    pixelRow = ~pixelRow;
+                for (int n = 0; n < 8; n++)
+                {
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, (pixelRow & (0xFULL << (28 - n * 4))) >> (28 - n * 4 + 1));
+                }
             }
         }
         if (paddingBits)
         {
-            uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
-            if (invert)
-                pixelRow = ~pixelRow;
-            for (int n = 0; n < paddingBits; n++)
-            {
-                drawPixel((i * 8) + n + x, h - 1 - j + y, ((pixelRow & (0xFULL << (28 - n * 4)))) >> (28 - n * 4 + 1));
+            if (dither) {
+                for (int n = 0; n < paddingBits; n++)
+                {
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits? 4 : 0), h) >> 5);
+                }
+            }
+            else {
+                uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
+                if (invert)
+                    pixelRow = ~pixelRow;
+                for (int n = 0; n < paddingBits; n++)
+                {
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, ((pixelRow & (0xFULL << (28 - n * 4)))) >> (28 - n * 4 + 1));
+                }
             }
         }
+        if (dither)
+            ditherSwap(w * 8 + paddingBits);
     }
     f->close();
     return 1;
@@ -1248,6 +1282,33 @@ void Inkplate::ditherStart(uint8_t *pixelBuffer, uint8_t* bufferPtr, int w, bool
             else
                 ditherBuffer[0][i] = *(bufferPtr++);
         }
+    if (bits == 4) {
+        int _w = w / 8;
+        int paddingBits = w % 8;
+
+        for (int i = 0; i < _w; ++i) {
+            for (int n = 0; n < 4; n++) {
+                uint8_t temp = *(bufferPtr++);
+                ditherBuffer[0][i * 8 + n * 2] = temp & 0xF0;
+                ditherBuffer[0][i * 8 + n * 2 + 1] = (temp & 0x0F) << 4;
+
+                if (invert) {
+                    ditherBuffer[0][i * 8 + n * 2] = ~ditherBuffer[0][i * 8 + n * 2];
+                    ditherBuffer[0][i * 8 + n * 2 + 1] = ~ditherBuffer[0][i * 8 + n * 2 + 1];
+                }
+            }
+        }
+        if (paddingBits)
+        {
+            uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
+            if (invert)
+                pixelRow = ~pixelRow;
+            for (int n = 0; n < paddingBits; n++)
+            {
+                ditherBuffer[0][_w * 8 + n] = (pixelRow & (0xFULL << ((7 - n) * 4))) >> ((7 - n) * 4 - 4);
+            }
+        }
+    }
 }
 
 //Loads next line, after this ditherGetPixel can be called and alters values in next line
@@ -1267,7 +1328,33 @@ void Inkplate::ditherLoadNextLine(uint8_t *pixelBuffer, uint8_t* bufferPtr, int 
                 ditherBuffer[1][i] = *(bufferPtr++);
         }
     }
+    if (bits == 4) {
+        int _w = w / 8;
+        int paddingBits = w % 8;
 
+        for (int i = 0; i < _w; ++i) {
+            for (int n = 0; n < 4; n++) {
+                uint8_t temp = *(bufferPtr++);
+                ditherBuffer[0][i * 8 + n * 2] = temp & 0xF0;
+                ditherBuffer[0][i * 8 + n * 2 + 1] = (temp & 0x0F) << 4;
+
+                if (invert) {
+                    ditherBuffer[0][i * 8 + n * 2] = ~ditherBuffer[0][i * 8 + n * 2];
+                    ditherBuffer[0][i * 8 + n * 2 + 1] = ~ditherBuffer[0][i * 8 + n * 2 + 1];
+                }
+            }
+        }
+        if (paddingBits)
+        {
+            uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
+            if (invert)
+                pixelRow = ~pixelRow;
+            for (int n = 0; n < paddingBits; n++)
+            {
+                ditherBuffer[1][_w * 8 + n] = (pixelRow & (0xFULL << (28 - n * 4))) >> (28 - n * 4 - 4);
+            }
+        }
+    }
 }
 
 //Gets specific pixel, mainly at i, j is just used for bound checking when changing next line values
@@ -1351,7 +1438,7 @@ int Inkplate::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHead
     return 1;
 }
 
-int Inkplate::drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert)
+int Inkplate::drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool dither, bool invert)
 {
     int w = bmpHeader.width;
     int h = bmpHeader.height;
@@ -1375,29 +1462,68 @@ int Inkplate::drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHead
         }
     }
 
-    int i, j, k = bmpHeader.startRAW - 34;
+    int i, j;
+
+    uint8_t *bufferPtr;
+    uint8_t *f_pointer = buf + (bmpHeader.startRAW - 34);
+
+    if (dither) {
+        bufferPtr = pixelBuffer;
+        for (i = 0; i < w * 4 + (paddingBits? 1 : 0); i++)
+            pixelBuffer[i] = *(f_pointer++);
+
+        ditherStart(pixelBuffer, bufferPtr, w, invert, 4);
+    }
+
     for (j = 0; j < h; j++)
     {
+        bufferPtr = pixelBuffer;
+        for (i = 0; i < w * 4 + (paddingBits? 1 : 0); i++)
+            pixelBuffer[i] = *(f_pointer++);
+
+        if (dither && j != h - 1) {
+            ditherLoadNextLine(pixelBuffer, bufferPtr, w * 8 + (paddingBits? 4 : 0), invert, 4);
+        }
+
         for (i = 0; i < w; i++)
         {
-            uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
-            if (invert)
-                pixelRow = ~pixelRow;
-            for (int n = 0; n < 8; n++)
-            {
-                drawPixel((i * 8) + n + x, h - 1 - j + y, (pixelRow & (0xFULL << (28 - n * 4))) >> (28 - n * 4 + 1));
+            if (dither) {
+
+                for (int n = 0; n < 8; n++)
+                {
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits? 4 : 0), h) >> 5);
+                }
+            }
+            else {
+                uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
+                if (invert)
+                    pixelRow = ~pixelRow;
+                for (int n = 0; n < 8; n++)
+                {
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, (pixelRow & (0xFULL << (28 - n * 4))) >> (28 - n * 4 + 1));
+                }
             }
         }
         if (paddingBits)
         {
-            uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
-            if (invert)
-                pixelRow = ~pixelRow;
-            for (int n = 0; n < paddingBits; n++)
-            {
-                drawPixel((i * 8) + n + x, h - 1 - j + y, ((pixelRow & (0xFULL << (28 - n * 4)))) >> (28 - n * 4 + 1));
+            if (dither) {
+                for (int n = 0; n < paddingBits; n++)
+                {
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits? 4 : 0), h) >> 5);
+                }
+            }
+            else {
+                uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
+                if (invert)
+                    pixelRow = ~pixelRow;
+                for (int n = 0; n < paddingBits; n++)
+                {
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, ((pixelRow & (0xFULL << (28 - n * 4)))) >> (28 - n * 4 + 1));
+                }
             }
         }
+        if (dither)
+            ditherSwap(w * 8 + paddingBits);
     }
 
     free(buf);

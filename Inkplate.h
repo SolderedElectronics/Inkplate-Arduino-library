@@ -245,11 +245,11 @@ private:
     void readBmpHeaderSd(SdFile *_f, struct bitmapHeader *_h);
     void readBmpHeaderWeb(WiFiClient *_s, struct bitmapHeader *_h);
     int drawMonochromeBitmapSd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
-    int drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool invert);
+    int drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool dither, bool invert);
     int drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool dither, bool invert);
     int drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, int x, int y, bool dither, bool invert);
     int drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
-    int drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert);
+    int drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool dither, bool invert);
     int drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool dither, bool invert);
     int drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool dither, bool invert);
     void precalculateGamma(uint8_t *c, float gamma);
