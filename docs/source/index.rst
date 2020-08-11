@@ -10,6 +10,7 @@ Welcome to Inkplate 6's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   begin
 
 *************
 What is this?
