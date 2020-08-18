@@ -11,7 +11,7 @@
 StaticJsonDocument<6000> doc;
 
 // Declared week days
-char weekDays[8][8] ={
+char weekDays[8][8] = {
     "Mon",
     "Tue",
     "Wed",
@@ -27,19 +27,22 @@ void Network::begin(char *city)
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pass);
 
-    if (WiFi.status() != WL_CONNECTED) {
-        WiFi.reconnect();
+    int cnt = 0;
+    Serial.print(F("Waiting for WiFi to connect..."));
+    while ((WiFi.status() != WL_CONNECTED))
+    {
+        Serial.print(F("."));
+        delay(1000);
+        ++cnt;
 
-        delay(5000);
-
-        Serial.println(F("Waiting for WiFi to reconnect..."));
-        while ((WiFi.status() != WL_CONNECTED))
+        if (cnt == 20)
         {
-            // Prints a dot every second that wifi isn't connected
-            Serial.print(F("."));
-            delay(1000);
+            Serial.println("Can't connect to WIFI, restarting");
+            delay(100);
+            ESP.restart();
         }
     }
+    Serial.println(F(" connected"));
 
     // Find internet time
     setTime();
@@ -84,20 +87,30 @@ void formatWind(char *str, float wind)
     dtostrf(wind, 2, 0, str);
 }
 
-void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char* abbr1, char* abbr2, char* abbr3, char* abbr4)
+void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1, char *abbr2, char *abbr3, char *abbr4)
 {
-    // Reconnect if wifi isn't connected
-    if (WiFi.status() != WL_CONNECTED) {
+    // If not connected to wifi reconnect wifi
+    if (WiFi.status() != WL_CONNECTED)
+    {
         WiFi.reconnect();
 
         delay(5000);
 
+        int cnt = 0;
         Serial.println(F("Waiting for WiFi to reconnect..."));
         while ((WiFi.status() != WL_CONNECTED))
         {
             // Prints a dot every second that wifi isn't connected
             Serial.print(F("."));
             delay(1000);
+            ++cnt;
+
+            if (cnt == 7)
+            {
+                Serial.println("Can't connect to WIFI, restart initiated.");
+                delay(100);
+                ESP.restart();
+            }
         }
     }
 
@@ -215,17 +228,27 @@ void Network::getDays(char *day, char *day1, char *day2, char *day3)
 void Network::findCity(char *city)
 {
     // If not connected to wifi reconnect wifi
-    if (WiFi.status() != WL_CONNECTED) {
+    if (WiFi.status() != WL_CONNECTED)
+    {
         WiFi.reconnect();
 
         delay(5000);
 
+        int cnt = 0;
         Serial.println(F("Waiting for WiFi to reconnect..."));
         while ((WiFi.status() != WL_CONNECTED))
         {
             // Prints a dot every second that wifi isn't connected
             Serial.print(F("."));
             delay(1000);
+            ++cnt;
+
+            if (cnt == 7)
+            {
+                Serial.println("Can't connect to WIFI, restart initiated.");
+                delay(100);
+                ESP.restart();
+            }
         }
     }
 
