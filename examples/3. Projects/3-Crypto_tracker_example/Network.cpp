@@ -26,11 +26,20 @@ void Network::begin()
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pass);
 
+    int cnt = 0;
     Serial.print(F("Waiting for WiFi to connect..."));
     while ((WiFi.status() != WL_CONNECTED))
     {
         Serial.print(F("."));
         delay(1000);
+        ++cnt;
+
+        if (cnt == 20)
+        {
+            Serial.println("Can't connect to WIFI, restarting");
+            delay(100);
+            ESP.restart();
+        }
     }
     Serial.println(F(" connected"));
 
@@ -67,17 +76,27 @@ bool Network::getData(double *data)
     bool f = 0;
 
     // If not connected to wifi reconnect wifi
-    if (WiFi.status() != WL_CONNECTED) {
+    if (WiFi.status() != WL_CONNECTED)
+    {
         WiFi.reconnect();
 
         delay(5000);
 
+        int cnt = 0;
         Serial.println(F("Waiting for WiFi to reconnect..."));
         while ((WiFi.status() != WL_CONNECTED))
         {
             // Prints a dot every second that wifi isn't connected
             Serial.print(F("."));
             delay(1000);
+            ++cnt;
+
+            if (cnt == 7)
+            {
+                Serial.println("Can't connect to WIFI, restart initiated.");
+                delay(100);
+                ESP.restart();
+            }
         }
     }
 
