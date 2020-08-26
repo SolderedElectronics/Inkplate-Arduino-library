@@ -204,6 +204,9 @@ public:
     int drawBitmapFromSD(char *fileName, int x, int y, bool dither = false, bool invert = false);
     int drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool dither = false, bool invert = false);
     int drawBitmapFromWeb(char *url, int x, int y, bool dither = false, bool invert = false);
+    void drawElipse(int rx, int ry, int xc, int yc, int c);
+    void fillElipse(int rx, int ry, int xc, int yc, int c);
+    void drawPolygon(int *x, int *y, int n, int color);
     void fillPolygon(int *x, int *y, int n, int color);
     void drawThickLine(int x1, int y1, int x2, int y2, int color, float thickness);
     void drawGradientLine(int x1, int y1, int x2, int y2, int color1, int color2, float thickness = -1);

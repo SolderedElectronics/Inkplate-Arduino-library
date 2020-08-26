@@ -361,6 +361,59 @@ void loop()
   display.display();
   delay(DELAY_MS);
 
+  // Draws an elipse with x radius, y radius, center x, center y and color
+  display.clearDisplay();
+  display.drawElipse(100, 200, 400, 300, 0);
+  displayCurrentAction("Drawing an elipse");
+  display.display();
+
+  delay(DELAY_MS);
+
+  // Fills an elipse with x radius, y radius, center x, center y and color
+  display.clearDisplay();
+  display.fillElipse(100, 200, 400, 300, 0);
+  displayCurrentAction("Drawing a filled elipse");
+  display.display();
+
+  delay(DELAY_MS);
+
+  // Code block for generating random points and sorting them in a counter
+  // clockwise direction.
+  int xt[10];
+  int yt[10];
+  int n = 10;
+  for (int i = 0; i < n; ++i)
+  {
+    xt[i] = random(100, 700);
+    yt[i] = random(100, 500);
+  }
+  int k;
+  for (int i = 0; i < n - 1; ++i)
+    for (int j = i + 1; j < n; ++j)
+      if (atan2(yt[j] - 300, xt[j] - 400) < atan2(yt[i] - 300, xt[i] - 400))
+      {
+        k = xt[i], xt[i] = xt[j], xt[j] = k;
+        k = yt[i], yt[i] = yt[j], yt[j] = k;
+      }
+
+  // Draws a polygon, from x and y coordinate arrays of n points in color c
+  display.clearDisplay();
+  display.drawPolygon(xt, yt, n, 0);
+  displayCurrentAction("Drawing a polygon");
+  display.display();
+
+  delay(DELAY_MS);
+
+  // Fills a polygon, from x and y coordinate arrays of n points in color c,
+  // Points need to be counter clockwise sorted
+  // Method can be quite slow for now, probably will improve
+  display.clearDisplay();
+  display.fillPolygon(xt, yt, n, 0);
+  displayCurrentAction("Drawing a filled polygon");
+  display.display();
+
+  delay(DELAY_MS);
+
   //Write text and rotate it by 90 deg. forever
   int r = 0;
   display.setTextSize(8);
