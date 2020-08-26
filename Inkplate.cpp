@@ -519,7 +519,6 @@ void Inkplate::drawElipse(int rx, int ry,
                           int xc, int yc,
                           int c)
 {
-    selectDisplayMode(INKPLATE_3BIT);
     float dx, dy, d1, d2, x, y;
     x = 0;
     y = ry;
@@ -583,7 +582,6 @@ void Inkplate::fillElipse(int rx, int ry,
                           int xc, int yc,
                           int c)
 {
-    selectDisplayMode(INKPLATE_3BIT);
     int hh = ry * ry;
     int ww = rx * rx;
     int hhww = hh * ww;
@@ -612,7 +610,6 @@ void Inkplate::fillElipse(int rx, int ry,
 
 void Inkplate::fillPolygon(int *x, int *y, int n, int color)
 {
-    selectDisplayMode(INKPLATE_3BIT);
     int tx[100], ty[100];
     triangulate.triangulate(x, y, n, tx, ty);
 
@@ -628,7 +625,6 @@ void Inkplate::fillPolygon(int *x, int *y, int n, int color)
 
 void Inkplate::drawPolygon(int *x, int *y, int n, int color)
 {
-    selectDisplayMode(INKPLATE_3BIT);
     for (int i = 0; i < n; ++i)
         drawLine(x[i], y[i], x[(i + 1) % n], y[(i + 1) % n], color);
 }

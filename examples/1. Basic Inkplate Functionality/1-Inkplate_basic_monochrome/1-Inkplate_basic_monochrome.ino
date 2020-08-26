@@ -363,7 +363,7 @@ void loop()
 
   // Draws an elipse with x radius, y radius, center x, center y and color
   display.clearDisplay();
-  display.drawElipse(100, 200, 400, 300, 0);
+  display.drawElipse(100, 200, 400, 300, BLACK);
   displayCurrentAction("Drawing an elipse");
   display.display();
 
@@ -371,7 +371,7 @@ void loop()
 
   // Fills an elipse with x radius, y radius, center x, center y and color
   display.clearDisplay();
-  display.fillElipse(100, 200, 400, 300, 0);
+  display.fillElipse(100, 200, 400, 300, BLACK);
   displayCurrentAction("Drawing a filled elipse");
   display.display();
 
@@ -398,7 +398,7 @@ void loop()
 
   // Draws a polygon, from x and y coordinate arrays of n points in color c
   display.clearDisplay();
-  display.drawPolygon(xt, yt, n, 0);
+  display.drawPolygon(xt, yt, n, BLACK);
   displayCurrentAction("Drawing a polygon");
   display.display();
 
@@ -408,7 +408,7 @@ void loop()
   // Points need to be counter clockwise sorted
   // Method can be quite slow for now, probably will improve
   display.clearDisplay();
-  display.fillPolygon(xt, yt, n, 0);
+  display.fillPolygon(xt, yt, n, BLACK);
   displayCurrentAction("Drawing a filled polygon");
   display.display();
 
