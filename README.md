@@ -59,7 +59,7 @@ As promised in an [early update](https://www.crowdsupply.com/e-radionica/inkplat
 It is based on UART (serial) communication - connect the Inkplate to "master" board either via USB cable or directly via ESP32 RX and TX pins. Using standard UART at 115200 baud, you can send commands to change screen contents. For example, send *#H(000,000,"/img.bmp")** to show image img.bmp from SD card on the screen. Find very basic documentation for using it [here](https://github.com/e-radionicacom/Inkplate-6-Arduino-library/blob/master/examples/4.%20Others/1-Inkplate_Slave_Mode/Inkplate_slave_mode_documentation.txt). 
 
 ### Battery power
-Inkplate 6 has two options for powering it. First one is obvious - USB port at side of the board. Just plug any micro USB cable and you are good to go. Second option is battery. Supported batteries are standard Li-Ion/Li-Poly batteries with 3.7V nominal voltage. Connector for the battery is standard 2.00mm pitch JST connector. The onboard charger will charge the battery with 500mA when USB is plugged at the same time. You can use battery of any size or capacity if you don't have a enclosure. If you are using our enclosure, battery size shouldn't exceed 90mm x 50mm (3.5 x 1.95 inch) and 5.5mm (0.2 inch) in height.
+Inkplate 6 has two options for powering it. First one is obvious - USB port at side of the board. Just plug any micro USB cable and you are good to go. Second option is battery. Supported batteries are standard Li-Ion/Li-Poly batteries with 3.7V nominal voltage. Connector for the battery is standard 2.00mm pitch JST connector. The onboard charger will charge the battery with 500mA when USB is plugged at the same time. You can use battery of any size or capacity if you don't have a enclosure. If you are using our enclosure, battery size shouldn't exceed 90mm x 40mm (3.5 x 1.57 inch) and 5mm (0.19 inch) in height.
 
 ### Micropython
 If you are looking for micropython support, it is still work in progress - we are new with it! :) When it's ready, we will let you know with new project update. 
@@ -76,5 +76,5 @@ Inkplate 6 is available for purchase via:
 
 Inkplate 6 is open-source. If you are looking for hardware design of the board, check the [Hardware repo](https://github.com/e-radionicacom/Inkplate-6-hardware). You will find 3D printable [enclosure](https://github.com/e-radionicacom/Inkplate-6-hardware/tree/master/3D%20printable%20case) there, as well as [detailed dimensions](https://github.com/e-radionicacom/Inkplate-6-hardware/tree/master/Technical%20drawings). In this repo you will find code for driving the ED060SC7 e-paper display used by Inkplate.
 
-For all questions and issues, please contact us via [temporary e-mail address](mailto:inkplate@e-radionica.com). As soon as forum has been set up, e-mail support will be discontinued. 
+For all questions and issues, please use our [forum](http://forum.e-radionica.com/en) to ask an question.
 For sales & collaboration, please reach us via [e-mail](mailto:kontakt@e-radionica.com).
