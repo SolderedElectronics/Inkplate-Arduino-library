@@ -298,12 +298,12 @@ void Inkplate::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, i
     {
         for (j = 0; j < xSize - 1; j++)
         {
-            drawPixel((j * 2) + _x, i + _y, (*(_p + xSize * (i)+j) >> 4) >> 1);
-            drawPixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i)+j) & 0xff) >> 1);
+            drawPixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4) >> 1);
+            drawPixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
         }
-        drawPixel((j * 2) + _x, i + _y, (*(_p + xSize * (i)+j) >> 4) >> 1);
+        drawPixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4) >> 1);
         if (_rem == 0)
-            drawPixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i)+j) & 0xff) >> 1);
+            drawPixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
     }
 }
 
@@ -515,6 +515,120 @@ int Inkplate::drawBitmapFromWeb(char *url, int x, int y, bool dither, bool inver
     return ret;
 }
 
+void Inkplate::drawElipse(int rx, int ry,
+                          int xc, int yc,
+                          int c)
+{
+    float dx, dy, d1, d2, x, y;
+    x = 0;
+    y = ry;
+
+    d1 = (ry * ry) - (rx * rx * ry) +
+         (0.25 * rx * rx);
+    dx = 2 * ry * ry * x;
+    dy = 2 * rx * rx * y;
+
+    while (dx < dy)
+    {
+        drawPixel(x + xc, y + yc, c);
+        drawPixel(-x + xc, y + yc, c);
+        drawPixel(x + xc, -y + yc, c);
+        drawPixel(-x + xc, -y + yc, c);
+
+        if (d1 < 0)
+        {
+            x++;
+            dx = dx + (2 * ry * ry);
+            d1 = d1 + dx + (ry * ry);
+        }
+        else
+        {
+            x++;
+            y--;
+            dx = dx + (2 * ry * ry);
+            dy = dy - (2 * rx * rx);
+            d1 = d1 + dx - dy + (ry * ry);
+        }
+    }
+
+    d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) +
+         ((rx * rx) * ((y - 1) * (y - 1))) -
+         (rx * rx * ry * ry);
+    while (y >= 0)
+    {
+        drawPixel(x + xc, y + yc, c);
+        drawPixel(-x + xc, y + yc, c);
+        drawPixel(x + xc, -y + yc, c);
+        drawPixel(-x + xc, -y + yc, c);
+
+        if (d2 > 0)
+        {
+            y--;
+            dy = dy - (2 * rx * rx);
+            d2 = d2 + (rx * rx) - dy;
+        }
+        else
+        {
+            y--;
+            x++;
+            dx = dx + (2 * ry * ry);
+            dy = dy - (2 * rx * rx);
+            d2 = d2 + dx - dy + (rx * rx);
+        }
+    }
+}
+
+void Inkplate::fillElipse(int rx, int ry,
+                          int xc, int yc,
+                          int c)
+{
+    int hh = ry * ry;
+    int ww = rx * rx;
+    int hhww = hh * ww;
+    int x0 = rx;
+    int dx = 0;
+
+    for (int x = -rx; x <= rx; x++)
+        drawPixel(xc + x, yc, c);
+
+    for (int y = 1; y <= ry; y++)
+    {
+        int x1 = x0 - (dx - 1);
+        for (; x1 > 0; x1--)
+            if (x1 * x1 * hh + y * y * ww <= hhww)
+                break;
+        dx = x0 - x1;
+        x0 = x1;
+
+        for (int x = -x0; x <= x0; x++)
+        {
+            drawPixel(xc + x, yc - y, c);
+            drawPixel(xc + x, yc + y, c);
+        }
+    }
+}
+
+void Inkplate::fillPolygon(int *x, int *y, int n, int color)
+{
+    int tx[100], ty[100];
+    triangulate.triangulate(x, y, n, tx, ty);
+
+    for (int i = 0; i < n - 2; ++i)
+    {
+        fillTriangle(
+            tx[i * 3 + 0], ty[i * 3 + 0],
+            tx[i * 3 + 1], ty[i * 3 + 1],
+            tx[i * 3 + 2], ty[i * 3 + 2],
+            color);
+    }
+}
+
+void Inkplate::drawPolygon(int *x, int *y, int n, int color)
+{
+    for (int i = 0; i < n; ++i)
+        drawLine(x[i], y[i], x[(i + 1) % n], y[(i + 1) % n], color);
+}
+
 void Inkplate::drawThickLine(int x1, int y1, int x2, int y2, int color, float thickness)
 {
     float deg = atan2f((float)(y2 - y1), (float)(x2 - x1));
@@ -551,13 +665,13 @@ void Inkplate::drawGradientLine(int x1, int y1, int x2, int y2, int color1, int 
     {
         if (abs(thickness + 1) < 0.1)
             drawLine((int)((float)x1 + (float)i * px), (int)((float)y1 + (float)i * py),
-                (int)((float)x1 + (float)(i + 1) * px), (int)((float)y1 + (float)(i + 1) * py),
-                color1 + i);
+                     (int)((float)x1 + (float)(i + 1) * px), (int)((float)y1 + (float)(i + 1) * py),
+                     color1 + i);
         else
             drawThickLine((int)((float)x1 + (float)i * px), (int)((float)y1 + (float)i * py),
-                (int)((float)x1 + (float)(i + 1) * px), (int)((float)y1 + (float)(i + 1) * py),
-                color1 + i,
-                thickness);
+                          (int)((float)x1 + (float)(i + 1) * px), (int)((float)y1 + (float)(i + 1) * py),
+                          color1 + i,
+                          thickness);
     }
 }
 
@@ -1088,32 +1202,36 @@ int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, i
 
     uint8_t *bufferPtr;
 
-    if (dither) {
+    if (dither)
+    {
         bufferPtr = pixelBuffer;
-        f->read(pixelBuffer, w * 4 + (paddingBits? 4 : 0));
+        f->read(pixelBuffer, w * 4 + (paddingBits ? 4 : 0));
 
-        ditherStart(pixelBuffer, bufferPtr, w * 8 + (paddingBits? 4 : 0), invert, 4);
+        ditherStart(pixelBuffer, bufferPtr, w * 8 + (paddingBits ? 4 : 0), invert, 4);
     }
 
     for (j = 0; j < h; j++)
     {
         bufferPtr = pixelBuffer;
-        f->read(pixelBuffer, w * 4 + (paddingBits? 4 : 0));
+        f->read(pixelBuffer, w * 4 + (paddingBits ? 4 : 0));
 
-        if (dither && j != h - 1) {
-            ditherLoadNextLine(pixelBuffer, bufferPtr, w * 8 + (paddingBits? 4 : 0), invert, 4);
+        if (dither && j != h - 1)
+        {
+            ditherLoadNextLine(pixelBuffer, bufferPtr, w * 8 + (paddingBits ? 4 : 0), invert, 4);
         }
 
         for (i = 0; i < w; i++)
         {
-            if (dither) {
+            if (dither)
+            {
 
                 for (int n = 0; n < 8; n++)
                 {
-                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits? 4 : 0), h) >> 5);
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits ? 4 : 0), h) >> 5);
                 }
             }
-            else {
+            else
+            {
                 uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
                 if (invert)
                     pixelRow = ~pixelRow;
@@ -1125,13 +1243,15 @@ int Inkplate::drawGrayscaleBitmap4Sd(SdFile *f, struct bitmapHeader bmpHeader, i
         }
         if (paddingBits)
         {
-            if (dither) {
+            if (dither)
+            {
                 for (int n = 0; n < paddingBits; n++)
                 {
-                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits? 4 : 0), h) >> 5);
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits ? 4 : 0), h) >> 5);
                 }
             }
-            else {
+            else
+            {
                 uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
                 if (invert)
                     pixelRow = ~pixelRow;
@@ -1158,7 +1278,8 @@ int Inkplate::drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, i
 
     uint8_t *bufferPtr;
 
-    if (dither) {
+    if (dither)
+    {
         bufferPtr = pixelBuffer;
         f->read(pixelBuffer, w);
 
@@ -1170,7 +1291,8 @@ int Inkplate::drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, i
         bufferPtr = pixelBuffer;
         f->read(pixelBuffer, w);
 
-        if (dither && j != h - 1) {
+        if (dither && j != h - 1)
+        {
             ditherLoadNextLine(pixelBuffer, bufferPtr, w, invert, 8);
         }
 
@@ -1178,7 +1300,8 @@ int Inkplate::drawGrayscaleBitmap8Sd(SdFile *f, struct bitmapHeader bmpHeader, i
         {
             if (dither)
                 drawPixel(i + x, h - 1 - j + y, ditherGetPixel(i, j, w, h) >> 5);
-            else {
+            else
+            {
                 uint8_t px = 0;
                 if (invert)
                     px = 255 - *(bufferPtr++);
@@ -1213,7 +1336,8 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
 
     uint8_t *bufferPtr;
 
-    if (dither) {
+    if (dither)
+    {
         bufferPtr = pixelBuffer;
         f->read(pixelBuffer, w * 3);
 
@@ -1225,7 +1349,8 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
         bufferPtr = pixelBuffer;
         f->read(pixelBuffer, w * 3);
 
-        if (dither && j != h - 1) {
+        if (dither && j != h - 1)
+        {
             ditherLoadNextLine(pixelBuffer, bufferPtr, w, invert, 24);
         }
 
@@ -1238,7 +1363,8 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
 
             if (dither)
                 drawPixel(i + x, h - 1 - j + y, ditherGetPixel(i, j, w, h) >> 5);
-            else {
+            else
+            {
                 uint8_t px = 0;
                 //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
                 if (invert)
@@ -1268,31 +1394,38 @@ int Inkplate::drawGrayscaleBitmap24Sd(SdFile *f, struct bitmapHeader bmpHeader, 
 }
 
 //Loads first line in current dither buffer
-void Inkplate::ditherStart(uint8_t *pixelBuffer, uint8_t* bufferPtr, int w, bool invert, uint8_t bits) {
+void Inkplate::ditherStart(uint8_t *pixelBuffer, uint8_t *bufferPtr, int w, bool invert, uint8_t bits)
+{
     for (int i = 0; i < w; ++i)
-        if (bits == 24) {
+        if (bits == 24)
+        {
             if (invert)
                 ditherBuffer[0][i] = ((255 - *(bufferPtr++)) * 2126 / 10000) + ((255 - *(bufferPtr++)) * 7152 / 10000) + ((255 - *(bufferPtr++)) * 722 / 10000);
             else
                 ditherBuffer[0][i] = (*(bufferPtr++) * 2126 / 10000) + (*(bufferPtr++) * 7152 / 10000) + (*(bufferPtr++) * 722 / 10000);
         }
-        else if (bits == 8) {
+        else if (bits == 8)
+        {
             if (invert)
                 ditherBuffer[0][i] = 255 - *(bufferPtr++);
             else
                 ditherBuffer[0][i] = *(bufferPtr++);
         }
-    if (bits == 4) {
+    if (bits == 4)
+    {
         int _w = w / 8;
         int paddingBits = w % 8;
 
-        for (int i = 0; i < _w; ++i) {
-            for (int n = 0; n < 4; n++) {
+        for (int i = 0; i < _w; ++i)
+        {
+            for (int n = 0; n < 4; n++)
+            {
                 uint8_t temp = *(bufferPtr++);
                 ditherBuffer[0][i * 8 + n * 2] = temp & 0xF0;
                 ditherBuffer[0][i * 8 + n * 2 + 1] = (temp & 0x0F) << 4;
 
-                if (invert) {
+                if (invert)
+                {
                     ditherBuffer[0][i * 8 + n * 2] = ~ditherBuffer[0][i * 8 + n * 2];
                     ditherBuffer[0][i * 8 + n * 2 + 1] = ~ditherBuffer[0][i * 8 + n * 2 + 1];
                 }
@@ -1312,33 +1445,40 @@ void Inkplate::ditherStart(uint8_t *pixelBuffer, uint8_t* bufferPtr, int w, bool
 }
 
 //Loads next line, after this ditherGetPixel can be called and alters values in next line
-void Inkplate::ditherLoadNextLine(uint8_t *pixelBuffer, uint8_t* bufferPtr, int w, bool invert, uint8_t bits) {
+void Inkplate::ditherLoadNextLine(uint8_t *pixelBuffer, uint8_t *bufferPtr, int w, bool invert, uint8_t bits)
+{
     for (int i = 0; i < w; ++i)
     {
-        if (bits == 24) {
+        if (bits == 24)
+        {
             if (invert)
                 ditherBuffer[1][i] = ((255 - *(bufferPtr++)) * 2126 / 10000) + ((255 - *(bufferPtr++)) * 7152 / 10000) + ((255 - *(bufferPtr++)) * 722 / 10000);
             else
                 ditherBuffer[1][i] = (*(bufferPtr++) * 2126 / 10000) + (*(bufferPtr++) * 7152 / 10000) + (*(bufferPtr++) * 722 / 10000);
         }
-        else if (bits == 8) {
+        else if (bits == 8)
+        {
             if (invert)
                 ditherBuffer[1][i] = 255 - *(bufferPtr++);
             else
                 ditherBuffer[1][i] = *(bufferPtr++);
         }
     }
-    if (bits == 4) {
+    if (bits == 4)
+    {
         int _w = w / 8;
         int paddingBits = w % 8;
 
-        for (int i = 0; i < _w; ++i) {
-            for (int n = 0; n < 4; n++) {
+        for (int i = 0; i < _w; ++i)
+        {
+            for (int n = 0; n < 4; n++)
+            {
                 uint8_t temp = *(bufferPtr++);
                 ditherBuffer[0][i * 8 + n * 2] = temp & 0xF0;
                 ditherBuffer[0][i * 8 + n * 2 + 1] = (temp & 0x0F) << 4;
 
-                if (invert) {
+                if (invert)
+                {
                     ditherBuffer[0][i * 8 + n * 2] = ~ditherBuffer[0][i * 8 + n * 2];
                     ditherBuffer[0][i * 8 + n * 2 + 1] = ~ditherBuffer[0][i * 8 + n * 2 + 1];
                 }
@@ -1358,7 +1498,8 @@ void Inkplate::ditherLoadNextLine(uint8_t *pixelBuffer, uint8_t* bufferPtr, int 
 }
 
 //Gets specific pixel, mainly at i, j is just used for bound checking when changing next line values
-uint8_t Inkplate::ditherGetPixel(int i, int j, int w, int h) {
+uint8_t Inkplate::ditherGetPixel(int i, int j, int w, int h)
+{
     uint8_t oldpixel = ditherBuffer[0][i];
     uint8_t newpixel = (oldpixel & B11100000);
 
@@ -1379,7 +1520,8 @@ uint8_t Inkplate::ditherGetPixel(int i, int j, int w, int h) {
 }
 
 //Swaps current and next line, for next one to be overwritten
-uint8_t Inkplate::ditherSwap(int w) {
+uint8_t Inkplate::ditherSwap(int w)
+{
     for (int i = 0; i < w; ++i)
         ditherBuffer[0][i] = ditherBuffer[1][i];
 }
@@ -1467,9 +1609,10 @@ int Inkplate::drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHead
     uint8_t *bufferPtr;
     uint8_t *f_pointer = buf + (bmpHeader.startRAW - 34);
 
-    if (dither) {
+    if (dither)
+    {
         bufferPtr = pixelBuffer;
-        for (i = 0; i < w * 4 + (paddingBits? 1 : 0); i++)
+        for (i = 0; i < w * 4 + (paddingBits ? 1 : 0); i++)
             pixelBuffer[i] = *(f_pointer++);
 
         ditherStart(pixelBuffer, bufferPtr, w, invert, 4);
@@ -1478,23 +1621,26 @@ int Inkplate::drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHead
     for (j = 0; j < h; j++)
     {
         bufferPtr = pixelBuffer;
-        for (i = 0; i < w * 4 + (paddingBits? 1 : 0); i++)
+        for (i = 0; i < w * 4 + (paddingBits ? 1 : 0); i++)
             pixelBuffer[i] = *(f_pointer++);
 
-        if (dither && j != h - 1) {
-            ditherLoadNextLine(pixelBuffer, bufferPtr, w * 8 + (paddingBits? 4 : 0), invert, 4);
+        if (dither && j != h - 1)
+        {
+            ditherLoadNextLine(pixelBuffer, bufferPtr, w * 8 + (paddingBits ? 4 : 0), invert, 4);
         }
 
         for (i = 0; i < w; i++)
         {
-            if (dither) {
+            if (dither)
+            {
 
                 for (int n = 0; n < 8; n++)
                 {
-                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits? 4 : 0), h) >> 5);
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits ? 4 : 0), h) >> 5);
                 }
             }
-            else {
+            else
+            {
                 uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
                 if (invert)
                     pixelRow = ~pixelRow;
@@ -1506,13 +1652,15 @@ int Inkplate::drawGrayscaleBitmap4Web(WiFiClient *s, struct bitmapHeader bmpHead
         }
         if (paddingBits)
         {
-            if (dither) {
+            if (dither)
+            {
                 for (int n = 0; n < paddingBits; n++)
                 {
-                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits? 4 : 0), h) >> 5);
+                    drawPixel((i * 8) + n + x, h - 1 - j + y, ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits ? 4 : 0), h) >> 5);
                 }
             }
-            else {
+            else
+            {
                 uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
                 if (invert)
                     pixelRow = ~pixelRow;
@@ -1559,7 +1707,8 @@ int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHead
 
     int i, j;
 
-    if (dither) {
+    if (dither)
+    {
         bufferPtr = pixelBuffer;
         for (i = 0; i < w; i++)
             pixelBuffer[i] = *(f_pointer++);
@@ -1573,7 +1722,8 @@ int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHead
         for (i = 0; i < w; i++)
             pixelBuffer[i] = *(f_pointer++);
 
-        if (dither && j != h - 1) {
+        if (dither && j != h - 1)
+        {
             ditherLoadNextLine(buf, bufferPtr, w, invert, 8);
         }
 
@@ -1581,7 +1731,8 @@ int Inkplate::drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHead
         {
             if (dither)
                 drawPixel(i + x, h - 1 - j + y, ditherGetPixel(i, j, w, h) >> 5);
-            else {
+            else
+            {
                 uint8_t px = 0;
                 if (invert)
                     px = 255 - *(bufferPtr++);
@@ -1636,7 +1787,8 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
 
     int i, j;
 
-    if (dither) {
+    if (dither)
+    {
         bufferPtr = pixelBuffer;
         for (i = 0; i < w * 3; i++)
             pixelBuffer[i] = *(f_pointer++);
@@ -1650,7 +1802,8 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
         for (i = 0; i < w * 3; i++)
             pixelBuffer[i] = *(f_pointer++);
 
-        if (dither && j != h - 1) {
+        if (dither && j != h - 1)
+        {
             ditherLoadNextLine(buf, bufferPtr, w, invert, 24);
         }
 
@@ -1664,7 +1817,8 @@ int Inkplate::drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHea
             //So then, we are convertng it to grayscale using good old average and gamma correction (from LUT). With this metod, it is still slow (full size image takes 4 seconds), but much beter than prev mentioned method.
             if (dither)
                 drawPixel(i + x, h - 1 - j + y, ditherGetPixel(i, j, w, h) >> 5);
-            else {
+            else
+            {
                 uint8_t px = 0;
                 if (invert)
                     px = ((255 - *(bufferPtr++)) * 2126 / 10000) + ((255 - *(bufferPtr++)) * 7152 / 10000) + ((255 - *(bufferPtr++)) * 722 / 10000);
