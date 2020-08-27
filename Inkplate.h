@@ -13,10 +13,43 @@
 #include "Adafruit_GFX.h"
 #include "Wire.h"
 #include "SPI.h"
-#include "Adafruit_MCP23017.h"
 #include "SdFat.h"
 #include "WiFiClient.h"
 #include "Triangulate.h"
+
+#define MCP23017_ADDR			0x20
+#define MCP23017_INT_PORTA      0x00
+#define MCP23017_INT_PORTB      0x01
+#define MCP23017_INT_NO_MIRROR  false
+#define MCP23017_INT_MIRROR     true
+#define MCP23017_INT_PUSHPULL   false
+#define MCP23017_INT_OPENDRAIN  true
+#define MCP23017_INT_ACTLOW     false
+#define MCP23017_INT_ACTHIGH    true
+
+#define MCP23017_IODIRA 0x00
+#define MCP23017_IPOLA 0x02
+#define MCP23017_GPINTENA 0x04
+#define MCP23017_DEFVALA 0x06
+#define MCP23017_INTCONA 0x08
+#define MCP23017_IOCONA 0x0A
+#define MCP23017_GPPUA 0x0C
+#define MCP23017_INTFA 0x0E
+#define MCP23017_INTCAPA 0x10
+#define MCP23017_GPIOA 0x12
+#define MCP23017_OLATA 0x14
+
+#define MCP23017_IODIRB 0x01
+#define MCP23017_IPOLB 0x03
+#define MCP23017_GPINTENB 0x05
+#define MCP23017_DEFVALB 0x07
+#define MCP23017_INTCONB 0x09
+#define MCP23017_IOCONB 0x0B
+#define MCP23017_GPPUB 0x0D
+#define MCP23017_INTFB 0x0F
+#define MCP23017_INTCAPB 0x11
+#define MCP23017_GPIOB 0x13
+#define MCP23017_OLATB 0x15
 
 #define INKPLATE_GAMMA 1.45
 #define E_INK_WIDTH 800
@@ -80,61 +113,61 @@
 #define GMOD 1 //GPIOA1
 #define GMOD_SET                      \
     {                                 \
-        mcp.digitalWrite(GMOD, HIGH); \
+        digitalWriteMCP(GMOD, HIGH); \
     }
 #define GMOD_CLEAR                   \
     {                                \
-        mcp.digitalWrite(GMOD, LOW); \
+        digitalWriteMCP(GMOD, LOW); \
     }
 
 #define OE 0 //GPIOA0
 #define OE_SET                      \
     {                               \
-        mcp.digitalWrite(OE, HIGH); \
+        digitalWriteMCP(OE, HIGH); \
     }
 #define OE_CLEAR                   \
     {                              \
-        mcp.digitalWrite(OE, LOW); \
+        digitalWriteMCP(OE, LOW); \
     }
 
 #define SPV 2 //GPIOA5
 #define SPV_SET                      \
     {                                \
-        mcp.digitalWrite(SPV, HIGH); \
+        digitalWriteMCP(SPV, HIGH); \
     }
 #define SPV_CLEAR                   \
     {                               \
-        mcp.digitalWrite(SPV, LOW); \
+        digitalWriteMCP(SPV, LOW); \
     }
 
 #define WAKEUP 3 //GPIOA3
 #define WAKEUP_SET                      \
     {                                   \
-        mcp.digitalWrite(WAKEUP, HIGH); \
+        digitalWriteMCP(WAKEUP, HIGH); \
     }
 #define WAKEUP_CLEAR                   \
     {                                  \
-        mcp.digitalWrite(WAKEUP, LOW); \
+        digitalWriteMCP(WAKEUP, LOW); \
     }
 
 #define PWRUP 4 //GPIOA4
 #define PWRUP_SET                      \
     {                                  \
-        mcp.digitalWrite(PWRUP, HIGH); \
+        digitalWriteMCP(PWRUP, HIGH); \
     }
 #define PWRUP_CLEAR                   \
     {                                 \
-        mcp.digitalWrite(PWRUP, LOW); \
+        digitalWriteMCP(PWRUP, LOW); \
     }
 
 #define VCOM 5 //GPIOA6
 #define VCOM_SET                      \
     {                                 \
-        mcp.digitalWrite(VCOM, HIGH); \
+        digitalWriteMCP(VCOM, HIGH); \
     }
 #define VCOM_CLEAR                   \
     {                                \
-        mcp.digitalWrite(VCOM, LOW); \
+        digitalWriteMCP(VCOM, LOW); \
     }
 
 #define CKV_CLOCK ckvClock();
@@ -148,7 +181,7 @@
     }
 #endif
 
-extern Adafruit_MCP23017 mcp;
+//extern Adafruit_MCP23017 mcp;
 extern SPIClass spi2;
 extern SdFat sd;
 static void ckvClock();
@@ -169,7 +202,7 @@ public:
     const uint8_t discharge[16] = {B11111111, B11111100, B11110011, B11110000, B11001111, B11001100, B11000011, B11000000, B00111111, B00111100, B00110011, B00110000, B00001111, B00001100, B00000011, B00000000};
     //BLACK->WHITE
     //THIS IS OKAYISH WAVEFORM FOR GRAYSCALE. IT CAN BE MUCH BETTER.
-    const uint8_t waveform3Bit[8][7] = {{0, 0, 0, 0, 1, 1, 1}, {0, 0, 1, 1, 1, 2, 1}, {0, 1, 1, 2, 1, 2, 1}, {0, 0, 1, 1, 2, 1, 2}, {1, 1, 1, 2, 2, 1, 2}, {0, 0, 1, 1, 1, 2, 2}, {0, 1, 1, 2, 1, 2, 2}, {0, 0, 0, 0, 0, 0, 2}};
+    const uint8_t waveform3Bit[8][8] = {{0, 0, 0, 0, 1, 1, 1, 0}, {1, 2, 2, 2, 1, 1, 1, 0}, {0, 1, 2, 1, 1, 2, 1, 0}, {0, 2, 1, 2, 1, 2, 1, 0}, {0, 0, 0, 1, 1, 1, 2, 0}, {2, 1, 1, 1, 2, 1, 2, 0}, {1, 1, 1, 2, 1, 2, 2, 0}, {0, 0, 0, 0, 0, 0, 2, 0}};
     //const uint8_t waveform3Bit[8][12] = {{3,3,3,1,1,1,1,1,1,1,2,0}, {3,3,3,3,1,1,1,1,1,1,2,0}, {3,3,3,3,3,1,1,1,1,1,2,0}, {3,3,3,3,3,3,1,1,1,1,2,0}, {3,3,3,3,3,3,3,1,1,1,2,0}, {3,3,3,3,3,3,3,2,1,1,2,0}, {3,3,3,3,3,3,3,3,3,1,2,0}, {3,3,3,3,3,3,3,3,3,3,2,0}};
     //const uint8_t waveform3Bit[16][12] = {{0,0,0,0,0,0,1,2,1,1,0,3},{0,0,1,1,1,2,2,2,1,1,0,3},{0,0,0,1,1,2,2,2,1,1,0,3},  {0,0,0,1,2,1,2,1,2,1,3}, {0,0,2,1,2,1,2,1,2,1,3}, {0,0,1,2,2,1,1,1,1,2,0,3}, {0,0,0,2,1,1,1,1,0,2,0,3}, {0,0,2,1,2,2,1,1,1,2,0,3}, {0,0,0,2,2,2,1,1,1,2,0,3}, {0,0,0,0,0,0,2,1,1,2,0,3}, {0,0,0,0,0,2,2,1,1,2,0,3}, {0,0,0,0,0,1,1,1,2,2,0,3}, {0,0,0,0,1,2,1,2,1,2,0,3}, {0,0,0,0,1,1,2,2,1,2,0,3},{0,0,0,0,1,1,1,2,2,2,0,3}, {0,0,0,0,0,0,0,0,0,2,0,3}};
     //PVI waveform for cleaning screen, not sure if it is correct, but it cleans screen properly.
@@ -226,9 +259,20 @@ public:
     void cleanFast2(uint8_t c, uint8_t n, uint16_t d);
     void pinsZstate();
     void pinsAsOutputs();
+	void pinModeMCP(uint8_t _pin, uint8_t _mode);
+	void digitalWriteMCP(uint8_t _pin, uint8_t _state);
+	uint8_t digitalReadMCP(uint8_t _pin);
+	void setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, uint8_t polarity);
+	void setIntPin(uint8_t _pin, uint8_t _mode);
+	void removeIntPin(uint8_t _pin);
+	uint16_t getINT();
+	uint16_t getINTstate();
+	void setPorts(uint16_t _d);
+	uint16_t getPorts();
 
 private:
     uint8_t gammaLUT[256];
+	uint8_t mcpRegsInt[22];
     uint8_t pixelBuffer[800 * 3 + 5];
     uint8_t ditherBuffer[800 * 3 + 5][2];
     int8_t _temperature;
@@ -260,6 +304,13 @@ private:
     int drawGrayscaleBitmap8Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool dither, bool invert);
     int drawGrayscaleBitmap24Web(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool dither, bool invert);
     void precalculateGamma(uint8_t *c, float gamma);
+	bool mcpBegin(uint8_t _addr, uint8_t* _r);
+	void readMCPRegisters(uint8_t _addr, uint8_t *k);
+	void readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
+	void readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k);
+	void updateAllRegisters(uint8_t _addr, uint8_t *k);
+	void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d);
+	void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
 };
 
 #endif

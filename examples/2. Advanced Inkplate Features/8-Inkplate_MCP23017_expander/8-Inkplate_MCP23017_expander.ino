@@ -28,16 +28,15 @@
 #define LED_PIN 15                  //We are going to use pin GPB7 (remember! GPA0 = 0, GPA1 = 1, ..., GPA7 = 7, GPB0 = 8, GBP1 = 9, ..., GPB7 = 15)
 
 Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1-bit mode (Monochrome)
-extern Adafruit_MCP23017 mcp;       //We are using mcp object used inside our Inkplate library
 
 void setup() {
   display.begin();                  //Init Inkplate library (you should call this function ONLY ONCE)
-  mcp.pinMode(LED_PIN, OUTPUT);     //Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
+  pinModeMCP(LED_PIN, OUTPUT);     	//Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
 }
 
 void loop() {
-  mcp.digitalWrite(LED_PIN, LOW);   //Set output to low (LED does not light up)
+  digitalWriteMCP(LED_PIN, LOW);   	//Set output to low (LED does not light up)
   delay(1000);                      //Wait for one second
-  mcp.digitalWrite(LED_PIN, HIGH);  //Set output to high (LED lights up)
+  digitalWriteMCP(LED_PIN, HIGH);  	//Set output to high (LED lights up)
   delay(1000);                      //Wait for one second
 }
