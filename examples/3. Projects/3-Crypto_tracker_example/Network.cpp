@@ -154,7 +154,7 @@ bool Network::getData(double *data)
         display.clearDisplay();
         display.setCursor(50, 230);
         display.setTextSize(2);
-        display.println(F("Your entered coin does not exsist!"));
+        display.println(F("Your entered coin does not exist!"));
         display.display();
         while (1)
             ;
