@@ -18,7 +18,10 @@ void Network::begin()
         delay(1000);
         ++cnt;
 
-        if (cnt == 20)
+        WiFi.reconnect();
+        delay(5000);
+
+        if (cnt == 10)
         {
             Serial.println("Can't connect to WIFI, restarting");
             delay(100);
@@ -67,7 +70,10 @@ bool Network::getData(char *data)
             delay(1000);
             ++cnt;
 
-            if (cnt == 7)
+            WiFi.reconnect();
+            delay(5000);
+
+            if (cnt == 10)
             {
                 Serial.println("Can't connect to WIFI, restart initiated.");
                 delay(100);
