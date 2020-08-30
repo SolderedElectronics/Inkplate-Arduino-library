@@ -4,6 +4,12 @@
 #include "WiFi.h"
 #include "HTTPClient.h"
 #include "Inkplate.h"
+#include "TJpg_Decoder.h"
+
+#define RED(a)    ((((a) & 0xf800) >> 11) << 3)
+#define GREEN(a)  ((((a) & 0x07e0) >> 5) << 2)
+#define BLUE(a)   (((a) & 0x001f) << 3)
+
 SPIClass spi2(HSPI);
 SdFat sd(&spi2);
 
@@ -24,6 +30,23 @@ void ckvClock()
     usleep1();
     CKV_SET;
     usleep1();
+}
+
+bool jpegCallback(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* data, void* _display) {
+    Inkplate *display = static_cast<Inkplate *>(_display);
+
+    int i, j;
+    for (j = 0; j < h; j++)
+    {
+        for (i = 0; i < w; i++)
+        {
+            uint16_t rgb = data[j*w + i];
+            uint8_t px = (RED(rgb) * 2126 / 10000) + (GREEN(rgb) * 7152 / 10000) + (BLUE(rgb) * 722 / 10000);
+            display->drawPixel(i + x, j + y, px >> 5);
+        }
+    }
+
+    return 1;
 }
 
 //--------------------------USER FUNCTIONS--------------------------------------------
@@ -511,6 +534,52 @@ int Inkplate::drawBitmapFromWeb(char *url, int x, int y, bool dither, bool inver
     http.end();
     WiFi.setSleep(sleep);
     return ret;
+}
+
+int Inkplate::drawJpegFromSD(Inkplate *display, SdFile *p, int x, int y, bool dither, bool invert)
+{
+    uint16_t w = 0, h = 0;
+
+    TJpgDec.setJpgScale(1);
+    TJpgDec.setCallback(jpegCallback);
+
+    uint32_t pnt = 0;
+    uint32_t total = p->fileSize();
+    uint8_t *buf = (uint8_t *)ps_malloc(total);
+    if (buf == NULL)
+        return 0;
+
+    while (pnt < total) {
+        uint32_t toread = p->available();
+        if (toread > 0) {
+            int read = p->read(buf + pnt, toread);
+            if (read > 0)
+                pnt += read;
+        }
+    }
+
+    //TJpgDec.getJpgSize(&w, &h, buf, total);
+    //Serial.print("Width = "); Serial.print(w); Serial.print(", height = "); Serial.println(h);
+    selectDisplayMode(INKPLATE_3BIT);
+
+    TJpgDec.drawJpg(x, y, buf, total, display);
+
+    free(buf);
+}
+
+int Inkplate::drawJpegFromSD(Inkplate *display, char *fileName, int x, int y, bool dither, bool invert)
+{
+    if (sdCardOk == 0)
+        return 0;
+    SdFile dat;
+    if (dat.open(fileName, O_RDONLY))
+    {
+        return drawJpegFromSD(display, &dat, x, y, dither, invert);
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 void Inkplate::drawElipse(int rx, int ry,
