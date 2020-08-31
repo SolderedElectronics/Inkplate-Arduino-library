@@ -947,7 +947,9 @@ JRESULT jd_decomp (
   JDEC* jd,               /* Initialized decompression object */
   uint16_t (*outfunc)(JDEC*, void*, JRECT*),  /* RGB output function */
   uint8_t scale,             /* Output de-scaling factor (0 to 3) */
-  void* display
+  void* display,
+  uint8_t dither,
+  uint8_t invert
 )
 {
   uint16_t x, y, mx, my;
@@ -958,6 +960,8 @@ JRESULT jd_decomp (
   if (scale > (JD_USE_SCALE ? 3 : 0)) return JDR_PAR;
   jd->scale = scale;
   jd->_display = display;
+  jd->_dither = dither;
+  jd->_invert = invert;
 
   mx = jd->msx * 8; my = jd->msy * 8;     /* Size of the MCU (pixel) */
 
@@ -1921,7 +1925,9 @@ JRESULT jd_decomp (
   JDEC* jd,               /* Initialized decompression object */
   uint16_t (*outfunc)(JDEC*, void*, JRECT*),  /* RGB output function */
   uint8_t scale,             /* Output de-scaling factor (0 to 3) */
-  void* display
+  void* display,
+  uint8_t dither,
+  uint8_t invert
 )
 {
   uint16_t x, y, mx, my;
@@ -1932,6 +1938,8 @@ JRESULT jd_decomp (
   if (scale > (JD_USE_SCALE ? 3 : 0)) return JDR_PAR;
   jd->scale = scale;
   jd->_display = display;
+  jd->_dither = dither;
+  jd->_invert = invert;
 
   mx = jd->msx * 8; my = jd->msy * 8;     /* Size of the MCU (pixel) */
 

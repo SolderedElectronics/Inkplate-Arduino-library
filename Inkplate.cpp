@@ -32,8 +32,13 @@ void ckvClock()
     usleep1();
 }
 
-bool jpegCallback(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* data, void* _display) {
+bool jpegCallback(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* data, void* _display, bool _dither, bool _invert) {
     Inkplate *display = static_cast<Inkplate *>(_display);
+
+    if (_dither) {
+      //TODO: Implement dithering!
+      Serial.println(_dither);
+    }
 
     int i, j;
     for (j = 0; j < h; j++)
@@ -41,6 +46,8 @@ bool jpegCallback(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* data, 
         for (i = 0; i < w; i++)
         {
             uint16_t rgb = data[j*w + i];
+            if (_invert)
+              rgb = ~rgb;
             uint8_t px = (RED(rgb) * 2126 / 10000) + (GREEN(rgb) * 7152 / 10000) + (BLUE(rgb) * 722 / 10000);
             display->drawPixel(i + x, j + y, px >> 5);
         }
@@ -561,7 +568,7 @@ int Inkplate::drawJpegFromSD(Inkplate *display, SdFile *p, int x, int y, bool di
 
     selectDisplayMode(INKPLATE_3BIT);
 
-    if(TJpgDec.drawJpg(x, y, buf, total, display) == 0)
+    if(TJpgDec.drawJpg(x, y, buf, total, display, dither, invert) == 0)
       ret = 1;
 
     free(buf);
@@ -607,7 +614,7 @@ int Inkplate::drawJpegFromWeb(Inkplate *display, WiFiClient *s, int x, int y, in
 
     selectDisplayMode(INKPLATE_3BIT);
 
-    if(TJpgDec.drawJpg(x, y, buf, len, display) == 0)
+    if(TJpgDec.drawJpg(x, y, buf, len, display, dither, invert) == 0)
       ret = 1;
 
     free(buf);

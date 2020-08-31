@@ -116,14 +116,14 @@ uint16_t TJpg_Decoder::jd_output(JDEC* jdec, void* bitmap, JRECT* jrect)
   uint16_t h = jrect->bottom + 1 - jrect->top;
 
   // Pass the image block and rendering parameters in a callback to the sketch
-  return thisPtr->tft_output(x, y, w, h, (uint16_t*)bitmap, (void*)jdec->_display);
+  return thisPtr->tft_output(x, y, w, h, (uint16_t*)bitmap, (void*)jdec->_display, jdec->_dither, jdec->_invert);
 }
 
 /***************************************************************************************
 ** Function name:           drawJpg
 ** Description:             Draw a jpg saved in a FLASH memory array
 ***************************************************************************************/
-JRESULT TJpg_Decoder::drawJpg(int32_t x, int32_t y, const uint8_t jpeg_data[], uint32_t  data_size, void* display) {
+JRESULT TJpg_Decoder::drawJpg(int32_t x, int32_t y, const uint8_t jpeg_data[], uint32_t  data_size, void* display, bool dither, bool invert) {
   JDEC jdec;
   JRESULT jresult = JDR_OK;
 
@@ -142,7 +142,7 @@ JRESULT TJpg_Decoder::drawJpg(int32_t x, int32_t y, const uint8_t jpeg_data[], u
 
   // Extract image and render
   if (jresult == JDR_OK) {
-    jresult = jd_decomp(&jdec, jd_output, jpgScale, display);
+    jresult = jd_decomp(&jdec, jd_output, jpgScale, display, dither, invert);
   }
 
   return jresult;

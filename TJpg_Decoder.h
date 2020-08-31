@@ -30,7 +30,7 @@ enum {
 
 //------------------------------------------------------------------------------
 
-typedef bool (*SketchCallback)(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *data, void* display);
+typedef bool (*SketchCallback)(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *data, void* display, bool dither, bool invert);
 
 class TJpg_Decoder {
 
@@ -47,7 +47,7 @@ public:
   void setJpgScale(uint8_t scale);
   void setCallback(SketchCallback sketchCallback);
 
-  JRESULT drawJpg(int32_t x, int32_t y, const uint8_t array[], uint32_t  array_size, void* display);
+  JRESULT drawJpg(int32_t x, int32_t y, const uint8_t array[], uint32_t  array_size, void* display, bool dither, bool invert);
   JRESULT getJpgSize(uint16_t *w, uint16_t *h, const uint8_t array[], uint32_t  array_size);
 
   void setSwapBytes(bool swap);

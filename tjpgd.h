@@ -77,11 +77,13 @@ struct JDEC_s {
     void* device;               /* Pointer to I/O device identifiler for the session */
 	uint8_t swap;               /* Added by Bodmer to control byte swapping */
     void* _display;
+    uint8_t _dither;
+    uint8_t _invert;
 };
 
 /* TJpgDec API functions */
 JRESULT jd_prepare (JDEC*, uint16_t(*)(JDEC*,uint8_t*,uint16_t), void*, uint16_t, void*);
-JRESULT jd_decomp (JDEC*, uint16_t(*)(JDEC*,void*,JRECT*), uint8_t, void*);
+JRESULT jd_decomp (JDEC*, uint16_t(*)(JDEC*,void*,JRECT*), uint8_t, void*, uint8_t, uint8_t);
 
 
 #ifdef __cplusplus

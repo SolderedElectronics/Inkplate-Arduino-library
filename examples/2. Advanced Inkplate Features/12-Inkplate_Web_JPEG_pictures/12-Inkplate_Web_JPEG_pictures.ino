@@ -20,10 +20,11 @@
 #include "WiFi.h"                   //Include library for WiFi
 Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
 
-const char* ssid     = "Twilight Sparkle"; //Your WiFi SSID
-const char* password = "thori4twily"; //Your WiFi password
+const char* ssid     = ""; //Your WiFi SSID
+const char* password = ""; //Your WiFi password
 
 void setup() {
+    Serial.begin(115200);
     display.begin();        //Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); //Clear frame buffer of display
     display.display();      //Put clear image on display
@@ -44,10 +45,10 @@ void setup() {
 
     //Try to load image and display it on e-paper at position X=0, Y=100
     //NOTE: These methods require you to pass a reference to the display object as first parameter.
-    //NOTE: Both drawJpegFromWeb methods allow for an optional fifth "invert" parameter. Setting this parameter to true
+    //NOTE: Both drawJpegFromWeb methods allow for an optional sisxth "invert" parameter. Setting this parameter to true
     //will flip all colors on the image, making black white and white black.
-    //Sixth parameter will dither the image.
-    if (!display.drawJpegFromWeb(&display, "https://varipass.org/destination.jpg", 0, 100, false, true)) {
+    //fifth parameter will dither the image.
+    if (!display.drawJpegFromWeb(&display, "https://varipass.org/destination.jpg", 0, 100, true, false)) {
         //If is something failed (wrong filename or format), write error message on the screen.
         display.println("Image open error");
         display.display();

@@ -26,8 +26,6 @@ Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and a
 SdFile file;                        //Create SdFile object used for accessing files on SD card
 
 void setup() {
-    Serial.begin(115200);
-
     display.begin();                  //Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();           //Clear frame buffer of display
     display.display();                //Put clear image on display
@@ -39,12 +37,12 @@ void setup() {
 
         //If card is properly init, try to load image and display it on e-paper at position X=100, Y=0
         //NOTE: These methods require you to pass a reference to the display object as first parameter.
-        //NOTE: Both drawJpegFromSD methods allow for an optional fifth "invert" parameter. Setting this parameter to true
+        //NOTE: Both drawJpegFromSD methods allow for an optional sixth "invert" parameter. Setting this parameter to true
         //will flip all colors on the image, making black white and white black.
-        //Sixth parameter will dither the image.
-        if (!display.drawJpegFromSD(&display, "pyramid.jpg", 100, 0, false, true)) {
+        //fifth parameter will dither the image.
+        if (!display.drawJpegFromSD(&display, "pyramid.jpg", 100, 0, true, false)) {
             //If is something failed (wrong filename or wrong format), write error message on the screen.
-            //You can turn off dithering for somewhat faster image load by changing the last true to false, or removing the argument completely
+            //You can turn off dithering for somewhat faster image load by changing the fifth parameter to false, or removing the parameter completely
             display.println("Image open error");
             display.display();
         }
