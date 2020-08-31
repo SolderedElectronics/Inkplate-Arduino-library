@@ -538,7 +538,7 @@ int Inkplate::drawBitmapFromWeb(char *url, int x, int y, bool dither, bool inver
 
 int Inkplate::drawJpegFromSD(Inkplate *display, SdFile *p, int x, int y, bool dither, bool invert)
 {
-    uint16_t w = 0, h = 0;
+    uint8_t ret = 0;
 
     TJpgDec.setJpgScale(1);
     TJpgDec.setCallback(jpegCallback);
@@ -559,13 +559,14 @@ int Inkplate::drawJpegFromSD(Inkplate *display, SdFile *p, int x, int y, bool di
     }
     p->close();
 
-    //TJpgDec.getJpgSize(&w, &h, buf, total);
-    //Serial.print("Width = "); Serial.print(w); Serial.print(", height = "); Serial.println(h);
     selectDisplayMode(INKPLATE_3BIT);
 
-    TJpgDec.drawJpg(x, y, buf, total, display);
+    if(TJpgDec.drawJpg(x, y, buf, total, display) == 0)
+      ret = 1;
 
     free(buf);
+
+    return ret;
 }
 
 int Inkplate::drawJpegFromSD(Inkplate *display, char *fileName, int x, int y, bool dither, bool invert)
@@ -581,6 +582,67 @@ int Inkplate::drawJpegFromSD(Inkplate *display, char *fileName, int x, int y, bo
     {
         return 0;
     }
+}
+
+int Inkplate::drawJpegFromWeb(Inkplate *display, WiFiClient *s, int x, int y, int len, bool dither, bool invert)
+{
+    uint8_t ret = 0;
+
+    TJpgDec.setJpgScale(1);
+    TJpgDec.setCallback(jpegCallback);
+
+    uint32_t pnt = 0;
+    uint8_t *buf = (uint8_t *)ps_malloc(len);
+    if (buf == NULL)
+        return 0;
+
+    while (pnt < len) {
+        uint32_t toread = s->available();
+        if (toread > 0) {
+            int read = s->read(buf + pnt, toread);
+            if (read > 0)
+                pnt += read;
+        }
+    }
+
+    selectDisplayMode(INKPLATE_3BIT);
+
+    if(TJpgDec.drawJpg(x, y, buf, len, display) == 0)
+      ret = 1;
+
+    free(buf);
+
+    return ret;
+}
+
+int Inkplate::drawJpegFromWeb(Inkplate *display, char *url, int x, int y, bool dither, bool invert)
+{
+    if (WiFi.status() != WL_CONNECTED)
+        return 0;
+    int ret = 0;
+
+    bool sleep = WiFi.getSleep();
+    WiFi.setSleep(false);
+
+    HTTPClient http;
+    http.getStream().setNoDelay(true);
+    http.getStream().setTimeout(1);
+    http.begin(url);
+
+    int httpCode = http.GET();
+    if (httpCode == 200)
+    {
+        int32_t len = http.getSize();
+        if (len > 0)
+        {
+            WiFiClient *dat = http.getStreamPtr();
+            ret = drawJpegFromWeb(display, dat, x, y, len, dither, invert);
+        }
+    }
+
+    http.end();
+    WiFi.setSleep(sleep);
+    return ret;
 }
 
 void Inkplate::drawElipse(int rx, int ry,

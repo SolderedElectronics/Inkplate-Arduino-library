@@ -38,11 +38,13 @@ void setup() {
         display.partialUpdate();
 
         //If card is properly init, try to load image and display it on e-paper at position X=100, Y=0
-        //NOTE: Both drawJpegFromSD methods allow for an optional fourth "invert" parameter. Setting this parameter to true
+        //NOTE: These methods require you to pass a reference to the display object as first parameter.
+        //NOTE: Both drawJpegFromSD methods allow for an optional fifth "invert" parameter. Setting this parameter to true
         //will flip all colors on the image, making black white and white black.
-        if (!display.drawJpegFromSD(&display, "pyramid.jpg", 100, 0, 0, 1)) {
+        //Sixth parameter will dither the image.
+        if (!display.drawJpegFromSD(&display, "pyramid.jpg", 100, 0, false, true)) {
             //If is something failed (wrong filename or wrong format), write error message on the screen.
-            //You can turn off dithering for somewhat faster image load by changing the last 1 to 0, or removing the 1 argument completely
+            //You can turn off dithering for somewhat faster image load by changing the last true to false, or removing the argument completely
             display.println("Image open error");
             display.display();
         }

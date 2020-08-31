@@ -22,7 +22,7 @@
 Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
 
 const char* ssid     = ""; //Your WiFi SSID
-const char* password = "";     //Your WiFi password
+const char* password = ""; //Your WiFi password
 
 void setup() {
     display.begin();        //Init Inkplate library (you should call this function ONLY ONCE)
