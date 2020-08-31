@@ -1,7 +1,7 @@
 /*
-   5_Inkplate_SD_BMP example for e-radionica Inkplate6
+   5_Inkplate_SD_JPEG_pictures example for e-radionica Inkplate6
    For this example you will need a micro USB cable, Inkplate6 and a SD card loaded with
-   image1.bmp and image2.bmp file that can be found inside folder of this example.
+   pyramid.jpg file that can be found inside folder of this example.
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -9,16 +9,15 @@
    To work with SD card on Inkplate, you will need to add one extra library.
    Download and install it from here: https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
 
-   You can open .bmp files that have color depth of 1 bit (monochrome bitmap), 4 bit, 8 bit and
-   24 bit AND have resoluton smaller than 800x600 or otherwise it won't fit on screen.
+   You can open .jpg files that have resoluton smaller than 800x600 or otherwise it won't fit on screen.
    Format your SD card in standard FAT fileformat.
 
-   This example will show you how you can read .bmp files (pictures) from SD card and
+   This example will show you how you can read a .jpg file (picture) from SD card and
    display that image on e-paper display.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   31 August 2020 by e-radionica.com
 */
 
 #include "Inkplate.h"               //Include Inkplate library to the sketch
@@ -38,14 +37,12 @@ void setup() {
         display.println("SD Card OK! Reading image...");
         display.partialUpdate();
 
-        //If card is properly init, try to load image and display it on e-paper at position X=0, Y=0
-        //NOTE: Both drawBitmapFromSD methods allow for an optional fourth "invert" parameter. Setting this parameter to true
-        //will flip all colors on the image, making black white and white black. This may be necessary when exporting bitmaps from
-        //certain softwares.
-        if (!display.drawJpegFromSD(&display, "pyramid.jpg", 100, 0, 0)) {
-            //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-            //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression! 
-            //You can turn of dithering for somewhat faster image load by changing the last 1 to 0, or removing the 1 argument completely
+        //If card is properly init, try to load image and display it on e-paper at position X=100, Y=0
+        //NOTE: Both drawJpegFromSD methods allow for an optional fourth "invert" parameter. Setting this parameter to true
+        //will flip all colors on the image, making black white and white black.
+        if (!display.drawJpegFromSD(&display, "pyramid.jpg", 100, 0, 0, 1)) {
+            //If is something failed (wrong filename or wrong format), write error message on the screen.
+            //You can turn off dithering for somewhat faster image load by changing the last 1 to 0, or removing the 1 argument completely
             display.println("Image open error");
             display.display();
         }

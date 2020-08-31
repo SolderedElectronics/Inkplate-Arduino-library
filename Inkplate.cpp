@@ -557,6 +557,7 @@ int Inkplate::drawJpegFromSD(Inkplate *display, SdFile *p, int x, int y, bool di
                 pnt += read;
         }
     }
+    p->close();
 
     //TJpgDec.getJpgSize(&w, &h, buf, total);
     //Serial.print("Width = "); Serial.print(w); Serial.print(", height = "); Serial.println(h);
