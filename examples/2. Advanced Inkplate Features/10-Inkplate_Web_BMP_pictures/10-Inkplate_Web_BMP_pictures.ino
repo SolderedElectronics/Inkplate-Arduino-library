@@ -1,5 +1,5 @@
 /*
-   10_Inkplate_Download_And_Show example for e-radionica Inkplate6
+   10_Web_BMP_pictures example for e-radionica Inkplate6
    For this example you will need a micro USB cable, Inkplate6, and an available WiFi connection.
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
