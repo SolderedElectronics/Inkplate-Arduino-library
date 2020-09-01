@@ -237,6 +237,10 @@ public:
     int drawBitmapFromSD(char *fileName, int x, int y, bool dither = false, bool invert = false);
     int drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool dither = false, bool invert = false);
     int drawBitmapFromWeb(char *url, int x, int y, bool dither = false, bool invert = false);
+    int drawJpegFromSD(Inkplate *display, SdFile *p, int x, int y, bool dither = false, bool invert = false);
+    int drawJpegFromSD(Inkplate *display, char *fileName, int x, int y, bool dither = false, bool invert = false);
+    int drawJpegFromWeb(Inkplate *display, WiFiClient *s, int x, int y, int len, bool dither = false, bool invert = false);
+    int drawJpegFromWeb(Inkplate *display, char *url, int x, int y, bool dither = false, bool invert = false);
     void drawElipse(int rx, int ry, int xc, int yc, int c);
     void fillElipse(int rx, int ry, int xc, int yc, int c);
     void drawPolygon(int *x, int *y, int n, int color);

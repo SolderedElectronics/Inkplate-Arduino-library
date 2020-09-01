@@ -4,6 +4,12 @@
 #include "WiFi.h"
 #include "HTTPClient.h"
 #include "Inkplate.h"
+#include "TJpg_Decoder.h"
+
+#define RED(a)    ((((a) & 0xf800) >> 11) << 3)
+#define GREEN(a)  ((((a) & 0x07e0) >> 5) << 2)
+#define BLUE(a)   (((a) & 0x001f) << 3)
+
 SPIClass spi2(HSPI);
 SdFat sd(&spi2);
 
@@ -24,6 +30,30 @@ void ckvClock()
     usleep1();
     CKV_SET;
     usleep1();
+}
+
+bool jpegCallback(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* data, void* _display, bool _dither, bool _invert) {
+    Inkplate *display = static_cast<Inkplate *>(_display);
+
+    if (_dither) {
+      //TODO: Implement dithering!
+      Serial.println(_dither);
+    }
+
+    int i, j;
+    for (j = 0; j < h; j++)
+    {
+        for (i = 0; i < w; i++)
+        {
+            uint16_t rgb = data[j*w + i];
+            if (_invert)
+              rgb = ~rgb;
+            uint8_t px = (RED(rgb) * 2126 / 10000) + (GREEN(rgb) * 7152 / 10000) + (BLUE(rgb) * 722 / 10000);
+            display->drawPixel(i + x, j + y, px >> 5);
+        }
+    }
+
+    return 1;
 }
 
 //--------------------------USER FUNCTIONS--------------------------------------------
@@ -505,6 +535,115 @@ int Inkplate::drawBitmapFromWeb(char *url, int x, int y, bool dither, bool inver
         {
             WiFiClient *dat = http.getStreamPtr();
             ret = drawBitmapFromWeb(dat, x, y, len, dither, invert);
+        }
+    }
+
+    http.end();
+    WiFi.setSleep(sleep);
+    return ret;
+}
+
+int Inkplate::drawJpegFromSD(Inkplate *display, SdFile *p, int x, int y, bool dither, bool invert)
+{
+    uint8_t ret = 0;
+
+    TJpgDec.setJpgScale(1);
+    TJpgDec.setCallback(jpegCallback);
+
+    uint32_t pnt = 0;
+    uint32_t total = p->fileSize();
+    uint8_t *buf = (uint8_t *)ps_malloc(total);
+    if (buf == NULL)
+        return 0;
+
+    while (pnt < total) {
+        uint32_t toread = p->available();
+        if (toread > 0) {
+            int read = p->read(buf + pnt, toread);
+            if (read > 0)
+                pnt += read;
+        }
+    }
+    p->close();
+
+    selectDisplayMode(INKPLATE_3BIT);
+
+    if(TJpgDec.drawJpg(x, y, buf, total, display, dither, invert) == 0)
+      ret = 1;
+
+    free(buf);
+
+    return ret;
+}
+
+int Inkplate::drawJpegFromSD(Inkplate *display, char *fileName, int x, int y, bool dither, bool invert)
+{
+    if (sdCardOk == 0)
+        return 0;
+    SdFile dat;
+    if (dat.open(fileName, O_RDONLY))
+    {
+        return drawJpegFromSD(display, &dat, x, y, dither, invert);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int Inkplate::drawJpegFromWeb(Inkplate *display, WiFiClient *s, int x, int y, int len, bool dither, bool invert)
+{
+    uint8_t ret = 0;
+
+    TJpgDec.setJpgScale(1);
+    TJpgDec.setCallback(jpegCallback);
+
+    uint32_t pnt = 0;
+    uint8_t *buf = (uint8_t *)ps_malloc(len);
+    if (buf == NULL)
+        return 0;
+
+    while (pnt < len) {
+        uint32_t toread = s->available();
+        if (toread > 0) {
+            int read = s->read(buf + pnt, toread);
+            if (read > 0)
+                pnt += read;
+        }
+    }
+
+    selectDisplayMode(INKPLATE_3BIT);
+
+    if(TJpgDec.drawJpg(x, y, buf, len, display, dither, invert) == 0)
+      ret = 1;
+
+    free(buf);
+
+    return ret;
+}
+
+int Inkplate::drawJpegFromWeb(Inkplate *display, char *url, int x, int y, bool dither, bool invert)
+{
+    if (WiFi.status() != WL_CONNECTED)
+        return 0;
+    int ret = 0;
+
+    bool sleep = WiFi.getSleep();
+    WiFi.setSleep(false);
+
+    HTTPClient http;
+    http.getStream().setNoDelay(true);
+    http.getStream().setTimeout(1);
+    http.begin(url);
+
+    int httpCode = http.GET();
+    if (httpCode == 200)
+    {
+        int32_t len = http.getSize();
+        if (len > 0)
+        {
+            WiFiClient *dat = http.getStreamPtr();
+            ret = drawJpegFromWeb(display, dat, x, y, len, dither, invert);
         }
     }
 

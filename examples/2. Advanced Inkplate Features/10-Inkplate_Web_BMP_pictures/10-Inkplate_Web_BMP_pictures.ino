@@ -1,5 +1,5 @@
 /*
-   10_Inkplate_Download_And_Show example for e-radionica Inkplate6
+   10_Web_BMP_pictures example for e-radionica Inkplate6
    For this example you will need a micro USB cable, Inkplate6, and an available WiFi connection.
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
@@ -22,7 +22,7 @@
 Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
 
 const char* ssid     = ""; //Your WiFi SSID
-const char* password = "";     //Your WiFi password
+const char* password = ""; //Your WiFi password
 
 void setup() {
     display.begin();        //Init Inkplate library (you should call this function ONLY ONCE)
@@ -52,7 +52,7 @@ void setup() {
     //Photo taken by: Roberto Fernandez
     if (!display.drawBitmapFromWeb("https://varipass.org/neowise_mono.bmp", 0, 0, false, true)) {
         //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-      //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression! 
+        //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression! 
         display.println("Image open error");
         display.display();
     }
