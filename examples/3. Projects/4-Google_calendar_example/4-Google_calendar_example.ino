@@ -92,7 +92,7 @@ void setup()
 {
     Serial.begin(115200);
 
-    data = (char*)ps_malloc(100000);
+    data = (char*)ps_malloc(2000000LL);
 
     //Initial display settings
     display.begin();
