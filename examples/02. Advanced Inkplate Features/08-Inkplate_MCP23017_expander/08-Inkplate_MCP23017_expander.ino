@@ -31,12 +31,12 @@ Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and a
 
 void setup() {
   display.begin();                  //Init Inkplate library (you should call this function ONLY ONCE)
-  pinModeMCP(LED_PIN, OUTPUT);     	//Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
+  display.pinModeMCP(LED_PIN, OUTPUT);     	//Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
 }
 
 void loop() {
-  digitalWriteMCP(LED_PIN, LOW);   	//Set output to low (LED does not light up)
-  delay(1000);                      //Wait for one second
-  digitalWriteMCP(LED_PIN, HIGH);  	//Set output to high (LED lights up)
-  delay(1000);                      //Wait for one second
+  display.digitalWriteMCP(LED_PIN, LOW);   	//Set output to low (LED does not light up)
+  delay(1000);                              //Wait for one second
+  display.digitalWriteMCP(LED_PIN, HIGH);  	//Set output to high (LED lights up)
+  delay(1000);                              //Wait for one second
 }
