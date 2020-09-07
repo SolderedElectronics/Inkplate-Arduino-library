@@ -12,9 +12,6 @@
 
 #include "include/defines.h"
 
-static void ckvClock();
-static void usleep1();
-
 class Inkplate : public System, public GFX
 {
   public:

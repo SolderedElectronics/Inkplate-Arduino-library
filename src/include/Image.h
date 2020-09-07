@@ -3,6 +3,7 @@
 
 #include "../libs/SdFat/SdFat.h"
 #include "Arduino.h"
+#include "Network.h"
 #include "WiFiClient.h"
 #include "defines.h"
 
@@ -18,7 +19,7 @@ struct bitmapHeader
     uint32_t compression;
 };
 
-class Image
+class Image : Network
 {
   public:
     Image();
@@ -35,7 +36,8 @@ class Image
     bool drawImage(const SdFile *path, int x, int y, bool dither = 1, bool invert = 0);
     bool drawImage(const WiFiClient *s, int x, int y, int len = -1, bool dither = 1, bool invert = 0);
 
-    void drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg = 0xFFFF);
+    void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color,
+                    uint16_t bg = 0xFFFF);
     void drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h);
 
     bool drawBitmapFromSD(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
@@ -75,8 +77,10 @@ class Image
     uint32_t read32(uint8_t *c);
     uint16_t read16(uint8_t *c);
 
+    void readBmpHeader(uint8_t *buf, bitmapHeader *_h);
     void readBmpHeaderSd(SdFile *_f, bitmapHeader *_h);
-    inline void displayBmpLine(int16_t x, int16_t y, SdFile *f, bitmapHeader *bmpHeader, bool dither, bool invert);
+
+    inline void displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool dither, bool invert);
 
     bool drawMonochromeBitmapWeb(WiFiClient *s, bitmapHeader bmpHeader, int x, int y, int len, bool invert);
     bool drawGrayscaleBitmap4Web(WiFiClient *s, bitmapHeader bmpHeader, int x, int y, int len, bool dither,

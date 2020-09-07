@@ -8,7 +8,13 @@
 class Network
 {
   public:
-    private:
+    bool joinAP(char *ssid, char *pass);
+    void disconnect();
+    bool isConnected();
+
+    bool downloadFile(uint8_t *buffer, const char *url);
+
+  private:
 };
 
 #endif

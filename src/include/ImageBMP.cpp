@@ -1,8 +1,11 @@
 #include "Image.h"
 
+#define RGB3BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 13)
+
 void Image::readBmpHeaderSd(SdFile *_f, bitmapHeader *_h)
 {
     uint8_t header[100];
+
     _f->rewind();
     _f->read(header, 100);
     _h->signature = read16(header + 0);
@@ -32,32 +35,50 @@ void Image::readBmpHeaderSd(SdFile *_f, bitmapHeader *_h)
         {
             uint32_t c = read32(paletteRGB + (i << 2));
 
-            Serial.println(c, 2);
+            uint8_t r = (c & 0xFF000000) >> 24;
+            uint8_t g = (c & 0x00FF0000) >> 16;
+            uint8_t b = (c & 0x0000FF00) >> 8;
+
+            pallete[i >> 1] |= RGB3BIT(r, g, b) << (i & 1 ? 0 : 4);
+        }
+    }
+}
+
+void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
+{
+    _h->signature = read16(buf + 0);
+    _h->fileSize = read32(buf + 2);
+    _h->startRAW = read32(buf + 10);
+    _h->dibHeaderSize = read32(buf + 14);
+    _h->width = read32(buf + 18);
+    _h->height = read32(buf + 22);
+    _h->color = read16(buf + 28);
+    _h->compression = read32(buf + 30);
+
+    uint32_t totalColors = read32(buf + 46);
+
+    uint8_t paletteRGB[1024];
+
+    if (_h->color <= 8)
+    {
+        if (!totalColors)
+            totalColors = (1ULL << _h->color);
+
+        memcpy(paletteRGB, buf + 53, totalColors * 4);
+        memset(pallete, 0, sizeof pallete);
+
+        for (int i = 0; i < totalColors; ++i)
+        {
+            uint32_t c = read32(paletteRGB + (i << 2));
 
             uint8_t r = (c & 0xFF000000) >> 24;
             uint8_t g = (c & 0x00FF0000) >> 16;
             uint8_t b = (c & 0x0000FF00) >> 8;
-            uint8_t a = (c & 0x000000FF);
 
-            Serial.println(b, 2);
-            Serial.println(g, 2);
-            Serial.println(r, 2);
-            Serial.println(a, 2);
-
-            pallete[i >> 1] |= ((54UL * r + 183UL * g + 19UL * b) >> 13) << (i & 1 ? 0 : 4);
+            pallete[i >> 1] |= RGB3BIT(r, g, b) << (i & 1 ? 0 : 4);
         }
     }
-
-    for (int i = 0; i < totalColors / 2; ++i)
-    {
-        Serial.println(pallete[i] >> 8);
-        Serial.println(pallete[i] & 0xF);
-    }
-
-    Serial.println();
-
-    return;
-}
+};
 
 bool Image::drawBitmapFromSD(const char *fileName, int x, int y, bool dither, bool invert)
 {
@@ -87,28 +108,27 @@ bool Image::drawBitmapFromSD(SdFile *p, int x, int y, bool dither, bool invert)
         selectDisplayMode(INKPLATE_3BIT);
 
     int16_t w = bmpHeader.width, h = bmpHeader.height;
+    int8_t c = bmpHeader.color;
 
     p->seekSet(bmpHeader.startRAW);
 
-    if (bmpHeader.color == 1)
-        Serial.println("nice");
-
     for (int i = 0; i < h; ++i)
-        displayBmpLine(x, y + i, p, &bmpHeader, dither, invert);
+    {
+        int16_t rowSize = (((int16_t)c * w + 31) >> 5) << 2;
 
+        p->read(pixelBuffer, rowSize);
+        displayBmpLine(x, y + i, &bmpHeader, dither, invert);
+    }
     return 1;
 }
 
-void Image::displayBmpLine(int16_t x, int16_t y, SdFile *f, bitmapHeader *bmpHeader, bool dither, bool invert)
+void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool dither, bool invert)
 {
     int16_t w = bmpHeader->width, h = bmpHeader->height;
     int8_t c = bmpHeader->color;
 
-    int16_t rowSize = (((int16_t)c * w + 31) >> 5) << 2;
-
     startWrite();
 
-    f->read(pixelBuffer, rowSize);
     for (int j = 0; j < w; ++j)
     {
         switch (c)
@@ -142,9 +162,9 @@ void Image::displayBmpLine(int16_t x, int16_t y, SdFile *f, bitmapHeader *bmpHea
             uint8_t b = (px & 0x1F) << 3;
 
             if (invert)
-                writePixel(x + j, y, 7 - ((54UL * r + 183UL * g + 19UL * b) >> 13));
+                writePixel(x + j, y, 7 - RGB3BIT(r, g, b));
             else
-                writePixel(x + j, y, (54UL * r + 183UL * b + 19UL * g) >> 13);
+                writePixel(x + j, y, RGB3BIT(r, g, b));
             break;
         }
         case 24: {
@@ -153,9 +173,9 @@ void Image::displayBmpLine(int16_t x, int16_t y, SdFile *f, bitmapHeader *bmpHea
             uint8_t b = pixelBuffer[j * 3 + 2];
 
             if (invert)
-                writePixel(x + j, y, 7 - ((54UL * r + 183UL * g + 19UL * b) >> 13));
+                writePixel(x + j, y, 7 - RGB3BIT(r, g, b));
             else
-                writePixel(x + j, y, (54UL * r + 183UL * b + 19UL * g) >> 13);
+                writePixel(x + j, y, RGB3BIT(r, g, b));
             break;
         }
         case 32:
@@ -164,9 +184,9 @@ void Image::displayBmpLine(int16_t x, int16_t y, SdFile *f, bitmapHeader *bmpHea
             uint8_t b = pixelBuffer[j * 4 + 2];
 
             if (invert)
-                writePixel(x + j, y, 7 - ((54UL * r + 183UL * g + 19UL * b) >> 13));
+                writePixel(x + j, y, 7 - RGB3BIT(r, g, b));
             else
-                writePixel(x + j, y, (54UL * r + 183UL * b + 19UL * g) >> 13);
+                writePixel(x + j, y, RGB3BIT(r, g, b));
             break;
         }
     }
@@ -174,240 +194,110 @@ void Image::displayBmpLine(int16_t x, int16_t y, SdFile *f, bitmapHeader *bmpHea
     endWrite();
 }
 
-// bool Image::drawMonochromeBitmapSd(SdFile *f, bitmapHeader bmpHeader, int x, int y, bool invert)
-// {
-//     int w = bmpHeader.width;
-//     int h = bmpHeader.height;
-//     uint8_t paddingBits = w % 32;
-//     w /= 32;
+bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool invert)
+{
+    uint8_t *buf = (uint8_t *)ps_malloc(800 * 600 * 4 + 100); // TODO: allocate as mush as used
+    downloadFile(buf, url);
 
+    struct bitmapHeader bmpHeader;
 
-//     int i, j;
-//     for (j = 0; j < h; j++)
-//     {
-//         uint8_t *bufferPtr = pixelBuffer;
+    readBmpHeader(buf, &bmpHeader);
 
-//         for (i = 0; i < w; i++)
-//         {
-//             uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 | *(bufferPtr++);
-//             if (invert)
-//                 pixelRow = ~pixelRow;
-//             for (int n = 0; n < 32; n++)
-//             {
-//                 drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
-//             }
-//         }
-//         if (paddingBits)
-//         {
-//             uint32_t pixelRow = f->read() << 24 | f->read() << 16 | f->read() << 8 | f->read();
-//             if (invert)
-//                 pixelRow = ~pixelRow;
-//             for (int n = 0; n < paddingBits; n++)
-//             {
-//                 drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
-//             }
-//         }
-//     }
-//     f->close();
-//     return 1;
-// }
+    uint8_t *bufferPtr = buf + bmpHeader.startRAW;
+    for (int i = 0; i < bmpHeader.height; ++i)
+    {
+        memcpy(pixelBuffer, bufferPtr, bmpHeader.width);
+        displayBmpLine(x, y + i, &bmpHeader, dither, invert);
+        bufferPtr += bmpHeader.width;
+    }
 
-// bool Image::drawGrayscaleBitmap4Sd(SdFile *f, bitmapHeader bmpHeader, int x, int y, bool dither, bool invert)
-// {
-//     int w = bmpHeader.width;
-//     int h = bmpHeader.height;
-//     uint8_t paddingBits = w % 8;
-//     w /= 8;
+    return 1;
+}
 
-//     f->seekSet(bmpHeader.startRAW);
-//     int i, j;
+bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool dither, bool invert)
+{
+    struct bitmapHeader bmpHeader;
+    // readBmpHeaderWeb(s, &bmpHeader);
 
-//     uint8_t *bufferPtr;
+    if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 ||
+        !(bmpHeader.color == 1 || bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 16 ||
+          bmpHeader.color == 24))
+        return 0;
 
-//     if (dither)
-//     {
-//         bufferPtr = pixelBuffer;
-//         f->read(pixelBuffer, w * 4 + (paddingBits ? 4 : 0));
+    if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 16 || bmpHeader.color == 24 ||
+         bmpHeader.color == 32) &&
+        getDisplayMode() != INKPLATE_3BIT)
+    {
+        selectDisplayMode(INKPLATE_3BIT);
+    }
 
-//         ditherStart(pixelBuffer, bufferPtr, w * 8 + (paddingBits ? 4 : 0), invert, 4);
-//     }
+    if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT)
+    {
+        selectDisplayMode(INKPLATE_1BIT);
+    }
 
-//     for (j = 0; j < h; j++)
-//     {
-//         bufferPtr = pixelBuffer;
-//         f->read(pixelBuffer, w * 4 + (paddingBits ? 4 : 0));
+    if (bmpHeader.color == 1)
+        drawMonochromeBitmapWeb(s, bmpHeader, x, y, len, invert);
+    if (bmpHeader.color == 4)
+        drawGrayscaleBitmap4Web(s, bmpHeader, x, y, len, dither, invert);
+    if (bmpHeader.color == 8)
+        drawGrayscaleBitmap8Web(s, bmpHeader, x, y, len, dither, invert);
+    if (bmpHeader.color == 24)
+        drawGrayscaleBitmap24Web(s, bmpHeader, x, y, len, dither, invert);
 
-//         if (dither && j != h - 1)
-//         {
-//             ditherLoadNextLine(pixelBuffer, bufferPtr, w * 8 + (paddingBits ? 4 : 0), invert, 4);
-//         }
+    return 1;
+}
 
-//         for (i = 0; i < w; i++)
-//         {
-//             if (dither)
-//             {
+bool Image::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert)
+{
+    int w = bmpHeader.width;
+    int h = bmpHeader.height;
+    uint8_t paddingBits = w % 32;
+    int total = len - 34;
+    w /= 32;
 
-//                 for (int n = 0; n < 8; n++)
-//                 {
-//                     drawPixel((i * 8) + n + x, h - 1 - j + y,
-//                               ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits ? 4 : 0), h) >> 5);
-//                 }
-//             }
-//             else
-//             {
-//                 uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 |
-//                 *(bufferPtr++); if (invert)
-//                     pixelRow = ~pixelRow;
-//                 for (int n = 0; n < 8; n++)
-//                 {
-//                     drawPixel((i * 8) + n + x, h - 1 - j + y,
-//                               (pixelRow & (0xFULL << (28 - n * 4))) >> (28 - n * 4 + 1));
-//                 }
-//             }
-//         }
-//         if (paddingBits)
-//         {
-//             if (dither)
-//             {
-//                 for (int n = 0; n < paddingBits; n++)
-//                 {
-//                     drawPixel((i * 8) + n + x, h - 1 - j + y,
-//                               ditherGetPixel((i * 8) + n, h - 1 - j, w * 8 + (paddingBits ? 4 : 0), h) >> 5);
-//                 }
-//             }
-//             else
-//             {
-//                 uint32_t pixelRow = *(bufferPtr++) << 24 | *(bufferPtr++) << 16 | *(bufferPtr++) << 8 |
-//                 *(bufferPtr++); if (invert)
-//                     pixelRow = ~pixelRow;
-//                 for (int n = 0; n < paddingBits; n++)
-//                 {
-//                     drawPixel((i * 8) + n + x, h - 1 - j + y,
-//                               ((pixelRow & (0xFULL << (28 - n * 4)))) >> (28 - n * 4 + 1));
-//                 }
-//             }
-//         }
-//         if (dither)
-//             ditherSwap(w * 8 + paddingBits);
-//     }
-//     f->close();
-//     return 1;
-// }
+    uint8_t *buf = (uint8_t *)ps_malloc(total);
+    if (buf == NULL)
+        return 0;
 
-// bool Image::drawGrayscaleBitmap8Sd(SdFile *f, bitmapHeader bmpHeader, int x, int y, bool dither, bool invert)
-// {
-//     int w = bmpHeader.width;
-//     int h = bmpHeader.height;
-//     char padding = w & 3;
-//     f->seekSet(bmpHeader.startRAW);
-//     int i, j;
+    int pnt = 0;
+    while (pnt < total)
+    {
+        int toread = s->available();
+        if (toread > 0)
+        {
+            int read = s->read(buf + pnt, toread);
+            if (read > 0)
+                pnt += read;
+        }
+    }
 
-//     uint8_t *bufferPtr;
+    int i, j, k = bmpHeader.startRAW - 34;
+    for (j = 0; j < h; j++)
+    {
+        for (i = 0; i < w; i++)
+        {
+            uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
+            if (invert)
+                pixelRow = ~pixelRow;
+            for (int n = 0; n < 32; n++)
+            {
+                drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
+            }
+        }
+        if (paddingBits)
+        {
+            uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
+            if (invert)
+                pixelRow = ~pixelRow;
+            for (int n = 0; n < paddingBits; n++)
+            {
+                drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
+            }
+        }
+    }
 
-//     if (dither)
-//     {
-//         bufferPtr = pixelBuffer;
-//         f->read(pixelBuffer, w);
+    free(buf);
 
-//         ditherStart(pixelBuffer, bufferPtr, w, invert, 8);
-//     }
-
-//     for (j = 0; j < h; j++)
-//     {
-//         bufferPtr = pixelBuffer;
-//         f->read(pixelBuffer, w);
-
-//         if (dither && j != h - 1)
-//         {
-//             ditherLoadNextLine(pixelBuffer, bufferPtr, w, invert, 8);
-//         }
-
-//         for (i = 0; i < w; i++)
-//         {
-//             if (dither)
-//                 drawPixel(i + x, h - 1 - j + y, ditherGetPixel(i, j, w, h) >> 5);
-//             else
-//             {
-//                 uint8_t px = 0;
-//                 if (invert)
-//                     px = 255 - *(bufferPtr++);
-//                 else
-//                     px = *(bufferPtr++);
-//                 drawPixel(i + x, h - 1 - j + y, px >> 5);
-//             }
-//         }
-//     }
-
-//     if (dither)
-//         ditherSwap(w);
-
-//     if (padding)
-//     {
-//         for (int p = 0; p < 4 - padding; p++)
-//         {
-//             f->read();
-//         }
-//     }
-//     f->close();
-//     return 1;
-// }
-
-// bool Image::drawGrayscaleBitmap24Sd(SdFile *f, bitmapHeader bmpHeader, int x, int y, bool dither, bool invert)
-// {
-//     int w = bmpHeader.width;
-//     int h = bmpHeader.height;
-//     char padding = w & 3;
-//     f->seekSet(bmpHeader.startRAW);
-//     int i, j;
-
-//     uint8_t *bufferPtr;
-
-//     if (dither)
-//     {
-//         bufferPtr = pixelBuffer;
-//         f->read(pixelBuffer, w * 3);
-
-//         ditherStart(pixelBuffer, bufferPtr, w, invert, 24);
-//     }
-
-//     for (j = 0; j < h; j++)
-//     {
-//         bufferPtr = pixelBuffer;
-//         f->read(pixelBuffer, w * 3);
-
-//         if (dither && j != h - 1)
-//         {
-//             ditherLoadNextLine(pixelBuffer, bufferPtr, w, invert, 24);
-//         }
-
-//         for (i = 0; i < w; i++)
-//         {
-//             if (dither)
-//                 drawPixel(i + x, h - 1 - j + y, ditherGetPixel(i, j, w, h) >> 5);
-//             else
-//             {
-//                 uint8_t px = 0;
-//                 if (invert)
-//                     px = ((255 - *(bufferPtr++)) * 2126 / 10000) + ((255 - *(bufferPtr++)) * 7152 / 10000) +
-//                          ((255 - *(bufferPtr++)) * 722 / 10000);
-//                 else
-//                     px = (*(bufferPtr++) * 2126 / 10000) + (*(bufferPtr++) * 7152 / 10000) +
-//                          (*(bufferPtr++) * 722 / 10000);
-//                 drawPixel(i + x, h - 1 - j + y, px >> 5);
-//             }
-//         }
-
-//         if (dither)
-//             ditherSwap(w);
-
-//         if (padding)
-//         {
-//             for (int p = 0; p < padding; p++)
-//             {
-//                 f->read();
-//             }
-//         }
-//     }
-//     f->close();
-//     return 1;
-// }
+    return 1;
+}

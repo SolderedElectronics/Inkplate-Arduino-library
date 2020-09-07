@@ -24,7 +24,7 @@
 #include "Inkplate.h" //Include Inkplate library to the sketch
 #include "SdFat.h"    //Include library for SD card
 Inkplate display(
-    INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+    INKPLATE_3BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
 SdFile file;        // Create SdFile object used for accessing files on SD card
 
 void setup()
@@ -49,7 +49,7 @@ void loop()
         // NOTE: Both drawBitmapFromSD methods allow for an optional fourth "invert" parameter. Setting this parameter
         // to true will flip all colors on the image, making black white and white black. This may be necessary when
         // exporting bitmaps from certain softwares.
-        if (!display.drawBitmapFromSD("4bitish.bmp", 200, 0, 0))
+        if (!display.drawBitmapFromSD("4bitTest.bmp", 0, 0, 0))
         {
             // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
             // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no

@@ -9,7 +9,7 @@
 #define GREEN(a) ((((a)&0x07e0) >> 5) << 2)
 #define BLUE(a)  (((a)&0x001f) << 3)
 
-static Image *_imagePtrJpeg = nullptr;
+Image *_imagePtrJpeg = nullptr;
 
 Image::Image()
 {
@@ -193,147 +193,7 @@ uint8_t Image::ditherSwap(int w)
         ditherBuffer[0][i] = ditherBuffer[1][i];
 }
 
-bool Image::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert)
-{
-    int w = bmpHeader.width;
-    int h = bmpHeader.height;
-    uint8_t paddingBits = w % 32;
-    int total = len - 34;
-    w /= 32;
-
-    uint8_t *buf = (uint8_t *)ps_malloc(total);
-    if (buf == NULL)
-        return 0;
-
-    int pnt = 0;
-    while (pnt < total)
-    {
-        int toread = s->available();
-        if (toread > 0)
-        {
-            int read = s->read(buf + pnt, toread);
-            if (read > 0)
-                pnt += read;
-        }
-    }
-
-    int i, j, k = bmpHeader.startRAW - 34;
-    for (j = 0; j < h; j++)
-    {
-        for (i = 0; i < w; i++)
-        {
-            uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
-            if (invert)
-                pixelRow = ~pixelRow;
-            for (int n = 0; n < 32; n++)
-            {
-                drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
-            }
-        }
-        if (paddingBits)
-        {
-            uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
-            if (invert)
-                pixelRow = ~pixelRow;
-            for (int n = 0; n < paddingBits; n++)
-            {
-                drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
-            }
-        }
-    }
-
-    free(buf);
-
-    return 1;
-}
-
-bool Image::drawJpegFromSD(SdFile *p, int x, int y, bool dither, bool invert)
-{
-    uint8_t ret = 0;
-
-    TJpgDec.setJpgScale(1);
-    TJpgDec.setCallback(drawJpegChunk);
-
-    uint32_t pnt = 0;
-    uint32_t total = p->fileSize();
-    uint8_t *buf = (uint8_t *)ps_malloc(total);
-    if (buf == NULL)
-        return 0;
-
-    while (pnt < total)
-    {
-        uint32_t toread = p->available();
-        if (toread > 0)
-        {
-            int read = p->read(buf + pnt, toread);
-            if (read > 0)
-                pnt += read;
-        }
-    }
-    p->close();
-
-    selectDisplayMode(INKPLATE_3BIT);
-
-    if (TJpgDec.drawJpg(x, y, buf, total, dither, invert) == 0)
-        ret = 1;
-
-    free(buf);
-
-    return ret;
-}
-
-bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool _dither, bool _invert)
-{
-    if (!_imagePtrJpeg)
-        return 0;
-
-    int i, j;
-    for (j = 0; j < h; ++j)
-    {
-        for (i = 0; i < w; ++i)
-        {
-            uint16_t rgb = bitmap[j * w + i];
-            if (_invert)
-                rgb = ~rgb;
-            uint8_t px = (RED(rgb) * 2126 / 10000) + (GREEN(rgb) * 7152 / 10000) + (BLUE(rgb) * 722 / 10000);
-            _imagePtrJpeg->drawPixel(i + x, j + y, px >> 5);
-        }
-    }
-
-    return 1;
-}
-
-bool Image::drawJpegFromSD(const char *fileName, int x, int y, bool dither, bool invert)
-{
-    SdFile dat;
-    if (dat.open(fileName, O_RDONLY))
-        return drawJpegFromSD(&dat, x, y, dither, invert);
-    return 0;
-}
-
-void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)
-{
-    if (getDisplayMode() != INKPLATE_3BIT)
-        return;
-    uint8_t _rem = _w % 2;
-    int i, j;
-    int xSize = _w / 2 + _rem;
-
-    for (i = 0; i < _h; i++)
-    {
-        for (j = 0; j < xSize - 1; j++)
-        {
-            drawPixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4) >> 1);
-            drawPixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
-        }
-        drawPixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4) >> 1);
-        if (_rem == 0)
-            drawPixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
-    }
-}
-
-// FUTURE COMPATIBILITY FUNCTIONS; DO NOT USE!
-void Image::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
+void Image::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;
@@ -357,6 +217,30 @@ void Image::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t
     endWrite();
 }
 
+void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)
+{
+    if (getDisplayMode() != INKPLATE_3BIT)
+        return;
+    uint8_t _rem = _w & 1;
+    int i, j;
+    int xSize = (_w >> 1) + _rem;
+
+    startWrite();
+    for (i = 0; i < _h; i++)
+    {
+        for (j = 0; j < xSize - 1; j++)
+        {
+            writePixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4) >> 1);
+            writePixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
+        }
+        writePixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4) >> 1);
+        if (_rem == 0)
+            writePixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
+    }
+    endWrite();
+}
+
+// FUTURE COMPATIBILITY FUNCTIONS; DO NOT USE!
 void Image::drawGrayscaleBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h)
 {
     startWrite();
