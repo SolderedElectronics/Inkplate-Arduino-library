@@ -28,7 +28,6 @@
 // minihelper to keep Arduino backward compatibility
 static inline void wiresend(uint8_t x) {
 #if ARDUINO >= 100
-	Wire.write((uint8_t)x);
 	Wire.write((uint8_t) x);
 #else
 	Wire.send(x);
