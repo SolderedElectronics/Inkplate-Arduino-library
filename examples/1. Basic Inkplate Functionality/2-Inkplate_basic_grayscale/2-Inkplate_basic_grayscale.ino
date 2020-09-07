@@ -7,7 +7,7 @@
    
    This example will show you how you can draw some simple graphics using 
    Adafruit GFX functions. Yes, Inkplate library is 100% compatible with GFX lib!
-   Learn more about Adafruit GFX: https://learn.adafruit.com/adafruit-gfx-graphics-library
+   Learn more about Adafruit GFX: https://learn.adafruit.com/adafruit-gfx-graphics-library )
    Inkplate will be used in grayscale mode which is 3 bit, so you can have up to 8 different colors (black, 6 gray colors and white)
    Color is represented by number, where number 0 means black and number 7 means white, while everything in between are shades of gray. 
 
@@ -29,7 +29,7 @@ void setup() {
   display.clearDisplay(); //Clear any data that may have been in (software) frame buffer. 
                           //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside ESP32).
   display.clean();        //Clear everything that has previously been on a screen
-  display.setTextColor(0,7); display.setCursor(150, 320); display.setTextSize(4); display.print("Welcome to Inkplate 6!"); display.display(); //Write hello message
+  display.setTextColor(0,7,); display.setCursor(150, 320); display.setTextSize(4); display.print("Welcome to Inkplate 6!"); display.display(); //Write hello message
   delay(5000);            //Wait a little bit
 }
 

@@ -41,7 +41,7 @@ void setup() {
     } else {
       display.clearDisplay();                           //Clear everything that is stored in frame buffer of epaper
       display.setCursor(0,0);                           //Set print position at the begining of the screen
-      char text[201];                                   //Array where data from SD card is stored (max 200 chars here)
+      char text[200];                                   //Array where data from SD card is stored (max 200 chars here)
       int len = file.fileSize();                        //Read how big is file that we are opening
       if(len>200) len = 200;                            //If it's more than 200 bytes (200 chars), limit to max 200 bytes
       file.read(text, len);                             //Read data from file and save it in text array
