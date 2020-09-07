@@ -13,6 +13,8 @@ In order to get a head start with Inkplate 6, follow these steps:
 4. Install [custom SdFat library](https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library) into your Arduino IDE. 
 5. You are ready to get started! Select Tools -> Board -> Inkplate 6, as well as correct COM port and upload! 
 
+### dev branch
+If you are looking for the latest features, but not fully tested, take a look at our [dev branch](https://github.com/e-radionicacom/Inkplate-6-Arduino-library/tree/dev).
 
 ### Code examples
 There are many examples in the library that you demonstrate how to use any of the Inkplate functionality. 
