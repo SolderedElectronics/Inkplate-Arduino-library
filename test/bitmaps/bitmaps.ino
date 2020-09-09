@@ -6,7 +6,17 @@
 
 Inkplate display(INKPLATE_1BIT);
 
+#define DELAYMS 1000
+
 const char *images[] = {"1bit.bmp", "4bit.bmp", "8bit.bmp", "16bit.bmp", "24bit.bmp", "32bit.bmp"};
+const char *imageUrls[] = {
+    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/1bit.bmp",
+    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/4bit.bmp",
+    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/8bit.bmp",
+    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/16bit.bmp",
+    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/24bit.bmp",
+    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/32bit.bmp",
+};
 const bool depth[] = {INKPLATE_1BIT, INKPLATE_3BIT, INKPLATE_3BIT, INKPLATE_3BIT, INKPLATE_3BIT, INKPLATE_3BIT};
 
 void setup()
@@ -91,7 +101,7 @@ void loop()
             display.clearDisplay();
             delay(5000);
 
-            display.drawBitmapFromSD(images[j], 0, 0, dither, invert);
+            display.drawBitmapFromSd(images[j], 0, 0, dither, invert);
             display.display();
             display.clearDisplay();
             delay(5000);
@@ -111,6 +121,7 @@ void loop()
             display.setCursor(100, 100);
             display.print("Displaying ");
             display.print(images[j]);
+            display.print(" from web");
             if (!dither)
                 display.print(" non");
             display.print(" dithered and");
@@ -122,7 +133,7 @@ void loop()
             display.clearDisplay();
             delay(5000);
 
-            display.drawBitmapFromSD(images[j], 0, 0, dither, invert);
+            display.drawBitmapFromWeb(imageUrls[j], 0, 0, dither, invert);
             display.display();
             display.clearDisplay();
             delay(5000);

@@ -16,8 +16,10 @@
 #define PAD3          2
 
 #define RGB3BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 13)
-#define read32(c)        (uint32_t)(*(c) | (*((c) + 1) << 8) | (*((c) + 2) << 16) | (*((c) + 3) << 24));
-#define read16(c)        (uint16_t)(*(c) | (*((c) + 1) << 8));
-#define rowSize(w, c)    (((int16_t)c * w + 31) >> 5) << 2
+#define RGB8BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 8)
+
+#define READ32(c)     (uint32_t)(*(c) | (*((c) + 1) << 8) | (*((c) + 2) << 16) | (*((c) + 3) << 24));
+#define READ16(c)     (uint16_t)(*(c) | (*((c) + 1) << 8));
+#define ROWSIZE(w, c) (((int16_t)c * w + 31) >> 5) << 2
 
 #endif

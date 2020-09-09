@@ -28,8 +28,8 @@ class Image : virtual public Network
                     uint16_t bg = 0xFFFF);
     void drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h);
 
-    bool drawBitmapFromSD(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
-    bool drawBitmapFromSD(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
+    bool drawBitmapFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
+    bool drawBitmapFromSd(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
 
     bool drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool dither = 0, bool invert = 0);
     bool drawBitmapFromWeb(const char *url, int x, int y, bool dither = 0, bool invert = 0);
@@ -54,15 +54,16 @@ class Image : virtual public Network
                               bool _invert);
 
     uint8_t pixelBuffer[800 * 4 + 5];
-    uint8_t ditherBuffer[800 * 3 + 5][2];
-    uint8_t pallete[128]; // 2 colors per byte, _###_###
+    uint8_t ditherBuffer[2][800 + 5];
+    uint8_t ditherPalette[256]; // 8 bit colors
+    uint8_t palette[128];       // 2 3 bit colors per byte, _###_###
 
     bool legalBmp(bitmapHeader *bmpHeader);
 
     void ditherStart(uint8_t *pixelBuffer, uint8_t *bufferPtr, int w, bool invert, uint8_t bits);
     void ditherLoadNextLine(uint8_t *pixelBuffer, uint8_t *bufferPtr, int w, bool invert, uint8_t bits);
-    uint8_t ditherGetPixel(int i, int j, int w, int h);
-    uint8_t ditherSwap(int w);
+    uint8_t ditherGetPixel(uint8_t px, int i, int w, bool paletted);
+    void ditherSwap(int w);
 
     void readBmpHeader(uint8_t *buf, bitmapHeader *_h);
     void readBmpHeaderSd(SdFile *_f, bitmapHeader *_h);

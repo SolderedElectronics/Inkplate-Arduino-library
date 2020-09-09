@@ -22,7 +22,17 @@ void loop()
 
     if (display.sdCardInit())
     {
-        Serial.println(display.drawBitmapFromSD("8bit.bmp", 0, 0));
+        Serial.println(display.drawBitmapFromSd("Lenna.bmp", 0, 0, 0, 0));
+    }
+    display.display();
+
+    delay(5000);
+
+    if (display.sdCardInit())
+    {
+        int16_t t = millis();
+        Serial.println(display.drawBitmapFromSd("Lenna.bmp", 0, 0, 1, 0));
+        Serial.println(millis() - t);
     }
     display.display();
 
