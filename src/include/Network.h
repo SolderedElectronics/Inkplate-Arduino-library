@@ -4,15 +4,28 @@
 #include "Arduino.h"
 #include "HTTPClient.h"
 #include "WiFi.h"
+#include "defines.h"
+
+struct bitmapHeader
+{
+    uint16_t signature;
+    uint32_t fileSize;
+    uint32_t startRAW;
+    uint32_t dibHeaderSize;
+    uint32_t width;
+    uint32_t height;
+    uint16_t color;
+    uint32_t compression;
+};
 
 class Network
 {
   public:
-    bool joinAP(char *ssid, char *pass);
+    bool joinAP(const char *ssid, const char *pass);
     void disconnect();
     bool isConnected();
 
-    bool downloadFile(uint8_t *buffer, const char *url);
+    uint8_t *downloadFile(const char *url, int32_t defaultLen);
 
   private:
 };

@@ -9,7 +9,7 @@
 #include "Mcp.h"
 #include "Network.h"
 
-class System : public Esp, public Mcp, public Network
+class System : public Esp, public Mcp, virtual public Network
 {
   public:
     void setPanelState(uint8_t s);

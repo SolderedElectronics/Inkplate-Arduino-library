@@ -1,6 +1,6 @@
 #include "Network.h"
 
-bool Network::joinAP(char *ssid, char *pass)
+bool Network::joinAP(const char *ssid, const char *pass)
 {
     WiFi.mode(WIFI_MODE_STA);
     WiFi.begin(ssid, pass);
@@ -27,13 +27,11 @@ bool Network::isConnected()
     return WiFi.status() == WL_CONNECTED;
 }
 
-bool Network::downloadFile(uint8_t *buffer, const char *url)
+
+uint8_t *Network::downloadFile(const char *url, int32_t defaultLen)
 {
     if (!isConnected())
-        return 0;
-
-    int ret = 0;
-    uint8_t *bufferPtr = buffer;
+        return NULL;
 
     bool sleep = WiFi.getSleep();
     WiFi.setSleep(false);
@@ -44,33 +42,40 @@ bool Network::downloadFile(uint8_t *buffer, const char *url)
     http.begin(url);
 
     int httpCode = http.GET();
-    if (httpCode == 200)
+
+    int32_t size = http.getSize();
+    if (size == -1)
+        size = defaultLen;
+
+    uint8_t *buffer = (uint8_t *)ps_malloc(size);
+    uint8_t *buffPtr = buffer;
+
+    if (httpCode == HTTP_CODE_OK)
     {
-        int total = http.getSize();
-        int len = total;
+        int32_t total = http.getSize();
+        int32_t len = total;
 
         uint8_t buff[128] = {0};
 
         WiFiClient *stream = http.getStreamPtr();
-
         while (http.connected() && (len > 0 || len == -1))
         {
             size_t size = stream->available();
+
             if (size)
             {
                 int c = stream->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
-
-                memcpy(bufferPtr, buff, c);
-                bufferPtr += c;
+                memcpy(buffPtr, buff, c);
 
                 if (len > 0)
                     len -= c;
+                buffPtr += c;
             }
             yield();
         }
     }
-
     http.end();
     WiFi.setSleep(sleep);
-    return ret;
+
+    return buffer;
 }

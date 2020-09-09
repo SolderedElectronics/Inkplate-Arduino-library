@@ -7,19 +7,7 @@
 #include "WiFiClient.h"
 #include "defines.h"
 
-struct bitmapHeader
-{
-    uint16_t signature;
-    uint32_t fileSize;
-    uint32_t startRAW;
-    uint32_t dibHeaderSize;
-    uint32_t width;
-    uint32_t height;
-    uint16_t color;
-    uint32_t compression;
-};
-
-class Image : Network
+class Image : virtual public Network
 {
   public:
     Image();
@@ -69,26 +57,17 @@ class Image : Network
     uint8_t ditherBuffer[800 * 3 + 5][2];
     uint8_t pallete[128]; // 2 colors per byte, _###_###
 
+    bool legalBmp(bitmapHeader *bmpHeader);
+
     void ditherStart(uint8_t *pixelBuffer, uint8_t *bufferPtr, int w, bool invert, uint8_t bits);
     void ditherLoadNextLine(uint8_t *pixelBuffer, uint8_t *bufferPtr, int w, bool invert, uint8_t bits);
     uint8_t ditherGetPixel(int i, int j, int w, int h);
     uint8_t ditherSwap(int w);
 
-    uint32_t read32(uint8_t *c);
-    uint16_t read16(uint8_t *c);
-
     void readBmpHeader(uint8_t *buf, bitmapHeader *_h);
     void readBmpHeaderSd(SdFile *_f, bitmapHeader *_h);
 
     inline void displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool dither, bool invert);
-
-    bool drawMonochromeBitmapWeb(WiFiClient *s, bitmapHeader bmpHeader, int x, int y, int len, bool invert);
-    bool drawGrayscaleBitmap4Web(WiFiClient *s, bitmapHeader bmpHeader, int x, int y, int len, bool dither,
-                                 bool invert);
-    bool drawGrayscaleBitmap8Web(WiFiClient *s, bitmapHeader bmpHeader, int x, int y, int len, bool dither,
-                                 bool invert);
-    bool drawGrayscaleBitmap24Web(WiFiClient *s, bitmapHeader bmpHeader, int x, int y, int len, bool dither,
-                                  bool invert);
 
     // FUTURE COMPATIBILITY FUNCTIONS; DO NOT USE!
 

@@ -1,9 +1,7 @@
 #include "Image.h"
 
-#include "pgmspace.h"
-
 #include "../libs/TJpeg/TJpg_Decoder.h"
-#include "defines.h"
+#include "pgmspace.h"
 
 #define RED(a)   ((((a)&0xf800) >> 11) << 3)
 #define GREEN(a) ((((a)&0x07e0) >> 5) << 2)
@@ -44,17 +42,6 @@ bool Image::drawImage(const SdFile *path, int x, int y, bool dither, bool invert
 bool Image::drawImage(const WiFiClient *s, int x, int y, int len, bool dither, bool invert){
 
 };
-
-uint32_t Image::read32(uint8_t *c)
-{
-    return (*(c) | (*(c + 1) << 8) | (*(c + 2) << 16) | (*(c + 3) << 24));
-}
-
-uint16_t Image::read16(uint8_t *c)
-{
-    return (*(c) | (*(c + 1) << 8));
-}
-
 
 // Loads first line in current dither buffer
 void Image::ditherStart(uint8_t *pixelBuffer, uint8_t *bufferPtr, int w, bool invert, uint8_t bits)
@@ -195,7 +182,7 @@ uint8_t Image::ditherSwap(int w)
 
 void Image::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
-    int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
+    int16_t byteWidth = (w + 7) >> 3; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;
 
     startWrite();
@@ -206,7 +193,7 @@ void Image::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, i
             if (i & 7)
                 byte <<= 1;
             else
-                byte = bitmap[j * byteWidth + i / 8];
+                byte = bitmap[j * byteWidth + (i >> 3)];
 
             if (byte & 0x80)
                 writePixel(x + i, y, color);
@@ -236,71 +223,6 @@ void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int1
         writePixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4) >> 1);
         if (_rem == 0)
             writePixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
-    }
-    endWrite();
-}
-
-// FUTURE COMPATIBILITY FUNCTIONS; DO NOT USE!
-void Image::drawGrayscaleBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h)
-{
-    startWrite();
-    for (int16_t j = 0; j < h; j++, y++)
-        for (int16_t i = 0; i < w; i++)
-            writePixel(x + i, y, bitmap[j * w + i]);
-
-    endWrite();
-}
-
-void Image::drawGrayscaleBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
-{
-    int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
-    uint8_t byte = 0;
-    startWrite();
-    for (int16_t j = 0; j < h; j++, y++)
-    {
-        for (int16_t i = 0; i < w; i++)
-        {
-            if (i & 7)
-                byte <<= 1;
-            else
-                byte = mask[j * bw + i / 8];
-
-            if (byte & 0x80)
-            {
-                writePixel(x + i, y, bitmap[j * w + i]);
-            }
-        }
-    }
-    endWrite();
-}
-
-void Image::drawRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h)
-{
-    startWrite();
-    for (int16_t j = 0; j < h; j++, y++)
-        for (int16_t i = 0; i < w; i++)
-            writePixel(x + i, y, bitmap[j * w + i]);
-
-    endWrite();
-}
-
-void Image::drawRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h)
-{
-    int16_t bw = (w + 7) / 8; // Bitmask scanline pad = whole byte
-    uint8_t byte = 0;
-    startWrite();
-    for (int16_t j = 0; j < h; j++, y++)
-    {
-        for (int16_t i = 0; i < w; i++)
-        {
-            if (i & 7)
-                byte <<= 1;
-            else
-                byte = mask[j * bw + i / 8];
-
-            if (byte & 0x80)
-                writePixel(x + i, y, bitmap[j * w + i]);
-        }
     }
     endWrite();
 }

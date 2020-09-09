@@ -1,46 +1,31 @@
 #include "Image.h"
 
-#define RGB3BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 13)
-
 void Image::readBmpHeaderSd(SdFile *_f, bitmapHeader *_h)
 {
-    uint8_t header[100];
+    uint8_t header[55];
 
     _f->rewind();
-    _f->read(header, 100);
-    _h->signature = read16(header + 0);
-    _h->fileSize = read32(header + 2);
-    _h->startRAW = read32(header + 10);
-    _h->dibHeaderSize = read32(header + 14);
-    _h->width = read32(header + 18);
-    _h->height = read32(header + 22);
-    _h->color = read16(header + 28);
-    _h->compression = read32(header + 30);
+    _f->read(header, 55);
 
+    uint16_t color = read16(header + 28);
     uint32_t totalColors = read32(header + 46);
 
-    uint8_t paletteRGB[1024];
-
-    if (_h->color <= 8)
+    if (color <= 8)
     {
         if (!totalColors)
-            totalColors = (1ULL << _h->color);
+            totalColors = (1ULL << color);
+
+        uint8_t *buff = (uint8_t *)ps_malloc(totalColors * 4 + 100);
 
         _f->rewind();
-        _f->read(paletteRGB, 53);
-        _f->read(paletteRGB, totalColors * 4);
+        _f->read(buff, totalColors * 4 + 100);
 
-        memset(pallete, 0, sizeof pallete);
-        for (int i = 0; i < totalColors; ++i)
-        {
-            uint32_t c = read32(paletteRGB + (i << 2));
-
-            uint8_t r = (c & 0xFF000000) >> 24;
-            uint8_t g = (c & 0x00FF0000) >> 16;
-            uint8_t b = (c & 0x0000FF00) >> 8;
-
-            pallete[i >> 1] |= RGB3BIT(r, g, b) << (i & 1 ? 0 : 4);
-        }
+        readBmpHeader(buff, _h);
+        free(buff);
+    }
+    else
+    {
+        readBmpHeader(header, _h);
     }
 }
 
@@ -80,46 +65,11 @@ void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
     }
 };
 
-bool Image::drawBitmapFromSD(const char *fileName, int x, int y, bool dither, bool invert)
+bool Image::legalBmp(bitmapHeader *bmpHeader)
 {
-    SdFile dat;
-    if (dat.open(fileName, O_RDONLY))
-        return drawBitmapFromSD(&dat, x, y, dither, invert);
-    else
-        return 0;
-}
-
-bool Image::drawBitmapFromSD(SdFile *p, int x, int y, bool dither, bool invert)
-{
-    bitmapHeader bmpHeader;
-    readBmpHeaderSd(p, &bmpHeader);
-
-    if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 ||
-        !(bmpHeader.color == 1 || bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 16 ||
-          bmpHeader.color == 24 || bmpHeader.color == 32))
-        return 0;
-
-    if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT)
-        selectDisplayMode(INKPLATE_1BIT);
-
-    if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 16 || bmpHeader.color == 24 ||
-         bmpHeader.color == 32) &&
-        getDisplayMode() != INKPLATE_3BIT)
-        selectDisplayMode(INKPLATE_3BIT);
-
-    int16_t w = bmpHeader.width, h = bmpHeader.height;
-    int8_t c = bmpHeader.color;
-
-    p->seekSet(bmpHeader.startRAW);
-
-    for (int i = 0; i < h; ++i)
-    {
-        int16_t rowSize = (((int16_t)c * w + 31) >> 5) << 2;
-
-        p->read(pixelBuffer, rowSize);
-        displayBmpLine(x, y + i, &bmpHeader, dither, invert);
-    }
-    return 1;
+    return bmpHeader->signature == 0x4D42 && bmpHeader->compression == 0 &&
+           (bmpHeader->color == 1 || bmpHeader->color == 4 || bmpHeader->color == 8 || bmpHeader->color == 16 ||
+            bmpHeader->color == 24 || bmpHeader->color == 32);
 }
 
 void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool dither, bool invert)
@@ -135,7 +85,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
         {
         case 1:
             // Should we ignore palette on 1 bit?
-            writePixel(x + j, y, (invert | (pallete[0] > pallete[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - j & 7))));
+            writePixel(x + j, y, (invert ^ (pallete[0] < pallete[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - j & 7))));
             break;
         // as for 2 bit, literally cannot find an example online or in PS, so skipped
         case 4: {
@@ -194,107 +144,71 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
     endWrite();
 }
 
-bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool invert)
+bool Image::drawBitmapFromSD(const char *fileName, int x, int y, bool dither, bool invert)
 {
-    uint8_t *buf = (uint8_t *)ps_malloc(800 * 600 * 4 + 100); // TODO: allocate as mush as used
-    downloadFile(buf, url);
-
-    struct bitmapHeader bmpHeader;
-
-    readBmpHeader(buf, &bmpHeader);
-
-    uint8_t *bufferPtr = buf + bmpHeader.startRAW;
-    for (int i = 0; i < bmpHeader.height; ++i)
-    {
-        memcpy(pixelBuffer, bufferPtr, bmpHeader.width);
-        displayBmpLine(x, y + i, &bmpHeader, dither, invert);
-        bufferPtr += bmpHeader.width;
-    }
-
-    return 1;
+    SdFile dat;
+    if (dat.open(fileName, O_RDONLY))
+        return drawBitmapFromSD(&dat, x, y, dither, invert);
+    else
+        return 0;
 }
 
-bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool dither, bool invert)
+bool Image::drawBitmapFromSD(SdFile *p, int x, int y, bool dither, bool invert)
 {
-    struct bitmapHeader bmpHeader;
-    // readBmpHeaderWeb(s, &bmpHeader);
+    bitmapHeader bmpHeader;
 
-    if (bmpHeader.signature != 0x4D42 || bmpHeader.compression != 0 ||
-        !(bmpHeader.color == 1 || bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 16 ||
-          bmpHeader.color == 24))
+    readBmpHeaderSd(p, &bmpHeader);
+
+    if (!legalBmp(&bmpHeader))
         return 0;
+
+    if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT)
+        selectDisplayMode(INKPLATE_1BIT);
 
     if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 16 || bmpHeader.color == 24 ||
          bmpHeader.color == 32) &&
         getDisplayMode() != INKPLATE_3BIT)
-    {
         selectDisplayMode(INKPLATE_3BIT);
-    }
 
-    if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT)
+    int16_t w = bmpHeader.width, h = bmpHeader.height;
+    int8_t c = bmpHeader.color;
+
+    p->seekSet(bmpHeader.startRAW);
+
+    for (int i = 0; i < h; ++i)
     {
-        selectDisplayMode(INKPLATE_1BIT);
+        int16_t n = rowSize(w, c);
+
+        p->read(pixelBuffer, n);
+        displayBmpLine(x, y + bmpHeader.height - i, &bmpHeader, dither, invert);
     }
-
-    if (bmpHeader.color == 1)
-        drawMonochromeBitmapWeb(s, bmpHeader, x, y, len, invert);
-    if (bmpHeader.color == 4)
-        drawGrayscaleBitmap4Web(s, bmpHeader, x, y, len, dither, invert);
-    if (bmpHeader.color == 8)
-        drawGrayscaleBitmap8Web(s, bmpHeader, x, y, len, dither, invert);
-    if (bmpHeader.color == 24)
-        drawGrayscaleBitmap24Web(s, bmpHeader, x, y, len, dither, invert);
-
     return 1;
 }
 
-bool Image::drawMonochromeBitmapWeb(WiFiClient *s, struct bitmapHeader bmpHeader, int x, int y, int len, bool invert)
+bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool invert)
 {
-    int w = bmpHeader.width;
-    int h = bmpHeader.height;
-    uint8_t paddingBits = w % 32;
-    int total = len - 34;
-    w /= 32;
+    uint8_t *buf = downloadFile(url, 800 * 600 * 4);
 
-    uint8_t *buf = (uint8_t *)ps_malloc(total);
-    if (buf == NULL)
+    bitmapHeader bmpHeader;
+    readBmpHeader(buf, &bmpHeader);
+
+    if (!legalBmp(&bmpHeader))
         return 0;
 
-    int pnt = 0;
-    while (pnt < total)
-    {
-        int toread = s->available();
-        if (toread > 0)
-        {
-            int read = s->read(buf + pnt, toread);
-            if (read > 0)
-                pnt += read;
-        }
-    }
+    if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT)
+        selectDisplayMode(INKPLATE_1BIT);
 
-    int i, j, k = bmpHeader.startRAW - 34;
-    for (j = 0; j < h; j++)
+    if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 16 || bmpHeader.color == 24 ||
+         bmpHeader.color == 32) &&
+        getDisplayMode() != INKPLATE_3BIT)
+        selectDisplayMode(INKPLATE_3BIT);
+
+    uint8_t *bufferPtr = buf + bmpHeader.startRAW;
+    for (int i = 0; i < bmpHeader.height; ++i)
     {
-        for (i = 0; i < w; i++)
-        {
-            uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
-            if (invert)
-                pixelRow = ~pixelRow;
-            for (int n = 0; n < 32; n++)
-            {
-                drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
-            }
-        }
-        if (paddingBits)
-        {
-            uint32_t pixelRow = buf[k++] << 24 | buf[k++] << 16 | buf[k++] << 8 | buf[k++];
-            if (invert)
-                pixelRow = ~pixelRow;
-            for (int n = 0; n < paddingBits; n++)
-            {
-                drawPixel((i * 32) + n + x, h - 1 - j + y, !(pixelRow & (1ULL << (31 - n))));
-            }
-        }
+        memcpy(pixelBuffer, bufferPtr, rowSize(bmpHeader.width, bmpHeader.color));
+        displayBmpLine(x, y + bmpHeader.height - i, &bmpHeader, dither, invert);
+        bufferPtr += rowSize(bmpHeader.width, bmpHeader.color);
     }
 
     free(buf);

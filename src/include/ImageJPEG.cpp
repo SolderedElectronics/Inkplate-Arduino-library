@@ -6,8 +6,6 @@
 #define GREEN(a) ((((a)&0x07e0) >> 5) << 2)
 #define BLUE(a)  (((a)&0x001f) << 3)
 
-#define RGB3BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 13)
-
 extern Image *_imagePtrJpeg;
 
 bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool _dither, bool _invert)

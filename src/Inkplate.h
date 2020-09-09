@@ -26,6 +26,22 @@ class Inkplate : public System, public GFX
     void einkOn();
     void einkOff();
 
+    bool joinAP(const char *ssid, const char *pass)
+    {
+        return Network::joinAP(ssid, pass);
+    }
+    void disconnect()
+    {
+        Network::disconnect();
+    };
+    bool isConnected()
+    {
+        return Network::isConnected();
+    };
+    uint8_t *downloadFile(const char *url, int32_t defaultLen)
+    {
+        return Network::downloadFile(url, defaultLen);
+    };
 
   private:
     void precalculateGamma(uint8_t *c, float gamma);
