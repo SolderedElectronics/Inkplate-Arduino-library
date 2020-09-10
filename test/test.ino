@@ -1,6 +1,7 @@
 #include "Inkplate.h"
 #include "SdFat.h"
-Inkplate display(INKPLATE_3BIT);
+
+Inkplate display(INKPLATE_1BIT);
 
 void setup()
 {
@@ -18,6 +19,14 @@ void loop()
 {
     display.clearDisplay();
     display.display();
+
+    if (display.sdCardInit())
+    {
+        Serial.println(display.drawBitmapFromSd("Lenna.bmp", 0, 0, 1, 0));
+    }
+    display.display();
+
+    delay(5000);
 
     if (display.sdCardInit())
     {
