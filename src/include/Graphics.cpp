@@ -1,4 +1,4 @@
-#include "GFX.h"
+#include "Graphics.h"
 
 #ifndef min
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -13,7 +13,7 @@
     }
 #endif
 
-GFX::GFX(int16_t w, int16_t h)
+Graphics::Graphics(int16_t w, int16_t h)
 {
     _width = WIDTH = w;
     _height = HEIGHT = h;
@@ -23,10 +23,10 @@ GFX::GFX(int16_t w, int16_t h)
     setTextColor(0xFFFF, 0xFFFF);
     setTextWrap(true);
     cp437(false);
-    gfxFont = NULL;
+    GraphicsFont = NULL;
 }
 
-void GFX::setRotation(uint8_t x)
+void Graphics::setRotation(uint8_t x)
 {
     rotation = (x & 3);
     switch (rotation)
@@ -44,21 +44,21 @@ void GFX::setRotation(uint8_t x)
     }
 }
 
-uint8_t GFX::getRotation()
+uint8_t Graphics::getRotation()
 {
     return rotation;
 }
 
-void GFX::drawPixel(int16_t x0, int16_t y0, uint16_t color)
+void Graphics::drawPixel(int16_t x0, int16_t y0, uint16_t color)
 {
     writePixel(x0, y0, color);
 }
 
-void GFX::startWrite()
+void Graphics::startWrite()
 {
 }
 
-void GFX::writePixel(int16_t x0, int16_t y0, uint16_t color)
+void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
 {
     if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
         return;
@@ -97,26 +97,26 @@ void GFX::writePixel(int16_t x0, int16_t y0, uint16_t color)
     }
 }
 
-void GFX::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+void Graphics::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     for (int i = 0; i < h; ++i)
         for (int j = 0; j < w; ++j)
             writePixel(x + j, y + i, color);
 }
 
-void GFX::writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color)
+void Graphics::writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color)
 {
     for (int i = 0; i < h; ++i)
         writePixel(x, y + i, color);
 }
 
-void GFX::writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color)
+void Graphics::writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color)
 {
     for (int j = 0; j < w; ++j)
         writePixel(x + j, y, color);
 }
 
-void GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
+void Graphics::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
 {
     int16_t steep = abs(y1 - y0) > abs(x1 - x0);
     if (steep)
@@ -158,16 +158,16 @@ void GFX::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t col
     }
 }
 
-void GFX::endWrite()
+void Graphics::endWrite()
 {
 }
 
-void GFX::setDisplayMode(uint8_t _mode)
+void Graphics::setDisplayMode(uint8_t _mode)
 {
     _displayMode = _mode;
 }
 
-void GFX::selectDisplayMode(uint8_t _mode)
+void Graphics::selectDisplayMode(uint8_t _mode)
 {
     if (_mode != _displayMode)
     {
@@ -180,17 +180,17 @@ void GFX::selectDisplayMode(uint8_t _mode)
     }
 }
 
-uint8_t GFX::getDisplayMode()
+uint8_t Graphics::getDisplayMode()
 {
     return _displayMode;
 }
 
-int16_t GFX::width()
+int16_t Graphics::width()
 {
     return _width;
 };
 
-int16_t GFX::height()
+int16_t Graphics::height()
 {
     return _height;
 };

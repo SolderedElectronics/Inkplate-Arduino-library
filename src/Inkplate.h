@@ -7,12 +7,12 @@
 #error "Wrong board selected! Select ESP32 Wrover from board menu!"
 #endif
 
-#include "include/GFX.h"
+#include "include/Graphics.h"
 #include "include/System.h"
 
 #include "include/defines.h"
 
-class Inkplate : public System, public GFX
+class Inkplate : public System, public Graphics
 {
   public:
     Inkplate(uint8_t _mode);

@@ -1,5 +1,5 @@
-#ifndef __GFX_H__
-#define __GFX_H__
+#ifndef __Graphics_H__
+#define __Graphics_H__
 
 #include "Arduino.h"
 
@@ -26,10 +26,10 @@
 #endif
 
 
-class GFX : public Shapes, public Image, public Font
+class Graphics : public Shapes, public Image, public Font
 {
   public:
-    GFX(int16_t w, int16_t h);
+    Graphics(int16_t w, int16_t h);
 
     void setRotation(uint8_t r);
     uint8_t getRotation();
