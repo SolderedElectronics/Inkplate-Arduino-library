@@ -20,6 +20,11 @@ bool Image::drawJpegFromSd(SdFile *p, int x, int y, bool dither, bool invert)
 {
     uint8_t ret = 0;
 
+    blockW = -1;
+    blockH = -1;
+    lastY = -1;
+    memset(ditherBuffer, 0, sizeof ditherBuffer);
+
     TJpgDec.setJpgScale(1);
     TJpgDec.setCallback(drawJpegChunk);
 
@@ -76,6 +81,13 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
 {
     bool ret = 0;
 
+    blockW = -1;
+    blockH = -1;
+    lastY = -1;
+
+    TJpgDec.setJpgScale(1);
+    TJpgDec.setCallback(drawJpegChunk);
+
     if (TJpgDec.drawJpg(x, y, buff, len, dither, invert) == 0)
         ret = 1;
 
@@ -87,20 +99,32 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
     if (!_imagePtrJpeg)
         return 0;
 
+    if (dither && y != _imagePtrJpeg->lastY)
+    {
+        _imagePtrJpeg->ditherSwap(800);
+        _imagePtrJpeg->lastY = y;
+    }
+
     _imagePtrJpeg->startWrite();
     for (int j = 0; j < h; ++j)
     {
         for (int i = 0; i < w; ++i)
         {
             uint16_t rgb = bitmap[j * w + i];
-            uint8_t val = RGB3BIT(RED(rgb), GREEN(rgb), BLUE(rgb));
-
+            uint8_t val;
+            if (dither)
+                val = _imagePtrJpeg->ditherGetPixelJpeg(RGB8BIT(RED(rgb), GREEN(rgb), BLUE(rgb)), i, j, x, y, w, h);
+            else
+                val = RGB3BIT(RED(rgb), GREEN(rgb), BLUE(rgb));
             if (invert)
                 val = 7 - val;
-
+            if (_imagePtrJpeg->getDisplayMode() == INKPLATE_1BIT)
+                val = (~val >> 2) & 1;
             _imagePtrJpeg->writePixel(x + i, y + j, val);
         }
     }
+    if (dither)
+        _imagePtrJpeg->ditherSwapBlockJpeg(x);
     _imagePtrJpeg->endWrite();
 
     return 1;

@@ -57,15 +57,20 @@ class Image : virtual public Network
     static bool drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool dither, bool invert);
 
     uint8_t pixelBuffer[800 * 4 + 5];
-    uint8_t ditherBuffer[2][800 + 5];
+    uint8_t ditherBuffer[2][800 + 20];
+    uint8_t jpegDitherBuffer[18][18];
+    int16_t blockW = 0, blockH = 0;
+    int16_t lastY = -1;
+
     uint8_t ditherPalette[256]; // 8 bit colors
     uint8_t palette[128];       // 2 3 bit colors per byte, _###_###
 
     bool legalBmp(bitmapHeader *bmpHeader);
 
     uint8_t ditherGetPixelBmp(uint8_t px, int i, int w, bool paletted);
-    uint8_t ditherGetPixelJpeg(uint8_t px, int x, int y, int w);
+    uint8_t ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h);
     void ditherSwap(int w);
+    void ditherSwapBlockJpeg(int x);
 
     void readBmpHeader(uint8_t *buf, bitmapHeader *_h);
     void readBmpHeaderSd(SdFile *_f, bitmapHeader *_h);

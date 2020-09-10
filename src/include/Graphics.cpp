@@ -23,7 +23,7 @@ Graphics::Graphics(int16_t w, int16_t h)
     setTextColor(0xFFFF, 0xFFFF);
     setTextWrap(true);
     cp437(false);
-    GraphicsFont = NULL;
+    gfxFont = NULL;
 }
 
 void Graphics::setRotation(uint8_t x)

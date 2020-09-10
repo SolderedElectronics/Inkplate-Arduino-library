@@ -95,7 +95,7 @@
 
 #define DATA 0x0E8C0030
 
-Inkplate::Inkplate(uint8_t _mode) : GFX(E_INK_WIDTH, E_INK_HEIGHT)
+Inkplate::Inkplate(uint8_t _mode) : Graphics(E_INK_WIDTH, E_INK_HEIGHT)
 {
     setDisplayMode(_mode);
     for (uint32_t i = 0; i < 256; ++i)
