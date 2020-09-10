@@ -31,7 +31,7 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
         if (strstr(path, ".bmp") != NULL)
             return drawBitmapFromSd(path, x, y, dither, invert);
         if (strstr(path, ".jpg") != NULL || strstr(path, ".jpeg") != NULL)
-            return drawJpegFromSD(path, x, y, dither, invert);
+            return drawJpegFromSd(path, x, y, dither, invert);
     }
 };
 

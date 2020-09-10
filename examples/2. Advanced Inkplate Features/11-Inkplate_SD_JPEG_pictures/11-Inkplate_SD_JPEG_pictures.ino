@@ -20,42 +20,50 @@
    31 August 2020 by e-radionica.com
 */
 
-#include "Inkplate.h"               //Include Inkplate library to the sketch
-#include "SdFat.h"                  //Include library for SD card
-Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
-SdFile file;                        //Create SdFile object used for accessing files on SD card
+#include "Inkplate.h" //Include Inkplate library to the sketch
+#include "SdFat.h"    //Include library for SD card
+Inkplate display(
+    INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+SdFile file;        // Create SdFile object used for accessing files on SD card
 
-void setup() {
-    display.begin();                  //Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay();           //Clear frame buffer of display
-    display.display();                //Put clear image on display
+void setup()
+{
+    display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
+    display.clearDisplay(); // Clear frame buffer of display
+    display.display();      // Put clear image on display
 
-    //Init SD card. Display if SD card is init propery or not.
-    if (display.sdCardInit()) {
+    // Init SD card. Display if SD card is init propery or not.
+    if (display.sdCardInit())
+    {
         display.println("SD Card OK! Reading image...");
         display.partialUpdate();
 
-        //If card is properly init, try to load image and display it on e-paper at position X=100, Y=0
-        //NOTE: These methods require you to pass a reference to the display object as first parameter.
-        //NOTE: Both drawJpegFromSD methods allow for an optional sixth "invert" parameter. Setting this parameter to true
-        //will flip all colors on the image, making black white and white black.
-        //fifth parameter will dither the image.
-        if (!display.drawJpegFromSD(&display, "pyramid.jpg", 100, 0, true, false)) {
-            //If is something failed (wrong filename or wrong format), write error message on the screen.
-            //You can turn off dithering for somewhat faster image load by changing the fifth parameter to false, or removing the parameter completely
+        // If card is properly init, try to load image and display it on e-paper at position X=100, Y=0
+        // NOTE: These methods require you to pass a reference to the display object as first parameter.
+        // NOTE: Both drawJpegFromSd methods allow for an optional sixth "invert" parameter. Setting this parameter to
+        // true will flip all colors on the image, making black white and white black. fifth parameter will dither the
+        // image.
+        if (!display.drawJpegFromSd(&display, "pyramid.jpg", 100, 0, true, false))
+        {
+            // If is something failed (wrong filename or wrong format), write error message on the screen.
+            // You can turn off dithering for somewhat faster image load by changing the fifth parameter to false, or
+            // removing the parameter completely
             display.println("Image open error");
             display.display();
         }
         display.display();
     }
-    else {
-        //If SD card init not success, display error on screen and stop the program (using infinite loop)
+    else
+    {
+        // If SD card init not success, display error on screen and stop the program (using infinite loop)
         display.println("SD Card error!");
         display.partialUpdate();
-        while (true);
+        while (true)
+            ;
     }
 }
 
-void loop() {
-    //Nothing...
+void loop()
+{
+    // Nothing...
 }

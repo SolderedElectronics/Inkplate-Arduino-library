@@ -172,7 +172,7 @@ void GFX::selectDisplayMode(uint8_t _mode)
     if (_mode != _displayMode)
     {
         _displayMode = _mode & 1;
-        memset(D_memory_new, 0, 60000);
+        memset(DMemoryNew, 0, 60000);
         memset(_partial, 0, 60000);
         memset(_pBuffer, 0, 120000);
         memset(D_memory4Bit, 255, 240000);

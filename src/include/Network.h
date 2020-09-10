@@ -25,7 +25,8 @@ class Network
     void disconnect();
     bool isConnected();
 
-    uint8_t *downloadFile(const char *url, int32_t defaultLen);
+    uint8_t *downloadFile(const char *url, int32_t *defaultLen);
+    uint8_t *downloadFile(WiFiClient *url, int32_t len);
 
   private:
 };

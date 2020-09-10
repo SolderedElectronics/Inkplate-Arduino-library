@@ -28,7 +28,7 @@ bool Network::isConnected()
 }
 
 
-uint8_t *Network::downloadFile(const char *url, int32_t defaultLen)
+uint8_t *Network::downloadFile(const char *url, int32_t *defaultLen)
 {
     if (!isConnected())
         return NULL;
@@ -45,7 +45,9 @@ uint8_t *Network::downloadFile(const char *url, int32_t defaultLen)
 
     int32_t size = http.getSize();
     if (size == -1)
-        size = defaultLen;
+        size = *defaultLen;
+    else
+        *defaultLen = size;
 
     uint8_t *buffer = (uint8_t *)ps_malloc(size);
     uint8_t *buffPtr = buffer;
@@ -75,6 +77,39 @@ uint8_t *Network::downloadFile(const char *url, int32_t defaultLen)
         }
     }
     http.end();
+    WiFi.setSleep(sleep);
+
+    return buffer;
+}
+
+uint8_t *Network::downloadFile(WiFiClient *s, int32_t len)
+{
+    if (!isConnected())
+        return NULL;
+
+    bool sleep = WiFi.getSleep();
+    WiFi.setSleep(false);
+
+    uint8_t *buffer = (uint8_t *)ps_malloc(len);
+    uint8_t *buffPtr = buffer;
+
+    uint8_t buff[128] = {0};
+
+    while (len > 0)
+    {
+        size_t size = s->available();
+        if (size)
+        {
+            int c = s->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
+            memcpy(buffPtr, buff, c);
+
+            if (len > 0)
+                len -= c;
+            buffPtr += c;
+        }
+        yield();
+    }
+
     WiFi.setSleep(sleep);
 
     return buffer;

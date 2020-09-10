@@ -38,10 +38,6 @@ class Inkplate : public System, public GFX
     {
         return Network::isConnected();
     };
-    uint8_t *downloadFile(const char *url, int32_t defaultLen)
-    {
-        return Network::downloadFile(url, defaultLen);
-    };
 
   private:
     void precalculateGamma(uint8_t *c, float gamma);
@@ -56,6 +52,7 @@ class Inkplate : public System, public GFX
     void pinsZstate();
     void pinsAsOutputs();
 
+    uint32_t pinLUT[256];
 
     uint8_t _beginDone = 0;
 

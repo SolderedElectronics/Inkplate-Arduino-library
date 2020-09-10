@@ -92,14 +92,6 @@ bool Image::drawBitmapFromSd(SdFile *p, int x, int y, bool dither, bool invert)
     if (!legalBmp(&bmpHeader))
         return 0;
 
-    if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT)
-        selectDisplayMode(INKPLATE_1BIT);
-
-    if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 16 || bmpHeader.color == 24 ||
-         bmpHeader.color == 32) &&
-        getDisplayMode() != INKPLATE_3BIT)
-        selectDisplayMode(INKPLATE_3BIT);
-
     int16_t w = bmpHeader.width, h = bmpHeader.height;
     int8_t c = bmpHeader.color;
 
@@ -117,24 +109,38 @@ bool Image::drawBitmapFromSd(SdFile *p, int x, int y, bool dither, bool invert)
 
 bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool invert)
 {
-    uint8_t *buf = downloadFile(url, 800 * 600 * 4);
+    bool ret = 0;
+    int32_t defaultLen = 800 * 600 * 4;
+    uint8_t *buf = downloadFile(url, &defaultLen);
 
+    ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
+    free(buf);
+
+    return 1;
+}
+
+bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither, bool invert)
+{
+    bool ret = 0;
+    uint8_t *buf = downloadFile(s, len);
+
+    ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
+    free(buf);
+
+    return 1;
+}
+
+bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert)
+{
     bitmapHeader bmpHeader;
     readBmpHeader(buf, &bmpHeader);
 
     if (!legalBmp(&bmpHeader))
         return 0;
 
-    if (bmpHeader.color == 1 && getDisplayMode() != INKPLATE_1BIT)
-        selectDisplayMode(INKPLATE_1BIT);
-
-    if ((bmpHeader.color == 4 || bmpHeader.color == 8 || bmpHeader.color == 16 || bmpHeader.color == 24 ||
-         bmpHeader.color == 32) &&
-        getDisplayMode() != INKPLATE_3BIT)
-        selectDisplayMode(INKPLATE_3BIT);
-
     if (dither)
         memset(ditherBuffer, 0, sizeof ditherBuffer);
+
     uint8_t *bufferPtr = buf + bmpHeader.startRAW;
     for (int i = 0; i < bmpHeader.height; ++i)
     {
@@ -144,7 +150,6 @@ bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool i
     }
 
     free(buf);
-
     return 1;
 }
 
@@ -167,14 +172,15 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-                val = ditherGetPixel(px, j, w, 1);
+                val = ditherGetPixelBmp(px, j, w, 1);
             else
                 val = palette[px >> 1] & (px & 1 ? 0x0F : 0xF0) >> (px & 1 ? 0 : 4);
-
             if (invert)
-                writePixel(x + j, y, 7 - val);
-            else
-                writePixel(x + j, y, val);
+                val = 7 - val;
+            if (getDisplayMode() == INKPLATE_1BIT)
+                val = (~val >> 2) & 1;
+
+            writePixel(x + j, y, val);
             break;
         }
         case 8: {
@@ -182,16 +188,15 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-                val = ditherGetPixel(px, j, w, 1);
+                val = ditherGetPixelBmp(px, j, w, 1);
             else
-            {
                 val = palette[px >> 1] & (px & 1 ? 0x0F : 0xF0) >> (px & 1 ? 0 : 4);
-            }
-
             if (invert)
-                writePixel(x + j, y, 7 - val);
-            else
-                writePixel(x + j, y, val);
+                val = 7 - val;
+            if (getDisplayMode() == INKPLATE_1BIT)
+                val = (~val >> 2) & 1;
+
+            writePixel(x + j, y, val);
             break;
         }
         case 16: {
@@ -204,14 +209,15 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-                val = ditherGetPixel(RGB8BIT(r, g, b), j, w, 0);
+                val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, w, 0);
             else
                 val = RGB3BIT(r, g, b);
-
             if (invert)
-                writePixel(x + j, y, 7 - val);
-            else
-                writePixel(x + j, y, val);
+                val = 7 - val;
+            if (getDisplayMode() == INKPLATE_1BIT)
+                val = (~val >> 2) & 1;
+
+            writePixel(x + j, y, val);
             break;
         }
         case 24: {
@@ -222,14 +228,15 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-                val = ditherGetPixel(RGB8BIT(r, g, b), j, w, 0);
+                val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, w, 0);
             else
                 val = RGB3BIT(r, g, b);
-
             if (invert)
-                writePixel(x + j, y, 7 - val);
-            else
-                writePixel(x + j, y, val);
+                val = 7 - val;
+            if (getDisplayMode() == INKPLATE_1BIT)
+                val = (~val >> 2) & 1;
+
+            writePixel(x + j, y, val);
             break;
         }
         case 32:
@@ -240,14 +247,15 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-                val = ditherGetPixel(RGB8BIT(r, g, b), j, w, 0);
+                val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, w, 0);
             else
                 val = RGB3BIT(r, g, b);
-
             if (invert)
-                writePixel(x + j, y, 7 - RGB3BIT(r, g, b));
-            else
-                writePixel(x + j, y, RGB3BIT(r, g, b));
+                val = 7 - val;
+            if (getDisplayMode() == INKPLATE_1BIT)
+                val = (~val >> 2) & 1;
+
+            writePixel(x + j, y, val);
             break;
         }
     }

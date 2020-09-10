@@ -34,7 +34,7 @@ class GFX : public Shapes, public Image, public Font
     void setRotation(uint8_t r);
     uint8_t getRotation();
 
-    void drawPixel(int16_t x, int16_t y, uint16_t color) override;
+    inline void drawPixel(int16_t x, int16_t y, uint16_t color) override;
 
     void selectDisplayMode(uint8_t _mode);
 
@@ -43,7 +43,7 @@ class GFX : public Shapes, public Image, public Font
     int16_t width() override;
     int16_t height() override;
 
-    uint8_t *D_memory_new;
+    uint8_t *DMemoryNew;
     uint8_t *_partial;
     uint8_t *D_memory4Bit;
     uint8_t *_pBuffer;
@@ -65,7 +65,7 @@ class GFX : public Shapes, public Image, public Font
 
   private:
     void startWrite(void) override;
-    void writePixel(int16_t x, int16_t y, uint16_t color) override;
+    inline void writePixel(int16_t x, int16_t y, uint16_t color) override;
     void writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) override;
     void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
     void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;

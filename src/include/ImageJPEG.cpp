@@ -8,7 +8,81 @@
 
 extern Image *_imagePtrJpeg;
 
-bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool _dither, bool _invert)
+bool Image::drawJpegFromSd(const char *fileName, int x, int y, bool dither, bool invert)
+{
+    SdFile dat;
+    if (dat.open(fileName, O_RDONLY))
+        return drawJpegFromSd(&dat, x, y, dither, invert);
+    return 0;
+}
+
+bool Image::drawJpegFromSd(SdFile *p, int x, int y, bool dither, bool invert)
+{
+    uint8_t ret = 0;
+
+    TJpgDec.setJpgScale(1);
+    TJpgDec.setCallback(drawJpegChunk);
+
+    uint32_t pnt = 0;
+    uint32_t total = p->fileSize();
+    uint8_t *buff = (uint8_t *)ps_malloc(total);
+
+    if (buff == NULL)
+        return 0;
+
+    while (pnt < total)
+    {
+        uint32_t toread = p->available();
+        if (toread > 0)
+        {
+            int read = p->read(buff + pnt, toread);
+            if (read > 0)
+                pnt += read;
+        }
+    }
+    p->close();
+
+    if (TJpgDec.drawJpg(x, y, buff, total, dither, invert) == 0)
+        ret = 1;
+
+    free(buff);
+
+    return ret;
+}
+
+bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool invert)
+{
+    bool ret = 0;
+
+    int32_t defaultLen = 800 * 600 * 4;
+    uint8_t *buff = downloadFile(url, &defaultLen);
+    ret = drawJpegFromBuffer(buff, x, y, defaultLen, dither, invert);
+    free(buff);
+
+    return ret;
+}
+
+bool Image::drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither, bool invert)
+{
+    bool ret = 0;
+    uint8_t *buff = downloadFile(s, len);
+    ret = drawJpegFromBuffer(buff, x, y, len, dither, invert);
+    free(buff);
+
+    return ret;
+}
+
+bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool dither, bool invert)
+{
+    bool ret = 0;
+
+    if (TJpgDec.drawJpg(x, y, buff, len, dither, invert) == 0)
+        ret = 1;
+
+    return ret;
+};
+
+bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool dither, bool invert)
 {
     if (!_imagePtrJpeg)
         return 0;
@@ -19,57 +93,15 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
         for (int i = 0; i < w; ++i)
         {
             uint16_t rgb = bitmap[j * w + i];
-            if (_invert)
-                _imagePtrJpeg->drawPixel(i + x, j + y, 7 - RGB3BIT(RED(rgb), GREEN(rgb), BLUE(rgb)));
-            else
-                _imagePtrJpeg->drawPixel(i + x, j + y, RGB3BIT(RED(rgb), GREEN(rgb), BLUE(rgb)));
+            uint8_t val = RGB3BIT(RED(rgb), GREEN(rgb), BLUE(rgb));
+
+            if (invert)
+                val = 7 - val;
+
+            _imagePtrJpeg->writePixel(x + i, y + j, val);
         }
     }
     _imagePtrJpeg->endWrite();
 
     return 1;
-}
-
-bool Image::drawJpegFromSD(const char *fileName, int x, int y, bool dither, bool invert)
-{
-    SdFile dat;
-    if (dat.open(fileName, O_RDONLY))
-        return drawJpegFromSD(&dat, x, y, dither, invert);
-    return 0;
-}
-
-bool Image::drawJpegFromSD(SdFile *p, int x, int y, bool dither, bool invert)
-{
-    uint8_t ret = 0;
-
-    TJpgDec.setJpgScale(1);
-    TJpgDec.setCallback(drawJpegChunk);
-
-    uint32_t pnt = 0;
-    uint32_t total = p->fileSize();
-    uint8_t *buf = (uint8_t *)ps_malloc(total);
-
-    if (buf == NULL)
-        return 0;
-
-    while (pnt < total)
-    {
-        uint32_t toread = p->available();
-        if (toread > 0)
-        {
-            int read = p->read(buf + pnt, toread);
-            if (read > 0)
-                pnt += read;
-        }
-    }
-    p->close();
-
-    selectDisplayMode(INKPLATE_3BIT);
-
-    if (TJpgDec.drawJpg(x, y, buf, total, dither, invert) == 0)
-        ret = 1;
-
-    free(buf);
-
-    return ret;
 }

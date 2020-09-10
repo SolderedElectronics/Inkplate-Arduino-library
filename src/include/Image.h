@@ -28,17 +28,21 @@ class Image : virtual public Network
                     uint16_t bg = 0xFFFF);
     void drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h);
 
-    bool drawBitmapFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
+    bool drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert);
+
     bool drawBitmapFromSd(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
+    bool drawBitmapFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
 
-    bool drawBitmapFromWeb(WiFiClient *s, int x, int y, int len, bool dither = 0, bool invert = 0);
     bool drawBitmapFromWeb(const char *url, int x, int y, bool dither = 0, bool invert = 0);
+    bool drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither = 0, bool invert = 0);
 
-    bool drawJpegFromSD(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
-    bool drawJpegFromSD(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
+    bool drawJpegFromBuffer(uint8_t *buf, int32_t len, int x, int y, bool dither, bool invert);
+
+    bool drawJpegFromSd(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
+    bool drawJpegFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
 
     bool drawJpegFromWeb(const char *url, int x, int y, bool dither = 0, bool invert = 0);
-    bool drawJpegFromWeb(WiFiClient *s, int x, int y, int len, bool dither = 0, bool invert = 0);
+    bool drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither = 0, bool invert = 0);
 
 
   private:
@@ -50,8 +54,7 @@ class Image : virtual public Network
     virtual void writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color) = 0;
     virtual void endWrite(void) = 0;
 
-    static bool drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool _dither,
-                              bool _invert);
+    static bool drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool dither, bool invert);
 
     uint8_t pixelBuffer[800 * 4 + 5];
     uint8_t ditherBuffer[2][800 + 5];
@@ -60,9 +63,8 @@ class Image : virtual public Network
 
     bool legalBmp(bitmapHeader *bmpHeader);
 
-    void ditherStart(uint8_t *pixelBuffer, uint8_t *bufferPtr, int w, bool invert, uint8_t bits);
-    void ditherLoadNextLine(uint8_t *pixelBuffer, uint8_t *bufferPtr, int w, bool invert, uint8_t bits);
-    uint8_t ditherGetPixel(uint8_t px, int i, int w, bool paletted);
+    uint8_t ditherGetPixelBmp(uint8_t px, int i, int w, bool paletted);
+    uint8_t ditherGetPixelJpeg(uint8_t px, int x, int y, int w);
     void ditherSwap(int w);
 
     void readBmpHeader(uint8_t *buf, bitmapHeader *_h);
