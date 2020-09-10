@@ -22,14 +22,6 @@ void loop()
 
     if (display.sdCardInit())
     {
-        Serial.println(display.drawBitmapFromSd("Lenna.bmp", 0, 0, 1, 0));
-    }
-    display.display();
-
-    delay(5000);
-
-    if (display.sdCardInit())
-    {
         Serial.println(display.drawJpegFromSd("Lenna.jpg", 0, 0, 1, 0));
     }
     display.display();

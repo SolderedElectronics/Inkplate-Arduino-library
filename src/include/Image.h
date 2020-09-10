@@ -21,8 +21,7 @@ class Image : virtual public Network
 
     bool drawImage(const char *path, int x, int y, bool dither = 1, bool invert = 0);
     bool drawImage(const String path, int x, int y, bool dither = 1, bool invert = 0);
-    bool drawImage(const SdFile *path, int x, int y, bool dither = 1, bool invert = 0);
-    bool drawImage(const WiFiClient *s, int x, int y, int len = -1, bool dither = 1, bool invert = 0);
+    bool drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c = BLACK, uint8_t bg = 0xFF);
 
     void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color,
                     uint16_t bg = 0xFFFF);

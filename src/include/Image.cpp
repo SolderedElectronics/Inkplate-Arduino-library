@@ -23,25 +23,29 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
 {
     if (strncmp(path, "http://", 7) == 0 || strncmp(path, "https://", 8) == 0)
     {
-        // TODO: Implement
-        return 0;
+        if (strstr(path, ".bmp") != NULL || strstr(path, ".dib") != NULL)
+            return drawBitmapFromWeb(path, x, y, dither, invert);
+        if (strstr(path, ".jpg") != NULL || strstr(path, ".jpeg") != NULL)
+            return drawJpegFromWeb(path, x, y, dither, invert);
     }
     else
     {
-        if (strstr(path, ".bmp") != NULL)
+        if (strstr(path, ".bmp") != NULL || strstr(path, ".dib") != NULL)
             return drawBitmapFromSd(path, x, y, dither, invert);
         if (strstr(path, ".jpg") != NULL || strstr(path, ".jpeg") != NULL)
             return drawJpegFromSd(path, x, y, dither, invert);
     }
 };
 
-bool Image::drawImage(const SdFile *path, int x, int y, bool dither, bool invert){
-
-};
-
-bool Image::drawImage(const WiFiClient *s, int x, int y, int len, bool dither, bool invert){
-
-};
+bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c, uint8_t bg)
+{
+    if (getDisplayMode() == INKPLATE_1BIT && bg == 0xFF)
+        drawBitmap(x, y, buf, w, h, c);
+    else if (getDisplayMode() == INKPLATE_1BIT && bg != 0xFF)
+        drawBitmap(x, y, buf, w, h, c, bg);
+    else if (getDisplayMode() == INKPLATE_3BIT)
+        drawBitmap3Bit(x, y, buf, w, h);
+}
 
 void Image::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
 {
