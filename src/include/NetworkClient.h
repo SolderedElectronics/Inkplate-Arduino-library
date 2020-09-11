@@ -1,5 +1,5 @@
-#ifndef __NETWORK_H__
-#define __NETWORK_H__
+#ifndef __NETWORKCLIENT_H__
+#define __NETWORKCLIENT_H__
 
 #include "Arduino.h"
 #include "HTTPClient.h"
@@ -18,7 +18,7 @@ struct bitmapHeader
     uint32_t compression;
 };
 
-class Network
+class NetworkClient
 {
   public:
     bool joinAP(const char *ssid, const char *pass);

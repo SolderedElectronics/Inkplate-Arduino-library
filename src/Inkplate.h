@@ -28,15 +28,15 @@ class Inkplate : public System, public Graphics
 
     bool joinAP(const char *ssid, const char *pass)
     {
-        return Network::joinAP(ssid, pass);
+        return NetworkClient::joinAP(ssid, pass);
     }
     void disconnect()
     {
-        Network::disconnect();
+        NetworkClient::disconnect();
     };
     bool isConnected()
     {
-        return Network::isConnected();
+        return NetworkClient::isConnected();
     };
 
   private:

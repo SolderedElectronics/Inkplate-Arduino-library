@@ -1,19 +1,19 @@
-//Network.cpp contains various functions and classes that enable Weather station
-//They have been declared in seperate file to increase readability
+// Network.cpp contains various functions and classes that enable Weather station
+// They have been declared in seperate file to increase readability
 #include "Network.h"
 
-#include <WiFi.h>
 #include <HTTPClient.h>
+#include <WiFi.h>
 #include <WiFiClientSecure.h>
 
 #include <ArduinoJson.h>
 
-//Static Json from ArduinoJson library
+// Static Json from ArduinoJson library
 StaticJsonDocument<32000> doc;
 
 void Network::begin(char *city)
 {
-    //Initiating wifi, like in BasicHttpClient example
+    // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pass);
 
@@ -34,50 +34,52 @@ void Network::begin(char *city)
     }
     Serial.println(F(" connected"));
 
-    //Find internet time
+    // Find internet time
     setTime();
 
-    //reduce power by making WiFi module sleep
+    // reduce power by making WiFi module sleep
     WiFi.setSleep(1);
 }
 
-//Gets time from ntp server
+// Gets time from ntp server
 void Network::getTime(char *timeStr)
 {
-    //Get seconds since 1.1.1970.
+    // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr);
 
-    //Used to store time
+    // Used to store time
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
 
-    //Copies time string into timeStr
+    // Copies time string into timeStr
     strncpy(timeStr, asctime(&timeinfo) + 11, 5);
 
-    //Setting time string timezone
-    int hr = 10 * timeStr[0] + timeStr[1] + timeZone;
+    // Setting time string timezone
+    int hr = 10 * (timeStr[0] - '0') + (timeStr[1] - '0') + timeZone;
 
-    //Better defined modulo, in case timezone makes hours to go below 0
+    // Better defined modulo, in case timezone makes hours to go below 0
     hr = (hr % 24 + 24) % 24;
 
-    //Adding time to '0' char makes it into whatever time char, for both digits
+    // Adding time to '0' char makes it into whatever time char, for both digits
     timeStr[0] = hr / 10 + '0';
     timeStr[1] = hr % 10 + '0';
 }
 
 void formatTemp(char *str, float temp)
 {
-    //Built in function for float to char* conversion
+    // Built in function for float to char* conversion
     dtostrf(temp, 2, 0, str);
 }
 
 void formatWind(char *str, float wind)
 {
-    //Built in function for float to char* conversion
+    // Built in function for float to char* conversion
     dtostrf(wind, 2, 0, str);
 }
 
-bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1, char *abbr2, char *abbr3, char *abbr4)
+bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp,
+                      char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1,
+                      char *abbr2, char *abbr3, char *abbr4)
 {
     bool f = 0;
     // If not connected to wifi reconnect wifi
@@ -105,32 +107,32 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
         }
     }
 
-    //Wake up if sleeping and save inital state
+    // Wake up if sleeping and save inital state
     bool sleep = WiFi.getSleep();
     WiFi.setSleep(false);
 
-    //Http object used to make get request
+    // Http object used to make get request
     HTTPClient http;
 
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1);
 
-    //Add woeid to api call
+    // Add woeid to api call
     char url[256];
     sprintf(url, "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s", lon, lat, apiKey);
 
-    //Initiate http
+    // Initiate http
     http.begin(url);
 
-    //Actually do request
+    // Actually do request
     int httpCode = http.GET();
     if (httpCode == 200)
     {
 
-        //Try parsing JSON object
+        // Try parsing JSON object
         DeserializationError error = deserializeJson(doc, http.getStream());
 
-        //If an error happens print it to Serial monitor
+        // If an error happens print it to Serial monitor
         if (error)
         {
             Serial.print(F("deserializeJson() failed: "));
@@ -140,8 +142,8 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
         }
         else
         {
-            //Set all data got from internet using formatTemp and formatWind defined above
-            //This part relies heavily on ArduinoJson library
+            // Set all data got from internet using formatTemp and formatWind defined above
+            // This part relies heavily on ArduinoJson library
 
             dataEpoch = doc["current"]["dt"].as<time_t>();
 
@@ -180,11 +182,11 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
             ;
     }
 
-    //Stop http and clear document
+    // Stop http and clear document
     doc.clear();
     http.end();
 
-    //Return to initial state
+    // Return to initial state
     WiFi.setSleep(sleep);
 
     return !f;
@@ -192,14 +194,14 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
 
 void Network::setTime()
 {
-    //Used for setting correct time
+    // Used for setting correct time
     configTime(0, 0, "pool.ntp.org", "time.nist.gov");
 
     Serial.print(F("Waiting for NTP time sync: "));
     time_t nowSecs = time(nullptr);
     while (nowSecs < 8 * 3600 * 2)
     {
-        //Print a dot every half a second while time is not set
+        // Print a dot every half a second while time is not set
         delay(500);
         Serial.print(F("."));
         yield();
@@ -208,7 +210,7 @@ void Network::setTime()
 
     Serial.println();
 
-    //Used to store time info
+    // Used to store time info
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
 
@@ -218,7 +220,7 @@ void Network::setTime()
 
 void Network::getHours(char *hour1, char *hour2, char *hour3, char *hour4)
 {
-    //Format hours info
+    // Format hours info
     sprintf(hour1, "%2dh", (dataEpoch / 3600L + timeZone + 24) % 24);
     sprintf(hour2, "%2dh", (dataEpoch / 3600L + 1 + timeZone + 24) % 24);
     sprintf(hour3, "%2dh", (dataEpoch / 3600L + 2 + timeZone + 24) % 24);

@@ -4,11 +4,11 @@
 #include "../libs/Adafruit-GFX-Library/Adafruit_GFX.h"
 #include "../libs/SdFat/SdFat.h"
 #include "Arduino.h"
-#include "Network.h"
+#include "NetworkClient.h"
 #include "WiFiClient.h"
 #include "defines.h"
 
-class Image : virtual public Network, virtual public Adafruit_GFX
+class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 {
   public:
     Image(int16_t w, int16_t h);

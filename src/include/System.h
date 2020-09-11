@@ -7,9 +7,9 @@
 
 #include "Esp.h"
 #include "Mcp.h"
-#include "Network.h"
+#include "NetworkClient.h"
 
-class System : public Esp, public Mcp, virtual public Network
+class System : public Esp, public Mcp, virtual public NetworkClient
 {
   public:
     void setPanelState(uint8_t s);

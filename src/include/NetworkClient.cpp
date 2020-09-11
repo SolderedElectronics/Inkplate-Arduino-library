@@ -1,6 +1,6 @@
-#include "Network.h"
+#include "NetworkClient.h"
 
-bool Network::joinAP(const char *ssid, const char *pass)
+bool NetworkClient::joinAP(const char *ssid, const char *pass)
 {
     WiFi.mode(WIFI_MODE_STA);
     WiFi.begin(ssid, pass);
@@ -17,18 +17,18 @@ bool Network::joinAP(const char *ssid, const char *pass)
     return 1;
 }
 
-void Network::disconnect()
+void NetworkClient::disconnect()
 {
     WiFi.mode(WIFI_OFF);
 }
 
-bool Network::isConnected()
+bool NetworkClient::isConnected()
 {
     return WiFi.status() == WL_CONNECTED;
 }
 
 
-uint8_t *Network::downloadFile(const char *url, int32_t *defaultLen)
+uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
 {
     if (!isConnected())
         return NULL;
@@ -82,7 +82,7 @@ uint8_t *Network::downloadFile(const char *url, int32_t *defaultLen)
     return buffer;
 }
 
-uint8_t *Network::downloadFile(WiFiClient *s, int32_t len)
+uint8_t *NetworkClient::downloadFile(WiFiClient *s, int32_t len)
 {
     if (!isConnected())
         return NULL;
