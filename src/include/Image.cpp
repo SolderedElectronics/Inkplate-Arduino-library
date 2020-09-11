@@ -9,7 +9,7 @@
 
 Image *_imagePtrJpeg = nullptr;
 
-Image::Image()
+Image::Image(int16_t w, int16_t h) : Adafruit_GFX(w, h)
 {
     _imagePtrJpeg = this;
 }
@@ -35,6 +35,7 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
         if (strstr(path, ".jpg") != NULL || strstr(path, ".jpeg") != NULL)
             return drawJpegFromSd(path, x, y, dither, invert);
     }
+    return 0;
 };
 
 bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c, uint8_t bg)
@@ -45,30 +46,7 @@ bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, ui
         drawBitmap(x, y, buf, w, h, c, bg);
     else if (getDisplayMode() == INKPLATE_3BIT)
         drawBitmap3Bit(x, y, buf, w, h);
-}
-
-void Image::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg)
-{
-    int16_t byteWidth = (w + 7) >> 3; // Bitmap scanline pad = whole byte
-    uint8_t byte = 0;
-
-    startWrite();
-    for (int16_t j = 0; j < h; j++, y++)
-    {
-        for (int16_t i = 0; i < w; i++)
-        {
-            if (i & 7)
-                byte <<= 1;
-            else
-                byte = bitmap[j * byteWidth + (i >> 3)];
-
-            if (byte & 0x80)
-                writePixel(x + i, y, color);
-            else if (bg != 0xFFFF)
-                writePixel(x + i, y, bg);
-        }
-    }
-    endWrite();
+    return 1;
 }
 
 void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)

@@ -13,19 +13,6 @@
     }
 #endif
 
-Graphics::Graphics(int16_t w, int16_t h)
-{
-    _width = WIDTH = w;
-    _height = HEIGHT = h;
-    setRotation(0);
-    setCursor(0, 0);
-    setTextSize(1);
-    setTextColor(0xFFFF, 0xFFFF);
-    setTextWrap(true);
-    cp437(false);
-    gfxFont = NULL;
-}
-
 void Graphics::setRotation(uint8_t x)
 {
     rotation = (x & 3);
@@ -84,7 +71,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         int x = x0 >> 3;
         int x_sub = x0 & 7;
         uint8_t temp = *(_partial + 100 * y0 + x);
-        *(_partial + 100 * y0 + x) = ~pixelMaskLUT[x_sub] & temp | (color ? pixelMaskLUT[x_sub] : 0);
+        *(_partial + 100 * y0 + x) = (~pixelMaskLUT[x_sub] & temp) | (color ? pixelMaskLUT[x_sub] : 0);
     }
     else
     {
@@ -93,7 +80,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         int x_sub = x0 & 1;
         uint8_t temp;
         temp = *(D_memory4Bit + 400 * y0 + x);
-        *(D_memory4Bit + 400 * y0 + x) = pixelMaskGLUT[x_sub] & temp | (x_sub ? color : color << 4);
+        *(D_memory4Bit + 400 * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
     }
 }
 

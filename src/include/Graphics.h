@@ -1,9 +1,8 @@
-#ifndef __Graphics_H__
-#define __Graphics_H__
+#ifndef __GRAPHICS_H__
+#define __GRAPHICS_H__
 
 #include "Arduino.h"
 
-#include "Font.h"
 #include "Image.h"
 #include "Shapes.h"
 
@@ -26,15 +25,15 @@
 #endif
 
 
-class Graphics : public Shapes, public Image, public Font
+class Graphics : public Shapes, public Image
 {
   public:
-    Graphics(int16_t w, int16_t h);
+    Graphics(int16_t w, int16_t h) : Adafruit_GFX(w, h), Shapes(w, h), Image(w, h){};
 
     void setRotation(uint8_t r);
     uint8_t getRotation();
 
-    inline void drawPixel(int16_t x, int16_t y, uint16_t color) override;
+    void drawPixel(int16_t x, int16_t y, uint16_t color) override;
 
     void selectDisplayMode(uint8_t _mode);
 
@@ -65,7 +64,7 @@ class Graphics : public Shapes, public Image, public Font
 
   private:
     void startWrite(void) override;
-    inline void writePixel(int16_t x, int16_t y, uint16_t color) override;
+    void writePixel(int16_t x, int16_t y, uint16_t color) override;
     void writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) override;
     void writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
     void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
@@ -75,9 +74,6 @@ class Graphics : public Shapes, public Image, public Font
     uint8_t _displayMode = 0;
 
   protected:
-    int16_t WIDTH, HEIGHT;
-    int16_t _width, _height;
-    uint8_t rotation = 0;
 };
 
 #endif

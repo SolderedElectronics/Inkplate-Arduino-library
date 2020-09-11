@@ -95,7 +95,7 @@
 
 #define DATA 0x0E8C0030
 
-Inkplate::Inkplate(uint8_t _mode) : Graphics(E_INK_WIDTH, E_INK_HEIGHT)
+Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
 {
     setDisplayMode(_mode);
     for (uint32_t i = 0; i < 256; ++i)
@@ -194,7 +194,7 @@ void Inkplate::display1b()
 {
     memcpy(DMemoryNew, _partial, 60000);
 
-    uint16_t _pos;
+
     uint32_t _send;
     uint8_t data;
     uint8_t dram;
@@ -209,23 +209,23 @@ void Inkplate::display1b()
     cleanFast(0, 11);
     for (int k = 0; k < 3; ++k)
     {
-        _pos = 59999;
+        uint8_t *DMemoryNewPtr = DMemoryNew + 59999;
         vscan_start();
         for (int i = 0; i < 600; ++i)
         {
-            dram = *(DMemoryNew + _pos);
-            data = LUTB[(dram >> 4) & 0x0F];
+            dram = *(DMemoryNewPtr--);
+            data = LUTB[dram >> 4];
             _send = pinLUT[data];
             hscan_start(_send);
             data = LUTB[dram & 0x0F];
             _send = pinLUT[data];
             GPIO.out_w1ts = (_send) | CL;
             GPIO.out_w1tc = DATA | CL;
-            _pos--;
+
             for (int j = 0; j < 99; ++j)
             {
-                dram = *(DMemoryNew + _pos);
-                data = LUTB[(dram >> 4) & 0x0F];
+                dram = *(DMemoryNewPtr--);
+                data = LUTB[dram >> 4];
                 _send = pinLUT[data];
                 GPIO.out_w1ts = (_send) | CL;
                 GPIO.out_w1tc = DATA | CL;
@@ -233,7 +233,6 @@ void Inkplate::display1b()
                 _send = pinLUT[data];
                 GPIO.out_w1ts = (_send) | CL;
                 GPIO.out_w1tc = DATA | CL;
-                _pos--;
             }
             GPIO.out_w1ts = (_send) | CL;
             GPIO.out_w1tc = DATA | CL;
@@ -242,12 +241,12 @@ void Inkplate::display1b()
         delayMicroseconds(230);
     }
 
-    _pos = 59999;
+    uint16_t _pos = 59999;
     vscan_start();
     for (int i = 0; i < 600; ++i)
     {
         dram = *(DMemoryNew + _pos);
-        data = LUT2[(dram >> 4) & 0x0F];
+        data = LUT2[dram >> 4];
         _send = pinLUT[data];
         hscan_start(_send);
         data = LUT2[dram & 0x0F];
@@ -258,7 +257,7 @@ void Inkplate::display1b()
         for (int j = 0; j < 99; ++j)
         {
             dram = *(DMemoryNew + _pos);
-            data = LUT2[(dram >> 4) & 0x0F];
+            data = LUT2[dram >> 4];
             _send = pinLUT[data];
             GPIO.out_w1ts = (_send) | CL;
             GPIO.out_w1tc = DATA | CL;
@@ -278,10 +277,10 @@ void Inkplate::display1b()
     for (int i = 0; i < 600; ++i)
     {
         dram = *(DMemoryNew + _pos);
-        data = 0b00000000;
+        data = 0;
         _send = pinLUT[data];
         hscan_start(_send);
-        data = 0b00000000;
+        data = 0;
         GPIO.out_w1ts = (_send) | CL;
         GPIO.out_w1tc = DATA | CL;
         for (int j = 0; j < 99; ++j)
@@ -387,10 +386,9 @@ void Inkplate::partialUpdate()
 
     uint16_t _pos = 59999;
     uint32_t _send;
-    uint8_t data;
+    uint8_t data = 0;
     uint8_t diffw, diffb;
     uint32_t n = 119999;
-    uint8_t dram;
 
     for (int i = 0; i < 600; ++i)
     {
@@ -459,7 +457,7 @@ void Inkplate::clean()
 void Inkplate::cleanFast(uint8_t c, uint8_t rep)
 {
     einkOn();
-    uint8_t data;
+    uint8_t data = 0;
     if (c == 0)
         data = B10101010;
     else if (c == 1)

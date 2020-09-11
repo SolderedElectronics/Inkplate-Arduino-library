@@ -1,16 +1,17 @@
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
 
+#include "../libs/Adafruit-GFX-Library/Adafruit_GFX.h"
 #include "../libs/SdFat/SdFat.h"
 #include "Arduino.h"
 #include "Network.h"
 #include "WiFiClient.h"
 #include "defines.h"
 
-class Image : virtual public Network
+class Image : virtual public Network, virtual public Adafruit_GFX
 {
   public:
-    Image();
+    Image(int16_t w, int16_t h);
 
     virtual void drawPixel(int16_t x, int16_t y, uint16_t color) = 0;
 
@@ -23,8 +24,11 @@ class Image : virtual public Network
     bool drawImage(const String path, int x, int y, bool dither = 1, bool invert = 0);
     bool drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c = BLACK, uint8_t bg = 0xFF);
 
-    void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color,
-                    uint16_t bg = 0xFFFF);
+    // Defined in Adafruit-GFX-Library, but should fit here
+    // void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
+    // void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color,
+    //                        uint16_t bg);
+
     void drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h);
 
     bool drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert);
