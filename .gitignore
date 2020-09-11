@@ -1,3 +1,6 @@
 
+.clang-format
+.vscode/
+build/
 examples/.DS_Store
 .DS_Store
