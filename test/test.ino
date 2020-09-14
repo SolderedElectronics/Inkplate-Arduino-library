@@ -1,7 +1,7 @@
 #include "Inkplate.h"
 #include "SdFat.h"
 
-const int n = 10;
+const int n = 500;
 
 Inkplate display(INKPLATE_1BIT);
 

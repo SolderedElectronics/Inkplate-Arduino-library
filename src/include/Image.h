@@ -10,7 +10,7 @@
 
 class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 {
-  public:
+public:
     Image(int16_t w, int16_t h);
 
     virtual void drawPixel(int16_t x, int16_t y, uint16_t color) = 0;
@@ -47,8 +47,13 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     bool drawJpegFromWeb(const char *url, int x, int y, bool dither = 0, bool invert = 0);
     bool drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither = 0, bool invert = 0);
 
+    bool drawPngFromSd(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
+    bool drawPngFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
 
-  private:
+    bool drawPngFromWeb(const char *url, int x, int y, bool dither = 0, bool invert = 0);
+    bool drawPngFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither = 0, bool invert = 0);
+
+private:
     virtual void startWrite(void) = 0;
     virtual void writePixel(int16_t x, int16_t y, uint16_t color) = 0;
     virtual void writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) = 0;
@@ -91,6 +96,5 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     void drawRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h);
     // -------------------------------------------
 };
-
 
 #endif

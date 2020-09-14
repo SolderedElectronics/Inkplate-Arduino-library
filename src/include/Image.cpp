@@ -3,9 +3,9 @@
 #include "../libs/TJpeg/TJpg_Decoder.h"
 #include "pgmspace.h"
 
-#define RED(a)   ((((a)&0xf800) >> 11) << 3)
+#define RED(a) ((((a)&0xf800) >> 11) << 3)
 #define GREEN(a) ((((a)&0x07e0) >> 5) << 2)
-#define BLUE(a)  (((a)&0x001f) << 3)
+#define BLUE(a) (((a)&0x001f) << 3)
 
 Image *_imagePtrJpeg = nullptr;
 
@@ -27,12 +27,16 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
             return drawBitmapFromWeb(path, x, y, dither, invert);
         if (strstr(path, ".jpg") != NULL || strstr(path, ".jpeg") != NULL)
             return drawJpegFromWeb(path, x, y, dither, invert);
+        if (strstr(path, ".png") != NULL)
+            return drawJpegFromWeb(path, x, y, dither, invert);
     }
     else
     {
         if (strstr(path, ".bmp") != NULL || strstr(path, ".dib") != NULL)
             return drawBitmapFromSd(path, x, y, dither, invert);
         if (strstr(path, ".jpg") != NULL || strstr(path, ".jpeg") != NULL)
+            return drawJpegFromSd(path, x, y, dither, invert);
+        if (strstr(path, ".png") != NULL)
             return drawJpegFromSd(path, x, y, dither, invert);
     }
     return 0;
