@@ -5,11 +5,11 @@
 #endif
 
 #ifndef _swap_int16_t
-#define _swap_int16_t(a, b)                                                                                            \
-    {                                                                                                                  \
-        int16_t t = a;                                                                                                 \
-        a = b;                                                                                                         \
-        b = t;                                                                                                         \
+#define _swap_int16_t(a, b) \
+    {                       \
+        int16_t t = a;      \
+        a = b;              \
+        b = t;              \
     }
 #endif
 
@@ -97,23 +97,6 @@ void Shapes::fillElipse(int rx, int ry, int xc, int yc, int c)
             drawPixel(xc + x, yc + y, c);
         }
     }
-}
-
-void Shapes::fillPolygon(int *x, int *y, int n, int color)
-{
-    int tx[100], ty[100];
-    triangulate.triangulate(x, y, n, tx, ty);
-
-    for (int i = 0; i < n - 2; ++i)
-    {
-        fillTriangle(tx[i * 3 + 0], ty[i * 3 + 0], tx[i * 3 + 1], ty[i * 3 + 1], tx[i * 3 + 2], ty[i * 3 + 2], color);
-    }
-}
-
-void Shapes::drawPolygon(int *x, int *y, int n, int color)
-{
-    for (int i = 0; i < n; ++i)
-        drawLine(x[i], y[i], x[(i + 1) % n], y[(i + 1) % n], color);
 }
 
 void Shapes::drawThickLine(int x1, int y1, int x2, int y2, int color, float thickness)

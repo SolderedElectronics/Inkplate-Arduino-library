@@ -22,9 +22,9 @@
 
 #include "Inkplate.h" //Include Inkplate library to the sketch
 #include "SdFat.h"    //Include library for SD card
-Inkplate display(
-    INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
-SdFile file;        // Create SdFile object used for accessing files on SD card
+
+Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+SdFile file;                     // Create SdFile object used for accessing files on SD card
 
 void setup()
 {

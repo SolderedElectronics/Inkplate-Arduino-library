@@ -19,36 +19,38 @@
    15 July 2020 by e-radionica.com
 */
 
-#include "Inkplate.h"                       //Include Inkplate library to the sketch
-#include "Not_Just_Groovy20pt7b.h"          //Include first .h font file to the sketch
-#include "DSEG14Classic_Regular20pt7b.h"    //Include second font
-Inkplate display(INKPLATE_1BIT);            //Create an object on Inkplate library and also set library into 1-bit mode (Monochrome)
+#include "Inkplate.h"                    //Include Inkplate library to the sketch
+#include "Not_Just_Groovy20pt7b.h"       //Include first .h font file to the sketch
+#include "DSEG14Classic_Regular20pt7b.h" //Include second font
+Inkplate display(INKPLATE_1BIT);         //Create an object on Inkplate library and also set library into 1-bit mode (Monochrome)
 
-void setup() {
-  display.begin();                  //Init Inkplate library (you should call this function ONLY ONCE)
-  display.clearDisplay();           //Clear frame buffer of display
-  display.display();                //Put clear image on display
-  
-  display.setFont(&Not_Just_Groovy20pt7b);    //Select new font
-  display.setTextSize(2);                     //Set font scaling to two (font will be 2 times bigger)
-  display.setCursor(0,60);                    //Set print cursor on X = 0, Y = 60
-  display.println("Inkplate 6");              //Print some text
-  display.setTextSize(1);                     //Set font scaling to one (font is now original size)
-  display.print("by e-radionica.com");        //Print text
+void setup()
+{
+  display.begin();        //Init Inkplate library (you should call this function ONLY ONCE)
+  display.clearDisplay(); //Clear frame buffer of display
+  display.display();      //Put clear image on display
 
-  display.setFont(&DSEG14Classic_Regular20pt7b);  //Select second font
-  display.setCursor(0, 250);                      //Set print position on X = 0, Y = 250
-  display.println("Some old-school 14 segment");  //Print text
+  display.setFont(&Not_Just_Groovy20pt7b); //Select new font
+  display.setTextSize(2);                  //Set font scaling to two (font will be 2 times bigger)
+  display.setCursor(0, 60);                //Set print cursor on X = 0, Y = 60
+  display.println("Inkplate 6");           //Print some text
+  display.setTextSize(1);                  //Set font scaling to one (font is now original size)
+  display.print("by e-radionica.com");     //Print text
+
+  display.setFont(&DSEG14Classic_Regular20pt7b); //Select second font
+  display.setCursor(0, 250);                     //Set print position on X = 0, Y = 250
+  display.println("Some old-school 14 segment"); //Print text
   display.println("display font on e-paper");
   display.print("display");
 
-  display.setFont();                      //Use original 5x7 pixel fonts
-  display.setCursor(0, 550);              //Set new print position at X = 0, Y = 550
-  display.setTextSize(3);                 //Set font scaling to three (font will be 3 times bigger)
-  display.print("Classic 5x7 px fonts");  //Print text
-  display.display();                      //Display everything on display
+  display.setFont();                     //Use original 5x7 pixel fonts
+  display.setCursor(0, 550);             //Set new print position at X = 0, Y = 550
+  display.setTextSize(3);                //Set font scaling to three (font will be 3 times bigger)
+  display.print("Classic 5x7 px fonts"); //Print text
+  display.display();                     //Display everything on display
 }
 
-void loop() {
+void loop()
+{
   //Nothing...
 }

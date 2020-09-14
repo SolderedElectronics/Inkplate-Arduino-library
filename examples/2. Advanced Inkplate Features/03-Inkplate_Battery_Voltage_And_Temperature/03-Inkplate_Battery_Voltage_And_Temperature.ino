@@ -15,36 +15,37 @@
    15 July 2020 by e-radionica.com
 */
 
-#include "Inkplate.h"               //Include Inkplate library to the sketch
-#include "symbols.h"                //Include .h file that contains byte array for battery symbol and temperature symbol. 
-                                    //It is in same folder as this sketch. You can even open it (read it) by clicking on symbols.h tab in Arduino IDE
-Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1-bit mode (Monochrome)
+#include "Inkplate.h"            //Include Inkplate library to the sketch
+#include "symbols.h"             //Include .h file that contains byte array for battery symbol and temperature symbol.
+                                 //It is in same folder as this sketch. You can even open it (read it) by clicking on symbols.h tab in Arduino IDE
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1-bit mode (Monochrome)
 
-void setup() {
-  display.begin();                          //Init Inkplate library (you should call this function ONLY ONCE)
-  display.clearDisplay();                   //Clear frame buffer of display
-  display.display();                        //Put clear image on display
-  display.setTextSize(2);                   //Scale text to be two times bigger then original (5x7 px)
-  display.setTextColor(BLACK, WHITE);       //Set text color to black and background color to white
+void setup()
+{
+  display.begin();                    //Init Inkplate library (you should call this function ONLY ONCE)
+  display.clearDisplay();             //Clear frame buffer of display
+  display.display();                  //Put clear image on display
+  display.setTextSize(2);             //Scale text to be two times bigger then original (5x7 px)
+  display.setTextColor(BLACK, WHITE); //Set text color to black and background color to white
 }
 
-void loop() {
+void loop()
+{
   int temperature;
   float voltage;
 
-  temperature = display.readTemperature();                      //Read temperature from on-board temperature sensor
-  voltage = display.readBattery();                              //Read battery voltage (NOTE: Doe to ESP32 ADC accuracy, you should calibrate the ADC!)
-  display.clearDisplay();                                       //Clear everything in frame buffer of e-paper display
-  display.drawBitmap(100, 100, battSymbol, 106, 45, BLACK);     //Draw battery symbol at position X=100 Y=100
+  temperature = display.readTemperature();                  //Read temperature from on-board temperature sensor
+  voltage = display.readBattery();                          //Read battery voltage (NOTE: Doe to ESP32 ADC accuracy, you should calibrate the ADC!)
+  display.clearDisplay();                                   //Clear everything in frame buffer of e-paper display
+  display.drawBitmap(100, 100, battSymbol, 106, 45, BLACK); //Draw battery symbol at position X=100 Y=100
   display.setCursor(210, 120);
-  display.print(voltage, 2);                                    //Print battery voltage
+  display.print(voltage, 2); //Print battery voltage
   display.print('V');
 
-  display.drawBitmap(100, 200, tempSymbol, 38, 79, BLACK);      //Draw temperature symbol at position X=100, Y=200
+  display.drawBitmap(100, 200, tempSymbol, 38, 79, BLACK); //Draw temperature symbol at position X=100, Y=200
   display.setCursor(150, 225);
-  display.print(temperature, DEC);                              //Print temperature
+  display.print(temperature, DEC); //Print temperature
   display.print('C');
-  display.display();                                            //Send everything to display (refresh the screen)
-  delay(10000);                                                 //Wait 10 seconds before new measurement
-
+  display.display(); //Send everything to display (refresh the screen)
+  delay(10000);      //Wait 10 seconds before new measurement
 }

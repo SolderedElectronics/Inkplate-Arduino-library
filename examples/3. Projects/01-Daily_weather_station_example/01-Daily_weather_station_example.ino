@@ -55,10 +55,9 @@ Inkplate display(INKPLATE_1BIT);
 Network network;
 
 // Contants used for drawing icons
-char abbrs[32][16] ={ "sn", "sl", "h", "t", "hr", "lr", "s", "hc", "lc", "c" };
-const uint8_t *logos[16] ={ icon_sn, icon_sl, icon_h, icon_t, icon_hr, icon_lr, icon_s, icon_hc, icon_lc, icon_c };
-const uint8_t *s_logos[16] ={ icon_s_sn, icon_s_sl, icon_s_h, icon_s_t, icon_s_hr, icon_s_lr, icon_s_s, icon_s_hc, icon_s_lc, icon_s_c };
-
+char abbrs[32][16] = {"sn", "sl", "h", "t", "hr", "lr", "s", "hc", "lc", "c"};
+const uint8_t *logos[16] = {icon_sn, icon_sl, icon_h, icon_t, icon_hr, icon_lr, icon_s, icon_hc, icon_lc, icon_c};
+const uint8_t *s_logos[16] = {icon_s_sn, icon_s_sl, icon_s_h, icon_s_t, icon_s_hr, icon_s_lr, icon_s_s, icon_s_hc, icon_s_lc, icon_s_c};
 
 char abbr1[16];
 char abbr2[16];
@@ -66,7 +65,7 @@ char abbr3[16];
 char abbr4[16];
 
 // Variables for storing temperature
-char temps[8][4] ={
+char temps[8][4] = {
     "0F",
     "0F",
     "0F",
@@ -74,7 +73,7 @@ char temps[8][4] ={
 };
 
 // Variables for storing days of the week
-char days[8][4] ={
+char days[8][4] = {
     "",
     "",
     "",
@@ -159,8 +158,6 @@ void loop()
         display.display();
     else
         display.partialUpdate();
-
-
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);

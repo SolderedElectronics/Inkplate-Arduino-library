@@ -17,14 +17,13 @@
    15 July 2020 by e-radionica.com
 */
 
-#include "Inkplate.h" //Include Inkplate library to the sketch
-#include "image.h" //Include image file that holds grayscale image data. You can see it in next tab inside Arduino IDE.
+#include "Inkplate.h"            //Include Inkplate library to the sketch
+#include "image.h"               //Include image file that holds grayscale image data. You can see it in next tab inside Arduino IDE.
 Inkplate display(INKPLATE_3BIT); // Create object on Inkplate library and set library to work in grayscale mode (3-bit)
                                  // Other option is monochrome mode, which is demonstrated in next example
                                  // "2-Inkplate_basic_monochrome"
 
-
-#define DELAY_MS                                                                                                       \
+#define DELAY_MS \
     5000 //Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not recommended \
                       //Want to refresh faster? Use partial update! Find example in "3-Inkplate-basic_partial_update"
 
@@ -54,9 +53,9 @@ void loop()
     displayCurrentAction(
         "Drawing a pixel"); // Function which writes small text at bottom left indicating what's currently done
                             // NOTE: you do not need displayCurrentAction function to use Inkplate!
-    display.display(); // Send image to display. You need to call this one each time you want to transfer frame buffer
-                       // to the screen.
-    delay(DELAY_MS);   // Wait a little bit
+    display.display();      // Send image to display. You need to call this one each time you want to transfer frame buffer
+                            // to the screen.
+    delay(DELAY_MS);        // Wait a little bit
 
     // Now, let's draw some random pixels!
     display.clearDisplay(); // Clear everything that is inside frame buffer in ESP32
@@ -73,7 +72,7 @@ void loop()
     display.clearDisplay();
     display.drawLine(
         0, 0, 799, 599,
-        0); // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already familiar
+        0);                              // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already familiar
     display.drawLine(799, 0, 0, 599, 0); // with those. Arguments are: start X, start Y, ending X, ending Y, color.
     displayCurrentAction("Drawing two diagonal lines");
     display.display();
@@ -270,7 +269,7 @@ void loop()
     {
         display.setTextColor(i);
         display.setTextSize(i +
-                            1); // textSize parameter starts at 0 and goes up to 10 (larger won't fit Inkplate 6 screen)
+                            1);              // textSize parameter starts at 0 and goes up to 10 (larger won't fit Inkplate 6 screen)
         display.setCursor(200, (i * i * 8)); // setCursor works as same as on LCD displays - sets "the cursor" at the
                                              // place you want to write someting next
         display.print("INKPLATE6!");         // The actual text you want to show on e-paper as String

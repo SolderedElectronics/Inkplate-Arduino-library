@@ -16,15 +16,16 @@
    23 July 2020 by e-radionica.com
 */
 
-#include "Inkplate.h"               //Include Inkplate library to the sketch
-#include "HTTPClient.h"             //Include library for HTTPClient
-#include "WiFi.h"                   //Include library for WiFi
-Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+#include "Inkplate.h"            //Include Inkplate library to the sketch
+#include "HTTPClient.h"          //Include library for HTTPClient
+#include "WiFi.h"                //Include library for WiFi
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
 
-const char* ssid     = ""; //Your WiFi SSID
-const char* password = ""; //Your WiFi password
+const char *ssid = "";     //Your WiFi SSID
+const char *password = ""; //Your WiFi password
 
-void setup() {
+void setup()
+{
     display.begin();        //Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); //Clear frame buffer of display
     display.display();      //Put clear image on display
@@ -35,7 +36,8 @@ void setup() {
     //Connect to the WiFi network.
     WiFi.mode(WIFI_MODE_STA);
     WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED) {
+    while (WiFi.status() != WL_CONNECTED)
+    {
         delay(500);
         display.print(".");
         display.partialUpdate();
@@ -50,9 +52,10 @@ void setup() {
     //certain softwares.
     //Forth parameter will dither the image.
     //Photo taken by: Roberto Fernandez
-    if (!display.drawBitmapFromWeb("https://varipass.org/neowise_mono.bmp", 0, 0, false, true)) {
+    if (!display.drawBitmapFromWeb("https://varipass.org/neowise_mono.bmp", 0, 0, false, true))
+    {
         //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-        //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression! 
+        //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
         display.println("Image open error");
         display.display();
     }
@@ -70,24 +73,29 @@ void setup() {
 
     //Check response code.
     int httpCode = http.GET();
-    if (httpCode == 200) {
+    if (httpCode == 200)
+    {
         //Get the response length and make sure it is not 0.
         int32_t len = http.getSize();
-        if (len > 0) {
-            if (!display.drawBitmapFromWeb(http.getStreamPtr(), 0, 0, len)) {
+        if (len > 0)
+        {
+            if (!display.drawBitmapFromWeb(http.getStreamPtr(), 0, 0, len))
+            {
                 //If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-                //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression! 
+                //REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
                 display.println("Image open error");
                 display.display();
             }
             display.display();
         }
-        else {
+        else
+        {
             display.println("Invalid response length");
             display.display();
         }
     }
-    else {
+    else
+    {
         display.println("HTTP error");
         display.display();
     }
@@ -97,6 +105,7 @@ void setup() {
     WiFi.mode(WIFI_OFF);
 }
 
-void loop() {
+void loop()
+{
     //Nothing...
 }

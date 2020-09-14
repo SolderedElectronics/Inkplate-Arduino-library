@@ -23,20 +23,22 @@
    15 July 2020 by e-radionica.com
 */
 
-#include "Inkplate.h"               //Include Inkplate library to the sketch
+#include "Inkplate.h" //Include Inkplate library to the sketch
 
-#define LED_PIN 15                  //We are going to use pin GPB7 (remember! GPA0 = 0, GPA1 = 1, ..., GPA7 = 7, GPB0 = 8, GBP1 = 9, ..., GPB7 = 15)
+#define LED_PIN 15 //We are going to use pin GPB7 (remember! GPA0 = 0, GPA1 = 1, ..., GPA7 = 7, GPB0 = 8, GBP1 = 9, ..., GPB7 = 15)
 
-Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1-bit mode (Monochrome)
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1-bit mode (Monochrome)
 
-void setup() {
-  display.begin();                  //Init Inkplate library (you should call this function ONLY ONCE)
-  pinModeMCP(LED_PIN, OUTPUT);     	//Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
+void setup()
+{
+  display.begin();                     //Init Inkplate library (you should call this function ONLY ONCE)
+  display.pinModeMCP(LED_PIN, OUTPUT); //Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
 }
 
-void loop() {
-  digitalWriteMCP(LED_PIN, LOW);   	//Set output to low (LED does not light up)
-  delay(1000);                      //Wait for one second
-  digitalWriteMCP(LED_PIN, HIGH);  	//Set output to high (LED lights up)
-  delay(1000);                      //Wait for one second
+void loop()
+{
+  display.digitalWriteMCP(LED_PIN, LOW);  //Set output to low (LED does not light up)
+  delay(1000);                            //Wait for one second
+  display.digitalWriteMCP(LED_PIN, HIGH); //Set output to high (LED lights up)
+  delay(1000);                            //Wait for one second
 }

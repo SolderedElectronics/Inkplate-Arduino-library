@@ -18,26 +18,29 @@
    15 July 2020 by e-radionica.com
 */
 
-#include "Inkplate.h"               //Include Inkplate library to the sketch
-#include <Adafruit_Sensor.h>        //Adafruit library for sensors
-#include "Adafruit_BME680.h"        //Adafruit library for BME680 Sensor
+#include "Inkplate.h"        //Include Inkplate library to the sketch
+#include <Adafruit_Sensor.h> //Adafruit library for sensors
+#include "Adafruit_BME680.h" //Adafruit library for BME680 Sensor
 
-Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
-Adafruit_BME680 bme;                //Create an object on Adafruit BME680 library 
-                                    //(with no arguments sent to constructor, that means we are using I2C communication for BME680 sensor)
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+Adafruit_BME680 bme;             //Create an object on Adafruit BME680 library
+                                 //(with no arguments sent to constructor, that means we are using I2C communication for BME680 sensor)
 
-int n = 0;                          //Variable that keep track on how many times screen has been partially updated
-void setup() {
-  display.begin();                  //Init Inkplate library (you should call this function ONLY ONCE)
-  display.clearDisplay();           //Clear frame buffer of display
-  display.display();                //Put clear image on display
-  display.setTextSize(2);           //Set text scaling to two (text will be two times bigger than normal)
+int n = 0; //Variable that keep track on how many times screen has been partially updated
+void setup()
+{
+  display.begin();        //Init Inkplate library (you should call this function ONLY ONCE)
+  display.clearDisplay(); //Clear frame buffer of display
+  display.display();      //Put clear image on display
+  display.setTextSize(2); //Set text scaling to two (text will be two times bigger than normal)
 
-  if (!bme.begin(0x76)) {           //Init. BME680 library. e-radionica.com BME680 sensor board uses 0x76 I2C address for sensor
+  if (!bme.begin(0x76))
+  { //Init. BME680 library. e-radionica.com BME680 sensor board uses 0x76 I2C address for sensor
     display.println("Sensor init failed!");
     display.println("Check sensor wiring/connection!");
     display.partialUpdate();
-    while (1);
+    while (1)
+      ;
   }
 
   //Set up oversampling and filter initialization for the sensor
@@ -48,14 +51,18 @@ void setup() {
   bme.setGasHeater(320, 150); // 320*C for 150 ms
 }
 
-void loop() {
-  if (!bme.performReading()) {              //If sending command to start reading data fails, send error message to display
+void loop()
+{
+  if (!bme.performReading())
+  { //If sending command to start reading data fails, send error message to display
     display.clearDisplay();
     display.setCursor(0, 0);
     display.print("Failed to read data from sensor");
     display.partialUpdate();
-  } else {                                  //Otherwise, clear frame buffer of epaper display
-    display.clearDisplay();                 //Print out new data
+  }
+  else
+  {                         //Otherwise, clear frame buffer of epaper display
+    display.clearDisplay(); //Print out new data
     display.setCursor(0, 0);
     display.print("Air temperature: ");
     display.print(bme.temperature);
@@ -73,13 +80,16 @@ void loop() {
     display.print(bme.gas_resistance / 1000.0);
     display.println(" kOhms");
 
-    if(n>20) {                            //If display has been partially updated more than 20 times, do a full refresh, otherwise, perform a partial update.
+    if (n > 20)
+    { //If display has been partially updated more than 20 times, do a full refresh, otherwise, perform a partial update.
       display.display();
       n = 0;
-    }else{
+    }
+    else
+    {
       display.partialUpdate();
       n++;
     }
   }
-  delay(2000);                            //Wait a little bit between readings
+  delay(2000); //Wait a little bit between readings
 }
