@@ -11,7 +11,7 @@
 
 class System : public Esp, public Mcp, virtual public NetworkClient
 {
-  public:
+public:
     void setPanelState(uint8_t s);
     uint8_t getPanelState();
 
@@ -29,7 +29,7 @@ class System : public Esp, public Mcp, virtual public NetworkClient
     SdFat getSdFat();
     SPIClass getSPI();
 
-  private:
+private:
     uint8_t _panelOn = 0;
     int8_t _temperature;
     int16_t _sdCardOk = 0;

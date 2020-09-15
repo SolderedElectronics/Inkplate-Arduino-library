@@ -9,12 +9,17 @@
 
 #include "include/Graphics.h"
 #include "include/System.h"
+#include "SPI.h"
+#include "libs/SdFat/SdFat.h"
 
 #include "include/defines.h"
 
+extern SPIClass spi2;
+extern SdFat sd;
+
 class Inkplate : public System, public Graphics
 {
-  public:
+public:
     Inkplate(uint8_t _mode);
     void begin(void);
 
@@ -39,7 +44,7 @@ class Inkplate : public System, public Graphics
         return NetworkClient::isConnected();
     };
 
-  private:
+private:
     void precalculateGamma(uint8_t *c, float gamma);
 
     void display1b();
@@ -56,9 +61,7 @@ class Inkplate : public System, public Graphics
 
     uint8_t _beginDone = 0;
 
-    const uint8_t waveform3Bit[8][8] = {{0, 0, 0, 0, 1, 1, 1, 0}, {1, 2, 2, 2, 1, 1, 1, 0}, {0, 1, 2, 1, 1, 2, 1, 0},
-                                        {0, 2, 1, 2, 1, 2, 1, 0}, {0, 0, 0, 1, 1, 1, 2, 0}, {2, 1, 1, 1, 2, 1, 2, 0},
-                                        {1, 1, 1, 2, 1, 2, 2, 0}, {0, 0, 0, 0, 0, 0, 2, 0}};
+    const uint8_t waveform3Bit[8][8] = {{0, 0, 0, 0, 1, 1, 1, 0}, {1, 2, 2, 2, 1, 1, 1, 0}, {0, 1, 2, 1, 1, 2, 1, 0}, {0, 2, 1, 2, 1, 2, 1, 0}, {0, 0, 0, 1, 1, 1, 2, 0}, {2, 1, 1, 1, 2, 1, 2, 0}, {1, 1, 1, 2, 1, 2, 2, 0}, {0, 0, 0, 0, 0, 0, 2, 0}};
     const uint32_t waveform[50] = {
         0x00000008, 0x00000008, 0x00200408, 0x80281888, 0x60A81898, 0x60A8A8A8, 0x60A8A8A8, 0x6068A868, 0x6868A868,
         0x6868A868, 0x68686868, 0x6A686868, 0x5A686868, 0x5A686868, 0x5A586A68, 0x5A5A6A68, 0x5A5A6A68, 0x55566A68,
