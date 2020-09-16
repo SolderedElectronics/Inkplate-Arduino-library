@@ -18,7 +18,7 @@
 #include "Inkplate.h"            //Include Inkplate library to the sketch
 #include "symbols.h"             //Include .h file that contains byte array for battery symbol and temperature symbol.
                                  //It is in same folder as this sketch. You can even open it (read it) by clicking on symbols.h tab in Arduino IDE
-Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1-bit mode (Monochrome)
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
 void setup()
 {

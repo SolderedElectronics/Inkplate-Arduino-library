@@ -24,14 +24,15 @@
    23 July 2020 by e-radionica.com
 */
 
-#include "Inkplate.h"               //Include Inkplate library to the sketch
-#include "WiFi.h"                   //Include library for WiFi
-Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+#include "Inkplate.h"            //Include Inkplate library to the sketch
+#include "WiFi.h"                //Include library for WiFi
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
-const char* ssid     = "YourWiFiSSID"; //Your WiFi SSID
-const char* password = "YourPass";     //Your WiFi password
+const char *ssid = "YourWiFiSSID"; //Your WiFi SSID
+const char *password = "YourPass"; //Your WiFi password
 
-void setup() {
+void setup()
+{
   display.begin();        //Init Inkplate library (you should call this function ONLY ONCE)
   display.clearDisplay(); //Clear frame buffer of display
   display.display();      //Put clear image on display
@@ -42,7 +43,8 @@ void setup() {
   //Connect to the WiFi network.
   WiFi.mode(WIFI_MODE_STA);
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(500);
     display.print(".");
     display.partialUpdate();
@@ -57,9 +59,10 @@ void setup() {
   //           but a "key" parameter should also be specified if not.
   //  width  - Width of the generated graph, here set to half the Inkplate's width.
   //  height - Height of the generated graph, here set to half the Inkplate's height.
-  //  eink   - Should be set to true to generate a monochrome 1 bit bitmap better suitable for Inkplate.
-  // For more detailed explanation and more parameters, please visit the docs page: https://varipass.org/docs/ 
-  if(!display.drawBitmapFromWeb("https://api.varipass.org/?action=sgraph&id=kbg3eQfA&width=400&height=300&eink=true", 200, 150)) {
+  //  eink   - Should be set to true to generate a BW 1 bit bitmap better suitable for Inkplate.
+  // For more detailed explanation and more parameters, please visit the docs page: https://varipass.org/docs/
+  if (!display.drawBitmapFromWeb("https://api.varipass.org/?action=sgraph&id=kbg3eQfA&width=400&height=300&eink=true", 200, 150))
+  {
     display.println("Image open error");
     display.partialUpdate();
   }
@@ -68,6 +71,7 @@ void setup() {
   WiFi.mode(WIFI_OFF);
 }
 
-void loop() {
+void loop()
+{
   //Nothing...
 }

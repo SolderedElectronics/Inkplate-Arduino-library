@@ -5,7 +5,7 @@
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   You can open .bmp files that have color depth of 1 bit (monochrome bitmap), 4 bit, 8 bit and
+   You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
    24 bit AND have resoluton smaller than 800x600 or otherwise it won't fit on screen.
 
    This example will show you how you can download a .bmp file (picture) from the web and
@@ -19,7 +19,7 @@
 #include "Inkplate.h"            //Include Inkplate library to the sketch
 #include "HTTPClient.h"          //Include library for HTTPClient
 #include "WiFi.h"                //Include library for WiFi
-Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
 const char *ssid = "";     //Your WiFi SSID
 const char *password = ""; //Your WiFi password

@@ -27,7 +27,7 @@
 #define ssid "Inkplate6"
 #define pass "e-radionica"
 
-Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 WebServer server(80);            //Create Web server on port 80 (HTTP port number)
 
 IPAddress serverIP;

@@ -23,7 +23,7 @@
 #define pass "" // Password of that WiFi network
 
 Inkplate display(
-    INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+    INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
 void setup()
 {

@@ -7,7 +7,7 @@
 
    In this example we will show  how to use partial update functionality of Inkplate 6 e-paper display.
    It will scroll text that is saved in char array
-   NOTE: Partial update is only available on 1 Bit mode (Monochrome) and it is not recommended to use it on first refresh after power up.
+   NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it on first refresh after power up.
    It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture quality.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
@@ -16,7 +16,7 @@
 */
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
-Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1-bit mode (Monochrome)
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
 //Char array where you can store your text that will be scrolled.
 const char text[] = "This is partial update on Inkplate 6 e-paper display! :)";

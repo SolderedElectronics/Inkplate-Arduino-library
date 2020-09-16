@@ -1,5 +1,5 @@
 /*
-   2_Basic_grayscale example for e-radionica.com Inkplate 6
+   2_Basic_gray example for e-radionica.com Inkplate 6
    For this example you will need only USB cable and Inkplate 6
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
@@ -8,7 +8,7 @@
    This example will show you how you can draw some simple graphics using
    Adafruit GFX functions. Yes, Inkplate library is 100% compatible with GFX lib!
    Learn more about Adafruit GFX: https://learn.adafruit.com/adafruit-gfx-graphics-library
-   Inkplate will be used in grayscale mode which is 3 bit, so you can have up to 8 different colors (black, 6 gray
+   Inkplate will be used in gray mode which is 3 bit, so you can have up to 8 different colors (black, 6 gray
    colors and white) Color is represented by number, where number 0 means black and number 7 means white, while
    everything in between are shades of gray.
 
@@ -18,10 +18,10 @@
 */
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
-#include "image.h"               //Include image file that holds grayscale image data. You can see it in next tab inside Arduino IDE.
-Inkplate display(INKPLATE_3BIT); // Create object on Inkplate library and set library to work in grayscale mode (3-bit)
-                                 // Other option is monochrome mode, which is demonstrated in next example
-                                 // "2-Inkplate_basic_monochrome"
+#include "image.h"               //Include image file that holds gray image data. You can see it in next tab inside Arduino IDE.
+Inkplate display(INKPLATE_3BIT); // Create object on Inkplate library and set library to work in gray mode (3-bit)
+                                 // Other option is BW mode, which is demonstrated in next example
+                                 // "2-Inkplate_basic_BW"
 
 #define DELAY_MS \
     5000 //Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not recommended \
@@ -359,7 +359,7 @@ void loop()
         delay(DELAY_MS);
     }
 
-    // Did you know that you can change between monochrome and greyscale mode anytime?
+    // Did you know that you can change between BW and greyscale mode anytime?
     // Just call Inkplate display(INKPLATE_1BIT) or Inkplate display(INKPLATE_3BIT)
 }
 

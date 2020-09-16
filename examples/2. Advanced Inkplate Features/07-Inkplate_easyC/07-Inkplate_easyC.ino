@@ -22,7 +22,7 @@
 #include <Adafruit_Sensor.h> //Adafruit library for sensors
 #include "Adafruit_BME680.h" //Adafruit library for BME680 Sensor
 
-Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 Adafruit_BME680 bme;             //Create an object on Adafruit BME680 library
                                  //(with no arguments sent to constructor, that means we are using I2C communication for BME680 sensor)
 

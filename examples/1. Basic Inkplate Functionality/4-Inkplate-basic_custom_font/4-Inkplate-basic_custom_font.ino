@@ -22,7 +22,7 @@
 #include "Inkplate.h"                    //Include Inkplate library to the sketch
 #include "Not_Just_Groovy20pt7b.h"       //Include first .h font file to the sketch
 #include "DSEG14Classic_Regular20pt7b.h" //Include second font
-Inkplate display(INKPLATE_1BIT);         //Create an object on Inkplate library and also set library into 1-bit mode (Monochrome)
+Inkplate display(INKPLATE_1BIT);         //Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
 void setup()
 {

@@ -146,7 +146,7 @@ void loop()
   display.clearDisplay();                  //Clear everytning that is inside frame buffer in ESP32
   displayCurrentAction("Drawing a pixel"); //Function which writes small text at bottom left indicating what's currently done
                                            //NOTE: you do not need displayCurrentAction function to use Inkplate!
-  display.drawPixel(100, 50, BLACK);       //Draw one black pixel at X = 100, Y = 50 position in BLACK color (must be black since Inkplate is in monochrome mode)
+  display.drawPixel(100, 50, BLACK);       //Draw one black pixel at X = 100, Y = 50 position in BLACK color (must be black since Inkplate is in BW mode)
   display.display();                       //Send image to display. You need to call this one each time you want to transfer frame buffer to the screen.
   delay(DELAY_MS);                         //Wait a little bit
 
@@ -351,7 +351,7 @@ void loop()
   delay(DELAY_MS);
 
   //Write same text on different location, but now invert colors (text is white, text background is black), without cleaning the previous text
-  display.setTextColor(WHITE, BLACK); //First argument is text color, while second argument is background color. In monochrome, there are
+  display.setTextColor(WHITE, BLACK); //First argument is text color, while second argument is background color. In BW, there are
   for (int i = 0; i < 6; i++)
   { //only two options: BLACK & WHITE
     display.setTextSize(i + 1);

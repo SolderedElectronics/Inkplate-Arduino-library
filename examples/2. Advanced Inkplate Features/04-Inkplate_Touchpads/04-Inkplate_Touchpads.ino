@@ -23,7 +23,7 @@
 */
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
-Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
 int number = 0; //Variable that stores our number
 int n = 0;      //Variable that keeps track on how many times display is partially updated

@@ -15,15 +15,16 @@
    31 August 2020 by e-radionica.com
 */
 
-#include "Inkplate.h"               //Include Inkplate library to the sketch
-#include "HTTPClient.h"             //Include library for HTTPClient
-#include "WiFi.h"                   //Include library for WiFi
-Inkplate display(INKPLATE_1BIT);    //Create an object on Inkplate library and also set library into 1 Bit mode (Monochrome)
+#include "Inkplate.h"            //Include Inkplate library to the sketch
+#include "HTTPClient.h"          //Include library for HTTPClient
+#include "WiFi.h"                //Include library for WiFi
+Inkplate display(INKPLATE_1BIT); //Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
-const char* ssid     = ""; //Your WiFi SSID
-const char* password = ""; //Your WiFi password
+const char *ssid = "";     //Your WiFi SSID
+const char *password = ""; //Your WiFi password
 
-void setup() {
+void setup()
+{
     Serial.begin(115200);
     display.begin();        //Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); //Clear frame buffer of display
@@ -35,7 +36,8 @@ void setup() {
     //Connect to the WiFi network.
     WiFi.mode(WIFI_MODE_STA);
     WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED) {
+    while (WiFi.status() != WL_CONNECTED)
+    {
         delay(500);
         display.print(".");
         display.partialUpdate();
@@ -48,7 +50,8 @@ void setup() {
     //NOTE: Both drawJpegFromWeb methods allow for an optional sisxth "invert" parameter. Setting this parameter to true
     //will flip all colors on the image, making black white and white black.
     //fifth parameter will dither the image.
-    if (!display.drawJpegFromWeb(&display, "https://varipass.org/destination.jpg", 0, 100, true, false)) {
+    if (!display.drawJpegFromWeb(&display, "https://varipass.org/destination.jpg", 0, 100, true, false))
+    {
         //If is something failed (wrong filename or format), write error message on the screen.
         display.println("Image open error");
         display.display();
@@ -58,6 +61,7 @@ void setup() {
     WiFi.mode(WIFI_OFF);
 }
 
-void loop() {
+void loop()
+{
     //Nothing...
 }
