@@ -73,7 +73,6 @@ void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
     }
 };
 
-
 bool Image::drawBitmapFromSd(const char *fileName, int x, int y, bool dither, bool invert)
 {
     SdFile dat;
@@ -167,7 +166,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, (invert ^ (palette[0] < palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
             break;
         // as for 2 bit, literally cannot find an example online or in PS, so skipped
-        case 4: {
+        case 4:
+        {
             uint8_t px = pixelBuffer[j >> 1] & (j & 1 ? 0x0F : 0xF0) >> (j & 1 ? 0 : 4);
             uint8_t val;
 
@@ -183,7 +183,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, val);
             break;
         }
-        case 8: {
+        case 8:
+        {
             uint8_t px = pixelBuffer[j];
             uint8_t val;
 
@@ -199,7 +200,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, val);
             break;
         }
-        case 16: {
+        case 16:
+        {
             uint16_t px = ((uint16_t)pixelBuffer[(j << 1) | 1] << 8) | pixelBuffer[(j << 1)];
 
             uint8_t r = (px & 0x7C00) >> 7;
@@ -220,7 +222,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, val);
             break;
         }
-        case 24: {
+        case 24:
+        {
             uint8_t r = pixelBuffer[j * 3];
             uint8_t g = pixelBuffer[j * 3 + 1];
             uint8_t b = pixelBuffer[j * 3 + 2];

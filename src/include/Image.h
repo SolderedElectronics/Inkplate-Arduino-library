@@ -10,7 +10,7 @@
 
 class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 {
-public:
+  public:
     Image(int16_t w, int16_t h);
 
     virtual void drawPixel(int16_t x, int16_t y, uint16_t color) = 0;
@@ -33,27 +33,45 @@ public:
 
     bool drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert);
 
-    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawBitmapFromSd(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
+    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawBitmapFromSd(
+        const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
     bool drawBitmapFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
 
-    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawBitmapFromWeb(const char *url, int x, int y, bool dither = 0, bool invert = 0);
+    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawBitmapFromWeb(const char *url,
+                                                                                                       int x, int y,
+                                                                                                       bool dither = 0,
+                                                                                                       bool invert = 0);
     bool drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither = 0, bool invert = 0);
 
     bool drawJpegFromBuffer(uint8_t *buf, int32_t len, int x, int y, bool dither, bool invert);
 
-    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawJpegFromSd(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
+    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawJpegFromSd(
+        const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
     bool drawJpegFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
 
-    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawJpegFromWeb(const char *url, int x, int y, bool dither = 0, bool invert = 0);
+    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawJpegFromWeb(const char *url,
+                                                                                                     int x, int y,
+                                                                                                     bool dither = 0,
+                                                                                                     bool invert = 0);
     bool drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither = 0, bool invert = 0);
 
-    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawPngFromSd(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
+    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawPngFromSd(const char *fileName,
+                                                                                                   int x, int y,
+                                                                                                   bool dither = 0,
+                                                                                                   bool invert = 0);
     bool drawPngFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
 
-    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawPngFromWeb(const char *url, int x, int y, bool dither = 0, bool invert = 0);
+    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawPngFromWeb(const char *url,
+                                                                                                    int x, int y,
+                                                                                                    bool dither = 0,
+                                                                                                    bool invert = 0);
     bool drawPngFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither = 0, bool invert = 0);
 
-private:
+    // Should be private, but needed in a png callback :(
+    void ditherSwap(int w);
+    uint8_t ditherGetPixelBmp(uint8_t px, int i, int w, bool paletted);
+
+  private:
     virtual void startWrite(void) = 0;
     virtual void writePixel(int16_t x, int16_t y, uint16_t color) = 0;
     virtual void writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) = 0;
@@ -75,9 +93,7 @@ private:
 
     bool legalBmp(bitmapHeader *bmpHeader);
 
-    uint8_t ditherGetPixelBmp(uint8_t px, int i, int w, bool paletted);
     uint8_t ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h);
-    void ditherSwap(int w);
     void ditherSwapBlockJpeg(int x);
 
     void readBmpHeader(uint8_t *buf, bitmapHeader *_h);

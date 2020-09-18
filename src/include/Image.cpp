@@ -1,17 +1,16 @@
 #include "Image.h"
 
 #include "../libs/TJpeg/TJpg_Decoder.h"
+#include "defines.h"
 #include "pgmspace.h"
 
-#define RED(a) ((((a)&0xf800) >> 11) << 3)
-#define GREEN(a) ((((a)&0x07e0) >> 5) << 2)
-#define BLUE(a) (((a)&0x001f) << 3)
-
 Image *_imagePtrJpeg = nullptr;
+Image *_imagePtrPng = nullptr;
 
 Image::Image(int16_t w, int16_t h) : Adafruit_GFX(w, h)
 {
     _imagePtrJpeg = this;
+    _imagePtrPng = this;
 }
 
 bool Image::drawImage(const String path, int x, int y, bool dither, bool invert)
@@ -28,7 +27,7 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
         if (strstr(path, ".jpg") != NULL || strstr(path, ".jpeg") != NULL)
             return drawJpegFromWeb(path, x, y, dither, invert);
         if (strstr(path, ".png") != NULL)
-            return drawJpegFromWeb(path, x, y, dither, invert);
+            return drawPngFromWeb(path, x, y, dither, invert);
     }
     else
     {
@@ -37,7 +36,7 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
         if (strstr(path, ".jpg") != NULL || strstr(path, ".jpeg") != NULL)
             return drawJpegFromSd(path, x, y, dither, invert);
         if (strstr(path, ".png") != NULL)
-            return drawJpegFromSd(path, x, y, dither, invert);
+            return drawPngFromSd(path, x, y, dither, invert);
     }
     return 0;
 };
