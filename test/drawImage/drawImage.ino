@@ -161,7 +161,7 @@ void loop()
             display.clearDisplay();
             delay(5000);
 
-            display.drawImage("png.jpg", 0, 0, dither, invert);
+            display.drawImage("png.png", 0, 0, dither, invert);
             display.display();
             display.clearDisplay();
             delay(5000);
@@ -188,43 +188,158 @@ void loop()
             display.clearDisplay();
             delay(5000);
 
-            display.drawImage("png.jpg", 0, 0, dither, invert);
+            display.drawImage("png.png", 0, 0, dither, invert);
             display.display();
             display.clearDisplay();
             delay(5000);
         }
 
-        for (int i = 0; i < 4; ++i)
-        {
-            bool dither = i & 1;
-            bool invert = i >> 1;
+        // web
 
-            for (int j = 0; j < 6; ++j)
-            {
-                display.selectDisplayMode(depth[j]);
-                display.setTextSize(2);
-                display.setTextColor(1);
-                display.setCursor(100, 100);
-                display.print("Displaying ");
-                display.print(images[j]);
-                display.print(" from web");
-                if (!dither)
-                    display.print(" non");
-                display.print(" dithered and");
-                if (!invert)
-                    display.print(" non");
-                display.print(" inverted.");
 
-                display.display();
-                display.clearDisplay();
-                delay(5000);
+        display.selectDisplayMode(INKPLATE_1BIT);
+        display.setTextSize(2);
+        display.setTextColor(1);
+        display.setCursor(100, 100);
+        display.print("Displaying Lenna.jpg 1bit from web");
+        if (!dither)
+            display.print(" non");
+        display.print(" dithered and");
+        if (!invert)
+            display.print(" non");
+        display.print(" inverted.");
 
-                display.drawImage(imageUrls[j], 0, 0, dither, invert);
-                display.display();
-                display.clearDisplay();
-                delay(5000);
-            }
-        }
+        display.display();
+        display.clearDisplay();
+        delay(5000);
 
+        display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
+                          "drawImage/Lenna.jpg",
+                          0, 0, dither, invert);
+        display.display();
+        display.clearDisplay();
         delay(5000);
     }
+
+    for (int i = 0; i < 4; ++i)
+    {
+        bool dither = i & 1;
+        bool invert = i >> 1;
+
+        display.selectDisplayMode(INKPLATE_3BIT);
+        display.setTextSize(2);
+        display.setTextColor(1);
+        display.setCursor(100, 100);
+        display.print("Displaying Lenna.jpg 3bit from web");
+        if (!dither)
+            display.print(" non");
+        display.print(" dithered and");
+        if (!invert)
+            display.print(" non");
+        display.print(" inverted.");
+
+        display.display();
+        display.clearDisplay();
+        delay(5000);
+
+        display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
+                          "drawImage/Lenna.jpg",
+                          0, 0, dither, invert);
+        display.display();
+        display.clearDisplay();
+        delay(5000);
+    }
+
+    for (int i = 0; i < 4; ++i)
+    {
+        bool dither = i & 1;
+        bool invert = i >> 1;
+
+        display.selectDisplayMode(INKPLATE_1BIT);
+        display.setTextSize(2);
+        display.setTextColor(1);
+        display.setCursor(100, 100);
+        display.print("Displaying png.png 1bit from web");
+        if (!dither)
+            display.print(" non");
+        display.print(" dithered and");
+        if (!invert)
+            display.print(" non");
+        display.print(" inverted.");
+
+        display.display();
+        display.clearDisplay();
+        delay(5000);
+
+        display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
+                          "drawImage/png.png",
+                          0, 0, dither, invert);
+        display.display();
+        display.clearDisplay();
+        delay(5000);
+    }
+
+    for (int i = 0; i < 4; ++i)
+    {
+        bool dither = i & 1;
+        bool invert = i >> 1;
+
+        display.selectDisplayMode(INKPLATE_3BIT);
+        display.setTextSize(2);
+        display.setTextColor(1);
+        display.setCursor(100, 100);
+        display.print("Displaying png.png 3bit from web");
+        if (!dither)
+            display.print(" non");
+        display.print(" dithered and");
+        if (!invert)
+            display.print(" non");
+        display.print(" inverted.");
+
+        display.display();
+        display.clearDisplay();
+        delay(5000);
+
+        display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
+                          "drawImage/png.png",
+                          0, 0, dither, invert);
+        display.display();
+        display.clearDisplay();
+        delay(5000);
+    }
+
+
+    for (int i = 0; i < 4; ++i)
+    {
+        bool dither = i & 1;
+        bool invert = i >> 1;
+
+        for (int j = 0; j < 6; ++j)
+        {
+            display.selectDisplayMode(depth[j]);
+            display.setTextSize(2);
+            display.setTextColor(1);
+            display.setCursor(100, 100);
+            display.print("Displaying ");
+            display.print(imagesBmp[j]);
+            display.print(" from web");
+            if (!dither)
+                display.print(" non");
+            display.print(" dithered and");
+            if (!invert)
+                display.print(" non");
+            display.print(" inverted.");
+
+            display.display();
+            display.clearDisplay();
+            delay(5000);
+
+            display.drawImage(imagesBmpUrls[j], 0, 0, dither, invert);
+            display.display();
+            display.clearDisplay();
+            delay(5000);
+        }
+    }
+
+    delay(5000);
+}
