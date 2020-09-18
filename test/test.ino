@@ -11,7 +11,7 @@ void setup()
 
     display.begin();
 
-    display.joinAP("e-radionica.com", "croduino");
+    display.joinAP("", "");
 
     delay(500);
 }
