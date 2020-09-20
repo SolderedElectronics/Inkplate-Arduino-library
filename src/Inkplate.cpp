@@ -198,15 +198,15 @@ void Inkplate::display1b()
     uint8_t data;
     uint8_t dram;
     einkOn();
-    cleanFast(0, 1);
-    cleanFast(1, 12);
-    cleanFast(2, 1);
-    cleanFast(0, 11);
-    cleanFast(2, 1);
-    cleanFast(1, 12);
-    cleanFast(2, 1);
-    cleanFast(0, 11);
-    for (int k = 0; k < 3; ++k)
+	cleanFast(0, 1);
+	cleanFast(1, 16);
+	cleanFast(2, 1);
+	cleanFast(0, 11);
+	cleanFast(2, 1);
+	cleanFast(1, 16);
+	cleanFast(2, 1);
+	cleanFast(0, 11);
+    for (int k = 0; k < 4; ++k)
     {
         uint8_t *DMemoryNewPtr = DMemoryNew + 59999;
         vscan_start();
@@ -303,14 +303,14 @@ void Inkplate::display1b()
 void Inkplate::display3b()
 {
     einkOn();
-    cleanFast(0, 1);
-    cleanFast(1, 12);
-    cleanFast(2, 1);
-    cleanFast(0, 11);
-    cleanFast(2, 1);
-    cleanFast(1, 12);
-    cleanFast(2, 1);
-    cleanFast(0, 11);
+	cleanFast(0, 1);
+	cleanFast(1, 16);
+	cleanFast(2, 1);
+	cleanFast(0, 11);
+	cleanFast(2, 1);
+	cleanFast(1, 16);
+	cleanFast(2, 1);
+	cleanFast(0, 11);
 
     for (int k = 0; k < 8; ++k)
     {
@@ -370,7 +370,6 @@ void Inkplate::display3b()
         }
         delayMicroseconds(230);
     }
-    cleanFast(2, 1);
     cleanFast(3, 1);
     vscan_start();
     einkOff();
@@ -490,37 +489,50 @@ void Inkplate::cleanFast(uint8_t c, uint8_t rep)
     }
 }
 
+//Turn off epaper power supply and put all digital IO pins in high Z state
+void Inkplate::einkOff()
+{
+    if (getPanelState() == 0)
+        return;
+	OE_CLEAR;
+    GMOD_CLEAR;
+    GPIO.out &= ~(DATA | LE | CL);
+	CKV_CLEAR;
+    SPH_CLEAR;
+    SPV_CLEAR;
+
+	VCOM_CLEAR;
+	delay(6);
+    PWRUP_CLEAR;
+    WAKEUP_CLEAR;
+	delay(50);
+    pinsZstate();
+	setPanelState(0);
+}
+
+//Turn on supply for epaper display (TPS65186) [+15 VDC, -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
 void Inkplate::einkOn()
 {
     if (getPanelState() == 1)
         return;
-    setPanelState(1);
-    pinsAsOutputs();
     WAKEUP_SET;
-    PWRUP_SET;
-    VCOM_SET;
-
+	delay(1);
+	Wire.beginTransmission(0x48);
+    Wire.write(0x09);
+	Wire.write(B00011011);    //Power up seq.
+	Wire.write(B00000000);    //Power up delay (3mS per rail)
+	Wire.write(B00011011);    //Power down seq.
+	Wire.write(B00000000);    //Power down delay (6mS per rail)
+    Wire.endTransmission();
+	
+	PWRUP_SET;
+	
+	//Enable all rails
     Wire.beginTransmission(0x48);
     Wire.write(0x01);
     Wire.write(B00111111);
     Wire.endTransmission();
-
-    delay(40);
-
-    Wire.beginTransmission(0x48);
-    Wire.write(0x0D);
-    Wire.write(B10000000);
-    Wire.endTransmission();
-
-    delay(2);
-
-    Wire.beginTransmission(0x48);
-    Wire.write(0x00);
-    Wire.endTransmission();
-
-    Wire.requestFrom(0x48, 1);
-    setTemperature(Wire.read());
-
+	pinsAsOutputs();
     LE_CLEAR;
     OE_CLEAR;
     CL_CLEAR;
@@ -528,25 +540,25 @@ void Inkplate::einkOn()
     GMOD_SET;
     SPV_SET;
     CKV_CLEAR;
-    OE_SET;
-}
-
-void Inkplate::einkOff()
-{
-    if (getPanelState() == 0)
-        return;
-    setPanelState(0);
-    GMOD_CLEAR;
     OE_CLEAR;
-    GPIO.out &= ~(DATA | CL | LE);
-    SPH_CLEAR;
-    SPV_CLEAR;
+	VCOM_SET;
+	Wire.beginTransmission(0x48);
+    Wire.write(0x0D);
+	Wire.write(B10000000);
+	Wire.endTransmission();
+    delay(5);
 
-    PWRUP_CLEAR;
-    WAKEUP_CLEAR;
-    VCOM_CLEAR;
+    Wire.beginTransmission(0x48);
+    Wire.write(0x00);
+    Wire.endTransmission();
 
-    pinsZstate();
+    Wire.requestFrom(0x48, 1);
+    setTemperature(Wire.read());
+	
+	pinModeMCP(7, INPUT_PULLUP);
+	while(!digitalReadMCP(7));
+	OE_SET;
+	setPanelState(1);
 }
 
 // LOW LEVEL FUNCTIONS
@@ -576,25 +588,13 @@ void Inkplate::vscan_start()
     CKV_SET;
 }
 
-void Inkplate::vscan_write()
-{
-    CKV_CLEAR;
-    LE_SET;
-    LE_CLEAR;
-    delayMicroseconds(0);
-    SPH_CLEAR;
-    CL_SET;
-    CL_CLEAR;
-    SPH_SET;
-    CKV_SET;
-}
-
 void Inkplate::hscan_start(uint32_t _d)
 {
     SPH_CLEAR;
     GPIO.out_w1ts = (_d) | CL;
     GPIO.out_w1tc = DATA | CL;
     SPH_SET;
+	CKV_SET;
 }
 
 void Inkplate::vscan_end()
@@ -602,8 +602,7 @@ void Inkplate::vscan_end()
     CKV_CLEAR;
     LE_SET;
     LE_CLEAR;
-    delayMicroseconds(1);
-    CKV_SET;
+    delayMicroseconds(0);
 }
 
 void Inkplate::pinsZstate()

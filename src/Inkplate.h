@@ -51,7 +51,6 @@ private:
     void display3b();
     void cleanFast(uint8_t c, uint8_t rep);
     void vscan_start();
-    void vscan_write();
     void vscan_end();
     void hscan_start(uint32_t _d = 0);
     void pinsZstate();
