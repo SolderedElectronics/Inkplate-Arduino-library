@@ -7,9 +7,9 @@
 #error "Wrong board selected! Select ESP32 Wrover from board menu!"
 #endif
 
+#include "SPI.h"
 #include "include/Graphics.h"
 #include "include/System.h"
-#include "SPI.h"
 #include "libs/SdFat/SdFat.h"
 
 #include "include/defines.h"
@@ -19,7 +19,7 @@ extern SdFat sd;
 
 class Inkplate : public System, public Graphics
 {
-public:
+  public:
     Inkplate(uint8_t _mode);
     void begin(void);
 
@@ -30,6 +30,7 @@ public:
 
     void einkOn();
     void einkOff();
+    void cleanFast(uint8_t c, uint8_t rep);
 
     bool joinAP(const char *ssid, const char *pass)
     {
@@ -44,12 +45,11 @@ public:
         return NetworkClient::isConnected();
     };
 
-private:
+  private:
     void precalculateGamma(uint8_t *c, float gamma);
 
     void display1b();
     void display3b();
-    void cleanFast(uint8_t c, uint8_t rep);
     void vscan_start();
     void vscan_end();
     void hscan_start(uint32_t _d = 0);
@@ -60,7 +60,9 @@ private:
 
     uint8_t _beginDone = 0;
 
-    const uint8_t waveform3Bit[8][8] = {{0, 0, 0, 0, 1, 1, 1, 0}, {1, 2, 2, 2, 1, 1, 1, 0}, {0, 1, 2, 1, 1, 2, 1, 0}, {0, 2, 1, 2, 1, 2, 1, 0}, {0, 0, 0, 1, 1, 1, 2, 0}, {2, 1, 1, 1, 2, 1, 2, 0}, {1, 1, 1, 2, 1, 2, 2, 0}, {0, 0, 0, 0, 0, 0, 2, 0}};
+    const uint8_t waveform3Bit[8][8] = {{0, 0, 0, 0, 1, 1, 1, 0}, {1, 2, 2, 2, 1, 1, 1, 0}, {0, 1, 2, 1, 1, 2, 1, 0},
+                                        {0, 2, 1, 2, 1, 2, 1, 0}, {0, 0, 0, 1, 1, 1, 2, 0}, {2, 1, 1, 1, 2, 1, 2, 0},
+                                        {1, 1, 1, 2, 1, 2, 2, 0}, {0, 0, 0, 0, 0, 0, 2, 0}};
     const uint32_t waveform[50] = {
         0x00000008, 0x00000008, 0x00200408, 0x80281888, 0x60A81898, 0x60A8A8A8, 0x60A8A8A8, 0x6068A868, 0x6868A868,
         0x6868A868, 0x68686868, 0x6A686868, 0x5A686868, 0x5A686868, 0x5A586A68, 0x5A5A6A68, 0x5A5A6A68, 0x55566A68,

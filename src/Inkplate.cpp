@@ -1,94 +1,94 @@
 #include "Inkplate.h"
 
 #define CL 0x01
-#define CL_SET              \
-    {                       \
-        GPIO.out_w1ts = CL; \
+#define CL_SET                                                                                                         \
+    {                                                                                                                  \
+        GPIO.out_w1ts = CL;                                                                                            \
     }
-#define CL_CLEAR            \
-    {                       \
-        GPIO.out_w1tc = CL; \
+#define CL_CLEAR                                                                                                       \
+    {                                                                                                                  \
+        GPIO.out_w1tc = CL;                                                                                            \
     }
 #define CKV 0x01
-#define CKV_SET                   \
-    {                             \
-        GPIO.out1_w1ts.val = CKV; \
+#define CKV_SET                                                                                                        \
+    {                                                                                                                  \
+        GPIO.out1_w1ts.val = CKV;                                                                                      \
     }
-#define CKV_CLEAR                 \
-    {                             \
-        GPIO.out1_w1tc.val = CKV; \
+#define CKV_CLEAR                                                                                                      \
+    {                                                                                                                  \
+        GPIO.out1_w1tc.val = CKV;                                                                                      \
     }
 #define SPH 0x02
-#define SPH_SET                   \
-    {                             \
-        GPIO.out1_w1ts.val = SPH; \
+#define SPH_SET                                                                                                        \
+    {                                                                                                                  \
+        GPIO.out1_w1ts.val = SPH;                                                                                      \
     }
-#define SPH_CLEAR                 \
-    {                             \
-        GPIO.out1_w1tc.val = SPH; \
+#define SPH_CLEAR                                                                                                      \
+    {                                                                                                                  \
+        GPIO.out1_w1tc.val = SPH;                                                                                      \
     }
 #define LE 0x04
-#define LE_SET              \
-    {                       \
-        GPIO.out_w1ts = LE; \
+#define LE_SET                                                                                                         \
+    {                                                                                                                  \
+        GPIO.out_w1ts = LE;                                                                                            \
     }
-#define LE_CLEAR            \
-    {                       \
-        GPIO.out_w1tc = LE; \
+#define LE_CLEAR                                                                                                       \
+    {                                                                                                                  \
+        GPIO.out_w1tc = LE;                                                                                            \
     }
 #define OE 0
-#define OE_SET                     \
-    {                              \
-        digitalWriteMCP(OE, HIGH); \
+#define OE_SET                                                                                                         \
+    {                                                                                                                  \
+        digitalWriteMCP(OE, HIGH);                                                                                     \
     }
-#define OE_CLEAR                  \
-    {                             \
-        digitalWriteMCP(OE, LOW); \
+#define OE_CLEAR                                                                                                       \
+    {                                                                                                                  \
+        digitalWriteMCP(OE, LOW);                                                                                      \
     }
 #define GMOD 1
-#define GMOD_SET                     \
-    {                                \
-        digitalWriteMCP(GMOD, HIGH); \
+#define GMOD_SET                                                                                                       \
+    {                                                                                                                  \
+        digitalWriteMCP(GMOD, HIGH);                                                                                   \
     }
-#define GMOD_CLEAR                  \
-    {                               \
-        digitalWriteMCP(GMOD, LOW); \
+#define GMOD_CLEAR                                                                                                     \
+    {                                                                                                                  \
+        digitalWriteMCP(GMOD, LOW);                                                                                    \
     }
 #define SPV 2
-#define SPV_SET                     \
-    {                               \
-        digitalWriteMCP(SPV, HIGH); \
+#define SPV_SET                                                                                                        \
+    {                                                                                                                  \
+        digitalWriteMCP(SPV, HIGH);                                                                                    \
     }
-#define SPV_CLEAR                  \
-    {                              \
-        digitalWriteMCP(SPV, LOW); \
+#define SPV_CLEAR                                                                                                      \
+    {                                                                                                                  \
+        digitalWriteMCP(SPV, LOW);                                                                                     \
     }
 #define WAKEUP 3
-#define WAKEUP_SET                     \
-    {                                  \
-        digitalWriteMCP(WAKEUP, HIGH); \
+#define WAKEUP_SET                                                                                                     \
+    {                                                                                                                  \
+        digitalWriteMCP(WAKEUP, HIGH);                                                                                 \
     }
-#define WAKEUP_CLEAR                  \
-    {                                 \
-        digitalWriteMCP(WAKEUP, LOW); \
+#define WAKEUP_CLEAR                                                                                                   \
+    {                                                                                                                  \
+        digitalWriteMCP(WAKEUP, LOW);                                                                                  \
     }
 #define PWRUP 4
-#define PWRUP_SET                     \
-    {                                 \
-        digitalWriteMCP(PWRUP, HIGH); \
+#define PWRUP_SET                                                                                                      \
+    {                                                                                                                  \
+        digitalWriteMCP(PWRUP, HIGH);                                                                                  \
     }
-#define PWRUP_CLEAR                  \
-    {                                \
-        digitalWriteMCP(PWRUP, LOW); \
+#define PWRUP_CLEAR                                                                                                    \
+    {                                                                                                                  \
+        digitalWriteMCP(PWRUP, LOW);                                                                                   \
     }
 #define VCOM 5
-#define VCOM_SET                     \
-    {                                \
-        digitalWriteMCP(VCOM, HIGH); \
+#define VCOM_SET                                                                                                       \
+    {                                                                                                                  \
+        digitalWriteMCP(VCOM, HIGH);                                                                                   \
     }
-#define VCOM_CLEAR                  \
-    {                               \
-        digitalWriteMCP(VCOM, LOW); \
+#define VCOM_CLEAR                                                                                                     \
+    {                                                                                                                  \
+        digitalWriteMCP(VCOM, LOW);                                                                                    \
     }
 
 #define GPIO0_ENABLE 8
@@ -198,14 +198,14 @@ void Inkplate::display1b()
     uint8_t data;
     uint8_t dram;
     einkOn();
-	cleanFast(0, 1);
-	cleanFast(1, 16);
-	cleanFast(2, 1);
-	cleanFast(0, 11);
-	cleanFast(2, 1);
-	cleanFast(1, 16);
-	cleanFast(2, 1);
-	cleanFast(0, 11);
+    cleanFast(0, 1);
+    cleanFast(1, 16);
+    cleanFast(2, 1);
+    cleanFast(0, 11);
+    cleanFast(2, 1);
+    cleanFast(1, 16);
+    cleanFast(2, 1);
+    cleanFast(0, 11);
     for (int k = 0; k < 4; ++k)
     {
         uint8_t *DMemoryNewPtr = DMemoryNew + 59999;
@@ -303,14 +303,14 @@ void Inkplate::display1b()
 void Inkplate::display3b()
 {
     einkOn();
-	cleanFast(0, 1);
-	cleanFast(1, 16);
-	cleanFast(2, 1);
-	cleanFast(0, 11);
-	cleanFast(2, 1);
-	cleanFast(1, 16);
-	cleanFast(2, 1);
-	cleanFast(0, 11);
+    cleanFast(0, 1);
+    cleanFast(1, 16);
+    cleanFast(2, 1);
+    cleanFast(0, 11);
+    cleanFast(2, 1);
+    cleanFast(1, 16);
+    cleanFast(2, 1);
+    cleanFast(0, 11);
 
     for (int k = 0; k < 8; ++k)
     {
@@ -489,50 +489,50 @@ void Inkplate::cleanFast(uint8_t c, uint8_t rep)
     }
 }
 
-//Turn off epaper power supply and put all digital IO pins in high Z state
+// Turn off epaper power supply and put all digital IO pins in high Z state
 void Inkplate::einkOff()
 {
     if (getPanelState() == 0)
         return;
-	OE_CLEAR;
+    OE_CLEAR;
     GMOD_CLEAR;
     GPIO.out &= ~(DATA | LE | CL);
-	CKV_CLEAR;
+    CKV_CLEAR;
     SPH_CLEAR;
     SPV_CLEAR;
 
-	VCOM_CLEAR;
-	delay(6);
+    VCOM_CLEAR;
+    delay(6);
     PWRUP_CLEAR;
     WAKEUP_CLEAR;
-	delay(50);
+    delay(50);
     pinsZstate();
-	setPanelState(0);
+    setPanelState(0);
 }
 
-//Turn on supply for epaper display (TPS65186) [+15 VDC, -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
+// Turn on supply for epaper display (TPS65186) [+15 VDC, -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
 void Inkplate::einkOn()
 {
     if (getPanelState() == 1)
         return;
     WAKEUP_SET;
-	delay(1);
-	Wire.beginTransmission(0x48);
+    delay(1);
+    Wire.beginTransmission(0x48);
     Wire.write(0x09);
-	Wire.write(B00011011);    //Power up seq.
-	Wire.write(B00000000);    //Power up delay (3mS per rail)
-	Wire.write(B00011011);    //Power down seq.
-	Wire.write(B00000000);    //Power down delay (6mS per rail)
+    Wire.write(B00011011); // Power up seq.
+    Wire.write(B00000000); // Power up delay (3mS per rail)
+    Wire.write(B00011011); // Power down seq.
+    Wire.write(B00000000); // Power down delay (6mS per rail)
     Wire.endTransmission();
-	
-	PWRUP_SET;
-	
-	//Enable all rails
+
+    PWRUP_SET;
+
+    // Enable all rails
     Wire.beginTransmission(0x48);
     Wire.write(0x01);
     Wire.write(B00111111);
     Wire.endTransmission();
-	pinsAsOutputs();
+    pinsAsOutputs();
     LE_CLEAR;
     OE_CLEAR;
     CL_CLEAR;
@@ -541,11 +541,11 @@ void Inkplate::einkOn()
     SPV_SET;
     CKV_CLEAR;
     OE_CLEAR;
-	VCOM_SET;
-	Wire.beginTransmission(0x48);
+    VCOM_SET;
+    Wire.beginTransmission(0x48);
     Wire.write(0x0D);
-	Wire.write(B10000000);
-	Wire.endTransmission();
+    Wire.write(B10000000);
+    Wire.endTransmission();
     delay(5);
 
     Wire.beginTransmission(0x48);
@@ -554,11 +554,12 @@ void Inkplate::einkOn()
 
     Wire.requestFrom(0x48, 1);
     setTemperature(Wire.read());
-	
-	pinModeMCP(7, INPUT_PULLUP);
-	while(!digitalReadMCP(7));
-	OE_SET;
-	setPanelState(1);
+
+    pinModeMCP(7, INPUT_PULLUP);
+    while (!digitalReadMCP(7))
+        ;
+    OE_SET;
+    setPanelState(1);
 }
 
 // LOW LEVEL FUNCTIONS
@@ -594,7 +595,7 @@ void Inkplate::hscan_start(uint32_t _d)
     GPIO.out_w1ts = (_d) | CL;
     GPIO.out_w1tc = DATA | CL;
     SPH_SET;
-	CKV_SET;
+    CKV_SET;
 }
 
 void Inkplate::vscan_end()
