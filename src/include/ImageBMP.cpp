@@ -109,7 +109,7 @@ bool Image::drawBitmapFromSd(SdFile *p, int x, int y, bool dither, bool invert)
 bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool invert)
 {
     bool ret = 0;
-    int32_t defaultLen = 800 * 600 * 4;
+    int32_t defaultLen = 800 * 600 * 4 + 150;
     uint8_t *buf = downloadFile(url, &defaultLen);
 
     ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
@@ -132,6 +132,7 @@ bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dit
 bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert)
 {
     bitmapHeader bmpHeader;
+
     readBmpHeader(buf, &bmpHeader);
 
     if (!legalBmp(&bmpHeader))
@@ -148,7 +149,6 @@ bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool i
         bufferPtr += ROWSIZE(bmpHeader.width, bmpHeader.color);
     }
 
-    free(buf);
     return 1;
 }
 
@@ -163,7 +163,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
         switch (c)
         {
         case 1:
-            writePixel(x + j, y, (invert ^ (palette[0] < palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
+            writePixel(x + j, y, (invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
             break;
         // as for 2 bit, literally cannot find an example online or in PS, so skipped
         case 4: {

@@ -1,17 +1,13 @@
 #include "Inkplate.h"
-#include "SdFat.h"
 
-const int n = 500;
-
-Inkplate display(INKPLATE_3BIT);
+Inkplate display(INKPLATE_1BIT);
 
 void setup()
 {
     Serial.begin(115200);
 
     display.begin();
-
-    display.joinAP("", "");
+    Serial.println(display.joinAP("e-radionica.com", "croduino"));
 
     delay(500);
 }
@@ -20,8 +16,7 @@ void loop()
 {
     display.clearDisplay();
 
-    display.sdCardInit();
-    display.drawPngFromSd("png.png", 0, 0, 1, 0);
+    Serial.println(display.drawBitmapFromWeb("http://img.cale.es/bmp/fasani/5e5ff140694ee", 0, 0, 1, 0));
 
     display.display();
     delay(5000);

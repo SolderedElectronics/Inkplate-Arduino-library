@@ -37,10 +37,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
         const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
     bool drawBitmapFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
 
-    [[deprecated("Use drawImage, as this will soon become a private method.")]] bool drawBitmapFromWeb(const char *url,
-                                                                                                       int x, int y,
-                                                                                                       bool dither = 0,
-                                                                                                       bool invert = 0);
+    bool drawBitmapFromWeb(const char *url, int x, int y, bool dither = 0, bool invert = 0);
     bool drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither = 0, bool invert = 0);
 
     bool drawJpegFromBuffer(uint8_t *buf, int32_t len, int x, int y, bool dither, bool invert);

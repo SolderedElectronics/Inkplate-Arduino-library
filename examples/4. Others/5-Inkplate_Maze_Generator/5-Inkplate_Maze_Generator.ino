@@ -26,8 +26,8 @@ void loop()
 // Display the maze
 void showMaze(const char *maze, int width, int height)
 {
-    for (int y = 0; y < height; y++)
-        for (int x = 0; x < width; x++)
+    for (int y = 0; y < height; ++y)
+        for (int x = 0; x < width; ++x)
             if (maze[x + y * width] == 1)
                 for (int i = 0; i < 4; ++i)
                 {
