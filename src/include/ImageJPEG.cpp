@@ -61,7 +61,8 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
 
     int32_t defaultLen = 800 * 600 * 4;
     uint8_t *buff = downloadFile(url, &defaultLen);
-    ret = drawJpegFromBuffer(buff, x, y, defaultLen, dither, invert);
+
+    ret = drawJpegFromBuffer(buff, defaultLen, x, y, dither, invert);
     free(buff);
 
     return ret;
@@ -71,7 +72,7 @@ bool Image::drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dithe
 {
     bool ret = 0;
     uint8_t *buff = downloadFile(s, len);
-    ret = drawJpegFromBuffer(buff, x, y, len, dither, invert);
+    ret = drawJpegFromBuffer(buff, len, x, y, dither, invert);
     free(buff);
 
     return ret;
@@ -88,7 +89,8 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
     TJpgDec.setJpgScale(1);
     TJpgDec.setCallback(drawJpegChunk);
 
-    if (TJpgDec.drawJpg(x, y, buff, len, dither, invert) == 0)
+    int err = TJpgDec.drawJpg(x, y, buff, len, dither, invert);
+    if (err == 0)
         ret = 1;
 
     return ret;

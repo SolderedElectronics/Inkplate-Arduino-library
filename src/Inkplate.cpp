@@ -505,7 +505,7 @@ void Inkplate::einkOff()
     delay(6);
     PWRUP_CLEAR;
     WAKEUP_CLEAR;
-    delay(50);
+    delay(100);
     pinsZstate();
     setPanelState(0);
 }
@@ -555,9 +555,12 @@ void Inkplate::einkOn()
     Wire.requestFrom(0x48, 1);
     setTemperature(Wire.read());
 
-    pinModeMCP(7, INPUT_PULLUP);
-    while (!digitalReadMCP(7))
-        ;
+    // pinModeMCP(7, INPUT_PULLUP);
+    // while (!digitalReadMCP(7))
+    //    ;
+
+    delay(100);
+
     OE_SET;
     setPanelState(1);
 }

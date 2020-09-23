@@ -6,18 +6,16 @@ void setup()
 {
     Serial.begin(115200);
 
+    pinMode(12, INPUT);
+    pinMode(13, INPUT);
     display.begin();
-    Serial.println(display.joinAP("", ""));
-
     delay(500);
 }
 
 void loop()
 {
-    display.clearDisplay();
-
-    Serial.println(display.drawBitmapFromWeb("http://img.cale.es/bmp/fasani/5e5ff140694ee", 0, 0, 1, 0));
-
-    display.display();
-    delay(5000);
+    Serial.println(analogRead(12));
+    Serial.println(analogRead(13));
+    Serial.println();
+    delay(1000);
 }

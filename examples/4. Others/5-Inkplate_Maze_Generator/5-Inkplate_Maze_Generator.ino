@@ -14,6 +14,10 @@ void setup()
 {
     Serial.begin(115200);
     display.begin();
+
+    pinMode(12, INPUT);
+    pinMode(13, INPUT);
+
     // Generate and display the maze
     generateMaze(maze, w, h);
     showMaze(maze, w, h);

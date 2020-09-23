@@ -5,13 +5,16 @@ bool NetworkClient::joinAP(const char *ssid, const char *pass)
     WiFi.mode(WIFI_MODE_STA);
     WiFi.begin(ssid, pass);
 
+    delay(3000);
+
     int cnt = 0;
     while (!isConnected())
     {
-        if (cnt > 15)
+        if (cnt > 20)
             return 0;
         delay(1000);
         ++cnt;
+        Serial.println(cnt);
     }
 
     return 1;
@@ -57,7 +60,7 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
         int32_t total = http.getSize();
         int32_t len = total;
 
-        uint8_t buff[128] = {0};
+        uint8_t buff[512] = {0};
 
         WiFiClient *stream = http.getStreamPtr();
         while (http.connected() && (len > 0 || len == -1))
@@ -73,7 +76,6 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
                     len -= c;
                 buffPtr += c;
             }
-            yield();
         }
     }
     http.end();
