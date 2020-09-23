@@ -3,6 +3,8 @@
 #include "Fonts/Roboto_Condensed_32.h"
 #include "Inkplate.h"
 
+// Not fully auto generated, tweaked a little for 1bit mode
+
 extern Inkplate display;
 
 int line0_start_x = 70;
