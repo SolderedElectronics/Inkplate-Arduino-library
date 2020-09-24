@@ -9,11 +9,11 @@
    To work with SD card on Inkplate, you will need to add one extra library.
    Download and install it from here: https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
 
-   You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
+   You can open .bmp, .jpeg or .png files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
    24 bit AND have resoluton smaller than 800x600 or otherwise it won't fit on screen.
    Format your SD card in standard FAT fileformat.
 
-   This example will show you how you can read .bmp files (pictures) from SD card and
+   This example will show you how you can read .bmp and .jpeg files (pictures) from SD card and
    display that image on e-paper display.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
