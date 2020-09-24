@@ -1,5 +1,5 @@
 /*
-   1_Inkplate_WiFi_HTTP example for e-radionica.com Inkplate 6
+   Inkplate_WiFi_HTTP example for e-radionica.com Inkplate 6
    For this example you will need USB cable, Inkplate 6 and stable WiFi Internet connection
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
@@ -22,8 +22,7 @@
 #define ssid "" // Name of the WiFi network (SSID) that you want to connect Inkplate to
 #define pass "" // Password of that WiFi network
 
-Inkplate display(
-    INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
 void setup()
 {

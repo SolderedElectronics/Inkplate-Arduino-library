@@ -1,5 +1,5 @@
 /*
-   2_Basic_gray example for e-radionica.com Inkplate 6
+   Basic_gray example for e-radionica.com Inkplate 6
    For this example you will need only USB cable and Inkplate 6
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
@@ -21,11 +21,11 @@
 #include "image.h"    //Include image file that holds gray image data. You can see it in next tab inside Arduino IDE.
 Inkplate display(INKPLATE_3BIT); // Create object on Inkplate library and set library to work in gray mode (3-bit)
                                  // Other option is BW mode, which is demonstrated in next example
-                                 // "2-Inkplate_basic_BW"
+                                 // "Inkplate_basic_BW"
 
 #define DELAY_MS                                                                                                       \
     5000 //Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not recommended \
-                      //Want to refresh faster? Use partial update! Find example in "3-Inkplate-basic_partial_update"
+                      //Want to refresh faster? Use partial update! Find example in "Inkplate-basic_partial_update"
 
 void setup()
 {

@@ -1,6 +1,18 @@
-/** Example "Game of Life" program for the InkPlate 6 by Chris Knight
- *  https://github.com/claud9999
- */
+/*
+   Game_Of_Life_by_claud9999 example for e-radionica Inkplate 6
+   For this example you will need only USB cable and Inkplate 6
+   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   Our first community created example, made by: https://github.com/claud9999
+   To run it, jut upload the code and watch Conways game of life animation!
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   24 September 2020 by e-radionica.com
+*/
+
 
 #include <Inkplate.h>
 

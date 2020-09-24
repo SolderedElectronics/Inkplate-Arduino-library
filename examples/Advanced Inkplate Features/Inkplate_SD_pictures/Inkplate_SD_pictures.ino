@@ -1,5 +1,5 @@
 /*
-   5_Inkplate_SD_BMP example for e-radionica Inkplate6
+   Inkplate_SD_BMP example for e-radionica Inkplate6
    For this example you will need a micro USB cable, Inkplate6 and a SD card loaded with
    image1.bmp and image2.bmp file that can be found inside folder of this example.
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.

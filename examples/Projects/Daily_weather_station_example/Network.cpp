@@ -1,9 +1,25 @@
+/*
+Network.cpp
+Inkplate 6 Arduino library
+David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
+September 24, 2020
+https://github.com/e-radionicacom/Inkplate-6-Arduino-library
+
+For support, please reach over forums: forum.e-radionica.com/en
+For more info about the product, please check: www.inkplate.io
+
+This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
+Please review the LICENSE file included with this example.
+If you have any questions about licensing, please contact techsupport@e-radionica.com
+Distributed as-is; no warranty is given.
+*/
+
 // Network.cpp contains various functions and classes that enable Weather station
 // They have been declared in seperate file to increase readability
 #include "Network.h"
 
-#include <WiFi.h>
 #include <HTTPClient.h>
+#include <WiFi.h>
 
 #include <ArduinoJson.h>
 
@@ -12,13 +28,7 @@ StaticJsonDocument<6000> doc;
 
 // Declared week days
 char weekDays[8][8] = {
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thr",
-    "Fri",
-    "Sat",
-    "Sun",
+    "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun",
 };
 
 void Network::begin(char *city)
@@ -61,7 +71,7 @@ void Network::getTime(char *timeStr)
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
 
-    //Copies time string into timeStr
+    // Copies time string into timeStr
     strncpy(timeStr, asctime(&timeinfo) + 11, 5);
 
     // Setting time string timezone
@@ -87,7 +97,9 @@ void formatWind(char *str, float wind)
     dtostrf(wind, 2, 0, str);
 }
 
-void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1, char *abbr2, char *abbr3, char *abbr4)
+void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp,
+                      char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1,
+                      char *abbr2, char *abbr3, char *abbr4)
 {
     // If not connected to wifi reconnect wifi
     if (WiFi.status() != WL_CONNECTED)

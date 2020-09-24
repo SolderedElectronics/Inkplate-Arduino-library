@@ -1,3 +1,21 @@
+/*
+   Spotify_api_example for e-radionica.com Inkplate 6
+   For this example you will need only USB cable and Inkplate 6.
+   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   This project shows you how Inkplate 6 can be used to display
+   your spotify real time activity.
+
+   To get this working, see https://inkplate.readthedocs.io/en/latest/examples.html#spotify-api
+   It is quite complicated, but were sure you'll get it working!
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   3 August 2020 by e-radionica.com
+*/
+
 #include "Inkplate.h"
 
 #include <ArduinoJson.h>

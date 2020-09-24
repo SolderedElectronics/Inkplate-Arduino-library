@@ -1,5 +1,5 @@
 /*
-   3_Inkplate_Battery_Voltage_And_Temperature example for e-radionica Inkplate 6
+   Inkplate_Battery_Voltage_And_Temperature example for e-radionica Inkplate 6
    For this example you will need USB cable, Inkplate 6 and a Lithium battery (3.6V) with two pin JST connector.
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:

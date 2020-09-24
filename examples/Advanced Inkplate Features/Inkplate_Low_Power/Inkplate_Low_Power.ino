@@ -1,5 +1,5 @@
 /*
-   2_Inkplate_Low_Power example for e-radionica.com Inkplate 6
+   Inkplate_Low_Power example for e-radionica.com Inkplate 6
    For this example you will need USB cable and Inkplate 6.
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:

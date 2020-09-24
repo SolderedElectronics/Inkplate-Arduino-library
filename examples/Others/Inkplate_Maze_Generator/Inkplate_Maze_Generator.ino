@@ -1,17 +1,38 @@
+/*
+   Inkplate_Maze_Generator sketch for e-radionica.com Inkplate 6
+   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   This example renders a random maze every time!
+   You can write on it with a whiteboard marker or a graphite pen to solve it.
+   Just be sure not to use pernament markers!
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   15 July 2020 by e-radionica.com
+*/
+
+
 #include "Inkplate.h"
 
+// Initialise Inkplate object
 Inkplate display(INKPLATE_1BIT);
 
+// Here we define one cell size
 const int cellSize = 10;
 
+// Calculate screen width and height
 const int w = 790 / cellSize, h = 590 / cellSize;
 char maze[w * h];
 
+// Move direction difference array
 int dx[] = {-1, 0, 0, 1};
 int dy[] = {0, -1, 1, 0};
 
 void setup()
 {
+    // Initialise Inkplate
     Serial.begin(115200);
     display.begin();
 

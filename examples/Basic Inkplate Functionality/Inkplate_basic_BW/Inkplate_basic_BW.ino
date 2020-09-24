@@ -1,5 +1,5 @@
 /*
-   1_Basic_monochorme example for e-radionica.com Inkplate 6
+   Basic_monochorme example for e-radionica.com Inkplate 6
    For this example you will need only USB cable and Inkplate 6.
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
@@ -16,7 +16,7 @@
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
 Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set library to work in monochorme mode
-// Other option is greyscale mode, which is demonstrated in next example "2-Inkplate_basic_greyscale"
+// Other option is gray mode, which is demonstrated in next example "Inkplate_basic_gray"
 
 #define DELAY_MS                                                                                                       \
     5000 // Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not
