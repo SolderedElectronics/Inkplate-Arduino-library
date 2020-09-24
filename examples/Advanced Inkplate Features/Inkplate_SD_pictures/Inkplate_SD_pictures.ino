@@ -71,6 +71,20 @@ void setup()
         display.drawBitmapFromSd(&file, 0, 0);
         display.display();
     }
+
+    display.clearDisplay();
+    delay(3000);
+
+    // Now draw a JPEG
+    if (!display.drawImage("pyramid.jpg", 100, 0, true, false))
+    {
+        // If is something failed (wrong filename or wrong format), write error message on the screen.
+        // You can turn off dithering for somewhat faster image load by changing the fifth parameter to false, or
+        // removing the parameter completely
+        display.println("Image open error");
+        display.display();
+    }
+    display.display();
 }
 
 void loop()

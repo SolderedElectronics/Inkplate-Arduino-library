@@ -99,6 +99,21 @@ void setup()
         display.display();
     }
 
+    display.clearDisplay();
+    delay(3000);
+
+    // Try to load image and display it on e-paper at position X=0, Y=100
+    // NOTE: Both drawJpegFromWeb methods allow for an optional fifth "invert" parameter. Setting this parameter to
+    // true will flip all colors on the image, making black white and white black. forth parameter will dither the
+    // image.
+    if (!display.drawImage("https://varipass.org/destination.jpg", 0, 100, true, false))
+    {
+        // If is something failed (wrong filename or format), write error message on the screen.
+        display.println("Image open error");
+        display.display();
+    }
+    display.display();
+
     http.end();
 
     WiFi.mode(WIFI_OFF);
