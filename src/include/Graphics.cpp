@@ -70,7 +70,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
     {
     case 1:
         _swap_int16_t(x0, y0);
-        x0 = width() - x0 - 1;
+        x0 = height() - x0 - 1;
         break;
     case 2:
         x0 = width() - x0 - 1;
