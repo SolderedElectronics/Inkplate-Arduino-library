@@ -46,6 +46,7 @@ class Inkplate : public System, public Graphics
 
     void einkOn();
     void einkOff();
+    uint8_t readPowerGood();
     void cleanFast(uint8_t c, uint8_t rep);
 
     bool joinAP(const char *ssid, const char *pass)
@@ -86,8 +87,6 @@ class Inkplate : public System, public Graphics
         0x95959595, 0x95949495, 0x94949495, 0x94949495, 0xA4949494, 0x9494A4A4, 0x84A49494, 0x84948484, 0x84848484,
         0x84848484, 0x84848484, 0xA5A48484, 0xA9A4A4A8, 0xA9A8A8A8, 0xA5A9A9A4, 0xA5A5A5A4, 0xA1A5A5A1, 0xA9A9A9A9,
         0xA9A9A9A9, 0xA9A9A9A9, 0xA9A9A9A9, 0x15151515, 0x11111111};
-
-    uint8_t gammaLUT[256];
 };
 
 #endif

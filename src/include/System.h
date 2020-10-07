@@ -21,6 +21,7 @@ Distributed as-is; no warranty is given.
 #include "Arduino.h"
 #include "SPI.h"
 
+#include "defines.h"
 #include "Esp.h"
 #include "Mcp.h"
 #include "NetworkClient.h"
@@ -34,7 +35,6 @@ class System : public Esp, public Mcp, virtual public NetworkClient
     void setSdCardOk(int16_t s);
     int16_t getSdCardOk();
 
-    void setTemperature(int8_t t);
     int8_t readTemperature();
 
     uint8_t readTouchpad(uint8_t _pad);
@@ -47,7 +47,6 @@ class System : public Esp, public Mcp, virtual public NetworkClient
 
   private:
     uint8_t _panelOn = 0;
-    int8_t _temperature;
     int16_t _sdCardOk = 0;
 };
 

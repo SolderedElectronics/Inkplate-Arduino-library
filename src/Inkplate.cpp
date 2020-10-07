@@ -79,33 +79,6 @@ Distributed as-is; no warranty is given.
     {                                                                                                                  \
         digitalWriteMCP(SPV, LOW);                                                                                     \
     }
-#define WAKEUP 3
-#define WAKEUP_SET                                                                                                     \
-    {                                                                                                                  \
-        digitalWriteMCP(WAKEUP, HIGH);                                                                                 \
-    }
-#define WAKEUP_CLEAR                                                                                                   \
-    {                                                                                                                  \
-        digitalWriteMCP(WAKEUP, LOW);                                                                                  \
-    }
-#define PWRUP 4
-#define PWRUP_SET                                                                                                      \
-    {                                                                                                                  \
-        digitalWriteMCP(PWRUP, HIGH);                                                                                  \
-    }
-#define PWRUP_CLEAR                                                                                                    \
-    {                                                                                                                  \
-        digitalWriteMCP(PWRUP, LOW);                                                                                   \
-    }
-#define VCOM 5
-#define VCOM_SET                                                                                                       \
-    {                                                                                                                  \
-        digitalWriteMCP(VCOM, HIGH);                                                                                   \
-    }
-#define VCOM_CLEAR                                                                                                     \
-    {                                                                                                                  \
-        digitalWriteMCP(VCOM, LOW);                                                                                    \
-    }
 
 #define GPIO0_ENABLE 8
 
@@ -125,6 +98,17 @@ void Inkplate::begin(void)
         return;
 
     Wire.begin();
+    WAKEUP_SET;
+    delay(1);
+    Wire.beginTransmission(0x48);
+    Wire.write(0x09);
+    Wire.write(B00011011); // Power up seq.
+    Wire.write(B00000000); // Power up delay (3mS per rail)
+    Wire.write(B00011011); // Power down seq.
+    Wire.write(B00000000); // Power down delay (6mS per rail)
+    Wire.endTransmission();
+    delay(1);
+    WAKEUP_CLEAR;
 
     mcpBegin(MCP23017_ADDR, mcpRegsInt);
     pinModeMCP(VCOM, OUTPUT);
@@ -176,18 +160,8 @@ void Inkplate::begin(void)
     memset(_partial, 0, 60000);
     memset(_pBuffer, 0, 120000);
     memset(D_memory4Bit, 255, 240000);
-
-    precalculateGamma(gammaLUT, 1);
-
+    
     _beginDone = 1;
-}
-
-void Inkplate::precalculateGamma(uint8_t *c, float gamma)
-{
-    for (int i = 0; i < 256; ++i)
-    {
-        c[i] = int(round((pow(i / 255.0, gamma)) * 15));
-    }
 }
 
 void Inkplate::clearDisplay()
@@ -215,13 +189,13 @@ void Inkplate::display1b()
     uint8_t dram;
     einkOn();
     cleanFast(0, 1);
-    cleanFast(1, 16);
+    cleanFast(1, 21);
     cleanFast(2, 1);
-    cleanFast(0, 11);
+    cleanFast(0, 12);
     cleanFast(2, 1);
-    cleanFast(1, 16);
+    cleanFast(1, 21);
     cleanFast(2, 1);
-    cleanFast(0, 11);
+    cleanFast(0, 12);
     for (int k = 0; k < 4; ++k)
     {
         uint8_t *DMemoryNewPtr = DMemoryNew + 59999;
@@ -320,13 +294,13 @@ void Inkplate::display3b()
 {
     einkOn();
     cleanFast(0, 1);
-    cleanFast(1, 16);
+    cleanFast(1, 21);
     cleanFast(2, 1);
-    cleanFast(0, 11);
+    cleanFast(0, 12);
     cleanFast(2, 1);
-    cleanFast(1, 16);
+    cleanFast(1, 21);
     cleanFast(2, 1);
-    cleanFast(0, 11);
+    cleanFast(0, 12);
 
     for (int k = 0; k < 8; ++k)
     {
@@ -521,7 +495,12 @@ void Inkplate::einkOff()
     delay(6);
     PWRUP_CLEAR;
     WAKEUP_CLEAR;
-    delay(100);
+    
+    unsigned long timer = millis();
+    do {
+        delay(1);
+    } while ((readPowerGood() != 0) && (millis() - timer) < 250);
+
     pinsZstate();
     setPanelState(0);
 }
@@ -533,14 +512,6 @@ void Inkplate::einkOn()
         return;
     WAKEUP_SET;
     delay(1);
-    Wire.beginTransmission(0x48);
-    Wire.write(0x09);
-    Wire.write(B00011011); // Power up seq.
-    Wire.write(B00000000); // Power up delay (3mS per rail)
-    Wire.write(B00011011); // Power down seq.
-    Wire.write(B00000000); // Power down delay (6mS per rail)
-    Wire.endTransmission();
-
     PWRUP_SET;
 
     // Enable all rails
@@ -558,27 +529,30 @@ void Inkplate::einkOn()
     CKV_CLEAR;
     OE_CLEAR;
     VCOM_SET;
-    Wire.beginTransmission(0x48);
-    Wire.write(0x0D);
-    Wire.write(B10000000);
-    Wire.endTransmission();
-    delay(5);
 
-    Wire.beginTransmission(0x48);
-    Wire.write(0x00);
-    Wire.endTransmission();
-
-    Wire.requestFrom(0x48, 1);
-    setTemperature(Wire.read());
-
-    // pinModeMCP(7, INPUT_PULLUP);
-    // while (!digitalReadMCP(7))
-    //    ;
-
-    delay(100);
+    unsigned long timer = millis();
+    do {
+        delay(1);
+    } while ((readPowerGood() != PWR_GOOD_OK) && (millis() - timer) < 250);
+	if ((millis() - timer) >= 250)
+    {
+        WAKEUP_CLEAR;
+		VCOM_CLEAR;
+		PWRUP_CLEAR;
+		return;
+    }
 
     OE_SET;
     setPanelState(1);
+}
+
+uint8_t Inkplate::readPowerGood() {
+    Wire.beginTransmission(0x48);
+    Wire.write(0x0F);
+    Wire.endTransmission();
+	
+    Wire.requestFrom(0x48, 1);
+    return Wire.read();
 }
 
 // LOW LEVEL FUNCTIONS

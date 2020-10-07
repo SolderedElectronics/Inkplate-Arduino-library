@@ -30,6 +30,36 @@ Distributed as-is; no warranty is given.
 #define PAD1          0
 #define PAD2          1
 #define PAD3          2
+#define PWR_GOOD_OK   0b11111010
+
+#define WAKEUP 3
+#define WAKEUP_SET                                                                                                     \
+    {                                                                                                                  \
+        digitalWriteMCP(WAKEUP, HIGH);                                                                                 \
+    }
+#define WAKEUP_CLEAR                                                                                                   \
+    {                                                                                                                  \
+        digitalWriteMCP(WAKEUP, LOW);                                                                                  \
+    }
+#define PWRUP 4
+#define PWRUP_SET                                                                                                      \
+    {                                                                                                                  \
+        digitalWriteMCP(PWRUP, HIGH);                                                                                  \
+    }
+#define PWRUP_CLEAR                                                                                                    \
+    {                                                                                                                  \
+        digitalWriteMCP(PWRUP, LOW);                                                                                   \
+    }
+#define VCOM 5
+#define VCOM_SET                                                                                                       \
+    {                                                                                                                  \
+        digitalWriteMCP(VCOM, HIGH);                                                                                   \
+    }
+#define VCOM_CLEAR                                                                                                     \
+    {                                                                                                                  \
+        digitalWriteMCP(VCOM, LOW);                                                                                    \
+    }
+
 
 #define RGB3BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 13)
 #define RGB8BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 8)

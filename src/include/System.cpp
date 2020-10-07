@@ -29,14 +29,34 @@ uint8_t System::getPanelState()
     return _panelOn;
 }
 
-void System::setTemperature(int8_t t)
-{
-    _temperature = t;
-}
-
 int8_t System::readTemperature()
 {
-    return _temperature;
+    int8_t temp;
+    if(getPanelState() == 0)
+    {
+        WAKEUP_SET;
+        PWRUP_SET;
+        delay(5);
+    }
+    Wire.beginTransmission(0x48);
+    Wire.write(0x0D);
+    Wire.write(B10000000);
+    Wire.endTransmission();
+    delay(5);
+
+    Wire.beginTransmission(0x48);
+    Wire.write(0x00);
+    Wire.endTransmission();
+
+    Wire.requestFrom(0x48, 1);
+    temp = Wire.read();
+    if(getPanelState() == 0)
+    {
+        PWRUP_CLEAR;
+        WAKEUP_CLEAR;
+        delay(5);
+    }
+    return temp;
 }
 
 uint8_t System::readTouchpad(uint8_t _pad)
