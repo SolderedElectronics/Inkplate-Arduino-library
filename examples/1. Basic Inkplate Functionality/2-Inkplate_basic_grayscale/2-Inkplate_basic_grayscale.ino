@@ -29,7 +29,7 @@ void setup() {
   display.clearDisplay(); //Clear any data that may have been in (software) frame buffer. 
                           //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside ESP32).
   display.clean();        //Clear everything that has previously been on a screen
-  display.setTextColor(0,7,); display.setCursor(150, 320); display.setTextSize(4); display.print("Welcome to Inkplate 6!"); display.display(); //Write hello message
+  display.setTextColor(0,7); display.setCursor(150, 320); display.setTextSize(4); display.print("Welcome to Inkplate 6!"); display.display(); //Write hello message
   delay(5000);            //Wait a little bit
 }
 
