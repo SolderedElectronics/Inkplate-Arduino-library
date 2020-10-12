@@ -32,7 +32,7 @@ uint8_t System::getPanelState()
 int8_t System::readTemperature()
 {
     int8_t temp;
-    if(getPanelState() == 0)
+    if (getPanelState() == 0)
     {
         WAKEUP_SET;
         PWRUP_SET;
@@ -50,7 +50,7 @@ int8_t System::readTemperature()
 
     Wire.requestFrom(0x48, 1);
     temp = Wire.read();
-    if(getPanelState() == 0)
+    if (getPanelState() == 0)
     {
         PWRUP_CLEAR;
         WAKEUP_CLEAR;

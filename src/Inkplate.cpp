@@ -160,7 +160,7 @@ void Inkplate::begin(void)
     memset(_partial, 0, 60000);
     memset(_pBuffer, 0, 120000);
     memset(D_memory4Bit, 255, 240000);
-    
+
     _beginDone = 1;
 }
 
@@ -495,9 +495,10 @@ void Inkplate::einkOff()
     delay(6);
     PWRUP_CLEAR;
     WAKEUP_CLEAR;
-    
+
     unsigned long timer = millis();
-    do {
+    do
+    {
         delay(1);
     } while ((readPowerGood() != 0) && (millis() - timer) < 250);
 
@@ -531,26 +532,28 @@ void Inkplate::einkOn()
     VCOM_SET;
 
     unsigned long timer = millis();
-    do {
+    do
+    {
         delay(1);
     } while ((readPowerGood() != PWR_GOOD_OK) && (millis() - timer) < 250);
-	if ((millis() - timer) >= 250)
+    if ((millis() - timer) >= 250)
     {
         WAKEUP_CLEAR;
-		VCOM_CLEAR;
-		PWRUP_CLEAR;
-		return;
+        VCOM_CLEAR;
+        PWRUP_CLEAR;
+        return;
     }
 
     OE_SET;
     setPanelState(1);
 }
 
-uint8_t Inkplate::readPowerGood() {
+uint8_t Inkplate::readPowerGood()
+{
     Wire.beginTransmission(0x48);
     Wire.write(0x0F);
     Wire.endTransmission();
-	
+
     Wire.requestFrom(0x48, 1);
     return Wire.read();
 }
