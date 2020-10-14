@@ -2,7 +2,7 @@
 
 ![](https://www.crowdsupply.com/img/040a/inkplate-6-angle-01_png_project-main.jpg)
 
-Arduino library for all-in-one e-paper display Inkplate 6 can be found in this repo. Inkplate 6 is a powerful, Wi-Fi enabled ESP32 based six-inch e-paper display – recycled from a Kindle e-reader. Its main feature is simplicity. Just plug in a USB cable, open Arduino IDE, and change the contents of the screen with few lines of code. Learn more about Inkplate 6 on [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6).
+Arduino library for all-in-one e-paper display Inkplate 6 can be found in this repo. Inkplate 6 is a powerful, Wi-Fi enabled ESP32 based six-inch e-paper display – recycled from a Kindle e-reader. Its main feature is simplicity. Just plug in a USB cable, open Arduino IDE, and change the contents of the screen with few lines of code. Learn more about Inkplate 6 on [official website](https://inkplate.io/). Inkplate was crowdfunded on [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6).
 
 ### Setting up Inkplate 6 in Arduino IDE
 
@@ -11,8 +11,7 @@ In order to get a head start with Inkplate 6, follow these steps:
 1. [Install Inkplate 6 board definition](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/) - add Inkplate 6 as a board into your Arduino IDE. Follow the instructions on the [link](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/).
 2. Install CH340 drivers (if you don't have them yet) - instructions [here](https://e-radionica.com/en/blog/ch340-driver-installation-croduino-basic3-nova2/)
 3. Install Inkplate 6 Arduino library - install the library from this repo into your Arduino IDE. If you don't know how, check our [tutorial](https://e-radionica.com/en/blog/arduino-library/#Kako%20instaliraty%20library?).
-4. Install [custom SdFat library](https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library) into your Arduino IDE.
-5. You are ready to get started! Select Tools -> Board -> Inkplate 6, as well as correct COM port and upload!
+4. You are ready to get started! Select Tools -> Board -> Inkplate 6, as well as correct COM port and upload!
 
 ### Code examples
 
@@ -54,11 +53,11 @@ There are many examples in the library that you demonstrate how to use any of th
 
    3.2. Screen Cleaning - clean the screen in case of image burn-in
 
-### Using Inkplate 6 with another microcontroller
+### Using Inkplate 6 with another microcontroller - Peripheral mode
 
-As promised in an [early update](https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates), Inkplate 6's screen contents can be updated using 3rd controller (such as Raspberry Pi or another microcontroller). The "Slave Mode" (unpopular name right now, we are aware and will change) enables this. All brand new Inkplates come pre-programmed with slave mode and can be used right away.
+As promised in an [early update](https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates), Inkplate 6's screen contents can be updated using 3rd controller (such as Raspberry Pi or another microcontroller). The Peripheral mode enables this. All brand new Inkplates come pre-programmed with slave mode and can be used right away.
 
-It is based on UART (serial) communication - connect the Inkplate to "master" board either via USB cable or directly via ESP32 RX and TX pins. Using standard UART at 115200 baud, you can send commands to change screen contents. For example, send \*#H(000,000,"/img.bmp")\*\* to show image img.bmp from SD card on the screen. Find very basic documentation for using it [here](https://github.com/e-radionicacom/Inkplate-6-Arduino-library/blob/master/examples/4.%20Others/1-Inkplate_Slave_Mode/Inkplate_slave_mode_documentation.txt).
+It is based on UART (serial) communication - connect the Inkplate to "Controller" ("Master", if using old terminology) board either via USB cable or directly via ESP32 RX and TX pins. Using standard UART at 115200 baud, you can send commands to change screen contents. For example, send \*#H(000,000,"/img.bmp")\*\* to show image img.bmp from SD card on the screen. Find very documentation for using it [here](https://inkplate.readthedocs.io/en/latest/slave-mode.html).
 
 ### Battery power
 
@@ -66,11 +65,11 @@ Inkplate 6 has two options for powering it. First one is obvious - USB port at s
 
 ### Micropython
 
-If you are looking for micropython support, it is still work in progress - we are new with it! :) When it's ready, we will let you know with new project update.
+If you are looking for micropython support, please find all details [here](https://github.com/e-radionicacom/Inkplate-6-micropython). 
 
 ### License
 
-This repo uses the source code from Adafruit libraries: [MCP23017](https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library), [Adafruit GFX](https://github.com/adafruit/Adafruit-GFX-Library).
+This repo uses the source code from another repositories. All their license files are located in "licences" folder. 
 
 ### Where to buy & other
 
@@ -80,6 +79,7 @@ Inkplate 6 is available for purchase via:
 - [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6)
 - [Mouser](https://hr.mouser.com/Search/Refine?Keyword=inkplate)
 - [Sparkfun](https://www.sparkfun.com/search/results?term=inkplate)
+- [Pimoroni](https://shop.pimoroni.com/products/inkplate-6)
 
 Inkplate 6 is open-source. If you are looking for hardware design of the board, check the [Hardware repo](https://github.com/e-radionicacom/Inkplate-6-hardware). You will find 3D printable [enclosure](https://github.com/e-radionicacom/Inkplate-6-hardware/tree/master/3D%20printable%20case) there, as well as [detailed dimensions](https://github.com/e-radionicacom/Inkplate-6-hardware/tree/master/Technical%20drawings). In this repo you will find code for driving the ED060SC7 e-paper display used by Inkplate.
 
