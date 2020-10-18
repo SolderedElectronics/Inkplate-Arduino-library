@@ -17,6 +17,7 @@ In order to get a head start with Inkplate 6, follow these steps:
 ### Code examples
 
 There are many examples in the library that you demonstrate how to use any of the Inkplate functionality.
+More are added daily, such as projects or community contributions, so here are just the basic ones.
 
 1. **Basic Inkplate Functionality**
 
@@ -38,27 +39,29 @@ There are many examples in the library that you demonstrate how to use any of th
 
    2.4. Touchpads - get readings from onboard touch pads
 
-   2.5. SD BMP Pictures - show .bmp images from the SD card on the screen
+   2.5. SD Pictures - show .bmp, .jpg and .png images from the SD card on the screen
 
-   2.6. Inkplate SD TXT File - read .txt file from the SD card and show it on the screen
+   2.6. Web Pictures - show .bmp, .jpg and .png images from the web
 
-   2.7. easyC - use easyC ecosystem (I2C) and read a sensor value
+   2.7. Inkplate SD TXT File - read .txt file from the SD card and show it on the screen
 
-   2.8. MCP23017 Expander - use onboard MCP23017 expander for your own external devices
+   2.8. easyC - use easyC ecosystem (I2C) and read a sensor value
 
-   2.9. Web Server - make Inkplate a web server
+   2.9. MCP23017 Expander - use onboard MCP23017 expander for your own external devices
+
+   2.10. Web Server - make Inkplate a web server
 
 3. **Others**
 
-   3.1. Slave Mode - mode that enables control of the screen from any external device using UART
+   3.1. Peripheral Mode - mode that enables control of the screen from any external device using UART
 
    3.2. Screen Cleaning - clean the screen in case of image burn-in
 
 ### Using Inkplate 6 with another microcontroller
 
-As promised in an [early update](https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates), Inkplate 6's screen contents can be updated using 3rd controller (such as Raspberry Pi or another microcontroller). The "Slave Mode" (unpopular name right now, we are aware and will change) enables this. All brand new Inkplates come pre-programmed with slave mode and can be used right away.
+As promised in an [early update](https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates), Inkplate 6's screen contents can be updated using 3rd controller (such as Raspberry Pi or another microcontroller). The "Peripheral Mode" (unpopular name right now, we are aware and will change) enables this. All brand new Inkplates come pre-programmed with peripheral mode and can be used right away.
 
-It is based on UART (serial) communication - connect the Inkplate to "master" board either via USB cable or directly via ESP32 RX and TX pins. Using standard UART at 115200 baud, you can send commands to change screen contents. For example, send \*#H(000,000,"/img.bmp")\*\* to show image img.bmp from SD card on the screen. Find very basic documentation for using it [here](https://github.com/e-radionicacom/Inkplate-6-Arduino-library/blob/master/examples/4.%20Others/1-Inkplate_Slave_Mode/Inkplate_slave_mode_documentation.txt).
+It is based on UART (serial) communication - connect the Inkplate to "master" board either via USB cable or directly via ESP32 RX and TX pins. Using standard UART at 115200 baud, you can send commands to change screen contents. For example, send \*#H(000,000,"/img.bmp")\*\* to show image img.bmp from SD card on the screen. Find documentation, see our readthedocs page here https://inkplate.readthedocs.io/en/latest/peripheral-mode.html.
 
 ### Battery power
 
@@ -66,7 +69,7 @@ Inkplate 6 has two options for powering it. First one is obvious - USB port at s
 
 ### Micropython
 
-If you are looking for micropython support, it is still work in progress - we are new with it! :) When it's ready, we will let you know with new project update.
+If you are looking for micropython support, see our docs showing how to set it up here: https://inkplate.readthedocs.io/en/latest/get-started.html#micropython
 
 ### License
 
