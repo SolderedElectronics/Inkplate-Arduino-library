@@ -1,1 +1,0 @@
-Please find documentation here: https://inkplate.readthedocs.io/en/latest/slave-mode.html

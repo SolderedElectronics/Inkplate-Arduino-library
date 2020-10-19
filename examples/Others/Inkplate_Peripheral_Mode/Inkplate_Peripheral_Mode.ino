@@ -1,5 +1,5 @@
 /*
-   Inkplate_Slave_Mode sketch for e-radionica.com Inkplate 6
+   Inkplate_Peripheral_Mode sketch for e-radionica.com Inkplate 6
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -11,9 +11,9 @@
    Because it uses UART, it's little bit slower and it's not recommended to send bunch of
    drawPixel command to draw some image. Instead, load bitmaps and pictures on SD card and load image from SD.
    If we missed some function, you can modify this and make yor own.
-   Also, every Inkplate comes with this slave mode right from the factory.
+   Also, every Inkplate comes with this peripheral mode right from the factory.
 
-   Learn more about Slave Mode in this update:
+   Learn more about Peripheral Mode in this update:
    https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates
 
    UART settings are: 115200 baud, standard parity, ending with "\n\r" (both)

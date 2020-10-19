@@ -16,6 +16,7 @@ In order to get a head start with Inkplate 6, follow these steps:
 ### Code examples
 
 There are many examples in the library that you demonstrate how to use any of the Inkplate functionality.
+More are added daily, such as projects or community contributions, so here are just the basic ones.
 
 1. **Basic Inkplate Functionality**
 
@@ -37,19 +38,21 @@ There are many examples in the library that you demonstrate how to use any of th
 
    2.4. Touchpads - get readings from onboard touch pads
 
-   2.5. SD BMP Pictures - show .bmp images from the SD card on the screen
+   2.5. SD Pictures - show .bmp, .jpg and .png images from the SD card on the screen
 
-   2.6. Inkplate SD TXT File - read .txt file from the SD card and show it on the screen
+   2.6. Web Pictures - show .bmp, .jpg and .png images from the web
 
-   2.7. easyC - use easyC ecosystem (I2C) and read a sensor value
+   2.7. Inkplate SD TXT File - read .txt file from the SD card and show it on the screen
 
-   2.8. MCP23017 Expander - use onboard MCP23017 expander for your own external devices
+   2.8. easyC - use easyC ecosystem (I2C) and read a sensor value
 
-   2.9. Web Server - make Inkplate a web server
+   2.9. MCP23017 Expander - use onboard MCP23017 expander for your own external devices
+
+   2.10. Web Server - make Inkplate a web server
 
 3. **Others**
 
-   3.1. Slave Mode - mode that enables control of the screen from any external device using UART
+   3.1. Peripheral Mode - mode that enables control of the screen from any external device using UART
 
    3.2. Screen Cleaning - clean the screen in case of image burn-in
 
