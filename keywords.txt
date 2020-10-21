@@ -1,0 +1,60 @@
+# Syntax Coloring Map For Arduino-SIM800L-driver
+
+# Datatypes (KEYWORD1)
+Inkplate		KEYWORD3
+
+# Methods and Functions (KEYWORD2)
+begin				KEYWORD2
+sdCardInit			KEYWORD2
+getSdFat			KEYWORD2
+getSPI				KEYWORD2
+getPanelState		KEYWORD2
+readTouchpad		KEYWORD2
+readTemperature		KEYWORD2
+readBattery			KEYWORD2
+einkOn				KEYWORD2
+einkOff				KEYWORD2
+drawPixel			KEYWORD2
+clearDisplay		KEYWORD2
+display				KEYWORD2
+partialUpdate		KEYWORD2
+setRotation			KEYWORD2
+selectDisplayMode	KEYWORD2
+getDisplayMode		KEYWORD2
+drawImage			KEYWORD2
+drawThickLine		KEYWORD2
+drawGradientLine	KEYWORD2
+clean				KEYWORD2
+drawFastVLine		KEYWORD2
+drawFastHLine		KEYWORD2
+fillRect			KEYWORD2
+fillScreen			KEYWORD2
+drawLine			KEYWORD2
+fillRect			KEYWORD2
+drawRect			KEYWORD2
+drawElipse			KEYWORD2
+fillElipse			KEYWORD2
+drawPolygon			KEYWORD2
+drawCircle			KEYWORD2
+fillCircle			KEYWORD2
+drawTriangle		KEYWORD2
+fillTriangle		KEYWORD2
+drawRoundRect		KEYWORD2
+fillRoundRect		KEYWORD2
+drawBitmap			KEYWORD2
+drawBitmap3bit		KEYWORD2
+setTextSize			KEYWORD2
+setFont				KEYWORD2
+setCursor			KEYWORD2
+print				KEYWORD2
+println				KEYWORD2
+setTextWarp			KEYWORD2
+width				KEYWORD2
+height				KEYWORD2
+getRotation			KEYWORD2
+getCursorX			KEYWORD2
+getCursorY			KEYWORD2
+
+# Instances (KEYWORD2)
+
+# Constants (LITERAL1)
