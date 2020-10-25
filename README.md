@@ -66,6 +66,14 @@ It is based on UART (serial) communication - connect the Inkplate to "Controller
 
 Inkplate 6 has two options for powering it. First one is obvious - USB port at side of the board. Just plug any micro USB cable and you are good to go. Second option is battery. Supported batteries are standard Li-Ion/Li-Poly batteries with 3.7V nominal voltage. Connector for the battery is standard 2.00mm pitch JST connector. The onboard charger will charge the battery with 500mA when USB is plugged at the same time. You can use battery of any size or capacity if you don't have a enclosure. If you are using our enclosure, battery size shouldn't exceed 90mm x 40mm (3.5 x 1.57 inch) and 5mm (0.19 inch) in height. [This battery](https://e-radionica.com/en/li-ion-baterija-1200mah.html) is good fit for the Inkplate.
 
+### Linux?
+Running Linux? You'll need to run few other lines from your Terminal:
+```
+apt install python3-pip
+pip3 install pyserial
+apt install python-is-python3
+```
+
 ### Micropython
 
 If you are looking for micropython support, please find all details [here](https://github.com/e-radionicacom/Inkplate-6-micropython). 
