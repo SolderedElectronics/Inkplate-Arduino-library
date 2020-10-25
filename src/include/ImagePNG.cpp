@@ -24,6 +24,8 @@ extern Image *_imagePtrPng;
 static bool _pngInvert = 0;
 static bool _pngDither = 0;
 static int16_t lastY = -1;
+static int16_t _pngX = 0;
+static int16_t _pngY = 0;
 
 void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint8_t rgba[4])
 {
@@ -39,7 +41,7 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
                     px = 7 - px;
                 if (_imagePtrPng->getDisplayMode() == INKPLATE_1BIT)
                     px = (~px >> 2) & 1;
-                _imagePtrPng->drawPixel(x + i, y + j, px);
+                _imagePtrPng->drawPixel(_pngX + x + i, _pngY + y + j, px);
             }
     if (lastY != y)
     {
@@ -71,6 +73,8 @@ bool Image::drawPngFromSd(SdFile *p, int x, int y, bool dither, bool invert)
         memset(ditherBuffer, 0, sizeof ditherBuffer);
 
     pngle_t *pngle = pngle_new();
+    _pngX = x;
+    _pngY = y;
     pngle_set_draw_callback(pngle, pngle_on_draw);
     uint32_t total = p->fileSize();
     uint8_t buff[2048];
@@ -110,6 +114,8 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
         memset(ditherBuffer, 0, sizeof ditherBuffer);
 
     pngle_t *pngle = pngle_new();
+    _pngX = x;
+    _pngY = y;
     pngle_set_draw_callback(pngle, pngle_on_draw);
 
     int32_t defaultLen = 800 * 600 * 4 + 100;
@@ -138,6 +144,8 @@ bool Image::drawPngFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither
         memset(ditherBuffer, 0, sizeof ditherBuffer);
 
     pngle_t *pngle = pngle_new();
+    _pngX = x;
+    _pngY = y;
     pngle_set_draw_callback(pngle, pngle_on_draw);
 
     uint8_t *buff = downloadFile(s, len);
