@@ -31,15 +31,18 @@
 // Change to your wifi ssid and password
 
 #include <OpenWeatherOneCall.h>
-#define HOMESSID "Monsterhouse"
-#define HOMEPW "8213VelikiGaber!"
+#define HOMESSID ""
+#define HOMEPW ""
 
 // Openweather set up information
-#define ONECALLKEY "1a37e6511710a0e6cc196a965412507f"
-// Velike Dole, Slovenia
-float myLatitude = 45.908894; //I got this from Wikipedia
-float myLongitude = 14.897647;
-char *city = "Velike Dole";
+#define ONECALLKEY ""
+
+// Your local coordinates
+
+float myLatitude = 0.00000; //I got this from Wikipedia
+float myLongitude = 0.00000;
+
+char *city = "My City";
 
 bool metric = true; //<------------------------------TRUE is METRIC, FALSE is IMPERIAL, BLANK is KELVIN
 
