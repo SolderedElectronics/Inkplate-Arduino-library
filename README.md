@@ -82,6 +82,14 @@ If you are looking for micropython support, please find all details [here](https
 
 This repo uses the source code from another repositories. All their license files are located in "licences" folder. 
 
+### Open-source
+
+All of Inkplate-related development is open-sourced:
+- [Arduino library](https://github.com/e-radionicacom/Inkplate-6-Arduino-library)
+- [Inkplate 6 hardware](https://github.com/e-radionicacom/Inkplate-6-hardware)
+- [micropython Inkplate](https://github.com/e-radionicacom/Inkplate-6-micropython)
+- [OSHWA certificate](https://certification.oshwa.org/hr000003.html)
+
 ### Where to buy & other
 
 Inkplate 6 is available for purchase via:
@@ -91,8 +99,6 @@ Inkplate 6 is available for purchase via:
 - [Mouser](https://hr.mouser.com/Search/Refine?Keyword=inkplate)
 - [Sparkfun](https://www.sparkfun.com/search/results?term=inkplate)
 - [Pimoroni](https://shop.pimoroni.com/products/inkplate-6)
-
-Inkplate 6 is open-source. If you are looking for hardware design of the board, check the [Hardware repo](https://github.com/e-radionicacom/Inkplate-6-hardware). You will find 3D printable [enclosure](https://github.com/e-radionicacom/Inkplate-6-hardware/tree/master/3D%20printable%20case) there, as well as [detailed dimensions](https://github.com/e-radionicacom/Inkplate-6-hardware/tree/master/Technical%20drawings). In this repo you will find code for driving the ED060SC7 e-paper display used by Inkplate.
 
 For all questions and issues, please use our [forum](http://forum.e-radionica.com/en) to ask an question.
 For sales & collaboration, please reach us via [e-mail](mailto:kontakt@e-radionica.com).
