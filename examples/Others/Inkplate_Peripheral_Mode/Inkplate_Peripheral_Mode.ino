@@ -66,7 +66,7 @@ void loop()
     {
         if ((e - s) > 0)
         {
-            int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n;
+            int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n, rx, ry, xc, yc;
             char b;
             char temp[150];
             switch (*(s + 1))
@@ -353,6 +353,54 @@ void loop()
                     Serial.println(")*");
                     Serial.flush();
                 }
+                break;
+            case 'S':
+                sscanf(s + 3, "%d,%d,\"%149[^\"]\"", &x, &y, strTemp);
+                n = strlen(strTemp);
+                for (int i = 0; i < n; i++)
+                {
+                    strTemp[i] = toupper(strTemp[i]);
+                }
+                for (int i = 0; i < n; i += 2)
+                {
+                    strTemp[i / 2] = (hexToChar(strTemp[i]) << 4) | (hexToChar(strTemp[i + 1]) & 0x0F);
+                }
+                strTemp[n / 2] = 0;
+                r = display.sdCardInit();
+                if (r)
+                {
+                    r = display.drawImage(strTemp, x, y);
+                    Serial.print("#H(");
+                    Serial.print(r, DEC);
+                    Serial.println(")*");
+                    Serial.flush();
+                    // sprintf(temp, "display.drawBitmap(%d, %d, %s)\n", x, y, strTemp);
+                    // Serial.print(temp);
+                }
+                else
+                {
+                    Serial.println("#H(-1)*");
+                    Serial.flush();
+                }
+                break;
+            case 'T':
+                int t;
+                sscanf(s + 3, "%d,%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &c, &t);
+                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
+                // Serial.print(temp);
+                display.drawThickLine(x1, y1, x2, y2, c, t);
+                break;
+            case 'U':
+                sscanf(s + 3, "%d,%d,%d,%d,%d", &rx, &ry, &xc, &yc, &c);
+                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
+                // Serial.print(temp);
+                display.drawElipse(rx, ry, xc, yc, c);
+                break;
+            case 'V':
+                sscanf(s + 3, "%d,%d,%d,%d,%d", &rx, &ry, &xc, &yc, &c);
+                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
+                // Serial.print(temp);
+                display.fillElipse(rx, ry, xc, yc, c);
                 break;
             }
             *s = 0;
