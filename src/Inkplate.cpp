@@ -148,8 +148,10 @@ void Inkplate::begin(void)
     _partial = (uint8_t *)ps_malloc(600 * 100);
     _pBuffer = (uint8_t *)ps_malloc(120000);
     D_memory4Bit = (uint8_t *)ps_malloc(240000);
+    GLUT = (uint32_t *)malloc(256 * 8 * sizeof(uint32_t));
+    GLUT2 = (uint32_t *)malloc(256 * 8 * sizeof(uint32_t));
 
-    if (DMemoryNew == NULL || _partial == NULL || _pBuffer == NULL || D_memory4Bit == NULL)
+    if (DMemoryNew == NULL || _partial == NULL || _pBuffer == NULL || D_memory4Bit == NULL || GLUT == NULL || GLUT2 == NULL)
     {
         do
         {
@@ -160,6 +162,19 @@ void Inkplate::begin(void)
     memset(_partial, 0, 60000);
     memset(_pBuffer, 0, 120000);
     memset(D_memory4Bit, 255, 240000);
+    
+    for (int i = 0; i < 8; ++i)
+    {
+        for (uint32_t j = 0; j < 256; ++j)
+        {
+            uint8_t z = (waveform3Bit[j & 0x07][i] << 2) | (waveform3Bit[(j >> 4) & 0x07][i]);
+            GLUT[i * 256 + j] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) | (((z & B00010000) >> 4) << 23) |
+                            (((z & B11100000) >> 5) << 25);
+            z = ((waveform3Bit[j & 0x07][i] << 2) | (waveform3Bit[(j >> 4) & 0x07][i])) << 4;
+            GLUT2[i * 256 + j] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) | (((z & B00010000) >> 4) << 23) |
+                            (((z & B11100000) >> 5) << 25);
+        }
+    }
 
     _beginDone = 1;
 }
@@ -301,60 +316,25 @@ void Inkplate::display3b()
     cleanFast(1, 21);
     cleanFast(2, 1);
     cleanFast(0, 12);
-
     for (int k = 0; k < 8; ++k)
     {
-        uint8_t *dp = D_memory4Bit + 239999;
-        uint32_t _send;
-        uint8_t pix1;
-        uint8_t pix2;
-        uint8_t pix3;
-        uint8_t pix4;
-        uint8_t pixel;
-        uint8_t pixel2;
+        uint8_t *dp = D_memory4Bit + 240000;
 
         vscan_start();
         for (int i = 0; i < 600; ++i)
         {
-            pixel = 0;
-            pixel2 = 0;
-            pix1 = *(dp--);
-            pix2 = *(dp--);
-            pix3 = *(dp--);
-            pix4 = *(dp--);
-            pixel |= (waveform3Bit[pix1 & 0x07][k] << 6) | (waveform3Bit[(pix1 >> 4) & 0x07][k] << 4) |
-                     (waveform3Bit[pix2 & 0x07][k] << 2) | (waveform3Bit[(pix2 >> 4) & 0x07][k] << 0);
-            pixel2 |= (waveform3Bit[pix3 & 0x07][k] << 6) | (waveform3Bit[(pix3 >> 4) & 0x07][k] << 4) |
-                      (waveform3Bit[pix4 & 0x07][k] << 2) | (waveform3Bit[(pix4 >> 4) & 0x07][k] << 0);
-
-            _send = pinLUT[pixel];
-            hscan_start(_send);
-            _send = pinLUT[pixel2];
-            GPIO.out_w1ts = (_send) | CL;
+            hscan_start((GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]));
+            GPIO.out_w1ts = (GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]) | CL;
             GPIO.out_w1tc = DATA | CL;
 
             for (int j = 0; j < 99; ++j)
             {
-                pixel = 0;
-                pixel2 = 0;
-                pix1 = *(dp--);
-                pix2 = *(dp--);
-                pix3 = *(dp--);
-                pix4 = *(dp--);
-                pixel |= (waveform3Bit[pix1 & 0x07][k] << 6) | (waveform3Bit[(pix1 >> 4) & 0x07][k] << 4) |
-                         (waveform3Bit[pix2 & 0x07][k] << 2) | (waveform3Bit[(pix2 >> 4) & 0x07][k] << 0);
-                pixel2 |= (waveform3Bit[pix3 & 0x07][k] << 6) | (waveform3Bit[(pix3 >> 4) & 0x07][k] << 4) |
-                          (waveform3Bit[pix4 & 0x07][k] << 2) | (waveform3Bit[(pix4 >> 4) & 0x07][k] << 0);
-
-                _send = pinLUT[pixel];
-                GPIO.out_w1ts = (_send) | CL;
+                GPIO.out_w1ts = (GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]) | CL;
                 GPIO.out_w1tc = DATA | CL;
-
-                _send = pinLUT[pixel2];
-                GPIO.out_w1ts = (_send) | CL;
+                GPIO.out_w1ts = (GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]) | CL;
                 GPIO.out_w1tc = DATA | CL;
             }
-            GPIO.out_w1ts = (_send) | CL;
+            GPIO.out_w1ts = CL;
             GPIO.out_w1tc = DATA | CL;
             vscan_end();
         }
@@ -463,16 +443,16 @@ void Inkplate::cleanFast(uint8_t c, uint8_t rep)
         {
             hscan_start(_send);
             GPIO.out_w1ts = (_send) | CL;
-            GPIO.out_w1tc = DATA | CL;
+            GPIO.out_w1tc = CL;
             for (int j = 0; j < 99; ++j)
             {
-                GPIO.out_w1ts = (_send) | CL;
-                GPIO.out_w1tc = DATA | CL;
-                GPIO.out_w1ts = (_send) | CL;
-                GPIO.out_w1tc = DATA | CL;
+                GPIO.out_w1ts = CL;
+                GPIO.out_w1tc = CL;
+                GPIO.out_w1ts = CL;
+                GPIO.out_w1tc = CL;
             }
-            GPIO.out_w1ts = (_send) | CL;
-            GPIO.out_w1tc = DATA | CL;
+            GPIO.out_w1ts = CL;
+            GPIO.out_w1tc = CL;
             vscan_end();
         }
         delayMicroseconds(230);

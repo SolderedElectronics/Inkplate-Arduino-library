@@ -66,10 +66,10 @@ uint8_t System::readTouchpad(uint8_t _pad)
 
 double System::readBattery()
 {
-    digitalWriteMCP(9, HIGH);
+    digitalWriteMCP(9, LOW);
     delay(1);
     int adc = analogRead(35);
-    digitalWriteMCP(9, LOW);
+    digitalWriteMCP(9, HIGH);
     return (double(adc) / 4095 * 3.3 * 2);
 }
 
