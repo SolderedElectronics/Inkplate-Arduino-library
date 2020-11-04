@@ -41,7 +41,8 @@ class Inkplate : public System, public Graphics
 
     void clearDisplay();
     void display();
-    void partialUpdate();
+    void preloadScreen();
+    void partialUpdate(bool _foced = false);
     void clean();
 
     void einkOn();

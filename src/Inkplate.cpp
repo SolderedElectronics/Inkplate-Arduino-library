@@ -203,6 +203,7 @@ void Inkplate::display1b()
     uint8_t data;
     uint8_t dram;
     einkOn();
+    
     cleanFast(0, 1);
     cleanFast(1, 21);
     cleanFast(2, 1);
@@ -211,6 +212,7 @@ void Inkplate::display1b()
     cleanFast(1, 21);
     cleanFast(2, 1);
     cleanFast(0, 12);
+    
     for (int k = 0; k < 4; ++k)
     {
         uint8_t *DMemoryNewPtr = DMemoryNew + 59999;
@@ -345,11 +347,16 @@ void Inkplate::display3b()
     einkOff();
 }
 
-void Inkplate::partialUpdate()
+void Inkplate::preloadScreen()
+{
+    memcpy(DMemoryNew, _partial, 60000);
+}
+
+void Inkplate::partialUpdate(bool _forced)
 {
     if (getDisplayMode() == 1)
         return;
-    if (_blockPartial == 1)
+    if (_blockPartial == 1 && !_forced)
         display1b();
 
     uint16_t _pos = 59999;
