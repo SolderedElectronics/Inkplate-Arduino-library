@@ -98,6 +98,7 @@ void Inkplate::begin(void)
         return;
 
     Wire.begin();
+    memset(mcpRegsInt, 0, 22);
     mcpBegin(MCP23017_ADDR, mcpRegsInt);
     pinModeMCP(VCOM, OUTPUT);
     pinModeMCP(PWRUP, OUTPUT);
