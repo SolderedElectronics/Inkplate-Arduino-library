@@ -98,6 +98,13 @@ void Inkplate::begin(void)
         return;
 
     Wire.begin();
+    mcpBegin(MCP23017_ADDR, mcpRegsInt);
+    pinModeMCP(VCOM, OUTPUT);
+    pinModeMCP(PWRUP, OUTPUT);
+    pinModeMCP(WAKEUP, OUTPUT);
+    pinModeMCP(GPIO0_ENABLE, OUTPUT);
+    digitalWriteMCP(GPIO0_ENABLE, HIGH);
+    
     WAKEUP_SET;
     delay(1);
     Wire.beginTransmission(0x48);
@@ -109,13 +116,6 @@ void Inkplate::begin(void)
     Wire.endTransmission();
     delay(1);
     WAKEUP_CLEAR;
-
-    mcpBegin(MCP23017_ADDR, mcpRegsInt);
-    pinModeMCP(VCOM, OUTPUT);
-    pinModeMCP(PWRUP, OUTPUT);
-    pinModeMCP(WAKEUP, OUTPUT);
-    pinModeMCP(GPIO0_ENABLE, OUTPUT);
-    digitalWriteMCP(GPIO0_ENABLE, HIGH);
 
     // CONTROL PINS
     pinMode(0, OUTPUT);
