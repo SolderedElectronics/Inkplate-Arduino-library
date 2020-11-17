@@ -152,9 +152,9 @@ void Mcp::setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, ui
     mirroring &= 1;
     openDrain &= 1;
     polarity &= 1;
-    mcpRegsInt[MCP23017_IOCONA + intPort] = (mcpRegsInt[MCP23017_IOCONA + intPort] & ~(1 << 6)) | (1 << mirroring);
-    mcpRegsInt[MCP23017_IOCONA + intPort] = (mcpRegsInt[MCP23017_IOCONA + intPort] & ~(1 << 6)) | (1 << openDrain);
-    mcpRegsInt[MCP23017_IOCONA + intPort] = (mcpRegsInt[MCP23017_IOCONA + intPort] & ~(1 << 6)) | (1 << polarity);
+    mcpRegsInt[MCP23017_IOCONA + intPort] = (mcpRegsInt[MCP23017_IOCONA + intPort] & ~(1 << 6)) | (mirroring << 6);
+    mcpRegsInt[MCP23017_IOCONA + intPort] = (mcpRegsInt[MCP23017_IOCONA + intPort] & ~(1 << 2)) | (openDrain << 2);
+    mcpRegsInt[MCP23017_IOCONA + intPort] = (mcpRegsInt[MCP23017_IOCONA + intPort] & ~(1 << 1)) | (polarity << 1);
     updateRegister(MCP23017_ADDR, MCP23017_IOCONA + intPort, mcpRegsInt[MCP23017_IOCONA + intPort]);
 }
 
