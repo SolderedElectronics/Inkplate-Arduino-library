@@ -14,6 +14,9 @@ If you have any questions about licensing, please contact techsupport@e-radionic
 Distributed as-is; no warranty is given.
 */
 
+// Uncomment for American output
+// #define AMERICAN
+
 // Network.cpp contains various functions and classes that enable Weather station
 // They have been declared in seperate file to increase readability
 #include "Network.h"
@@ -83,12 +86,22 @@ void Network::getTime(char *timeStr)
 
 void formatTemp(char *str, float temp)
 {
+    // Converting to Fahrenheit
+#ifdef AMERICAN
+    temp = (temp * 9.0 / 5.0 + 32.0);
+#endif
+
     // Built in function for float to char* conversion
     dtostrf(temp, 2, 0, str);
 }
 
 void formatWind(char *str, float wind)
 {
+    // Converting to MPH
+#ifdef AMERICAN
+    wind = wind * 2.237;
+#endif
+
     // Built in function for float to char* conversion
     dtostrf(wind, 2, 0, str);
 }
@@ -135,7 +148,7 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
 
     // Add woeid to api call
     char url[256];
-    sprintf(url, "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s", lon, lat, apiKey);
+    sprintf(url, "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s", lat, lon, apiKey);
 
     // Initiate http
     http.begin(url);

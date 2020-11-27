@@ -33,6 +33,9 @@ char *lat = "18.5947808";
 char *ssid = "";
 char *pass = "";
 
+// Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
+// #define AMERICAN
+
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
 char *apiKey = "";
@@ -325,7 +328,12 @@ void drawCurrent()
     display.setTextSize(1);
 
     display.setCursor(x, y);
+
+#ifdef AMERICAN
+    display.println(F("F"));
+#else
     display.println(F("C"));
+#endif
 
     // Wind:
     display.setFont(&Roboto_Light_120);
@@ -342,7 +350,12 @@ void drawCurrent()
     display.setTextSize(1);
 
     display.setCursor(x, y);
+
+#ifdef AMERICAN
+    display.println(F("mph"));
+#else
     display.println(F("m/s"));
+#endif
 
     // Labels underneath
     display.setFont(&Roboto_Light_36);
