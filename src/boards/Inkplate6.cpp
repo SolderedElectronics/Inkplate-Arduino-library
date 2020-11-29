@@ -1,4 +1,5 @@
 #include "../Inkplate.h"
+#include "../include/Graphics.h"
 #include "../include/defines.h"
 
 #ifdef ARDUINO_ESP32_DEV
@@ -90,6 +91,47 @@ void Inkplate::begin(void)
 
     _beginDone = 1;
 }
+
+void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
+{
+    if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
+        return;
+
+    switch (rotation)
+    {
+    case 1:
+        _swap_int16_t(x0, y0);
+        x0 = height() - x0 - 1;
+        break;
+    case 2:
+        x0 = width() - x0 - 1;
+        y0 = height() - y0 - 1;
+        break;
+    case 3:
+        _swap_int16_t(x0, y0);
+        y0 = width() - y0 - 1;
+        break;
+    }
+
+    if (getDisplayMode() == 0)
+    {
+        int x = x0 >> 3;
+        int x_sub = x0 & 7;
+        uint8_t temp = *(_partial + 100 * y0 + x);
+        *(_partial + 100 * y0 + x) = (~pixelMaskLUT[x_sub] & temp) | (color ? pixelMaskLUT[x_sub] : 0);
+    }
+    else
+    {
+        color &= 7;
+        int x = x0 >> 1;
+        int x_sub = x0 & 1;
+        uint8_t temp;
+        temp = *(DMemory4Bit + 400 * y0 + x);
+        *(DMemory4Bit + 400 * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
+    }
+}
+
+
 void Inkplate::display1b()
 {
     memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);

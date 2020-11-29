@@ -34,7 +34,7 @@ void setup()
 
     display.begin();
 
-    display.joinAP("TP-Link_66E5", "35503394");
+    display.joinAP("", "");
 
     Serial.println();
     delay(500);

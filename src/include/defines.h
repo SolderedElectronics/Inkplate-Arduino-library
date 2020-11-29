@@ -63,6 +63,14 @@ Distributed as-is; no warranty is given.
         digitalWriteMCP(VCOM, LOW);                                                                                    \
     }
 
+#ifndef _swap_int16_t
+#define _swap_int16_t(a, b)                                                                                            \
+    {                                                                                                                  \
+        int16_t t = a;                                                                                                 \
+        a = b;                                                                                                         \
+        b = t;                                                                                                         \
+    }
+#endif
 
 #define RGB3BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 13)
 #define RGB8BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 8)
