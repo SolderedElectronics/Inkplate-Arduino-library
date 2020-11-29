@@ -19,10 +19,6 @@ Distributed as-is; no warranty is given.
 
 #include "Arduino.h"
 
-#ifndef ARDUINO_ESP32_DEV
-#error "Wrong board selected! Select ESP32 Wrover from board menu!"
-#endif
-
 #include "SPI.h"
 #include "include/Graphics.h"
 #include "include/System.h"
@@ -37,13 +33,11 @@ class Inkplate : public System, public Graphics
 {
   public:
     Inkplate(uint8_t _mode);
-    void begin(void);
-
+    void begin(void); // In boards
     void clearDisplay();
     void display();
     void partialUpdate();
     void clean();
-
     void einkOn();
     void einkOff();
     uint8_t readPowerGood();
@@ -74,6 +68,8 @@ class Inkplate : public System, public Graphics
     void pinsAsOutputs();
 
     uint32_t pinLUT[256];
+    uint32_t *GLUT;
+    uint32_t *GLUT2;
 
     uint8_t _beginDone = 0;
 

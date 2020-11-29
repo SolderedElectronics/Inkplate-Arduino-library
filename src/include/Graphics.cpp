@@ -95,8 +95,8 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         int x = x0 >> 1;
         int x_sub = x0 & 1;
         uint8_t temp;
-        temp = *(D_memory4Bit + 400 * y0 + x);
-        *(D_memory4Bit + 400 * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
+        temp = *(DMemory4Bit + 400 * y0 + x);
+        *(DMemory4Bit + 400 * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
     }
 }
 
@@ -178,7 +178,7 @@ void Graphics::selectDisplayMode(uint8_t _mode)
         memset(DMemoryNew, 0, 60000);
         memset(_partial, 0, 60000);
         memset(_pBuffer, 0, 120000);
-        memset(D_memory4Bit, 255, 240000);
+        memset(DMemory4Bit, 255, 240000);
         _blockPartial = 1;
     }
 }

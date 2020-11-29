@@ -17,10 +17,7 @@ Distributed as-is; no warranty is given.
 #include "Image.h"
 
 #include "../libs/TJpeg/TJpg_Decoder.h"
-
-#define RED(a)   ((((a)&0xf800) >> 11) << 3)
-#define GREEN(a) ((((a)&0x07e0) >> 5) << 2)
-#define BLUE(a)  (((a)&0x001f) << 3)
+#include "defines.h"
 
 extern Image *_imagePtrJpeg;
 
@@ -75,7 +72,7 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
 {
     bool ret = 0;
 
-    int32_t defaultLen = 800 * 600 * 4;
+    int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4;
     uint8_t *buff = downloadFile(url, &defaultLen);
 
     ret = drawJpegFromBuffer(buff, defaultLen, x, y, dither, invert);
@@ -119,7 +116,7 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
 
     if (dither && y != _imagePtrJpeg->lastY)
     {
-        _imagePtrJpeg->ditherSwap(800);
+        _imagePtrJpeg->ditherSwap(E_INK_WIDTH);
         _imagePtrJpeg->lastY = y;
     }
 

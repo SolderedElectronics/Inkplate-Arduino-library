@@ -118,7 +118,7 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
     _pngY = y;
     pngle_set_draw_callback(pngle, pngle_on_draw);
 
-    int32_t defaultLen = 800 * 600 * 4 + 100;
+    int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 100;
     uint8_t *buff = downloadFile(url, &defaultLen);
 
     if (!buff)

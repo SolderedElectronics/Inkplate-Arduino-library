@@ -1,0 +1,2 @@
+#define E_INK_WIDTH  800
+#define E_INK_HEIGHT 600
