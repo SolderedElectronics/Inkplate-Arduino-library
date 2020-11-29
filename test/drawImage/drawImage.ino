@@ -91,128 +91,126 @@ void loop()
     delay(5000);
 
 
-    if (!display.sdCardInit())
-    {
-        display.println("Sd card error!");
-        delay(1000);
-        return;
-    }
+    // if (!display.sdCardInit())
+    // {
+    //     display.println("Sd card error!");
+    //     delay(1000);
+    // }
 
     for (int i = 0; i < 4; ++i)
     {
         bool dither = i & 1;
         bool invert = i >> 1;
 
-        for (int i = 0; i < 4; ++i)
-        {
-            bool dither = i & 1;
-            bool invert = i >> 1;
+        // for (int i = 0; i < 4; ++i)
+        // {
+        //     bool dither = i & 1;
+        //     bool invert = i >> 1;
 
-            display.selectDisplayMode(INKPLATE_1BIT);
-            display.setTextSize(2);
-            display.setTextColor(1);
-            display.setCursor(100, 100);
-            display.print("Displaying Lenna.jpg 1bit");
-            if (!dither)
-                display.print(" non");
-            display.print(" dithered and");
-            if (!invert)
-                display.print(" non");
-            display.print(" inverted.");
+        //     display.selectDisplayMode(INKPLATE_1BIT);
+        //     display.setTextSize(2);
+        //     display.setTextColor(1);
+        //     display.setCursor(100, 100);
+        //     display.print("Displaying Lenna.jpg 1bit");
+        //     if (!dither)
+        //         display.print(" non");
+        //     display.print(" dithered and");
+        //     if (!invert)
+        //         display.print(" non");
+        //     display.print(" inverted.");
 
-            display.display();
-            display.clearDisplay();
-            delay(5000);
+        //     display.display();
+        //     display.clearDisplay();
+        //     delay(5000);
 
-            display.drawImage("Lenna.jpg", 0, 0, dither, invert);
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-        }
+        //     display.drawImage("Lenna.jpg", 0, 0, dither, invert);
+        //     display.display();
+        //     display.clearDisplay();
+        //     delay(5000);
+        // }
 
-        for (int i = 0; i < 4; ++i)
-        {
-            bool dither = i & 1;
-            bool invert = i >> 1;
+        // for (int i = 0; i < 4; ++i)
+        // {
+        //     bool dither = i & 1;
+        //     bool invert = i >> 1;
 
-            display.selectDisplayMode(INKPLATE_3BIT);
-            display.setTextSize(2);
-            display.setTextColor(1);
-            display.setCursor(100, 100);
-            display.print("Displaying Lenna.jpg 3bit");
-            if (!dither)
-                display.print(" non");
-            display.print(" dithered and");
-            if (!invert)
-                display.print(" non");
-            display.print(" inverted.");
+        //     display.selectDisplayMode(INKPLATE_3BIT);
+        //     display.setTextSize(2);
+        //     display.setTextColor(1);
+        //     display.setCursor(100, 100);
+        //     display.print("Displaying Lenna.jpg 3bit");
+        //     if (!dither)
+        //         display.print(" non");
+        //     display.print(" dithered and");
+        //     if (!invert)
+        //         display.print(" non");
+        //     display.print(" inverted.");
 
-            display.display();
-            display.clearDisplay();
-            delay(5000);
+        //     display.display();
+        //     display.clearDisplay();
+        //     delay(5000);
 
-            display.drawImage("Lenna.jpg", 0, 0, dither, invert);
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-        }
+        //     display.drawImage("Lenna.jpg", 0, 0, dither, invert);
+        //     display.display();
+        //     display.clearDisplay();
+        //     delay(5000);
+        // }
 
-        for (int i = 0; i < 4; ++i)
-        {
-            bool dither = i & 1;
-            bool invert = i >> 1;
+        // for (int i = 0; i < 4; ++i)
+        // {
+        //     bool dither = i & 1;
+        //     bool invert = i >> 1;
 
-            display.selectDisplayMode(INKPLATE_1BIT);
-            display.setTextSize(2);
-            display.setTextColor(1);
-            display.setCursor(100, 100);
-            display.print("Displaying png.png 1bit");
-            if (!dither)
-                display.print(" non");
-            display.print(" dithered and");
-            if (!invert)
-                display.print(" non");
-            display.print(" inverted.");
+        //     display.selectDisplayMode(INKPLATE_1BIT);
+        //     display.setTextSize(2);
+        //     display.setTextColor(1);
+        //     display.setCursor(100, 100);
+        //     display.print("Displaying png.png 1bit");
+        //     if (!dither)
+        //         display.print(" non");
+        //     display.print(" dithered and");
+        //     if (!invert)
+        //         display.print(" non");
+        //     display.print(" inverted.");
 
-            display.display();
-            display.clearDisplay();
-            delay(5000);
+        //     display.display();
+        //     display.clearDisplay();
+        //     delay(5000);
 
-            display.drawImage("png.png", 0, 0, dither, invert);
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-        }
+        //     display.drawImage("png.png", 0, 0, dither, invert);
+        //     display.display();
+        //     display.clearDisplay();
+        //     delay(5000);
+        // }
 
-        for (int i = 0; i < 4; ++i)
-        {
-            bool dither = i & 1;
-            bool invert = i >> 1;
+        // for (int i = 0; i < 4; ++i)
+        // {
+        //     bool dither = i & 1;
+        //     bool invert = i >> 1;
 
-            display.selectDisplayMode(INKPLATE_3BIT);
-            display.setTextSize(2);
-            display.setTextColor(1);
-            display.setCursor(100, 100);
-            display.print("Displaying png.png 3bit");
-            if (!dither)
-                display.print(" non");
-            display.print(" dithered and");
-            if (!invert)
-                display.print(" non");
-            display.print(" inverted.");
+        //     display.selectDisplayMode(INKPLATE_3BIT);
+        //     display.setTextSize(2);
+        //     display.setTextColor(1);
+        //     display.setCursor(100, 100);
+        //     display.print("Displaying png.png 3bit");
+        //     if (!dither)
+        //         display.print(" non");
+        //     display.print(" dithered and");
+        //     if (!invert)
+        //         display.print(" non");
+        //     display.print(" inverted.");
 
-            display.display();
-            display.clearDisplay();
-            delay(5000);
+        //     display.display();
+        //     display.clearDisplay();
+        //     delay(5000);
 
-            display.drawImage("png.png", 0, 0, dither, invert);
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-        }
+        //     display.drawImage("png.png", 0, 0, dither, invert);
+        //     display.display();
+        //     display.clearDisplay();
+        //     delay(5000);
+        // }
 
         // web
-
 
         display.selectDisplayMode(INKPLATE_1BIT);
         display.setTextSize(2);

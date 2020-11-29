@@ -36,7 +36,7 @@ class Inkplate : public System, public Graphics
     void begin(void); // In boards
     void clearDisplay();
     void display();
-    void partialUpdate();
+    void partialUpdate(bool);
     void clean();
     void einkOn();
     void einkOff();

@@ -108,7 +108,7 @@ void loop()
             display.clearDisplay();
             delay(5000);
 
-            display.drawJpegFromWeb(imageUrls[j], 0, 0, dither, invert);
+            Serial.println(display.drawJpegFromWeb(imageUrls[j], 0, 0, dither, invert));
             display.display();
             display.clearDisplay();
             delay(5000);
