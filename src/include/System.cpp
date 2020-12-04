@@ -66,11 +66,13 @@ uint8_t System::readTouchpad(uint8_t _pad)
 
 double System::readBattery()
 {
-    digitalWriteMCP(9, HIGH);
+    digitalWriteMCP(9, LOW);
     delay(1);
     int adc = analogRead(35);
-    digitalWriteMCP(9, LOW);
-    return (double(adc) / 4095 * 3.3 * 2);
+    digitalWriteMCP(9, HIGH);
+    //Calculate the voltage using the following formula
+    //1.1V is internal ADC reference of ESP32, 3.548133892 is 11dB in linear scale (Analog signal is attenuated by 11dB before ESP32 ADC input)
+    return (double(adc) / 4095 * 1.1 * 3.548133892 * 2);
 }
 
 int16_t System::sdCardInit()

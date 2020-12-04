@@ -81,6 +81,32 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
     return ret;
 }
 
+bool Image::drawJpegFromWebAtPosition(const char *url, const Position& position, const bool dither, const bool invert)
+{
+    bool ret = 0;
+
+    int32_t defaultLen = 800 * 600 * 4;
+    uint8_t *buff = downloadFile(url, &defaultLen);
+
+    uint16_t w = 0;
+    uint16_t h = 0;
+    TJpgDec.setJpgScale(1);
+    JRESULT r = TJpgDec.getJpgSize(&w, &h, buff, defaultLen);
+    if(r != JDR_OK) {
+        free(buff);
+        return false;
+    }
+
+    uint16_t posX, posY;
+    getPointsForPosition(position, w, h, 800, 600, &posX, &posY);
+
+    ret = drawJpegFromBuffer(buff, defaultLen, posX, posY, dither, invert);
+    free(buff);
+
+    return ret;
+}
+
+
 bool Image::drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither, bool invert)
 {
     bool ret = 0;

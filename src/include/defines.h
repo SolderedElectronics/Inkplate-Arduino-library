@@ -25,15 +25,16 @@ Distributed as-is; no warranty is given.
 #include "../boards/Inkplate10.h"
 #endif
 
-#define BLACK 1
-#define WHITE 0
+#define BLACK                       1
+#define WHITE                       0
 
-#define INKPLATE_1BIT 0
-#define INKPLATE_3BIT 1
-#define PAD1          0
-#define PAD2          1
-#define PAD3          2
-#define PWR_GOOD_OK   0b11111010
+#define INKPLATE_1BIT               0
+#define INKPLATE_3BIT               1
+#define PAD1                        0
+#define PAD2                        1
+#define PAD3                        2
+#define PWR_GOOD_OK                 0b11111010
+#define INKPLATE_FORCE_PARTIAL      true
 
 #define WAKEUP 3
 #define WAKEUP_SET                                                                                                     \

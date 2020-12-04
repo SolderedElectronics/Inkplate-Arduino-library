@@ -24,6 +24,7 @@ Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Gra
                     (((i & B11100000) >> 5) << 25);
 }
 
+
 void Inkplate::clearDisplay()
 {
     // Clear 1 bit per pixel display buffer
@@ -41,6 +42,11 @@ void Inkplate::display()
         display1b();
     else if (getDisplayMode() == 1)
         display3b();
+}
+
+void Inkplate::preloadScreen()
+{
+    memcpy(DMemoryNew, _partial, 60000);
 }
 
 // Turn off epaper power supply and put all digital IO pins in high Z state

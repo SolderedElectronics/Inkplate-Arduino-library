@@ -68,6 +68,52 @@ bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, ui
     return 1;
 }
 
+bool Image::drawImage(const String path, const Format& format, const int x, const int y, const bool dither, const bool invert)
+{
+    return drawImage(path.c_str(), format, x, y, dither, invert);
+};
+
+bool Image::drawImage(const char *path, const Format& format, const int x, const int y, const bool dither, const bool invert)
+{
+    if (strncmp(path, "http://", 7) == 0 || strncmp(path, "https://", 8) == 0)
+    {
+        if (format == BMP)
+            return drawBitmapFromWeb(path, x, y, dither, invert);
+        if (format == JPG)
+            return drawJpegFromWeb(path, x, y, dither, invert);
+        if (format == PNG)
+            return drawPngFromWeb(path, x, y, dither, invert);
+    }
+    else
+    {
+        if (format == BMP)
+            return drawBitmapFromSd(path, x, y, dither, invert);
+        if (format == JPG)
+            return drawJpegFromSd(path, x, y, dither, invert);
+        if (format == PNG)
+            return drawPngFromSd(path, x, y, dither, invert);
+    }
+    return 0;
+}
+
+bool Image::drawImage(const char* path, const Format& format, const Position& position, const bool dither, const bool invert) {
+    if (strncmp(path, "http://", 7) == 0 || strncmp(path, "https://", 8) == 0)
+    {
+        if (format == JPG)
+            return drawJpegFromWebAtPosition(path, position, dither, invert);
+
+        //TODO: implement
+        return false;
+    }
+    else
+    {
+        //TODO: implement
+        return false;
+    }
+    return false;
+}
+
+
 void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)
 {
     if (getDisplayMode() != INKPLATE_3BIT)
