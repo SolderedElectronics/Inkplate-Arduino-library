@@ -24,7 +24,7 @@
 #include <WiFi.h>       //Include ESP32 WiFi library
 #include <WiFiClient.h> //Include ESP32 WiFi library for AP
 
-#define ssid "Inkplate6"
+#define ssid "Inkplate"
 #define pass "e-radionica"
 
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)

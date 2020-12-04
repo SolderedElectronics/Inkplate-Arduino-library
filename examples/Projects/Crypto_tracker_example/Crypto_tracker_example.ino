@@ -109,26 +109,18 @@ char *months[] = {
 
 // Out UI elements data
 textElement elements[] = {
-    {50, 130, &Roboto_Light_160, currencyAbbr, 0},
-    {390, 80, &Roboto_Light_40, date, 0},
-    {190, 185, &Roboto_Light_40, fromToDate, 0},
-    {570, 140, &Roboto_Light_40, "Current price:", 0},
-    {790, 190, &Roboto_Light_40, current, 1},
-    {630, 275, &Roboto_Light_40, "Minimum:", 0},
-    {790, 320, &Roboto_Light_40, minimum, 1},
-    {625, 420, &Roboto_Light_40, "Maximum:", 0},
+    {50, 130, &Roboto_Light_160, currencyAbbr, 0}, {390, 80, &Roboto_Light_40, date, 0},
+    {190, 185, &Roboto_Light_40, fromToDate, 0},   {570, 140, &Roboto_Light_40, "Current price:", 0},
+    {790, 190, &Roboto_Light_40, current, 1},      {630, 275, &Roboto_Light_40, "Minimum:", 0},
+    {790, 320, &Roboto_Light_40, minimum, 1},      {625, 420, &Roboto_Light_40, "Maximum:", 0},
     {790, 466, &Roboto_Light_40, maximum, 1},
 
-    {18, 570, &Roboto_Light_36, dates, 0},
-    {122, 570, &Roboto_Light_36, dates + 8, 0},
-    {227, 570, &Roboto_Light_36, dates + 16, 0},
-    {342, 570, &Roboto_Light_36, dates + 24, 0},
+    {18, 570, &Roboto_Light_36, dates, 0},         {122, 570, &Roboto_Light_36, dates + 8, 0},
+    {227, 570, &Roboto_Light_36, dates + 16, 0},   {342, 570, &Roboto_Light_36, dates + 24, 0},
     {466, 570, &Roboto_Light_36, dates + 32, 0},
 
-    {450, 240, &Roboto_Light_36, prices, 0},
-    {450, 322, &Roboto_Light_36, prices + 16, 0},
-    {450, 401, &Roboto_Light_36, prices + 32, 0},
-    {450, 483, &Roboto_Light_36, prices + 48, 0},
+    {450, 240, &Roboto_Light_36, prices, 0},       {450, 322, &Roboto_Light_36, prices + 16, 0},
+    {450, 401, &Roboto_Light_36, prices + 32, 0},  {450, 483, &Roboto_Light_36, prices + 48, 0},
 };
 
 // Our functions declared below setup and loop

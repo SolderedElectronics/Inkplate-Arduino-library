@@ -34,9 +34,9 @@ void setup()
 void loop()
 {
     display.clearDisplay();
-    for (int j = 0; j < 600; ++j)
+    for (int j = 0; j < E_INK_HEIGHT; ++j)
     {
-        for (int i = 0; i < 800; ++i)
+        for (int i = 0; i < E_INK_WIDTH; ++i)
             display.drawPixel(
                 i, j, colorAt(xFrom + (double)i * (xTo - xFrom) / 800.0, yFrom + (double)j * (yTo - yFrom) / 600.0));
         // for whole set:

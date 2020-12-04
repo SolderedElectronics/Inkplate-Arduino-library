@@ -23,7 +23,7 @@ Inkplate display(INKPLATE_1BIT);
 const int cellSize = 10;
 
 // Calculate screen width and height
-const int w = 790 / cellSize, h = 590 / cellSize;
+const int w = (E_INK_WIDTH - 10) / cellSize, h = (E_INK_HEIGHT - 10) / cellSize;
 char maze[w * h];
 
 // Move direction difference array

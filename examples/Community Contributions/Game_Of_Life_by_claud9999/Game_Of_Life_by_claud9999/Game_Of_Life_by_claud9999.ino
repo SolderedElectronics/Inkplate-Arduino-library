@@ -20,8 +20,8 @@ Inkplate display(INKPLATE_1BIT);
 
 #define FULLREFRESH 40
 
-#define SCREEN_WIDTH  800
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH  E_INK_WIDTH
+#define SCREEN_HEIGHT E_INK_HEIGHT
 
 #define MIN_CELLSZ 8
 #define MAX_CELLSZ 40
