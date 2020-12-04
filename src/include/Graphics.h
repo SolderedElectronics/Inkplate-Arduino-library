@@ -59,7 +59,7 @@ class Graphics : public Shapes, public Image
 
     uint8_t *DMemoryNew;
     uint8_t *_partial;
-    uint8_t *D_memory4Bit;
+    uint8_t *DMemory4Bit;
     uint8_t *_pBuffer;
 
     const uint8_t LUT2[16] = {0xAA, 0xA9, 0xA6, 0xA5, 0x9A, 0x99, 0x96, 0x95,

@@ -19,8 +19,11 @@ Distributed as-is; no warranty is given.
 
 #include "Arduino.h"
 
-#define E_INK_WIDTH                 800
-#define E_INK_HEIGHT                600
+#ifdef ARDUINO_ESP32_DEV
+#include "../boards/Inkplate6.h"
+#elif ARDUINO_INKPLATE10
+#include "../boards/Inkplate10.h"
+#endif
 
 #define BLACK                       1
 #define WHITE                       0
@@ -61,6 +64,14 @@ Distributed as-is; no warranty is given.
         digitalWriteMCP(VCOM, LOW);                                                                                    \
     }
 
+#ifndef _swap_int16_t
+#define _swap_int16_t(a, b)                                                                                            \
+    {                                                                                                                  \
+        int16_t t = a;                                                                                                 \
+        a = b;                                                                                                         \
+        b = t;                                                                                                         \
+    }
+#endif
 
 #define RGB3BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 13)
 #define RGB8BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 8)
@@ -72,5 +83,74 @@ Distributed as-is; no warranty is given.
 #define RED(a)   ((((a)&0xf800) >> 11) << 3)
 #define GREEN(a) ((((a)&0x07e0) >> 5) << 2)
 #define BLUE(a)  (((a)&0x001f) << 3)
+
+
+#define CL 0x01
+#define CL_SET                                                                                                         \
+    {                                                                                                                  \
+        GPIO.out_w1ts = CL;                                                                                            \
+    }
+#define CL_CLEAR                                                                                                       \
+    {                                                                                                                  \
+        GPIO.out_w1tc = CL;                                                                                            \
+    }
+#define CKV 0x01
+#define CKV_SET                                                                                                        \
+    {                                                                                                                  \
+        GPIO.out1_w1ts.val = CKV;                                                                                      \
+    }
+#define CKV_CLEAR                                                                                                      \
+    {                                                                                                                  \
+        GPIO.out1_w1tc.val = CKV;                                                                                      \
+    }
+#define SPH 0x02
+#define SPH_SET                                                                                                        \
+    {                                                                                                                  \
+        GPIO.out1_w1ts.val = SPH;                                                                                      \
+    }
+#define SPH_CLEAR                                                                                                      \
+    {                                                                                                                  \
+        GPIO.out1_w1tc.val = SPH;                                                                                      \
+    }
+#define LE 0x04
+#define LE_SET                                                                                                         \
+    {                                                                                                                  \
+        GPIO.out_w1ts = LE;                                                                                            \
+    }
+#define LE_CLEAR                                                                                                       \
+    {                                                                                                                  \
+        GPIO.out_w1tc = LE;                                                                                            \
+    }
+#define OE 0
+#define OE_SET                                                                                                         \
+    {                                                                                                                  \
+        digitalWriteMCP(OE, HIGH);                                                                                     \
+    }
+#define OE_CLEAR                                                                                                       \
+    {                                                                                                                  \
+        digitalWriteMCP(OE, LOW);                                                                                      \
+    }
+#define GMOD 1
+#define GMOD_SET                                                                                                       \
+    {                                                                                                                  \
+        digitalWriteMCP(GMOD, HIGH);                                                                                   \
+    }
+#define GMOD_CLEAR                                                                                                     \
+    {                                                                                                                  \
+        digitalWriteMCP(GMOD, LOW);                                                                                    \
+    }
+#define SPV 2
+#define SPV_SET                                                                                                        \
+    {                                                                                                                  \
+        digitalWriteMCP(SPV, HIGH);                                                                                    \
+    }
+#define SPV_CLEAR                                                                                                      \
+    {                                                                                                                  \
+        digitalWriteMCP(SPV, LOW);                                                                                     \
+    }
+
+#define GPIO0_ENABLE 8
+
+#define DATA 0x0E8C0030
 
 #endif

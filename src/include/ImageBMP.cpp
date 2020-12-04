@@ -125,7 +125,7 @@ bool Image::drawBitmapFromSd(SdFile *p, int x, int y, bool dither, bool invert)
 bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool invert)
 {
     bool ret = 0;
-    int32_t defaultLen = 800 * 600 * 4 + 150;
+    int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
     uint8_t *buf = downloadFile(url, &defaultLen);
 
     ret = drawBitmapFromBuffer(buf, x, y, dither, invert);

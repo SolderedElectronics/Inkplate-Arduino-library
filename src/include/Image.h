@@ -114,8 +114,8 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     static bool drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool dither, bool invert);
 
-    uint8_t pixelBuffer[800 * 4 + 5];
-    uint8_t ditherBuffer[2][800 + 20];
+    uint8_t pixelBuffer[E_INK_WIDTH * 4 + 5];
+    uint8_t ditherBuffer[2][E_INK_WIDTH + 20];
     uint8_t jpegDitherBuffer[18][18];
     int16_t blockW = 0, blockH = 0;
     int16_t lastY = -1;

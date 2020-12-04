@@ -127,6 +127,36 @@ void Mcp::pinModeMCP(uint8_t _pin, uint8_t _mode)
     }
 }
 
+void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
+{
+    uint8_t _port = (_pin / 8) & 1;
+    uint8_t _p = _pin % 8;
+
+    switch (_mode)
+    {
+    case INPUT:
+        _r[MCP23017_IODIRA + _port] |= 1 << _p;   // Set it to input
+        _r[MCP23017_GPPUA + _port] &= ~(1 << _p); // Disable pullup on that pin
+        updateRegister(_addr, MCP23017_IODIRA + _port, _r[MCP23017_IODIRA + _port]);
+        updateRegister(_addr, MCP23017_GPPUA + _port, _r[MCP23017_GPPUA + _port]);
+        break;
+
+    case INPUT_PULLUP:
+        _r[MCP23017_IODIRA + _port] |= 1 << _p; // Set it to input
+        _r[MCP23017_GPPUA + _port] |= 1 << _p;  // Enable pullup on that pin
+        updateRegister(_addr, MCP23017_IODIRA + _port, _r[MCP23017_IODIRA + _port]);
+        updateRegister(_addr, MCP23017_GPPUA + _port, _r[MCP23017_GPPUA + _port]);
+        break;
+
+    case OUTPUT:
+        _r[MCP23017_IODIRA + _port] &= ~(1 << _p); // Set it to output
+        _r[MCP23017_GPPUA + _port] &= ~(1 << _p);  // Disable pullup on that pin
+        updateRegister(_addr, MCP23017_IODIRA + _port, _r[MCP23017_IODIRA + _port]);
+        updateRegister(_addr, MCP23017_GPPUA + _port, _r[MCP23017_GPPUA + _port]);
+        break;
+    }
+}
+
 void Mcp::digitalWriteMCP(uint8_t _pin, uint8_t _state)
 {
     uint8_t _port = (_pin / 8) & 1;
@@ -136,6 +166,17 @@ void Mcp::digitalWriteMCP(uint8_t _pin, uint8_t _state)
         return;
     _state ? (mcpRegsInt[MCP23017_GPIOA + _port] |= (1 << _p)) : (mcpRegsInt[MCP23017_GPIOA + _port] &= ~(1 << _p));
     updateRegister(MCP23017_ADDR, MCP23017_GPIOA + _port, mcpRegsInt[MCP23017_GPIOA + _port]);
+}
+
+void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state)
+{
+    uint8_t _port = (_pin / 8) & 1;
+    uint8_t _p = _pin % 8;
+
+    if (_r[MCP23017_IODIRA + _port] & (1 << _p))
+        return; // Check if the pin is set as an output
+    _state ? (_r[MCP23017_GPIOA + _port] |= (1 << _p)) : (_r[MCP23017_GPIOA + _port] &= ~(1 << _p));
+    updateRegister(_addr, MCP23017_GPIOA + _port, _r[MCP23017_GPIOA + _port]);
 }
 
 uint8_t Mcp::digitalReadMCP(uint8_t _pin)

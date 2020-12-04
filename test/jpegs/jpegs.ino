@@ -45,43 +45,43 @@ void loop()
     display.clearDisplay();
     display.display();
 
-    if (!display.sdCardInit())
-    {
-        display.println("Sd card error!");
-        delay(1000);
-        return;
-    }
+    // if (!display.sdCardInit())
+    // {
+    //     display.println("Sd card error!");
+    //     delay(1000);
+    //     return;
+    // }
 
-    for (int i = 0; i < 4; ++i)
-    {
-        bool dither = i & 1;
-        bool invert = i >> 1;
+    // for (int i = 0; i < 4; ++i)
+    // {
+    //     bool dither = i & 1;
+    //     bool invert = i >> 1;
 
-        for (int j = 0; j < 2; ++j)
-        {
-            display.selectDisplayMode(depth[j]);
-            display.setTextSize(2);
-            display.setTextColor(1);
-            display.setCursor(100, 100);
-            display.print("Displaying ");
-            display.print(images[j]);
-            if (!dither)
-                display.print(" non");
-            display.print(" dithered and");
-            if (!invert)
-                display.print(" non");
-            display.print(" inverted.");
+    //     for (int j = 0; j < 2; ++j)
+    //     {
+    //         display.selectDisplayMode(depth[j]);
+    //         display.setTextSize(2);
+    //         display.setTextColor(1);
+    //         display.setCursor(100, 100);
+    //         display.print("Displaying ");
+    //         display.print(images[j]);
+    //         if (!dither)
+    //             display.print(" non");
+    //         display.print(" dithered and");
+    //         if (!invert)
+    //             display.print(" non");
+    //         display.print(" inverted.");
 
-            display.display();
-            display.clearDisplay();
-            delay(5000);
+    //         display.display();
+    //         display.clearDisplay();
+    //         delay(5000);
 
-            Serial.println(display.drawJpegFromSd(images[j], 0, 0, dither, invert));
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-        }
-    }
+    //         Serial.println(display.drawJpegFromSd(images[j], 0, 0, dither, invert));
+    //         display.display();
+    //         display.clearDisplay();
+    //         delay(5000);
+    //     }
+    // }
 
     for (int i = 0; i < 4; ++i)
     {
@@ -108,7 +108,7 @@ void loop()
             display.clearDisplay();
             delay(5000);
 
-            display.drawJpegFromWeb(imageUrls[j], 0, 0, dither, invert);
+            Serial.println(display.drawJpegFromWeb(imageUrls[j], 0, 0, dither, invert));
             display.display();
             display.clearDisplay();
             delay(5000);
