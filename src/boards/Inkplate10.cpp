@@ -7,6 +7,7 @@ void Inkplate::begin()
 {
     if (_beginDone == 1)
         return;
+
     Wire.begin();
     memset(mcpRegsInt, 0, 22);
     memset(mcpRegsEx, 0, 22);
@@ -129,32 +130,28 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         break;
     }
 
-    if (_displayMode == 0)
+    if (getDisplayMode() == 0)
     {
-        int x = x0 / 8;
-        int x_sub = x0 % 8;
-        uint8_t temp = *(_partial + (E_INK_WIDTH / 8 * y0) + x);
+        int x = x0 >> 3;
+        int x_sub = x0 & 7;
+        uint8_t temp = *(_partial + ((E_INK_WIDTH >> 3) * y0) + x);
         *(_partial + (E_INK_WIDTH / 8 * y0) + x) = ~pixelMaskLUT[x_sub] & temp | (color ? pixelMaskLUT[x_sub] : 0);
     }
     else
     {
         color &= 7;
-        int x = x0 / 2;
-        int x_sub = x0 % 2;
+        int x = x0 >> 1;
+        int x_sub = x0 & 1;
         uint8_t temp;
-        temp = *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + x);
-        *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + x) = pixelMaskGLUT[x_sub] & temp | (x_sub ? color : color << 4);
+        temp = *(DMemory4Bit + (E_INK_WIDTH >> 1) * y0 + x);
+        *(DMemory4Bit + (E_INK_WIDTH >> 1) * y0 + x) = pixelMaskGLUT[x_sub] & temp | (x_sub ? color : color << 4);
     }
 }
 
 void Inkplate::display1b()
 {
-    Serial.println("aaaa");
-    for (int i = 0; i < (E_INK_HEIGHT * E_INK_WIDTH) / 8; i++)
-    {
-        *(DMemoryNew + i) &= *(_partial + i);
-        *(DMemoryNew + i) |= (*(_partial + i));
-    }
+    memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
+
     uint32_t _pos;
     uint8_t data;
     uint8_t dram;
@@ -193,36 +190,6 @@ void Inkplate::display1b()
         }
         delayMicroseconds(230);
     }
-
-    /*
-      _pos = (E_INK_HEIGHT * E_INK_WIDTH / 8) - 1;
-      vscan_start();
-      for (int i = 0; i < E_INK_HEIGHT; i++)
-      {
-        dram = *(DMemoryNew + _pos);
-        data = LUT2[(dram >> 4) & 0x0F];
-        hscan_start(pinLUT[data] );
-        data = LUT2[dram & 0x0F];
-        GPIO.out_w1ts = (pinLUT[data] ) | CL;
-        GPIO.out_w1tc = DATA | CL;
-        _pos--;
-        for (int j = 0; j < ((E_INK_WIDTH / 8)-1); j++)
-        {
-          dram = *(DMemoryNew + _pos);
-          data = LUT2[(dram >> 4) & 0x0F];
-          GPIO.out_w1ts = (pinLUT[data] ) | CL;
-          GPIO.out_w1tc = DATA | CL;
-          data = LUT2[dram & 0x0F];
-          GPIO.out_w1ts = (pinLUT[data] ) | CL;
-          GPIO.out_w1tc = DATA | CL;
-          _pos--;
-        }
-        GPIO.out_w1ts = CL;
-        GPIO.out_w1tc = DATA | CL;
-        vscan_end();
-      }
-      delayMicroseconds(230);
-      */
 
     cleanFast(2, 2);
     cleanFast(3, 1);
@@ -273,7 +240,7 @@ void Inkplate::partialUpdate(bool _forced)
 {
     if (getDisplayMode() == 1)
         return;
-    if (_blockPartial == 1 && !_forced)
+    if (_blockPartial == 1)
     {
         display1b();
         return;
