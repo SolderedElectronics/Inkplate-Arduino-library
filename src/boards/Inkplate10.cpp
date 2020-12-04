@@ -246,7 +246,7 @@ void Inkplate::partialUpdate(bool _forced)
         return;
     }
 
-    uint16_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
+    uint32_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
     uint32_t _send;
     uint8_t data = 0;
     uint8_t diffw, diffb;
