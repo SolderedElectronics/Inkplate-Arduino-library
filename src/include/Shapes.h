@@ -19,9 +19,10 @@ Distributed as-is; no warranty is given.
 
 #include "../libs/Adafruit-GFX-Library/Adafruit_GFX.h"
 #include "Arduino.h"
+#include "defines.h"
 
 #define maxVer 100
-#define maxHt  600
+#define maxHt  E_INK_HEIGHT
 
 class Shapes : virtual public Adafruit_GFX
 {

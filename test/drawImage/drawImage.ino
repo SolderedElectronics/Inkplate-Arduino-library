@@ -46,7 +46,7 @@ void setup()
 
     display.begin();
 
-    display.joinAP("", "");
+    display.joinAP("e-radionica.com", "croduino");
 
     Serial.println();
     delay(500);

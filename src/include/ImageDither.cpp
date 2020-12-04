@@ -16,6 +16,7 @@ Distributed as-is; no warranty is given.
 
 #include "Image.h"
 
+#ifndef ARDUINO_INKPLATECOLOR
 uint8_t Image::ditherGetPixelBmp(uint8_t px, int i, int w, bool paletted)
 {
     if (paletted)
@@ -92,3 +93,4 @@ void Image::ditherSwapBlockJpeg(int x)
 
     jpegDitherBuffer[17][1] = 0;
 }
+#endif
