@@ -81,7 +81,7 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
     return ret;
 }
 
-bool Image::drawJpegFromWebAtPosition(const char *url, const Position& position, const bool dither, const bool invert)
+bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position, const bool dither, const bool invert)
 {
     bool ret = 0;
 
@@ -92,7 +92,8 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position& position,
     uint16_t h = 0;
     TJpgDec.setJpgScale(1);
     JRESULT r = TJpgDec.getJpgSize(&w, &h, buff, defaultLen);
-    if(r != JDR_OK) {
+    if (r != JDR_OK)
+    {
         free(buff);
         return false;
     }

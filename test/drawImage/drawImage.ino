@@ -227,9 +227,9 @@ void loop()
         display.clearDisplay();
         delay(5000);
 
-        display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
-                          "drawImage/Lenna.jpg",
-                          0, 0, dither, invert);
+        Serial.println(display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
+                                         "inkplate10-integration/test/drawImage/test.jpg",
+                                         0, 0, dither, invert));
         display.display();
         display.clearDisplay();
         delay(5000);
@@ -256,9 +256,9 @@ void loop()
         display.clearDisplay();
         delay(5000);
 
-        display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
-                          "drawImage/Lenna.jpg",
-                          0, 0, dither, invert);
+        Serial.println(display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
+                                         "inkplate10-integration/test/drawImage/test.jpg",
+                                         0, 0, dither, invert));
         display.display();
         display.clearDisplay();
         delay(5000);
