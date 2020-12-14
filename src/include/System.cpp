@@ -61,17 +61,18 @@ int8_t System::readTemperature()
 
 uint8_t System::readTouchpad(uint8_t _pad)
 {
-    return digitalReadMCP((_pad & 3) + 10);
+    return digitalReadInternal(MCP23017_INT_ADDR, mcpRegsInt, _pad);
 }
 
 double System::readBattery()
 {
-    digitalWriteMCP(9, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
     delay(1);
     int adc = analogRead(35);
-    digitalWriteMCP(9, HIGH);
-    //Calculate the voltage using the following formula
-    //1.1V is internal ADC reference of ESP32, 3.548133892 is 11dB in linear scale (Analog signal is attenuated by 11dB before ESP32 ADC input)
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
+    // Calculate the voltage using the following formula
+    // 1.1V is internal ADC reference of ESP32, 3.548133892 is 11dB in linear scale (Analog signal is attenuated by 11dB
+    // before ESP32 ADC input)
     return (double(adc) / 4095 * 1.1 * 3.548133892 * 2);
 }
 

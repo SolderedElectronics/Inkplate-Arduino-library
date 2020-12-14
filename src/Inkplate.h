@@ -38,7 +38,6 @@ class Inkplate : public System, public Graphics
     void display();
     void preloadScreen();
     void partialUpdate(bool _forced = false);
-    void clean();
     void einkOn();
     void einkOff();
     uint8_t readPowerGood();
@@ -74,8 +73,7 @@ class Inkplate : public System, public Graphics
 
     uint8_t _beginDone = 0;
 
-    const uint8_t waveform3Bit[8][8] = WAVEFORM3BIT;
-    const uint32_t waveform[50] = WAVEFORM;
+    const uint8_t waveform3Bit[8][9] = WAVEFORM3BIT;
 };
 
 #endif

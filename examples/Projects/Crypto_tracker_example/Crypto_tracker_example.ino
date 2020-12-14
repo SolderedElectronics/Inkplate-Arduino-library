@@ -134,8 +134,8 @@ void setup()
 
     // Initial display settings
     display.begin();
-    display.clean();
     display.clearDisplay();
+    display.display();
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 

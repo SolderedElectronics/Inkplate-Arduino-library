@@ -49,7 +49,6 @@ void randomize()
     offset_x = (SCREEN_WIDTH - cols * cell_size) / 2;
     offset_y = (SCREEN_HEIGHT - rows * cell_size) / 2;
 
-    display.clean();
     display.display();
 
     display.clearDisplay();

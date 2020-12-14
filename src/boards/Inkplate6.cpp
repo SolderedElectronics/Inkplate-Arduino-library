@@ -11,11 +11,11 @@ void Inkplate::begin(void)
     Wire.begin();
     memset(mcpRegsInt, 0, 22);
     mcpBegin(MCP23017_ADDR, mcpRegsInt);
-    pinModeMCP(VCOM, OUTPUT);
-    pinModeMCP(PWRUP, OUTPUT);
-    pinModeMCP(WAKEUP, OUTPUT);
-    pinModeMCP(GPIO0_ENABLE, OUTPUT);
-    digitalWriteMCP(GPIO0_ENABLE, HIGH);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, VCOM, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, GPIO0_ENABLE, OUTPUT);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, GPIO0_ENABLE, HIGH);
 
     WAKEUP_SET;
     delay(1);
@@ -34,9 +34,9 @@ void Inkplate::begin(void)
     pinMode(2, OUTPUT);
     pinMode(32, OUTPUT);
     pinMode(33, OUTPUT);
-    pinModeMCP(OE, OUTPUT);
-    pinModeMCP(GMOD, OUTPUT);
-    pinModeMCP(SPV, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, OE, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, GMOD, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, SPV, OUTPUT);
 
     // DATA PINS
     pinMode(4, OUTPUT); // D0
@@ -49,12 +49,12 @@ void Inkplate::begin(void)
     pinMode(27, OUTPUT); // D7
 
     // TOUCHPAD PINS
-    pinModeMCP(10, INPUT);
-    pinModeMCP(11, INPUT);
-    pinModeMCP(12, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 10, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 11, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 12, INPUT);
 
     // Battery voltage Switch MOSFET
-    pinModeMCP(9, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, OUTPUT);
 
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
@@ -345,23 +345,6 @@ void Inkplate::partialUpdate(bool _forced)
     einkOff();
 
     memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
-}
-
-void Inkplate::clean()
-{
-    einkOn();
-    int m = 0;
-    cleanFast(0, 1);
-    m++;
-    cleanFast((waveform[m] >> 30) & 3, 8);
-    m++;
-    cleanFast((waveform[m] >> 24) & 3, 1);
-    m++;
-    cleanFast((waveform[m]) & 3, 8);
-    m++;
-    cleanFast((waveform[m] >> 6) & 3, 1);
-    m++;
-    cleanFast((waveform[m] >> 30) & 3, 10);
 }
 
 void Inkplate::cleanFast(uint8_t c, uint8_t rep)

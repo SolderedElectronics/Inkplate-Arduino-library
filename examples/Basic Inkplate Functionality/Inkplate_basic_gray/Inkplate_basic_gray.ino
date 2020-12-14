@@ -33,7 +33,7 @@ void setup()
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
                             //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside
                             // ESP32).
-    display.clean();        // Clear everything that has previously been on a screen
+    display.display();      // Clear everything that has previously been on a screen
     display.setTextColor(0, 7);
     display.setCursor(150, 320);
     display.setTextSize(4);

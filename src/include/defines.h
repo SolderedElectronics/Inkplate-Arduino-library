@@ -23,45 +23,47 @@ Distributed as-is; no warranty is given.
 #include "../boards/Inkplate6.h"
 #elif ARDUINO_INKPLATE10
 #include "../boards/Inkplate10.h"
+#elif ARDUINO_INKPLATE6PLUS
+#include "../boards/Inkplate6plus.h"
 #endif
 
-#define BLACK                       1
-#define WHITE                       0
+#define BLACK 1
+#define WHITE 0
 
-#define INKPLATE_1BIT               0
-#define INKPLATE_3BIT               1
-#define PAD1                        0
-#define PAD2                        1
-#define PAD3                        2
-#define PWR_GOOD_OK                 0b11111010
-#define INKPLATE_FORCE_PARTIAL      true
+#define INKPLATE_1BIT          0
+#define INKPLATE_3BIT          1
+#define PAD1                   0
+#define PAD2                   1
+#define PAD3                   2
+#define PWR_GOOD_OK            0b11111010
+#define INKPLATE_FORCE_PARTIAL true
 
 #define WAKEUP 3
 #define WAKEUP_SET                                                                                                     \
     {                                                                                                                  \
-        digitalWriteMCP(WAKEUP, HIGH);                                                                                 \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, HIGH);                                             \
     }
 #define WAKEUP_CLEAR                                                                                                   \
     {                                                                                                                  \
-        digitalWriteMCP(WAKEUP, LOW);                                                                                  \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, LOW);                                              \
     }
 #define PWRUP 4
 #define PWRUP_SET                                                                                                      \
     {                                                                                                                  \
-        digitalWriteMCP(PWRUP, HIGH);                                                                                  \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, HIGH);                                              \
     }
 #define PWRUP_CLEAR                                                                                                    \
     {                                                                                                                  \
-        digitalWriteMCP(PWRUP, LOW);                                                                                   \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, LOW);                                               \
     }
 #define VCOM 5
 #define VCOM_SET                                                                                                       \
     {                                                                                                                  \
-        digitalWriteMCP(VCOM, HIGH);                                                                                   \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, VCOM, HIGH);                                               \
     }
 #define VCOM_CLEAR                                                                                                     \
     {                                                                                                                  \
-        digitalWriteMCP(VCOM, LOW);                                                                                    \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, VCOM, LOW);                                                \
     }
 
 #ifndef _swap_int16_t
@@ -124,29 +126,29 @@ Distributed as-is; no warranty is given.
 #define OE 0
 #define OE_SET                                                                                                         \
     {                                                                                                                  \
-        digitalWriteMCP(OE, HIGH);                                                                                     \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, OE, HIGH);                                                 \
     }
 #define OE_CLEAR                                                                                                       \
     {                                                                                                                  \
-        digitalWriteMCP(OE, LOW);                                                                                      \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, OE, LOW);                                                  \
     }
 #define GMOD 1
 #define GMOD_SET                                                                                                       \
     {                                                                                                                  \
-        digitalWriteMCP(GMOD, HIGH);                                                                                   \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, GMOD, HIGH);                                               \
     }
 #define GMOD_CLEAR                                                                                                     \
     {                                                                                                                  \
-        digitalWriteMCP(GMOD, LOW);                                                                                    \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, GMOD, LOW);                                                \
     }
 #define SPV 2
 #define SPV_SET                                                                                                        \
     {                                                                                                                  \
-        digitalWriteMCP(SPV, HIGH);                                                                                    \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, SPV, HIGH);                                                \
     }
 #define SPV_CLEAR                                                                                                      \
     {                                                                                                                  \
-        digitalWriteMCP(SPV, LOW);                                                                                     \
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, SPV, LOW);                                                 \
     }
 
 #define GPIO0_ENABLE 8

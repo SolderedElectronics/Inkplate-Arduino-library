@@ -54,8 +54,6 @@ More are added daily, such as projects or community contributions, so here are j
 
    3.1. Peripheral Mode - mode that enables control of the screen from any external device using UART
 
-   3.2. Screen Cleaning - clean the screen in case of image burn-in
-
 ### Using Inkplate 6 with another microcontroller - Peripheral mode
 
 As promised in an [early update](https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates), Inkplate 6's screen contents can be updated using 3rd controller (such as Raspberry Pi or another microcontroller). The Peripheral mode enables this. All brand new Inkplates come pre-programmed with slave mode and can be used right away.
@@ -67,7 +65,9 @@ It is based on UART (serial) communication - connect the Inkplate to "Controller
 Inkplate 6 has two options for powering it. First one is obvious - USB port at side of the board. Just plug any micro USB cable and you are good to go. Second option is battery. Supported batteries are standard Li-Ion/Li-Poly batteries with 3.7V nominal voltage. Connector for the battery is standard 2.00mm pitch JST connector. The onboard charger will charge the battery with 500mA when USB is plugged at the same time. You can use battery of any size or capacity if you don't have a enclosure. If you are using our enclosure, battery size shouldn't exceed 90mm x 40mm (3.5 x 1.57 inch) and 5mm (0.19 inch) in height. [This battery](https://e-radionica.com/en/li-ion-baterija-1200mah.html) is good fit for the Inkplate.
 
 ### Linux?
+
 Running Linux? You'll need to run few other lines from your Terminal:
+
 ```
 apt install python3-pip
 pip3 install pyserial
@@ -76,15 +76,16 @@ apt install python-is-python3
 
 ### Micropython
 
-If you are looking for micropython support, please find all details [here](https://github.com/e-radionicacom/Inkplate-6-micropython). 
+If you are looking for micropython support, please find all details [here](https://github.com/e-radionicacom/Inkplate-6-micropython).
 
 ### License
 
-This repo uses the source code from another repositories. All their license files are located in "licences" folder. 
+This repo uses the source code from another repositories. All their license files are located in "licences" folder.
 
 ### Open-source
 
 All of Inkplate-related development is open-sourced:
+
 - [Arduino library](https://github.com/e-radionicacom/Inkplate-6-Arduino-library)
 - [Inkplate 6 hardware](https://github.com/e-radionicacom/Inkplate-6-hardware)
 - [micropython Inkplate](https://github.com/e-radionicacom/Inkplate-6-micropython)

@@ -20,6 +20,5 @@ void loop()
         display.clearDisplay();
     }
 
-    display.clean();
     display.display();
 }
