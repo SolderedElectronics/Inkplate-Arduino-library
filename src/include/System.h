@@ -34,8 +34,9 @@ Distributed as-is; no warranty is given.
 
 class System : public Esp,
                virtual public Mcp,
-               virtual public NetworkClient,
+               virtual public NetworkClient
 #ifdef ARDUINO_INKPLATE6PLUS
+    ,
                public Touch,
                public Backlight
 #endif
