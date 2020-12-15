@@ -55,6 +55,10 @@ class Inkplate : public System, public Graphics
     {
         return NetworkClient::isConnected();
     };
+    int _getRotation()
+    {
+        return Graphics::getRotation();
+    };
 
   private:
     void precalculateGamma(uint8_t *c, float gamma);
