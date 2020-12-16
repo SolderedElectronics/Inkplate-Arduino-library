@@ -1,5 +1,7 @@
 #include "Touch.h"
 
+#ifdef ARDUINO_INKPLATE6PLUS
+
 uint8_t Touch::tsWriteRegs(uint8_t _addr, const uint8_t *_buff, uint8_t _size)
 {
     Wire.beginTransmission(_addr);
@@ -169,3 +171,5 @@ bool Touch::tsAvailable()
 {
     return _tsFlag;
 }
+
+#endif

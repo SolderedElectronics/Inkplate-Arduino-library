@@ -1,6 +1,8 @@
 #include "Backlight.h"
 #include "defines.h"
 
+#ifdef ARDUINO_INKPLATE6PLUS
+
 void Backlight::setBacklight(uint8_t _v)
 {
     Wire.beginTransmission(0x5C >> 1);
@@ -22,3 +24,5 @@ void Backlight::backlight(bool _e)
         digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, BACKLIGHT_EN, LOW);
     }
 }
+
+#endif

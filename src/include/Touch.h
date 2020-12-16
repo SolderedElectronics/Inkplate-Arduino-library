@@ -1,6 +1,8 @@
 #ifndef __TOUCH_H__
 #define __TOUCH_H__
 
+#ifdef ARDUINO_INKPLATE6PLUS
+
 #include "Arduino.h"
 #include "Graphics.h"
 #include "Mcp.h"
@@ -32,5 +34,7 @@ class Touch : virtual public Mcp
     void tsGetXY(uint8_t *_d, uint16_t *x, uint16_t *y);
     void tsGetResolution(uint16_t *xRes, uint16_t *yRes);
 };
+
+#endif
 
 #endif
