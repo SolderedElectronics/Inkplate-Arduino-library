@@ -158,3 +158,15 @@ bool Image::drawPngFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither
     free(buff);
     return ret;
 }
+
+bool Image::drawPngFromWebAtPosition(const char *fileName, const Position &position, const bool dither,
+                                     const bool invert)
+{
+    return 0;
+}
+
+bool Image::drawPngFromSdAtPosition(const char *fileName, const Position &position, const bool dither,
+                                    const bool invert)
+{
+    return 0;
+}

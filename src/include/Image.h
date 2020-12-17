@@ -42,7 +42,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
         TopRight,
         BottomRight
     } Position;
-	
+
     Image(int16_t w, int16_t h);
 
     virtual void drawPixel(int16_t x, int16_t y, uint16_t color) = 0;
@@ -55,9 +55,12 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     bool drawImage(const char *path, int x, int y, bool dither = 1, bool invert = 0);
     bool drawImage(const String path, int x, int y, bool dither = 1, bool invert = 0);
     bool drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c = BLACK, uint8_t bg = 0xFF);
-    bool drawImage(const char *path, const Format& format, const int x, const int y, const bool dither = 1, const bool invert = 0);
-    bool drawImage(const String path, const Format& format, const int x, const int y, const bool dither = 1, const bool invert = 0);
-    bool drawImage(const char* path, const Format& format, const Position& position, const bool dither = 1, const bool invert = 0);	
+    bool drawImage(const char *path, const Format &format, const int x, const int y, const bool dither = 1,
+                   const bool invert = 0);
+    bool drawImage(const String path, const Format &format, const int x, const int y, const bool dither = 1,
+                   const bool invert = 0);
+    bool drawImage(const char *path, const Format &format, const Position &position, const bool dither = 1,
+                   const bool invert = 0);
 
     // Defined in Adafruit-GFX-Library, but should fit here
     // void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
@@ -133,10 +136,21 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     inline void displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool dither, bool invert);
 
-    void getPointsForPosition(const Position& position, const uint16_t imageWidth, const uint16_t imageHeight, 
-		const uint16_t screenWidth, const uint16_t screenHeight, uint16_t *posX, uint16_t *posY);
+    void getPointsForPosition(const Position &position, const uint16_t imageWidth, const uint16_t imageHeight,
+                              const uint16_t screenWidth, const uint16_t screenHeight, uint16_t *posX, uint16_t *posY);
 
-    bool drawJpegFromWebAtPosition(const char* url, const Position& position, const bool dither = 0, const bool invert = 0);
+    bool drawJpegFromWebAtPosition(const char *url, const Position &position, const bool dither = 0,
+                                   const bool invert = 0);
+    bool drawJpegFromSdAtPosition(const char *fileName, const Position &position, const bool dither = 0,
+                                  const bool invert = 0);
+    bool drawPngFromWebAtPosition(const char *url, const Position &position, const bool dither = 0,
+                                  const bool invert = 0);
+    bool drawPngFromSdAtPosition(const char *fileName, const Position &position, const bool dither = 0,
+                                 const bool invert = 0);
+    bool drawBmpFromWebAtPosition(const char *url, const Position &position, const bool dither = 0,
+                                  const bool invert = 0);
+    bool drawBmpFromSdAtPosition(const char *fileName, const Position &position, const bool dither = 0,
+                                 const bool invert = 0);
 
     // FUTURE COMPATIBILITY FUNCTIONS; DO NOT USE!
 

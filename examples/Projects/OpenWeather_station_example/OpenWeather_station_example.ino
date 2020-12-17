@@ -32,14 +32,14 @@
 // Change to your wifi ssid and password
 
 #include "OpenWeatherOneCall.h"
-#define HOMESSID ""
-#define HOMEPW   ""
+#define HOMESSID "e-radionica.com"
+#define HOMEPW   "croduino"
 
 // Openweather set up information
-#define ONECALLKEY ""
+#define ONECALLKEY "74bb81945168707323a7e01686bc0b14"
 
-float myLatitude = 0.00000; // I got this from Wikipedia
-float myLongitude = 0.00000;
+float myLatitude = 45.560001; // I got this from Wikipedia
+float myLongitude = 18.675880;
 
 bool metric = true; //<------------------------------TRUE is METRIC, FALSE is IMPERIAL, BLANK is KELVIN
 

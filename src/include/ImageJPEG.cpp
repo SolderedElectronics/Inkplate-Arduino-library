@@ -85,7 +85,7 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position,
 {
     bool ret = 0;
 
-    int32_t defaultLen = 800 * 600 * 4;
+    int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4;
     uint8_t *buff = downloadFile(url, &defaultLen);
 
     uint16_t w = 0;
@@ -95,11 +95,11 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position,
     if (r != JDR_OK)
     {
         free(buff);
-        return false;
+        return 0;
     }
 
     uint16_t posX, posY;
-    getPointsForPosition(position, w, h, 800, 600, &posX, &posY);
+    getPointsForPosition(position, w, h, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
 
     ret = drawJpegFromBuffer(buff, defaultLen, posX, posY, dither, invert);
     free(buff);
@@ -107,6 +107,67 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position,
     return ret;
 }
 
+bool Image::drawJpegFromSdAtPosition(const char *fileName, const Position &position, const bool dither,
+                                     const bool invert)
+{
+    Serial.println("aaaaa");
+    uint8_t ret = 0;
+
+    SdFile dat;
+    if (!dat.open(fileName, O_RDONLY))
+        return 0;
+
+    blockW = -1;
+    blockH = -1;
+    lastY = -1;
+    memset(ditherBuffer, 0, sizeof ditherBuffer);
+
+    TJpgDec.setJpgScale(1);
+    TJpgDec.setCallback(drawJpegChunk);
+
+    uint32_t pnt = 0;
+    uint32_t total = dat.fileSize();
+    uint8_t *buff = (uint8_t *)ps_malloc(total);
+
+    if (buff == NULL)
+        return 0;
+
+    uint16_t w = 0;
+    uint16_t h = 0;
+    JRESULT r = TJpgDec.getJpgSize(&w, &h, buff, total);
+    if (r != JDR_OK)
+    {
+        free(buff);
+        return 0;
+    }
+
+    while (pnt < total)
+    {
+        uint32_t toread = dat.available();
+        if (toread > 0)
+        {
+            int read = dat.read(buff + pnt, toread);
+            if (read > 0)
+                pnt += read;
+        }
+    }
+    dat.close();
+
+    uint16_t posX, posY;
+    getPointsForPosition(position, w, h, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
+
+    Serial.println(posX);
+    Serial.println(posY);
+    Serial.println(w);
+    Serial.println(h);
+    Serial.println();
+
+    if (TJpgDec.drawJpg(posX, posY, buff, total, dither, invert) == 0)
+        ret = 1;
+
+    free(buff);
+    return ret;
+}
 
 bool Image::drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither, bool invert)
 {

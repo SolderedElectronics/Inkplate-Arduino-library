@@ -278,3 +278,15 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
     ditherSwap(w);
     endWrite();
 }
+
+bool Image::drawBmpFromWebAtPosition(const char *fileName, const Position &position, const bool dither,
+                                     const bool invert)
+{
+    return 0;
+}
+
+bool Image::drawBmpFromSdAtPosition(const char *fileName, const Position &position, const bool dither,
+                                    const bool invert)
+{
+    return 0;
+}
