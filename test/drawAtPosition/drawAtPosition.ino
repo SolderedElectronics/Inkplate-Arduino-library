@@ -20,8 +20,8 @@ void loop()
         return;
     }
 
-    display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
-                      "drawImage/png.png",
+    display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
+                      "inkplate10-integration/test/drawImage/png.png",
                       display.PNG, display.BottomLeft);
     display.display();
 

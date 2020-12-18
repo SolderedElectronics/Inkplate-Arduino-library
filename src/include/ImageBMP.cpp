@@ -279,10 +279,21 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
     endWrite();
 }
 
-bool Image::drawBmpFromWebAtPosition(const char *fileName, const Position &position, const bool dither,
-                                     const bool invert)
+bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, const bool dither, const bool invert)
 {
-    return 0;
+    bool ret = 0;
+    int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
+    uint8_t *buf = downloadFile(url, &defaultLen);
+
+    bitmapHeader bmpHeader;
+    readBmpHeader(buf, &bmpHeader);
+
+    int posX, posY;
+    getPointsForPosition(position, bmpHeader.width, bmpHeader.height, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
+    ret = drawBitmapFromBuffer(buf, posX, posY, dither, invert);
+    free(buf);
+
+    return ret;
 }
 
 bool Image::drawBmpFromSdAtPosition(const char *fileName, const Position &position, const bool dither,
