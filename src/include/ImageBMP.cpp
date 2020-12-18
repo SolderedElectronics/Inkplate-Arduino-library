@@ -288,7 +288,7 @@ bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, 
     bitmapHeader bmpHeader;
     readBmpHeader(buf, &bmpHeader);
 
-    int posX, posY;
+    uint16_t posX, posY;
     getPointsForPosition(position, bmpHeader.width, bmpHeader.height, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
     ret = drawBitmapFromBuffer(buf, posX, posY, dither, invert);
     free(buf);
@@ -299,5 +299,32 @@ bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, 
 bool Image::drawBmpFromSdAtPosition(const char *fileName, const Position &position, const bool dither,
                                     const bool invert)
 {
-    return 0;
+    SdFile dat;
+    if (!dat.open(fileName, O_RDONLY))
+        return 0;
+    bitmapHeader bmpHeader;
+
+    readBmpHeaderSd(&dat, &bmpHeader);
+
+    if (!legalBmp(&bmpHeader))
+        return 0;
+
+    int16_t w = bmpHeader.width, h = bmpHeader.height;
+    int8_t c = bmpHeader.color;
+
+    dat.seekSet(bmpHeader.startRAW);
+    if (dither)
+        memset(ditherBuffer, 0, sizeof ditherBuffer);
+
+    uint16_t posX, posY;
+    getPointsForPosition(position, bmpHeader.width, bmpHeader.height, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
+
+    for (int i = 0; i < h; ++i)
+    {
+        int16_t n = ROWSIZE(w, c);
+        dat.read(pixelBuffer, n);
+        displayBmpLine(posX, posY + bmpHeader.height - i - 1, &bmpHeader, dither, invert);
+    }
+
+    return 1;
 }

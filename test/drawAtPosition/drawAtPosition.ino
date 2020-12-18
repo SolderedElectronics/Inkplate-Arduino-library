@@ -20,9 +20,7 @@ void loop()
         return;
     }
 
-    display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
-                      "inkplate10-integration/test/drawImage/png.png",
-                      display.PNG, display.BottomLeft);
+    display.drawImage("test.bmp", display.BMP, display.TopRight);
     display.display();
 
     delay(5000);
