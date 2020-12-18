@@ -7,7 +7,7 @@ void setup()
     Serial.begin(115200);
     display.begin();
 
-    display.joinAP("e-radionica.com", "croduino");
+    display.joinAP("", "");
 }
 
 void loop()
