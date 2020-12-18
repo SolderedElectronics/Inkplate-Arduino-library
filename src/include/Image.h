@@ -40,7 +40,8 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
         TopLeft,
         BottomLeft,
         TopRight,
-        BottomRight
+        BottomRight,
+        _npos
     } Position;
 
     Image(int16_t w, int16_t h);
@@ -106,6 +107,9 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     void ditherSwap(int w);
     uint8_t ditherGetPixelBmp(uint8_t px, int i, int w, bool paletted);
 
+    void getPointsForPosition(const Position &position, const uint16_t imageWidth, const uint16_t imageHeight,
+                              const uint16_t screenWidth, const uint16_t screenHeight, uint16_t *posX, uint16_t *posY);
+
   private:
     virtual void startWrite(void) = 0;
     virtual void writePixel(int16_t x, int16_t y, uint16_t color) = 0;
@@ -135,9 +139,6 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     void readBmpHeaderSd(SdFile *_f, bitmapHeader *_h);
 
     inline void displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool dither, bool invert);
-
-    void getPointsForPosition(const Position &position, const uint16_t imageWidth, const uint16_t imageHeight,
-                              const uint16_t screenWidth, const uint16_t screenHeight, uint16_t *posX, uint16_t *posY);
 
     bool drawJpegFromWebAtPosition(const char *url, const Position &position, const bool dither = 0,
                                    const bool invert = 0);

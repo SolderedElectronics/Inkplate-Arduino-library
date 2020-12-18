@@ -6,6 +6,8 @@ void setup()
 {
     Serial.begin(115200);
     display.begin();
+
+    display.joinAP("e-radionica.com", "croduino");
 }
 
 void loop()
@@ -18,7 +20,9 @@ void loop()
         return;
     }
 
-    display.drawImage("test.jpg", display.JPG, display.BottomRight);
+    display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
+                      "drawImage/png.png",
+                      display.PNG, display.BottomLeft);
     display.display();
 
     delay(5000);

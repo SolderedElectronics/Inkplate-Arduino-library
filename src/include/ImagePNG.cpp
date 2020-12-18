@@ -22,11 +22,19 @@ extern Image *_imagePtrPng;
 static bool _pngInvert = 0;
 static bool _pngDither = 0;
 static int16_t lastY = -1;
-static int16_t _pngX = 0;
-static int16_t _pngY = 0;
+static uint16_t _pngX = 0;
+static uint16_t _pngY = 0;
+static Image::Position _pngPosition = Image::_npos;
 
 void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint8_t rgba[4])
 {
+    if (_pngPosition != Image::_npos)
+    {
+        _imagePtrPng->getPointsForPosition(_pngPosition, pngle_get_width(pngle), pngle_get_height(pngle), E_INK_WIDTH,
+                                           E_INK_HEIGHT, &_pngX, &_pngY);
+        lastY = _pngY;
+        _pngPosition = Image::_npos;
+    }
     if (rgba[3])
         for (int j = 0; j < h; ++j)
             for (int i = 0; i < w; ++i)
@@ -159,14 +167,84 @@ bool Image::drawPngFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither
     return ret;
 }
 
-bool Image::drawPngFromWebAtPosition(const char *fileName, const Position &position, const bool dither,
-                                     const bool invert)
+bool Image::drawPngFromWebAtPosition(const char *url, const Position &position, const bool dither, const bool invert)
 {
-    return 0;
+    _pngDither = dither;
+    _pngInvert = invert;
+
+    bool ret = 1;
+
+    if (dither)
+        memset(ditherBuffer, 0, sizeof ditherBuffer);
+
+    pngle_t *pngle = pngle_new();
+
+    _pngPosition = position;
+    pngle_set_draw_callback(pngle, pngle_on_draw);
+
+    int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 100;
+    uint8_t *buff = downloadFile(url, &defaultLen);
+
+    if (!buff)
+        return 0;
+
+    if (pngle_feed(pngle, buff, defaultLen) < 0)
+        ret = 0;
+
+    pngle_destroy(pngle);
+    free(buff);
+    _pngPosition = _npos;
+
+    return ret;
 }
 
 bool Image::drawPngFromSdAtPosition(const char *fileName, const Position &position, const bool dither,
                                     const bool invert)
 {
-    return 0;
+    SdFile dat;
+    if (!dat.open(fileName, O_RDONLY))
+    {
+        return 0;
+    }
+
+    _pngDither = dither;
+    _pngInvert = invert;
+
+    bool ret = 1;
+    uint32_t remain = 0;
+
+    if (dither)
+        memset(ditherBuffer, 0, sizeof ditherBuffer);
+
+    pngle_t *pngle = pngle_new();
+
+    _pngPosition = position;
+    pngle_set_draw_callback(pngle, pngle_on_draw);
+    uint32_t total = dat.fileSize();
+    uint8_t buff[2048];
+    uint32_t pnt = 0;
+
+    while (pnt < total)
+    {
+        uint32_t toread = dat.available();
+        if (toread > 0)
+        {
+            int len = dat.read(buff, min((uint32_t)2048, toread));
+            int fed = pngle_feed(pngle, buff, len);
+
+            if (fed < 0)
+            {
+                ret = 0;
+                break;
+            }
+            remain = remain + len - fed;
+            pnt += len;
+        }
+    }
+
+    dat.close();
+    pngle_destroy(pngle);
+    _pngPosition = _npos;
+
+    return ret;
 }

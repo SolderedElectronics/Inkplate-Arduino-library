@@ -110,7 +110,6 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position,
 bool Image::drawJpegFromSdAtPosition(const char *fileName, const Position &position, const bool dither,
                                      const bool invert)
 {
-    Serial.println("aaaaa");
     uint8_t ret = 0;
 
     SdFile dat;
@@ -132,15 +131,6 @@ bool Image::drawJpegFromSdAtPosition(const char *fileName, const Position &posit
     if (buff == NULL)
         return 0;
 
-    uint16_t w = 0;
-    uint16_t h = 0;
-    JRESULT r = TJpgDec.getJpgSize(&w, &h, buff, total);
-    if (r != JDR_OK)
-    {
-        free(buff);
-        return 0;
-    }
-
     while (pnt < total)
     {
         uint32_t toread = dat.available();
@@ -154,6 +144,16 @@ bool Image::drawJpegFromSdAtPosition(const char *fileName, const Position &posit
     dat.close();
 
     uint16_t posX, posY;
+
+    uint16_t w = 0;
+    uint16_t h = 0;
+    JRESULT r = TJpgDec.getJpgSize(&w, &h, buff, total);
+    if (r != JDR_OK)
+    {
+        free(buff);
+        return 0;
+    }
+
     getPointsForPosition(position, w, h, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
 
     Serial.println(posX);
