@@ -191,6 +191,9 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
     TJpgDec.setCallback(drawJpegChunk);
 
     int err = TJpgDec.drawJpg(x, y, buff, len, dither, invert);
+
+    Serial.printf("Error: %d", err);
+
     if (err == 0)
         ret = 1;
 
