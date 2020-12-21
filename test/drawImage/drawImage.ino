@@ -31,7 +31,7 @@ char *formatFolders[] = {"bmp1bit", "bmp4bit", "bmp8bit", "bmp16bit", "bmp24bit"
 char *formatExtension[] = {"bmp", "bmp", "bmp", "bmp", "bmp", "bmp", "jpg", "png"};
 
 char *formatStr = "https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
-                  "inkplate10-integration/test/drawImage/imageGrid/%s/tile%03d.%s";
+                  "inkplate10-integration/test/drawImage/imageGrid/%s/tile%d.%s";
 
 void setup()
 {
@@ -62,7 +62,7 @@ void loop()
         int x = i % m, y = i / m;
 
         char url[256];
-        sprintf(url, formatStr, "jpg", i, "jpg");
+        sprintf(url, formatStr, "bmp24bit", i, "jpg");
 
         Serial.println(url);
         Serial.println(display.drawImage(url, x * 60, y * 60, 1, 0));
