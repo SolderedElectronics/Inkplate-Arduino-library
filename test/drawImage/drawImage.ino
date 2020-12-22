@@ -21,6 +21,7 @@ Distributed as-is; no warranty is given.
 #include "sample3bit.h"
 
 // zsh script for converting filetypes: for x (./jpg/*); do convert $x -depth 24 ./bmp24bit/${x:r:t}.bmp; done
+// for x (./jpg/*); do ffmpeg -i $x  -pix_fmt rgb565 -y ./bmp16bit/${x:r:t}.bmp; done
 
 Inkplate display(INKPLATE_3BIT);
 
@@ -30,8 +31,10 @@ const int n = E_INK_HEIGHT / testImgHeight, m = E_INK_WIDTH / testImgWidth;
 char *formatFolders[] = {"bmp1bit", "bmp4bit", "bmp8bit", "bmp16bit", "bmp24bit", "bmp32bit", "jpg", "png"};
 char *formatExtension[] = {"bmp", "bmp", "bmp", "bmp", "bmp", "bmp", "jpg", "png"};
 
-char *formatStr = "https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
-                  "inkplate10-integration/test/drawImage/imageGrid/%s/tile%d.%s";
+char *formatStrWeb = "https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
+                     "inkplate10-integration/test/drawImage/imageGrid/%s/tile%d.%s";
+
+char *formatStrSd = "imageGrid/%s/tile%d.%s";
 
 void setup()
 {
@@ -42,13 +45,14 @@ void setup()
 
     display.begin();
     display.joinAP("e-radionica.com", "croduino");
+    display.sdCardInit();
 }
 
 void loop()
 {
     // -------- BW ---------
     display.clearDisplay();
-    for (int i = 3; i < 128; ++i)
+    for (int i = 0; i < 128; ++i)
     {
         Serial.println(i);
         delay(100);
@@ -62,10 +66,11 @@ void loop()
         int x = i % m, y = i / m;
 
         char url[256];
-        sprintf(url, formatStr, "bmp24bit", i, "jpg");
+        sprintf(url, formatStrSd, formatFolders[format], i + 1, formatExtension[format]);
 
         Serial.println(url);
-        Serial.println(display.drawImage(url, x * 60, y * 60, 1, 0));
+        Serial.printf("dithered: %d inverted: %d\n", dither, invert);
+        Serial.println(display.drawImage(url, x * 60, y * 60, dither, invert));
         Serial.printf("%d %d\n", x * 60, y * 60);
 
         display.display();

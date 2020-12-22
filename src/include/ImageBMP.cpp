@@ -18,9 +18,12 @@ Distributed as-is; no warranty is given.
 
 bool Image::legalBmp(bitmapHeader *bmpHeader)
 {
-    return bmpHeader->signature == 0x4D42 && bmpHeader->compression == 0 &&
-           (bmpHeader->color == 1 || bmpHeader->color == 4 || bmpHeader->color == 8 || bmpHeader->color == 16 ||
-            bmpHeader->color == 24 || bmpHeader->color == 32);
+    return bmpHeader->signature == 0x4D42;
+
+    // removed
+    // && bmpHeader->compression == 0 && (bmpHeader->color == 1 || bmpHeader->color == 4 || bmpHeader->color == 8 ||
+    // bmpHeader->color == 16 || bmpHeader->color == 24 || bmpHeader->color == 32)
+    // because some converters don't set image depth
 }
 
 void Image::readBmpHeaderSd(SdFile *_f, bitmapHeader *_h)
