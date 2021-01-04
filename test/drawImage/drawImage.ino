@@ -20,6 +20,8 @@ Distributed as-is; no warranty is given.
 #include "img.h"
 #include "img_g.h"
 
+//#define SEQUENTIAL
+
 // zsh script for converting filetypes: for x (./jpg/*); do convert $x -depth 24 ./bmp24bit/${x:r:t}.bmp; done
 // for x (./jpg/*); do ffmpeg -i $x  -pix_fmt rgb565 -y ./bmp16bit/${x:r:t}.bmp; done
 
@@ -97,7 +99,9 @@ void drawAll()
             Serial.println(display.drawImage(web ? url : path, formats[format], x * 60, y * 60, dither, invert));
         }
         Serial.printf("%d %d\n", x * 60, y * 60);
+#ifdef SEQUENTIAL
         display.display();
+#endif
     }
 
     int x = (128 % m) * 60, y = (128 / m) * 60;
@@ -105,7 +109,9 @@ void drawAll()
         display.drawImage(img, x, y, img_w, img_w);
     else
         display.drawImage(img_g, x, y, img_g_w, img_g_w);
+#ifdef SEQUENTIAL
     display.display();
+#endif
     delay(3000);
 
     x = (129 % m) * 60, y = (129 / m) * 60;
@@ -113,6 +119,7 @@ void drawAll()
         display.drawImage(img, x, y, img_w, img_w, BLACK);
     else
         display.drawImage(img_g, x, y, img_g_w, img_g_w);
+
     display.display();
     delay(3000);
 }
