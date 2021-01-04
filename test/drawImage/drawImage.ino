@@ -33,16 +33,15 @@ Inkplate display(INKPLATE_3BIT);
 const int testImgHeight = 60, testImgWidth = 60;
 const int n = E_INK_HEIGHT / testImgHeight, m = E_INK_WIDTH / testImgWidth;
 
-char *formatFolders[] = {"bmp1bit", "bmp4bit", "bmp8bit", "bmp16bit", "bmp24bit", "bmp32bit", "jpg", "png"};
 char *formatExtension[] = {"bmp", "bmp", "bmp", "bmp", "bmp", "bmp", "jpg", "png"};
 
 char *formatStrWeb = "https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
-                     "inkplate10-integration/test/drawImage/imageGrid/%s/tile%d.%s";
+                     "inkplate10-integration/test/drawImage/tile%d.%s";
 
 Image::Format formats[] = {Image::BMP, Image::BMP, Image::BMP, Image::BMP,
                            Image::BMP, Image::BMP, Image::JPG, Image::PNG};
 
-char *formatStrSd = "imageGrid/%s/tile%d.%s";
+char *formatStrSd = "tile%d.%s";
 
 void drawAll();
 
