@@ -17,6 +17,11 @@ Distributed as-is; no warranty is given.
 
 #include "Inkplate.h"
 
+#include "tile129.h"
+#include "tile129_g.h"
+#include "tile130.h"
+#include "tile130_g.h"
+
 #include "sample1bit.h"
 #include "sample3bit.h"
 
@@ -34,7 +39,12 @@ char *formatExtension[] = {"bmp", "bmp", "bmp", "bmp", "bmp", "bmp", "jpg", "png
 char *formatStrWeb = "https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
                      "inkplate10-integration/test/drawImage/imageGrid/%s/tile%d.%s";
 
+Image::Format formats[] = {Image::BMP, Image::BMP, Image::BMP, Image::BMP,
+                           Image::BMP, Image::BMP, Image::JPG, Image::PNG};
+
 char *formatStrSd = "imageGrid/%s/tile%d.%s";
+
+void drawAll();
 
 void setup()
 {
@@ -51,12 +61,22 @@ void setup()
 void loop()
 {
     // -------- BW ---------
+    display.setDisplayMode(INKPLATE_1BIT);
+    drawAll();
+
+    delay(5000);
+
+    display.setDisplayMode(INKPLATE_3BIT);
+    drawAll();
+
+    delay(5000);
+}
+
+void drawAll()
+{
     display.clearDisplay();
     for (int i = 0; i < 128; ++i)
     {
-        Serial.println(i);
-        delay(100);
-
         bool web = i & 1;            // or sd
         bool dither = i & 2;         // or not to dither
         bool invert = i & 4;         // or not to invert
@@ -66,33 +86,38 @@ void loop()
         int x = i % m, y = i / m;
 
         char url[256];
-        sprintf(url, formatStrSd, formatFolders[format], i + 1, formatExtension[format]);
+        sprintf(url, formatStrWeb, formatFolders[format], i + 1, formatExtension[format]);
+        char path[128];
+        sprintf(path, formatStrSd, formatFolders[format], i + 1, formatExtension[format]);
 
-        Serial.println(url);
+        Serial.println(web ? url : path);
         Serial.printf("dithered: %d inverted: %d\n", dither, invert);
-        Serial.println(display.drawImage(url, x * 60, y * 60, dither, invert));
-        Serial.printf("%d %d\n", x * 60, y * 60);
 
+        if (autoFormat)
+        {
+            Serial.println(display.drawImage(web ? url : path, x * 60, y * 60, dither, invert));
+        }
+        else
+        {
+            Serial.println(display.drawImage(web ? url : path, formats[format], x * 60, y * 60, dither, invert));
+        }
+        Serial.printf("%d %d\n", x * 60, y * 60);
         display.display();
     }
 
+    int x = (128 % m) * 60, y = (128 / m) * 60;
+    if (display.getDisplayMode() == INKPLATE_1BIT)
+        display.drawImage(tile129, x, y, tile129_w, tile129_w);
+    else
+        display.drawImage(tile129_g, x, y, tile129_g_w, tile129_g_w);
     display.display();
-    delay(5000);
+    delay(3000);
 
-    // ------- gray --------
-    // for (int i = 0; i < 128; ++i)
-    // {
-    //     bool web = i & 1;        // or sd
-    //     bool dither = i & 2;     // or not to dither
-    //     bool invert = i & 4;     // or not to invert
-    //     bool autoFormat = i & 8; // or not to auto format
-    //     bool format = i & 112;   // 1bitBMP 4bitBMP 8bitBMP 16bitBMP 24bitBMP 32bitBMP PNG JPG
-
-    //     drawImage();
-
-    //     int x = i % m, y = i / m;
-    // }
-
+    x = (129 % m) * 60, y = (129 / m) * 60;
+    if (display.getDisplayMode() == INKPLATE_1BIT)
+        display.drawImage(tile130, x, y, tile130_w, tile130_w, BLACK);
+    else
+        display.drawImage(tile130_g, x, y, tile130_g_w, tile130_g_w);
     display.display();
-    delay(5000);
+    delay(3000);
 }
