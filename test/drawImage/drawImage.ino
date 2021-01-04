@@ -2,7 +2,7 @@
 drawImage.ino
 Inkplate 6 Arduino library
 Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
+January 4, 2021
 https://github.com/e-radionicacom/Inkplate-6-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
@@ -20,19 +20,24 @@ Distributed as-is; no warranty is given.
 #include "img.h"
 #include "img_g.h"
 
-//#define SEQUENTIAL
+#define SEQUENTIAL
 
 // zsh script for converting filetypes: for x (./jpg/*); do convert $x -depth 24 ./bmp24bit/${x:r:t}.bmp; done
 // for x (./jpg/*); do ffmpeg -i $x  -pix_fmt rgb565 -y ./bmp16bit/${x:r:t}.bmp; done
 
 Inkplate display(INKPLATE_3BIT);
 
+#ifdef ARDUINO_ESP32_DEV
 const int testImgHeight = 60, testImgWidth = 60;
-const int n = E_INK_HEIGHT / testImgHeight, m = E_INK_WIDTH / testImgWidth;
-
 char *filename[] = {"img1bit.bmp",  "img4bit.bmp",  "img8bit.bmp", "img16bit.bmp",
                     "img24bit.bmp", "img32bit.bmp", "img.jpg",     "img.png"};
+#else // Inkplate10
+const int testImgHeight = 92, testImgWidth = 92;
+char *filename[] = {"img_2_1bit.bmp",  "img_2_4bit.bmp",  "img_2_8bit.bmp", "img_2_16bit.bmp",
+                    "img_2_24bit.bmp", "img_2_32bit.bmp", "img_2_jpg",      "img_2.png"};
+#endif
 
+const int n = E_INK_HEIGHT / testImgHeight, m = E_INK_WIDTH / testImgWidth;
 char *formatStrWeb = "https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
                      "inkplate10-integration/test/drawImage/%s";
 
