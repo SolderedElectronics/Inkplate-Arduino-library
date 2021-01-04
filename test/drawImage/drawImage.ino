@@ -17,13 +17,8 @@ Distributed as-is; no warranty is given.
 
 #include "Inkplate.h"
 
-#include "tile129.h"
-#include "tile129_g.h"
-#include "tile130.h"
-#include "tile130_g.h"
-
-#include "sample1bit.h"
-#include "sample3bit.h"
+#include "img.h"
+#include "img_g.h"
 
 // zsh script for converting filetypes: for x (./jpg/*); do convert $x -depth 24 ./bmp24bit/${x:r:t}.bmp; done
 // for x (./jpg/*); do ffmpeg -i $x  -pix_fmt rgb565 -y ./bmp16bit/${x:r:t}.bmp; done
@@ -33,15 +28,16 @@ Inkplate display(INKPLATE_3BIT);
 const int testImgHeight = 60, testImgWidth = 60;
 const int n = E_INK_HEIGHT / testImgHeight, m = E_INK_WIDTH / testImgWidth;
 
-char *formatExtension[] = {"bmp", "bmp", "bmp", "bmp", "bmp", "bmp", "jpg", "png"};
+char *filename[] = {"img1bit.bmp",  "img4bit.bmp",  "img8bit.bmp", "img16bit.bmp",
+                    "img24bit.bmp", "img32bit.bmp", "img.jpg",     "img.png"};
 
 char *formatStrWeb = "https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
-                     "inkplate10-integration/test/drawImage/tile%d.%s";
+                     "inkplate10-integration/test/drawImage/%s";
 
 Image::Format formats[] = {Image::BMP, Image::BMP, Image::BMP, Image::BMP,
                            Image::BMP, Image::BMP, Image::JPG, Image::PNG};
 
-char *formatStrSd = "tile%d.%s";
+char *formatStrSd = "%s";
 
 void drawAll();
 
@@ -85,9 +81,9 @@ void drawAll()
         int x = i % m, y = i / m;
 
         char url[256];
-        sprintf(url, formatStrWeb, formatFolders[format], i + 1, formatExtension[format]);
+        sprintf(url, formatStrWeb, filename[format]);
         char path[128];
-        sprintf(path, formatStrSd, formatFolders[format], i + 1, formatExtension[format]);
+        sprintf(path, formatStrSd, filename[format]);
 
         Serial.println(web ? url : path);
         Serial.printf("dithered: %d inverted: %d\n", dither, invert);
@@ -106,17 +102,17 @@ void drawAll()
 
     int x = (128 % m) * 60, y = (128 / m) * 60;
     if (display.getDisplayMode() == INKPLATE_1BIT)
-        display.drawImage(tile129, x, y, tile129_w, tile129_w);
+        display.drawImage(img, x, y, img_w, img_w);
     else
-        display.drawImage(tile129_g, x, y, tile129_g_w, tile129_g_w);
+        display.drawImage(img_g, x, y, img_g_w, img_g_w);
     display.display();
     delay(3000);
 
     x = (129 % m) * 60, y = (129 / m) * 60;
     if (display.getDisplayMode() == INKPLATE_1BIT)
-        display.drawImage(tile130, x, y, tile130_w, tile130_w, BLACK);
+        display.drawImage(img, x, y, img_w, img_w, BLACK);
     else
-        display.drawImage(tile130_g, x, y, tile130_g_w, tile130_g_w);
+        display.drawImage(img_g, x, y, img_g_w, img_g_w);
     display.display();
     delay(3000);
 }
