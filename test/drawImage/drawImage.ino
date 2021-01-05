@@ -17,10 +17,15 @@ Distributed as-is; no warranty is given.
 
 #include "Inkplate.h"
 
+#ifdef ARDUINO_ESP32_DEV
 #include "img.h"
 #include "img_g.h"
+#else
+#include "img_2.h"
+#include "img_2_g.h"
+#endif
 
-#define SEQUENTIAL
+// #define SEQUENTIAL
 
 // zsh script for converting filetypes: for x (./jpg/*); do convert $x -depth 24 ./bmp24bit/${x:r:t}.bmp; done
 // for x (./jpg/*); do ffmpeg -i $x  -pix_fmt rgb565 -y ./bmp16bit/${x:r:t}.bmp; done
@@ -32,9 +37,9 @@ const int testImgHeight = 60, testImgWidth = 60;
 char *filename[] = {"img1bit.bmp",  "img4bit.bmp",  "img8bit.bmp", "img16bit.bmp",
                     "img24bit.bmp", "img32bit.bmp", "img.jpg",     "img.png"};
 #else // Inkplate10
-const int testImgHeight = 92, testImgWidth = 92;
+const int testImgHeight = 92 - 11, testImgWidth = 92;
 char *filename[] = {"img_2_1bit.bmp",  "img_2_4bit.bmp",  "img_2_8bit.bmp", "img_2_16bit.bmp",
-                    "img_2_24bit.bmp", "img_2_32bit.bmp", "img_2_jpg",      "img_2.png"};
+                    "img_2_24bit.bmp", "img_2_32bit.bmp", "img_2.jpg",      "img_2.png"};
 #endif
 
 const int n = E_INK_HEIGHT / testImgHeight, m = E_INK_WIDTH / testImgWidth;
@@ -50,13 +55,10 @@ void drawAll();
 
 void setup()
 {
-    Serial.println("Commencing test...");
-    delay(100);
-
     Serial.begin(115200);
 
     display.begin();
-    display.joinAP("e-radionica.com", "croduino");
+    display.joinAP("", "");
     display.sdCardInit();
 }
 
@@ -97,19 +99,20 @@ void drawAll()
 
         if (autoFormat)
         {
-            Serial.println(display.drawImage(web ? url : path, x * 60, y * 60, dither, invert));
+            Serial.println(display.drawImage(web ? url : path, x * testImgWidth, y * testImgHeight, dither, invert));
         }
         else
         {
-            Serial.println(display.drawImage(web ? url : path, formats[format], x * 60, y * 60, dither, invert));
+            Serial.println(display.drawImage(web ? url : path, formats[format], x * testImgWidth, y * testImgHeight,
+                                             dither, invert));
         }
-        Serial.printf("%d %d\n", x * 60, y * 60);
+        Serial.printf("%d %d\n", x * testImgWidth, y * testImgHeight);
 #ifdef SEQUENTIAL
         display.display();
 #endif
     }
 
-    int x = (128 % m) * 60, y = (128 / m) * 60;
+    int x = (128 % m) * testImgWidth, y = (128 / m) * testImgHeight;
     if (display.getDisplayMode() == INKPLATE_1BIT)
         display.drawImage(img, x, y, img_w, img_w);
     else
@@ -119,7 +122,7 @@ void drawAll()
 #endif
     delay(3000);
 
-    x = (129 % m) * 60, y = (129 / m) * 60;
+    x = (129 % m) * testImgWidth, y = (129 / m) * testImgHeight;
     if (display.getDisplayMode() == INKPLATE_1BIT)
         display.drawImage(img, x, y, img_w, img_w, BLACK);
     else
