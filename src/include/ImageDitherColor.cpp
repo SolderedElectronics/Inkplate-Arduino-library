@@ -14,9 +14,11 @@ static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
 uint8_t Image::findClosestPalette(uint32_t c)
 {
     int mi = 0;
-    for (int i = 1; i < sizeof pallete[0] / sizeof pallete; ++i)
+    for (int i = 1; i < sizeof pallete / sizeof pallete[0]; ++i)
+    {
         if (COLORDISTSQR(c, pallete[i]) < COLORDISTSQR(c, pallete[mi]))
             mi = i;
+    }
     return mi;
 }
 

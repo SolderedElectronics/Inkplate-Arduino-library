@@ -85,7 +85,6 @@ void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
             uint8_t r = (c & 0xFF000000) >> 24;
             uint8_t g = (c & 0x00FF0000) >> 16;
             uint8_t b = (c & 0x0000FF00) >> 8;
-
 #ifdef ARDUINO_INKPLATECOLOR
             palette[i >> 1] |= findClosestPalette(c) << (i & 1 ? 0 : 4);
             ditherPalette[i] = c;
@@ -203,17 +202,15 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
                 val = ditherGetPixelBmp(px, j, w, 1);
             else
             {
-#ifdef ARUDUINO_INKPLATECOLOR
                 val = palette[px >> 1] & (px & 1 ? 0x0F : 0xF0) >> (px & 1 ? 0 : 4);
-#else
-                val = palette[px >> 1] & (px & 1 ? 0x0F : 0xF0) >> (px & 1 ? 0 : 4);
-#endif
             }
+
+#ifndef ARDUINO_INKPLATECOLOR
             if (invert)
                 val = 7 - val;
             if (getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
-
+#endif
             writePixel(x + j, y, val);
             break;
         }
@@ -225,7 +222,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
                 val = ditherGetPixelBmp(px, j, w, 1);
             else
             {
-#ifdef ARUDUINO_INKPLATECOLOR
+#ifdef ARDUINO_INKPLATECOLOR
                 val = palette[px >> 1] & (px & 1 ? 0x0F : 0xF0) >> (px & 1 ? 0 : 4);
 #else
                 val = palette[px >> 1] & (px & 1 ? 0x0F : 0xF0) >> (px & 1 ? 0 : 4);

@@ -88,6 +88,9 @@ Distributed as-is; no warranty is given.
 #define GREEN(a) ((((a)&0x07e0) >> 5) << 2)
 #define BLUE(a)  (((a)&0x001f) << 3)
 
+#define RED8(a)   (((a) >> 16) & 0xff)
+#define GREEN8(a) (((a) >> 8) & 0xff)
+#define BLUE8(a)  (((a)) & 0xff)
 
 #define CL 0x01
 #define CL_SET                                                                                                         \
@@ -157,7 +160,7 @@ Distributed as-is; no warranty is given.
 
 #define DATA 0x0E8C0030
 
-#define SQR(a)             (a) * (a)
-#define COLORDISTSQR(x, y) (SQR(RED(x) - RED(y)) + SQR(GREEN(x) - GREEN(y)) + SQR(BLUE(x) - BLUE(y)))
+#define SQR(a)             ((a) * (a))
+#define COLORDISTSQR(x, y) (SQR(RED8(x) - RED8(y)) + SQR(GREEN8(x) - GREEN8(y)) + SQR(BLUE8(x) - BLUE8(y)))
 
 #endif

@@ -11,9 +11,9 @@ void setup()
 
 void loop()
 {
-    display.drawImage(
-        "https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/master/test/bitmaps/1bit.bmp", 0, 0,
-        false);
+    display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
+                      "inkplate10-integration/test/test/4bit.bmp",
+                      0, 0, false);
     display.display();
     Serial.println("Done");
     delay(5000);
