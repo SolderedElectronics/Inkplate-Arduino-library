@@ -15,6 +15,5 @@ void loop()
                       "inkplate10-integration/test/test/8bit.bmp",
                       0, 0, false);
     display.display();
-    Serial.println("Done");
     delay(5000);
 }

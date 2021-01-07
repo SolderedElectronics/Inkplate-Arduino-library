@@ -171,7 +171,6 @@ bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool i
         displayBmpLine(x, y + bmpHeader.height - i - 1, &bmpHeader, dither, invert);
         bufferPtr += ROWSIZE(bmpHeader.width, bmpHeader.color);
     }
-
     return 1;
 }
 
@@ -223,7 +222,6 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             else
             {
                 val = palette[px >> 1] & (px & 1 ? 0x0F : 0xF0) >> (px & 1 ? 0 : 4);
-                Serial.println(val);
             }
 
 #ifndef ARDUINO_INKPLATECOLOR
