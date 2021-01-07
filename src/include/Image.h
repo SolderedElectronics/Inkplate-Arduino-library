@@ -127,8 +127,12 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     int16_t blockW = 0, blockH = 0;
     int16_t lastY = -1;
 
-    uint8_t ditherPalette[256]; // 8 bit colors
-    uint8_t palette[128];       // 2 3 bit colors per byte, _###_###
+#ifdef ARDUINO_INKPLATECOLOR
+    uint8_t findClosestPalette(uint32_t c);
+#endif
+
+    uint32_t ditherPalette[256]; // 8 bit colors, in color, 3x8 bit colors
+    uint8_t palette[128];        // 2 3 bit colors per byte, _###_###
 
     bool legalBmp(bitmapHeader *bmpHeader);
 

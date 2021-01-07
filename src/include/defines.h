@@ -25,6 +25,8 @@ Distributed as-is; no warranty is given.
 #include "../boards/Inkplate10.h"
 #elif ARDUINO_INKPLATE6PLUS
 #include "../boards/Inkplate6plus.h"
+#elif ARDUINO_INKPLATECOLOR
+#include "../boards/InkplateColor.h"
 #endif
 
 #define BLACK 1
@@ -154,5 +156,8 @@ Distributed as-is; no warranty is given.
 #define GPIO0_ENABLE 8
 
 #define DATA 0x0E8C0030
+
+#define SQR(a)             (a) * (a)
+#define COLORDISTSQR(x, y) (SQR(RED(x) - RED(y)) + SQR(GREEN(x) - GREEN(y)) + SQR(BLUE(x) - BLUE(y)))
 
 #endif

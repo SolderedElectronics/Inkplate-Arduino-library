@@ -3,10 +3,10 @@
 #include "../include/defines.h"
 
 #ifdef ARDUINO_INKPLATE10
-void Inkplate::begin()
+bool Inkplate::begin(void)
 {
     if (_beginDone == 1)
-        return;
+        return 0;
 
     Wire.begin();
     memset(mcpRegsInt, 0, 22);
@@ -83,10 +83,7 @@ void Inkplate::begin()
     if (DMemoryNew == NULL || _partial == NULL || _pBuffer == NULL || DMemory4Bit == NULL || GLUT == NULL ||
         GLUT2 == NULL)
     {
-        do
-        {
-            delay(100);
-        } while (true);
+        return 0;
     }
     memset(DMemoryNew, 0, E_INK_WIDTH * E_INK_HEIGHT / 8);
     memset(_partial, 0, E_INK_WIDTH * E_INK_HEIGHT / 8);
@@ -107,6 +104,7 @@ void Inkplate::begin()
     }
 
     _beginDone = 1;
+    return 1;
 }
 
 void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
@@ -156,10 +154,10 @@ void Inkplate::display1b()
     uint8_t data;
     uint8_t dram;
     einkOn();
-    cleanFast(0, 10);
-    cleanFast(1, 10);
-    cleanFast(0, 10);
-    cleanFast(1, 10);
+    clean(0, 10);
+    clean(1, 10);
+    clean(0, 10);
+    clean(1, 10);
     for (int k = 0; k < 5; k++)
     {
         _pos = (E_INK_HEIGHT * E_INK_WIDTH / 8) - 1;
@@ -191,8 +189,8 @@ void Inkplate::display1b()
         delayMicroseconds(230);
     }
 
-    cleanFast(2, 2);
-    cleanFast(3, 1);
+    clean(2, 2);
+    clean(3, 1);
     vscan_start();
     einkOff();
     _blockPartial = 0;
@@ -201,10 +199,10 @@ void Inkplate::display1b()
 void IRAM_ATTR Inkplate::display3b()
 {
     einkOn();
-    cleanFast(0, 10);
-    cleanFast(1, 10);
-    cleanFast(0, 10);
-    cleanFast(1, 10);
+    clean(0, 10);
+    clean(1, 10);
+    clean(0, 10);
+    clean(1, 10);
 
     for (int k = 0; k < 8; k++)
     {
@@ -231,7 +229,7 @@ void IRAM_ATTR Inkplate::display3b()
         }
         delayMicroseconds(230);
     }
-    cleanFast(3, 1);
+    clean(3, 1);
     vscan_start();
     einkOff();
 }
@@ -291,15 +289,15 @@ void Inkplate::partialUpdate(bool _forced)
         }
         delayMicroseconds(230);
     }
-    cleanFast(2, 2);
-    cleanFast(3, 1);
+    clean(2, 2);
+    clean(3, 1);
     vscan_start();
     einkOff();
 
     memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
 }
 
-void Inkplate::cleanFast(uint8_t c, uint8_t rep)
+void Inkplate::clean(uint8_t c, uint8_t rep)
 {
     einkOn();
     uint8_t data = 0;

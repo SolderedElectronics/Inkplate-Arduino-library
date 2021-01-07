@@ -33,15 +33,22 @@ class Inkplate : public System, public Graphics
 {
   public:
     Inkplate(uint8_t _mode);
-    void begin(void); // In boards
+    bool begin(void); // In boards
     void clearDisplay();
     void display();
-    void preloadScreen();
     void partialUpdate(bool _forced = false);
+
+#ifdef ARDUINO_INKPLATECOLOR
+    void clean();
+    void setPanelState(bool _state);
+    bool getPanelState();
+#else
     void einkOn();
     void einkOff();
+    void preloadScreen();
     uint8_t readPowerGood();
-    void cleanFast(uint8_t c, uint8_t rep);
+    void clean(uint8_t c, uint8_t rep);
+#endif
 
     bool joinAP(const char *ssid, const char *pass)
     {
@@ -63,8 +70,17 @@ class Inkplate : public System, public Graphics
   private:
     void precalculateGamma(uint8_t *c, float gamma);
 
+#ifdef ARDUINO_INKPLATECOLOR
+    bool _panelState = false;
+
+    void resetPanel();
+    void sendCommand(uint8_t _command);
+    void sendData(uint8_t *_data, int _n);
+    void sendData(uint8_t _data);
+#else
     void display1b();
     void display3b();
+
     void vscan_start();
     void vscan_end();
     void hscan_start(uint32_t _d = 0);
@@ -74,10 +90,13 @@ class Inkplate : public System, public Graphics
     uint32_t pinLUT[256];
     uint32_t *GLUT;
     uint32_t *GLUT2;
+#endif
 
     uint8_t _beginDone = 0;
 
+#ifdef WAVEFORM3BIT
     const uint8_t waveform3Bit[8][9] = WAVEFORM3BIT;
+#endif
 };
 
 #endif

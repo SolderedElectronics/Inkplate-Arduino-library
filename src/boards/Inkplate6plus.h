@@ -43,8 +43,6 @@
 
 #define E_INK_WIDTH   1024
 #define E_INK_HEIGHT  758
-#define BLACK         1
-#define WHITE         0
 #define GPIO0_ENABLE  8
 #define INKPLATE_1BIT 0
 #define INKPLATE_3BIT 1

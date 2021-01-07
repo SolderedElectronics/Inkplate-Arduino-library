@@ -19,14 +19,19 @@ Distributed as-is; no warranty is given.
 Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
 {
     setDisplayMode(_mode);
+#ifndef ARDUINO_INKPLATECOLOR
     for (uint32_t i = 0; i < 256; ++i)
         pinLUT[i] = ((i & B00000011) << 4) | (((i & B00001100) >> 2) << 18) | (((i & B00010000) >> 4) << 23) |
                     (((i & B11100000) >> 5) << 25);
+#endif
 }
 
 
 void Inkplate::clearDisplay()
 {
+#ifdef ARDUINO_INKPLATECOLOR
+    memset(DMemory4Bit, 255, E_INK_WIDTH * E_INK_HEIGHT / 2);
+#else
     // Clear 1 bit per pixel display buffer
     if (getDisplayMode() == 0)
         memset(_partial, 0, E_INK_WIDTH * E_INK_HEIGHT / 8);
@@ -34,8 +39,10 @@ void Inkplate::clearDisplay()
     // Clear 3 bit per pixel display buffer
     if (getDisplayMode() == 1)
         memset(DMemory4Bit, 255, E_INK_WIDTH * E_INK_HEIGHT / 2);
+#endif
 }
 
+#ifndef ARDUINO_INKPLATECOLOR
 void Inkplate::display()
 {
     if (getDisplayMode() == 0)
@@ -211,3 +218,5 @@ void Inkplate::pinsAsOutputs()
     pinMode(26, OUTPUT);
     pinMode(27, OUTPUT);
 }
+
+#endif
