@@ -12,7 +12,7 @@ void setup()
 void loop()
 {
     display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
-                      "inkplate10-integration/test/test/4bit.bmp",
+                      "inkplate10-integration/test/test/8bit.bmp",
                       0, 0, false);
     display.display();
     Serial.println("Done");
