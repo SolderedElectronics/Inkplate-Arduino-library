@@ -1,6 +1,6 @@
 #include "Inkplate.h"
 
-Inkplate display(INKPLATE_1BIT);
+Inkplate display(INKPLATE_3BIT);
 
 void setup()
 {

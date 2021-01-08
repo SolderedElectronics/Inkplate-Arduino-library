@@ -267,22 +267,22 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             break;
         }
         case 24: {
-            uint8_t r = pixelBuffer[j * 3];
-            uint8_t g = pixelBuffer[j * 3 + 1];
-            uint8_t b = pixelBuffer[j * 3 + 2];
+            uint32_t b = pixelBuffer[j * 3];
+            uint32_t g = pixelBuffer[j * 3 + 1];
+            uint32_t r = pixelBuffer[j * 3 + 2];
 
             uint8_t val;
 
             if (dither)
 #ifdef ARDUINO_INKPLATECOLOR
-                val = ditherGetPixelBmp(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b), j, y, w, 0);
+                val = ditherGetPixelBmp((r << 16) | (g << 8) | (b), j, y, w, 0);
 #else
                 val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, y, w, 0);
 #endif
             else
             {
 #ifdef ARDUINO_INKPLATECOLOR
-                val = findClosestPalette(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b));
+                val = findClosestPalette((r << 16) | (g << 8) | (b));
 #else
                 val = RGB3BIT(r, g, b);
 #endif

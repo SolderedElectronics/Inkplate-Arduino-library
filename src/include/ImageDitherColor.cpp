@@ -2,8 +2,8 @@
 
 #ifdef ARDUINO_INKPLATECOLOR
 
-static unsigned int pallete[] = {
-    0x000000, 0xFFFFFF, 0x00FF00, 0x0000FF, 0xFF0000, 0xFFFF00, 0xFF8000,
+static uint32_t pallete[] = {
+    0x000000ll, 0xFFFFFFll, 0x008000ll, 0x0000FFll, 0xFF0000ll, 0xFFFF00ll, 0xFFAA00ll,
 };
 
 static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;

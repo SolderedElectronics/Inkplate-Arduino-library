@@ -160,7 +160,7 @@ Distributed as-is; no warranty is given.
 
 #define DATA 0x0E8C0030
 
-#define SQR(a)             ((a) * (a))
+#define SQR(a)             ((int32_t)(a) * (int32_t)(a))
 #define COLORDISTSQR(x, y) (SQR(RED8(x) - RED8(y)) + SQR(GREEN8(x) - GREEN8(y)) + SQR(BLUE8(x) - BLUE8(y)))
 
 #endif
