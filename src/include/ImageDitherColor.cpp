@@ -1,9 +1,6 @@
 #include "Image.h"
-#include "ImageDitherColorKernels.h"
 
 #ifdef ARDUINO_INKPLATECOLOR
-int kernelWidth = sizeof kernel[0] / sizeof kernel[0][0];
-int kernelHeight = sizeof kernel / sizeof kernel[0];
 
 static unsigned int pallete[] = {
     0x000000, 0xFFFFFF, 0x00FF00, 0x0000FF, 0xFF0000, 0xFFFF00, 0xFF8000,
@@ -22,81 +19,56 @@ uint8_t Image::findClosestPalette(uint32_t c)
     return mi;
 }
 
-uint8_t Image::ditherGetPixelBmp(uint8_t px, int i, int w, bool paletted)
+uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted)
 {
     if (paletted)
         px = ditherPalette[px];
 
-    if (getDisplayMode() == INKPLATE_1BIT)
-        px = (uint16_t)px >> 1;
+    int16_t r = RED8(px) + ditherBuffer[0][j % kernelHeight][i];
+    int16_t g = GREEN8(px) + ditherBuffer[1][j % kernelHeight][i];
+    int16_t b = BLUE8(px) + ditherBuffer[2][j % kernelHeight][i];
 
-    uint8_t oldPixel = min((uint16_t)0xFF, (uint16_t)((uint16_t)ditherBuffer[0][i] + px));
+    ditherBuffer[0][j % kernelHeight][i] = ditherBuffer[1][j % kernelHeight][i] = ditherBuffer[2][j % kernelHeight][i] =
+        0;
 
-    uint8_t newPixel = oldPixel & (getDisplayMode() == INKPLATE_1BIT ? B10000000 : B11100000);
-    uint8_t quantError = oldPixel - newPixel;
+    r = max((int16_t)0, min((int16_t)255, r));
+    g = max((int16_t)0, min((int16_t)255, g));
+    b = max((int16_t)0, min((int16_t)255, b));
 
-    ditherBuffer[1][i + 0] += (quantError * 5) >> 4;
-    if (i != w - 1)
+    int closest = findClosestPalette(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b));
+
+    int32_t rErr = r - (int32_t)((pallete[closest] >> 16) & 0xFF);
+    int32_t gErr = g - (int32_t)((pallete[closest] >> 8) & 0xFF);
+    int32_t bErr = b - (int32_t)((pallete[closest] >> 0) & 0xFF);
+
+    for (int k = 0; k < kernelHeight; ++k)
     {
-        ditherBuffer[0][i + 1] += (quantError * 7) >> 4;
-        ditherBuffer[1][i + 1] += (quantError * 1) >> 4;
+        for (int l = -kernelX; l < kernelWidth - kernelX; ++l)
+        {
+            if (!(0 <= i + l && i + l < w))
+                continue;
+            ditherBuffer[0][(j + k) % kernelHeight][i + l] += (kernel[k][l] * rErr) / coef;
+            ditherBuffer[1][(j + k) % kernelHeight][i + l] += (kernel[k][l] * gErr) / coef;
+            ditherBuffer[2][(j + k) % kernelHeight][i + l] += (kernel[k][l] * bErr) / coef;
+        }
     }
-    if (i != 0)
-        ditherBuffer[1][i - 1] += (quantError * 3) >> 4;
 
-    return newPixel >> 5;
+    return closest;
 }
 
-uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h)
+void Image::ditherSwap(int)
 {
-    if (blockW == -1)
-    {
-        blockW = w;
-        blockH = h;
-    }
-
-    if (getDisplayMode() == INKPLATE_1BIT)
-        px = (uint16_t)px >> 1;
-
-    uint16_t oldPixel = min((uint16_t)0xFF, (uint16_t)((uint16_t)px + (uint16_t)jpegDitherBuffer[j + 1][i + 1] +
-                                                       (j ? (uint16_t)0 : (uint16_t)ditherBuffer[0][x + i])));
-
-    uint8_t newPixel = oldPixel & (getDisplayMode() == INKPLATE_1BIT ? B10000000 : B11100000);
-    uint8_t quantError = oldPixel - newPixel;
-
-    jpegDitherBuffer[j + 1 + 1][i + 0 + 1] += (quantError * 5) >> 4;
-
-    jpegDitherBuffer[j + 0 + 1][i + 1 + 1] += (quantError * 7) >> 4;
-    jpegDitherBuffer[j + 1 + 1][i + 1 + 1] += (quantError * 1) >> 4;
-
-    jpegDitherBuffer[j + 1 + 1][i - 1 + 1] += (quantError * 3) >> 4;
-
-    return newPixel >> 5;
-}
-
-void Image::ditherSwap(int w)
-{
-    for (int i = 0; i < w; ++i)
-    {
-        ditherBuffer[0][i] = ditherBuffer[1][i];
-        ditherBuffer[1][i] = 0;
-    }
+    // Not used
 }
 
 void Image::ditherSwapBlockJpeg(int x)
 {
-    for (int i = 0; i < 18; ++i)
-    {
-        if (x + i)
-            ditherBuffer[1][x + i - 1] += jpegDitherBuffer[blockH - 1 + 2][i];
-        jpegDitherBuffer[i][0 + 1] = jpegDitherBuffer[i][blockW - 1 + 2];
-    }
-    for (int j = 0; j < 18; ++j)
-        for (int i = 0; i < 18; ++i)
-            if (i != 1)
-                jpegDitherBuffer[j][i] = 0;
+    // Not used
+}
 
-    jpegDitherBuffer[17][1] = 0;
+uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h)
+{
+    return 0;
 }
 
 #endif

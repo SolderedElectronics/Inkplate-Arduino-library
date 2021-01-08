@@ -20,6 +20,7 @@ Distributed as-is; no warranty is given.
 #include "../libs/Adafruit-GFX-Library/Adafruit_GFX.h"
 #include "../libs/SdFat/SdFat.h"
 #include "Arduino.h"
+#include "ImageDitherColorKernels.h"
 #include "NetworkClient.h"
 #include "WiFiClient.h"
 #include "defines.h"
@@ -105,7 +106,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     // Should be private, but needed in a png callback :(
     void ditherSwap(int w);
-    uint8_t ditherGetPixelBmp(uint8_t px, int i, int w, bool paletted);
+    uint8_t ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted);
 
     void getPointsForPosition(const Position &position, const uint16_t imageWidth, const uint16_t imageHeight,
                               const uint16_t screenWidth, const uint16_t screenHeight, uint16_t *posX, uint16_t *posY);
@@ -122,14 +123,28 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     static bool drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool dither, bool invert);
 
     uint8_t pixelBuffer[E_INK_WIDTH * 4 + 5];
+#ifdef ARDUINO_INKPLATECOLOR
+    int32_t ditherBuffer[3][_kernelWidth][E_INK_WIDTH + 20];
+
+    int32_t (*ditherBuffer_r)[E_INK_WIDTH + 20] = ditherBuffer[0];
+    int32_t (*ditherBuffer_g)[E_INK_WIDTH + 20] = ditherBuffer[1];
+    int32_t (*ditherBuffer_b)[E_INK_WIDTH + 20] = ditherBuffer[2];
+
+    const int kernelWidth = _kernelWidth;
+    const int kernelHeight = _kernelHeight;
+
+    const int coef = _coef;
+    const int kernelX = _kernelX;
+
+    const unsigned char (*kernel)[_kernelWidth] = _kernel;
+
+    uint8_t findClosestPalette(uint32_t c);
+#else
     uint8_t ditherBuffer[2][E_INK_WIDTH + 20];
+#endif
     uint8_t jpegDitherBuffer[18][18];
     int16_t blockW = 0, blockH = 0;
     int16_t lastY = -1;
-
-#ifdef ARDUINO_INKPLATECOLOR
-    uint8_t findClosestPalette(uint32_t c);
-#endif
 
     uint32_t ditherPalette[256]; // 8 bit colors, in color, 3x8 bit colors
     uint8_t palette[128];        // 2 3 bit colors per byte, _###_###

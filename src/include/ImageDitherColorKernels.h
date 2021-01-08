@@ -14,6 +14,9 @@ If you have any questions about licensing, please contact techsupport@e-radionic
 Distributed as-is; no warranty is given.
 */
 
+#ifndef __IMAGE_DITHER_COLOR_KERNELS
+#define __IMAGE_DITHER_COLOR_KERNELS
+
 // If you want to experiment with different color dither kernels, uncomment the one you want below
 
 // Floyd Steinberg
@@ -34,9 +37,9 @@ Distributed as-is; no warranty is given.
 // };
 
 // Atkinson
-int coef = 8;
-int kernelX = 1;
-unsigned char kernel[3][4] = {
+const int _coef = 8;
+const int _kernelX = 1;
+const unsigned char _kernel[3][4] = {
     {0, 0, 1, 1},
     {1, 1, 1, 0},
     {0, 1, 0, 0},
@@ -68,3 +71,8 @@ unsigned char kernel[3][4] = {
 //     {1, 1, 0},
 //     {0, 0, 0},
 // };
+
+const int _kernelWidth = (sizeof _kernel[0] / sizeof _kernel[0][0]);
+const int _kernelHeight = (sizeof _kernel / sizeof _kernel[0]);
+
+#endif

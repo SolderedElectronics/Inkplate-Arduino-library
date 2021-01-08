@@ -41,7 +41,7 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
             {
                 uint8_t px = RGB3BIT(rgba[0], rgba[1], rgba[2]);
                 if (_pngDither)
-                    px = _imagePtrPng->ditherGetPixelBmp(RGB8BIT(rgba[0], rgba[1], rgba[2]), x + i,
+                    px = _imagePtrPng->ditherGetPixelBmp(RGB8BIT(rgba[0], rgba[1], rgba[2]), x + i, y + j,
                                                          _imagePtrPng->width(), 0);
                 if (_pngInvert)
                     px = 7 - px;
