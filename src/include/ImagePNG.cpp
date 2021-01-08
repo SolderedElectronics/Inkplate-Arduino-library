@@ -39,10 +39,19 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
         for (int j = 0; j < h; ++j)
             for (int i = 0; i < w; ++i)
             {
+#ifdef ARDUINO_INKPLATE_COLOR
+                uint8_t px = _imagePtrPng->findClosestPalette((rgba[0] << 16) | (rgba[1] << 8) | (rgba[2]));
+#else
                 uint8_t px = RGB3BIT(rgba[0], rgba[1], rgba[2]);
+#endif
                 if (_pngDither)
+#ifdef ARDUINO_INKPLATE_COLOR
                     px = _imagePtrPng->ditherGetPixelBmp(RGB8BIT(rgba[0], rgba[1], rgba[2]), x + i, y + j,
                                                          _imagePtrPng->width(), 0);
+#else
+                    px = _imagePtrPng->ditherGetPixelBmp((rgba[0] << 16) | (rgba[1] << 8) | (rgba[2]), x + i, y + j,
+                                                         _imagePtrPng->width(), 0);
+#endif
                 if (_pngInvert)
                     px = 7 - px;
                 if (_imagePtrPng->getDisplayMode() == INKPLATE_1BIT)

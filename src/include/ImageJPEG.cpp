@@ -156,12 +156,6 @@ bool Image::drawJpegFromSdAtPosition(const char *fileName, const Position &posit
 
     getPointsForPosition(position, w, h, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
 
-    Serial.println(posX);
-    Serial.println(posY);
-    Serial.println(w);
-    Serial.println(h);
-    Serial.println();
-
     if (TJpgDec.drawJpg(posX, posY, buff, total, dither, invert) == 0)
         ret = 1;
 
@@ -192,7 +186,7 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
 
     int err = TJpgDec.drawJpg(x, y, buff, len, dither, invert);
 
-    // Serial.printf("Error: %d", err);
+    Serial.printf("Error: %d", err);
 
     if (err == 0)
         ret = 1;
@@ -202,8 +196,10 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
 
 bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool dither, bool invert)
 {
+    Serial.println("aa");
     if (!_imagePtrJpeg)
         return 0;
+    Serial.println("bb");
 
     if (dither && y != _imagePtrJpeg->lastY)
     {
@@ -217,15 +213,21 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
         for (int i = 0; i < w; ++i)
         {
             uint16_t rgb = bitmap[j * w + i];
-            uint8_t val;
+            uint32_t val;
             if (dither)
                 val = _imagePtrJpeg->ditherGetPixelJpeg(RGB8BIT(RED(rgb), GREEN(rgb), BLUE(rgb)), i, j, x, y, w, h);
             else
+#ifdef ARDUINO_INKPLATECOLOR
+                val = _imagePtrJpeg->findClosestPalette(((uint32_t)RED(rgb) << 16) | ((uint32_t)GREEN(rgb) << 8) |
+                                                        ((uint32_t)BLUE(rgb)));
+#else
                 val = RGB3BIT(RED(rgb), GREEN(rgb), BLUE(rgb));
+#endif
             if (invert)
                 val = 7 - val;
             if (_imagePtrJpeg->getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
+            Serial.println(val);
             _imagePtrJpeg->writePixel(x + i, y + j, val);
         }
     }

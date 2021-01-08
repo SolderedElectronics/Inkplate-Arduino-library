@@ -56,6 +56,16 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
     return closest;
 }
 
+uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h)
+{
+    if (blockW == -1)
+    {
+        blockW = w;
+        blockH = h;
+    }
+    return 0;
+}
+
 void Image::ditherSwap(int)
 {
     // Not used
@@ -66,9 +76,5 @@ void Image::ditherSwapBlockJpeg(int x)
     // Not used
 }
 
-uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h)
-{
-    return 0;
-}
 
 #endif
