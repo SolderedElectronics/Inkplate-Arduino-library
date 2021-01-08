@@ -20,17 +20,17 @@ Distributed as-is; no warranty is given.
 // If you want to experiment with different color dither kernels, uncomment the one you want below
 
 // Floyd Steinberg
-// int coef = 16;
-// int kernelX = 1;
-// unsigned char kernel[3][4] = {
+// const int _coef = 16;
+// const int _kernelX = 1;
+// const unsigned char _kernel[3][4] = {
 //     {0, 0, 7},
 //     {3, 5, 1},
 // };
 
 // J F Jarvis, C N Judice, and W H Ninke "Minimized Average Error"
-// int coef = 48;
-// int kernelX = 2;
-// unsigned char kernel[3][5] = {
+// const int _coef = 48;
+// const int _kernelX = 2;
+// const unsigned char kernel[3][5] = {
 //     {0, 0, 0, 7, 5},
 //     {3, 5, 7, 5, 3},
 //     {1, 3, 5, 3, 1},
@@ -46,27 +46,27 @@ const unsigned char _kernel[3][4] = {
 };
 
 // Burkes
-// int coef = 32;
-// int kernelX = 2;
-// unsigned char kernel[3][5] = {
+// const int _coef = 32;
+// const int _kernelX = 2;
+// const unsigned char _kernel[3][5] = {
 //     {0, 0, 0, 8, 4},
 //     {2, 4, 8, 4, 2},
 //     {0, 0, 0, 0, 0},
 // };
 
 // Stucki
-// int coef = 42;
-// int kernelX = 2;
-// unsigned char kernel[3][5] = {
+// const int _coef = 42;
+// const int _kernelX = 2;
+// const unsigned char _kernel[3][5] = {
 //     {0, 0, 0, 8, 4},
 //     {2, 4, 8, 4, 2},
 //     {1, 2, 4, 2, 1},
 // };
 
 // Sierra lite
-// int coef = 4;
-// int kernelX = 1;
-// unsigned char kernel[3][3] = {
+// const int _coef = 4;
+// const int _kernelX = 1;
+// const unsigned char _kernel[3][3] = {
 //     {0, 0, 2},
 //     {1, 1, 0},
 //     {0, 0, 0},
