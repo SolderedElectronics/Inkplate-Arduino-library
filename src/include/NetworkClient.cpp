@@ -30,7 +30,6 @@ bool NetworkClient::joinAP(const char *ssid, const char *pass)
             return 0;
         delay(1000);
         ++cnt;
-        Serial.println(cnt);
     }
 
     return 1;

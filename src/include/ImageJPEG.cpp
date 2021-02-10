@@ -186,8 +186,6 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
 
     int err = TJpgDec.drawJpg(x, y, buff, len, dither, invert);
 
-    Serial.printf("Error: %d", err);
-
     if (err == 0)
         ret = 1;
 
@@ -196,10 +194,8 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
 
 bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool dither, bool invert)
 {
-    Serial.println("aa");
     if (!_imagePtrJpeg)
         return 0;
-    Serial.println("bb");
 
     if (dither && y != _imagePtrJpeg->lastY)
     {
@@ -227,7 +223,6 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
                 val = 7 - val;
             if (_imagePtrJpeg->getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
-            Serial.println(val);
             _imagePtrJpeg->writePixel(x + i, y + j, val);
         }
     }

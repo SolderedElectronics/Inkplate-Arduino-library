@@ -194,9 +194,6 @@ void Shapes::scanlineFill(uint8_t c)
 
                 if (FillFlag)
                 {
-                    Serial.println(x1);
-                    Serial.println(x2);
-                    Serial.println();
                     drawLine(x1, i, x2, i, c);
                 }
             }

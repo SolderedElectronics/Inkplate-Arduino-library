@@ -186,7 +186,7 @@ class OpenWeatherOneCall
         long apparentTemperatureMaxTime;  // 1582139100
         const char *summary;              // "heavy intensity rain"
 #endif
-    } forecast[8];
+    } forecast[7];
 #endif
 
 #ifdef ALERTS

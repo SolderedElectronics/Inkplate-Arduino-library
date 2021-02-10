@@ -1,0 +1,1 @@
+This is some text that has been read from SD card and it is being displayed on Inkplate6! :)

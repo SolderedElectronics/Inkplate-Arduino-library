@@ -41,13 +41,6 @@ class Mcp
     void digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state);
     uint8_t digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin);
 
-  private:
-    void readMCPRegisters(uint8_t _addr, uint8_t *k);
-    void readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
-    void readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k);
-    void updateAllRegisters(uint8_t _addr, uint8_t *k);
-    void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d);
-    void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
     void setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint8_t mirroring, uint8_t openDrain,
                               uint8_t polarity);
     void setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode);
@@ -56,6 +49,14 @@ class Mcp
     uint16_t getINTstateInternal(uint8_t _addr, uint8_t *_r);
     void setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d);
     uint16_t getPortsInternal(uint8_t _addr, uint8_t *_r);
+
+  private:
+    void readMCPRegisters(uint8_t _addr, uint8_t *k);
+    void readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
+    void readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k);
+    void updateAllRegisters(uint8_t _addr, uint8_t *k);
+    void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d);
+    void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
 };
 
 #endif
