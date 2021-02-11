@@ -181,6 +181,8 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
     blockH = -1;
     lastY = -1;
 
+    memset(ditherBuffer, 0, sizeof ditherBuffer);
+
     TJpgDec.setJpgScale(1);
     TJpgDec.setCallback(drawJpegChunk);
 
@@ -211,7 +213,14 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
             uint16_t rgb = bitmap[j * w + i];
             uint32_t val;
             if (dither)
+#ifdef ARDUINO_INKPLATECOLOR
+                val = _imagePtrJpeg->ditherGetPixelBmp(((uint32_t)RED(rgb) << 16) | ((uint32_t)GREEN(rgb) << 8) |
+                                                           ((uint32_t)BLUE(rgb)),
+                                                       i + x, j + y, _imagePtrJpeg->width(), 0);
+#else
                 val = _imagePtrJpeg->ditherGetPixelJpeg(RGB8BIT(RED(rgb), GREEN(rgb), BLUE(rgb)), i, j, x, y, w, h);
+
+#endif
             else
 #ifdef ARDUINO_INKPLATECOLOR
                 val = _imagePtrJpeg->findClosestPalette(((uint32_t)RED(rgb) << 16) | ((uint32_t)GREEN(rgb) << 8) |

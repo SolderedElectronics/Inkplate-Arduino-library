@@ -17,6 +17,8 @@ Distributed as-is; no warranty is given.
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
 
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+
 #include "../libs/Adafruit-GFX-Library/Adafruit_GFX.h"
 #include "../libs/SdFat/SdFat.h"
 #include "Arduino.h"
@@ -124,11 +126,11 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     uint8_t pixelBuffer[E_INK_WIDTH * 4 + 5];
 #ifdef ARDUINO_INKPLATECOLOR
-    int32_t ditherBuffer[3][_kernelWidth][E_INK_WIDTH + 20];
+    int8_t ditherBuffer[3][MAX(_kernelHeight, 16)][E_INK_WIDTH + 20];
 
-    int32_t (*ditherBuffer_r)[E_INK_WIDTH + 20] = ditherBuffer[0];
-    int32_t (*ditherBuffer_g)[E_INK_WIDTH + 20] = ditherBuffer[1];
-    int32_t (*ditherBuffer_b)[E_INK_WIDTH + 20] = ditherBuffer[2];
+    int8_t (*ditherBuffer_r)[E_INK_WIDTH + 20] = ditherBuffer[0];
+    int8_t (*ditherBuffer_g)[E_INK_WIDTH + 20] = ditherBuffer[1];
+    int8_t (*ditherBuffer_b)[E_INK_WIDTH + 20] = ditherBuffer[2];
 
     const int kernelWidth = _kernelWidth;
     const int kernelHeight = _kernelHeight;

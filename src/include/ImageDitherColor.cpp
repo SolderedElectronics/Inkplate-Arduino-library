@@ -2,6 +2,8 @@
 
 #ifdef ARDUINO_INKPLATECOLOR
 
+extern Image *_imagePtrJpeg;
+
 static uint32_t pallete[] = {
     0x000000ll, 0xFFFFFFll, 0x008000ll, 0x0000FFll, 0xFF0000ll, 0xFFFF00ll, 0xFFAA00ll,
 };
@@ -28,8 +30,9 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
     int16_t g = GREEN8(px) + ditherBuffer[1][j % kernelHeight][i];
     int16_t b = BLUE8(px) + ditherBuffer[2][j % kernelHeight][i];
 
-    ditherBuffer[0][j % kernelHeight][i] = ditherBuffer[1][j % kernelHeight][i] = ditherBuffer[2][j % kernelHeight][i] =
-        0;
+    ditherBuffer[0][j % kernelHeight][i] = 0;
+    ditherBuffer[1][j % kernelHeight][i] = 0;
+    ditherBuffer[2][j % kernelHeight][i] = 0;
 
     r = max((int16_t)0, min((int16_t)255, r));
     g = max((int16_t)0, min((int16_t)255, g));
@@ -58,11 +61,7 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
 
 uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h)
 {
-    if (blockW == -1)
-    {
-        blockW = w;
-        blockH = h;
-    }
+    // Not used
     return 0;
 }
 
