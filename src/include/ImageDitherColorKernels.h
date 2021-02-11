@@ -30,7 +30,7 @@ Distributed as-is; no warranty is given.
 // J F Jarvis, C N Judice, and W H Ninke "Minimized Average Error"
 // const int _coef = 48;
 // const int _kernelX = 2;
-// const unsigned char kernel[3][5] = {
+// const unsigned char _kernel[3][5] = {
 //     {0, 0, 0, 7, 5},
 //     {3, 5, 7, 5, 3},
 //     {1, 3, 5, 3, 1},
