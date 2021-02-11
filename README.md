@@ -1,7 +1,6 @@
 # Inkplate Arduino library
 
-![](https://www.crowdsupply.com/img/040a/inkplate-6-angle-01_png_project-main.jpg)
-![](https://www.crowdsupply.com/img/053e/front-white_jpg_project-body.jpg)
+![](https://www.crowdsupply.com/img/cf95/compare-peripheral_jpg_project-body.jpg)
 
 Arduino library for all-in-one e-paper displays named Inkplate can be found in this repo. Inkplate is a series of powerful, Wi-Fi enabled ESP32-based e-paper display products. Its main feature is simplicity. Just plug in a USB cable, open Arduino IDE, and change the contents of the screen with few lines of code. Inkplate currently includes Inkplate 10 and Inkplate 6 - learn more about Inkplates on [official website](https://inkplate.io/). 
 Inkplate 6 was crowdfunded on [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6), as well as [Inkplate 10](https://www.crowdsupply.com/e-radionica/inkplate-10).
