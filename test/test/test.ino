@@ -12,7 +12,7 @@ void setup()
 void loop()
 {
     display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
-                      "inkplate10-integration/test/test/test4.jpg",
+                      "inkplate10-integration/test/drawImage/parrots.jpg",
                       0, 0, true);
     display.display();
     delay(5000);
