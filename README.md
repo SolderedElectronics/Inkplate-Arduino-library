@@ -1,8 +1,10 @@
-# Inkplate 6 Arduino library
+# Inkplate Arduino library
 
 ![](https://www.crowdsupply.com/img/040a/inkplate-6-angle-01_png_project-main.jpg)
+![](https://www.crowdsupply.com/img/053e/front-white_jpg_project-body.jpg)
 
-Arduino library for all-in-one e-paper display Inkplate 6 can be found in this repo. Inkplate 6 is a powerful, Wi-Fi enabled ESP32 based six-inch e-paper display – recycled from a Kindle e-reader. Its main feature is simplicity. Just plug in a USB cable, open Arduino IDE, and change the contents of the screen with few lines of code. Learn more about Inkplate 6 on [official website](https://inkplate.io/). Inkplate was crowdfunded on [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6).
+Arduino library for all-in-one e-paper displays named Inkplate can be found in this repo. Inkplate is a series of powerful, Wi-Fi enabled ESP32-based e-paper display products. Its main feature is simplicity. Just plug in a USB cable, open Arduino IDE, and change the contents of the screen with few lines of code. Inkplate currently includes Inkplate 10 and Inkplate 6 - learn more about Inkplates on [official website](https://inkplate.io/). 
+Inkplate 6 was crowdfunded on [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6), as well as [Inkplate 10](https://www.crowdsupply.com/e-radionica/inkplate-10).
 
 ### Setting up Inkplate 6 in Arduino IDE
 
@@ -15,46 +17,11 @@ In order to get a head start with Inkplate 6, follow these steps:
 
 ### Code examples
 
-There are many examples in the library that you demonstrate how to use any of the Inkplate functionality.
-More are added daily, such as projects or community contributions, so here are just the basic ones.
+There are many examples in the library that you demonstrate how to use any of the Inkplate functionality. Use Basic folder to get familiar with principles of using the Inkplate, such as modes (BW and Gray), how to write graphics and text. In Advanced folder, you'll learn how to make HTTP/HTTPS requests, utilise low power, use touchpads or SD card. Finally, get easily started on some projects. More are added daily, such as projects or community contributions.
 
-1. **Basic Inkplate Functionality**
+### Documentation
 
-   1.1. Basic BW - use the screen in BW mode (graphics & text)
-
-   1.2. Basic Gray - use the screen in gray mode (graphics & text)
-
-   1.3. Basic Partial Update - do a partial update of the screen on Inkplate 6
-
-   1.4. Basic Custom Fonts - add custom fonts and use them to write text on the screen
-
-2. **Advanced Inkplate Functionality**
-
-   2.1. WiFi HTTP Request - make HTTP request while connected too WiFi
-
-   2.2. Low Power - put Inkplate in sleep in order to save battery
-
-   2.3. Battery Voltage And Temperature - measure battery voltage and temperature of the board
-
-   2.4. Touchpads - get readings from onboard touch pads
-
-   2.5. SD Pictures - show .bmp, .jpg and .png images from the SD card on the screen
-
-   2.6. Web Pictures - show .bmp, .jpg and .png images from the web
-
-   2.7. Inkplate SD TXT File - read .txt file from the SD card and show it on the screen
-
-   2.8. easyC - use easyC ecosystem (I2C) and read a sensor value
-
-   2.9. MCP23017 Expander - use onboard MCP23017 expander for your own external devices
-
-   2.10. Web Server - make Inkplate a web server
-
-3. **Others**
-
-   3.1. Peripheral Mode - mode that enables control of the screen from any external device using UART
-
-   3.2. Screen Cleaning - clean the screen in case of image burn-in
+Find Inkplate documentation [here](https://inkplate.readthedocs.io/en/latest/get-started.html). 
 
 ### Using Inkplate 6 with another microcontroller - Peripheral mode
 
@@ -97,7 +64,6 @@ Inkplate 6 is available for purchase via:
 - [e-radionica.com](https://e-radionica.com/en/inkplate.html)
 - [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6)
 - [Mouser](https://hr.mouser.com/Search/Refine?Keyword=inkplate)
-- [Sparkfun](https://www.sparkfun.com/search/results?term=inkplate)
 - [Pimoroni](https://shop.pimoroni.com/products/inkplate-6)
 
 For all questions and issues, please use our [forum](http://forum.e-radionica.com/en) to ask an question.
