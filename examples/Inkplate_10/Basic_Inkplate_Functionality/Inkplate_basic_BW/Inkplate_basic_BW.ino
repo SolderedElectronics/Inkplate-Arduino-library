@@ -11,7 +11,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   11 February 2021 by e-radionica.com
 */
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch

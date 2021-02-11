@@ -1,8 +1,8 @@
 /*
-   Inkplate_WiFi_HTTP example for e-radionica.com Inkplate 6
-   For this example you will need USB cable, Inkplate 6 and stable WiFi Internet connection
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_WiFi_HTTP example for e-radionica.com Inkplate 10
+   For this example you will need USB cable, Inkplate 10 and stable WiFi Internet connection
+   Select "Inkplate 10(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how to connect to WiFi network, get data from Internet and display that data on epaper.
@@ -12,7 +12,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   11 February 2021 by e-radionica.com
 */
 
 #include "Inkplate.h"   //Include Inkplate library to the sketch

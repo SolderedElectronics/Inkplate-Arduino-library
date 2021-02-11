@@ -32,7 +32,11 @@ extern SdFat sd;
 class Inkplate : public System, public Graphics
 {
   public:
+#ifdef ARDUINO_INKPLATECOLOR
+    Inkplate();
+#else
     Inkplate(uint8_t _mode);
+#endif
     bool begin(void); // In boards
     void clearDisplay();
     void display();

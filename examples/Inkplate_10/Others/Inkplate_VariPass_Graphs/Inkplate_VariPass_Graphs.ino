@@ -21,14 +21,14 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   23 July 2020 by e-radionica.com
+   11 February 2021 by e-radionica.com
 */
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
 #include "WiFi.h"                //Include library for WiFi
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
-const char *ssid = "";           // Your WiFi SSID
+const char *ssid = "";     // Your WiFi SSID
 const char *password = ""; // Your WiFi password
 
 void setup()

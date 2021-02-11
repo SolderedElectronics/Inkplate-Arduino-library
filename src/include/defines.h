@@ -29,8 +29,17 @@ Distributed as-is; no warranty is given.
 #include "../boards/InkplateColor.h"
 #endif
 
+#ifdef ARDUINO_INKPLATECOLOR
+
+#define BLACK 0
+#define WHITE 1
+
+#else
+
 #define BLACK 1
 #define WHITE 0
+
+#endif
 
 #define INKPLATE_1BIT          0
 #define INKPLATE_3BIT          1

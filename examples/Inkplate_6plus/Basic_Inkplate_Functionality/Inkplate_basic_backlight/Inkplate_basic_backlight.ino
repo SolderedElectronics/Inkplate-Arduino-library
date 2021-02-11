@@ -1,3 +1,16 @@
+/*
+   Inkplate_basic_backlight example for e-radionica.com Inkplate 6 plus
+   For this example you will need a micro USB cable, Inkplate 6 plus and a device with WiFi and Internet brower (PC,
+   Laptop, Smartphone, ...). Select "Inkplate 6 plus(ESP32)" from Tools -> Board menu. Don't have "Inkplate 6
+   plus(ESP32)" option? Follow our tutorial and add it: https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   This example will show you how to use Inkplate 6 plus'es backlight.
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   11 February 2021 by e-radionica.com
+*/
+
 #include "Inkplate.h" //Include Inkplate library
 
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate class

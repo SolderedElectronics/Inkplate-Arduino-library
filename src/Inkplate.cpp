@@ -16,9 +16,15 @@ Distributed as-is; no warranty is given.
 
 #include "Inkplate.h"
 
+#ifdef ARDUINO_INKPLATECOLOR
+Inkplate::Inkplate() : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
+#else
 Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
+#endif
 {
+#ifndef ARDUINO_INKPLATECOLOR
     setDisplayMode(_mode);
+#endif
 #ifndef ARDUINO_INKPLATECOLOR
     for (uint32_t i = 0; i < 256; ++i)
         pinLUT[i] = ((i & B00000011) << 4) | (((i & B00001100) >> 2) << 18) | (((i & B00010000) >> 4) << 23) |

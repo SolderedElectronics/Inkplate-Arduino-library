@@ -1,8 +1,8 @@
 /*
-   Game_Of_Life_by_claud9999 example for e-radionica Inkplate 6
-   For this example you will need only USB cable and Inkplate 6
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Game_Of_Life_by_claud9999 example for e-radionica Inkplate 6 plus
+   For this example you will need only USB cable and Inkplate 6 plus
+   Select "Inkplate 6 plus(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6 plus(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Our first community created example, made by: https://github.com/claud9999

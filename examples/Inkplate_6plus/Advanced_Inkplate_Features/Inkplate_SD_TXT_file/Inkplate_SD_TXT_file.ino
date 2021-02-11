@@ -1,9 +1,9 @@
 /*
-   Inkplate_SD_TXT example for e-radionica.com Inkplate 6
-   For this example you will need only a micro USB cable, Inkplate 6 and a SD card
+   Inkplate_SD_TXT example for e-radionica.com Inkplate 6 plus
+   For this example you will need only a micro USB cable, Inkplate 6 plus and a SD card
    loaded with text.txt file that can be found inside folder of this example.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Select "Inkplate 6 plus(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6 plus(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    To work with SD card on Inkplate, you will need to add one extra library.
@@ -16,7 +16,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   11 February 2021 by e-radionica.com
 */
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch

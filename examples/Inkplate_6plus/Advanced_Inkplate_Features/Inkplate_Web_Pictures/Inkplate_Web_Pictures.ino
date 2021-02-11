@@ -1,8 +1,8 @@
 /*
    Web_BMP_pictures example for e-radionica Inkplate6
    For this example you will need a micro USB cable, Inkplate6, and an available WiFi connection.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Select "Inkplate 6 plus(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6 plus(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
@@ -13,7 +13,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   23 July 2020 by e-radionica.com
+   11 February 2021 by e-radionica.com
 */
 
 #include "HTTPClient.h"          //Include library for HTTPClient

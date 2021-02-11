@@ -1,3 +1,18 @@
+/*
+   Basic_touchscreen_draw example for e-radionica Inkplate 6 plus
+   For this example you will need only USB cable and Inkplate 6 plus
+   Select "Inkplate 6 plus(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6 plus(ESP32)" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   This example shows you how to use Inkplate 6 plus'es touchscreen.
+   Once the code is uploaded, try drawing on the screen :)
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   11 February 2021 by e-radionica.com
+*/
+
 #include "Inkplate.h"
 
 // Select to draw a line on screen or filled circle
