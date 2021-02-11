@@ -66,10 +66,18 @@ uint8_t System::readTouchpad(uint8_t _pad)
 
 double System::readBattery()
 {
+#ifdef ARDUINO_ESP32_DEV
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
+#else ›
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
+#endif
     delay(1);
     int adc = analogRead(35);
+#ifdef ARDUINO_ESP32_DEV
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
+#else
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
+#endif
     // Calculate the voltage using the following formula
     // 1.1V is internal ADC reference of ESP32, 3.548133892 is 11dB in linear scale (Analog signal is attenuated by 11dB
     // before ESP32 ADC input)
