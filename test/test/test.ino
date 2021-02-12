@@ -11,21 +11,7 @@ void setup()
 
 void loop()
 {
-    display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
-                      "inkplate10-integration/test/test/test2.jpg",
-                      0, 0, false, false);
-    display.display();
-    display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
-                      "inkplate10-integration/test/test/test2.jpg",
-                      0, 0, false, true);
-    display.display();
-    display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
-                      "inkplate10-integration/test/test/test2.jpg",
-                      0, 0, true, false);
-    display.display();
-    display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
-                      "inkplate10-integration/test/test/test2.jpg",
-                      0, 0, true, true);
+    display.drawImage("https://www.fnordware.com/superpng/pnggrad16rgb.png", 0, 0, true, false);
     display.display();
     delay(5000);
 }

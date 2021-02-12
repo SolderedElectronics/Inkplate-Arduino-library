@@ -1,9 +1,9 @@
 /*
 ImagePNG.cpp
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
-https://github.com/e-radionicacom/Inkplate-6-Arduino-library
+February 12, 2021
+https://github.com/e-radionicacom/Inkplate-Arduino-library
 For support, please reach over forums: forum.e-radionica.com/en
 For more info about the product, please check: www.inkplate.io
 This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
@@ -130,7 +130,6 @@ bool Image::drawPngFromSd(SdFile *p, int x, int y, bool dither, bool invert)
 
 bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool invert)
 {
-    Serial.println("aaa");
     _pngDither = dither;
     _pngInvert = invert;
     lastY = y;
