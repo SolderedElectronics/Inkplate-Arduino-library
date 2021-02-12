@@ -31,8 +31,10 @@ class Shapes : virtual public Adafruit_GFX
 
     virtual void drawPixel(int16_t x, int16_t y, uint16_t color) = 0;
 
+#ifndef ARDUINO_INKPLATECOLOR
     virtual void selectDisplayMode(uint8_t _mode) = 0;
     virtual uint8_t getDisplayMode() = 0;
+#endif
 
     void drawElipse(int rx, int ry, int xc, int yc, int c);
     void fillElipse(int rx, int ry, int xc, int yc, int c);

@@ -211,34 +211,55 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
     {
         for (int i = 0; i < w; ++i)
         {
-            uint16_t rgb = bitmap[j * w + i];
+            uint32_t rgb = bitmap[j * w + i];
             uint32_t val;
-            if (dither)
-#ifdef ARDUINO_INKPLATECOLOR
-                val = _imagePtrJpeg->ditherGetPixelBmp(((uint32_t)RED(rgb) << 16) | ((uint32_t)GREEN(rgb) << 8) |
-                                                           ((uint32_t)BLUE(rgb)),
-                                                       i + x, j + y, _imagePtrJpeg->width(), 0);
-#else
-                val = _imagePtrJpeg->ditherGetPixelJpeg(RGB8BIT(RED(rgb), GREEN(rgb), BLUE(rgb)), i, j, x, y, w, h);
 
-#endif
-            else
+            uint8_t r = RED(rgb), g = GREEN(rgb), b = BLUE(rgb);
+
 #ifdef ARDUINO_INKPLATECOLOR
-                val = _imagePtrJpeg->findClosestPalette(((uint32_t)RED(rgb) << 16) | ((uint32_t)GREEN(rgb) << 8) |
-                                                        ((uint32_t)BLUE(rgb)));
+            if (invert)
+            {
+                r = 255 - r;
+                g = 255 - g;
+                b = 255 - b;
+            }
+
+            if (dither)
+            {
+                val = _imagePtrJpeg->ditherGetPixelBmp(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b), i + x,
+                                                       j + y, _imagePtrJpeg->width(), 0);
+            }
+            else
+            {
+                val = _imagePtrJpeg->findClosestPalette(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b));
+            }
+
+            _imagePtrJpeg->writePixel(x + i, y + j, val);
 #else
-                val = RGB3BIT(RED(rgb), GREEN(rgb), BLUE(rgb));
-#endif
+            if (dither)
+            {
+                val = _imagePtrJpeg->ditherGetPixelJpeg(RGB8BIT(r, g, b), i, j, x, y, w, h);
+            }
+            else
+            {
+                val = RGB3BIT(r, g, b);
+            }
+
             if (invert)
                 val = 7 - val;
             if (_imagePtrJpeg->getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
+
             _imagePtrJpeg->writePixel(x + i, y + j, val);
+#endif
         }
     }
+
+#ifndef ARDUINO_INKPLATECOLOR
     if (dither)
         _imagePtrJpeg->ditherSwapBlockJpeg(x);
     _imagePtrJpeg->endWrite();
+#endif
 
     return 1;
 }

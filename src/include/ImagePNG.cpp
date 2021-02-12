@@ -39,23 +39,34 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
         for (int j = 0; j < h; ++j)
             for (int i = 0; i < w; ++i)
             {
+                uint8_t r = rgba[0];
+                uint8_t g = rgba[1];
+                uint8_t b = rgba[2];
+
 #ifdef ARDUINO_INKPLATE_COLOR
-                uint8_t px = _imagePtrPng->findClosestPalette((rgba[0] << 16) | (rgba[1] << 8) | (rgba[2]));
+                if (_pngInvert)
+                {
+                    r = 255 - r;
+                    g = 255 - g;
+                    b = 255 - b;
+                }
+
+                uint8_t px = _imagePtrPng->findClosestPalette((r << 16) | (g << 8) | (b));
 #else
-                uint8_t px = RGB3BIT(rgba[0], rgba[1], rgba[2]);
+                uint8_t px = RGB3BIT(r, g, b);
 #endif
+
                 if (_pngDither)
-#ifdef ARDUINO_INKPLATE_COLOR
-                    px = _imagePtrPng->ditherGetPixelBmp(RGB8BIT(rgba[0], rgba[1], rgba[2]), x + i, y + j,
-                                                         _imagePtrPng->width(), 0);
+#ifdef ARDUINO_INKPLATECOLOR
+                    px = _imagePtrPng->ditherGetPixelBmp(RGB8BIT(r, g, b), x + i, y + j, _imagePtrPng->width(), 0);
 #else
-                    px = _imagePtrPng->ditherGetPixelBmp((rgba[0] << 16) | (rgba[1] << 8) | (rgba[2]), x + i, y + j,
+                    px = _imagePtrPng->ditherGetPixelBmp((r << 16) | (g << 8) | (b), x + i, y + j,
                                                          _imagePtrPng->width(), 0);
-#endif
                 if (_pngInvert)
                     px = 7 - px;
                 if (_imagePtrPng->getDisplayMode() == INKPLATE_1BIT)
                     px = (~px >> 2) & 1;
+#endif
                 _imagePtrPng->drawPixel(_pngX + x + i, _pngY + y + j, px);
             }
     if (lastY != y)
@@ -119,6 +130,7 @@ bool Image::drawPngFromSd(SdFile *p, int x, int y, bool dither, bool invert)
 
 bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool invert)
 {
+    Serial.println("aaa");
     _pngDither = dither;
     _pngInvert = invert;
     lastY = y;

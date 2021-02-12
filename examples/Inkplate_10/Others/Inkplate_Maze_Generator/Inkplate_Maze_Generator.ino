@@ -1,7 +1,7 @@
 /*
-   Inkplate_Maze_Generator sketch for e-radionica.com Inkplate 6
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_Maze_Generator sketch for e-radionica.com Inkplate 10
+   Select "Inkplate 10(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example renders a random maze every time!

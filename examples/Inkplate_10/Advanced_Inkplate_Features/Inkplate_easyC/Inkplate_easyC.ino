@@ -1,10 +1,10 @@
 /*
-   Inkplate_easyC example for e-radionica.com Inkplate 6
-   For this example you will need a micro USB cable, Inkplate 6,
+   Inkplate_easyC example for e-radionica.com Inkplate 10
+   For this example you will need a micro USB cable, Inkplate 10,
    BME680 sensor with easyC connector on it: https://e-radionica.com/en/bme680-breakout-made-by-e-radionica.html
    and a easyC cable: https://e-radionica.com/en/easyc-cable-20cm.html
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Select "Inkplate 10(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can read temperature, humidity, air pressure and gas data from BME680.

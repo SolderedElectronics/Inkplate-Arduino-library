@@ -52,8 +52,11 @@ class Graphics : public Shapes, public Image
 
     void selectDisplayMode(uint8_t _mode);
 
+#ifndef ARDUINO_INKPLATECOLOR
     void setDisplayMode(uint8_t _mode);
     uint8_t getDisplayMode();
+#endif
+
     int16_t width() override;
     int16_t height() override;
 

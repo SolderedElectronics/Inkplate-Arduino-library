@@ -126,10 +126,17 @@ void Graphics::endWrite()
 {
 }
 
+#ifndef ARDUINO_INKPLATECOLOR
 void Graphics::setDisplayMode(uint8_t _mode)
 {
     _displayMode = _mode;
 }
+
+uint8_t Graphics::getDisplayMode()
+{
+    return _displayMode;
+}
+#endif
 
 void Graphics::selectDisplayMode(uint8_t _mode)
 {
@@ -142,11 +149,6 @@ void Graphics::selectDisplayMode(uint8_t _mode)
         memset(DMemory4Bit, 255, 240000);
         _blockPartial = 1;
     }
-}
-
-uint8_t Graphics::getDisplayMode()
-{
-    return _displayMode;
 }
 
 int16_t Graphics::width()
