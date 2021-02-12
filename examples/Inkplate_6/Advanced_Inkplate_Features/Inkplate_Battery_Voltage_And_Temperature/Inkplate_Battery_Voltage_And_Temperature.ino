@@ -15,6 +15,11 @@
    15 July 2020 by e-radionica.com
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_ESP32_DEV
+#error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
+#endif
+
 #include "Inkplate.h" //Include Inkplate library to the sketch
 #include "symbols.h"  //Include .h file that contains byte array for battery symbol and temperature symbol.
 // It is in same folder as this sketch. You can even open it (read it) by clicking on symbols.h tab in Arduino IDE

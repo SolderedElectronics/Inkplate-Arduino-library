@@ -15,6 +15,11 @@
    11 February 2021 by e-radionica.com
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATE10
+#error "Wrong board selection for this example, please select Inkplate 10 in the boards menu."
+#endif
+
 #include "Inkplate.h"   //Include Inkplate library to the sketch
 #include <HTTPClient.h> //Include HTTP library to this sketch
 #include <WiFi.h>       //Include ESP32 WiFi library to our sketch

@@ -17,6 +17,11 @@
    11 February 2021 by e-radionica.com
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATE6PLUS
+#error "Wrong board selection for this example, please select Inkplate 6 plus in the boards menu."
+#endif
+
 #include "Inkplate.h" //Include Inkplate library to the sketch
 #include "image.h"    //Include image file that holds gray image data. You can see it in next tab inside Arduino IDE.
 Inkplate display(INKPLATE_3BIT); // Create object on Inkplate library and set library to work in gray mode (3-bit)

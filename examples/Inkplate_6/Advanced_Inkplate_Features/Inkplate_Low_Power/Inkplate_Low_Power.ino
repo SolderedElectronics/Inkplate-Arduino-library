@@ -17,6 +17,11 @@
    15 July 2020 by e-radionica.com
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_ESP32_DEV
+#error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
+#endif
+
 #include "Inkplate.h"      //Include Inkplate library to the sketch
 #include "driver/rtc_io.h" //ESP32 library used for deep sleep and RTC wake up pins
 #include "picture1.h" //Include .h files of 3 pictures. All three pictures were converted using LCD Image Converter software

@@ -18,6 +18,11 @@
    15 July 2020 by e-radionica.com
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_ESP32_DEV
+#error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
+#endif
+
 #include "Inkplate.h"   //Include Inkplate library to the sketch
 #include "htmlCode.h"   //Include .h file where we stored out html code of our web page
 #include <WebServer.h>  //Include ESP32 library for Web server

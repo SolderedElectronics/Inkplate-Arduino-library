@@ -19,6 +19,11 @@
    Code for Moonphase and moon fonts taken from here: https://learn.adafruit.com/epaper-weather-station/arduino-setup
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_ESP32_DEV
+#error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
+#endif
+
 // WiFi Connection required
 #include <WiFi.h>
 

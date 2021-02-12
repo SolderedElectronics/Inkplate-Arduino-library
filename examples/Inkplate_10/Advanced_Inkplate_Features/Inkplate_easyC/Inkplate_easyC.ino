@@ -18,6 +18,11 @@
    11 February 2021 by e-radionica.com
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATE10
+#error "Wrong board selection for this example, please select Inkplate 10 in the boards menu."
+#endif
+
 #include "Adafruit_BME680.h" //Adafruit library for BME680 Sensor
 #include "Inkplate.h"        //Include Inkplate library to the sketch
 #include <Adafruit_Sensor.h> //Adafruit library for sensors
