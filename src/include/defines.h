@@ -21,6 +21,8 @@ Distributed as-is; no warranty is given.
 
 #ifdef ARDUINO_ESP32_DEV
 #include "../boards/Inkplate6.h"
+#elif ARDUINO_INKPLATE5
+#include "../boards/Inkplate5.h"
 #elif ARDUINO_INKPLATE10
 #include "../boards/Inkplate10.h"
 #elif ARDUINO_INKPLATE6PLUS
