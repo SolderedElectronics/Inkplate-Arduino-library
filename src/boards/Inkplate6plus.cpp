@@ -324,7 +324,20 @@ void Inkplate::display3b()
     einkOff();
 }
 
-void Inkplate::partialUpdate(bool _forced)
+// void Inkplate::writeRow(uint8_t data)
+// {
+//     hscan_start(pinLUT[data]);
+//     GPIO.out_w1ts = (pinLUT[data]) | CL;
+//     GPIO.out_w1tc = CL;
+//     for (int j = 0; j < (E_INK_WIDTH / 4); j++)
+//     {
+//         GPIO.out_w1ts = CL;
+//         GPIO.out_w1tc = CL;
+//     }
+//     vscan_end();
+// }
+
+void Inkplate::partialUpdate()
 {
     if (getDisplayMode() == 1)
         return;
@@ -355,7 +368,7 @@ void Inkplate::partialUpdate(bool _forced)
     }
 
     einkOn();
-    for (int k = 0; k < 3; k++)
+    for (int k = 0; k < 5; k++)
     {
         vscan_start();
         n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
@@ -378,16 +391,35 @@ void Inkplate::partialUpdate(bool _forced)
         delayMicroseconds(230);
     }
 
-    for (int i = 0; i < (E_INK_WIDTH * E_INK_HEIGHT / 8); i++)
-    {
-        *(DMemoryNew + i) &= *(_partial + i);
-        *(DMemoryNew + i) |= (*(_partial + i));
-    }
+    // for (int k = 0; k < 60; ++k)
+    // {
+    //     uint8_t _send = B11111111;
+    //     vscan_start();
+
+    //     writeRow(_send);
+    //     for (int i = 0; i < E_INK_HEIGHT / 2; i++)
+    //     {
+    //         hscan_start(pinLUT[_send]);
+    //         delayMicroseconds(1);
+    //         vscan_end();
+    //     }
+
+    //     _send = B01010101;
+
+    //     writeRow(_send);
+    //     for (int i = 0; i < E_INK_HEIGHT / 2; i++)
+    //     {
+    //         hscan_start(pinLUT[_send]);
+    //         delayMicroseconds(1);
+    //         vscan_end();
+    //     }
+    // }
 
     clean(2, 2);
     clean(3, 1);
     vscan_start();
     einkOff();
+    memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
 }
 
 #endif

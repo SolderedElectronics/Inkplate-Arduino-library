@@ -31,8 +31,8 @@ int timeZone = 2;
 char city[128] = "ZAGREB";
 
 // Change to your wifi ssid and password
-char *ssid = "";
-char *pass = "";
+char *ssid = "e-radionica.com";
+char *pass = "croduino";
 
 // ----------------------------------
 

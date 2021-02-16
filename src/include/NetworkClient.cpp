@@ -78,12 +78,14 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
         uint8_t buff[512] = {0};
 
         WiFiClient *stream = http.getStreamPtr();
+        int32_t zeroCount = 0;
         while (http.connected() && (len > 0 || len == -1))
         {
             size_t size = stream->available();
 
             if (size)
             {
+                zeroCount = 0;
                 int c = stream->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
                 memcpy(buffPtr, buff, c);
 
@@ -91,6 +93,11 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
                     len -= c;
                 buffPtr += c;
             }
+            else
+                ++zeroCount;
+
+            if (zeroCount > 10000)
+                break;
         }
     }
     http.end();

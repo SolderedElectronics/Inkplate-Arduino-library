@@ -234,7 +234,7 @@ void IRAM_ATTR Inkplate::display3b()
     einkOff();
 }
 
-void Inkplate::partialUpdate(bool _forced)
+void Inkplate::partialUpdate()
 {
     if (getDisplayMode() == 1)
         return;

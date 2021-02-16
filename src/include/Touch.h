@@ -28,6 +28,8 @@ Distributed as-is; no warranty is given.
 class Touch : virtual public Mcp
 {
   public:
+    bool inRect(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
+
     bool tsInit(uint8_t _pwrState);
     void tsShutdown();
     bool tsAvailable();
@@ -49,6 +51,9 @@ class Touch : virtual public Mcp
     void tsGetRawData(uint8_t *b);
     void tsGetXY(uint8_t *_d, uint16_t *x, uint16_t *y);
     void tsGetResolution(uint16_t *xRes, uint16_t *yRes);
+
+    int32_t touchT = 0;
+    uint16_t touchX[2], touchY[2], touchN;
 };
 
 #endif

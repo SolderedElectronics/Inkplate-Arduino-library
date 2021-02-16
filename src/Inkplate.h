@@ -40,7 +40,8 @@ class Inkplate : public System, public Graphics
     bool begin(void); // In boards
     void clearDisplay();
     void display();
-    void partialUpdate(bool _forced = false);
+    // void writeRow(uint8_t data);
+    void partialUpdate();
 
 #ifdef ARDUINO_INKPLATECOLOR
     void clean();
