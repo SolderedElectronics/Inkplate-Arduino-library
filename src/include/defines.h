@@ -88,6 +88,8 @@ Distributed as-is; no warranty is given.
     }
 #endif
 
+#define BOUND(a, b, c) ((a) <= (b) && (b) <= (c))
+
 #define RGB3BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 13)
 #define RGB8BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 8)
 

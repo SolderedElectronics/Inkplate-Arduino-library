@@ -18,6 +18,36 @@ Distributed as-is; no warranty is given.
 
 #ifdef ARDUINO_INKPLATE6PLUS
 
+bool Touch::inRect(int16_t x1, int16_t y1, int16_t w, int16_t h)
+{
+    int16_t x2 = x1 + w, y2 = y1 + h;
+    if (tsAvailable())
+    {
+        uint8_t n;
+        uint16_t x[2], y[2];
+        n = tsGetData(x, y);
+
+        if (n)
+        {
+            touchT = millis();
+            touchN = n;
+            memcpy(touchX, x, 2);
+            memcpy(touchY, y, 2);
+        }
+    }
+
+    if (millis() - touchT < 100)
+    {
+        Serial.printf("%d: %d, %d - %d, %d\n", touchN, touchX[0], touchY[0], touchX[1], touchY[1]);
+        if (touchN == 1 && BOUND(x1, touchX[0], x2) && BOUND(y1, touchY[0], y2))
+            return true;
+        if (touchN == 2 && ((BOUND(x1, touchX[0], x2) && BOUND(y1, touchY[0], y2)) ||
+                            (BOUND(x1, touchX[1], x2) && BOUND(y1, touchY[1], y2))))
+            return true;
+    }
+    return false;
+}
+
 uint8_t Touch::tsWriteRegs(uint8_t _addr, const uint8_t *_buff, uint8_t _size)
 {
     Wire.beginTransmission(_addr);
