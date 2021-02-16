@@ -1,9 +1,9 @@
 /*
 System.h
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
-https://github.com/e-radionicacom/Inkplate-6-Arduino-library
+February 12, 2021
+https://github.com/e-radionicacom/Inkplate-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
 For more info about the product, please check: www.inkplate.io
@@ -21,12 +21,25 @@ Distributed as-is; no warranty is given.
 #include "Arduino.h"
 #include "SPI.h"
 
-#include "defines.h"
 #include "Esp.h"
 #include "Mcp.h"
 #include "NetworkClient.h"
 
-class System : public Esp, public Mcp, virtual public NetworkClient
+#ifdef ARDUINO_INKPLATE6PLUS
+#include "Backlight.h"
+#include "Touch.h"
+#endif
+
+#include "defines.h"
+
+class System : public Esp,
+               virtual public Mcp,
+               virtual public NetworkClient
+#ifdef ARDUINO_INKPLATE6PLUS
+    ,
+               public Touch,
+               public Backlight
+#endif
 {
   public:
     void setPanelState(uint8_t s);
@@ -44,6 +57,13 @@ class System : public Esp, public Mcp, virtual public NetworkClient
 
     SdFat getSdFat();
     SPIClass getSPI();
+
+    virtual int _getRotation() = 0; // required in Touch
+    int getRotation()
+    {
+        return _getRotation();
+    };
+
 
   private:
     uint8_t _panelOn = 0;

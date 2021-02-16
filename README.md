@@ -20,7 +20,42 @@ There are many examples in the library that you demonstrate how to use any of th
 
 ### Documentation
 
+
 Find Inkplate documentation [here](https://inkplate.readthedocs.io/en/latest/get-started.html). 
+   1.1. Basic BW - use the screen in BW mode (graphics & text)
+
+   1.2. Basic Gray - use the screen in gray mode (graphics & text)
+
+   1.3. Basic Partial Update - do a partial update of the screen on Inkplate 6
+
+   1.4. Basic Custom Fonts - add custom fonts and use them to write text on the screen
+
+2. **Advanced Inkplate Functionality**
+
+   2.1. WiFi HTTP Request - make HTTP request while connected too WiFi
+
+   2.2. Low Power - put Inkplate in sleep in order to save battery
+
+   2.3. Battery Voltage And Temperature - measure battery voltage and temperature of the board
+
+   2.4. Touchpads - get readings from onboard touch pads
+
+   2.5. SD Pictures - show .bmp, .jpg and .png images from the SD card on the screen
+
+   2.6. Web Pictures - show .bmp, .jpg and .png images from the web
+
+   2.7. Inkplate SD TXT File - read .txt file from the SD card and show it on the screen
+
+   2.8. easyC - use easyC ecosystem (I2C) and read a sensor value
+
+   2.9. MCP23017 Expander - use onboard MCP23017 expander for your own external devices
+
+   2.10. Web Server - make Inkplate a web server
+
+3. **Others**
+
+   3.1. Peripheral Mode - mode that enables control of the screen from any external device using UART
+
 
 ### Using Inkplate 6 with another microcontroller - Peripheral mode
 
@@ -33,7 +68,9 @@ It is based on UART (serial) communication - connect the Inkplate to "Controller
 Inkplate 6 has two options for powering it. First one is obvious - USB port at side of the board. Just plug any micro USB cable and you are good to go. Second option is battery. Supported batteries are standard Li-Ion/Li-Poly batteries with 3.7V nominal voltage. Connector for the battery is standard 2.00mm pitch JST connector. The onboard charger will charge the battery with 500mA when USB is plugged at the same time. You can use battery of any size or capacity if you don't have a enclosure. If you are using our enclosure, battery size shouldn't exceed 90mm x 40mm (3.5 x 1.57 inch) and 5mm (0.19 inch) in height. [This battery](https://e-radionica.com/en/li-ion-baterija-1200mah.html) is good fit for the Inkplate.
 
 ### Linux?
+
 Running Linux? You'll need to run few other lines from your Terminal:
+
 ```
 apt install python3-pip
 pip3 install pyserial
@@ -42,15 +79,16 @@ apt install python-is-python3
 
 ### Micropython
 
-If you are looking for micropython support, please find all details [here](https://github.com/e-radionicacom/Inkplate-6-micropython). 
+If you are looking for micropython support, please find all details [here](https://github.com/e-radionicacom/Inkplate-6-micropython).
 
 ### License
 
-This repo uses the source code from another repositories. All their license files are located in "licences" folder. 
+This repo uses the source code from another repositories. All their license files are located in "licences" folder.
 
 ### Open-source
 
 All of Inkplate-related development is open-sourced:
+
 - [Arduino library](https://github.com/e-radionicacom/Inkplate-6-Arduino-library)
 - [Inkplate 6 hardware](https://github.com/e-radionicacom/Inkplate-6-hardware)
 - [micropython Inkplate](https://github.com/e-radionicacom/Inkplate-6-micropython)

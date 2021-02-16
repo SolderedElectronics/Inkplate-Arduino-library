@@ -24,7 +24,6 @@ getDisplayMode		KEYWORD2
 drawImage			KEYWORD2
 drawThickLine		KEYWORD2
 drawGradientLine	KEYWORD2
-clean				KEYWORD2
 drawFastVLine		KEYWORD2
 drawFastHLine		KEYWORD2
 fillRect			KEYWORD2

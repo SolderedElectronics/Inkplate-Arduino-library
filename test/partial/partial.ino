@@ -2,6 +2,8 @@
 
 Inkplate display(INKPLATE_1BIT);
 
+int k = 0;
+
 void setup()
 {
     Serial.begin(115200);
@@ -10,16 +12,11 @@ void setup()
 
 void loop()
 {
-    for (int j = 0; j < 50; ++j)
-    {
-        for (int i = 0; i < 100; ++i)
-            display.drawFastVLine(i * 5 + j * 3, 0, 600, BLACK);
-        for (int i = 0; i < 100; ++i)
-            display.drawFastHLine(j * 3, i * 5, 800, BLACK);
-        display.partialUpdate();
-        display.clearDisplay();
-    }
-
-    display.clean();
-    display.display();
+    for (int i = 0; i < 600 / 50; ++i)
+        for (int j = 0; j < 800 / 50; ++j)
+            display.fillRect(j * 50, i * 50, 50, 50, (i + j + k % 2) & 1);
+    display.partialUpdate(0, 100, 800, 200);
+    ++k;
+    if (k % 2 == 0)
+        display.display();
 }

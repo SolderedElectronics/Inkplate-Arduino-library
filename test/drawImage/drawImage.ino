@@ -2,7 +2,7 @@
 drawImage.ino
 Inkplate 6 Arduino library
 Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
+January 4, 2021
 https://github.com/e-radionicacom/Inkplate-6-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
@@ -16,347 +16,118 @@ Distributed as-is; no warranty is given.
 
 
 #include "Inkplate.h"
-#include "SdFat.h"
 
-#include "sample1bit.h"
-#include "sample3bit.h"
+#ifdef ARDUINO_ESP32_DEV
+#include "img.h"
+#include "img_g.h"
+#else
+#include "img_2.h"
+#include "img_2_g.h"
+#endif
 
-Inkplate display(INKPLATE_1BIT);
+// #define SEQUENTIAL
 
-#define DELAYMS 1000
+// zsh script for converting filetypes: for x (./jpg/*); do convert $x -depth 24 ./bmp24bit/${x:r:t}.bmp; done
+// for x (./jpg/*); do ffmpeg -i $x  -pix_fmt rgb565 -y ./bmp16bit/${x:r:t}.bmp; done
 
-const char *imagesBmp[] = {"1bit.bmp",  "4bit.bmp",  "8bit.bmp",  "16bit.bmp",
-                           "24bit.bmp", "32bit.bmp", "Lenna.jpg", "Lenna.jpg"};
-const char *imagesBmpUrls[] = {
-    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/1bit.bmp",
-    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/4bit.bmp",
-    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/8bit.bmp",
-    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/16bit.bmp",
-    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/24bit.bmp",
-    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/bitmaps/32bit.bmp",
-    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/jpegs/Lenna.jpg",
-    "https://raw.githubusercontent.com/nitko12/Inkplate-revision/master/test/jpegs/Lenna.jpg",
-};
-const bool depth[] = {INKPLATE_1BIT, INKPLATE_3BIT, INKPLATE_3BIT, INKPLATE_3BIT,
-                      INKPLATE_3BIT, INKPLATE_3BIT, INKPLATE_1BIT, INKPLATE_3BIT};
+Inkplate display(INKPLATE_3BIT);
+
+#ifdef ARDUINO_ESP32_DEV
+const int testImgHeight = 60, testImgWidth = 60;
+char *filename[] = {"img1bit.bmp",  "img4bit.bmp",  "img8bit.bmp", "img16bit.bmp",
+                    "img24bit.bmp", "img32bit.bmp", "img.jpg",     "img.png"};
+#else // Inkplate10
+const int testImgHeight = 92 - 11, testImgWidth = 92;
+char *filename[] = {"img_2_1bit.bmp",  "img_2_4bit.bmp",  "img_2_8bit.bmp", "img_2_16bit.bmp",
+                    "img_2_24bit.bmp", "img_2_32bit.bmp", "img_2.jpg",      "img_2.png"};
+#endif
+
+const int n = E_INK_HEIGHT / testImgHeight, m = E_INK_WIDTH / testImgWidth;
+char *formatStrWeb = "https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
+                     "inkplate10-integration/test/drawImage/%s";
+
+Image::Format formats[] = {Image::BMP, Image::BMP, Image::BMP, Image::BMP,
+                           Image::BMP, Image::BMP, Image::JPG, Image::PNG};
+
+char *formatStrSd = "%s";
+
+void drawAll();
 
 void setup()
 {
     Serial.begin(115200);
 
     display.begin();
-
     display.joinAP("", "");
-
-    Serial.println();
-    delay(500);
+    display.sdCardInit();
 }
 
 void loop()
 {
-    display.clearDisplay();
-    display.display();
-
-
-    display.selectDisplayMode(INKPLATE_1BIT);
-    display.setTextSize(2);
-    display.setTextColor(1);
-    display.setCursor(100, 100);
-    display.print("Displaying 1 bit flash image.");
-
-    display.display();
-    display.clearDisplay();
-    delay(5000);
-
-    display.drawImage(sample1bit, 0, 0, sample1bit_w, sample1bit_h, WHITE, BLACK);
-
-    display.display();
-    display.clearDisplay();
-    delay(5000);
-
-    display.selectDisplayMode(INKPLATE_3BIT);
-    display.setTextSize(2);
-    display.setTextColor(1);
-    display.setCursor(90, 100);
-    display.print("Displaying 3 bit flash image.");
-
-    display.display();
-    display.clearDisplay();
-    delay(5000);
-
-    display.drawImage(sample3bit, 0, 0, sample3bit_w, sample3bit_h);
-
-    display.display();
-    display.clearDisplay();
-    delay(5000);
-
-
-    if (!display.sdCardInit())
-    {
-        display.println("Sd card error!");
-        delay(1000);
-        return;
-    }
-
-    for (int i = 0; i < 4; ++i)
-    {
-        bool dither = i & 1;
-        bool invert = i >> 1;
-
-        for (int i = 0; i < 4; ++i)
-        {
-            bool dither = i & 1;
-            bool invert = i >> 1;
-
-            display.selectDisplayMode(INKPLATE_1BIT);
-            display.setTextSize(2);
-            display.setTextColor(1);
-            display.setCursor(100, 100);
-            display.print("Displaying Lenna.jpg 1bit");
-            if (!dither)
-                display.print(" non");
-            display.print(" dithered and");
-            if (!invert)
-                display.print(" non");
-            display.print(" inverted.");
-
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-
-            display.drawImage("Lenna.jpg", 0, 0, dither, invert);
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-        }
-
-        for (int i = 0; i < 4; ++i)
-        {
-            bool dither = i & 1;
-            bool invert = i >> 1;
-
-            display.selectDisplayMode(INKPLATE_3BIT);
-            display.setTextSize(2);
-            display.setTextColor(1);
-            display.setCursor(100, 100);
-            display.print("Displaying Lenna.jpg 3bit");
-            if (!dither)
-                display.print(" non");
-            display.print(" dithered and");
-            if (!invert)
-                display.print(" non");
-            display.print(" inverted.");
-
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-
-            display.drawImage("Lenna.jpg", 0, 0, dither, invert);
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-        }
-
-        for (int i = 0; i < 4; ++i)
-        {
-            bool dither = i & 1;
-            bool invert = i >> 1;
-
-            display.selectDisplayMode(INKPLATE_1BIT);
-            display.setTextSize(2);
-            display.setTextColor(1);
-            display.setCursor(100, 100);
-            display.print("Displaying png.png 1bit");
-            if (!dither)
-                display.print(" non");
-            display.print(" dithered and");
-            if (!invert)
-                display.print(" non");
-            display.print(" inverted.");
-
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-
-            display.drawImage("png.png", 0, 0, dither, invert);
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-        }
-
-        for (int i = 0; i < 4; ++i)
-        {
-            bool dither = i & 1;
-            bool invert = i >> 1;
-
-            display.selectDisplayMode(INKPLATE_3BIT);
-            display.setTextSize(2);
-            display.setTextColor(1);
-            display.setCursor(100, 100);
-            display.print("Displaying png.png 3bit");
-            if (!dither)
-                display.print(" non");
-            display.print(" dithered and");
-            if (!invert)
-                display.print(" non");
-            display.print(" inverted.");
-
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-
-            display.drawImage("png.png", 0, 0, dither, invert);
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-        }
-
-        // web
-
-
-        display.selectDisplayMode(INKPLATE_1BIT);
-        display.setTextSize(2);
-        display.setTextColor(1);
-        display.setCursor(100, 100);
-        display.print("Displaying Lenna.jpg 1bit from web");
-        if (!dither)
-            display.print(" non");
-        display.print(" dithered and");
-        if (!invert)
-            display.print(" non");
-        display.print(" inverted.");
-
-        display.display();
-        display.clearDisplay();
-        delay(5000);
-
-        display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
-                          "drawImage/Lenna.jpg",
-                          0, 0, dither, invert);
-        display.display();
-        display.clearDisplay();
-        delay(5000);
-    }
-
-    for (int i = 0; i < 4; ++i)
-    {
-        bool dither = i & 1;
-        bool invert = i >> 1;
-
-        display.selectDisplayMode(INKPLATE_3BIT);
-        display.setTextSize(2);
-        display.setTextColor(1);
-        display.setCursor(100, 100);
-        display.print("Displaying Lenna.jpg 3bit from web");
-        if (!dither)
-            display.print(" non");
-        display.print(" dithered and");
-        if (!invert)
-            display.print(" non");
-        display.print(" inverted.");
-
-        display.display();
-        display.clearDisplay();
-        delay(5000);
-
-        display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
-                          "drawImage/Lenna.jpg",
-                          0, 0, dither, invert);
-        display.display();
-        display.clearDisplay();
-        delay(5000);
-    }
-
-    for (int i = 0; i < 4; ++i)
-    {
-        bool dither = i & 1;
-        bool invert = i >> 1;
-
-        display.selectDisplayMode(INKPLATE_1BIT);
-        display.setTextSize(2);
-        display.setTextColor(1);
-        display.setCursor(100, 100);
-        display.print("Displaying png.png 1bit from web");
-        if (!dither)
-            display.print(" non");
-        display.print(" dithered and");
-        if (!invert)
-            display.print(" non");
-        display.print(" inverted.");
-
-        display.display();
-        display.clearDisplay();
-        delay(5000);
-
-        display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
-                          "drawImage/png.png",
-                          0, 0, dither, invert);
-        display.display();
-        display.clearDisplay();
-        delay(5000);
-    }
-
-    for (int i = 0; i < 4; ++i)
-    {
-        bool dither = i & 1;
-        bool invert = i >> 1;
-
-        display.selectDisplayMode(INKPLATE_3BIT);
-        display.setTextSize(2);
-        display.setTextColor(1);
-        display.setCursor(100, 100);
-        display.print("Displaying png.png 3bit from web");
-        if (!dither)
-            display.print(" non");
-        display.print(" dithered and");
-        if (!invert)
-            display.print(" non");
-        display.print(" inverted.");
-
-        display.display();
-        display.clearDisplay();
-        delay(5000);
-
-        display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-6-Arduino-library/revision/test/"
-                          "drawImage/png.png",
-                          0, 0, dither, invert);
-        display.display();
-        display.clearDisplay();
-        delay(5000);
-    }
-
-
-    for (int i = 0; i < 4; ++i)
-    {
-        bool dither = i & 1;
-        bool invert = i >> 1;
-
-        for (int j = 0; j < 6; ++j)
-        {
-            display.selectDisplayMode(depth[j]);
-            display.setTextSize(2);
-            display.setTextColor(1);
-            display.setCursor(100, 100);
-            display.print("Displaying ");
-            display.print(imagesBmp[j]);
-            display.print(" from web");
-            if (!dither)
-                display.print(" non");
-            display.print(" dithered and");
-            if (!invert)
-                display.print(" non");
-            display.print(" inverted.");
-
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-
-            display.drawImage(imagesBmpUrls[j], 0, 0, dither, invert);
-            display.display();
-            display.clearDisplay();
-            delay(5000);
-        }
-    }
+    // -------- BW ---------
+    display.setDisplayMode(INKPLATE_1BIT);
+    drawAll();
 
     delay(5000);
+
+    display.setDisplayMode(INKPLATE_3BIT);
+    drawAll();
+
+    delay(5000);
+}
+
+void drawAll()
+{
+    display.clearDisplay();
+    for (int i = 0; i < 128; ++i)
+    {
+        bool web = i & 1;            // or sd
+        bool dither = i & 2;         // or not to dither
+        bool invert = i & 4;         // or not to invert
+        bool autoFormat = i & 8;     // or not to auto format
+        int format = (i & 112) >> 4; // 1bitBMP 4bitBMP 8bitBMP 16bitBMP 24bitBMP 32bitBMP PNG JPG
+
+        int x = i % m, y = i / m;
+
+        char url[256];
+        sprintf(url, formatStrWeb, filename[format]);
+        char path[128];
+        sprintf(path, formatStrSd, filename[format]);
+
+        Serial.println(web ? url : path);
+        Serial.printf("dithered: %d inverted: %d\n", dither, invert);
+
+        if (autoFormat)
+        {
+            Serial.println(display.drawImage(web ? url : path, x * testImgWidth, y * testImgHeight, dither, invert));
+        }
+        else
+        {
+            Serial.println(display.drawImage(web ? url : path, formats[format], x * testImgWidth, y * testImgHeight,
+                                             dither, invert));
+        }
+        Serial.printf("%d %d\n", x * testImgWidth, y * testImgHeight);
+#ifdef SEQUENTIAL
+        display.display();
+#endif
+    }
+
+    int x = (128 % m) * testImgWidth, y = (128 / m) * testImgHeight;
+    if (display.getDisplayMode() == INKPLATE_1BIT)
+        display.drawImage(img, x, y, img_w, img_w);
+    else
+        display.drawImage(img_g, x, y, img_g_w, img_g_w);
+#ifdef SEQUENTIAL
+    display.display();
+#endif
+    delay(3000);
+
+    x = (129 % m) * testImgWidth, y = (129 / m) * testImgHeight;
+    if (display.getDisplayMode() == INKPLATE_1BIT)
+        display.drawImage(img, x, y, img_w, img_w, BLACK);
+    else
+        display.drawImage(img_g, x, y, img_g_w, img_g_w);
+
+    display.display();
+    delay(3000);
 }

@@ -1,9 +1,9 @@
 /*
 NetworkClient.cpp
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
-https://github.com/e-radionicacom/Inkplate-6-Arduino-library
+February 12, 2021
+https://github.com/e-radionicacom/Inkplate-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
 For more info about the product, please check: www.inkplate.io
@@ -30,7 +30,6 @@ bool NetworkClient::joinAP(const char *ssid, const char *pass)
             return 0;
         delay(1000);
         ++cnt;
-        Serial.println(cnt);
     }
 
     return 1;
@@ -79,12 +78,14 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
         uint8_t buff[512] = {0};
 
         WiFiClient *stream = http.getStreamPtr();
+        int32_t zeroCount = 0;
         while (http.connected() && (len > 0 || len == -1))
         {
             size_t size = stream->available();
 
             if (size)
             {
+                zeroCount = 0;
                 int c = stream->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
                 memcpy(buffPtr, buff, c);
 
@@ -92,6 +93,11 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
                     len -= c;
                 buffPtr += c;
             }
+            else
+                ++zeroCount;
+
+            if (zeroCount > 10000)
+                break;
         }
     }
     http.end();

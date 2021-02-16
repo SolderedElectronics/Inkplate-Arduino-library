@@ -1,9 +1,9 @@
 /*
 Image.cpp
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
-https://github.com/e-radionicacom/Inkplate-6-Arduino-library
+February 12, 2021
+https://github.com/e-radionicacom/Inkplate-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
 For more info about the product, please check: www.inkplate.io
@@ -59,6 +59,10 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
 
 bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c, uint8_t bg)
 {
+#ifdef ARDUINO_INKPLATECOLOR
+    // TODO: implement
+    return 0;
+#else
     if (getDisplayMode() == INKPLATE_1BIT && bg == 0xFF)
         drawBitmap(x, y, buf, w, h, c);
     else if (getDisplayMode() == INKPLATE_1BIT && bg != 0xFF)
@@ -66,10 +70,73 @@ bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, ui
     else if (getDisplayMode() == INKPLATE_3BIT)
         drawBitmap3Bit(x, y, buf, w, h);
     return 1;
+#endif
 }
+
+bool Image::drawImage(const String path, const Format &format, const int x, const int y, const bool dither,
+                      const bool invert)
+{
+    return drawImage(path.c_str(), format, x, y, dither, invert);
+};
+
+bool Image::drawImage(const char *path, const Format &format, const int x, const int y, const bool dither,
+                      const bool invert)
+{
+    if (strncmp(path, "http://", 7) == 0 || strncmp(path, "https://", 8) == 0)
+    {
+        if (format == BMP)
+            return drawBitmapFromWeb(path, x, y, dither, invert);
+        if (format == JPG)
+            return drawJpegFromWeb(path, x, y, dither, invert);
+        if (format == PNG)
+            return drawPngFromWeb(path, x, y, dither, invert);
+    }
+    else
+    {
+        if (format == BMP)
+            return drawBitmapFromSd(path, x, y, dither, invert);
+        if (format == JPG)
+            return drawJpegFromSd(path, x, y, dither, invert);
+        if (format == PNG)
+            return drawPngFromSd(path, x, y, dither, invert);
+    }
+    return 0;
+}
+
+bool Image::drawImage(const char *path, const Format &format, const Position &position, const bool dither,
+                      const bool invert)
+{
+    if (strncmp(path, "http://", 7) == 0 || strncmp(path, "https://", 8) == 0)
+    {
+        if (format == JPG)
+            return drawJpegFromWebAtPosition(path, position, dither, invert);
+        else if (format == PNG)
+            return drawPngFromWebAtPosition(path, position, dither, invert);
+        else if (format == BMP)
+            return drawBmpFromWebAtPosition(path, position, dither, invert);
+        return false;
+    }
+    else
+    {
+        if (format == JPG)
+            return drawJpegFromSdAtPosition(path, position, dither, invert);
+        else if (format == PNG)
+            return drawPngFromSdAtPosition(path, position, dither, invert);
+        else if (format == BMP)
+            return drawBmpFromSdAtPosition(path, position, dither, invert);
+        return false;
+    }
+    return false;
+}
+
 
 void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)
 {
+
+#ifdef ARDUINO_INKPLATECOLOR
+    // TODO: implement
+#else
+
     if (getDisplayMode() != INKPLATE_3BIT)
         return;
     uint8_t _rem = _w & 1;
@@ -89,4 +156,5 @@ void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int1
             writePixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
     }
     endWrite();
+#endif
 }
