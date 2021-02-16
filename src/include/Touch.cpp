@@ -18,13 +18,13 @@ Distributed as-is; no warranty is given.
 
 #ifdef ARDUINO_INKPLATE6PLUS
 
-#define BOUNDED(a, b, c) ((a) <= (b) && (b) <= (c))
-
-bool Touch::inRect(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h)
+bool Touch::inRect(int16_t x1, int16_t y1, int16_t w, int16_t h)
 {
+    int16_t x2 = x1 + w, y2 = y1 + h;
     if (tsAvailable())
     {
-        uint16_t x[2], y[2], n;
+        uint8_t n;
+        uint16_t x[2], y[2];
         n = tsGetData(x, y);
         if (n)
         {
@@ -34,17 +34,15 @@ bool Touch::inRect(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h)
             memcpy(touchY, y, 2);
         }
     }
-
-    if (millis() - touchT > 10)
-        return false;
-
-    int x2 = x1 + w, y2 = y1 + h;
-
-    if (touchN == 1 && BOUNDED(x1, touchX[0], x2) && BOUNDED(y1, touchY[0], y2))
-        return true;
-    if (touchN == 2 && ((BOUNDED(x1, touchX[0], x2) && BOUNDED(y1, touchY[0], y2)) ||
-                        (BOUNDED(x1, touchX[1], x2) && BOUNDED(y1, touchY[1], y2))))
-        return true;
+    if (millis() - touchT < 100)
+    {
+        Serial.printf("%d: %d, %d - %d, %d\n", touchN, touchX[0], touchY[0], touchX[1], touchY[1]);
+        if (touchN == 1 && BOUND(x1, touchX[0], x2) && BOUND(y1, touchY[0], y2))
+            return true;
+        if (touchN == 2 && ((BOUND(x1, touchX[0], x2) && BOUND(y1, touchY[0], y2)) ||
+                            (BOUND(x1, touchX[1], x2) && BOUND(y1, touchY[1], y2))))
+            return true;
+    }
     return false;
 }
 
