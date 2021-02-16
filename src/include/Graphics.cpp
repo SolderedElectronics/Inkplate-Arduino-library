@@ -1,9 +1,9 @@
 /*
 Graphics.cpp
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
-https://github.com/e-radionicacom/Inkplate-6-Arduino-library
+February 12, 2021
+https://github.com/e-radionicacom/Inkplate-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
 For more info about the product, please check: www.inkplate.io
@@ -54,50 +54,11 @@ uint8_t Graphics::getRotation()
 
 void Graphics::drawPixel(int16_t x0, int16_t y0, uint16_t color)
 {
-    writePixel(x0, y0, color);
+    writePixel(x0, y0, color); // Specified in boards folder
 }
 
 void Graphics::startWrite()
 {
-}
-
-void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
-{
-    if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
-        return;
-
-    switch (rotation)
-    {
-    case 1:
-        _swap_int16_t(x0, y0);
-        x0 = height() - x0 - 1;
-        break;
-    case 2:
-        x0 = width() - x0 - 1;
-        y0 = height() - y0 - 1;
-        break;
-    case 3:
-        _swap_int16_t(x0, y0);
-        y0 = width() - y0 - 1;
-        break;
-    }
-
-    if (getDisplayMode() == 0)
-    {
-        int x = x0 >> 3;
-        int x_sub = x0 & 7;
-        uint8_t temp = *(_partial + 100 * y0 + x);
-        *(_partial + 100 * y0 + x) = (~pixelMaskLUT[x_sub] & temp) | (color ? pixelMaskLUT[x_sub] : 0);
-    }
-    else
-    {
-        color &= 7;
-        int x = x0 >> 1;
-        int x_sub = x0 & 1;
-        uint8_t temp;
-        temp = *(D_memory4Bit + 400 * y0 + x);
-        *(D_memory4Bit + 400 * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
-    }
 }
 
 void Graphics::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
@@ -165,10 +126,17 @@ void Graphics::endWrite()
 {
 }
 
+#ifndef ARDUINO_INKPLATECOLOR
 void Graphics::setDisplayMode(uint8_t _mode)
 {
     _displayMode = _mode;
 }
+
+uint8_t Graphics::getDisplayMode()
+{
+    return _displayMode;
+}
+#endif
 
 void Graphics::selectDisplayMode(uint8_t _mode)
 {
@@ -178,14 +146,9 @@ void Graphics::selectDisplayMode(uint8_t _mode)
         memset(DMemoryNew, 0, 60000);
         memset(_partial, 0, 60000);
         memset(_pBuffer, 0, 120000);
-        memset(D_memory4Bit, 255, 240000);
+        memset(DMemory4Bit, 255, 240000);
         _blockPartial = 1;
     }
-}
-
-uint8_t Graphics::getDisplayMode()
-{
-    return _displayMode;
 }
 
 int16_t Graphics::width()

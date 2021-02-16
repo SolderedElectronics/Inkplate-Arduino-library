@@ -1,9 +1,9 @@
 /*
 Mcp.h
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
-https://github.com/e-radionicacom/Inkplate-6-Arduino-library
+February 12, 2021
+https://github.com/e-radionicacom/Inkplate-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
 For more info about the product, please check: www.inkplate.io
@@ -17,35 +17,13 @@ Distributed as-is; no warranty is given.
 #ifndef __MCP_H__
 #define __MCP_H__
 
-#define MCP23017_IODIRA 0x00
-#define MCP23017_GPPUA  0x0C
-#define MCP23017_ADDR   0x20
-
-#define MCP23017_GPIOA    0x12
-#define MCP23017_IOCONA   0x0A
-#define MCP23017_INTCONA  0x08
-#define MCP23017_GPINTENA 0x04
-#define MCP23017_DEFVALA  0x06
-#define MCP23017_INTFA    0x0E
-#define MCP23017_INTCAPA  0x10
-#define MCP23017_INTFB    0x0F
-#define MCP23017_INTCAPB  0x11
-#define MCP23017_GPIOB    0x13
-
 #include "Arduino.h"
 #include "Wire.h"
+#include "defines.h"
 
 class Mcp
 {
   public:
-    bool mcpBegin(uint8_t _addr, uint8_t *_r);
-    void readMCPRegisters(uint8_t _addr, uint8_t *k);
-    void readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
-    void readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k);
-    void updateAllRegisters(uint8_t _addr, uint8_t *k);
-    void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d);
-    void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
-
     void pinModeMCP(uint8_t _pin, uint8_t _mode);
     void digitalWriteMCP(uint8_t _pin, uint8_t _state);
     uint8_t digitalReadMCP(uint8_t _pin);
@@ -56,10 +34,29 @@ class Mcp
     uint16_t getINTstate();
     void setPorts(uint16_t _d);
     uint16_t getPorts();
+    uint8_t mcpRegsInt[22], mcpRegsEx[22];
 
-    uint8_t mcpRegsInt[22];
+    bool mcpBegin(uint8_t _addr, uint8_t *_r);
+    void pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode);
+    void digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state);
+    uint8_t digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin);
+
+    void setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint8_t mirroring, uint8_t openDrain,
+                              uint8_t polarity);
+    void setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode);
+    void removeIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin);
+    uint16_t getINTInternal(uint8_t _addr, uint8_t *_r);
+    uint16_t getINTstateInternal(uint8_t _addr, uint8_t *_r);
+    void setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d);
+    uint16_t getPortsInternal(uint8_t _addr, uint8_t *_r);
 
   private:
+    void readMCPRegisters(uint8_t _addr, uint8_t *k);
+    void readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
+    void readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k);
+    void updateAllRegisters(uint8_t _addr, uint8_t *k);
+    void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d);
+    void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
 };
 
 #endif

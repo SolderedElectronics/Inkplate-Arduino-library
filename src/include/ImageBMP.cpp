@@ -1,9 +1,9 @@
 /*
 ImageBMP.cpp
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
-https://github.com/e-radionicacom/Inkplate-6-Arduino-library
+February 12, 2021
+https://github.com/e-radionicacom/Inkplate-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
 For more info about the product, please check: www.inkplate.io
@@ -18,9 +18,12 @@ Distributed as-is; no warranty is given.
 
 bool Image::legalBmp(bitmapHeader *bmpHeader)
 {
-    return bmpHeader->signature == 0x4D42 && bmpHeader->compression == 0 &&
-           (bmpHeader->color == 1 || bmpHeader->color == 4 || bmpHeader->color == 8 || bmpHeader->color == 16 ||
-            bmpHeader->color == 24 || bmpHeader->color == 32);
+    return bmpHeader->signature == 0x4D42;
+
+    // removed
+    // && bmpHeader->compression == 0 && (bmpHeader->color == 1 || bmpHeader->color == 4 || bmpHeader->color == 8 ||
+    // bmpHeader->color == 16 || bmpHeader->color == 24 || bmpHeader->color == 32)
+    // because some converters don't set image depth
 }
 
 void Image::readBmpHeaderSd(SdFile *_f, bitmapHeader *_h)
@@ -82,9 +85,13 @@ void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
             uint8_t r = (c & 0xFF000000) >> 24;
             uint8_t g = (c & 0x00FF0000) >> 16;
             uint8_t b = (c & 0x0000FF00) >> 8;
-
+#ifdef ARDUINO_INKPLATECOLOR
+            palette[i >> 1] |= findClosestPalette(c) << (i & 1 ? 0 : 4);
+            ditherPalette[i] = c;
+#else
             palette[i >> 1] |= RGB3BIT(r, g, b) << (i & 1 ? 0 : 4);
             ditherPalette[i] = RGB8BIT(r, g, b);
+#endif
         }
     }
 };
@@ -125,7 +132,7 @@ bool Image::drawBitmapFromSd(SdFile *p, int x, int y, bool dither, bool invert)
 bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool invert)
 {
     bool ret = 0;
-    int32_t defaultLen = 800 * 600 * 4 + 150;
+    int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
     uint8_t *buf = downloadFile(url, &defaultLen);
 
     ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
@@ -164,7 +171,6 @@ bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool i
         displayBmpLine(x, y + bmpHeader.height - i - 1, &bmpHeader, dither, invert);
         bufferPtr += ROWSIZE(bmpHeader.width, bmpHeader.color);
     }
-
     return 1;
 }
 
@@ -179,7 +185,12 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
         switch (c)
         {
         case 1:
+#ifdef ARDUINO_INKPLATECOLOR
+            writePixel(x + j, y,
+                       (!invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
+#else
             writePixel(x + j, y, (invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
+#endif
             break;
         // as for 2 bit, literally cannot find an example online or in PS, so skipped
         case 4: {
@@ -187,14 +198,18 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-                val = ditherGetPixelBmp(px, j, w, 1);
+                val = ditherGetPixelBmp(px, j, y, w, 1);
             else
+            {
                 val = palette[px >> 1] & (px & 1 ? 0x0F : 0xF0) >> (px & 1 ? 0 : 4);
+            }
+
+#ifndef ARDUINO_INKPLATECOLOR
             if (invert)
                 val = 7 - val;
             if (getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
-
+#endif
             writePixel(x + j, y, val);
             break;
         }
@@ -203,14 +218,18 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-                val = ditherGetPixelBmp(px, j, w, 1);
+                val = ditherGetPixelBmp(px, j, y, w, 1);
             else
+            {
                 val = palette[px >> 1] & (px & 1 ? 0x0F : 0xF0) >> (px & 1 ? 0 : 4);
+            }
+
+#ifndef ARDUINO_INKPLATECOLOR
             if (invert)
                 val = 7 - val;
             if (getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
-
+#endif
             writePixel(x + j, y, val);
             break;
         }
@@ -224,33 +243,56 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-                val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, w, 0);
+#ifdef ARDUINO_INKPLATECOLOR
+                val = ditherGetPixelBmp(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b), j, y, w, 0);
+#else
+                val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, y, w, 0);
+#endif
             else
+            {
+#ifdef ARDUINO_INKPLATECOLOR
+                val = findClosestPalette(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b));
+#else
                 val = RGB3BIT(r, g, b);
+#endif
+            }
+
+#ifndef ARDUINO_INKPLATECOLOR
             if (invert)
                 val = 7 - val;
             if (getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
-
+#endif
             writePixel(x + j, y, val);
             break;
         }
         case 24: {
-            uint8_t r = pixelBuffer[j * 3];
-            uint8_t g = pixelBuffer[j * 3 + 1];
-            uint8_t b = pixelBuffer[j * 3 + 2];
+            uint32_t b = pixelBuffer[j * 3];
+            uint32_t g = pixelBuffer[j * 3 + 1];
+            uint32_t r = pixelBuffer[j * 3 + 2];
 
             uint8_t val;
 
             if (dither)
-                val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, w, 0);
+#ifdef ARDUINO_INKPLATECOLOR
+                val = ditherGetPixelBmp((r << 16) | (g << 8) | (b), j, y, w, 0);
+#else
+                val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, y, w, 0);
+#endif
             else
+            {
+#ifdef ARDUINO_INKPLATECOLOR
+                val = findClosestPalette((r << 16) | (g << 8) | (b));
+#else
                 val = RGB3BIT(r, g, b);
+#endif
+            }
+#ifndef ARDUINO_INKPLATECOLOR
             if (invert)
                 val = 7 - val;
             if (getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
-
+#endif
             writePixel(x + j, y, val);
             break;
         }
@@ -262,14 +304,25 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-                val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, w, 0);
+#ifdef ARDUINO_INKPLATECOLOR
+                val = ditherGetPixelBmp(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b), j, y, w, 0);
+#else
+                val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, y, w, 0);
+#endif
             else
+            {
+#ifdef ARDUINO_INKPLATECOLOR
+                val = findClosestPalette(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b));
+#else
                 val = RGB3BIT(r, g, b);
+#endif
+            }
+#ifndef ARDUINO_INKPLATECOLOR
             if (invert)
                 val = 7 - val;
             if (getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
-
+#endif
             writePixel(x + j, y, val);
             break;
         }
@@ -277,4 +330,54 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 
     ditherSwap(w);
     endWrite();
+}
+
+bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, const bool dither, const bool invert)
+{
+    bool ret = 0;
+    int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
+    uint8_t *buf = downloadFile(url, &defaultLen);
+
+    bitmapHeader bmpHeader;
+    readBmpHeader(buf, &bmpHeader);
+
+    uint16_t posX, posY;
+    getPointsForPosition(position, bmpHeader.width, bmpHeader.height, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
+    ret = drawBitmapFromBuffer(buf, posX, posY, dither, invert);
+    free(buf);
+
+    return ret;
+}
+
+bool Image::drawBmpFromSdAtPosition(const char *fileName, const Position &position, const bool dither,
+                                    const bool invert)
+{
+    SdFile dat;
+    if (!dat.open(fileName, O_RDONLY))
+        return 0;
+    bitmapHeader bmpHeader;
+
+    readBmpHeaderSd(&dat, &bmpHeader);
+
+    if (!legalBmp(&bmpHeader))
+        return 0;
+
+    int16_t w = bmpHeader.width, h = bmpHeader.height;
+    int8_t c = bmpHeader.color;
+
+    dat.seekSet(bmpHeader.startRAW);
+    if (dither)
+        memset(ditherBuffer, 0, sizeof ditherBuffer);
+
+    uint16_t posX, posY;
+    getPointsForPosition(position, bmpHeader.width, bmpHeader.height, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
+
+    for (int i = 0; i < h; ++i)
+    {
+        int16_t n = ROWSIZE(w, c);
+        dat.read(pixelBuffer, n);
+        displayBmpLine(posX, posY + bmpHeader.height - i - 1, &bmpHeader, dither, invert);
+    }
+
+    return 1;
 }

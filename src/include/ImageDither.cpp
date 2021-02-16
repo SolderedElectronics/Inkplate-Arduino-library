@@ -1,9 +1,9 @@
 /*
 ImageDither.cpp
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
-https://github.com/e-radionicacom/Inkplate-6-Arduino-library
+February 12, 2021
+https://github.com/e-radionicacom/Inkplate-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
 For more info about the product, please check: www.inkplate.io
@@ -16,7 +16,8 @@ Distributed as-is; no warranty is given.
 
 #include "Image.h"
 
-uint8_t Image::ditherGetPixelBmp(uint8_t px, int i, int w, bool paletted)
+#ifndef ARDUINO_INKPLATECOLOR
+uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted)
 {
     if (paletted)
         px = ditherPalette[px];
@@ -92,3 +93,4 @@ void Image::ditherSwapBlockJpeg(int x)
 
     jpegDitherBuffer[17][1] = 0;
 }
+#endif

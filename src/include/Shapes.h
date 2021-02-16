@@ -1,9 +1,9 @@
 /*
 Shapes.h
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
-https://github.com/e-radionicacom/Inkplate-6-Arduino-library
+February 12, 2021
+https://github.com/e-radionicacom/Inkplate-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
 For more info about the product, please check: www.inkplate.io
@@ -19,9 +19,10 @@ Distributed as-is; no warranty is given.
 
 #include "../libs/Adafruit-GFX-Library/Adafruit_GFX.h"
 #include "Arduino.h"
+#include "defines.h"
 
 #define maxVer 100
-#define maxHt  600
+#define maxHt  E_INK_HEIGHT
 
 class Shapes : virtual public Adafruit_GFX
 {
@@ -30,8 +31,10 @@ class Shapes : virtual public Adafruit_GFX
 
     virtual void drawPixel(int16_t x, int16_t y, uint16_t color) = 0;
 
+#ifndef ARDUINO_INKPLATECOLOR
     virtual void selectDisplayMode(uint8_t _mode) = 0;
     virtual uint8_t getDisplayMode() = 0;
+#endif
 
     void drawElipse(int rx, int ry, int xc, int yc, int c);
     void fillElipse(int rx, int ry, int xc, int yc, int c);

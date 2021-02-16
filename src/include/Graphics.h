@@ -1,9 +1,9 @@
 /*
 Graphics.h
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
-https://github.com/e-radionicacom/Inkplate-6-Arduino-library
+February 12, 2021
+https://github.com/e-radionicacom/Inkplate-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
 For more info about the product, please check: www.inkplate.io
@@ -52,14 +52,17 @@ class Graphics : public Shapes, public Image
 
     void selectDisplayMode(uint8_t _mode);
 
+#ifndef ARDUINO_INKPLATECOLOR
     void setDisplayMode(uint8_t _mode);
     uint8_t getDisplayMode();
+#endif
+
     int16_t width() override;
     int16_t height() override;
 
     uint8_t *DMemoryNew;
     uint8_t *_partial;
-    uint8_t *D_memory4Bit;
+    uint8_t *DMemory4Bit;
     uint8_t *_pBuffer;
 
     const uint8_t LUT2[16] = {0xAA, 0xA9, 0xA6, 0xA5, 0x9A, 0x99, 0x96, 0x95,
