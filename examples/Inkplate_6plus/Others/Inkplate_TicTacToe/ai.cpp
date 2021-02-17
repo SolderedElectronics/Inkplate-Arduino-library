@@ -61,30 +61,41 @@ struct best minimax(char player, char max, char board[3][3], int depth)
 
     // Try all possible moves, and return min or max, depending on who's move it is
     struct best bs = {-1, player == max ? -1e8 : 1e8};
+
+    // List possible moves and shuffle them
+    int pos[9], n = 0;
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j)
+            if (board[i][j] == '_')
+                pos[n++] = j + i * 3;
+
+    fisher_yates_shuffle(n, pos);
+    for (int k = 0; k < n; ++k)
+    {
+        int i = pos[k] / 3;
+        int j = pos[k] % 3;
+
+        if (board[i][j] != '_')
+            continue;
+
+        board[i][j] = player;
+        struct best t = {j + i * 3, minimax(player == 'x' ? 'o' : 'x', max, board, depth - 1).score};
+        board[i][j] = '_';
+
+        if (depth == 0)
         {
-            if (board[i][j] != '_')
-                continue;
-
-            board[i][j] = player;
-            struct best t = {j + i * 3, minimax(player == 'x' ? 'o' : 'x', max, board, depth - 1).score};
-            board[i][j] = '_';
-
-            if (depth == 0)
-            {
-                Serial.printf("%d %d\n", j + 3 * j, t.score);
-            }
-            if (player == max)
-            {
-                if (t.score > bs.score)
-                    bs = t;
-            }
-            else
-            {
-                if (t.score < bs.score)
-                    bs = t;
-            }
+            Serial.printf("%d %d\n", j + 3 * j, t.score);
         }
+        if (player == max)
+        {
+            if (t.score > bs.score)
+                bs = t;
+        }
+        else
+        {
+            if (t.score < bs.score)
+                bs = t;
+        }
+    }
     return bs;
 }
