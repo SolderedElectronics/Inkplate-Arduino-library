@@ -38,7 +38,7 @@ bool Touch::inRect(int16_t x1, int16_t y1, int16_t w, int16_t h)
 
     if (millis() - touchT < 100)
     {
-        Serial.printf("%d: %d, %d - %d, %d\n", touchN, touchX[0], touchY[0], touchX[1], touchY[1]);
+        // Serial.printf("%d: %d, %d - %d, %d\n", touchN, touchX[0], touchY[0], touchX[1], touchY[1]);
         if (touchN == 1 && BOUND(x1, touchX[0], x2) && BOUND(y1, touchY[0], y2))
             return true;
         if (touchN == 2 && ((BOUND(x1, touchX[0], x2) && BOUND(y1, touchY[0], y2)) ||
