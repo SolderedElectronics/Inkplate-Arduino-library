@@ -60,13 +60,15 @@ void loop()
         n = display.tsGetData(x, y);
         if (n != 0)
         {
-#ifdef DRAW_LINE
+#ifdef DRAW_LINE // Draw line from old point to new
             display.drawLine(xOld, yOld, x[0], y[0], BLACK);
+
+            // Save coordinates to use as old next time
             xOld = x[0];
             yOld = y[0];
 #endif
 
-#ifdef DRAW_CIRCLE
+#ifdef DRAW_CIRCLE // Draw circle on touch event coordinates
             display.fillCircle(x[0], y[0], 20, BLACK);
 #endif
             display.partialUpdate();

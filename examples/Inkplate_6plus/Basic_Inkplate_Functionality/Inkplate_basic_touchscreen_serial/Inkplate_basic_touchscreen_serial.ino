@@ -60,15 +60,16 @@ void loop()
         n = display.tsGetData(x, y);
         if (n != 0)
         {
+            // Print number of fingers to serial monitor, along with their coordinates
             Serial.printf("%d finger%c ", n, n > 1 ? 's' : NULL);
             for (int i = 0; i < n; i++)
-            {
                 Serial.printf("X=%d Y=%d ", x[i], y[i]);
-            }
             Serial.println();
         }
         else
         {
+            // If touchscreen driver returns us a zero, it means that there are no more touch events pressent on the
+            // screen
             x[0] = 0;
             x[1] = 0;
             y[0] = 0;
