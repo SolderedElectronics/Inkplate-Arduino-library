@@ -238,7 +238,6 @@ void Inkplate::display1b()
 
     vscan_start();
     einkOff();
-    _blockPartial = 0;
 }
 
 void Inkplate::display3b()
@@ -285,11 +284,6 @@ void Inkplate::partialUpdate(bool _forced)
 {
     if (getDisplayMode() == 1)
         return;
-    if (_blockPartial == 1 && !_forced)
-    {
-        display1b();
-        return;
-    }
 
     uint16_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
     uint32_t _send;

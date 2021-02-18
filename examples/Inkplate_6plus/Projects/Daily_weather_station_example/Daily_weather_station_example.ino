@@ -51,7 +51,7 @@ char *pass = "";
 #include "icons.h"
 
 // Delay between API calls
-#define DELAY_MS 15000
+#define DELAY_MS 60000 * 3
 
 // Inkplate object
 Inkplate display(INKPLATE_1BIT);
@@ -86,11 +86,11 @@ char days[8][4] = {
     "",
 };
 
-// Variable for counting partial refreshes
-long refreshes = 0;
+// Variable for counting partial refreshes, in rtc data, survives reset
+RTC_DATA_ATTR unsigned refreshes = 0;
 
 // Constant to determine when to full update
-const int fullRefresh = 10;
+const int fullRefresh = 5;
 
 // Variables for storing current time and weather info
 char currentTemp[16] = "0F";
@@ -114,62 +114,79 @@ void setup()
     Serial.begin(115200);
     display.begin();
 
-    // Initial cleaning of buffer and physical screen
-    display.clearDisplay();
-    display.display();
-
-    // Calling our begin from network.h file
-    network.begin(city);
-
-    // If city not found, do nothing
-    if (network.location == -1)
+    if (refreshes == 0)
     {
+        // Welcome screen
         display.setCursor(50, 290);
         display.setTextSize(3);
-        display.print(F("City not in Metaweather Database"));
+        display.print(F("Welcome to Inkplate 6 plus weather example!"));
         display.display();
-        while (1)
-            ;
+
+        display.clearDisplay();
+        // Wait a bit before proceeding
+        delay(5000);
     }
 
-    // Welcome screen
-    display.setCursor(50, 290);
-    display.setTextSize(3);
-    display.print(F("Welcome to Inkplate 6 plus weather example!"));
-    display.display();
+    if (refreshes % fullRefresh == 0)
+    {
+        // Calling our begin from network.h file
+        network.begin(city);
 
-    // Wait a bit before proceeding
-    delay(5000);
+        // If city not found, do nothing
+        if (network.location == -1)
+        {
+            display.setCursor(50, 290);
+            display.setTextSize(3);
+            display.print(F("City not in Metaweather Database"));
+            display.display();
+            while (1)
+                ;
+        }
+
+        // Get all relevant data, see Network.cpp for info
+        network.getTime(currentTime);
+        network.getTime(currentTime);
+        network.getDays(days[0], days[1], days[2], days[3]);
+        network.getData(city, temps[0], temps[1], temps[2], temps[3], currentTemp, currentWind, currentTime,
+                        currentWeather, currentWeatherAbbr, abbr1, abbr2, abbr3, abbr4);
+
+        // Draw data, see functions below for info
+        drawTime();
+        drawWeather();
+        drawCurrent();
+        drawTemps();
+        drawCity();
+
+        display.display();
+    }
+    else
+    {
+        // Refresh only the clock
+        network.getTime(currentTime);
+
+        int16_t x1, y1;
+        uint16_t w1, h1;
+        display.setFont(&Roboto_Light_36);
+        display.setTextSize(1);
+        display.getTextBounds(currentTime, 1024 - 20 * strlen(currentTime), 35, &x1, &y1, &w1, &h1);
+        display.fillRect(x1, y1, w1 + 50, h1 + 50, BLACK);
+        display.partialUpdate();
+        display.fillRect(x1, y1, w1 + 50, h1 + 50, WHITE);
+        drawTime();
+
+        display.partialUpdate();
+    }
+
+    ++refreshes;
+
+    // Go to sleep
+    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+    (void)esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Clear display
-    display.clearDisplay();
-
-    // Get all relevant data, see Network.cpp for info
-    network.getTime(currentTime);
-    network.getDays(days[0], days[1], days[2], days[3]);
-    network.getData(city, temps[0], temps[1], temps[2], temps[3], currentTemp, currentWind, currentTime, currentWeather,
-                    currentWeatherAbbr, abbr1, abbr2, abbr3, abbr4);
-
-    // Draw data, see functions below for info
-    drawWeather();
-    drawCurrent();
-    drawTemps();
-    drawCity();
-    drawTime();
-
-    // Refresh full screen every fullRefresh times, defined above
-    if (refreshes % fullRefresh == 0)
-        display.display();
-    else
-        display.partialUpdate();
-
-    // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
-    ++refreshes;
+    // Never here
 }
 
 // Function for drawing weather info

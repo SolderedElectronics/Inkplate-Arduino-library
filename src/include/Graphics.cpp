@@ -147,7 +147,6 @@ void Graphics::selectDisplayMode(uint8_t _mode)
         memset(_partial, 0, 60000);
         memset(_pBuffer, 0, 120000);
         memset(DMemory4Bit, 255, 240000);
-        _blockPartial = 1;
     }
 }
 
