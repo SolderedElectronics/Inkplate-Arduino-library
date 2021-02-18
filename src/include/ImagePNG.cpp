@@ -60,8 +60,7 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
 #ifdef ARDUINO_INKPLATECOLOR
                     px = _imagePtrPng->ditherGetPixelBmp(RGB8BIT(r, g, b), x + i, y + j, _imagePtrPng->width(), 0);
 #else
-                    px = _imagePtrPng->ditherGetPixelBmp((r << 16) | (g << 8) | (b), x + i, y + j,
-                                                         _imagePtrPng->width(), 0);
+                    px = _imagePtrPng->ditherGetPixelBmp(RGB8BIT(r, g, b), x + i, y + j, _imagePtrPng->width(), 0);
                 if (_pngInvert)
                     px = 7 - px;
                 if (_imagePtrPng->getDisplayMode() == INKPLATE_1BIT)

@@ -3,10 +3,10 @@ Mcp.cpp
 Mcp 6 Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
 February 12, 2021
-https://github.com/e-radionicacom/Mcp-6-Arduino-library
+https://github.com/e-radionicacom/Inkplate-6-Arduino-library
 
 For support, please reach over forums: forum.e-radionica.com/en
-For more info about the product, please check: www.Mcp.io
+For more info about the product, please check: www.inkplate.io
 
 This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
 Please review the LICENSE file included with this example.

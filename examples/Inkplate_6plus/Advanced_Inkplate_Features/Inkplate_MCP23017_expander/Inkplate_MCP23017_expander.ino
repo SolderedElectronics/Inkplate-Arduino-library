@@ -50,5 +50,5 @@ void loop()
     display.digitalWriteMCP(LED_PIN, LOW);  // Set output to low (LED does not light up)
     delay(1000);                            // Wait for one second
     display.digitalWriteMCP(LED_PIN, HIGH); // Set output to high (LED lights up)
-    delay(1000);                            // Wait for one second
+    delay(1000);
 }

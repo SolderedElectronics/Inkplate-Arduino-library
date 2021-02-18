@@ -23,7 +23,6 @@ extern Image *_imagePtrJpeg;
 
 bool Image::drawJpegFromSd(const char *fileName, int x, int y, bool dither, bool invert)
 {
-    Serial.println("nice");
     SdFile dat;
     if (dat.open(fileName, O_RDONLY))
         return drawJpegFromSd(&dat, x, y, dither, invert);
