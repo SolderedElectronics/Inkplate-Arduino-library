@@ -30,8 +30,8 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char *ssid = "";
-char *pass = "";
+char *ssid = "e-radionica.com";
+char *pass = "croduino";
 
 // OPTIONAL:
 // change to a different currency
@@ -139,6 +139,7 @@ void setup()
 
     // Initial display settings
     display.begin();
+    display.tsInit(true);
     display.clearDisplay();
     display.display();
     display.setTextWrap(false);
@@ -173,7 +174,9 @@ void loop()
     drawAll();
 
     // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+    esp_sleep_enable_timer_wakeup(100000L * DELAY_MS);
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, 0);
+
     (void)esp_light_sleep_start();
 
     // Increment refresh count
@@ -303,6 +306,17 @@ void drawGraph()
 
     display.drawFastVLine(x2 - textMargin + 2, y2, y1 - y2, 4);
     display.drawThickLine(x1, y1, x2, y1, 0, 3);
+
+    display.fillRoundRect(755, 620, 100, 100, 15, 0);
+    display.fillRoundRect(870, 620, 100, 100, 15, 0);
+
+    display.setTextColor(7, 0);
+    display.setTextSize(5);
+    display.setCursor(785, 650);
+    display.print("<");
+    display.setCursor(905, 650);
+    display.print(">");
+    display.setTextColor(0, 7);
 }
 
 // Our main drawing function

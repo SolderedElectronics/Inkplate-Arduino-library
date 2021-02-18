@@ -91,10 +91,18 @@ bool Network::getData(double *data)
 {
     bool f = 0;
 
+    // Wake up if sleeping and save inital state
+    bool sleep = WiFi.getSleep();
+    WiFi.setSleep(false);
+
     // If not connected to wifi reconnect wifi
     if (WiFi.status() != WL_CONNECTED)
     {
-        WiFi.reconnect();
+        // WiFi.reconnect();
+
+        WiFi.disconnect();
+        WiFi.mode(WIFI_STA);
+        WiFi.begin(ssid, pass);
 
         delay(5000);
 
@@ -115,10 +123,6 @@ bool Network::getData(double *data)
             }
         }
     }
-
-    // Wake up if sleeping and save inital state
-    bool sleep = WiFi.getSleep();
-    WiFi.setSleep(false);
 
     // Http object used to make get request
     HTTPClient http;

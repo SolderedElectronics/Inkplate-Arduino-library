@@ -60,8 +60,7 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
 bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c, uint8_t bg)
 {
 #ifdef ARDUINO_INKPLATECOLOR
-    // TODO: implement
-    return 0;
+    drawBitmap3Bit(x, y, buf, w, h);
 #else
     if (getDisplayMode() == INKPLATE_1BIT && bg == 0xFF)
         drawBitmap(x, y, buf, w, h, c);
@@ -132,13 +131,11 @@ bool Image::drawImage(const char *path, const Format &format, const Position &po
 
 void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)
 {
-
-#ifdef ARDUINO_INKPLATECOLOR
-    // TODO: implement
-#else
-
+#ifndef ARDUINO_INKPLATECOLOR
     if (getDisplayMode() != INKPLATE_3BIT)
         return;
+#endif
+
     uint8_t _rem = _w & 1;
     int i, j;
     int xSize = (_w >> 1) + _rem;
@@ -156,5 +153,4 @@ void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int1
             writePixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
     }
     endWrite();
-#endif
 }

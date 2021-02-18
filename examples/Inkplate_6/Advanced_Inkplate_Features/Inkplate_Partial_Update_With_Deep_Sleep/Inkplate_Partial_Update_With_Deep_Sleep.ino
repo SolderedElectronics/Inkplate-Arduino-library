@@ -52,10 +52,10 @@ void setup()
             .preloadScreen(); // If is woken up by deep sleep, recreate whole screen to be same as was before deep sleep
         counter++;            // Update variable / variables
         decimal *= 1.23;
-        display.clearDisplay();                        // Clear everything in buffer
-        createScreen();                                // Create new screen with new variables
-        display.partialUpdate(INKPLATE_FORCE_PARTIAL); // Force partial update of screen. (Use this only in this
-                                                       // scenario, otherwise YOU CAN DAMAGE YOUR SCRREN)
+        display.clearDisplay();  // Clear everything in buffer
+        createScreen();          // Create new screen with new variables
+        display.partialUpdate(); // Partial update of screen. (Use this only in this
+                                 // scenario, otherwise YOU CAN DAMAGE YOUR SCRREN)
     }
     else // If is not deep sleep reset, that must be some thing else, so use normal update procerude (full screen
          // update)
