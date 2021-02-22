@@ -20,7 +20,7 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_ESP32_DEV
+#ifndef ARDUINO_INKPLATE5
 #error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
 #endif
 
@@ -30,8 +30,8 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char *ssid = "";
-char *pass = "";
+char *ssid = "e-radionica.com";
+char *pass = "croduino";
 
 // OPTIONAL:
 // change to a different currency
@@ -64,10 +64,10 @@ Network network;
 Inkplate display(INKPLATE_3BIT);
 
 // Delay between API calls in miliseconds
-#define DELAY_MS 5000
+#define DELAY_MS 3 * 60 * 1000
 
 // Variable for counting partial refreshes
-long refreshes = 0;
+RTC_DATA_ATTR unsigned refreshes = 0;
 
 // Constant to determine when to full update
 const int fullRefresh = 20;
@@ -98,18 +98,7 @@ char maximum[16];
 
 // All months in a year, for finding current date
 char *months[] = {
-    "Jan"
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 };
 
 // Out UI elements data
@@ -139,44 +128,75 @@ void setup()
 
     // Initial display settings
     display.begin();
-    display.clearDisplay();
-    display.display();
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    // Welcome screen
-    display.setCursor(70, 230);
-    display.setTextSize(2);
-    display.println(F("Welcome to Inkplate 6 cryptocurrency tracker example!"));
-    display.setCursor(70, 250);
-    display.println(F("Connecting to WiFi..."));
-    display.display();
+    if (refreshes == 0)
+    {
+        // Welcome screen
+        display.setCursor(70, 230);
+        display.setTextSize(2);
+        display.println(F("Welcome to Inkplate 6 cryptocurrency tracker example!"));
+        display.setCursor(70, 250);
+        display.println(F("Connecting to WiFi..."));
+        display.display();
+        display.clearDisplay();
+        delay(1000);
+    }
 
-    delay(5000);
-
-    // Our begin function
-    network.begin();
-}
-
-void loop()
-{
-    // Do a new network request every fullRefresh times, defined above
     if (refreshes % fullRefresh == 0)
+    {
+        // Our begin function
+        network.begin();
+
         while (!network.getData(data))
         {
             Serial.println("Retrying retriving data!");
             delay(1000);
         }
 
-    // Our main drawing function
-    drawAll();
+        // Our main drawing function
+        drawAll();
+        // Time drawing function
+        drawTime();
+        // Full refresh
+        display.display();
+    }
+    else
+    {
+        display.setDisplayMode(INKPLATE_1BIT);
+        Serial.println("heree");
+        // Reset screen where date is drawn
+        int16_t x1, y1;
+        uint16_t w1, h1;
+        display.setFont(elements[1].font);
+        display.setTextSize(1);
+        network.getTime(date);
+        display.getTextBounds(date, (int)(elements[1].x * 0.96), (int)(elements[1].y), &x1, &y1, &w1, &h1);
+
+        Serial.printf("%d %d %d %d\n", x1, y1, w1, h1);
+        display.fillRect(x1, y1, w1, h1, BLACK);
+        display.partialUpdate();
+        display.fillRect(x1, y1, w1, h1, WHITE);
+        display.partialUpdate();
+
+        // Time drawing function
+        drawTime();
+
+        // Just update time
+        display.partialUpdate();
+    }
+
+    ++refreshes;
 
     // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
+    esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS);
+    (void)esp_deep_sleep_start();
+}
 
-    // Increment refresh count
-    ++refreshes;
+void loop()
+{
+    // Never here
 }
 
 // Function to draw our graph
@@ -230,7 +250,7 @@ void drawGraph()
     for (int i = 0; i < 12; ++i)
     {
         if (strncmp(months[i], date, 3) == 0)
-            month = ((i + 2) % 12 ? i + 2 : 12);
+            month = i + 1;
     }
 
     // Find days to display underneath the graph
@@ -304,72 +324,54 @@ void drawGraph()
     display.drawThickLine(x1, y1, x2, y1, 0, 3);
 }
 
+// Function to draw time
+void drawTime()
+{
+    // Just draw time
+    int i = 1;
+
+    // Save current date string, more about it in Network.cpp
+    network.getTime(date);
+
+    // Text settings
+    if (display.getDisplayMode() == INKPLATE_3BIT)
+        display.setTextColor(0, 7);
+    else
+        display.setTextColor(BLACK, WHITE);
+    display.setFont(elements[i].font);
+    display.setTextSize(1);
+
+    // 0 is aligned by left bottom corner, 1 by right
+    if (elements[i].align == 0)
+        display.setCursor((int)(elements[i].x * 0.96), (int)(elements[i].y));
+
+    // Print out text to above set cursor location
+    display.print(date);
+}
+
 // Our main drawing function
 void drawAll()
-{ // Do a full refresh every fullRefresh times, defined above
-    if (refreshes % fullRefresh == 0)
+{
+    // Save current date string, more about it in Network.cpp
+    network.getTime(date);
+
+    // Find current day from string
+    int day;
+    sscanf(date + 3, "%d", &day);
+
+    // Find what month is it numericly and display it
+    for (int i = 0; i < 12; ++i)
     {
-        // Initial screen clear
-        display.clearDisplay();
-
-        // Save current date string, more about it in Network.cpp
-        network.getTime(date);
-
-        // Find current day from string
-        int day;
-        sscanf(date + 3, "%d", &day);
-
-        // Find what month is it numericly and display it
-        for (int i = 0; i < 12; ++i)
-        {
-            if (strncmp(months[i], date, 3) == 0)
-                sprintf(fromToDate, "%d.%d. to %d.%d.", day, ((i + 1) % 12 ? i + 1 : 12), day,
-                        ((i + 2) % 12 ? i + 2 : 12));
-        }
-
-        // Draw graph
-        drawGraph();
-
-        // Draw our UI elements
-        for (int i = 0; i < sizeof(elements) / sizeof(elements[0]); ++i)
-        {
-            // Text settings
-            display.setTextColor(0, 7);
-            display.setFont(elements[i].font);
-            display.setTextSize(1);
-
-            // 0 is aligned by left bottom corner, 1 by right
-            if (elements[i].align == 0)
-                display.setCursor((int)(elements[i].x * 0.96), (int)(elements[i].y));
-            else if (elements[i].align == 1)
-            {
-                int16_t x, y;
-                uint16_t w, h;
-
-                // Get hot much the textx offsets pointer and draw it that much more left
-                display.getTextBounds(elements[i].text, 0, 0, &x, &y, &w, &h);
-
-                display.setCursor((int)(elements[i].x * 0.96) - w, (int)(elements[i].y));
-            }
-
-            // Print out text to above set cursor location
-            display.print(elements[i].text);
-        }
-
-        // Display all
-        display.display();
+        if (strncmp(months[i], date, 3) == 0)
+            sprintf(fromToDate, "%d.%d. to %d.%d.", day, ((i + 1) % 12 ? i + 1 : 12), day, ((i + 2) % 12 ? i + 2 : 12));
     }
-    else
+
+    // Draw graph
+    drawGraph();
+
+    // Draw our UI elements
+    for (int i = 0; i < sizeof(elements) / sizeof(elements[0]); ++i)
     {
-        // Just draw time
-        int i = 1;
-
-        // Initial screen clear
-        display.clearDisplay();
-
-        // Save current date string, more about it in Network.cpp
-        network.getTime(date);
-
         // Text settings
         display.setTextColor(0, 7);
         display.setFont(elements[i].font);
@@ -378,11 +380,18 @@ void drawAll()
         // 0 is aligned by left bottom corner, 1 by right
         if (elements[i].align == 0)
             display.setCursor((int)(elements[i].x * 0.96), (int)(elements[i].y));
+        else if (elements[i].align == 1)
+        {
+            int16_t x, y;
+            uint16_t w, h;
+
+            // Get hot much the textx offsets pointer and draw it that much more left
+            display.getTextBounds(elements[i].text, 0, 0, &x, &y, &w, &h);
+
+            display.setCursor((int)(elements[i].x * 0.96) - w, (int)(elements[i].y));
+        }
 
         // Print out text to above set cursor location
-        display.print(date);
-
-        // Just update time
-        display.partialUpdate();
+        display.print(elements[i].text);
     }
 }

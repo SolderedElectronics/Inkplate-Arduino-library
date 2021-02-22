@@ -18,6 +18,9 @@ Distributed as-is; no warranty is given.
 
 #ifdef ARDUINO_INKPLATE6PLUS
 
+uint16_t _tsXResolution;
+uint16_t _tsYResolution;
+
 bool Touch::inRect(int16_t x1, int16_t y1, int16_t w, int16_t h)
 {
     int16_t x2 = x1 + w, y2 = y1 + h;
@@ -117,6 +120,8 @@ bool Touch::tsInit(uint8_t _pwrState)
     }
     tsGetResolution(&_tsXResolution, &_tsYResolution);
     tsSetPowerState(_pwrState);
+
+    tsInt();
     return true;
 }
 

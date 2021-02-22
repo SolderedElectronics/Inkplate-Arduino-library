@@ -64,12 +64,12 @@ Network network;
 Inkplate display(INKPLATE_3BIT);
 
 // Delay between API calls in miliseconds
-#define DELAY_MS 60 * 1000
+#define DELAY_MS 3 * 60 * 1000
 
 // Refresh counter that's persisant between deepsleeps
-RTC_DATA_ATTR int refreshes = 0;
+RTC_DATA_ATTR unsigned refreshes = 0;
 
-// Constant to determine when to full update
+// Constant to determine when to full update and fetch
 const int fullRefresh = 20;
 
 // Used for storing raw price values
@@ -98,18 +98,7 @@ char maximum[16];
 
 // All months in a year, for finding current date
 char *months[] = {
-    "Jan"
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 };
 
 // Out UI elements data
@@ -134,12 +123,17 @@ void drawAll();
 
 void setup()
 {
-    // Begin serial communitcation, sed for debugging
+    // Begin serial communication, sed for debugging
     Serial.begin(115200);
 
     // Initial display settings
     display.begin();
     display.tsInit(true);
+
+    // Turn off backlight
+    display.backlight(true);
+    display.setBacklight(0);
+
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
@@ -149,11 +143,11 @@ void setup()
         display.setCursor(90, 240);
         display.setTextSize(2);
         display.println(F("Welcome to Inkplate 6 plus cryptocurrency tracker example!"));
-        display.clearDisplay();
-        delay(1000);
-        display.setCursor(90, 240);
+        display.setCursor(90, 280);
         display.println(F("Connecting to WiFi..."));
         display.display();
+        display.clearDisplay();
+        delay(1000);
     }
 
     // Do a new network request every fullRefresh times, defined above
@@ -168,22 +162,65 @@ void setup()
         }
         // Our main drawing function
         drawAll();
+        // Time drawing function
+        drawTime();
+        // Full refresh
+        display.display();
+    }
+    else
+    {
+        display.setDisplayMode(INKPLATE_1BIT);
+        // Reset screen where date is drawn
+        int16_t x1, y1;
+        uint16_t w1, h1;
+        display.setFont(elements[1].font);
+        display.setTextSize(1);
+        network.getTime(date);
+
+        // Clear date
+        display.getTextBounds(date, (int)(elements[1].x * 0.96), (int)(elements[1].y), &x1, &y1, &w1, &h1);
+        display.fillRect(x1, y1, w1 + 5, h1 + 5, BLACK);
+        display.partialUpdate();
+        display.fillRect(x1, y1, w1 + 5, h1 + 5, WHITE);
+        display.partialUpdate();
+
+        // Clear reset text 600, 746
+        display.getTextBounds("Press screen to wake up.", 600, 748, &x1, &y1, &w1, &h1);
+        display.fillRect(x1 - 1, y1, w1 + 1, h1 + 1, BLACK);
+        display.partialUpdate();
+        display.fillRect(x1 - 1, y1, w1 + 1, h1 + 1, WHITE);
+        display.partialUpdate();
+
+        // Time drawing function
+        drawTime();
+
+        // Draw selection
+        display.fillRoundRect(755, 620, 100, 100, 15, BLACK);
+        display.fillRoundRect(870, 620, 100, 100, 15, BLACK);
+
+        // Just update time
+        display.partialUpdate();
     }
 
-    // Update just the clock
-    updateClock();
+    uint32_t t = millis();
+    while (millis() - t < 20000)
+    {
+        if (display.inRect(755, 620, 100, 100))
+        {
+            Serial.println("aa");
+            t = millis();
+        }
+        if (display.inRect(870, 620, 100, 100))
+        {
+            Serial.println("bb");
+            t = millis();
+        }
+        delay(15);
+    }
 
     // Increment refresh count
     ++refreshes;
-
-    // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, 0);
-
-    gpio_hold_en(GPIO_NUM_25);
-    gpio_deep_sleep_hold_en();
-
-    (void)esp_deep_sleep_start();
+    goToSleep();
 }
 
 void loop()
@@ -191,40 +228,28 @@ void loop()
     // Nothing here as we're using deep sleep
 }
 
-void updateClock()
+void goToSleep()
 {
-    // Let us know in the console that clock is being updated
-    Serial.println("Updating clock");
+    display.setDisplayMode(INKPLATE_1BIT);
 
-    // Just draw time
-    int i = 1;
-
-    // Save current date string, more about it in Network.cpp
-    network.getTime(date);
-
-    // Calculate where the text is for deleting it
-    int16_t x, y;
-    uint16_t w, h;
-    display.getTextBounds(elements[i].text, elements[i].x, elements[i].y, &x, &y, &w, &h);
-
-    // Fill where the text is with black and update it, so we can refresh time
-    display.fillRect(x, y, w, h, BLACK);
+    display.fillRect(755, 620, 250, 100, BLACK);
     display.partialUpdate();
-    display.fillRect(x, y, w, h, WHITE);
+    display.fillRect(755, 620, 250, 100, WHITE);
     display.partialUpdate();
 
-    // Text settings
-    display.setTextColor(0, 7);
-    display.setFont(elements[i].font);
-    display.setTextSize(1);
-
-    display.setCursor((int)(elements[i].x * 0.96), (int)(elements[i].y));
-
-    // Print out text to above set cursor location
-    display.print(date);
-
-    // Just update time
+    display.setFont(&Roboto_Light_36);
+    display.setTextColor(BLACK, WHITE);
+    display.setCursor(600, 746);
+    display.print("Press screen to wake up.");
     display.partialUpdate();
+
+    Serial.println("Going to sleep...");
+
+    // Go to sleep before checking again
+    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, 0);
+
+    (void)esp_deep_sleep_start();
 }
 
 // Function to draw our graph
@@ -278,7 +303,7 @@ void drawGraph()
     for (int i = 0; i < 12; ++i)
     {
         if (strncmp(months[i], date, 3) == 0)
-            month = ((i + 2) % 12 ? i + 2 : 12);
+            month = i + 1;
     }
 
     // Find days to display underneath the graph
@@ -358,13 +383,34 @@ void drawGraph()
     display.fillTriangle(910, 680, 910, 660, 930, 670, 7);
 }
 
+// Function to draw time
+void drawTime()
+{
+    // Just draw time
+    int i = 1;
+
+    // Save current date string, more about it in Network.cpp
+    network.getTime(date);
+
+    // Text settings
+    if (display.getDisplayMode() == INKPLATE_3BIT)
+        display.setTextColor(0, 7);
+    else
+        display.setTextColor(BLACK, WHITE);
+    display.setFont(elements[i].font);
+    display.setTextSize(1);
+
+    // 0 is aligned by left bottom corner, 1 by right
+    if (elements[i].align == 0)
+        display.setCursor((int)(elements[i].x * 0.96), (int)(elements[i].y));
+
+    // Print out text to above set cursor location
+    display.print(date);
+}
+
 // Our main drawing function
 void drawAll()
-{ // Do a full refresh every fullRefresh times, defined above
-
-    // Initial screen clear
-    display.clearDisplay();
-
+{
     // Save current date string, more about it in Network.cpp
     network.getTime(date);
 
@@ -407,7 +453,4 @@ void drawAll()
         // Print out text to above set cursor location
         display.print(elements[i].text);
     }
-
-    // Display all
-    display.display();
 }

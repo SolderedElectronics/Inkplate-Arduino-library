@@ -41,8 +41,6 @@ class Touch : virtual public Mcp
 
   private:
     const char hello_packet[4] = {0x55, 0x55, 0x55, 0x55};
-    uint16_t _tsXResolution;
-    uint16_t _tsYResolution;
 
     uint8_t tsWriteRegs(uint8_t _addr, const uint8_t *_buff, uint8_t _size);
     void tsReadRegs(uint8_t _addr, uint8_t *_buff, uint8_t _size);

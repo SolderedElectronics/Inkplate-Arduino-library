@@ -225,7 +225,7 @@ void drawGraph()
     for (int i = 0; i < 12; ++i)
     {
         if (strncmp(months[i], date, 3) == 0)
-            month = ((i + 2) % 12 ? i + 2 : 12);
+            month = i + 1;
     }
 
     // Find days to display underneath the graph

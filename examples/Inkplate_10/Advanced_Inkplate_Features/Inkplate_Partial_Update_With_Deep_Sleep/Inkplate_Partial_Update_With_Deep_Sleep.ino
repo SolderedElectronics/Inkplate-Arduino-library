@@ -42,6 +42,7 @@ RTC_DATA_ATTR float decimal = PI;
 
 void setup()
 {
+    Serial.begin(115200);
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
     createScreen();  // Function that contains everything that has to be written on screen
 
@@ -57,7 +58,7 @@ void setup()
         display.partialUpdate(); // Partial update of screen. (Use this only in this
                                  // scenario, otherwise YOU CAN DAMAGE YOUR SCRREN)
     }
-    else // If is not deep sleep reset, that must be some thing else, so use normal update procerude (full screen
+    else // If is not deep sleep reset, that must be some thing else, so use normal update procedure (full screen
          // update)
     {
         display.display();

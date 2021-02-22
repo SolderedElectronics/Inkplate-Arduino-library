@@ -169,9 +169,11 @@ void setup()
         display.setFont(&Roboto_Light_36);
         display.setTextSize(1);
         display.getTextBounds(currentTime, 1024 - 20 * strlen(currentTime), 35, &x1, &y1, &w1, &h1);
-        display.fillRect(x1, y1, w1 + 50, h1 + 50, BLACK);
+
+        display.fillRect(x1, y1, w1 + 30, h1 + 30, BLACK);
         display.partialUpdate();
-        display.fillRect(x1, y1, w1 + 50, h1 + 50, WHITE);
+
+        display.fillRect(x1, y1, w1 + 30, h1 + 30, WHITE);
         drawTime();
 
         display.partialUpdate();
@@ -241,7 +243,7 @@ void drawTime()
     display.setFont(&Roboto_Light_36);
     display.setTextSize(1);
 
-    display.setCursor(1200 - 20 * strlen(currentTime), 35);
+    display.setCursor(1024 - 20 * strlen(currentTime), 35);
     display.println(currentTime);
 }
 
