@@ -25,7 +25,7 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_ESP32_DEV
+#ifndef ARDUINO_INKPLATE5
 #error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
 #endif
 
@@ -54,10 +54,10 @@ int timeZone = 2;
 //---------------------------
 
 // Delay between API calls
-#define DELAY_MS 5000
+#define DELAY_MS 4 * 60000
 
 // Variables to keep count of when to get new data, and when to just update time
-int refreshes = 0;
+RTC_DATA_ATTR unsigned int refreshes = 0;
 const int refreshesToGet = 10;
 
 // Initiate out Inkplate object
@@ -102,58 +102,54 @@ void setup()
     // Initial display settings
     display.begin();
 
-    display.clearDisplay();
-    display.display();
     display.setRotation(ROTATION);
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    // Welcome screen
-    display.setCursor(5, 230);
-    display.setTextSize(2);
-    display.println(F("Welcome to Inkplate 6 Google Calendar example!"));
-    display.setCursor(5, 250);
-    display.println(F("Connecting to WiFi..."));
-    display.display();
+    if (refreshes == 0)
+    {
+        // Welcome screen
+        display.setCursor(5, 230);
+        display.setTextSize(2);
+        display.println(F("Welcome to Inkplate 6 Google Calendar example!"));
+        display.setCursor(5, 250);
+        display.println(F("Connecting to WiFi..."));
+        display.display();
+    }
 
     delay(5000);
     network.begin();
-}
 
-void loop()
-{
     // Keep trying to get data if it fails the first time
-    if (refreshes % refreshesToGet == 0)
-        while (!network.getData(data))
-        {
-            Serial.println("Failed getting data, retrying");
-            delay(1000);
-        }
+    while (!network.getData(data))
+    {
+        Serial.println("Failed getting data, retrying");
+        delay(1000);
+    }
 
     // Initial screen clearing
     display.clearDisplay();
 
     // Drawing all data, functions for that are above
-    if (refreshes % refreshesToGet == 0)
-    {
-        drawInfo();
-        drawGrid();
-        drawData();
-    }
+    drawInfo();
+    drawGrid();
+    drawData();
     drawTime();
 
-    // Actually display all data
-    if (refreshes % refreshesToGet == 0)
-        display.display();
-    else
-        display.partialUpdate();
+    // Can't do partial due to deepsleep
+    display.display();
 
     // Increment refreshes
     ++refreshes;
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
+    (void)esp_deep_sleep_start();
+}
+
+void loop()
+{
+    // Never here
 }
 
 // Function for drawing calendar info
@@ -447,6 +443,9 @@ void drawData()
         i = strstr(data + i, "BEGIN:VEVENT") - data + 12;
         char *end = strstr(data + i, "END:VEVENT");
 
+        if (end == NULL)
+            continue;
+
         // Find all relevant event data
         char *summary = strstr(data + i, "SUMMARY:") + 8;
         char *location = strstr(data + i, "LOCATION:") + 9;
@@ -488,7 +487,7 @@ void drawData()
         if (entries[i].day == -1 || clogged[entries[i].day])
             continue;
 
-        // We store hot much height did one event take up
+        // We store how much height did one event take up
         int shift = 0;
         bool s = drawEvent(&entries[i], entries[i].day, columns[entries[i].day] + 64, 800 - 4, &shift);
 

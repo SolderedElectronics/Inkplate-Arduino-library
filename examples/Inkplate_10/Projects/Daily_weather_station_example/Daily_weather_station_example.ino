@@ -188,32 +188,7 @@ void setup()
 
 void loop()
 {
-    // Clear display
-    display.clearDisplay();
-
-    // Get all relevant data, see Network.cpp for info
-    network.getTime(currentTime);
-    network.getDays(days[0], days[1], days[2], days[3]);
-    network.getData(city, temps[0], temps[1], temps[2], temps[3], currentTemp, currentWind, currentTime, currentWeather,
-                    currentWeatherAbbr, abbr1, abbr2, abbr3, abbr4);
-
-    // Draw data, see functions below for info
-    drawWeather();
-    drawCurrent();
-    drawTemps();
-    drawCity();
-    drawTime();
-
-    // Refresh full screen every fullRefresh times, defined above
-    if (refreshes % fullRefresh == 0)
-        display.display();
-    else
-        display.partialUpdate();
-
-    // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
-    ++refreshes;
+    // Never here
 }
 
 // Function for drawing weather info

@@ -488,7 +488,7 @@ void drawData()
         if (entries[i].day == -1 || clogged[entries[i].day])
             continue;
 
-        // We store hot much height did one event take up
+        // We store how much height did one event take up
         int shift = 0;
         bool s = drawEvent(&entries[i], entries[i].day, columns[entries[i].day] + 64, 1024 - 4, &shift);
 

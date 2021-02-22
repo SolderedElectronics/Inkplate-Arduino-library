@@ -341,7 +341,7 @@ void drawAll()
                 int16_t x, y;
                 uint16_t w, h;
 
-                // Get hot much the textx offsets pointer and draw it that much more left
+                // Get how much the textx offsets pointer and draw it that much more left
                 display.getTextBounds(elements[i].text, 0, 0, &x, &y, &w, &h);
 
                 display.setCursor((int)(elements[i].x * 0.96) - w, (int)(elements[i].y));
