@@ -91,6 +91,8 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
                     len -= c;
                 buffPtr += c;
             }
+
+            Serial.println("aa");
         }
     }
     http.end();

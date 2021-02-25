@@ -43,9 +43,10 @@
 
 // CHANGE HERE ---------------
 
-char *ssid = "";
-char *pass = "";
-char *calendarURL = "";
+char *ssid = "e-radionica.com";
+char *pass = "croduino";
+char *calendarURL = "https://calendar.google.com/calendar/ical/nitko12%40hotmail.com/"
+                    "private-b201b93428ac8d800b00d19b982a892b/basic.ics";
 int timeZone = 2;
 
 // Set to 3 to flip the screen 180 degrees
@@ -54,10 +55,10 @@ int timeZone = 2;
 //---------------------------
 
 // Delay between API calls
-#define DELAY_MS 5000
+#define DELAY_MS 4 * 60000
 
 // Variables to keep count of when to get new data, and when to just update time
-int refreshes = 0;
+RTC_DATA_ATTR unsigned int refreshes = 0;
 const int refreshesToGet = 10;
 
 // Initiate out Inkplate object
@@ -102,58 +103,54 @@ void setup()
     // Initial display settings
     display.begin();
 
-    display.clearDisplay();
-    display.display();
     display.setRotation(ROTATION);
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    // Welcome screen
-    display.setCursor(5, 230);
-    display.setTextSize(2);
-    display.println(F("Welcome to Inkplate 6 plus Google Calendar example!"));
-    display.setCursor(5, 250);
-    display.println(F("Connecting to WiFi..."));
-    display.display();
+    if (refreshes == 0)
+    {
+        // Welcome screen
+        display.setCursor(5, 230);
+        display.setTextSize(2);
+        display.println(F("Welcome to Inkplate 6 plus Google Calendar example!"));
+        display.setCursor(5, 250);
+        display.println(F("Connecting to WiFi..."));
+        display.display();
+    }
 
     delay(5000);
     network.begin();
-}
 
-void loop()
-{
     // Keep trying to get data if it fails the first time
-    if (refreshes % refreshesToGet == 0)
-        while (!network.getData(data))
-        {
-            Serial.println("Failed getting data, retrying");
-            delay(1000);
-        }
+    while (!network.getData(data))
+    {
+        Serial.println("Failed getting data, retrying");
+        delay(1000);
+    }
 
     // Initial screen clearing
     display.clearDisplay();
 
     // Drawing all data, functions for that are above
-    if (refreshes % refreshesToGet == 0)
-    {
-        drawInfo();
-        drawGrid();
-        drawData();
-    }
+    drawInfo();
+    drawGrid();
+    drawData();
     drawTime();
 
-    // Actually display all data
-    if (refreshes % refreshesToGet == 0)
-        display.display();
-    else
-        display.partialUpdate();
+    // Can't do partial due to deepsleep
+    display.display();
 
     // Increment refreshes
     ++refreshes;
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
+    (void)esp_deep_sleep_start();
+}
+
+void loop()
+{
+    // Never here
 }
 
 // Function for drawing calendar info
@@ -313,7 +310,7 @@ void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp)
 bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeeded)
 {
     // Upper left coordintes
-    int x1 = 3 + 4 + (765 / 3) * day;
+    int x1 = 3 + 4 + (755 / 3) * day;
     int y1 = beginY + 3;
 
     // Setting text font
@@ -406,7 +403,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
 
     int bx1 = x1 + 2;
     int by1 = y1;
-    int bx2 = x1 + 760 / 3 - 7;
+    int bx2 = x1 + 750 / 3 - 7;
     int by2 = display.getCursorY() + 7;
 
     // Draw event rect bounds
@@ -446,6 +443,9 @@ void drawData()
         // Find next event start and end
         i = strstr(data + i, "BEGIN:VEVENT") - data + 12;
         char *end = strstr(data + i, "END:VEVENT");
+
+        if (end == NULL)
+            continue;
 
         // Find all relevant event data
         char *summary = strstr(data + i, "SUMMARY:") + 8;
