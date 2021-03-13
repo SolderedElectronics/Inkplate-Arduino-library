@@ -1,11 +1,11 @@
 /*
-   3-Google_calendar_example for e-radionica.com Inkplate 6
-   For this example you will need only USB cable and Inkplate 6.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   3-Google_calendar_example for e-radionica.com Inkplate 10
+   For this example you will need only USB cable and Inkplate 10.
+   Select "Inkplate 10(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This project shows you how Inkplate 6 can be used to display
+   This project shows you how Inkplate 10 can be used to display
    events in your Google Calendar using their provided API
 
    For this to work you need to change your timezone, wifi credentials and your private calendar url
@@ -54,10 +54,10 @@ int timeZone = 2;
 //---------------------------
 
 // Delay between API calls
-#define DELAY_MS 5000
+#define DELAY_MS 1 * 60000
 
 // Variables to keep count of when to get new data, and when to just update time
-int refreshes = 0;
+RTC_DATA_ATTR unsigned int refreshes = 0;
 const int refreshesToGet = 10;
 
 // Initiate out Inkplate object
@@ -102,58 +102,54 @@ void setup()
     // Initial display settings
     display.begin();
 
-    display.clearDisplay();
-    display.display();
     display.setRotation(ROTATION);
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    // Welcome screen
-    display.setCursor(5, 230);
-    display.setTextSize(2);
-    display.println(F("Welcome to Inkplate 6 Google Calendar example!"));
-    display.setCursor(5, 250);
-    display.println(F("Connecting to WiFi..."));
-    display.display();
+    if (refreshes == 0)
+    {
+        // Welcome screen
+        display.setCursor(5, 230);
+        display.setTextSize(2);
+        display.println(F("Welcome to Inkplate 10 Google Calendar example!"));
+        display.setCursor(5, 250);
+        display.println(F("Connecting to WiFi..."));
+        display.display();
+    }
 
     delay(5000);
     network.begin();
-}
 
-void loop()
-{
     // Keep trying to get data if it fails the first time
-    if (refreshes % refreshesToGet == 0)
-        while (!network.getData(data))
-        {
-            Serial.println("Failed getting data, retrying");
-            delay(1000);
-        }
+    while (!network.getData(data))
+    {
+        Serial.println("Failed getting data, retrying");
+        delay(1000);
+    }
 
     // Initial screen clearing
     display.clearDisplay();
 
     // Drawing all data, functions for that are above
-    if (refreshes % refreshesToGet == 0)
-    {
-        drawInfo();
-        drawGrid();
-        drawData();
-    }
+    drawInfo();
+    drawGrid();
+    drawData();
     drawTime();
 
-    // Actually display all data
-    if (refreshes % refreshesToGet == 0)
-        display.display();
-    else
-        display.partialUpdate();
+    // Can't do partial due to deepsleep
+    display.display();
 
     // Increment refreshes
     ++refreshes;
 
     // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
+    esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS);
+    (void)esp_deep_sleep_start();
+}
+
+void loop()
+{
+    // Never here
 }
 
 // Function for drawing calendar info
@@ -447,6 +443,9 @@ void drawData()
         i = strstr(data + i, "BEGIN:VEVENT") - data + 12;
         char *end = strstr(data + i, "END:VEVENT");
 
+        if (end == NULL)
+            continue;
+
         // Find all relevant event data
         char *summary = strstr(data + i, "SUMMARY:") + 8;
         char *location = strstr(data + i, "LOCATION:") + 9;
@@ -488,7 +487,7 @@ void drawData()
         if (entries[i].day == -1 || clogged[entries[i].day])
             continue;
 
-        // We store hot much height did one event take up
+        // We store how much height did one event take up
         int shift = 0;
         bool s = drawEvent(&entries[i], entries[i].day, columns[entries[i].day] + 64, 1200 - 4, &shift);
 
