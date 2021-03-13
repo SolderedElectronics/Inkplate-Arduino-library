@@ -35,9 +35,6 @@ void Network::begin(char *city)
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
-    WiFi.persistent(true);
-    WiFi.setAutoConnect(true);
-    WiFi.setAutoReconnect(true);
     WiFi.begin(ssid, pass);
 
     int cnt = 0;
@@ -45,28 +42,14 @@ void Network::begin(char *city)
     while ((WiFi.status() != WL_CONNECTED))
     {
         Serial.print(F("."));
-        vTaskDelay(1000);
+        delay(1000);
         ++cnt;
 
         if (cnt == 20)
         {
-            Serial.println("Can't reconnect to WIFI, begin wifi again");
-            vTaskDelay(100);
-
-            WiFi.mode(WIFI_STA);
-            WiFi.begin(ssid, pass);
-            while ((WiFi.status() != WL_CONNECTED))
-            {
-                Serial.print(F("."));
-                vTaskDelay(1000);
-                ++cnt;
-                if (cnt > 30)
-                {
-                    Serial.println("Unable to join WiFi, restarting!");
-                    ESP.restart();
-                }
-            }
-            vTaskDelay(1000);
+            Serial.println("Can't connect to WIFI, restarting");
+            delay(100);
+            ESP.restart();
         }
     }
     Serial.println(F(" connected"));
@@ -123,7 +106,7 @@ void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
     {
         WiFi.reconnect();
 
-        vTaskDelay(5000);
+        delay(5000);
 
         int cnt = 0;
         Serial.println(F("Waiting for WiFi to reconnect..."));
@@ -131,13 +114,13 @@ void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
         {
             // Prints a dot every second that wifi isn't connected
             Serial.print(F("."));
-            vTaskDelay(1000);
+            delay(1000);
             ++cnt;
 
             if (cnt == 7)
             {
                 Serial.println("Can't connect to WIFI, restart initiated.");
-                vTaskDelay(100);
+                delay(100);
                 ESP.restart();
             }
         }
@@ -219,7 +202,7 @@ void Network::setTime()
     while (nowSecs < 8 * 3600 * 2)
     {
         // Print a dot every half a second while time is not set
-        vTaskDelay(500);
+        delay(500);
         Serial.print(F("."));
         yield();
         nowSecs = time(nullptr);
@@ -261,7 +244,7 @@ void Network::findCity(char *city)
     {
         WiFi.reconnect();
 
-        vTaskDelay(5000);
+        delay(5000);
 
         int cnt = 0;
         Serial.println(F("Waiting for WiFi to reconnect..."));
@@ -269,13 +252,13 @@ void Network::findCity(char *city)
         {
             // Prints a dot every second that wifi isn't connected
             Serial.print(F("."));
-            vTaskDelay(1000);
+            delay(1000);
             ++cnt;
 
             if (cnt == 7)
             {
                 Serial.println("Can't connect to WIFI, restart initiated.");
-                vTaskDelay(100);
+                delay(100);
                 ESP.restart();
             }
         }

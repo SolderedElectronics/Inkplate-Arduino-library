@@ -32,7 +32,7 @@ void setup()
     WiFi.persistent(true);
     WiFi.setAutoConnect(true);
     WiFi.setAutoReconnect(true);
-    WiFi.begin("e-radionica.com", "croduino");
+    WiFi.begin("", "");
     while (WiFi.status() != WL_CONNECTED)
     {
         Serial.print(".");
