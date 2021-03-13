@@ -68,7 +68,7 @@ double System::readBattery()
 {
 #ifdef ARDUINO_ESP32_DEV
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
-#else ›
+#else
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
 #endif
     delay(1);

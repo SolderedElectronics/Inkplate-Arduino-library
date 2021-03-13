@@ -133,7 +133,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         int x = x0 >> 3;
         int x_sub = x0 & 7;
         uint8_t temp = *(_partial + ((E_INK_WIDTH >> 3) * y0) + x);
-        *(_partial + (E_INK_WIDTH / 8 * y0) + x) = ~pixelMaskLUT[x_sub] & temp | (color ? pixelMaskLUT[x_sub] : 0);
+        *(_partial + (E_INK_WIDTH / 8 * y0) + x) = (~pixelMaskLUT[x_sub] & temp) | (color ? pixelMaskLUT[x_sub] : 0);
     }
     else
     {
@@ -142,7 +142,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         int x_sub = x0 & 1;
         uint8_t temp;
         temp = *(DMemory4Bit + (E_INK_WIDTH >> 1) * y0 + x);
-        *(DMemory4Bit + (E_INK_WIDTH >> 1) * y0 + x) = pixelMaskGLUT[x_sub] & temp | (x_sub ? color : color << 4);
+        *(DMemory4Bit + (E_INK_WIDTH >> 1) * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
     }
 }
 
