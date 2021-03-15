@@ -23,9 +23,9 @@
 Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set library to work in monochorme mode
 // Other option is gray mode, which is demonstrated in next example "Inkplate_basic_gray"
 
-#define DELAY_MS                                                                                                       \
-    5000 // Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not
-         // recommended
+#define DELAY_MS 5000
+// Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not
+// recommended
 // Want to refresh faster? Use partial update! Find example in "3-Inkplate-basic_partial_update"
 
 // Array that holds data for bitmap image of 576x100 pixels. You can convert your own image using LCD image Converter.
