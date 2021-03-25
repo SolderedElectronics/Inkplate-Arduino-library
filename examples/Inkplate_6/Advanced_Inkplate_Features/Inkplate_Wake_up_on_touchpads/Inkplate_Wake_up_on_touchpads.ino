@@ -27,7 +27,7 @@
 // Initiate Inkplate object
 Inkplate display(INKPLATE_1BIT);
 
-byte touchPadPin = 10;
+byte touchPadPin = PAD1;
 
 // Store int in rtc data, to remain persistent during deep sleep
 RTC_DATA_ATTR int bootCount = 0;
