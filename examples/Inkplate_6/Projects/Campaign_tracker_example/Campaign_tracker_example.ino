@@ -2,7 +2,8 @@
 #include "generatedUI.h"
 
 #define DELAY_MS 60000 * 60
-#define URL      "https://www.crowdsupply.com/byte-mix-labs/microbyte"
+//#define URL      "https://www.crowdsupply.com/byte-mix-labs/microbyte"
+#define URL      "https://www.crowdsupply.com/e-radionica/inkplate-10"
 
 Inkplate display(INKPLATE_1BIT);
 
@@ -21,8 +22,8 @@ void setup()
     if (refreshes == 0)
     {
         // Welcome screen
-        display.setCursor(70, 370);
-        display.setTextSize(3);
+        display.setCursor(70, 270);
+        display.setTextSize(2);
         display.print(F("Welcome to Inkplate Crowdsupply tracker example!"));
         display.display();
 
@@ -30,8 +31,10 @@ void setup()
         delay(5000);
     }
 
-    if (!display.joinAP("e-radionica.com", "croduino"))
-        ESP.restart();
+    while(!display.joinAP("e-radionica.com", "croduino"))
+    {
+        Serial.println("Connecting to wifi");
+    }
 
     buf = (char *)ps_malloc(100000);
 
@@ -45,23 +48,41 @@ void setup()
         }
         buf[n] = 0;
     }
+    Serial.println("Buffer load complete!");
 
     text1_content = textInTag("<h1 class=\"mobile-break project-title\">", "</h1>");
     text2_content = textInTag("<h4 class=\"mobile-break tiny-text project-organization-name\">", "</h4>");
     text3_content = textInTag("<h3 class=\"project-teaser\">", "</h3>");
     text4_content = textInTag("<p class=\"project-pledged\">", "</p>");
     text7_content = textInTag("<p class=\"project-goal\">", "</p>");
-    text11_content = textInTag("<div class=\"status-bar progress-bar-nontext-past-hump\">", "</div>");
-
+    text11_content = textInTag("<div class=\"status-bar status-bar-primary\">", "</span>");
     int percent;
+    text11_content.replace(",", "");
     sscanf(text11_content.c_str(), "%d%", &percent);
-    line0_end_x = map(min(percent, 100), 0, 100, 75, 435);
+
+    if(percent < 100 && percent > 0)
+    {
+        float per = (float)(percent / 100.00);
+        int diff = line0_end_x - line0_start_x;
+        Serial.println(per);
+        Serial.println(diff);
+        line0_end_x = line0_start_x + (diff * per);
+    }
+    else if (percent >= 100)
+    {
+
+    }
+    else
+    {
+        line0_end_x = line0_start_x;
+    }
 
     int j = 0;
     String s = textInTag("<div class=\"factoids\">", "</div>", 3);
-    String *arr[] = {&text13_content, &text14_content, &text15_content};
-    for (int i = 0; i < 3; ++i)
-    {
+    Serial.println(s);
+    String *arr[] = {&text13_content, &text14_content, &text15_content, &text17_content, &text17_content, &text17_content};
+    for (int i = 0; i < 6; ++i)
+    {           
         while (isspace(s[j++]))
             ;
         --j;
@@ -76,6 +97,7 @@ void setup()
 
     ++refreshes;
 
+    free(buf);
     // Go to sleep
     esp_sleep_enable_timer_wakeup(1000LL * DELAY_MS);
     (void)esp_deep_sleep_start();
@@ -100,7 +122,9 @@ String textInTag(const char *tag, const char *tagEnd, int dt)
         if (*t == '<')
             ++d;
         if (d == 0 && *t != '\n')
+        {
             r += *t;
+        }
         if (*t == '>')
             --d;
     }
@@ -113,6 +137,8 @@ String textInTag(const char *tag, const char *tagEnd, int dt)
     r.replace("raised", "");
     r.replace("goal", "");
     r.replace("Funded!", "");
+    r.replace("funded", "");
+    r.replace("on", "");
 
     r.replace("updates", "");
 
