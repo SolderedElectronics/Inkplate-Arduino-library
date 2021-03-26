@@ -147,10 +147,7 @@ void setup()
 
     // Wait a bit before proceeding
     delay(5000);
-}
 
-void loop()
-{
     // Clear display
     display.clearDisplay();
 
@@ -180,10 +177,17 @@ void loop()
     else
         display.partialUpdate();
 
+    ++refreshes;
+
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
-    ++refreshes;
+    (void)esp_deep_sleep_start();
+    
+}
+
+void loop()
+{
+    //nothing here
 }
 
 // Function for drawing weather info
