@@ -93,7 +93,7 @@ const char *moonphasenames[29] = {
 const int fullRefresh = 30;
 
 // Variable for counting partial refreshes
-char refreshes = 0;
+RTC_DATA_ATTR char refreshes = 0;
 
 // Hich line to start drawing the Dayly forecast
 const int dayOffset = 380;

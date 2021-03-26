@@ -12,6 +12,11 @@
    17 February 2021 by e-radionica.com
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATE6PLUS
+    #error "Wrong board selection for this example, please select Inkplate 6 plus in the boards menu."
+#endif
+
 #include "Inkplate.h"
 #include "ai.h"
 
