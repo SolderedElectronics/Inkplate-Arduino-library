@@ -100,7 +100,7 @@ char hours[4][8] = {
 };
 
 // Variable for counting partial refreshes
-long refreshes = 0;
+RTC_DATA_ATTR long refreshes = 0;
 
 // Constant to determine when to full update
 const int fullRefresh = 10;
@@ -147,10 +147,7 @@ void setup()
 
     // Wait a bit before proceeding
     delay(5000);
-}
 
-void loop()
-{
     // Clear display
     display.clearDisplay();
 
@@ -181,9 +178,15 @@ void loop()
         display.partialUpdate();
 
     // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
+        
     ++refreshes;
+    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+    (void)esp_deep_sleep_start();
+}
+
+void loop()
+{
+    
 }
 
 // Function for drawing weather info

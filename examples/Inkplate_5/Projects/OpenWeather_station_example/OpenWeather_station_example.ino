@@ -93,7 +93,7 @@ const char *moonphasenames[29] = {
 const int fullRefresh = 30;
 
 // Variable for counting partial refreshes
-char refreshes = 0;
+RTC_DATA_ATTR char refreshes = 0;
 
 // Hich line to start drawing the Dayly forecast
 const int dayOffset = 380;
@@ -286,9 +286,9 @@ void loop()
     }
 
     // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
     ++refreshes;
+    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+    (void)esp_deep_sleep_start();
 }
 
 // Function for drawing weather info
