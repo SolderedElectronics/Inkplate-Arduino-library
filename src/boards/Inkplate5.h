@@ -1,5 +1,5 @@
-#ifndef INKPLATE10_H
-#define INKPLATE10_H
+#ifndef INKPLATE5_H
+#define INKPLATE5_H
 
 #define E_INK_WIDTH  800
 #define E_INK_HEIGHT 600
