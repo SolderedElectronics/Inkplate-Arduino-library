@@ -1,3 +1,16 @@
+/*
+   Image frame example for e-radionica.com Inkplate 6 plus
+   For this example you will need only USB cable and Inkplate 6 plus.
+   Select "Inkplate 6 plus(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6 plus(ESP32)" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   28 July 2020 by e-radionica.com
+*/
+
+
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6PLUS
 #error "Wrong board selection for this example, please select Inkplate 6 plus in the boards menu."
