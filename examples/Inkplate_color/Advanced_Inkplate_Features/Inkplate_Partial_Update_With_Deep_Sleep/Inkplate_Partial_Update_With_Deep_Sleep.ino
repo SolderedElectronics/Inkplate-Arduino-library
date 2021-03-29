@@ -20,6 +20,11 @@
    4 November 2020 by e-radionica.com
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATECOLOR
+#error "Wrong board selection for this example, please select Inkplate color in the boards menu."
+#endif
+
 #include "Inkplate.h"      // Include Inkplate library to the sketch
 #include "driver/rtc_io.h" // Include ESP32 library for RTC pin I/O (needed for rtc_gpio_isolate() function)
 #include <rom/rtc.h>       // Include ESP32 library for RTC (needed for rtc_get_reset_reason() function)

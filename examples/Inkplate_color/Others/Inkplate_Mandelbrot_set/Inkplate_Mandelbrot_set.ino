@@ -12,6 +12,11 @@
    15 July 2020 by e-radionica.com
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATECOLOR
+#error "Wrong board selection for this example, please select Inkplate color in the boards menu."
+#endif
+
 #include "Inkplate.h"
 
 #define MAXITERATIONS 150

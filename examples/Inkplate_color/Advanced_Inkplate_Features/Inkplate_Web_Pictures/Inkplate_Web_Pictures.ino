@@ -16,6 +16,11 @@
    23 July 2020 by e-radionica.com
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATECOLOR
+#error "Wrong board selection for this example, please select Inkplate color in the boards menu."
+#endif
+
 #include "HTTPClient.h"          //Include library for HTTPClient
 #include "Inkplate.h"            //Include Inkplate library to the sketch
 #include "WiFi.h"                //Include library for WiFi
