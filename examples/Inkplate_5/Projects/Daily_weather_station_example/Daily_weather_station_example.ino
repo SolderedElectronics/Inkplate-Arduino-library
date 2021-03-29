@@ -19,7 +19,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE5
-#error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 5 in the boards menu."
 #endif
 
 // ---------- CHANGE HERE  -------------:
