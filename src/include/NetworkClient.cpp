@@ -1,21 +1,34 @@
-/*
-NetworkClient.cpp
-Inkplate Arduino library
-David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-February 12, 2021
-https://github.com/e-radionicacom/Inkplate-Arduino-library
-
-For support, please reach over forums: forum.e-radionica.com/en
-For more info about the product, please check: www.inkplate.io
-
-This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
-Please review the LICENSE file included with this example.
-If you have any questions about licensing, please contact techsupport@e-radionica.com
-Distributed as-is; no warranty is given.
-*/
+/**
+ **************************************************
+ * @file        NetworkClient.cpp
+ * @brief       Basic funtions for working with network
+ * 
+ *              https://github.com/e-radionicacom/Inkplate-Arduino-library
+ *              For support, please reach over forums: forum.e-radionica.com/en
+ *              For more info about the product, please check: www.inkplate.io
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
+ *              Please review the LICENSE file included with this example.
+ *              If you have any questions about licensing, please contact techsupport@e-radionica.com
+ *              Distributed as-is; no warranty is given.
+ * 
+ * @authors     David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
+ ***************************************************/
 
 #include "NetworkClient.h"
 
+/**
+ * @brief       joinAP function sets inkplate and connects it on wifi network
+ * 
+ * @param       char *ssid
+ *              pointer to network name
+ * @param       char *pass
+ *              pointer to password
+ * 
+ * @return      true if successful, false if failed
+ * 
+ * @note        usual wait time is max 23 seconds for fail
+ */
 bool NetworkClient::joinAP(const char *ssid, const char *pass)
 {
     WiFi.mode(WIFI_MODE_STA);
@@ -35,17 +48,34 @@ bool NetworkClient::joinAP(const char *ssid, const char *pass)
     return 1;
 }
 
+/**
+ * @brief       disconnect function turns of inkplate wifi mode
+ */
 void NetworkClient::disconnect()
 {
     WiFi.mode(WIFI_OFF);
 }
 
+/**
+ * @brief       isConnected function checks wifi status
+ * 
+ * @return      true if connected, false if not
+ */
 bool NetworkClient::isConnected()
 {
     return WiFi.status() == WL_CONNECTED;
 }
 
-
+/**
+ * @brief       downloadFile function downloads file from url
+ * 
+ * @param       char *url
+ *              pointer to URL link that holds file
+ * @param       uint32_t *defaultLen
+ *              pointer that holds assumed length of file in bytes, will be checked before download
+ * 
+ * @return      pointer to buffer that holds downloaded file
+ */
 uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
 {
     if (!isConnected())
@@ -101,6 +131,16 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
     return buffer;
 }
 
+/**
+ * @brief       downloadFile function downloads file from wificlient url object
+ * 
+ * @param       WifiClient *s 
+ *              pointer to WifiClient object that holds data about URL
+ * @param       int32_t len
+ *              holds assumed length of file in bytes, will be checked before download
+ * 
+ * @return      pointer to buffer that holds downloaded file
+ */
 uint8_t *NetworkClient::downloadFile(WiFiClient *s, int32_t len)
 {
     if (!isConnected())
