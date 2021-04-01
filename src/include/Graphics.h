@@ -41,6 +41,9 @@
 #define pgm_read_pointer(addr) ((void *)pgm_read_word(addr))
 #endif
 
+/**
+ * @brief       Graphics class holds basic functionalities for Inkplate display
+ */
 class Graphics : public Shapes, public Image
 {
   public:

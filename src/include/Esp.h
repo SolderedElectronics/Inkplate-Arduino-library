@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Esp.cpp
+ * @file        Esp.h
  * @brief       File for ESP, only class declaration
  * 
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
