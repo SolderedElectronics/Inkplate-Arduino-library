@@ -28,6 +28,7 @@
 #include <WebServer.h>  //Include ESP32 library for Web server
 #include <WiFi.h>       //Include ESP32 WiFi library
 #include <WiFiClient.h> //Include ESP32 WiFi library for AP
+#include <uri/UriBraces.h>
 
 #define ssid "Inkplate"
 #define pass "e-radionica"
@@ -54,7 +55,7 @@ void setup()
     serverIP = WiFi.softAPIP(); // Get the server IP address
 
     server.on("/", handleRoot); // If you open homepage, go to handle root function
-    server.on("/string/{}",
+    server.on(UriBraces("/string/{}"),
               handleString); // If you send some text to Inkplate, go to handleString function. Note that {} brackets at
                              // the end of address. That means that web address has some arguments (our text!).
     server.begin();          // Start the web server
