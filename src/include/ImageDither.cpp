@@ -1,22 +1,38 @@
-/*
-ImageDither.cpp
-Inkplate Arduino library
-David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-February 12, 2021
-https://github.com/e-radionicacom/Inkplate-Arduino-library
-
-For support, please reach over forums: forum.e-radionica.com/en
-For more info about the product, please check: www.inkplate.io
-
-This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
-Please review the LICENSE file included with this example.
-If you have any questions about licensing, please contact techsupport@e-radionica.com
-Distributed as-is; no warranty is given.
-*/
+/**
+ **************************************************
+ * @file        ImageDither.cpp
+ * @brief       dither functionalities for images
+ * 
+ *              https://github.com/e-radionicacom/Inkplate-Arduino-library
+ *              For support, please reach over forums: forum.e-radionica.com/en
+ *              For more info about the product, please check: www.inkplate.io
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
+ *              Please review the LICENSE file included with this example.
+ *              If you have any questions about licensing, please contact techsupport@e-radionica.com
+ *              Distributed as-is; no warranty is given.
+ * 
+ * @authors     e-radionica.com
+ ***************************************************/
 
 #include "Image.h"
 
 #ifndef ARDUINO_INKPLATECOLOR
+
+/**
+ * @brief       ditherGetPixelBmp calculates dither for given pixel in bmp images
+ * 
+ * @param       uint32_t px
+ *              pixel value with color information
+ * @param       int i
+ *              ditherBuffer width plane position
+ * @param       int w
+ *              image width
+ * @param       bool paletted
+ *              1 if paletted image, 0 if not
+ * 
+ * @return      new pixel value (dithered pixel)
+ */
 uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted)
 {
     if (paletted)
@@ -42,6 +58,26 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
     return newPixel >> 5;
 }
 
+/**
+ * @brief       ditherGetPixelJpeg calculates dither for given pixel in jpeg images
+ * 
+ * @param       uint8_t px
+ *              pixel value with color information
+ * @param       int i
+ *              ditherBuffer width plane position
+ * @param       int j
+ *              ditherBuffer height plane position
+ * @param       int x
+ *              x image starting position
+ * @param       int y
+ *              y image starting position
+ * @param       int w
+ *              image width
+ * @param       int h
+ *              image height
+ * 
+ * @return      new pixel value (dithered pixel)
+ */
 uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h)
 {
     if (blockW == -1)
@@ -69,6 +105,12 @@ uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w,
     return newPixel >> 5;
 }
 
+/**
+ * @brief       ditherSwap swaps ditherBuffer values
+ * 
+ * @param       int w
+ *              screen width
+ */
 void Image::ditherSwap(int w)
 {
     for (int i = 0; i < w; ++i)
@@ -78,6 +120,12 @@ void Image::ditherSwap(int w)
     }
 }
 
+/**
+ * @brief       ditherSwapBlockJpeg swaps ditherBuffer values
+ * 
+ * @param       int x
+ *              x plane image starting point
+ */
 void Image::ditherSwapBlockJpeg(int x)
 {
     for (int i = 0; i < 18; ++i)
