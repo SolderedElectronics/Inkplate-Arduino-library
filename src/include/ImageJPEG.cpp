@@ -309,6 +309,24 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
     return ret;
 };
 
+/**
+ * @brief       drawJpegChunk draws one chunk of image
+ * 
+ * @param       int16_t x
+ *              x plane starting point
+ * @param       int16_t y
+ *              y plane starting point
+ * @param       int16_t w
+ *              image width
+ * @param       int16_t h
+ *              image height
+ * @param       int16_t *bitmap
+ *              pointer to bitmap image
+ * @param       int16_t dither
+ *              1 if using dither, 0 if not
+ * @param       int16_t invert
+ *              1 if using invert, 0 if not
+ */
 bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool dither, bool invert)
 {
     if (!_imagePtrJpeg)
