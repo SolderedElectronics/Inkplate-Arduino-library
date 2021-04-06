@@ -29,7 +29,7 @@
 #include "defines.h"
 
 /**
- * @brief       Basic class for work with images
+ * @brief       Image basic class for work with images
  */
 class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 {

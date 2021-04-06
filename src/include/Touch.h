@@ -26,6 +26,9 @@
 #include "Wire.h"
 #include "defines.h"
 
+/**
+ * @brief       Touch class holds functionality for interaction with touchscreen displays
+ */
 class Touch : virtual public Mcp
 {
   public:

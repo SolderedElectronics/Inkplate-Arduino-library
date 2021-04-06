@@ -24,8 +24,7 @@
 #include "defines.h"
 
 /**
- * @brief       Bitmap header structure
- *              Includes standard bitmap parameters
+ * @brief       BitmapHeader structure includes standard bitmap parameters
  */
 struct bitmapHeader
 {

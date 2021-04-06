@@ -42,7 +42,7 @@
 #endif
 
 /**
- * @brief       Graphics class holds basic functionalities for Inkplate display
+ * @brief       Graphics class that holds basic functionalities for Inkplate display
  */
 class Graphics : public Shapes, public Image
 {

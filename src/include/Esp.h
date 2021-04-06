@@ -20,6 +20,9 @@
 
 #include "Arduino.h"
 
+/**
+ * @brief       Esp class
+ */
 class Esp
 {
   public:
