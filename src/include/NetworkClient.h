@@ -12,7 +12,7 @@
  *              If you have any questions about licensing, please contact techsupport@e-radionica.com
  *              Distributed as-is; no warranty is given.
  * 
- * @authors     David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
+ * @authors     @ e-radionica.com
  ***************************************************/
 
 #ifndef __NETWORKCLIENT_H__
