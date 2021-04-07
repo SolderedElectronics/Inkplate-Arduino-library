@@ -138,7 +138,7 @@ String textInTag(const char *tag, const char *tagEnd, int dt)
     r.replace("goal", "");
     r.replace("Funded!", "");
     r.replace("funded", "");
-    r.replace("on", "");
+    r.replace(" on", "");
 
     r.replace("updates", "");
 
