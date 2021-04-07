@@ -207,6 +207,7 @@ void Shapes::drawThickLine(int x1, int y1, int x2, int y2, int color, float thic
  *              ending color for gradient line
  * @param       int thickness
  *              line thickness in pixels
+ * @note        color 1 should always be less than color 2
  */
 void Shapes::drawGradientLine(int x1, int y1, int x2, int y2, int color1, int color2, float thickness)
 {
