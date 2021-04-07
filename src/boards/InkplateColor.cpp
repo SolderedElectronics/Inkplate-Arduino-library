@@ -1,9 +1,32 @@
+/**
+ **************************************************
+ *
+ * @file        InkplateColor.cpp
+ * @brief       Basic funtions for controling inkplate color
+ * 
+ *              https://github.com/e-radionicacom/Inkplate-Arduino-library
+ *              For support, please reach over forums: forum.e-radionica.com/en
+ *              For more info about the product, please check: www.inkplate.io
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
+ *              Please review the LICENSE file included with this example.
+ *              If you have any questions about licensing, please contact techsupport@e-radionica.com
+ *              Distributed as-is; no warranty is given.
+ * 
+ * @authors     @ e-radionica.com
+ ***************************************************/
+
 #include "../Inkplate.h"
 #include "../include/Graphics.h"
 #include "../include/defines.h"
 
 #ifdef ARDUINO_INKPLATECOLOR
 
+/**
+ * @brief       begin function initialize Inkplate object with predefined settings
+ * 
+ * @return      True if initialization is successful, false if failed or already initialized
+ */
 bool Inkplate::begin(void)
 {
     unsigned long _timeout = 0;
@@ -85,6 +108,9 @@ bool Inkplate::begin(void)
     return true;
 }
 
+/**
+ * @brief       display function update display with new data from buffer
+ */
 void Inkplate::display()
 {
     if (!_panelState)
@@ -116,6 +142,19 @@ void Inkplate::display()
     delay(200);
 }
 
+/**
+ * 
+ * @brief       writePixel funtion sets pixel data for (x, y) pixel position
+ * 
+ * @param       int16_t x0
+ *              default position for x, will be changed depending on rotation
+ * @param       int16_t y0
+ *              default position for y, will be changed depending on rotation
+ * @param       uint16_t color
+ *              pixel color, in 3bit mode have values in range 0-7
+ * 
+ * @note        If x0 or y0 are out of inkplate screen borders, function will exit.
+ */
 void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
 {
     if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
@@ -146,6 +185,11 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
     *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + _x) = pixelMaskGLUT[_x_sub] & temp | (_x_sub ? _color : _color << 4);
 }
 
+/**
+ * @brief       clean function cleans screen of any potential burn in
+ * 
+ * @note        Should not be used in intervals smaller than 5 seconds
+ */
 void Inkplate::clean()
 {
     if (!_panelState)
@@ -180,6 +224,9 @@ void Inkplate::clean()
     delay(200);
 }
 
+/**
+ * @brief       resetPanel resets inkplate color
+ */
 void Inkplate::resetPanel()
 {
     digitalWrite(EPAPER_RST_PIN, LOW);
@@ -188,6 +235,12 @@ void Inkplate::resetPanel()
     delay(200);
 }
 
+/**
+ * @brief       sendCommand sends SPI command to inkplate color
+ * 
+ * @param       uint8_t _command
+ *              predefined command for epaper control 
+ */
 void Inkplate::sendCommand(uint8_t _command)
 {
     digitalWrite(EPAPER_DC_PIN, LOW);
@@ -198,6 +251,14 @@ void Inkplate::sendCommand(uint8_t _command)
     digitalWrite(EPAPER_CS_PIN, HIGH);
 }
 
+/**
+ * @brief       sendData sends SPI data to inkplate color
+ * 
+ * @param       uint8_t *_data
+ *              pointer to data buffer to be sent to epaper
+ * @param       int _n
+ *              number of data bytes
+ */
 void Inkplate::sendData(uint8_t *_data, int _n)
 {
     digitalWrite(EPAPER_DC_PIN, HIGH);
@@ -208,6 +269,12 @@ void Inkplate::sendData(uint8_t *_data, int _n)
     digitalWrite(EPAPER_CS_PIN, HIGH);
 }
 
+/**
+ * @brief       sendData sends SPI data to inkplate color
+ * 
+ * @param       uint8_t _data
+ *              data buffer to be sent to epaper
+ */
 void Inkplate::sendData(uint8_t _data)
 {
     digitalWrite(EPAPER_DC_PIN, HIGH);
