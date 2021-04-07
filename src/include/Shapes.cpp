@@ -17,10 +17,16 @@
 
 #include "Shapes.h"
 
+/**
+ * @brief       min checks which param have smaller value
+ */
 #ifndef min
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 
+/**
+ * @brief       _swap_int16_t swaps two int16_t variables
+ */
 #ifndef _swap_int16_t
 #define _swap_int16_t(a, b)                                                                                            \
     {                                                                                                                  \

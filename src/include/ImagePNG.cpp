@@ -29,7 +29,22 @@ static uint16_t _pngX = 0;
 static uint16_t _pngY = 0;
 static Image::Position _pngPosition = Image::_npos;
 
-
+/**
+ * @brief       pngle_on_draw 
+ * 
+ * @param       pngle_t *pngle
+ *              pointer to image
+ * @param       uint32_t x
+ *              x plane position
+ * @param       uint32_t y
+ *              y plane position
+ * @param       uint32_t w
+ *              image width
+ * @param       uint32_t h
+ *              image height
+ * @param       uint8_t rgba[4]
+ *              color
+ */
 void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint8_t rgba[4])
 {
     if (_pngPosition != Image::_npos)
