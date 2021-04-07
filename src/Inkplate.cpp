@@ -23,6 +23,7 @@ Inkplate::Inkplate() : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_W
 #else
 
 Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
+#endif
 {
 #ifndef ARDUINO_INKPLATECOLOR
     setDisplayMode(_mode);
@@ -37,7 +38,6 @@ Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Gra
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
 #endif
 }
-#endif
 
 /**
  * @brief       clearDisplay function clears memory buffer for display
