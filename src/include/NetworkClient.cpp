@@ -18,7 +18,7 @@
 #include "NetworkClient.h"
 
 /**
- * @brief       joinAP function sets inkplate and connects it on wifi network
+ * @brief       joinAP function sets and connects inkplate it on wifi network
  * 
  * @param       char *ssid
  *              pointer to network name
