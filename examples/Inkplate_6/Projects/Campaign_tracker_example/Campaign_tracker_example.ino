@@ -1,3 +1,18 @@
+/*
+   Campaing tracker example for e-radionica.com Inkplate 6
+   For this example you will need only USB cable and Inkplate 6.
+   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   This example will show you how you can use Inkplate 6 to display html data.
+   This example gets html data from crowdsource campaing and displays them on Inkplate screen.
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   28 July 2020 by e-radionica.com
+*/
+
 #include "Inkplate.h"
 #include "generatedUI.h"
 
