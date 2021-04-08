@@ -1,4 +1,4 @@
-/*Inkplate_Factory_Programming_VCOM is used for programming new panels. Should not be used unless you know exactly what are you doing. 
+/*Inkplate_Factory_Programming_VCOM is used for programming new panels. Should not be used unless you know exactly what are you doing as it can damage panel. 
 
 */
 
