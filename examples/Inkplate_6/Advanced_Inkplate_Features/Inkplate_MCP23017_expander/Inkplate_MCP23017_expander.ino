@@ -40,6 +40,8 @@ Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and als
 void setup()
 {
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
+    display.clearDisplay();
+    display.display();
     display.pinModeMCP(
         LED_PIN,
         OUTPUT); // Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
