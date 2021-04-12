@@ -197,7 +197,7 @@ void GetCurrentWeather()
     Serial.println("");
 
     Serial.println("7 Day Forecast:");
-    for (int y = 0; y < (sizeof(OWOC.forecast) / sizeof(OWOC.forecast[0])); y++)
+    for (int y = 0; y < 3; y++)
     {
         sprintf(Output,
                 "%s:%02d:%02d-%02d:%02d,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02."
@@ -266,12 +266,18 @@ void loop()
     if ((minute(t) % 30) == 0) // Also returns 0 when time isn't set
     {
         GetCurrentWeather();
+        Serial.println("got weather data");
         display.clearDisplay();
         drawForecast();
+        Serial.println("draw forecast");
         drawCurrent();
+        Serial.println("draw current");
         drawHourly();
+        Serial.println("draw hourly");
         drawTime();
+        Serial.println("draw time");
         drawMoon();
+        Serial.println("draw moon");
         display.display();
     }
     else
@@ -347,7 +353,7 @@ void drawForecast()
     int startDay = 1;
     int numOfDays = (sizeof(OWOC.forecast) / sizeof(OWOC.forecast[0]));
     int dayPitch = E_INK_WIDTH / (numOfDays - startDay);
-    for (int day = startDay; day < numOfDays; day++)
+    for (int day = startDay; day < 4; day++)
     {
         dayPos = (day - startDay) * dayPitch;
         int textCentre = dayPos + (dayPitch / 2);

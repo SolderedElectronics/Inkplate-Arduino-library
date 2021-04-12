@@ -288,7 +288,7 @@ int OpenWeatherOneCall::parseWeather(char *DKEY, char *GKEY, float SEEK_LATITUDE
         forecast[x].id = daily[x]["weather"][0]["id"];                         // 500
         forecast[x].main = daily[x]["weather"][0]["main"];                     // "rain"
         forecast[x].description = daily[x]["weather"][0]["description"];       // "moderate rain"
-        strcpy(forecast[x].icon, daily[x]["weather"][0]["icon"].as<char *>()); // "10d"
+        forecast[x].icon = daily[x]["weather"][0]["icon"];                   // "10d"
 #ifdef DARKSKY
         // Legacy DarkSky compatibility
         forecast[x].dayTime = (long)daily[x]["dt"] + current.timezone_offset;          // 1586793600
