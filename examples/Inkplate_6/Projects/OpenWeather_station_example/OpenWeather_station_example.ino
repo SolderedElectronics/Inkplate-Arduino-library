@@ -352,7 +352,7 @@ void drawForecast()
     int xOffset = 10;
     int startDay = 1;
     int numOfDays = (sizeof(OWOC.forecast) / sizeof(OWOC.forecast[0]));
-    int dayPitch = E_INK_WIDTH / (numOfDays - startDay);
+    int dayPitch = E_INK_WIDTH / (4 - startDay);
     for (int day = startDay; day < 4; day++)
     {
         dayPos = (day - startDay) * dayPitch;
