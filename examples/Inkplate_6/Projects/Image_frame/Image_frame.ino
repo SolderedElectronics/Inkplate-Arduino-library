@@ -1,13 +1,15 @@
 /*
-   Image frame example for e-radionica.com Inkplate 6
-   For this example you will need only USB cable and Inkplate 6.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
-   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+    Image frame example for e-radionica.com Inkplate 6
+    For this example you will need only USB cable and Inkplate 6.
+    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
+    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   Want to learn more about Inkplate? Visit www.inkplate.io
-   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   28 July 2020 by e-radionica.com
+    This example shows how you can set inkplate to show random pictures from web.
+
+    Want to learn more about Inkplate? Visit www.inkplate.io
+    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+    28 July 2020 by e-radionica.com
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -19,8 +21,8 @@
 
 Inkplate display(INKPLATE_3BIT);
 
-const char *ssid = "";     // Your WiFi SSID
-const char *password = ""; // Your WiFi password
+const char *ssid = "e-radionica.com";     // Your WiFi SSID
+const char *password = "croduino"; // Your WiFi password
 
 void setup()
 {
@@ -29,7 +31,7 @@ void setup()
 
     // Join wifi
     display.joinAP(ssid, password);
-
+    Serial.println("joined wifi");
     char url[256];
     imageUrl(url);
 
@@ -37,7 +39,6 @@ void setup()
     display.display();
 
     Serial.println("Going to sleep");
-    delay(100);
     esp_sleep_enable_timer_wakeup(15ll * 60 * 1000 * 1000);
     esp_deep_sleep_start();
 }
