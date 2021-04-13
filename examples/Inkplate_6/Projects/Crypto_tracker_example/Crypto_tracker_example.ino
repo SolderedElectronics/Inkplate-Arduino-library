@@ -6,8 +6,10 @@
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can use Inkplate 6 to display API data.
-   Here we use Coingecko API to get latest cryptocurrency prices and display
-   them on the Inkplate screen. If you wish to change the currecny, you can
+   Here we use Coingecko API to get last 90 days prices and display
+   them on the Inkplate screen:
+   https://www.coingecko.com/en/coins/bitcoin/historical_data/usd#panel
+   If you wish to change the currecny, you can
    edit it below.
 
    IMPORTANT:
@@ -63,8 +65,8 @@ Network network;
 // create display object
 Inkplate display(INKPLATE_3BIT);
 
-// Delay between API calls in miliseconds
-#define DELAY_MS 3 * 60 * 1000
+// Delay between API calls in miliseconds (first 60 represents minutes so you can change to your need)
+#define DELAY_MS 60 * 60 * 1000
 
 // Variable for counting partial refreshes
 RTC_DATA_ATTR unsigned refreshes = 0;
@@ -144,8 +146,6 @@ void setup()
         delay(1000);
     }
 
-    if (refreshes % fullRefresh == 0)
-    {
         // Our begin function
         network.begin();
 
@@ -161,31 +161,6 @@ void setup()
         drawTime();
         // Full refresh
         display.display();
-    }
-    else
-    {
-        display.setDisplayMode(INKPLATE_1BIT);
-        Serial.println("heree");
-        // Reset screen where date is drawn
-        int16_t x1, y1;
-        uint16_t w1, h1;
-        display.setFont(elements[1].font);
-        display.setTextSize(1);
-        network.getTime(date);
-        display.getTextBounds(date, (int)(elements[1].x * 0.96), (int)(elements[1].y), &x1, &y1, &w1, &h1);
-
-        Serial.printf("%d %d %d %d\n", x1, y1, w1, h1);
-        display.fillRect(x1, y1, w1, h1, BLACK);
-        display.partialUpdate();
-        display.fillRect(x1, y1, w1, h1, WHITE);
-        display.partialUpdate();
-
-        // Time drawing function
-        drawTime();
-
-        // Just update time
-        display.partialUpdate();
-    }
 
     ++refreshes;
 
