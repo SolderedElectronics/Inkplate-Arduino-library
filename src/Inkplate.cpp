@@ -1,24 +1,27 @@
-/*
-Inkplate.cpp
-Inkplate Arduino library
-David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-September 24, 2020
-https://github.com/e-radionicacom/Inkplate-Arduino-library
-
-For support, please reach over forums: forum.e-radionica.com/en
-For more info about the product, please check: www.inkplate.io
-
-This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
-Please review the LICENSE file included with this example.
-If you have any questions about licensing, please contact techsupport@e-radionica.com
-Distributed as-is; no warranty is given.
-*/
+/**
+ **************************************************
+ *
+ * @file        Inkplate.cpp
+ * @brief       Basic funtions for controling inkplate 
+ * 
+ *              https://github.com/e-radionicacom/Inkplate-Arduino-library
+ *              For support, please reach over forums: forum.e-radionica.com/en
+ *              For more info about the product, please check: www.inkplate.io
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
+ *              Please review the LICENSE file included with this example.
+ *              If you have any questions about licensing, please contact techsupport@e-radionica.com
+ *              Distributed as-is; no warranty is given.
+ * 
+ * @authors     @ e-radionica.com
+ ***************************************************/
 
 #include "Inkplate.h"
 
 #ifdef ARDUINO_INKPLATECOLOR
 Inkplate::Inkplate() : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
 #else
+
 Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
 #endif
 {
@@ -36,7 +39,11 @@ Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Gra
 #endif
 }
 
-
+/**
+ * @brief       clearDisplay function clears memory buffer for display
+ * 
+ * @note        This does not clears display, only buffer, you need to call display() function after this to clear display
+ */
 void Inkplate::clearDisplay()
 {
 #ifdef ARDUINO_INKPLATECOLOR
@@ -53,6 +60,10 @@ void Inkplate::clearDisplay()
 }
 
 #ifndef ARDUINO_INKPLATECOLOR
+
+/**
+ * @brief       display function update display with new data from buffer
+ */
 void Inkplate::display()
 {
     if (getDisplayMode() == 0)
@@ -61,12 +72,17 @@ void Inkplate::display()
         display3b();
 }
 
+/**
+ * @brief       preloadScreen function copy data from partial to data buffer
+ */
 void Inkplate::preloadScreen()
 {
     memcpy(DMemoryNew, _partial, 60000);
 }
 
-// Turn off epaper power supply and put all digital IO pins in high Z state
+/** 
+ * @brief       einkOff turns off epaper power supply and put all digital IO pins in high Z state
+ */
 void Inkplate::einkOff()
 {
     if (getPanelState() == 0)
@@ -93,7 +109,13 @@ void Inkplate::einkOff()
     setPanelState(0);
 }
 
-// Turn on supply for epaper display (TPS65186) [+15 VDC, -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
+
+/**
+ * @brief       einkOn turns on supply for epaper display (TPS65186) [+15 VDC, -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
+ * 
+ * @note        its important to use this order when turning epaper on.
+ *              using wrong order can irreparably damage epaper
+ */
 void Inkplate::einkOn()
 {
     if (getPanelState() == 1)
@@ -135,6 +157,11 @@ void Inkplate::einkOn()
     setPanelState(1);
 }
 
+/**
+ * @brief       readPowerGood reads ok status for each rail
+ * 
+ * @return      power good status register
+ */
 uint8_t Inkplate::readPowerGood()
 {
     Wire.beginTransmission(0x48);
@@ -147,6 +174,9 @@ uint8_t Inkplate::readPowerGood()
 
 // LOW LEVEL FUNCTIONS
 
+/**
+ * @brief       vscan_start starts writing new frame and skips first two lines that are invisible on screen
+ */
 void Inkplate::vscan_start()
 {
     CKV_SET;
@@ -172,6 +202,12 @@ void Inkplate::vscan_start()
     CKV_SET;
 }
 
+/**
+ * @brief       hscan_start starts writing data into current row
+ * 
+ * @param       uint32_t _d
+ *              data to be written into current row
+ */
 void Inkplate::hscan_start(uint32_t _d)
 {
     SPH_CLEAR;
@@ -181,6 +217,9 @@ void Inkplate::hscan_start(uint32_t _d)
     CKV_SET;
 }
 
+/**
+ * @brief       vscan_end ends current row and prints data to screen
+ */
 void Inkplate::vscan_end()
 {
     CKV_CLEAR;
@@ -189,6 +228,11 @@ void Inkplate::vscan_end()
     delayMicroseconds(0);
 }
 
+/**
+ * @brief       pinsZstate sets all tps pins at high z state
+ * 
+ * @note        this is used only when turning off epaper
+ */
 void Inkplate::pinsZstate()
 {
     pinMode(0, INPUT);
@@ -209,6 +253,9 @@ void Inkplate::pinsZstate()
     pinMode(27, INPUT);
 }
 
+/**
+ * @brief       pinsAsOutputs sets all tps pins as outputs
+ */
 void Inkplate::pinsAsOutputs()
 {
     pinMode(0, OUTPUT);

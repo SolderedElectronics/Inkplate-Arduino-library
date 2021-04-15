@@ -1,8 +1,33 @@
+/**
+ **************************************************
+ *
+ * @file        Inkplate5.cpp
+ * @brief       Basic funtions for controling inkplate 5
+ * 
+ *              https://github.com/e-radionicacom/Inkplate-Arduino-library
+ *              For support, please reach over forums: forum.e-radionica.com/en
+ *              For more info about the product, please check: www.inkplate.io
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
+ *              Please review the LICENSE file included with this example.
+ *              If you have any questions about licensing, please contact techsupport@e-radionica.com
+ *              Distributed as-is; no warranty is given.
+ * 
+ * @authors     @ e-radionica.com
+ ***************************************************/
+
+
 #include "../Inkplate.h"
 #include "../include/Graphics.h"
 #include "../include/defines.h"
 
 #ifdef ARDUINO_INKPLATE5
+
+/**
+ * @brief       begin function initialize Inkplate object with predefined settings
+ * 
+ * @return      True if initialization is successful, false if failed or already initialized
+ */
 bool Inkplate::begin(void)
 {
     if (_beginDone == 1)
@@ -107,6 +132,19 @@ bool Inkplate::begin(void)
     return 1;
 }
 
+/**
+ * 
+ * @brief       writePixel funtion sets pixel data for (x, y) pixel position
+ * 
+ * @param       int16_t x0
+ *              default position for x, will be changed depending on rotation
+ * @param       int16_t y0
+ *              default position for y, will be changed depending on rotation
+ * @param       uint16_t color
+ *              pixel color, in 3bit mode have values in range 0-7
+ * 
+ * @note        If x0 or y0 are out of inkplate screen borders, function will exit.
+ */
 void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
 {
     if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
@@ -146,6 +184,10 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
     }
 }
 
+/**
+ * 
+ * @brief       display1b function writes black and white data to display
+ */
 void Inkplate::display1b()
 {
     for (int i = 0; i < (E_INK_HEIGHT * E_INK_WIDTH) / 8; i++)
@@ -224,9 +266,11 @@ void Inkplate::display1b()
     clean(3, 1);
     vscan_start();
     einkOff();
-    _blockPartial = 0;
 }
 
+/**
+ * @brief       display3b function writes grayscale data to display
+ */ 
 void IRAM_ATTR Inkplate::display3b()
 {
     einkOn();
@@ -273,15 +317,18 @@ void IRAM_ATTR Inkplate::display3b()
     einkOff();
 }
 
+/**
+ * @brief       partialUpdate function updates changed parts of the screen without need to refresh whole display
+ * 
+ * @param       bool _forced 
+ *              For advanced use with deep sleep. Can force partial update in deep sleep
+ * 
+ * @note        Partial update only works in black and white mode
+ */
 void Inkplate::partialUpdate(bool _forced)
 {
     if (getDisplayMode() == 1)
         return;
-    if (_blockPartial == 1 && !_forced)
-    {
-        display1b();
-        return;
-    }
 
     uint32_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
     uint8_t data;
@@ -337,7 +384,20 @@ void Inkplate::partialUpdate(bool _forced)
     }
 }
 
-
+/**
+ * @brief       clean function cleans screen of any potential burn in
+ * 
+ *              Based on c param it will: if c=0 light screen, c=1 darken the screen, c=2 discharge the screen or 3 skip all pixels
+ * 
+ * @param       uint8_t c
+ *              one of four posible pixel states
+ *              
+ * @param       uint8_t rep
+ *              Number of repetitions 
+ *              
+ * 
+ * @note        Should not be used in intervals smaller than 5 seconds
+ */
 void Inkplate::clean(uint8_t c, uint8_t rep)
 {
     einkOn();

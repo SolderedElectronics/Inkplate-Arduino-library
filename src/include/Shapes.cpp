@@ -1,25 +1,32 @@
-/*
-Shapes.cpp
-Inkplate Arduino library
-David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-February 12, 2021
-https://github.com/e-radionicacom/Inkplate-Arduino-library
-
-For support, please reach over forums: forum.e-radionica.com/en
-For more info about the product, please check: www.inkplate.io
-
-This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
-Please review the LICENSE file included with this example.
-If you have any questions about licensing, please contact techsupport@e-radionica.com
-Distributed as-is; no warranty is given.
-*/
+/**
+ **************************************************
+ * @file        Shapes.cpp
+ * @brief       Basic shapes
+ * 
+ *              https://github.com/e-radionicacom/Inkplate-Arduino-library
+ *              For support, please reach over forums: forum.e-radionica.com/en
+ *              For more info about the product, please check: www.inkplate.io
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
+ *              Please review the LICENSE file included with this example.
+ *              If you have any questions about licensing, please contact techsupport@e-radionica.com
+ *              Distributed as-is; no warranty is given.
+ * 
+ * @authors     @ e-radionica.com
+ ***************************************************/
 
 #include "Shapes.h"
 
+/**
+ * @brief       min checks which param have smaller value
+ */
 #ifndef min
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 
+/**
+ * @brief       _swap_int16_t swaps two int16_t variables
+ */
 #ifndef _swap_int16_t
 #define _swap_int16_t(a, b)                                                                                            \
     {                                                                                                                  \
@@ -29,6 +36,20 @@ Distributed as-is; no warranty is given.
     }
 #endif
 
+/**
+ * @brief       drawElipse draws empty elipse shape
+ * 
+ * @param       int rx
+ *              x plane radius
+ * @param       int ry
+ *              y plane radius
+ * @param       int xc
+ *              x plane central point
+ * @param       int yc
+ *              y plane central point
+ * @param       int c
+ *              color
+ */
 void Shapes::drawElipse(int rx, int ry, int xc, int yc, int c)
 {
     float dx, dy, d1, d2, x, y;
@@ -87,6 +108,20 @@ void Shapes::drawElipse(int rx, int ry, int xc, int yc, int c)
     }
 }
 
+/**
+ * @brief       fillElipse draws filled elipse shape
+ *
+ * @param       int rx
+ *              x plane radius
+ * @param       int ry
+ *              y plane radius
+ * @param       int xc
+ *              x plane central point
+ * @param       int yc
+ *              y plane central point
+ * @param       int c
+ *              color
+ */
 void Shapes::fillElipse(int rx, int ry, int xc, int yc, int c)
 {
     int hh = ry * ry;
@@ -115,6 +150,22 @@ void Shapes::fillElipse(int rx, int ry, int xc, int yc, int c)
     }
 }
 
+/**
+ * @brief       drawThickLine draws thick filled line
+ * 
+ * @param       int x1
+ *              x plane starting point
+ * @param       int y1
+ *              y plane starting point
+ * @param       int x2
+ *              x plane end point
+ * @param       int y2
+ *              y plane end point
+ * @param       int color
+ *              line color
+ * @param       int thickness
+ *              line thickness in pixels
+ */
 void Shapes::drawThickLine(int x1, int y1, int x2, int y2, int color, float thickness)
 {
     float deg = atan2f((float)(y2 - y1), (float)(x2 - x1));
@@ -139,6 +190,25 @@ void Shapes::drawThickLine(int x1, int y1, int x2, int y2, int color, float thic
     fillTriangle(x2, y2, x4, y4, x3, y3, color);
 }
 
+/**
+ * @brief       drawGradientLine draws thick gradient line
+ * 
+ * @param       int x1
+ *              x plane starting point
+ * @param       int y1
+ *              y plane starting point
+ * @param       int x2
+ *              x plane end point
+ * @param       int y2
+ *              y plane end point
+ * @param       int color1
+ *              starting color for gradient line
+ * @param       int color2
+ *              ending color for gradient line
+ * @param       int thickness
+ *              line thickness in pixels
+ * @note        color 1 should always be less than color 2
+ */
 void Shapes::drawGradientLine(int x1, int y1, int x2, int y2, int color1, int color2, float thickness)
 {
     int n = color2 - color1;

@@ -1,18 +1,19 @@
-/*
-ImageDitherColor.cpp
-Inkplate Arduino library
-David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
-February 12, 2021
-https://github.com/e-radionicacom/Inkplate-Arduino-library
-
-For support, please reach over forums: forum.e-radionica.com/en
-For more info about the product, please check: www.inkplate.io
-
-This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
-Please review the LICENSE file included with this example.
-If you have any questions about licensing, please contact techsupport@e-radionica.com
-Distributed as-is; no warranty is given.
-*/
+/**
+ **************************************************
+ * @file        ImageDitherColor.cpp
+ * @brief       dither functionalities for colored images
+ * 
+ *              https://github.com/e-radionicacom/Inkplate-Arduino-library
+ *              For support, please reach over forums: forum.e-radionica.com/en
+ *              For more info about the product, please check: www.inkplate.io
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
+ *              Please review the LICENSE file included with this example.
+ *              If you have any questions about licensing, please contact techsupport@e-radionica.com
+ *              Distributed as-is; no warranty is given.
+ * 
+ * @authors     e-radionica.com
+ ***************************************************/
 
 #include "Image.h"
 
@@ -26,6 +27,14 @@ static uint32_t pallete[] = {
 
 static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
 
+/**
+ * @brief       findClosestPalette return closes pallete for given pixel
+ * 
+ * @param       uint32_t c
+ *              color of the given pixel
+ * 
+ * @return      closest color in pallete array 
+ */
 uint8_t Image::findClosestPalette(uint32_t c)
 {
     int mi = 0;
@@ -37,6 +46,22 @@ uint8_t Image::findClosestPalette(uint32_t c)
     return mi;
 }
 
+/**
+ * @brief       ditherGetPixelBmp finds dithered value for given pixel
+ * 
+ * @param       uint32_t px
+ *              pixel to find value for
+ * @param       int i
+ *              x plane pixel position
+ * @param       int j
+ *              y plane pixel position
+ * @param       int w
+ *              image width
+ * @param       bool paletted
+ *              1 if palleted image, 0 if not
+ * 
+ * @return      new dithered pixel
+ */
 uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted)
 {
     if (paletted)
@@ -75,17 +100,32 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
     return closest;
 }
 
+/**
+ * @brief       ditherGetPixelJpeg finds dithered value for given pixel
+ * 
+ * @note        currently not used
+ */
 uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h)
 {
     // Not used
     return 0;
 }
 
+/**
+ * @brief       ditherSwap 
+ * 
+ * @note        not used
+ */
 void Image::ditherSwap(int)
 {
     // Not used
 }
 
+/**
+ * @brief       ditherSwapBlockJpeg 
+ * 
+ * @note        not used
+ */
 void Image::ditherSwapBlockJpeg(int x)
 {
     // Not used

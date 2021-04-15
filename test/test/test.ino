@@ -28,18 +28,10 @@ void setup()
 
     // Connect to the WiFi network.
     Serial.println("Connecting to WiFi");
-    WiFi.mode(WIFI_STA);
-    WiFi.persistent(true);
-    WiFi.setAutoConnect(true);
-    WiFi.setAutoReconnect(true);
-    WiFi.begin("", "");
+    WiFi.mode(WIFI_MODE_STA);
+    WiFi.begin("e-radionica.com", "croduino");
     while (WiFi.status() != WL_CONNECTED)
-    {
-        Serial.print(".");
-        delay(3000);
-    }
-    Serial.println("aaaa");
-    delay(100);
+        delay(0);
 
     uint8_t attempts = 3;
     while (attempts--)
@@ -55,7 +47,6 @@ void setup()
             Serial.println("Image open error");
         }
     }
-    display.display();
     Serial.println("Going to sleep...");
     esp_sleep_enable_timer_wakeup(SLIDES_CHANGE_SECONDS *
                                   USEC); // Set EPS32 to be woken up in SLIDES_CHANGE_SECONDS seconds (in this case)
