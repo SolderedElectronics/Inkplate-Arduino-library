@@ -1,5 +1,6 @@
 
 .clang-format
+clang-format
 .vscode/
 build/
 examples/.DS_Store
