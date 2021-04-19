@@ -401,7 +401,7 @@ void Inkplate::partialUpdate(bool _forced)
 {
     if (getDisplayMode() == 1)
         return;
-    if (_blockPartial == 1 && !_forced)
+    if (_blockPartial == 1 && _forced)
     {
         display1b();
         return;
