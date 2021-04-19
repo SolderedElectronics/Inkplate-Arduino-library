@@ -235,6 +235,7 @@ void Inkplate::display1b()
     clean(3, 1);
     vscan_start();
     einkOff();
+    _blockPartial = 0;
 }
 
 /**
@@ -298,7 +299,7 @@ void Inkplate::partialUpdate(bool _forced)
 {
     if (getDisplayMode() == 1)
         return;
-    if (_blockPartial == 1 && _forced)
+    if (_blockPartial == 1 && !_forced)
     {
         display1b();
         return;
