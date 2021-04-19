@@ -330,6 +330,8 @@ void Inkplate::display1b()
     clean(3, 1);
     vscan_start();
     einkOff();
+    _blockPartial = 0;
+
 }
 
 /**
@@ -363,7 +365,7 @@ void Inkplate::display3b()
             t |= GLUT[k * 256 + (*(--dp))];
             hscan_start(t);
             t = GLUT2[k * 256 + (*(--dp))];
-            t|=GLUT[k * 256 + (*(--dp))]);
+            t|=GLUT[k * 256 + (*(--dp))];
             GPIO.out_w1ts = t | CL;
             GPIO.out_w1tc = DATA | CL;
 
