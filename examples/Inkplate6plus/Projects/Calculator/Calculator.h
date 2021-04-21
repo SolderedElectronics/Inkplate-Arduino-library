@@ -234,7 +234,7 @@ int text18_cursor_y = 260;
 const GFXfont *text18_font = &FreeSansBold24pt7b;
 
 String text19_content = "";
-int text19_cursor_x = 80;
+int text19_cursor_x = 50;
 int text19_cursor_y = 700;
 const GFXfont *text19_font = &FreeSansBold24pt7b;
 
@@ -263,6 +263,19 @@ String text21_content = "Clear";
 int text21_cursor_x = 620;
 int text21_cursor_y = 60;
 const GFXfont *text21_font = &FreeSansBold24pt7b;
+
+int rect20_a_x = 50;
+int rect20_a_y = 50;
+int rect20_b_x = 200;
+int rect20_b_y = 100;
+int rect20_fill = -1;
+int rect20_radius = -1;
+int rect20_color = BLACK;
+
+String text22_content = "Clear";
+int text22_cursor_x = 50;
+int text22_cursor_y = 95;
+const GFXfont *text22_font = &FreeSansBold24pt7b;
 
 
 void mainDraw() {
@@ -528,4 +541,17 @@ void mainDraw() {
     display.setFont(text21_font);
     display.setTextColor(BLACK, WHITE);    display.setTextSize(1);    display.setCursor(text21_cursor_x, text21_cursor_y);
     display.print(text21_content);
+
+    if (rect20_radius != -1 && rect20_fill != -1)
+       display.fillRoundRect(rect20_a_x, rect20_a_y, rect20_b_x - rect20_a_x, rect20_b_y - rect20_a_y, rect20_radius, rect20_color);
+    else if (rect20_radius != -1 && rect20_fill == -1)
+       display.drawRoundRect(rect20_a_x, rect20_a_y, rect20_b_x - rect20_a_x, rect20_b_y - rect20_a_y, rect20_radius, rect20_color);
+    else if (rect20_radius == -1 && rect20_fill != -1)
+       display.fillRect(rect20_a_x, rect20_a_y, rect20_b_x - rect20_a_x, rect20_b_y - rect20_a_y, rect20_color);
+    else if (rect20_radius == -1 && rect20_fill == -1)
+       display.drawRect(rect20_a_x, rect20_a_y, rect20_b_x - rect20_a_x, rect20_b_y - rect20_a_y, rect20_color);
+
+    display.setFont(text22_font);
+    display.setTextColor(BLACK, WHITE);    display.setTextSize(1);    display.setCursor(text22_cursor_x, text22_cursor_y);
+    display.print(text22_content);
 }

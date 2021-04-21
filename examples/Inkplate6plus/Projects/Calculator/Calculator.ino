@@ -58,13 +58,32 @@ void keysEvents()
         display.partialUpdate();
     }
 
+    if (display.inRect(50, 50, 100, 50))//Clear history
+    {
+        text19_content = "";
+        text19_cursor_x = 50;
+        text19_cursor_y = 700;
+        
+        display.clearDisplay();
+        mainDraw();
+        display.partialUpdate();
+    }
+
     if (display.inRect(800, 650, 100, 100) && (op != ' '))//Calculate
     {
         result = calculate();
         
-        text19_cursor_y -= 55;
-        text19_content = text19_content + '\n' + "    " + text18_content + " = " + result;
         
+        if(text19_content == "")
+        {
+            text19_content = text18_content + " = " + result;
+        }
+        else
+        {
+            text19_cursor_y -= 55;
+            text19_content = text19_content + '\n' + "    " + text18_content + " = " + result;
+        }
+
         text18_content = result;
 
         display.clearDisplay();
