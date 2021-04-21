@@ -36,17 +36,7 @@ char *currencyAbbr = "BTC";
 //----------------------------------
 
 // Used for storing raw price values
-double data[64];
-
-// Used to simplify UI design
-struct textElement
-{
-    int x;
-    int y;
-    const GFXfont *font;
-    char *text;
-    char align;
-};
+double data[3];
 
 // Variables for storing all displayed data as char arrays
 char date[64];
@@ -70,14 +60,22 @@ void setup()
     Serial.begin(115200);
     display.begin(); // Initialize Inkplate object
     display.clearDisplay();
+    mainDraw();
+    display.display();
+
     // Initialize touchscreen
     if (!display.tsInit(true))
     {
         Serial.println("Touchscreen init failed!");
     }
-    // Call main draw function defined below
+
+    network.begin();
+
+    getCoinPrices();
+
+    display.clearDisplay();
     mainDraw();
-    display.display();
+    display.partialUpdate();
 }
 
 void loop()
@@ -87,15 +85,20 @@ void loop()
 
 void keysEvents()
 {
-    if (display.inRect(600, 610, 400, 80))//Refresh
+    if (display.inRect(30, 610, 400, 80))//Refresh Screen
     {
         display.clearDisplay();
         mainDraw();
-        display.partialUpdate();
+        display.display();
     }
 
     if (display.inRect(600, 10, 400, 80))//Bitcoin
     {
+        
+        currency = "bitcoin";
+        currencyAbbr = "BTC";
+        getCoinPrices();
+
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -103,6 +106,10 @@ void keysEvents()
 
     if (display.inRect(600, 110, 400, 80))//Ethereum
     {
+        currency = "ethereum";
+        currencyAbbr = "ETH";
+        getCoinPrices();
+        
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -110,6 +117,10 @@ void keysEvents()
 
     if (display.inRect(600, 210, 400, 80))//Binance
     {
+        currency = "binancecoin";
+        currencyAbbr = "BNB";
+        getCoinPrices();
+        
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -117,6 +128,10 @@ void keysEvents()
 
     if (display.inRect(600, 310, 400, 80))//XRP
     {
+        currency = "ripple";
+        currencyAbbr = "XRP";
+        getCoinPrices();
+        
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -124,6 +139,10 @@ void keysEvents()
 
     if (display.inRect(600, 410, 400, 80))//Dogecoin
     {
+        currency = "dogecoin";
+        currencyAbbr = "DOGE";
+        getCoinPrices();
+        
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -131,8 +150,41 @@ void keysEvents()
 
     if (display.inRect(600, 510, 400, 80))//Tether
     {
+        currency = "tether";
+        currencyAbbr = "USDT";
+        getCoinPrices();
+        
         display.clearDisplay();
         mainDraw();
-        display.display();
+        display.partialUpdate();
     }
+
+    if (display.inRect(600, 650, 400, 80))//Refresh price for currently selected coin
+    {
+        getCoinPrices();
+        display.clearDisplay();
+        mainDraw();
+        display.partialUpdate();
+    }
+}
+
+void getCoinPrices()
+{
+    text17_content = "Updating..";
+    display.clearDisplay();
+    mainDraw();
+    display.partialUpdate();
+    while (!network.getData(data))
+    {
+        Serial.println("Retrying retriving data!");
+        delay(1000);
+    }
+    network.getTime(date);
+
+    text18_content = date;
+    text17_content = "";
+    text7_content = currencyAbbr;
+    text9_content = data[0];
+    text11_content = data[1];
+    text13_content = data[2];
 }

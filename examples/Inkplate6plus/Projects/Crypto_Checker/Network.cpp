@@ -132,7 +132,7 @@ bool Network::getData(double *data)
 
     // Initiate http
     char temp[128];
-    sprintf(temp, "https://api.coingecko.com/api/v3/coins/%s/market_chart?vs_currency=usd&days=92", currency);
+    sprintf(temp, "https://api.coingecko.com/api/v3/simple/price?ids=%s&vs_currencies=usd,eur,gbp", currency);
 
     http.begin(temp);
 
@@ -152,7 +152,7 @@ bool Network::getData(double *data)
             Serial.println(error.c_str());
             f = 1;
         }
-        else if (doc["prices"].size() > 31)
+        else if (doc[currency].size() > 0)
         {
             // Set all data got from internet using formatTemp and formatWind defined above
             // This part relies heavily on ArduinoJson library
@@ -160,24 +160,16 @@ bool Network::getData(double *data)
             Serial.println("Success");
 
             // Save our data to data pointer from main file
-            for (int i = 0; i < 31; ++i)
-            {
-                data[i] = doc["prices"][92 - 31 + i][1].as<double>();
-                // Serial.println(data[i]);
-            }
+            
+            data[0] = doc[currency]["usd"].as<double>();
+            data[1] = doc[currency]["eur"].as<double>();
+            data[2] = doc[currency]["gbp"].as<double>();
+            
+            Serial.println(data[0]);
+            Serial.println(data[1]);
+            Serial.println(data[2]);
             f = 0;
         }
-    }
-    else if (httpCode == 404)
-    {
-        // Coin id not found
-        display.clearDisplay();
-        display.setCursor(50, 230);
-        display.setTextSize(2);
-        display.println(F("Your entered coin does not exist!"));
-        display.display();
-        while (1)
-            ;
     }
     else
     {
