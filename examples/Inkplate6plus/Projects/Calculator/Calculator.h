@@ -273,7 +273,7 @@ int rect20_radius = -1;
 int rect20_color = BLACK;
 
 String text22_content = "Clear";
-int text22_cursor_x = 50;
+int text22_cursor_x = 60;
 int text22_cursor_y = 95;
 const GFXfont *text22_font = &FreeSansBold24pt7b;
 
