@@ -5,6 +5,15 @@
 
 #include "Inkplate.h"
 #include "Crypto_UI.h"
+#include "Icons/euro.h"
+#include "Icons/dollar.h"
+#include "Icons/gbp.h"
+#include "Icons/btc.h"
+#include "Icons/eth.h"
+#include "Icons/bnc.h"
+#include "Icons/xrp.h"
+#include "Icons/doge.h"
+#include "Icons/tether.h"
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
@@ -14,6 +23,9 @@ Network network;
 Inkplate display(INKPLATE_1BIT);
 
 //---------- CHANGE HERE  -------------:
+
+#define COIN_ICON_X 320
+#define COIN_ICON_Y 50
 
 // Adjust your time zone, 2 means UTC+2
 int timeZone = 2;
@@ -27,33 +39,12 @@ char *pass = "croduino";
 char *currency = "bitcoin";
 char *currencyAbbr = "BTC";
 
-// You can find your currency id here:
-// https://api.coingecko.com/api/v3/coins
-
-// If it loads weirdly you can search the JSON using ctrl/command+f for
-// your crypto by name and then find it's id next to it's name and copy those above
-
-//----------------------------------
 
 // Used for storing raw price values
 double data[3];
 
 // Variables for storing all displayed data as char arrays
 char date[64];
-char fromToDate[64];
-
-char dates[8 * 8];
-char prices[16 * 16];
-
-char current[16];
-char minimum[16];
-char maximum[16];
-
-
-// Our functions declared below setup and loop
-void drawGraph();
-void drawAll();
-
 
 void setup()
 {
@@ -61,6 +52,7 @@ void setup()
     display.begin(); // Initialize Inkplate object
     display.clearDisplay();
     mainDraw();
+    drawCurrencySigns();
     display.display();
 
     // Initialize touchscreen
@@ -73,9 +65,7 @@ void setup()
 
     getCoinPrices();
 
-    display.clearDisplay();
-    mainDraw();
-    display.partialUpdate();
+    drawAll();
 }
 
 void loop()
@@ -88,7 +78,10 @@ void keysEvents()
     if (display.inRect(30, 610, 400, 80))//Refresh Screen
     {
         display.clearDisplay();
+        setBlackButton();
         mainDraw();
+        drawCurrencySigns();
+        drawCoinIcons();
         display.display();
     }
 
@@ -97,83 +90,73 @@ void keysEvents()
         
         currency = "bitcoin";
         currencyAbbr = "BTC";
+        
+        drawAll();
         getCoinPrices();
-
-        display.clearDisplay();
-        mainDraw();
-        display.partialUpdate();
+        drawAll();
     }
 
     if (display.inRect(600, 110, 400, 80))//Ethereum
     {
         currency = "ethereum";
         currencyAbbr = "ETH";
+
+        drawAll();
         getCoinPrices();
-        
-        display.clearDisplay();
-        mainDraw();
-        display.partialUpdate();
+        drawAll();
     }
 
     if (display.inRect(600, 210, 400, 80))//Binance
     {
         currency = "binancecoin";
         currencyAbbr = "BNB";
+
+        drawAll();
         getCoinPrices();
-        
-        display.clearDisplay();
-        mainDraw();
-        display.partialUpdate();
+        drawAll();
     }
 
     if (display.inRect(600, 310, 400, 80))//XRP
     {
         currency = "ripple";
         currencyAbbr = "XRP";
+
+        drawAll();
         getCoinPrices();
-        
-        display.clearDisplay();
-        mainDraw();
-        display.partialUpdate();
+        drawAll();
     }
 
     if (display.inRect(600, 410, 400, 80))//Dogecoin
     {
         currency = "dogecoin";
         currencyAbbr = "DOGE";
-        getCoinPrices();
         
-        display.clearDisplay();
-        mainDraw();
-        display.partialUpdate();
+        drawAll();
+        getCoinPrices();
+        drawAll();
     }
 
     if (display.inRect(600, 510, 400, 80))//Tether
     {
         currency = "tether";
         currencyAbbr = "USDT";
-        getCoinPrices();
         
-        display.clearDisplay();
-        mainDraw();
-        display.partialUpdate();
+        drawAll();
+        getCoinPrices();
+        drawAll();
     }
 
     if (display.inRect(600, 650, 400, 80))//Refresh price for currently selected coin
     {
         getCoinPrices();
-        display.clearDisplay();
-        mainDraw();
-        display.partialUpdate();
+        drawAll();
     }
 }
 
 void getCoinPrices()
 {
     text17_content = "Updating..";
-    display.clearDisplay();
-    mainDraw();
-    display.partialUpdate();
+    drawAll();
     while (!network.getData(data))
     {
         Serial.println("Retrying retriving data!");
@@ -187,4 +170,111 @@ void getCoinPrices()
     text9_content = data[0];
     text11_content = data[1];
     text13_content = data[2];
+
+    drawCurrencySigns();
+}
+
+void drawCurrencySigns()
+{
+    display.drawImage(dollar, 280, 235, 48, 48);
+    display.drawImage(euro, 280, 335, 48, 48);
+    display.drawImage(gbp, 280, 435, 48, 48);
+}
+
+void drawAll()
+{
+    display.clearDisplay();
+    setBlackButton();
+    mainDraw();
+    drawCurrencySigns();
+    drawCoinIcons();
+    display.partialUpdate();
+}
+
+void setBlackButton()
+{
+    rect0_fill = -1;
+    rect1_fill = -1;
+    rect2_fill = -1;
+    rect3_fill = -1;
+    rect4_fill = -1;
+    rect5_fill = -1;
+
+    text1_color_text = BLACK;
+    text1_color_bg = WHITE;
+    text2_color_text = BLACK;
+    text2_color_bg = WHITE;
+    text3_color_text = BLACK;
+    text3_color_bg = WHITE;
+    text4_color_text = BLACK;
+    text4_color_bg = WHITE;
+    text5_color_text = BLACK;
+    text5_color_bg = WHITE;
+    text6_color_text = BLACK;
+    text6_color_bg = WHITE;
+    
+    if(currency == "bitcoin")
+    {
+        rect0_fill = 1;
+        text1_color_text = WHITE;
+        text1_color_bg = BLACK;
+    }
+    else if ( currency == "ethereum")
+    {
+        rect1_fill = 1;
+        text2_color_text = WHITE;
+        text2_color_bg = BLACK;
+    }
+    else if ( currency == "binancecoin")
+    {
+        rect2_fill = 1;
+        text3_color_text = WHITE;
+        text3_color_bg = BLACK;
+    }
+    else if ( currency ==  "ripple")
+    {
+        rect3_fill = 1;
+        text4_color_text = WHITE;
+        text4_color_bg = BLACK;
+    }
+    else if ( currency ==  "dogecoin")
+    {
+        rect4_fill = 1;
+        text5_color_text = WHITE;
+        text5_color_bg = BLACK;
+    }
+    else if ( currency ==  "tether")
+    {
+        rect5_fill = 1;
+        text6_color_text = WHITE;
+        text6_color_bg = BLACK;
+    }
+}
+
+void drawCoinIcons()
+{
+    if(currency == "bitcoin")
+    {
+        display.drawImage(btc, COIN_ICON_X, COIN_ICON_Y, btc_w, btc_h);
+    }
+    else if ( currency == "ethereum")
+    {
+        display.drawImage(eth, COIN_ICON_X, COIN_ICON_Y, eth_w, eth_h);
+    }
+    else if ( currency == "binancecoin")
+    {
+        display.drawImage(bnc, COIN_ICON_X, COIN_ICON_Y, bnc_w, bnc_h);
+    }
+    else if ( currency ==  "ripple")
+    {
+        display.drawImage(xrp, COIN_ICON_X, COIN_ICON_Y, xrp_w, xrp_h);
+    }
+    else if ( currency ==  "dogecoin")
+    {
+        display.drawImage(doge, COIN_ICON_X, COIN_ICON_Y, doge_w, doge_h);
+    }
+    else if ( currency ==  "tether")
+    {
+        display.drawImage(tether, COIN_ICON_X, COIN_ICON_Y, tether_w, tether_h);
+    }
 }
