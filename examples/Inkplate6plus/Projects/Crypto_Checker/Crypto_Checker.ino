@@ -53,6 +53,7 @@ void setup()
     display.clearDisplay();
     mainDraw();
     drawCurrencySigns();
+    drawCoinIcons();
     display.display();
 
     // Initialize touchscreen
