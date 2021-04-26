@@ -76,7 +76,7 @@ void loop()
 
 void keysEvents()
 {
-    if (display.inRect(30, 610, 400, 80))//Refresh Screen
+    if (display.touchInArea(30, 610, 400, 80))//Refresh Screen
     {
         display.clearDisplay();
         setBlackButton();
@@ -86,7 +86,7 @@ void keysEvents()
         display.display();
     }
 
-    if (display.inRect(600, 10, 400, 80))//Bitcoin
+    if (display.touchInArea(600, 10, 400, 80))//Bitcoin
     {
         
         currency = "bitcoin";
@@ -97,7 +97,7 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.inRect(600, 110, 400, 80))//Ethereum
+    if (display.touchInArea(600, 110, 400, 80))//Ethereum
     {
         currency = "ethereum";
         currencyAbbr = "ETH";
@@ -107,7 +107,7 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.inRect(600, 210, 400, 80))//Binance
+    if (display.touchInArea(600, 210, 400, 80))//Binance
     {
         currency = "binancecoin";
         currencyAbbr = "BNB";
@@ -117,7 +117,7 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.inRect(600, 310, 400, 80))//XRP
+    if (display.touchInArea(600, 310, 400, 80))//XRP
     {
         currency = "ripple";
         currencyAbbr = "XRP";
@@ -127,7 +127,7 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.inRect(600, 410, 400, 80))//Dogecoin
+    if (display.touchInArea(600, 410, 400, 80))//Dogecoin
     {
         currency = "dogecoin";
         currencyAbbr = "DOGE";
@@ -137,7 +137,7 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.inRect(600, 510, 400, 80))//Tether
+    if (display.touchInArea(600, 510, 400, 80))//Tether
     {
         currency = "tether";
         currencyAbbr = "USDT";
@@ -147,7 +147,7 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.inRect(600, 650, 400, 80))//Refresh price for currently selected coin
+    if (display.touchInArea(600, 650, 400, 80))//Refresh price for currently selected coin
     {
         getCoinPrices();
         drawAll();

@@ -205,12 +205,12 @@ void setup()
     uint32_t t = millis();
     while (millis() - t < 20000)
     {
-        if (display.inRect(755, 620, 100, 100))
+        if (display.touchInArea(755, 620, 100, 100))
         {
             Serial.println("aa");
             t = millis();
         }
-        if (display.inRect(870, 620, 100, 100))
+        if (display.touchInArea(870, 620, 100, 100))
         {
             Serial.println("bb");
             t = millis();

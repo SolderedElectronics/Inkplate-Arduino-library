@@ -71,7 +71,7 @@ void loop()
 // All touchscreen events happening while in menu
 void menuEvents()
 {
-    if (display.inRect(39, 225, 300, 55)) // Easy difficulty
+    if (display.touchInArea(39, 225, 300, 55)) // Easy difficulty
     {
         difficulty = 0;
         display.clearDisplay();
@@ -80,7 +80,7 @@ void menuEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(39, 320, 300, 55)) // Medium difficulty
+    if (display.touchInArea(39, 320, 300, 55)) // Medium difficulty
     {
         difficulty = 1;
         display.clearDisplay();
@@ -89,7 +89,7 @@ void menuEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(39, 420, 300, 55)) // Hard difficulty
+    if (display.touchInArea(39, 420, 300, 55)) // Hard difficulty
     {
         difficulty = 2;
         display.clearDisplay();
@@ -98,7 +98,7 @@ void menuEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(39, 516, 300, 55)) // 2 player game
+    if (display.touchInArea(39, 516, 300, 55)) // 2 player game
     {
         difficulty = 3;
         display.clearDisplay();
@@ -107,7 +107,7 @@ void menuEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(553, 246, 300, 55) && difficulty != 3) // Human plays first
+    if (display.touchInArea(553, 246, 300, 55) && difficulty != 3) // Human plays first
     {
         firstHuman = 0;
         display.clearDisplay();
@@ -116,7 +116,7 @@ void menuEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(553, 326, 300, 55) && difficulty != 3) // Computer plays first
+    if (display.touchInArea(553, 326, 300, 55) && difficulty != 3) // Computer plays first
     {
         firstHuman = 1;
         display.clearDisplay();
@@ -125,7 +125,7 @@ void menuEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(553, 447, 300, 55)) // First player is X
+    if (display.touchInArea(553, 447, 300, 55)) // First player is X
     {
         firstXO = 0;
         display.clearDisplay();
@@ -134,7 +134,7 @@ void menuEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(553, 512, 300, 55)) // First player is O
+    if (display.touchInArea(553, 512, 300, 55)) // First player is O
     {
         firstXO = 1;
         display.clearDisplay();
@@ -143,7 +143,7 @@ void menuEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(585, 627, 301, 79)) // Start gane
+    if (display.touchInArea(585, 627, 301, 79)) // Start gane
     {
         // Check if all settings are legal, and if so, start the game
         if (difficulty == 3 && (firstXO == 0 || firstXO == 1))
@@ -244,7 +244,7 @@ void crossOutHumanFirst()
 // All touchscreen events during normal game
 void gameEvents()
 {
-    if (display.inRect(15, 600, 215, 140)) // Go back
+    if (display.touchInArea(15, 600, 215, 140)) // Go back
     {
         memset(board, '_', sizeof board);
         menu = 1;
@@ -258,7 +258,7 @@ void gameEvents()
     // Check if any board field pressed
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j)
-            if (display.inRect(268 + 243 * j, 20 + 243 * i, 243, 243))
+            if (display.touchInArea(268 + 243 * j, 20 + 243 * i, 243, 243))
             {
                 // If field already pressed, skip
                 if (board[i][j] != '_' || result(board) != 0)

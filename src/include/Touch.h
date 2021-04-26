@@ -32,7 +32,7 @@
 class Touch : virtual public Mcp
 {
   public:
-    bool inRect(int16_t x1, int16_t y1, int16_t w, int16_t h);
+    bool touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h);
 
     bool tsInit(uint8_t _pwrState);
     void tsShutdown();

@@ -39,14 +39,14 @@ void loop()
 
 void keysEvents()
 {
-    if (display.inRect(800, 20, 200, 80))//Refresh
+    if (display.touchInArea(800, 20, 200, 80))//Refresh
     {
         display.clearDisplay();
         mainDraw();
         display.display();
     }
 
-    if (display.inRect(600, 20, 200, 80))//Clear
+    if (display.touchInArea(600, 20, 200, 80))//Clear
     {
         text18_cursor_x = 800;
         text18_cursor_y = 260;
@@ -58,7 +58,7 @@ void keysEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(50, 50, 100, 50))//Clear history
+    if (display.touchInArea(50, 50, 100, 50))//Clear history
     {
         text19_content = "";
         text19_cursor_x = 50;
@@ -69,7 +69,7 @@ void keysEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(800, 650, 100, 100) && (op != ' '))//Calculate
+    if (display.touchInArea(800, 650, 100, 100) && (op != ' '))//Calculate
     {
         result = calculate();
         
@@ -97,7 +97,7 @@ void keysEvents()
         op = ' ';
     }
 
-    if (display.inRect(900, 650, 100, 100) && (op == ' ') && (rightNumPos > 0))
+    if (display.touchInArea(900, 650, 100, 100) && (op == ' ') && (rightNumPos > 0))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " + ";
@@ -107,7 +107,7 @@ void keysEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(700, 650, 100, 100))
+    if (display.touchInArea(700, 650, 100, 100))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "0";
@@ -121,7 +121,7 @@ void keysEvents()
         }
     }
 
-    if (display.inRect(600, 650, 100, 100))
+    if (display.touchInArea(600, 650, 100, 100))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + ".";
@@ -135,7 +135,7 @@ void keysEvents()
         }
     }
 
-    if (display.inRect(900, 550, 100, 100) && (op == ' ') && (rightNumPos > 0))
+    if (display.touchInArea(900, 550, 100, 100) && (op == ' ') && (rightNumPos > 0))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " - ";
@@ -145,7 +145,7 @@ void keysEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(800, 550, 100, 100))
+    if (display.touchInArea(800, 550, 100, 100))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "3";
@@ -159,7 +159,7 @@ void keysEvents()
         }
     }
 
-    if (display.inRect(700, 550, 100, 100))
+    if (display.touchInArea(700, 550, 100, 100))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "2";
@@ -173,7 +173,7 @@ void keysEvents()
         }
     }
 
-    if (display.inRect(600, 550, 100, 100))
+    if (display.touchInArea(600, 550, 100, 100))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "1";
@@ -187,7 +187,7 @@ void keysEvents()
         }
     }
 
-    if (display.inRect(900, 450, 100, 100) && (op == ' ') && (rightNumPos > 0))
+    if (display.touchInArea(900, 450, 100, 100) && (op == ' ') && (rightNumPos > 0))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " x ";
@@ -197,7 +197,7 @@ void keysEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(800, 450, 100, 100))
+    if (display.touchInArea(800, 450, 100, 100))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "6";
@@ -211,7 +211,7 @@ void keysEvents()
         }
     }
 
-    if (display.inRect(700, 450, 100, 100))
+    if (display.touchInArea(700, 450, 100, 100))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "5";
@@ -225,7 +225,7 @@ void keysEvents()
         }
     }
 
-    if (display.inRect(600, 450, 100, 100))
+    if (display.touchInArea(600, 450, 100, 100))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "4";
@@ -239,7 +239,7 @@ void keysEvents()
         }
     }
 
-    if (display.inRect(900, 350, 100, 100) && (op == ' ') && (rightNumPos > 0))
+    if (display.touchInArea(900, 350, 100, 100) && (op == ' ') && (rightNumPos > 0))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " / ";
@@ -249,7 +249,7 @@ void keysEvents()
         display.partialUpdate();
     }
 
-    if (display.inRect(800, 350, 100, 100))
+    if (display.touchInArea(800, 350, 100, 100))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "9";
@@ -263,7 +263,7 @@ void keysEvents()
         }
     }
 
-    if (display.inRect(700, 350, 100, 100))
+    if (display.touchInArea(700, 350, 100, 100))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "8";
@@ -277,7 +277,7 @@ void keysEvents()
         }
     }
 
-    if (display.inRect(600, 350, 100, 100))
+    if (display.touchInArea(600, 350, 100, 100))
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "7";
