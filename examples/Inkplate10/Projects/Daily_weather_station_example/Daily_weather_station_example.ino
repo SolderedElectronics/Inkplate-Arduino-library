@@ -65,13 +65,13 @@ const uint8_t *logos[16] = {icon_sn, icon_sl, icon_h, icon_t, icon_hr, icon_lr, 
 const uint8_t *s_logos[16] = {icon_s_sn, icon_s_sl, icon_s_h,  icon_s_t,  icon_s_hr,
                               icon_s_lr, icon_s_s,  icon_s_hc, icon_s_lc, icon_s_c};
 
-char abbr1[16];
-char abbr2[16];
-char abbr3[16];
-char abbr4[16];
+RTC_DATA_ATTR char abbr1[16];
+RTC_DATA_ATTR char abbr2[16];
+RTC_DATA_ATTR char abbr3[16];
+RTC_DATA_ATTR char abbr4[16];
 
 // Variables for storing temperature
-char temps[8][4] = {
+RTC_DATA_ATTR char temps[8][4] = {
     "0F",
     "0F",
     "0F",
@@ -79,7 +79,7 @@ char temps[8][4] = {
 };
 
 // Variables for storing days of the week
-char days[8][4] = {
+RTC_DATA_ATTR char days[8][4] = {
     "",
     "",
     "",
@@ -93,13 +93,13 @@ RTC_DATA_ATTR unsigned refreshes = 0;
 const int fullRefresh = 5;
 
 // Variables for storing current time and weather info
-char currentTemp[16] = "0F";
-char currentWind[16] = "0m/s";
+RTC_DATA_ATTR char currentTemp[16] = "0F";
+RTC_DATA_ATTR char currentWind[16] = "0m/s";
 
-char currentTime[16] = "9:41";
+RTC_DATA_ATTR char currentTime[16] = "9:41";
 
-char currentWeather[32] = "-";
-char currentWeatherAbbr[8] = "th";
+RTC_DATA_ATTR char currentWeather[32] = "-";
+RTC_DATA_ATTR char currentWeatherAbbr[8] = "th";
 
 // functions defined below
 void drawWeather();
@@ -119,7 +119,7 @@ void setup()
         // Welcome screen
         display.setCursor(250, 370);
         display.setTextSize(3);
-        display.print(F("Welcome to Inkplate 6 plus weather example!"));
+        display.print(F("Welcome to Inkplate 10 weather example!"));
         display.display();
 
         display.clearDisplay();
@@ -164,17 +164,11 @@ void setup()
         // Refresh only the clock
         network.getTime(currentTime);
 
-        int16_t x1, y1;
-        uint16_t w1, h1;
-        display.setFont(&Roboto_Light_36);
-        display.setTextSize(1);
-        display.getTextBounds(currentTime, 1024 - 20 * strlen(currentTime), 35, &x1, &y1, &w1, &h1);
-
-        display.fillRect(x1, y1, w1 + 30, h1 + 30, BLACK);
-        display.partialUpdate();
-
-        display.fillRect(x1, y1, w1 + 30, h1 + 30, WHITE);
         drawTime();
+        drawWeather();
+        drawCurrent();
+        drawTemps();
+        drawCity();
 
         display.partialUpdate();
     }
