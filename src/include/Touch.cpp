@@ -23,7 +23,7 @@ uint16_t _tsXResolution;
 uint16_t _tsYResolution;
 
 /**
- * @brief       inRect checks if touch occured in given rectangle
+ * @brief       touchInArea checks if touch occured in given rectangle area
  * 
  * @param       int16_t x1
  *              rectangle top left corner x plane
