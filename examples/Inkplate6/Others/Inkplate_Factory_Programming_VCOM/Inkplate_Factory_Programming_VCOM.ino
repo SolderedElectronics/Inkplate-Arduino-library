@@ -38,7 +38,7 @@ void setup()
         Serial.print(vcomVoltage, 2);
         Serial.println("V");
         delay(1000);
-        display.pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 6, INPUT_PULLUP);
+        display.pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 6, INPUT_PULLUP);// Declaring this again since it gets reset somewhere.
         writeVCOMToEEPROM(vcomVoltage);
         EEPROM.write(EEPROMaddress, 170);
         EEPROM.commit();
