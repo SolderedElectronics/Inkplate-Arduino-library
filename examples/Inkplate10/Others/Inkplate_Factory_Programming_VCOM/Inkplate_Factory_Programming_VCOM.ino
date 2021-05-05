@@ -489,6 +489,7 @@ void writeVCOMToEEPROM(double v)
     vcomH = readReg(0x04);
     Serial.print("Vcom: ");
     Serial.println(vcom);
+    Serial.print("Vcom register: ");
     Serial.println(vcomL | (vcomH << 8));
 
     if (vcom != (vcomL | (vcomH << 8)))
