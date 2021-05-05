@@ -410,7 +410,7 @@ void Inkplate::partialUpdate(bool _forced)
     }
 
     uint32_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
-    uint32_t _send;
+    //uint32_t _send;
     uint8_t data;
     uint8_t diffw, diffb;
     uint32_t n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
@@ -447,7 +447,7 @@ void Inkplate::partialUpdate(bool _forced)
                 GPIO.out_w1tc = DATA | CL;
                 n--;
             }
-            GPIO.out_w1ts = (_send) | CL;
+            GPIO.out_w1ts =  CL;
             GPIO.out_w1tc = DATA | CL;
             vscan_end();
         }
