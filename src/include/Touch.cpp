@@ -23,7 +23,7 @@ uint16_t _tsXResolution;
 uint16_t _tsYResolution;
 
 /**
- * @brief       inRect checks if touch occured in given rectangle
+ * @brief       touchInArea checks if touch occured in given rectangle area
  * 
  * @param       int16_t x1
  *              rectangle top left corner x plane
@@ -36,7 +36,7 @@ uint16_t _tsYResolution;
  * 
  * @return      true if successful, false if failed
  */
-bool Touch::inRect(int16_t x1, int16_t y1, int16_t w, int16_t h)
+bool Touch::touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h)
 {
     int16_t x2 = x1 + w, y2 = y1 + h;
     if (tsAvailable())

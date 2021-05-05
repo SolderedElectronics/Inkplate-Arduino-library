@@ -13,29 +13,20 @@ int EEPROMaddress = 0;
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
 
+//Internal registers of MCP
+uint8_t mcpRegsInt[22];
+
 void setup()
 {
     display.begin();
     Serial.begin(115200);
     EEPROM.begin(64);
 
+    vcomVoltage = -1.23;
+
     if (EEPROM.read(EEPROMaddress) != 170)
     {
-        display.digitalWriteMCP(3, HIGH);
-        display.digitalWriteMCP(4, HIGH);
-        display.digitalWriteMCP(5, HIGH);
-        display.pinModeMCP(6, INPUT_PULLUP);
-        display.display();
-        display.einkOn();
-        delay(100);
-        vcomVoltage = readVCOM();
-        display.einkOff();
-        delay(1000);
-        Serial.print("\n\nStarting VCOM measurment...");
-        Serial.print("\nVCOM: ");
-        Serial.print(vcomVoltage, 2);
-        Serial.println("V");
-        delay(1000);
+        display.pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 6, INPUT_PULLUP);
         writeVCOMToEEPROM(vcomVoltage);
         EEPROM.write(EEPROMaddress, 170);
         EEPROM.commit();
@@ -43,7 +34,8 @@ void setup()
     }
     else
     {
-        vcomVoltage = (double)EEPROM.read(EEPROMaddress) / 100;
+        Serial.println("Vcom already set!");
+        //vcomVoltage = (double)EEPROM.read(EEPROMaddress) / 100;
     }
     memset(commandBuffer, 0, BUFFER_SIZE);
 
@@ -402,10 +394,10 @@ uint8_t readReg(uint8_t _reg)
 
 void showSplashScreen()
 {
-    display.clean();
+    display.clean(0, 1);
     display.display();
     display.selectDisplayMode(INKPLATE_3BIT);
-    display.drawBitmap3Bit(0, 0, picture1, picture1_w, picture1_h);
+    display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
     display.setTextColor(0, 7);
     display.setTextSize(1);
     display.setCursor(760, 57);
@@ -414,14 +406,16 @@ void showSplashScreen()
     display.display();
 }
 
+//Need to be changed to inkplate 10 Null waveform
 void writeToScreen()
 {
-    display.cleanFast(1, 8);
-    display.cleanFast(0, 2);
-    display.cleanFast(2, 10);
+    display.clean(1, 8);
+    display.clean(0, 2);
+    display.clean(2, 10);
     // delay(10);
 }
 
+//Do not use until until null waveform is set correctly
 double readVCOM()
 {
     double vcomVolts;
@@ -449,10 +443,10 @@ void writeVCOMToEEPROM(double v)
     vcomL = vcom & 0xFF;
     // First, we have to power up TPS65186
     // Pull TPS65186 WAKEUP pin to High
-    display.digitalWriteMCP(3, HIGH);
+    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt,3, HIGH);
 
     // Pull TPS65186 PWR pin to High
-    display.digitalWriteMCP(4, HIGH);
+    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 4, HIGH);
     delay(10);
 
     // Send to TPS65186 first 8 bits of VCOM
@@ -470,29 +464,33 @@ void writeVCOMToEEPROM(double v)
     do
     {
         delay(1);
-    } while (display.digitalReadMCP(6));
+    } while (display.digitalReadInternal(MCP23017_INT_ADDR, mcpRegsInt, 6));
 
     // Clear Interrupt flag by reading INT1 register
     readReg(0x07);
 
     // Now, power off whole TPS
     // Pull TPS65186 WAKEUP pin to Low
-    display.digitalWriteMCP(3, LOW);
+    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 3, LOW);
 
     // Pull TPS65186 PWR pin to Low
-    display.digitalWriteMCP(4, LOW);
+    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 4, LOW);
 
     // Wait a little bit...
     delay(1000);
 
     // Power up TPS again
-    display.digitalWriteMCP(3, HIGH);
+    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 3, HIGH);
 
     delay(10);
 
     // Read VCOM valuse from registers
     vcomL = readReg(0x03);
     vcomH = readReg(0x04);
+    Serial.print("Vcom: ");
+    Serial.println(vcom);
+    Serial.print("Vcom register: ");
+    Serial.println(vcomL | (vcomH << 8));
 
     if (vcom != (vcomL | (vcomH << 8)))
     {
