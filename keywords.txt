@@ -53,7 +53,7 @@ height				KEYWORD2
 getRotation			KEYWORD2
 getCursorX			KEYWORD2
 getCursorY			KEYWORD2
-
+touchInArea         KEYWORD2
 # Instances (KEYWORD2)
 
 # Constants (LITERAL1)

@@ -1,8 +1,8 @@
 /*
-   Inkplate_Partial_Update_With_Deep_Sleep example for e-radionica Inkplate 6 plus
-   For this example you will need only USB cable and Inkplate 6 plus
-   Select "Inkplate 6 plus(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6 plus(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_Partial_Update_With_Deep_Sleep example for e-radionica Inkplate 6PLUS
+   For this example you will need only USB cable and Inkplate 6PLUS
+   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    In this example we will show how to use partial update of epaper screen with deep sleep functionality of ESP32.
@@ -22,7 +22,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6PLUS
-#error "Wrong board selection for this example, please select Inkplate 6 plus in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
 #endif
 
 #include "Inkplate.h"      // Include Inkplate library to the sketch

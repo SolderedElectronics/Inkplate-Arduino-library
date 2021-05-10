@@ -1,8 +1,8 @@
 /*
-   Inkplate_VariPass_Graphs example for e-radionica Inkplate6
-   For this example you will need a micro USB cable, Inkplate6, and an available WiFi connection.
-   Select "Inkplate 6 plus(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6 plus(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_VariPass_Graphs example for e-radionica Inkplate 6PLUS
+   For this example you will need a micro USB cable, Inkplate 6PLUS, and an available WiFi connection.
+   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can use the API on the VariPass website to download and display
@@ -26,7 +26,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6PLUS
-#error "Wrong board selection for this example, please select Inkplate 6 plus in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6PLUS plus in the boards menu."
 #endif
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch

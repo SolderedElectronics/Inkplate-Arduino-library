@@ -1,11 +1,11 @@
 /*
-   Cryptocurrency tracker example for e-radionica.com Inkplate 6 plus
-   For this example you will need only USB cable and Inkplate 6 plus.
-   Select "Inkplate 6 plus(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6 plus(ESP32)" option? Follow our tutorial and add it:
+   Cryptocurrency tracker example for e-radionica.com Inkplate 6PLUS
+   For this example you will need only USB cable and Inkplate 6PLUS.
+   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how you can use Inkplate 6 plus to display API data.
+   This example will show you how you can use Inkplate 6PLUS to display API data.
    Here we use Coingecko API to get latest cryptocurrency prices and display
    them on the Inkplate screen. If you wish to change the currecny, you can
    edit it below.
@@ -21,7 +21,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6PLUS
-#error "Wrong board selection for this example, please select Inkplate 6 plus in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
 #endif
 
 //---------- CHANGE HERE  -------------:

@@ -26,7 +26,7 @@
  * @param       uint8_t _v
  *              value to set backlight to
  * 
- * @note        can only be used in inkplate6plus, others don't suport backlight
+ * @note        can only be used in inkplate 6PLUS, others don't suport backlight
  */
 void Backlight::setBacklight(uint8_t _v)
 {

@@ -1,8 +1,8 @@
 /*
-   Basic_gray example for e-radionica.com Inkplate 6 plus
-   For this example you will need only USB cable and Inkplate 6 plus
-   Select "Inkplate 6 plus(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6 plus(ESP32)" option? Follow our tutorial and add it:
+   Basic_gray example for e-radionica.com Inkplate 6PLUS
+   For this example you will need only USB cable and Inkplate 6PLUS
+   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can draw some simple graphics using
@@ -19,7 +19,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6PLUS
-#error "Wrong board selection for this example, please select Inkplate 6 plus in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
 #endif
 
 #include "Inkplate.h" //Include Inkplate library to the sketch
@@ -42,7 +42,7 @@ void setup()
     display.setTextColor(0, 7);
     display.setCursor(150, 320);
     display.setTextSize(4);
-    display.print("Welcome to Inkplate 6 plus!");
+    display.print("Welcome to Inkplate 6PLUS!");
     display.display(); // Write hello message
     delay(5000);       // Wait a little bit
 }
@@ -277,7 +277,7 @@ void loop()
             i + 1); // textSize parameter starts at 0 and goes up to 10 (larger won't fit Inkplate 6 plus screen)
         display.setCursor(200, (i * i * 8)); // setCursor works as same as on LCD displays - sets "the cursor" at the
                                              // place you want to write someting next
-        display.print("INKPLATE6!");         // The actual text you want to show on e-paper as String
+        display.print("INKPLATE 6PLUS!");         // The actual text you want to show on e-paper as String
     }
     displayCurrentAction("Text in different sizes and shadings");
     display.display(); // To show stuff on screen, you always need to call display.display();
@@ -290,7 +290,7 @@ void loop()
     { // you are able to choose from 8 different colors (0-7)
         display.setTextSize(i + 1);
         display.setCursor(200, 300 + (i * i * 8));
-        display.print("INKPLATE6!");
+        display.print("INKPLATE 6PLUS!");
     }
     display.display();
     delay(DELAY_MS);
@@ -358,7 +358,7 @@ void loop()
         display.clearDisplay();
         display.setRotation(
             r); // Set rotation will sent rotation for the entire display, so you can use it sideways or upside-down
-        display.print("INKPLATE6");
+        display.print("INKPLATE 6PLUS");
         display.display();
         r++;
         delay(DELAY_MS);

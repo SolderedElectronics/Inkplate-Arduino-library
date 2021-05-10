@@ -1,8 +1,8 @@
 /*
-   Inkplate_Web_Server example for e-radionica.com Inkplate 6 plus
-   For this example you will need a micro USB cable, Inkplate 6 plus and a device with WiFi and Internet brower (PC,
-   Laptop, Smartphone, ...). Select "Inkplate 6 plus(ESP32)" from Tools -> Board menu. Don't have "Inkplate 6
-   plus(ESP32)" option? Follow our tutorial and add it: https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+   Inkplate_Web_Server example for e-radionica.com Inkplate 6PLUS
+   For this example you will need a micro USB cable, Inkplate 6PLUS and a device with WiFi and Internet brower (PC,
+   Laptop, Smartphone, ...). Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu. Don't have "Inkplate 6PLUS(ESP32)" option?
+   Follow our tutorial and add it: https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can use Inkplate as a small and simple standlone Web Server.
    You need to connect to Inkplate with WiFi and open IP address shown on Inkplate display.
@@ -20,7 +20,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6PLUS
-#error "Wrong board selection for this example, please select Inkplate 6 plus in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
 #endif
 
 #include "Inkplate.h"   //Include Inkplate library to the sketch
