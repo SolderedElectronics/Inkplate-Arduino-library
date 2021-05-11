@@ -430,8 +430,7 @@ void loop()
 
     // Let's start by drawing a pixel at x = 100 and y = 50 location
     display.clearDisplay(); // Clear everytning that is inside frame buffer in ESP32
-    displayCurrentAction(
-        "Drawing a pixel"); // Function which writes small text at bottom left indicating what's currently done
+    displayCurrentAction("Drawing a pixel"); // Function which writes small text at bottom left indicating what's currently done
                             // NOTE: you do not need displayCurrentAction function to use Inkplate!
     display.drawPixel(100, 50, BLACK); // Draw one black pixel at X = 100, Y = 50 position in BLACK color (must be black
                                        // since Inkplate is in BW mode)
