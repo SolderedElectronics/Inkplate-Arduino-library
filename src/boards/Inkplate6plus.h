@@ -23,8 +23,6 @@
 #define E_INK_WIDTH  1024
 #define E_INK_HEIGHT 758
 
-#define BACKLIGHT_EN 11
-
 #define MCP23017_INT_ADDR      0x20
 #define MCP23017_EXT_ADDR      0x22
 #define MCP23017_INT_PORTA     0x00
