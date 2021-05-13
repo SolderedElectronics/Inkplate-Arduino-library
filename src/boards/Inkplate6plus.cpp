@@ -148,9 +148,9 @@ bool Inkplate::begin(void)
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, TOUCHSCREEN_EN, OUTPUT);
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, TOUCHSCREEN_EN, HIGH);
 
-    // Disable/Enable Backlight PWR
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, BACKLIGHT_EN, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, BACKLIGHT_EN, HIGH);
+    // Disable/Enable Frontlight PWR
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, OUTPUT);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, HIGH);
 
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);

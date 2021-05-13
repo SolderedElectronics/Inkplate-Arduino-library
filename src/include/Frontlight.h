@@ -1,7 +1,7 @@
 /**
  **************************************************
- * @file        Backlight.h
- * @brief       Basic funtions for controling inkplate backlight
+ * @file        Frontlight.h
+ * @brief       Basic funtions for controling inkplate frontlight
  * 
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -14,8 +14,8 @@
  * 
  * @authors     e-radionica.com
  ***************************************************/
-#ifndef __BACKLIGHT_H__
-#define __BACKLIGHT_H__
+#ifndef __FRONTLIGHT_H__
+#define __FRONTLIGHT_H__
 
 #ifdef ARDUINO_INKPLATE6PLUS
 
@@ -25,13 +25,13 @@
 #include "defines.h"
 
 /**
- * @brief       Backlight class designed to work with inkplates that support backlight (Inkplate 6 plus)
+ * @brief       Frontlight class designed to work with inkplates that support frontlight (Inkplate 6 plus)
  */
-class Backlight : virtual public Mcp
+class Frontlight : virtual public Mcp
 {
   public:
-    void setBacklight(uint8_t _v);
-    void backlight(bool _e);
+    void setFrontlight(uint8_t _v);
+    void frontlight(bool _e);
 };
 
 #endif

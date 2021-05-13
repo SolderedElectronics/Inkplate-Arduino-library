@@ -54,6 +54,9 @@ getRotation			KEYWORD2
 getCursorX			KEYWORD2
 getCursorY			KEYWORD2
 touchInArea         KEYWORD2
+setFrontlight       KEYWORD2
+frontlight          KEYWORD2
+
 # Instances (KEYWORD2)
 
 # Constants (LITERAL1)

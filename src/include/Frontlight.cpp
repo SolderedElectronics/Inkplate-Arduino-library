@@ -1,7 +1,7 @@
 /**
  **************************************************
- * @file        Backlight.cpp
- * @brief       Basic funtions for controling inkplate backlight
+ * @file        Frontlight.cpp
+ * @brief       Basic funtions for controling inkplate frontlight
  * 
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -15,20 +15,20 @@
  * @authors     e-radionica.com
  ***************************************************/
 
-#include "Backlight.h"
+#include "Frontlight.h"
 #include "defines.h"
 
 #ifdef ARDUINO_INKPLATE6PLUS
 
 /**
- * @brief       setBacklight function sets backlight intensity for inkplate
+ * @brief       setFrontlight function sets frontlight intensity for inkplate
  * 
  * @param       uint8_t _v
- *              value to set backlight to
+ *              value to set frontlight to
  * 
- * @note        can only be used in inkplate 6PLUS, others don't suport backlight
+ * @note        can only be used in inkplate 6PLUS, others don't suport frontlight
  */
-void Backlight::setBacklight(uint8_t _v)
+void Frontlight::setFrontlight(uint8_t _v)
 {
     Wire.beginTransmission(0x5C >> 1);
     Wire.write(0);
@@ -37,22 +37,22 @@ void Backlight::setBacklight(uint8_t _v)
 }
 
 /**
- * @brief       backlight function turns backlight on/off
+ * @brief       frontlight function turns frontlight on/off
  * 
  * @param       bool _e
  *              enable value, 1 turns on, 0 off
  */
-void Backlight::backlight(bool _e)
+void Frontlight::frontlight(bool _e)
 {
     if (_e)
     {
-        pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, BACKLIGHT_EN, OUTPUT);
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, BACKLIGHT_EN, HIGH);
+        pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, OUTPUT);
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, HIGH);
     }
     else
     {
-        pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, BACKLIGHT_EN, OUTPUT);
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, BACKLIGHT_EN, LOW);
+        pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, OUTPUT);
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, LOW);
     }
 }
 
