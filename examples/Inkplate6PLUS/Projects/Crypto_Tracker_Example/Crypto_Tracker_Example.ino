@@ -130,9 +130,9 @@ void setup()
     display.begin();
     display.tsInit(true);
 
-    // Turn off backlight
-    display.backlight(true);
-    display.setBacklight(0);
+    // Turn off frontlight
+    display.frontlight(true);
+    display.setFrontlight(0);
 
     display.setTextWrap(false);
     display.setTextColor(0, 7);

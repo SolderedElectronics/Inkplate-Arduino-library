@@ -28,9 +28,9 @@ void setup()
     Serial.begin(115200);
     display.begin();
 
-    // Turn off backlight
-    display.backlight(true);
-    display.setBacklight(0);
+    // Turn off frontlight
+    display.frontlight(true);
+    display.setFrontlight(0);
 
     // Join wifi
     display.joinAP(ssid, password);
