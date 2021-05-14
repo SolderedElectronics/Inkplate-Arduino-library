@@ -351,7 +351,7 @@ void drawForecast()
     int xOffset = 10;
     int startDay = 1;
     int numOfDays = (sizeof(OWOC.forecast) / sizeof(OWOC.forecast[0]));
-    int dayPitch = E_INK_WIDTH / (numOfDays - startDay);
+    int dayPitch = E_INK_WIDTH / (4 - startDay);
     for (int day = startDay; day < 4; day++)
     {
         dayPos = (day - startDay) * dayPitch;
@@ -364,25 +364,26 @@ void drawForecast()
         sprintf(Output, "%s", dayShortStr(weekday(OWOC.forecast[day].dt)));
         alignText(CENTRE_BOT, Output, textCentre, dayOffset + 15);
 
-        display.setFont(&FreeSans9pt7b);
-        sprintf(Output, "%02.0fC/%02.0fC", OWOC.forecast[day].temp_min, OWOC.forecast[day].temp_max);
-        alignText(CENTRE_BOT, Output, textCentre, dayOffset + 126);
+        display.setFont(&FreeSans12pt7b);
 
         sprintf(Output, "%02.0f%%", OWOC.forecast[day].pop * 126);
-        alignText(CENTRE_BOT, Output, textCentre, dayOffset + 120);
+        alignText(CENTRE_BOT, Output, textCentre, dayOffset + 100);
+
+        sprintf(Output, "%02.0fC/%02.0fC", OWOC.forecast[day].temp_min, OWOC.forecast[day].temp_max);
+        alignText(CENTRE_BOT, Output, textCentre, dayOffset + 125);
 
         sprintf(Output, "%02.01fmm", OWOC.forecast[day].rain + OWOC.forecast[day].snow);
-        alignText(CENTRE_BOT, Output, textCentre, dayOffset + 140);
+        alignText(CENTRE_BOT, Output, textCentre, dayOffset + 150);
 
         sprintf(Output, "%02d:%02d-%02d:%02d", hour(OWOC.forecast[day].sunrise), minute(OWOC.forecast[day].sunrise),
                 hour(OWOC.forecast[day].sunset), minute(OWOC.forecast[day].sunset));
-        alignText(CENTRE_BOT, Output, textCentre, dayOffset + 160);
-
-        sprintf(Output, "%04.0fhPa", OWOC.forecast[day].pressure);
-        alignText(CENTRE_BOT, Output, textCentre, dayOffset + 226);
+        alignText(CENTRE_BOT, Output, textCentre, dayOffset + 175);
 
         sprintf(Output, "%03.0f%% Rh", OWOC.forecast[day].humidity);
         alignText(CENTRE_BOT, Output, textCentre, dayOffset + 200);
+
+        sprintf(Output, "%04.0fhPa", OWOC.forecast[day].pressure);
+        alignText(CENTRE_BOT, Output, textCentre, dayOffset + 225);
     }
 }
 
