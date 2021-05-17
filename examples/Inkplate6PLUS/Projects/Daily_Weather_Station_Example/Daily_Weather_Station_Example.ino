@@ -119,7 +119,7 @@ void setup()
         // Welcome screen
         display.setCursor(50, 290);
         display.setTextSize(3);
-        display.print(F("Welcome to Inkplate 6 plus weather example!"));
+        display.print(F("Welcome to Inkplate 6PLUS weather example!"));
         display.display();
 
         display.clearDisplay();

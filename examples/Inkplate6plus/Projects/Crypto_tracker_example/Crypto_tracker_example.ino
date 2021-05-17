@@ -142,7 +142,7 @@ void setup()
     {
         display.setCursor(90, 240);
         display.setTextSize(2);
-        display.println(F("Welcome to Inkplate 6 plus cryptocurrency tracker example!"));
+        display.println(F("Welcome to Inkplate 6PLUS cryptocurrency tracker example!"));
         display.setCursor(90, 280);
         display.println(F("Connecting to WiFi..."));
         display.display();
