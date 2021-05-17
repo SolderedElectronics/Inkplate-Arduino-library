@@ -110,8 +110,8 @@ bool Inkplate::begin(void)
     // For some reason, it draw more current in deep sleep when pins are set as inputs...
     for (int i = 0; i < 15; i++)
     {
-        pinModeInternal(MCP23017_EXT_ADDR, mcpRegsInt, i, OUTPUT);
-        digitalWriteInternal(MCP23017_EXT_ADDR, mcpRegsInt, i, LOW);
+        pinModeInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, OUTPUT);
+        digitalWriteInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, LOW);
     }
 
     // For same reason, unused pins of first I/O expander have to be also set as outputs, low.
