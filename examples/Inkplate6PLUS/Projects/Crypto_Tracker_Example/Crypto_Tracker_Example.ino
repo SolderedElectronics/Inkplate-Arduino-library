@@ -73,7 +73,7 @@ RTC_DATA_ATTR unsigned refreshes = 0;
 const int fullRefresh = 20;
 
 // Used for storing raw price values
-double data[64];
+RTC_DATA_ATTR double data[64];
 
 // Used to simplify UI design
 struct textElement
@@ -86,15 +86,15 @@ struct textElement
 };
 
 // Variables for storing all displayed data as char arrays
-char date[64];
-char fromToDate[64];
+RTC_DATA_ATTR char date[64];
+RTC_DATA_ATTR char fromToDate[64];
 
-char dates[8 * 8];
-char prices[16 * 16];
+RTC_DATA_ATTR char dates[8 * 8];
+RTC_DATA_ATTR char prices[16 * 16];
 
-char current[16];
-char minimum[16];
-char maximum[16];
+RTC_DATA_ATTR char current[16];
+RTC_DATA_ATTR char minimum[16];
+RTC_DATA_ATTR char maximum[16];
 
 // All months in a year, for finding current date
 char *months[] = {
@@ -169,37 +169,12 @@ void setup()
     }
     else
     {
-        display.setDisplayMode(INKPLATE_1BIT);
-        // Reset screen where date is drawn
-        int16_t x1, y1;
-        uint16_t w1, h1;
-        display.setFont(elements[1].font);
-        display.setTextSize(1);
-        network.getTime(date);
-
-        // Clear date
-        display.getTextBounds(date, (int)(elements[1].x * 0.96), (int)(elements[1].y), &x1, &y1, &w1, &h1);
-        display.fillRect(x1, y1, w1 + 5, h1 + 5, BLACK);
-        display.partialUpdate();
-        display.fillRect(x1, y1, w1 + 5, h1 + 5, WHITE);
-        display.partialUpdate();
-
-        // Clear reset text 600, 746
-        display.getTextBounds("Press screen to wake up.", 600, 748, &x1, &y1, &w1, &h1);
-        display.fillRect(x1 - 1, y1, w1 + 1, h1 + 1, BLACK);
-        display.partialUpdate();
-        display.fillRect(x1 - 1, y1, w1 + 1, h1 + 1, WHITE);
-        display.partialUpdate();
-
+        // Our main drawing function
+        drawAll();
         // Time drawing function
         drawTime();
-
-        // Draw selection
-        display.fillRoundRect(755, 620, 100, 100, 15, BLACK);
-        display.fillRoundRect(870, 620, 100, 100, 15, BLACK);
-
         // Just update time
-        display.partialUpdate();
+        display.display();
     }
 
     uint32_t t = millis();
@@ -249,7 +224,7 @@ void goToSleep()
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, 0);
 
-    (void)esp_deep_sleep_start();
+    esp_deep_sleep_start();
 }
 
 // Function to draw our graph
