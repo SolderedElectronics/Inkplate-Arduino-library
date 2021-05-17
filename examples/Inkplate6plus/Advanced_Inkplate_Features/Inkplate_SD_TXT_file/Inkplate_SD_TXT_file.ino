@@ -34,7 +34,8 @@ void setup()
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
-
+    display.setRotation(1);
+    display.setFrontlight(15);
     // Init SD card. Display if SD card is init propery or not.
     if (display.sdCardInit())
     {
@@ -51,12 +52,13 @@ void setup()
         {
             display.clearDisplay();    // Clear everything that is stored in frame buffer of epaper
             display.setCursor(0, 0);   // Set print position at the begining of the screen
-            char text[201];            // Array where data from SD card is stored (max 200 chars here)
+            char text[3001];            // Array where data from SD card is stored (max 200 chars here)
             int len = file.fileSize(); // Read how big is file that we are opening
-            if (len > 200)
-                len = 200;        // If it's more than 200 bytes (200 chars), limit to max 200 bytes
+            if (len > 3000)
+                len = 3000;        // If it's more than 200 bytes (200 chars), limit to max 200 bytes
             file.read(text, len); // Read data from file and save it in text array
             text[len] = 0;        // Put null terminating char at the and of data
+            display.setTextSize(2);
             display.print(text);  // Print data/text
             display.display();    // Do a full refresh of display
         }
