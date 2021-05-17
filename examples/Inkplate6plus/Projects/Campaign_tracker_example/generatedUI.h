@@ -9,8 +9,8 @@ extern Inkplate display;
 
 int rect0_a_x = 9;
 int rect0_a_y = 9;
-int rect0_b_x = 776;
-int rect0_b_y = 574;
+int rect0_b_x = 1015;
+int rect0_b_y = 749;
 int rect0_fill = -1;
 int rect0_radius = -1;
 int rect0_color = BLACK;
@@ -22,7 +22,7 @@ const GFXfont *text1_font = &Open_Sans_SemiBold_56;
 
 String text2_content;
 int text2_cursor_x = 323;
-int text2_cursor_y = 92;
+int text2_cursor_y = 110;
 const GFXfont *text2_font = &Open_Sans_SemiBold_16;
 
 String text3_content;
@@ -32,64 +32,64 @@ const GFXfont *text3_font = &Open_Sans_SemiBold_24;
 
 String text4_content;
 int text4_cursor_x = 98;
-int text4_cursor_y = 326;
+int text4_cursor_y = 390;
 const GFXfont *text4_font = &Open_Sans_SemiBold_32;
 
 String text5_content = "$";
 int text5_cursor_x = 74;
-int text5_cursor_y = 308;
+int text5_cursor_y = 390;
 const GFXfont *text5_font = &Open_Sans_SemiBold_24;
 
 String text6_content = "raised";
 int text6_cursor_x = 223;
-int text6_cursor_y = 324;
+int text6_cursor_y = 390;
 const GFXfont *text6_font = &Open_Sans_SemiBold_24;
 
 String text7_content;
 int text7_cursor_x = 112;
-int text7_cursor_y = 387;
+int text7_cursor_y = 490;
 const GFXfont *text7_font = &Open_Sans_SemiBold_32;
 
 String text8_content = "$";
 int text8_cursor_x = 73;
-int text8_cursor_y = 373;
+int text8_cursor_y = 490;
 const GFXfont *text8_font = &Open_Sans_SemiBold_24;
 
 String text9_content = "goal";
 int text9_cursor_x = 224;
-int text9_cursor_y = 384;
+int text9_cursor_y = 490;
 const GFXfont *text9_font = &Open_Sans_SemiBold_24;
 
-int rect1_a_x = 40;
-int rect1_a_y = 241;
-int rect1_b_x = 356;
-int rect1_b_y = 544;
+int rect1_a_x = 22;
+int rect1_a_y = 300;
+int rect1_b_x = 468;
+int rect1_b_y = 700;
 int rect1_fill = -1;
 int rect1_radius = -1;
 int rect1_color = BLACK;
 
-int rect2_a_x = 538;
-int rect2_a_y = 317;
-int rect2_b_x = 968;
-int rect2_b_y = 544;
+int rect2_a_x = 512;
+int rect2_a_y = 300;
+int rect2_b_x = 1002;
+int rect2_b_y = 700;
 int rect2_fill = -1;
 int rect2_radius = -1;
 int rect2_color = BLACK;
 
-int rect3_a_x = 43;
-int rect3_a_y = 448;
-int rect3_b_x = 334;
-int rect3_b_y = 499;
+int rect3_a_x = 42;
+int rect3_a_y = 600;
+int rect3_b_x = 448;
+int rect3_b_y = 650;
 int rect3_fill = -1;
 int rect3_radius = -1;
 int rect3_color = BLACK;
 
-int line0_start_x = 43;
-int line0_start_y = 616;
-int line0_end_x = 408;
-int line0_end_y = 473;
+int line0_start_x = 42;
+int line0_start_y = 625;
+int line0_end_x = 448;
+int line0_end_y = 625;
 int line0_color = BLACK;
-int line0_thickness = 41;
+int line0_thickness = 50;
 int line0_gradient = 0;
 
 String text11_content = "100%";
@@ -119,7 +119,7 @@ const GFXfont *text15_font = &Open_Sans_SemiBold_32;
 
 String text16_content = "updates";
 int text16_cursor_x = 680;
-int text16_cursor_y = 393;
+int text16_cursor_y = 390;
 const GFXfont *text16_font = &Open_Sans_SemiBold_24;
 
 String text17_content;

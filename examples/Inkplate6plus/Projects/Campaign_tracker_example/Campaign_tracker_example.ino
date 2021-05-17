@@ -38,7 +38,7 @@ void setup()
     {
         // Welcome screen
         display.setCursor(70, 270);
-        display.setTextSize(2);
+        display.setTextSize(3);
         display.print(F("Welcome to Inkplate Crowdsupply tracker example!"));
         display.display();
 
