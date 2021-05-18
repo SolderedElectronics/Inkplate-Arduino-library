@@ -226,6 +226,8 @@ void Touch::tsGetXY(uint8_t *_d, uint16_t *x, uint16_t *y)
  *              pointer to store y position of finger
  * 
  * @return      returns number of fingers currently on screen
+ * 
+ * @note        touch screen doesn't return data for two fingers when fingers are align at the y axis, or one above another
  */
 uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos)
 {
