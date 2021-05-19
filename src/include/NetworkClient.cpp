@@ -122,9 +122,16 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
                 if (len > 0)
                     len -= c;
                 buffPtr += c;
+            } else if(len == -1)
+            {
+                len = 0;
             }
 
-            Serial.println("aa");
+
+            Serial.print("Len: ");
+            Serial.println(len);
+            Serial.print("Size: ");
+            Serial.println(size);
         }
     }
     http.end();
