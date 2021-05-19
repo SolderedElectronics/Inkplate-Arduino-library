@@ -22,7 +22,7 @@ void setup()
     Serial.begin(115200);
     EEPROM.begin(64);
 
-    vcomVoltage = -1.23;
+    vcomVoltage = -1.19;
 
     if (EEPROM.read(EEPROMaddress) != 170)
     {
@@ -400,7 +400,7 @@ void showSplashScreen()
     display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
     display.setTextColor(0, 7);
     display.setTextSize(1);
-    display.setCursor(760, 57);
+    display.setCursor(10, 10);
     display.print(vcomVoltage, 2);
     display.print("V");
     display.display();
