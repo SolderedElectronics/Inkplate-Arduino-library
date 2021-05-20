@@ -50,8 +50,12 @@ class Inkplate : public System, public Graphics
 
 #ifdef ARDUINO_INKPLATECOLOR
     void clean();
+
+    //These 4 functions need to refactored because conflicting functionalities
     void setPanelState(bool _state);
     bool getPanelState();
+    void setPanelDeepSleep(bool _state);
+    bool getPanelDeepSleepState();
 #else
     void einkOn();
     void einkOff();

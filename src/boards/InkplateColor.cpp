@@ -285,4 +285,41 @@ void Inkplate::sendData(uint8_t _data)
     digitalWrite(EPAPER_CS_PIN, HIGH);
 }
 
+/**
+ * @brief       setPanelDeepSleep puts color epaper in deep sleep, or starts epaper, depending on given arguments.
+ * 
+ * @param       bool _state
+ *              HIGH or LOW (1 or 0) 1 will start panel, 0 will put it into deep sleep
+ */
+void Inkplate::setPanelDeepSleep(bool _state)
+{
+    _panelState = _state==0?false:true;
+    
+    if (_panelState)
+    {
+        // Send commands to power up panel. According to the datasheet, it can be powered up from deep sleep only by reseting it and doing reinit.
+        begin();
+    }
+    else
+    {
+        delay(10);
+        sendCommand(DEEP_SLEEP_REGISTER);
+        sendData(0xA5);
+        delay(100);
+        digitalWrite(EPAPER_RST_PIN, LOW);
+        digitalWrite(EPAPER_DC_PIN, LOW);
+        digitalWrite(EPAPER_CS_PIN, LOW);
+    }
+}
+
+/**
+ * @brief        getPanelDeepSleepState returns current state of the panel
+ * 
+ * @return      bool _panelState
+ */
+bool Inkplate::getPanelDeepSleepState()
+{
+    return _panelState;
+}
+
 #endif
