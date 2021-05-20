@@ -27,7 +27,7 @@
 #include "NetworkClient.h"
 
 #ifdef ARDUINO_INKPLATE6PLUS
-#include "Backlight.h"
+#include "Frontlight.h"
 #include "Touch.h"
 #endif
 
@@ -42,7 +42,7 @@ class System : public Esp,
 #ifdef ARDUINO_INKPLATE6PLUS
     ,
                public Touch,
-               public Backlight
+               public Frontlight
 #endif
 {
   public:

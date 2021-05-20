@@ -2,7 +2,7 @@
  **************************************************
  *
  * @file        Inkplate6plus.cpp
- * @brief       Basic funtions for controling inkplate 6 plus
+ * @brief       Basic funtions for controling inkplate 6PLUS
  * 
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -110,8 +110,8 @@ bool Inkplate::begin(void)
     // For some reason, it draw more current in deep sleep when pins are set as inputs...
     for (int i = 0; i < 15; i++)
     {
-        pinModeInternal(MCP23017_EXT_ADDR, mcpRegsInt, i, OUTPUT);
-        digitalWriteInternal(MCP23017_EXT_ADDR, mcpRegsInt, i, LOW);
+        pinModeInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, OUTPUT);
+        digitalWriteInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, LOW);
     }
 
     // For same reason, unused pins of first I/O expander have to be also set as outputs, low.
@@ -148,9 +148,9 @@ bool Inkplate::begin(void)
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, TOUCHSCREEN_EN, OUTPUT);
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, TOUCHSCREEN_EN, HIGH);
 
-    // Disable/Enable Backlight PWR
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, BACKLIGHT_EN, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, BACKLIGHT_EN, HIGH);
+    // Disable/Enable Frontlight PWR
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, OUTPUT);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, HIGH);
 
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
