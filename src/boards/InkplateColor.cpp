@@ -335,6 +335,10 @@ void Inkplate::initMCPAtStart()
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 11, INPUT);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 12, INPUT);
 
+    // Battery voltage Switch MOSFET
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B1, OUTPUT);
+
+
     //Rest of pins go to high z state, which is INPUT without pull resistor
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A0, INPUT);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A1, INPUT);
@@ -345,7 +349,6 @@ void Inkplate::initMCPAtStart()
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A6, INPUT);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A7, INPUT);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B0, INPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B1, INPUT);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B5, INPUT);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B6, INPUT);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B7, INPUT);
