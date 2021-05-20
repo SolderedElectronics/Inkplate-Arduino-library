@@ -111,6 +111,7 @@
 #define MCP23017_PIN_A5     5
 #define MCP23017_PIN_A6     6
 #define MCP23017_PIN_A7     7
+
 #define MCP23017_PIN_B0     8
 #define MCP23017_PIN_B1     9
 #define MCP23017_PIN_B2     10

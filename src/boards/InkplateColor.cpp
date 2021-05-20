@@ -104,6 +104,8 @@ bool Inkplate::begin(void)
     sendCommand(0x50);
     sendData(0x37);
 
+    initMCPAtStart();
+
     _panelState = true;
     return true;
 }
@@ -322,4 +324,30 @@ bool Inkplate::getPanelDeepSleepState()
     return _panelState;
 }
 
+void Inkplate::initMCPAtStart()
+{
+    Wire.begin();
+    memset(mcpRegsInt, 0, 22);
+    mcpBegin(MCP23017_INT_ADDR, mcpRegsInt);
+    
+    // TOUCHPAD PINS
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 10, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 11, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 12, INPUT);
+
+    //Rest of pins go to high z state, which is INPUT without pull resistor
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A0, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A1, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A2, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A3, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A4, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A5, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A6, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A7, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B0, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B1, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B5, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B6, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B7, INPUT);
+}
 #endif

@@ -56,6 +56,8 @@ class Inkplate : public System, public Graphics
     bool getPanelState();
     void setPanelDeepSleep(bool _state);
     bool getPanelDeepSleepState();
+
+    void initMCPAtStart();
 #else
     void einkOn();
     void einkOff();
