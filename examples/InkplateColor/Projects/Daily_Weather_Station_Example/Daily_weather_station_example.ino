@@ -54,7 +54,7 @@ char *pass = "";
 #define DELAY_MS 15000
 
 // Inkplate object
-Inkplate display(INKPLATE_1BIT);
+Inkplate display;
 
 // All our network functions are in this object, see Network.h
 Network network;

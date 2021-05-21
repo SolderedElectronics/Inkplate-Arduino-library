@@ -61,7 +61,7 @@ int refreshes = 0;
 const int refreshesToGet = 10;
 
 // Initiate out Inkplate object
-Inkplate display(INKPLATE_3BIT);
+Inkplate display;
 
 // Our networking functions, see Network.cpp for info
 Network network;

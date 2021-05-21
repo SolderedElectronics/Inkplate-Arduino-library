@@ -21,7 +21,7 @@
 
 #define MAXITERATIONS 150
 
-Inkplate display(INKPLATE_1BIT);
+Inkplate display;
 
 // Takes a long time to render, cca 3 minutes
 
@@ -34,6 +34,7 @@ void setup()
 {
     Serial.begin(115200);
     display.begin();
+    Serial.println("Started");
 }
 
 void loop()

@@ -20,7 +20,7 @@
 //#define URL      "https://www.crowdsupply.com/byte-mix-labs/microbyte"
 #define URL      "https://www.crowdsupply.com/e-radionica/inkplate-10"
 
-Inkplate display(INKPLATE_1BIT);
+Inkplate display;
 
 RTC_DATA_ATTR unsigned refreshes = 0;
 

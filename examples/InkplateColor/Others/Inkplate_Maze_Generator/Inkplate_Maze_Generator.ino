@@ -21,7 +21,7 @@
 #include "Inkplate.h"
 
 // Initialise Inkplate object
-Inkplate display(INKPLATE_1BIT);
+Inkplate display;
 
 // Here we define one cell size
 const int cellSize = 10;

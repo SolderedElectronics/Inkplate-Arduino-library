@@ -25,7 +25,7 @@
 #define TIME_TO_SLEEP 30
 
 // Initiate Inkplate object
-Inkplate display(INKPLATE_1BIT);
+Inkplate display;
 
 byte touchPadPin = 10;
 

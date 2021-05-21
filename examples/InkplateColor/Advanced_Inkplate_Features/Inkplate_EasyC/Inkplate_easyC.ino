@@ -27,7 +27,7 @@
 #include "Inkplate.h"        //Include Inkplate library to the sketch
 #include <Adafruit_Sensor.h> //Adafruit library for sensors
 
-Inkplate display(); // Create an object on Inkplate library
+Inkplate display; // Create an object on Inkplate library
 Adafruit_BME680
     bme; // Create an object on Adafruit BME680 library
          //(with no arguments sent to constructor, that means we are using I2C communication for BME680 sensor)

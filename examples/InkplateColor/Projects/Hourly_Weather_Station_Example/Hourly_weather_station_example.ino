@@ -65,7 +65,7 @@ char *apiKey = "";
 #define DELAY_MS 267800L
 
 // Inkplate object
-Inkplate display(INKPLATE_1BIT);
+Inkplate display;
 
 // All our network functions are in this object, see Network.h
 Network network;

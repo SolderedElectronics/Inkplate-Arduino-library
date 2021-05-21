@@ -20,7 +20,7 @@
 #endif
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
-Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set library to work in monochorme mode
+Inkplate display; // Create object on Inkplate library and set library to work in monochorme mode
 // Other option is gray mode, which is demonstrated in next example "Inkplate_basic_gray"
 
 #define DELAY_MS                                                                                                       \

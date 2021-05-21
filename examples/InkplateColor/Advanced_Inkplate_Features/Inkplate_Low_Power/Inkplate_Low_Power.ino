@@ -35,7 +35,7 @@ const uint8_t *pictures[] = {picture1, picture2,
 #define TIME_TO_SLEEP  20      // How long ESP32 will be in deep sleep (in seconds)
 RTC_DATA_ATTR int slide = 0;
 
-Inkplate display(INKPLATE_3BIT); // Create an object on Inkplate library and also set library into 3 Bit mode (gray)
+Inkplate display; // Create an object on Inkplate library and also set library into 3 Bit mode (gray)
 
 void setup()
 {

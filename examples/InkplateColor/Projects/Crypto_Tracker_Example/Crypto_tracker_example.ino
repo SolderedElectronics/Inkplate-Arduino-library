@@ -61,7 +61,7 @@ char *currencyAbbr = "BTC";
 Network network;
 
 // create display object
-Inkplate display(INKPLATE_3BIT);
+Inkplate display;
 
 // Delay between API calls in miliseconds
 #define DELAY_MS 5000

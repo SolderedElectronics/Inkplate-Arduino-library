@@ -67,7 +67,7 @@ bool metric = true; //<------------------------------TRUE is METRIC, FALSE is IM
 #define DELAY_MS 59000
 
 // Inkplate object
-Inkplate display(INKPLATE_1BIT);
+Inkplate display;
 
 enum alignment
 {
