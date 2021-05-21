@@ -13,13 +13,13 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_ESP32_DEV
-#error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
+#ifndef ARDUINO_INKPLATECOLOR
+#error "Wrong board selection for this example, please select Inkplate color in the boards menu."
 #endif
 
 #include "Inkplate.h"
 
-Inkplate display(INKPLATE_3BIT);
+Inkplate display;
 
 const char *ssid = "e-radionica.com";     // Your WiFi SSID
 const char *password = "croduino"; // Your WiFi password
@@ -35,7 +35,7 @@ void setup()
     char url[256];
     imageUrl(url);
 
-    Serial.println(display.drawImage(url, display.PNG, 0, 0));
+    Serial.println(display.drawImage(url, display.PNG, 0, 0, true, true));
     display.display();
 
     Serial.println("Going to sleep");

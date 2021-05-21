@@ -36,7 +36,7 @@ void setup()
     display.display();      // Put clear image on display
 
     display.print("Connecting to WiFi...");
-    display.partialUpdate();
+    display.display();
 
     // Connect to the WiFi network.
     WiFi.mode(WIFI_MODE_STA);
@@ -45,10 +45,10 @@ void setup()
     {
         delay(500);
         display.print(".");
-        display.partialUpdate();
+        display.display();
     }
     display.println("\nWiFi OK! Downloading...");
-    display.partialUpdate();
+    display.display();
 
     // Draw the first image from web.
     // Monochromatic bitmap with 1 bit depth. Images like this load quickest.

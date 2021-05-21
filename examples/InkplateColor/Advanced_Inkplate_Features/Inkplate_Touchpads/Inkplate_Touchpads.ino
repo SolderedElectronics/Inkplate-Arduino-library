@@ -84,7 +84,7 @@ void displayNumber()
     }
     else
     {
-        display.partialUpdate();
+        display.display();
         n++;
     }
 }

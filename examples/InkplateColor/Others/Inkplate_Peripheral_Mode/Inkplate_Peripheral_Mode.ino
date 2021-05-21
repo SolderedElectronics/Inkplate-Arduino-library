@@ -296,9 +296,9 @@ void loop()
 
             case 'M':
                 sscanf(s + 3, "%d,%d,%d", &y1, &x2, &y2);
-                // sprintf(temp, "display.partialUpdate(%d, %d, %d);\n", y1, x2, y2);
+                // sprintf(temp, "display.display(%d, %d, %d);\n", y1, x2, y2);
                 // Serial.print(temp);
-                display.partialUpdate();
+                display.display();
                 break;
 
             case 'N':

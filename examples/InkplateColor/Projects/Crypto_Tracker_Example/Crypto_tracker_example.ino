@@ -383,6 +383,6 @@ void drawAll()
         display.print(date);
 
         // Just update time
-        display.partialUpdate();
+        display.display();
     }
 }

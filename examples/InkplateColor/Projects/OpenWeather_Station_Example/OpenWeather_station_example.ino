@@ -277,7 +277,7 @@ void loop()
     else
     {
         drawTime();
-        display.partialUpdate();
+        display.display();
     }
 
     // wait for the turn of the minute before sleeping

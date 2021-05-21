@@ -45,7 +45,7 @@ void setup()
     if (n == 0)
     { // If you did not find any network, show the message and stop the program.
         display.print("No WiFi networks found!");
-        display.partialUpdate();
+        display.display();
         while (true)
             ;
     }
@@ -60,7 +60,7 @@ void setup()
             display.print('\n');
             display.print(WiFi.RSSI(i), DEC);
         }
-        display.partialUpdate(); //(Partial) refresh thescreen
+        display.display(); //(Partial) refresh thescreen
     }
 
     display.clearDisplay();          // Clear everything in frame buffer
@@ -73,10 +73,10 @@ void setup()
         delay(1000); // While it is connecting to network, display dot every second, just to know that Inkplate is
                      // alive.
         display.print('.');
-        display.partialUpdate();
+        display.display();
     }
     display.print("connected"); // If it's connected, notify user
-    display.partialUpdate();
+    display.display();
 
     HTTPClient http;
     if (http.begin("http://example.com/index.html"))

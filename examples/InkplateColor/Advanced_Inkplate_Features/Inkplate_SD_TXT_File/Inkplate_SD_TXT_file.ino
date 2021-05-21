@@ -39,7 +39,7 @@ void setup()
     if (display.sdCardInit())
     {
         display.println("SD Card ok! Reading data...");
-        display.partialUpdate();
+        display.display();
 
         // Try to load text with max lenght of 200 chars.
         if (!file.open("/text.txt", O_RDONLY))
@@ -64,7 +64,7 @@ void setup()
     else
     { // If card init was not successful, display error on screen and stop the program (using infinite loop)
         display.println("SD Card error!");
-        display.partialUpdate();
+        display.display();
         while (true)
             ;
     }

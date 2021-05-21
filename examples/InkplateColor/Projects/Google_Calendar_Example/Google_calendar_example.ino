@@ -146,7 +146,7 @@ void loop()
     if (refreshes % refreshesToGet == 0)
         display.display();
     else
-        display.partialUpdate();
+        display.display();
 
     // Increment refreshes
     ++refreshes;

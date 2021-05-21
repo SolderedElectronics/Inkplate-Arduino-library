@@ -43,7 +43,7 @@ void setup()
     display.display();      // Put clear image on display
 
     display.print("Connecting to WiFi...");
-    display.partialUpdate();
+    display.display();
 
     // Connect to the WiFi network.
     WiFi.mode(WIFI_MODE_STA);
@@ -52,10 +52,10 @@ void setup()
     {
         delay(500);
         display.print(".");
-        display.partialUpdate();
+        display.display();
     }
     display.println("\nWiFi OK! Downloading...");
-    display.partialUpdate();
+    display.display();
 
     // Use a HTTP get request to fetch the graph from VariPass.
     // The API expects a few parameters in the URL to allow it to work.
@@ -70,9 +70,9 @@ void setup()
                                    200, 150))
     {
         display.println("Image open error");
-        display.partialUpdate();
+        display.display();
     }
-    display.partialUpdate();
+    display.display();
 
     WiFi.mode(WIFI_OFF);
 }

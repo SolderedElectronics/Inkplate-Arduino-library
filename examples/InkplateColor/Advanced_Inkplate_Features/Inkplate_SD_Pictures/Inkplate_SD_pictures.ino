@@ -43,7 +43,7 @@ void setup()
     if (display.sdCardInit())
     {
         display.println("SD Card OK! Reading image...");
-        display.partialUpdate();
+        display.display();
 
         // If card is properly init, try to load image and display it on e-paper at position X=0, Y=0
         // NOTE: Both drawImage methods allow for an optional fifth "invert" parameter. Setting this parameter
@@ -64,7 +64,7 @@ void setup()
     {
         // If SD card init not success, display error on screen and stop the program (using infinite loop)
         display.println("SD Card error!");
-        display.partialUpdate();
+        display.display();
         while (true)
             ;
     }

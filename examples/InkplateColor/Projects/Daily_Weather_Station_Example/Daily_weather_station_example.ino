@@ -164,7 +164,7 @@ void loop()
     if (refreshes % fullRefresh == 0)
         display.display();
     else
-        display.partialUpdate();
+        display.display();
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
