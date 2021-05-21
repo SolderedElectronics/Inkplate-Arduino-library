@@ -126,12 +126,6 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
             {
                 len = 0;
             }
-
-
-            Serial.print("Len: ");
-            Serial.println(len);
-            Serial.print("Size: ");
-            Serial.println(size);
         }
     }
     http.end();

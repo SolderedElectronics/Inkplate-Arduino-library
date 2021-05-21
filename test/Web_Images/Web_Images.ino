@@ -56,7 +56,7 @@ void setup()
     // NOTE: Both drawImage methods allow for an optional fifth "invert" parameter. Setting this parameter to true
     // will flip all colors on the image, making black white and white black. This may be necessary when exporting
     // bitmaps from certain softwares. Forth parameter will dither the image. Photo taken by: Roberto Fernandez
-    if (!display.drawImage("https://i.pinimg.com/originals/fc/de/94/fcde946d572f8968cde14b688527021b.png", 0, 0, false, false))
+    if (!display.drawImage("https://www.learningcontainer.com/wp-content/uploads/2020/08/Sample-Webp-File-for-Testing.png", 0, 0, true, false))
     {
         // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
         // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!

@@ -216,14 +216,8 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
     if (!buff)
         return 0;
 
-    Serial.print("Ret: ");
-    Serial.println(ret);
-
     if (pngle_feed(pngle, buff, defaultLen) < 0)
         ret = 0;
-
-    Serial.print("Ret: ");
-    Serial.println(ret);
 
     pngle_destroy(pngle);
     free(buff);
