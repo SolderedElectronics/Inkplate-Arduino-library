@@ -41,12 +41,12 @@ String txt;
 
 void setup()
 {
-    display.begin();                    // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay();             // Clear frame buffer of display
-    display.display();                  // Put clear image on display
-    display.setTextSize(3);             // Scale text to be two times bigger then original (5x7 px)
-    display.setTextColor(BLACK, WHITE); // Set text color to black and background color to white
-    display.setTextWrap(true);          // If text does not fit on screen, send it to new line
+    display.begin();                        // Init Inkplate library (you should call this function ONLY ONCE)
+    display.clearDisplay();                 // Clear frame buffer of display
+    display.display();                      // Put clear image on display
+    display.setTextSize(2);                 // Scale text to be two times bigger then original (5x7 px)
+    display.setTextColor(INKPLATE_BLACK);   // Set text color to black and background color to white
+    display.setTextWrap(true);              // If text does not fit on screen, send it to new line
 
     WiFi.begin();            // Init. WiFi library
     WiFi.mode(WIFI_AP);      // Set WiFi to Access point mode
