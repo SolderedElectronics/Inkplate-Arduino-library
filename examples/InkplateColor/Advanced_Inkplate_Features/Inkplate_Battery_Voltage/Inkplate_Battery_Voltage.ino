@@ -44,8 +44,10 @@ void loop()
         display.readBattery(); // Read battery voltage (NOTE: Doe to ESP32 ADC accuracy, you should calibrate the ADC!)
 
     display.clearDisplay();                                  // Clear everything in frame buffer of e-paper display
-    display.drawImage(battSymbol, 100, 100, 106, 45, BLACK); // Draw battery symbol at position X=100 Y=100
+    display.drawBitmap(100, 100, battSymbol, battSymbol_w, battSymbol_h, INKPLATE_BLUE); // Draw battery symbol at position X=100 Y=100
     display.setCursor(210, 120);
+    display.setTextColor(INKPLATE_BLUE);
+    display.setTextSize(3);
     display.print(voltage, 2); // Print battery voltage
     display.print('V');
 
