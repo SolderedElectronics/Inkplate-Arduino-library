@@ -1,12 +1,12 @@
 /*
-   Inkplate_Peripheral_Mode sketch for e-radionica.com Inkplate 6
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_Peripheral_Mode sketch for e-radionica.com Inkplate COLOR
+   Select "Inkplate COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Using this sketch, you don't have to program and control e-paper using Arduino code.
    Instead, you can send UART command (explained in documentation that can be found inside folder of this sketch).
-   This give you flexibility that you can use this Inkplate 6 on any platform!
+   This give you flexibility that you can use this Inkplate COLOR on any platform!
 
    Because it uses UART, it's little bit slower and it's not recommended to send bunch of
    drawPixel command to draw some image. Instead, load bitmaps and pictures on SD card and load image from SD.
@@ -32,7 +32,7 @@
 #endif
 
 #include <Inkplate.h>
-Inkplate display(INKPLATE_1BIT);
+Inkplate display;
 
 #define BUFFER_SIZE 1000
 char commandBuffer[BUFFER_SIZE + 1];
@@ -254,27 +254,6 @@ void loop()
                     display.selectDisplayMode(INKPLATE_3BIT);
                 break;
 
-            case 'J':
-                sscanf(s + 3, "%c", &b);
-                if (b == '?')
-                {
-                    // if (0 == 0) {
-                    //  Serial.println("#J(0)*");
-                    //} else {
-                    //  Serial.println("#J(1)*");
-                    //}
-                    if (display.getDisplayMode() == INKPLATE_1BIT)
-                    {
-                        Serial.println("#J(0)*");
-                        Serial.flush();
-                    }
-                    if (display.getDisplayMode() == INKPLATE_3BIT)
-                    {
-                        Serial.println("#J(1)*");
-                        Serial.flush();
-                    }
-                }
-                break;
 
             case 'K':
                 sscanf(s + 3, "%c", &b);
@@ -343,9 +322,9 @@ void loop()
                 // if (c == 0) Serial.print("display.einkOff();\n");
                 // if (c == 1) Serial.print("display.einkOn();\n");
                 if (c == 0)
-                    display.einkOff();
+                    display.setPanelDeepSleep(c);
                 if (c == 1)
-                    display.einkOn();
+                    display.setPanelDeepSleep(c);
                 break;
 
             case 'R':
@@ -353,7 +332,7 @@ void loop()
                 if (b == '?')
                 {
                     Serial.print("#R(");
-                    Serial.print(display.getPanelState(), DEC);
+                    Serial.print(display.getPanelDeepSleepState(), DEC);
                     // Serial.print(1, DEC);
                     Serial.println(")*");
                     Serial.flush();
