@@ -29,21 +29,21 @@
 #error "Wrong board selection for this example, please select Inkplate color in the boards menu."
 #endif
 
-#include "Inkplate.h"            //Include Inkplate library to the sketch
-#include "WiFi.h"                //Include library for WiFi
-Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+#include "Inkplate.h"               //Include Inkplate library to the sketch
+#include "WiFi.h"                   //Include library for WiFi
+Inkplate display;                   // Create an object of Inkplate library
 
-const char *ssid = "";     // Your WiFi SSID
-const char *password = ""; // Your WiFi password
+const char *ssid = "e-radionica.com";       // Your WiFi SSID
+const char *password = "croduino";          // Your WiFi password
 
 void setup()
 {
+    Serial.begin(115200);
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
 
-    display.print("Connecting to WiFi...");
-    display.display();
+    Serial.print("Connecting to WiFi...");
 
     // Connect to the WiFi network.
     WiFi.mode(WIFI_MODE_STA);
@@ -51,11 +51,9 @@ void setup()
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
-        display.print(".");
-        display.display();
+        Serial.print(".");
     }
-    display.println("\nWiFi OK! Downloading...");
-    display.display();
+    Serial.println("\nWiFi OK! Downloading...");
 
     // Use a HTTP get request to fetch the graph from VariPass.
     // The API expects a few parameters in the URL to allow it to work.
@@ -66,10 +64,10 @@ void setup()
     //  height - Height of the generated graph, here set to half the Inkplate's height.
     //  eink   - Should be set to true to generate a BW 1 bit bitmap better suitable for Inkplate.
     // For more detailed explanation and more parameters, please visit the docs page: https://varipass.org/docs/
-    if (!display.drawBitmapFromWeb("https://api.varipass.org/?action=sgraph&id=kbg3eQfA&width=400&height=300&eink=true",
-                                   200, 150))
+    if (!display.drawBitmapFromWeb("https://api.varipass.org/?action=sgraph&id=kbg3eQfA&width=600&height=448&eink=true",
+                                   0, 0))
     {
-        display.println("Image open error");
+        Serial.println("Image open error");
         display.display();
     }
     display.display();
