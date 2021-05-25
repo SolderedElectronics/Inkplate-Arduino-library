@@ -1,8 +1,8 @@
 /*
-   Inkplate_WiFi_HTTP example for e-radionica.com Inkplate 6
-   For this example you will need USB cable, Inkplate 6 and stable WiFi Internet connection
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_WiFi_HTTP example for e-radionica.com Inkplate COLOR
+   For this example you will need USB cable, Inkplate COLOR and stable WiFi Internet connection
+   Select "Inkplate COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how to connect to WiFi network, get data from Internet and display that data on epaper.
@@ -36,12 +36,11 @@ void setup()
     display.display();                                // Put clear image on display
     display.setTextSize(2);                           // Set text scaling to two (text will be two times bigger)
     display.setCursor(0, 0);                          // Set print position
-    display.setTextColor(BLACK, WHITE);               // Set text color to black and background color to white
+    display.setTextColor(INKPLATE_BLACK);               // Set text color to black and background color to white
     display.println("Scanning for WiFi networks..."); // Write text
     display.display();                                // Send everything to display (refresh display)
 
-    int n = WiFi.scanNetworks(); // Start searching WiFi networks and put the nubmer of found WiFi networks in variable
-                                 // n
+    int n = WiFi.scanNetworks(); // Start searching WiFi networks and put the nubmer of found WiFi networks in variable n
     if (n == 0)
     { // If you did not find any network, show the message and stop the program.
         display.print("No WiFi networks found!");
@@ -60,7 +59,7 @@ void setup()
             display.print('\n');
             display.print(WiFi.RSSI(i), DEC);
         }
-        display.display(); //(Partial) refresh thescreen
+        display.display(); 
     }
 
     display.clearDisplay();          // Clear everything in frame buffer
