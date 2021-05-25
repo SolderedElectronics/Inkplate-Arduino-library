@@ -31,8 +31,7 @@
 
 #include "Inkplate.h" //Include Inkplate library to the sketch
 
-#define LED_PIN                                                                                                        \
-    15 // We are going to use pin GPB7 (remember! GPA0 = 0, GPA1 = 1, ..., GPA7 = 7, GPB0 = 8, GBP1 = 9, ..., GPB7 =
+#define LED_PIN MCP23017_PIN_B7 // We are going to use pin GPB7 (remember! GPA0 = 0, GPA1 = 1, ..., GPA7 = 7, GPB0 = 8, GBP1 = 9, ..., GPB7 =
        // 15)
 
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
