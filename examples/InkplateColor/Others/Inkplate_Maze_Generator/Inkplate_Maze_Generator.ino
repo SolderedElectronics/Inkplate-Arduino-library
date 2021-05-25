@@ -1,7 +1,7 @@
 /*
-   Inkplate_Maze_Generator sketch for e-radionica.com Inkplate 6
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_Maze_Generator sketch for e-radionica.com Inkplate COLOR
+   Select "Inkplate COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example renders a random maze every time!
@@ -24,7 +24,7 @@
 Inkplate display;
 
 // Here we define one cell size
-const int cellSize = 10;
+const int cellSize = 5;
 
 // Calculate screen width and height
 const int w = (E_INK_WIDTH - 10) / cellSize, h = (E_INK_HEIGHT - 10) / cellSize;
