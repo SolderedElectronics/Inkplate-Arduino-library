@@ -27,7 +27,7 @@
 // Initiate Inkplate object
 Inkplate display;
 
-byte touchPadPin = 10;
+byte touchPadPin = PAD1;
 
 // Store int in rtc data, to remain persistent during deep sleep
 RTC_DATA_ATTR int bootCount = 0;
@@ -70,6 +70,7 @@ void displayInfo()
     display.clearDisplay();
 
     // Set text cursor and size
+    display.setTextColor(INKPLATE_BLACK);
     display.setCursor(10, 280);
     display.setTextSize(2);
 
