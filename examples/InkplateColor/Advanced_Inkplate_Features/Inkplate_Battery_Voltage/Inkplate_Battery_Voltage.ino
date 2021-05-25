@@ -1,8 +1,8 @@
 /*
-   Inkplate_Battery_Voltage_And_Temperature example for e-radionica Inkplate 6
-   For this example you will need USB cable, Inkplate 6 and a Lithium battery (3.6V) with two pin JST connector.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_Battery_Voltage_And_Temperature example for e-radionica Inkplate COLOR
+   For this example you will need USB cable, Inkplate COLOR and a Lithium battery (3.6V) with two pin JST connector.
+   Select "Inkplate COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how to read voltage of the battery and read temperature from on-board
@@ -32,8 +32,6 @@ void setup()
 
     display.clearDisplay();             // Clear frame buffer of display
     display.display();                  // Put clear image on display
-    display.setTextSize(2);             // Scale text to be two times bigger then original (5x7 px)
-    display.setTextColor(BLACK, WHITE); // Set text color to black and background color to white
 }
 
 void loop()

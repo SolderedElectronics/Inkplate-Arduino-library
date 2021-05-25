@@ -1,10 +1,10 @@
 /*
-   Inkplate_easyC example for e-radionica.com Inkplate 6
-   For this example you will need a micro USB cable, Inkplate 6,
+   Inkplate_easyC example for e-radionica.com Inkplate COLOR
+   For this example you will need a micro USB cable, Inkplate COLOR,
    BME680 sensor with easyC connector on it: https://e-radionica.com/en/bme680-breakout-made-by-e-radionica.html
    and a easyC cable: https://e-radionica.com/en/easyc-cable-20cm.html
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Select "Inkplate COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can read temperature, humidity, air pressure and gas data from BME680.
@@ -28,17 +28,19 @@
 #include <Adafruit_Sensor.h> //Adafruit library for sensors
 
 Inkplate display; // Create an object on Inkplate library
-Adafruit_BME680
-    bme; // Create an object on Adafruit BME680 library
+Adafruit_BME680 bme; // Create an object on Adafruit BME680 library
          //(with no arguments sent to constructor, that means we are using I2C communication for BME680 sensor)
 
 int n = 0; // Variable that keep track on how many times screen has been partially updated
 void setup()
 {
+    Serial.begin(115200);
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
     display.setTextSize(2); // Set text scaling to two (text will be two times bigger than normal)
+    display.setTextColor(INKPLATE_BLACK);
+    display.setCursor(0, 0);
 
     if (!bme.begin(0x76))
     { // Init. BME680 library. e-radionica.com BME680 sensor board uses 0x76 I2C address for sensor
@@ -61,13 +63,15 @@ void loop()
 {
     if (!bme.performReading())
     { // If sending command to start reading data fails, send error message to display
-        display.clearDisplay();
         display.setCursor(0, 0);
-        display.print("Failed to read data from sensor");
+        display.clearDisplay();
+        display.println("Failed to read data from sensor");
         display.display();
     }
     else
-    {                           // Otherwise, clear frame buffer of epaper display
+    {                           
+        Serial.println("Reading started");
+                                // Otherwise, clear frame buffer of epaper display
         display.clearDisplay(); // Print out new data
         display.setCursor(0, 0);
         display.print("Air temperature: ");
@@ -86,17 +90,7 @@ void loop()
         display.print(bme.gas_resistance / 1000.0);
         display.println(" kOhms");
 
-        if (n > 20)
-        { // If display has been partially updated more than 20 times, do a full refresh, otherwise, perform a partial
-          // update.
-            display.display();
-            n = 0;
-        }
-        else
-        {
-            display.display();
-            n++;
-        }
+        display.display();
     }
-    delay(2000); // Wait a little bit between readings
+    delay(10000); // Wait a little bit between readings
 }
