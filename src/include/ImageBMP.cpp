@@ -206,7 +206,7 @@ bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool i
 {
     bool ret = 0;
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
-    uint8_t *buf = downloadFile(url, &defaultLen);
+    uint8_t *buf = NetworkClient::downloadFile(url, &defaultLen);
 
     ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
     free(buf);
@@ -235,7 +235,7 @@ bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool i
 bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither, bool invert)
 {
     bool ret = 0;
-    uint8_t *buf = downloadFile(s, len);
+    uint8_t *buf = NetworkClient::downloadFile(s, len);
 
     ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
     free(buf);
@@ -471,7 +471,7 @@ bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, 
 {
     bool ret = 0;
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
-    uint8_t *buf = downloadFile(url, &defaultLen);
+    uint8_t *buf = NetworkClient::downloadFile(url, &defaultLen);
 
     bitmapHeader bmpHeader;
     readBmpHeader(buf, &bmpHeader);

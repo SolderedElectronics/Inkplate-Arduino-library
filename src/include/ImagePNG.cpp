@@ -211,7 +211,7 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
     pngle_set_draw_callback(pngle, pngle_on_draw);
 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 100;
-    uint8_t *buff = downloadFile(url, &defaultLen);
+    uint8_t *buff = NetworkClient::downloadFile(url, &defaultLen);
 
     if (!buff)
         return 0;
@@ -264,7 +264,7 @@ bool Image::drawPngFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither
     _pngY = y;
     pngle_set_draw_callback(pngle, pngle_on_draw);
 
-    uint8_t *buff = downloadFile(s, len);
+    uint8_t *buff = NetworkClient::downloadFile(s, len);
 
     if (!buff)
         return 0;
@@ -307,7 +307,7 @@ bool Image::drawPngFromWebAtPosition(const char *url, const Position &position, 
     pngle_set_draw_callback(pngle, pngle_on_draw);
 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 100;
-    uint8_t *buff = downloadFile(url, &defaultLen);
+    uint8_t *buff = NetworkClient::downloadFile(url, &defaultLen);
 
     if (!buff)
         return 0;

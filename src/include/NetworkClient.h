@@ -41,15 +41,18 @@ struct bitmapHeader
 /**
  * @brief       NetworkClient class that holds standard functions for working with network
  */
-class NetworkClient
+class NetworkClient final
 {
   public:
-    bool joinAP(const char *ssid, const char *pass);
-    void disconnect();
-    bool isConnected();
+    NetworkClient() = delete;
+    ~NetworkClient() = delete;
 
-    uint8_t *downloadFile(const char *url, int32_t *defaultLen);
-    uint8_t *downloadFile(WiFiClient *url, int32_t len);
+    static bool joinAP(const char *ssid, const char *pass);
+    static void disconnect();
+    static bool isConnected();
+
+    static uint8_t *downloadFile(const char *url, int32_t *defaultLen);
+    static uint8_t *downloadFile(WiFiClient *url, int32_t len);
 
   private:
 };

@@ -31,7 +31,7 @@
 /**
  * @brief       Image basic class for work with images
  */
-class Image : virtual public NetworkClient, virtual public Adafruit_GFX
+class Image : virtual public Adafruit_GFX
 {
   public:
     typedef enum

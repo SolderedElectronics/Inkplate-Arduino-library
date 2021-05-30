@@ -122,7 +122,7 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
     bool ret = 0;
 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4;
-    uint8_t *buff = downloadFile(url, &defaultLen);
+    uint8_t *buff = NetworkClient::downloadFile(url, &defaultLen);
 
     ret = drawJpegFromBuffer(buff, defaultLen, x, y, dither, invert);
     free(buff);
@@ -149,7 +149,7 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position,
     bool ret = 0;
 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4;
-    uint8_t *buff = downloadFile(url, &defaultLen);
+    uint8_t *buff = NetworkClient::downloadFile(url, &defaultLen);
 
     uint16_t w = 0;
     uint16_t h = 0;
@@ -263,7 +263,7 @@ bool Image::drawJpegFromSdAtPosition(const char *fileName, const Position &posit
 bool Image::drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither, bool invert)
 {
     bool ret = 0;
-    uint8_t *buff = downloadFile(s, len);
+    uint8_t *buff = NetworkClient::downloadFile(s, len);
     ret = drawJpegFromBuffer(buff, len, x, y, dither, invert);
     free(buff);
 

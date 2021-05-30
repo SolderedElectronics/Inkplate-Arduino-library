@@ -22,9 +22,7 @@
 #include "Arduino.h"
 #include "SPI.h"
 
-#include "Esp.h"
 #include "Mcp.h"
-#include "NetworkClient.h"
 
 #ifdef ARDUINO_INKPLATE6PLUS
 #include "Frontlight.h"
@@ -36,13 +34,10 @@
 /**
  * @brief       System class for interaction with panel harware
  */
-class System : public Esp,
-               virtual public Mcp,
-               virtual public NetworkClient
+class System : virtual public Mcp
 #ifdef ARDUINO_INKPLATE6PLUS
-    ,
-               public Touch,
-               public Frontlight
+               , public Touch
+               , public Frontlight
 #endif
 {
   public:
