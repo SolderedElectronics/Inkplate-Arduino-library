@@ -28,7 +28,7 @@ Distributed as-is; no warranty is given.
 #include <ArduinoJson.h>
 
 // Static Json from ArduinoJson library
-StaticJsonDocument<32000> doc;
+StaticJsonDocument<40000> doc;
 
 void Network::begin(char *city)
 {
