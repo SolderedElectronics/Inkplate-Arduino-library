@@ -24,8 +24,8 @@
 #include <HTTPClient.h> //Include HTTP library to this sketch
 #include <WiFi.h>       //Include ESP32 WiFi library to our sketch
 
-#define ssid "" // Name of the WiFi network (SSID) that you want to connect Inkplate to
-#define pass "" // Password of that WiFi network
+#define ssid "e-radionica.com" // Name of the WiFi network (SSID) that you want to connect Inkplate to
+#define pass "croduino" // Password of that WiFi network
 
 Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
@@ -37,14 +37,12 @@ void setup()
     display.setTextSize(2);                           // Set text scaling to two (text will be two times bigger)
     display.setCursor(0, 0);                          // Set print position
     display.setTextColor(INKPLATE_BLACK);               // Set text color to black and background color to white
-    display.println("Scanning for WiFi networks..."); // Write text
-    display.display();                                // Send everything to display (refresh display)
+    Serial.println("Scanning for WiFi networks..."); // Write text
 
     int n = WiFi.scanNetworks(); // Start searching WiFi networks and put the nubmer of found WiFi networks in variable n
     if (n == 0)
     { // If you did not find any network, show the message and stop the program.
-        display.print("No WiFi networks found!");
-        display.display();
+        Serial.print("No WiFi networks found!");
         while (true)
             ;
     }
@@ -64,18 +62,16 @@ void setup()
 
     display.clearDisplay();          // Clear everything in frame buffer
     display.setCursor(0, 0);         // Set print cursor to new position
-    display.print("Connecting to "); // Print the name of WiFi network
-    display.print(ssid);
+    Serial.print("Connecting to "); // Print the name of WiFi network
+    Serial.print(ssid);
     WiFi.begin(ssid, pass); // Try to connect to WiFi network
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(1000); // While it is connecting to network, display dot every second, just to know that Inkplate is
                      // alive.
-        display.print('.');
-        display.display();
+        Serial.print('.');
     }
-    display.print("connected"); // If it's connected, notify user
-    display.display();
+    Serial.print("connected"); // If it's connected, notify user
 
     HTTPClient http;
     if (http.begin("http://example.com/index.html"))

@@ -26,8 +26,8 @@
 #include "WiFi.h"                //Include library for WiFi
 Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
-const char *ssid = "";     // Your WiFi SSID
-const char *password = ""; // Your WiFi password
+const char *ssid = "e-radionica.com";     // Your WiFi SSID
+const char *password = "croduino"; // Your WiFi password
 
 void setup()
 {
@@ -35,8 +35,7 @@ void setup()
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
 
-    display.print("Connecting to WiFi...");
-    display.display();
+    Serial.print("Connecting to WiFi...");
 
     // Connect to the WiFi network.
     WiFi.mode(WIFI_MODE_STA);
@@ -44,18 +43,16 @@ void setup()
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
-        display.print(".");
-        display.display();
+        Serial.print(".");
     }
-    display.println("\nWiFi OK! Downloading...");
-    display.display();
+    Serial.println("\nWiFi OK! Downloading...");
 
     // Draw the first image from web.
     // Monochromatic bitmap with 1 bit depth. Images like this load quickest.
     // NOTE: Both drawImage methods allow for an optional fifth "invert" parameter. Setting this parameter to true
     // will flip all colors on the image, making black white and white black. This may be necessary when exporting
     // bitmaps from certain softwares. Forth parameter will dither the image. Photo taken by: Roberto Fernandez
-    if (!display.drawImage("https://varipass.org/neowise_mono.bmp", 0, 0, false, true))
+    if (!display.drawImage("https://varipass.org/neowise_mono.bmp", 0, 0, false, false))
     {
         // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
         // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
@@ -87,21 +84,18 @@ void setup()
                 // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
                 // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no
                 // compression!
-                display.println("Image open error");
-                display.display();
+                Serial.println("Image open error");
             }
             display.display();
         }
         else
         {
-            display.println("Invalid response length");
-            display.display();
+            Serial.println("Invalid response length");
         }
     }
     else
     {
-        display.println("HTTP error");
-        display.display();
+        Serial.println("HTTP error");
     }
 
     display.clearDisplay();

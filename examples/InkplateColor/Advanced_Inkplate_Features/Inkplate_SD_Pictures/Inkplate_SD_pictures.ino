@@ -42,29 +42,26 @@ void setup()
     // Init SD card. Display if SD card is init propery or not.
     if (display.sdCardInit())
     {
-        display.println("SD Card OK! Reading image...");
-        display.display();
+        Serial.println("SD Card OK! Reading image...");
 
         // If card is properly init, try to load image and display it on e-paper at position X=0, Y=0
         // NOTE: Both drawImage methods allow for an optional fifth "invert" parameter. Setting this parameter
         // to true will flip all colors on the image, making black white and white black. This may be necessary when
         // exporting bitmaps from certain softwares.
-        if (!display.drawImage("image1.bmp", 0, 0, 1))
+        if (!display.drawImage("image1.bmp", 0, 0, 0))
         {
             // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
             // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no
             // compression! You can turn of dithering for somewhat faster image load by changing the last 1 to 0, or
             // removing the 1 argument completely
-            display.println("Image open error");
-            display.display();
+            Serial.println("Image open error");
         }
         display.display();
     }
     else
     {
         // If SD card init not success, display error on screen and stop the program (using infinite loop)
-        display.println("SD Card error!");
-        display.display();
+        Serial.println("SD Card error!");
         while (true)
             ;
     }
@@ -76,20 +73,6 @@ void setup()
         display.drawBitmapFromSd(&file, 0, 0);
         display.display();
     }
-
-    display.clearDisplay();
-    delay(3000);
-
-    // Now draw a JPEG
-    if (!display.drawImage("pyramid.jpg", 100, 0, true, false))
-    {
-        // If is something failed (wrong filename or wrong format), write error message on the screen.
-        // You can turn off dithering for somewhat faster image load by changing the fifth parameter to false, or
-        // removing the parameter completely
-        display.println("Image open error");
-        display.display();
-    }
-    display.display();
 }
 
 void loop()
