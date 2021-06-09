@@ -315,7 +315,7 @@ void Inkplate::setPanelDeepSleep(bool _state)
 }
 
 /**
- * @brief        getPanelDeepSleepState returns current state of the panel
+ * @brief       getPanelDeepSleepState returns current state of the panel
  * 
  * @return      bool _panelState
  */
@@ -324,6 +324,9 @@ bool Inkplate::getPanelDeepSleepState()
     return _panelState;
 }
 
+/**
+ * @brief       initMCPAtStart initiates MCP pins, and puts them in HIGH Z state except for pins that are used for other things
+ */
 void Inkplate::initMCPAtStart()
 {
     Wire.begin();
