@@ -419,9 +419,9 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             break;
         }
         case 32:
-            uint8_t r = pixelBuffer[j * 4];
+            uint8_t b = pixelBuffer[j * 4];
             uint8_t g = pixelBuffer[j * 4 + 1];
-            uint8_t b = pixelBuffer[j * 4 + 2];
+            uint8_t r = pixelBuffer[j * 4 + 2];
 
             uint8_t val;
 
@@ -434,7 +434,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             else
             {
 #ifdef ARDUINO_INKPLATECOLOR
-                val = findClosestPalette(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b));
+                val = findClosestPalette((r << 16) | (g << 8) | (b));
 #else
                 val = RGB3BIT(r, g, b);
 #endif
