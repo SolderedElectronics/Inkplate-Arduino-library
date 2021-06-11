@@ -20,9 +20,14 @@
 #ifdef ARDUINO_INKPLATECOLOR
 
 extern Image *_imagePtrJpeg;
-
+/*
 static uint32_t pallete[] = {
     0x000000ll, 0xFFFFFFll, 0x008000ll, 0x0000FFll, 0xFF0000ll, 0xFFFF00ll, 0xFFAA00ll,
+};
+*/
+
+static uint32_t pallete[] = {
+    0x000000, 0xFFFFFF, 0x438A1C, 0x6440FF, 0xBF0000, 0xFFF338, 0xE87E00, 0xC2A4F4
 };
 
 static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
@@ -43,6 +48,7 @@ uint8_t Image::findClosestPalette(uint32_t c)
         if (COLORDISTSQR(c, pallete[i]) < COLORDISTSQR(c, pallete[mi]))
             mi = i;
     }
+
     return mi;
 }
 

@@ -28,6 +28,7 @@ void setup()
 
     if (BMP_TEST)
     {
+        /*
         Serial.println("1 bit mono bmp.");
         display.drawImage("parrots_mono.bmp", 0, 0, dither, invert);
         display.display();
@@ -37,7 +38,7 @@ void setup()
         display.drawImage("parrots1_indexed.bmp", 0, 0, dither, invert);
         display.display();
         delay(delayTime);
-
+        */
         Serial.println("4 bit indexed bmp.");
         display.drawImage("parrots4_indexed.bmp", 0, 0, dither, invert);
         display.display();

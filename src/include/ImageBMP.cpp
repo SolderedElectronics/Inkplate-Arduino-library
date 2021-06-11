@@ -111,6 +111,7 @@ void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
             uint8_t g = (c & 0x00FF0000) >> 16;
             uint8_t b = (c & 0x0000FF00) >> 8;
 #ifdef ARDUINO_INKPLATECOLOR
+            c = c >> 8;
             palette[i >> 1] |= findClosestPalette(c) << (i & 1 ? 0 : 4);
             ditherPalette[i] = c;
 #else
