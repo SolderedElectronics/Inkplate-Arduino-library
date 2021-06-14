@@ -108,6 +108,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     void getPointsForPosition(const Position &position, const uint16_t imageWidth, const uint16_t imageHeight,
                               const uint16_t screenWidth, const uint16_t screenHeight, uint16_t *posX, uint16_t *posY);
+    uint8_t findClosestPalette(uint32_t c);
 
   private:
     virtual void startWrite(void) = 0;
@@ -136,7 +137,6 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     const unsigned char (*kernel)[_kernelWidth] = _kernel;
 
-    uint8_t findClosestPalette(uint32_t c);
 #else
     uint8_t ditherBuffer[2][E_INK_WIDTH + 20];
 #endif

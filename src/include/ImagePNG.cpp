@@ -62,7 +62,7 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
                 uint8_t g = rgba[1];
                 uint8_t b = rgba[2];
 
-#ifdef ARDUINO_INKPLATE_COLOR
+#ifdef ARDUINO_INKPLATECOLOR
                 if (_pngInvert)
                 {
                     r = 255 - r;
