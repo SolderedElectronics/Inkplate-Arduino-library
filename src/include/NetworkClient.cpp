@@ -35,16 +35,19 @@ bool NetworkClient::joinAP(const char *ssid, const char *pass)
     WiFi.begin(ssid, pass);
 
     delay(3000);
-
+    Serial.print("Connecting to wifi.");
     int cnt = 0;
     while (!isConnected())
     {
         if (cnt > 20)
+            Serial.println();
             return 0;
         delay(1000);
         ++cnt;
+        Serial.print(".");
     }
 
+    Serial.println();
     return 1;
 }
 
