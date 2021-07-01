@@ -39,12 +39,12 @@ bool NetworkClient::joinAP(const char *ssid, const char *pass)
     int cnt = 0;
     while (!isConnected())
     {
+        Serial.print(".");
         if (cnt > 20)
             Serial.println();
             return 0;
         delay(1000);
         ++cnt;
-        Serial.print(".");
     }
 
     Serial.println();
