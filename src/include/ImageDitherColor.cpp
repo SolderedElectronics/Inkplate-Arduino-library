@@ -27,8 +27,7 @@ static uint32_t pallete[] = {
 */
 
 static uint32_t pallete[] = {
-    0x000000, 0xFFFFFF, 0x438A1C, 0x6440FF, 0xBF0000, 0xFFF338, 0xE87E00, 0xC2A4F4
-};
+    0x000000, 0xFFFFFF, 0x438A1C, 0x6440FF, 0xBF0000, 0xFFF338, 0xE87E00, 0xC2A4F4};
 
 static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
 
@@ -73,13 +72,13 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
     if (paletted)
         px = ditherPalette[px];
 
-    int16_t r = RED8(px) + ditherBuffer[0][j % kernelHeight][i];
-    int16_t g = GREEN8(px) + ditherBuffer[1][j % kernelHeight][i];
-    int16_t b = BLUE8(px) + ditherBuffer[2][j % kernelHeight][i];
+    int16_t r = RED8(px) + ditherBuffer[0][j % 15][i];
+    int16_t g = GREEN8(px) + ditherBuffer[1][j % 15][i];
+    int16_t b = BLUE8(px) + ditherBuffer[2][j % 15][i];
 
-    ditherBuffer[0][j % kernelHeight][i] = 0;
-    ditherBuffer[1][j % kernelHeight][i] = 0;
-    ditherBuffer[2][j % kernelHeight][i] = 0;
+    ditherBuffer[0][j % 15][i] = 0;
+    ditherBuffer[1][j % 15][i] = 0;
+    ditherBuffer[2][j % 15][i] = 0;
 
     r = max((int16_t)0, min((int16_t)255, r));
     g = max((int16_t)0, min((int16_t)255, g));
@@ -97,9 +96,9 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
         {
             if (!(0 <= i + l && i + l < w))
                 continue;
-            ditherBuffer[0][(j + k) % kernelHeight][i + l] += (kernel[k][l] * rErr) / coef;
-            ditherBuffer[1][(j + k) % kernelHeight][i + l] += (kernel[k][l] * gErr) / coef;
-            ditherBuffer[2][(j + k) % kernelHeight][i + l] += (kernel[k][l] * bErr) / coef;
+            ditherBuffer[0][(j + k) % 15][i + l] += (kernel[k][l + kernelX] * rErr) / coef;
+            ditherBuffer[1][(j + k) % 15][i + l] += (kernel[k][l + kernelX] * gErr) / coef;
+            ditherBuffer[2][(j + k) % 15][i + l] += (kernel[k][l + kernelX] * bErr) / coef;
         }
     }
 
@@ -136,6 +135,5 @@ void Image::ditherSwapBlockJpeg(int x)
 {
     // Not used
 }
-
 
 #endif

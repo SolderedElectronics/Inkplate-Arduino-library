@@ -14,7 +14,7 @@ SdFile file;
 #define JPG_TEST 1
 
 int invert = 0;
-int dither = 0;
+int dither = 1;
 int delayTime = 2000;
 
 void setup()
@@ -79,8 +79,8 @@ void setup()
         display.display();
         delay(delayTime);
     }
-    
-    if(PNG_TEST)
+
+    if (PNG_TEST)
     {
         Serial.println("mono png.");
         display.drawImage("parrots_mono.png", 0, 0, dither, invert);
@@ -111,14 +111,14 @@ void setup()
         display.drawImage("parrots48_RGB.png", 0, 0, dither, invert);
         display.display();
         delay(delayTime);
-    
+
         Serial.println("64 RGBA png.");
         display.drawImage("parrots64_RGBA.png", 0, 0, dither, invert);
         display.display();
         delay(delayTime);
     }
 
-    if(JPG_TEST)
+    if (JPG_TEST)
     {
         Serial.println("grayscale jpg.");
         display.drawImage("parrots_grayscale.jpg", 0, 0, dither, invert);

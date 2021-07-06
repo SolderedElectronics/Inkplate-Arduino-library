@@ -36,7 +36,7 @@ extern SdFat sd;
  */
 class Inkplate : public System, public Graphics
 {
-  public:
+public:
 #ifdef ARDUINO_INKPLATECOLOR
     Inkplate();
 #else
@@ -83,7 +83,7 @@ class Inkplate : public System, public Graphics
         return Graphics::getRotation();
     };
 
-  private:
+private:
     void precalculateGamma(uint8_t *c, float gamma);
 
 #ifdef ARDUINO_INKPLATECOLOR

@@ -431,13 +431,13 @@ void loop()
     // Let's start by drawing a pixel at x = 100 and y = 50 location
     display.clearDisplay(); // Clear everytning that is inside frame buffer in ESP32
     displayCurrentAction(
-        "Drawing a pixel"); // Function which writes small text at bottom left indicating what's currently done
-                            // NOTE: you do not need displayCurrentAction function to use Inkplate!
+        "Drawing a pixel");            // Function which writes small text at bottom left indicating what's currently done
+                                       // NOTE: you do not need displayCurrentAction function to use Inkplate!
     display.drawPixel(100, 50, BLACK); // Draw one black pixel at X = 100, Y = 50 position in BLACK color (must be black
                                        // since Inkplate is in BW mode)
-    display.display(); // Send image to display. You need to call this one each time you want to transfer frame buffer
-                       // to the screen.
-    delay(DELAY_MS);   // Wait a little bit
+    display.display();                 // Send image to display. You need to call this one each time you want to transfer frame buffer
+                                       // to the screen.
+    delay(DELAY_MS);                   // Wait a little bit
 
     // Now, let's draw some random pixels!
     display.clearDisplay(); // Clear everything that is inside frame buffer in ESP32
@@ -453,7 +453,7 @@ void loop()
     display.clearDisplay();
     display.drawLine(
         0, 0, 799, 599,
-        BLACK); // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already familiar
+        BLACK);                              // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already familiar
     display.drawLine(799, 0, 0, 599, BLACK); // with those. Arguments are: start X, start Y, ending X, ending Y, color.
     displayCurrentAction("Drawing two diagonal lines");
     display.display();
@@ -638,7 +638,7 @@ void loop()
     for (int i = 0; i < 6; i++)
     {
         display.setTextSize(i +
-                            1); // textSize parameter starts at 0 and goes up to 10 (larger won't fit Inkplate 6 screen)
+                            1);              // textSize parameter starts at 0 and goes up to 10 (larger won't fit Inkplate 6 screen)
         display.setCursor(200, (i * i * 8)); // setCursor works as same as on LCD displays - sets "the cursor" at the
                                              // place you want to write someting next
         display.print("INKPLATE 6!");        // The actual text you want to show on e-paper as String

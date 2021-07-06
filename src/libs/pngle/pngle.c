@@ -42,8 +42,8 @@
 #endif
 
 #define PNGLE_ERROR(s) (pngle->error = (s), pngle->state = PNGLE_STATE_ERROR, -1)
-#define PNGLE_CALLOC(a, b, name)                                                                                       \
-    (debug_printf("[pngle] Allocating %zu bytes for %s\n", (size_t)(a) * (size_t)(b), (name)),                         \
+#define PNGLE_CALLOC(a, b, name)                                                               \
+    (debug_printf("[pngle] Allocating %zu bytes for %s\n", (size_t)(a) * (size_t)(b), (name)), \
      calloc((size_t)(a), (size_t)(b)))
 
 #define PNGLE_UNUSED(x) (void)(x)
@@ -132,7 +132,6 @@ static uint32_t interlace_off_y[8] = {0, 0, 0, 4, 0, 2, 0, 1};
 static uint32_t interlace_div_x[8] = {1, 8, 8, 4, 4, 2, 2, 1};
 static uint32_t interlace_div_y[8] = {1, 8, 8, 8, 4, 4, 2, 2};
 
-
 static inline uint8_t read_uint8(const uint8_t *p)
 {
     return *p;
@@ -152,7 +151,6 @@ static inline uint32_t U32_CLAMP_ADD(uint32_t a, uint32_t b, uint32_t top)
         return top; // clamp
     return v;
 }
-
 
 void pngle_reset(pngle_t *pngle)
 {
@@ -240,7 +238,6 @@ pngle_ihdr_t *pngle_get_ihdr(pngle_t *pngle)
         return NULL;
     return &pngle->hdr;
 }
-
 
 static int is_trans_color(pngle_t *pngle, uint16_t *value, size_t n)
 {
@@ -341,13 +338,15 @@ static int pngle_draw_pixels(pngle_t *pngle, size_t scanline_ringbuf_xidx)
             else
             {
                 // true color: 2, and 6
-                v[3] = (pngle->hdr.color_type & 4) ? v[3] : is_trans_color(pngle, v, 3) ? 0 : maxval;
+                v[3] = (pngle->hdr.color_type & 4) ? v[3] : is_trans_color(pngle, v, 3) ? 0
+                                                                                        : maxval;
             }
         }
         else
         {
             // alpha, tRNS, or opaque
-            v[3] = (pngle->hdr.color_type & 4) ? v[1] : is_trans_color(pngle, v, 1) ? 0 : maxval;
+            v[3] = (pngle->hdr.color_type & 4) ? v[1] : is_trans_color(pngle, v, 1) ? 0
+                                                                                    : maxval;
 
             // monochrome
             v[1] = v[2] = v[0];
@@ -452,7 +451,6 @@ static int setup_gamma_table(pngle_t *pngle, uint32_t png_gamma)
     return 0;
 }
 
-
 static int pngle_on_data(pngle_t *pngle, const uint8_t *p, int len)
 {
     const uint8_t *ep = p + len;
@@ -552,7 +550,6 @@ static int pngle_on_data(pngle_t *pngle, const uint8_t *p, int len)
     return len;
 }
 
-
 static int pngle_handle_chunk(pngle_t *pngle, const uint8_t *buf, size_t len)
 {
     size_t consume = 0;
@@ -574,7 +571,6 @@ static int pngle_handle_chunk(pngle_t *pngle, const uint8_t *buf, size_t len)
         pngle->hdr.compression = read_uint8(buf + 10);
         pngle->hdr.filter = read_uint8(buf + 11);
         pngle->hdr.interlace = read_uint8(buf + 12);
-
 
         debug_printf("[pngle]     width      : %d\n", pngle->hdr.width);
         debug_printf("[pngle]     height     : %d\n", pngle->hdr.height);

@@ -30,8 +30,8 @@ void setup()
     Serial.begin(115200);
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
 
-    display.clearDisplay();             // Clear frame buffer of display
-    display.display();                  // Put clear image on display
+    display.clearDisplay(); // Clear frame buffer of display
+    display.display();      // Put clear image on display
 }
 
 void loop()
@@ -41,7 +41,7 @@ void loop()
     voltage =
         display.readBattery(); // Read battery voltage (NOTE: Doe to ESP32 ADC accuracy, you should calibrate the ADC!)
 
-    display.clearDisplay();                                  // Clear everything in frame buffer of e-paper display
+    display.clearDisplay();                                                              // Clear everything in frame buffer of e-paper display
     display.drawBitmap(100, 100, battSymbol, battSymbol_w, battSymbol_h, INKPLATE_BLUE); // Draw battery symbol at position X=100 Y=100
     display.setCursor(210, 120);
     display.setTextColor(INKPLATE_BLUE);
