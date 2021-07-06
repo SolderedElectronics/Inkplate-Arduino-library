@@ -42,7 +42,7 @@ bool NetworkClient::joinAP(const char *ssid, const char *pass)
         Serial.print(".");
         if (cnt > 20)
             Serial.println();
-            return 0;
+        return 0;
         delay(1000);
         ++cnt;
     }
@@ -111,21 +111,20 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
         uint8_t buff[512] = {0};
 
         WiFiClient *stream = http.getStreamPtr();
-        int32_t zeroCount = 0;
         while (http.connected() && (len > 0 || len == -1))
         {
             size_t size = stream->available();
 
             if (size)
             {
-                zeroCount = 0;
                 int c = stream->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
                 memcpy(buffPtr, buff, c);
 
                 if (len > 0)
                     len -= c;
                 buffPtr += c;
-            } else if(len == -1)
+            }
+            else if (len == -1)
             {
                 len = 0;
             }

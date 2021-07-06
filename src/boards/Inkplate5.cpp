@@ -16,7 +16,6 @@
  * @authors     @ e-radionica.com
  ***************************************************/
 
-
 #include "../Inkplate.h"
 #include "../include/Graphics.h"
 #include "../include/defines.h"
@@ -171,7 +170,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         int x = x0 / 8;
         int x_sub = x0 % 8;
         uint8_t temp = *(_partial + (E_INK_WIDTH / 8 * y0) + x);
-        *(_partial + (E_INK_WIDTH / 8 * y0) + x) = ~pixelMaskLUT[x_sub] & temp | (color ? pixelMaskLUT[x_sub] : 0);
+        *(_partial + (E_INK_WIDTH / 8 * y0) + x) = (~pixelMaskLUT[x_sub] & temp) | (color ? pixelMaskLUT[x_sub] : 0);
     }
     else
     {
@@ -267,12 +266,11 @@ void Inkplate::display1b()
     vscan_start();
     einkOff();
     _blockPartial = 0;
-
 }
 
 /**
  * @brief       display3b function writes grayscale data to display
- */ 
+ */
 void IRAM_ATTR Inkplate::display3b()
 {
     einkOn();

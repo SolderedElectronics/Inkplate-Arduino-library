@@ -15,12 +15,10 @@
  * @authors     e-radionica.com
  ***************************************************/
 
-
 #ifndef __IMAGE_DITHER_COLOR_KERNELS
 #define __IMAGE_DITHER_COLOR_KERNELS
 
 // If you want to experiment with different color dither kernels, uncomment the one you want below
-
 
 // Floyd Steinberg
 const int _coef = 16;
@@ -29,7 +27,6 @@ const unsigned char _kernel[3][4] = {
     {0, 0, 7},
     {3, 5, 1},
 };
-
 
 /*
 //J F Jarvis, C N Judice, and W H Ninke "Minimized Average Error"

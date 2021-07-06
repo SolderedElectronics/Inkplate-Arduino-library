@@ -117,6 +117,7 @@ bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, ui
 {
 #ifdef ARDUINO_INKPLATECOLOR
     drawBitmap3Bit(x, y, buf, w, h);
+    return 1;
 #else
     if (getDisplayMode() == INKPLATE_1BIT && bg == 0xFF)
         drawBitmap(x, y, buf, w, h, c);

@@ -109,7 +109,6 @@ void Inkplate::einkOff()
     setPanelState(0);
 }
 
-
 /**
  * @brief       einkOn turns on supply for epaper display (TPS65186) [+15 VDC, -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
  * 

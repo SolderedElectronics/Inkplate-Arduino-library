@@ -62,6 +62,11 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
                 uint8_t g = rgba[1];
                 uint8_t b = rgba[2];
 
+                pngle_ihdr_t *ihdr = pngle_get_ihdr(pngle);
+
+                if (ihdr->depth == 1)
+                    r = g = b = (b ? 0xFF : 0);
+
 #ifdef ARDUINO_INKPLATECOLOR
                 if (_pngInvert)
                 {
@@ -76,15 +81,17 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
 #endif
 
                 if (_pngDither)
+                {
 #ifdef ARDUINO_INKPLATECOLOR
-                    px = _imagePtrPng->ditherGetPixelBmp(RGB8BIT(r, g, b), x + i, y + j, _imagePtrPng->width(), 0);
+                    px = _imagePtrPng->ditherGetPixelBmp((r << 16) | (g << 8) | (b), x + i, y + j, _imagePtrPng->width(), 0);
 #else
                     px = _imagePtrPng->ditherGetPixelBmp(RGB8BIT(r, g, b), x + i, y + j, _imagePtrPng->width(), 0);
-                if (_pngInvert)
-                    px = 7 - px;
-                if (_imagePtrPng->getDisplayMode() == INKPLATE_1BIT)
-                    px = (~px >> 2) & 1;
+                    if (_pngInvert)
+                        px = 7 - px;
+                    if (_imagePtrPng->getDisplayMode() == INKPLATE_1BIT)
+                        px = (~px >> 2) & 1;
 #endif
+                }
                 _imagePtrPng->drawPixel(_pngX + x + i, _pngY + y + j, px);
             }
     if (lastY != y)

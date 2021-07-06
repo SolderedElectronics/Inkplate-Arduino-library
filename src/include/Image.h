@@ -18,8 +18,6 @@
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
 
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-
 #include "../libs/Adafruit-GFX-Library/Adafruit_GFX.h"
 #include "../libs/SdFat/SdFat.h"
 #include "Arduino.h"
@@ -33,7 +31,7 @@
  */
 class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 {
-  public:
+public:
     typedef enum
     {
         BMP,
@@ -110,7 +108,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
                               const uint16_t screenWidth, const uint16_t screenHeight, uint16_t *posX, uint16_t *posY);
     uint8_t findClosestPalette(uint32_t c);
 
-  private:
+private:
     virtual void startWrite(void) = 0;
     virtual void writePixel(int16_t x, int16_t y, uint16_t color) = 0;
     virtual void writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) = 0;
@@ -123,7 +121,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     uint8_t pixelBuffer[E_INK_WIDTH * 4 + 5];
 #ifdef ARDUINO_INKPLATECOLOR
-    int8_t ditherBuffer[3][MAX(_kernelHeight, 16)][E_INK_WIDTH + 20];
+    int8_t ditherBuffer[3][16][E_INK_WIDTH + 20];
 
     int8_t (*ditherBuffer_r)[E_INK_WIDTH + 20] = ditherBuffer[0];
     int8_t (*ditherBuffer_g)[E_INK_WIDTH + 20] = ditherBuffer[1];

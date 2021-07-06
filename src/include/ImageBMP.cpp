@@ -107,14 +107,15 @@ void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
         {
             uint32_t c = READ32(paletteRGB + (i << 2));
 
-            uint8_t r = (c & 0xFF000000) >> 24;
-            uint8_t g = (c & 0x00FF0000) >> 16;
-            uint8_t b = (c & 0x0000FF00) >> 8;
 #ifdef ARDUINO_INKPLATECOLOR
             c = c >> 8;
             palette[i >> 1] |= findClosestPalette(c) << (i & 1 ? 0 : 4);
             ditherPalette[i] = c;
 #else
+            uint8_t r = (c & 0xFF000000) >> 24;
+            uint8_t g = (c & 0x00FF0000) >> 16;
+            uint8_t b = (c & 0x0000FF00) >> 8;
+
             palette[i >> 1] |= RGB3BIT(r, g, b) << (i & 1 ? 0 : 4);
             ditherPalette[i] = RGB8BIT(r, g, b);
 #endif
@@ -315,7 +316,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 #endif
             break;
         // as for 2 bit, literally cannot find an example online or in PS, so skipped
-        case 4: {
+        case 4:
+        {
             uint8_t px = pixelBuffer[j >> 1] & (j & 1 ? 0x0F : 0xF0) >> (j & 1 ? 0 : 4);
             uint8_t val;
 
@@ -335,7 +337,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, val);
             break;
         }
-        case 8: {
+        case 8:
+        {
             uint8_t px = pixelBuffer[j];
             uint8_t val;
 
@@ -355,7 +358,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, val);
             break;
         }
-        case 16: {
+        case 16:
+        {
             uint16_t px = ((uint16_t)pixelBuffer[(j << 1) | 1] << 8) | pixelBuffer[(j << 1)];
 
             uint8_t r = (px & 0x7C00) >> 7;
@@ -388,7 +392,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, val);
             break;
         }
-        case 24: {
+        case 24:
+        {
             uint32_t b = pixelBuffer[j * 3];
             uint32_t g = pixelBuffer[j * 3 + 1];
             uint32_t r = pixelBuffer[j * 3 + 2];
