@@ -161,7 +161,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
 {
     if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
         return;
-    if (_color > 6 || _color < 0)
+    if (_color > 6)
         return;
 
     switch (rotation)
@@ -184,7 +184,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
     int _x_sub = x0 % 2;
     uint8_t temp;
     temp = *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + _x);
-    *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + _x) = pixelMaskGLUT[_x_sub] & temp | (_x_sub ? _color : _color << 4);
+    *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + _x) = (pixelMaskGLUT[_x_sub] & temp) | (_x_sub ? _color : _color << 4);
 }
 
 /**
@@ -295,8 +295,8 @@ void Inkplate::sendData(uint8_t _data)
  */
 void Inkplate::setPanelDeepSleep(bool _state)
 {
-    _panelState = _state==0?false:true;
-    
+    _panelState = _state == 0 ? false : true;
+
     if (_panelState)
     {
         // Send commands to power up panel. According to the datasheet, it can be powered up from deep sleep only by reseting it and doing reinit.
@@ -332,7 +332,7 @@ void Inkplate::setMCPForLowPower()
     Wire.begin();
     memset(mcpRegsInt, 0, 22);
     mcpBegin(MCP23017_INT_ADDR, mcpRegsInt);
-    
+
     // TOUCHPAD PINS
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B2, INPUT);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B3, INPUT);
@@ -340,7 +340,6 @@ void Inkplate::setMCPForLowPower()
 
     // Battery voltage Switch MOSFET
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B1, OUTPUT);
-
 
     //Rest of pins go to OUTPUT LOW state because in deepSleep mode they are using least amount of power
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A0, OUTPUT);
@@ -368,6 +367,5 @@ void Inkplate::setMCPForLowPower()
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B5, LOW);
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B6, LOW);
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B7, LOW);
-
 }
 #endif

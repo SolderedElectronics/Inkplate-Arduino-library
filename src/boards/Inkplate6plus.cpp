@@ -61,7 +61,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         int x = x0 / 8;
         int x_sub = x0 % 8;
         uint8_t temp = *(_partial + (E_INK_WIDTH / 8 * y0) + x); // DMemoryNew[99 * y0 + x];
-        *(_partial + (E_INK_WIDTH / 8 * y0) + x) = ~pixelMaskLUT[x_sub] & temp | (color ? pixelMaskLUT[x_sub] : 0);
+        *(_partial + (E_INK_WIDTH / 8 * y0) + x) = (~pixelMaskLUT[x_sub] & temp) | (color ? pixelMaskLUT[x_sub] : 0);
     }
     else
     {
@@ -70,7 +70,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         int x_sub = x0 % 2;
         uint8_t temp;
         temp = *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + x);
-        *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + x) = pixelMaskGLUT[x_sub] & temp | (x_sub ? color : color << 4);
+        *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
     }
 }
 
@@ -219,6 +219,10 @@ void Inkplate::clean(uint8_t c, uint8_t rep)
     {
         data = B11111111; // Skip
     }
+    else
+    {
+        data = 0;
+    }
 
     uint32_t _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) |
                      (((data & B11100000) >> 5) << 25);
@@ -331,12 +335,11 @@ void Inkplate::display1b()
     vscan_start();
     einkOff();
     _blockPartial = 0;
-
 }
 
 /**
  * @brief       display3b function writes grayscale data to display
- */ 
+ */
 void Inkplate::display3b()
 {
     einkOn();
@@ -350,13 +353,6 @@ void Inkplate::display3b()
     for (int k = 0; k < 9; k++)
     {
         uint8_t *dp = DMemory4Bit + (E_INK_HEIGHT * E_INK_WIDTH / 2);
-        uint32_t _send;
-        uint8_t pix1;
-        uint8_t pix2;
-        uint8_t pix3;
-        uint8_t pix4;
-        uint8_t pixel;
-        uint8_t pixel2;
 
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; i++)
@@ -365,7 +361,7 @@ void Inkplate::display3b()
             t |= GLUT[k * 256 + (*(--dp))];
             hscan_start(t);
             t = GLUT2[k * 256 + (*(--dp))];
-            t|=GLUT[k * 256 + (*(--dp))];
+            t |= GLUT[k * 256 + (*(--dp))];
             GPIO.out_w1ts = t | CL;
             GPIO.out_w1tc = DATA | CL;
 
@@ -414,7 +410,6 @@ void Inkplate::partialUpdate(bool _forced)
     uint8_t data;
     uint8_t diffw, diffb;
     uint32_t n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
-    uint8_t dram;
 
     for (int i = 0; i < E_INK_HEIGHT; i++)
     {
@@ -447,7 +442,7 @@ void Inkplate::partialUpdate(bool _forced)
                 GPIO.out_w1tc = DATA | CL;
                 n--;
             }
-            GPIO.out_w1ts =  CL;
+            GPIO.out_w1ts = CL;
             GPIO.out_w1tc = DATA | CL;
             vscan_end();
         }
