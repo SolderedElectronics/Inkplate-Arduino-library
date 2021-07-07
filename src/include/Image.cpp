@@ -123,7 +123,7 @@ bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, ui
         drawBitmap(x, y, buf, w, h, c);
     else if (getDisplayMode() == INKPLATE_1BIT && bg != 0xFF)
         drawBitmap(x, y, buf, w, h, c, bg);
-    else if (getDisplayMode() == INKPLATE_3BIT)
+    else
         drawBitmap3Bit(x, y, buf, w, h);
     return 1;
 #endif
@@ -266,11 +266,11 @@ void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int1
         for (j = 0; j < xSize - 1; j++)
         {
             writePixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4) >> 1);
-            writePixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
+            writePixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0x0f) >> 1);
         }
         writePixel((j * 2) + _x, i + _y, (*(_p + xSize * (i) + j) >> 4) >> 1);
         if (_rem == 0)
-            writePixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0xff) >> 1);
+            writePixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0x0f) >> 1);
     }
     endWrite();
 }
