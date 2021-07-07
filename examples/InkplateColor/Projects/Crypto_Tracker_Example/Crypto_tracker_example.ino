@@ -30,8 +30,8 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char *ssid = "";
-char *pass = "";
+char *ssid = "e-radionica.com";
+char *pass = "croduino";
 
 // OPTIONAL:
 // change to a different currency
@@ -50,9 +50,8 @@ char *currencyAbbr = "BTC";
 #include "Inkplate.h"
 
 // Include fonts used
-#include "Fonts/Roboto_Light_160.h"
-#include "Fonts/Roboto_Light_36.h"
-#include "Fonts/Roboto_Light_40.h"
+#include "Fonts/Roboto_Light_100.h"
+#include "Fonts/Roboto_Light_20.h"
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
@@ -64,13 +63,7 @@ Network network;
 Inkplate display;
 
 // Delay between API calls in miliseconds
-#define DELAY_MS 5000
-
-// Variable for counting partial refreshes
-long refreshes = 0;
-
-// Constant to determine when to full update
-const int fullRefresh = 20;
+#define DELAY_MS 30 * 60 * 1000
 
 // Used for storing raw price values
 double data[64];
@@ -114,18 +107,26 @@ char *months[] = {
 
 // Out UI elements data
 textElement elements[] = {
-    {50, 130, &Roboto_Light_160, currencyAbbr, 0}, {390, 80, &Roboto_Light_40, date, 0},
-    {190, 185, &Roboto_Light_40, fromToDate, 0},   {570, 140, &Roboto_Light_40, "Current price:", 0},
-    {790, 190, &Roboto_Light_40, current, 1},      {630, 275, &Roboto_Light_40, "Minimum:", 0},
-    {790, 320, &Roboto_Light_40, minimum, 1},      {625, 420, &Roboto_Light_40, "Maximum:", 0},
-    {790, 466, &Roboto_Light_40, maximum, 1},
+    {50 / 1.4, 130 / 1.4, &Roboto_Light_100, currencyAbbr, 0},
+    {390 / 1.4, 80 / 1.4, &Roboto_Light_20, date, 0},
+    {190 / 1.4, 185 / 1.4, &Roboto_Light_20, fromToDate, 0},
+    {570 / 1.4, 140 / 1.4, &Roboto_Light_20, "Current price:", 0},
+    {790 / 1.4, 190 / 1.4, &Roboto_Light_20, current, 1},
+    {630 / 1.4, 275 / 1.4, &Roboto_Light_20, "Minimum:", 0},
+    {790 / 1.4, 320 / 1.4, &Roboto_Light_20, minimum, 1},
+    {625 / 1.4, 420 / 1.4, &Roboto_Light_20, "Maximum:", 0},
+    {790 / 1.4, 466 / 1.4, &Roboto_Light_20, maximum, 1},
 
-    {18, 570, &Roboto_Light_36, dates, 0},         {122, 570, &Roboto_Light_36, dates + 8, 0},
-    {227, 570, &Roboto_Light_36, dates + 16, 0},   {342, 570, &Roboto_Light_36, dates + 24, 0},
-    {466, 570, &Roboto_Light_36, dates + 32, 0},
+    {18 / 1.4, 570 / 1.4, &Roboto_Light_20, dates, 0},
+    {122 / 1.4, 570 / 1.4, &Roboto_Light_20, dates + 8, 0},
+    {227 / 1.4, 570 / 1.4, &Roboto_Light_20, dates + 16, 0},
+    {342 / 1.4, 570 / 1.4, &Roboto_Light_20, dates + 24, 0},
+    {466 / 1.4, 570 / 1.4, &Roboto_Light_20, dates + 32, 0},
 
-    {450, 240, &Roboto_Light_36, prices, 0},       {450, 322, &Roboto_Light_36, prices + 16, 0},
-    {450, 401, &Roboto_Light_36, prices + 32, 0},  {450, 483, &Roboto_Light_36, prices + 48, 0},
+    {450 / 1.4, 240 / 1.4, &Roboto_Light_20, prices, 0},
+    {450 / 1.4, 322 / 1.4, &Roboto_Light_20, prices + 16, 0},
+    {450 / 1.4, 401 / 1.4, &Roboto_Light_20, prices + 32, 0},
+    {450 / 1.4, 483 / 1.4, &Roboto_Light_20, prices + 48, 0},
 };
 
 // Our functions declared below setup and loop
@@ -145,10 +146,10 @@ void setup()
     display.setTextColor(0, 7);
 
     // Welcome screen
-    display.setCursor(70, 230);
+    display.setCursor(30, 230);
     display.setTextSize(2);
-    display.println(F("Welcome to Inkplate 6 cryptocurrency tracker example!"));
-    display.setCursor(70, 250);
+    display.println(F("Welcome to Inkplate Color cryptocurrency tracker example!"));
+    display.setCursor(30, 250);
     display.println(F("Connecting to WiFi..."));
     display.display();
 
@@ -161,12 +162,11 @@ void setup()
 void loop()
 {
     // Do a new network request every fullRefresh times, defined above
-    if (refreshes % fullRefresh == 0)
-        while (!network.getData(data))
-        {
-            Serial.println("Retrying retriving data!");
-            delay(1000);
-        }
+    while (!network.getData(data))
+    {
+        Serial.println("Retrying retriving data!");
+        delay(1000);
+    }
 
     // Our main drawing function
     drawAll();
@@ -174,9 +174,6 @@ void loop()
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
     (void)esp_light_sleep_start();
-
-    // Increment refresh count
-    ++refreshes;
 }
 
 // Function to draw our graph
@@ -184,10 +181,10 @@ void drawGraph()
 {
     // Edge Coordinates
     int x1 = 10;
-    int y1 = 535;
+    int y1 = 382;
 
-    int x2 = 500;
-    int y2 = 205;
+    int x2 = 357;
+    int y2 = 146;
 
     int textMargin = 68;
 
@@ -307,69 +304,33 @@ void drawGraph()
 // Our main drawing function
 void drawAll()
 { // Do a full refresh every fullRefresh times, defined above
-    if (refreshes % fullRefresh == 0)
+
+    // Initial screen clear
+    display.clearDisplay();
+
+    // display.fillRect(0, 0, 600, 448, WHITE);
+
+    // Save current date string, more about it in Network.cpp
+    network.getTime(date);
+
+    // Find current day from string
+    int day;
+    sscanf(date + 3, "%d", &day);
+
+    // Find what month is it numericly and display it
+    for (int i = 0; i < 12; ++i)
     {
-        // Initial screen clear
-        display.clearDisplay();
-
-        // Save current date string, more about it in Network.cpp
-        network.getTime(date);
-
-        // Find current day from string
-        int day;
-        sscanf(date + 3, "%d", &day);
-
-        // Find what month is it numericly and display it
-        for (int i = 0; i < 12; ++i)
-        {
-            if (strncmp(months[i], date, 3) == 0)
-                sprintf(fromToDate, "%d.%d. to %d.%d.", day, ((i + 1) % 12 ? i + 1 : 12), day,
-                        ((i + 2) % 12 ? i + 2 : 12));
-        }
-
-        // Draw graph
-        drawGraph();
-
-        // Draw our UI elements
-        for (int i = 0; i < sizeof(elements) / sizeof(elements[0]); ++i)
-        {
-            // Text settings
-            display.setTextColor(0, 7);
-            display.setFont(elements[i].font);
-            display.setTextSize(1);
-
-            // 0 is aligned by left bottom corner, 1 by right
-            if (elements[i].align == 0)
-                display.setCursor((int)(elements[i].x * 0.96), (int)(elements[i].y));
-            else if (elements[i].align == 1)
-            {
-                int16_t x, y;
-                uint16_t w, h;
-
-                // Get how much the textx offsets pointer and draw it that much more left
-                display.getTextBounds(elements[i].text, 0, 0, &x, &y, &w, &h);
-
-                display.setCursor((int)(elements[i].x * 0.96) - w, (int)(elements[i].y));
-            }
-
-            // Print out text to above set cursor location
-            display.print(elements[i].text);
-        }
-
-        // Display all
-        display.display();
+        if (strncmp(months[i], date, 3) == 0)
+            sprintf(fromToDate, "%d.%d. to %d.%d.", day, ((i + 1) % 12 ? i + 1 : 12), day,
+                    ((i + 2) % 12 ? i + 2 : 12));
     }
-    else
+
+    // Draw graph
+    drawGraph();
+
+    // Draw our UI elements
+    for (int i = 0; i < sizeof(elements) / sizeof(elements[0]); ++i)
     {
-        // Just draw time
-        int i = 1;
-
-        // Initial screen clear
-        display.clearDisplay();
-
-        // Save current date string, more about it in Network.cpp
-        network.getTime(date);
-
         // Text settings
         display.setTextColor(0, 7);
         display.setFont(elements[i].font);
@@ -378,11 +339,21 @@ void drawAll()
         // 0 is aligned by left bottom corner, 1 by right
         if (elements[i].align == 0)
             display.setCursor((int)(elements[i].x * 0.96), (int)(elements[i].y));
+        else if (elements[i].align == 1)
+        {
+            int16_t x, y;
+            uint16_t w, h;
+
+            // Get how much the textx offsets pointer and draw it that much more left
+            display.getTextBounds(elements[i].text, 0, 0, &x, &y, &w, &h);
+
+            display.setCursor((int)(elements[i].x * 0.96) - w, (int)(elements[i].y));
+        }
 
         // Print out text to above set cursor location
-        display.print(date);
-
-        // Just update time
-        display.display();
+        display.print(elements[i].text);
     }
+
+    // Display all
+    display.display();
 }
