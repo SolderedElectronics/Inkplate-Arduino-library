@@ -37,11 +37,11 @@
 // Change to your wifi ssid and password
 
 #include "OpenWeatherOneCall.h"
-#define HOMESSID ""
-#define HOMEPW   ""
+#define HOMESSID "Soldered"
+#define HOMEPW   "dasduino"
 
 // Openweather set up information
-#define ONECALLKEY ""
+#define ONECALLKEY "74bb81945168707323a7e01686bc0b14"
 
 float myLatitude = 45.560001; // I got this from Wikipedia
 float myLongitude = 18.675880;
@@ -93,7 +93,7 @@ const char *moonphasenames[29] = {
 const int fullRefresh = 30;
 
 // Variable for counting partial refreshes
-RTC_DATA_ATTR refreshes = 0;
+RTC_DATA_ATTR char refreshes = 0;
 
 // Hich line to start drawing the Dayly forecast
 const int dayOffset = 522;
@@ -197,7 +197,7 @@ void GetCurrentWeather()
     Serial.println("");
 
     Serial.println("7 Day Forecast:");
-    for (int y = 0; y < (sizeof(OWOC.forecast) / sizeof(OWOC.forecast[0])); y++)
+    for (int y = 0; y < 3; y++)
     {
         sprintf(Output,
                 "%s:%02d:%02d-%02d:%02d,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02."
@@ -348,8 +348,8 @@ void drawForecast()
     int xOffset = 10;
     int startDay = 1;
     int numOfDays = (sizeof(OWOC.forecast) / sizeof(OWOC.forecast[0]));
-    int dayPitch = E_INK_WIDTH / (numOfDays - startDay);
-    for (int day = startDay; day < numOfDays; day++)
+    int dayPitch = E_INK_WIDTH / (4 - startDay);
+    for (int day = startDay; day < 4; day++)
     {
         dayPos = (day - startDay) * dayPitch;
         int textCentre = dayPos + (dayPitch / 2);
