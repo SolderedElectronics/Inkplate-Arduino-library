@@ -1,10 +1,10 @@
 /*
    Inkplate_easyC example for e-radionica.com Inkplate COLOR
-   For this example you will need a micro USB cable, Inkplate COLOR,
+   For this example you will need a micro USB cable, Inkplate 6COLOR,
    BME680 sensor with easyC connector on it: https://e-radionica.com/en/bme680-breakout-made-by-e-radionica.html
    and a easyC cable: https://e-radionica.com/en/easyc-cable-20cm.html
-   Select "Inkplate COLOR(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate COLOR(ESP32)" option? Follow our tutorial and add it:
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can read temperature, humidity, air pressure and gas data from BME680.
@@ -27,9 +27,9 @@
 #include "Inkplate.h"        //Include Inkplate library to the sketch
 #include <Adafruit_Sensor.h> //Adafruit library for sensors
 
-Inkplate display; // Create an object on Inkplate library
+Inkplate display;    // Create an object on Inkplate library
 Adafruit_BME680 bme; // Create an object on Adafruit BME680 library
-         //(with no arguments sent to constructor, that means we are using I2C communication for BME680 sensor)
+                     //(with no arguments sent to constructor, that means we are using I2C communication for BME680 sensor)
 
 int n = 0; // Variable that keep track on how many times screen has been partially updated
 void setup()
@@ -69,9 +69,9 @@ void loop()
         display.display();
     }
     else
-    {                           
+    {
         Serial.println("Reading started");
-                                // Otherwise, clear frame buffer of epaper display
+        // Otherwise, clear frame buffer of epaper display
         display.clearDisplay(); // Print out new data
         display.setCursor(0, 0);
         display.print("Air temperature: ");

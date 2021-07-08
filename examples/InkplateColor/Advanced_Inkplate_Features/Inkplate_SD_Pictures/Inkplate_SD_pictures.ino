@@ -1,9 +1,9 @@
 /*
-   Inkplate_SD_BMP example for e-radionica Inkplate6
-   For this example you will need a micro USB cable, Inkplate6 and a SD card loaded with
+   Inkplate_SD_BMP example for e-radionica 6COLOR
+   For this example you will need a micro USB cable, an Inkplate 6COLOR and a SD card loaded with
    image1.bmp and image2.bmp file that can be found inside folder of this example.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    To work with SD card on Inkplate, you will need to add one extra library.
@@ -26,10 +26,10 @@
 #error "Wrong board selection for this example, please select Inkplate color in the boards menu."
 #endif
 
-#include "Inkplate.h"            //Include Inkplate library to the sketch
-#include "SdFat.h"               //Include library for SD card
-Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
-SdFile file;                     // Create SdFile object used for accessing files on SD card
+#include "Inkplate.h" //Include Inkplate library to the sketch
+#include "SdFat.h"    //Include library for SD card
+Inkplate display;     // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+SdFile file;          // Create SdFile object used for accessing files on SD card
 
 void setup()
 {

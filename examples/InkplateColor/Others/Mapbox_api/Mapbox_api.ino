@@ -10,10 +10,13 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   28 July 2020 by e-radionica.com
+   8 July 2021 by e-radionica.com
 */
 
 #include "Inkplate.h"
+
+#define ssid "e-radionica.com" // Name of the WiFi network (SSID) that you want to connect Inkplate to
+#define pass "croduino"        // Password of that WiFi network
 
 // Fill in these using api key from https://www.mapbox.com/ and coordinates you want to draw
 // http://bboxfinder.com/ might help you :)
@@ -34,7 +37,7 @@ void setup()
     display.begin();      // Initialize display
 
     // Connect to WiFi
-    while (!display.joinAP("e-radionica.com", "croduino"))
+    while (!display.joinAP(ssid, pass))
     {
         Serial.println("Connecting to wifi");
     }
