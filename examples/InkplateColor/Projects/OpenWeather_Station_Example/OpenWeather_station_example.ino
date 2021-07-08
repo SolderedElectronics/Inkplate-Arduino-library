@@ -37,8 +37,8 @@
 // Change to your wifi ssid and password
 
 #include "OpenWeatherOneCall.h"
-#define HOMESSID ""
-#define HOMEPW ""
+#define HOMESSID "e-radionica.com"
+#define HOMEPW "croduino"
 
 // Openweather set up information
 #define ONECALLKEY ""
@@ -244,15 +244,6 @@ void setup()
 
     // Initial cleaning of buffer and physical screen
     display.clearDisplay();
-    display.display();
-
-    // Welcome screen
-    display.setCursor(50, 290);
-    display.setTextSize(3);
-    display.print(F("Welcome to Wol Inkplate 6 weather example!"));
-    display.display();
-    Serial.println("Welcome to Wol Inkplate 6 weather example!");
-    display.display();
 
     connectWifi();
 }

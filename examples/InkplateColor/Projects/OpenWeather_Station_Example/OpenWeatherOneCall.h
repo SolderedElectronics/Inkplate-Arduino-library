@@ -21,16 +21,14 @@
 #define ALERTS
 //#define DARKSKY
 
-
 class OpenWeatherOneCall
 {
-  public:
+public:
     // Constructor
     OpenWeatherOneCall();
 
     // Methods
     int parseWeather(char *DKEY, char *GKEY, float SEEK_LATITUDE, float SEEK_LONGITUDE, bool SET_UNITS, int CITY_ID);
-
 
 #ifdef CURRENT
     // Variables
@@ -210,8 +208,7 @@ class OpenWeatherOneCall
     float latitude;
     float longitude;
 
-
-  private:
+private:
     // Methods
     int getCoordinates(String googleKey);
 
