@@ -1,7 +1,7 @@
 /*
-   Inkplate_Web_Server example for e-radionica.com Inkplate 6
-   For this example you will need a micro USB cable, Inkplate 6 and a device with WiFi and Internet brower (PC, Laptop,
-   Smartphone, ...). Select "Inkplate 6(ESP32)" from Tools -> Board menu. Don't have "Inkplate 6(ESP32)" option? Follow
+   Inkplate_Web_Server example for e-radionica.com Inkplate 6COLOR
+   For this example you will need a micro USB cable, Inkplate 6COLOR and a device with WiFi and Internet brower (PC, Laptop,
+   Smartphone, ...). Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu. Don't have "Inkplate 6COLOR(ESP32)" option? Follow
    our tutorial and add it: https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can use Inkplate as a small and simple standlone Web Server.
@@ -33,20 +33,20 @@
 #define ssid "Inkplate"
 #define pass "e-radionica"
 
-Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
-WebServer server(80);            // Create Web server on port 80 (HTTP port number)
+Inkplate display;     // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+WebServer server(80); // Create Web server on port 80 (HTTP port number)
 
 IPAddress serverIP;
 String txt;
 
 void setup()
 {
-    display.begin();                        // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay();                 // Clear frame buffer of display
-    display.display();                      // Put clear image on display
-    display.setTextSize(2);                 // Scale text to be two times bigger then original (5x7 px)
-    display.setTextColor(INKPLATE_BLACK);   // Set text color to black and background color to white
-    display.setTextWrap(true);              // If text does not fit on screen, send it to new line
+    display.begin();                      // Init Inkplate library (you should call this function ONLY ONCE)
+    display.clearDisplay();               // Clear frame buffer of display
+    display.display();                    // Put clear image on display
+    display.setTextSize(2);               // Scale text to be two times bigger then original (5x7 px)
+    display.setTextColor(INKPLATE_BLACK); // Set text color to black and background color to white
+    display.setTextWrap(true);            // If text does not fit on screen, send it to new line
 
     WiFi.begin();            // Init. WiFi library
     WiFi.mode(WIFI_AP);      // Set WiFi to Access point mode
@@ -79,7 +79,7 @@ void handleRoot()
 
 void handleString()
 { // This function will send response to client, send HTML code of web page, get the text from argument sent in web page
-  // address and refresh screen with new text
+    // address and refresh screen with new text
     txt = server.arg(0);
     updateHTML();
     updatePaper();

@@ -1,8 +1,8 @@
 /*
-   Inkplate_Wake_up_on_touchpads example for e-radionica.com Inkplate 6
-   For this example you will need USB cable and an Inkplate 6
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_Wake_up_on_touchpads example for e-radionica.com Inkplate 6COLOR
+   For this example you will need USB cable and an Inkplate 6COLOR
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Here is shown how to use MCP and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.

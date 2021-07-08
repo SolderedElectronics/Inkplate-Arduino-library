@@ -1,8 +1,8 @@
 /*
    Web_BMP_pictures example for e-radionica Inkplate6
    For this example you will need a micro USB cable, Inkplate6, and an available WiFi connection.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
@@ -21,13 +21,13 @@
 #error "Wrong board selection for this example, please select Inkplate color in the boards menu."
 #endif
 
-#include "HTTPClient.h"          //Include library for HTTPClient
-#include "Inkplate.h"            //Include Inkplate library to the sketch
-#include "WiFi.h"                //Include library for WiFi
-Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+#include "HTTPClient.h" //Include library for HTTPClient
+#include "Inkplate.h"   //Include Inkplate library to the sketch
+#include "WiFi.h"       //Include library for WiFi
+Inkplate display;       // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
-const char *ssid = "e-radionica.com";     // Your WiFi SSID
-const char *password = "croduino"; // Your WiFi password
+const char *ssid = "e-radionica.com"; // Your WiFi SSID
+const char *password = "croduino";    // Your WiFi password
 
 void setup()
 {

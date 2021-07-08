@@ -1,3 +1,17 @@
+/*
+   Gallery example for Inkplate 6COLOR
+   For this example you will need only USB cable and an Inkplate 6COLOR.
+   Select "Inkplate 6COLOR" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   This example will show you how you can use Inkplate 6COLOR to random images in the root sdcard folder.
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   8 July 2021 by e-radionica.com
+*/
+
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATECOLOR
 #error "Wrong board selection for this example, please select Inkplate color in the boards menu."
@@ -42,7 +56,7 @@ void setup()
         FatFile f, root = display.getSdFat().open("/");         // Currently open file and the directory we want images from e.g. root /
         while (f.openNext(&root, O_RDONLY) && f.getName(a, 40)) // Iterate over all files in directory
         {
-            if (f.isFile() && !f.isHidden() &&                                       // Check if current file isn't a directory
+            if (f.isFile() && !f.isHidden() && a[0] != '.' &&                        // Check if current file isn't a directory
                 (endsWith(a, ".bmp") || endsWith(a, ".jpg") || endsWith(a, ".png"))) // Check if the file is an image
                 Serial.println(files[fileCount++] = String(a));                      // Print the file name and add it to all files
             f.close();                                                               // Close the file
