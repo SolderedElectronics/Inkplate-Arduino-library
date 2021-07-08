@@ -18,7 +18,7 @@
 
 #define DELAY_MS 60000 * 60
 //#define URL      "https://www.crowdsupply.com/byte-mix-labs/microbyte"
-#define URL      "https://www.crowdsupply.com/e-radionica/inkplate-10"
+#define URL "https://www.crowdsupply.com/e-radionica/inkplate-10"
 
 Inkplate display;
 
@@ -46,7 +46,7 @@ void setup()
         delay(5000);
     }
 
-    while(!display.joinAP("e-radionica.com", "croduino"))
+    while (!display.joinAP("e-radionica.com", "croduino"))
     {
         Serial.println("Connecting to wifi");
     }
@@ -75,7 +75,7 @@ void setup()
     text11_content.replace(",", "");
     sscanf(text11_content.c_str(), "%d%", &percent);
 
-    if(percent < 100 && percent > 0)
+    if (percent < 100 && percent > 0)
     {
         float per = (float)(percent / 100.00);
         int diff = line0_end_x - line0_start_x;
@@ -85,7 +85,6 @@ void setup()
     }
     else if (percent >= 100)
     {
-
     }
     else
     {
@@ -97,7 +96,7 @@ void setup()
     Serial.println(s);
     String *arr[] = {&text13_content, &text14_content, &text15_content, &text17_content, &text17_content, &text17_content};
     for (int i = 0; i < 6; ++i)
-    {           
+    {
         while (isspace(s[j++]))
             ;
         --j;

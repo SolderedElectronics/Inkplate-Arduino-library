@@ -21,8 +21,8 @@
 
 Inkplate display;
 
-const char *ssid = "e-radionica.com";     // Your WiFi SSID
-const char *password = "croduino"; // Your WiFi password
+const char *ssid = "e-radionica.com"; // Your WiFi SSID
+const char *password = "croduino";    // Your WiFi password
 
 void setup()
 {
@@ -35,7 +35,7 @@ void setup()
     char url[256];
     imageUrl(url);
 
-    Serial.println(display.drawImage(url, display.PNG, 0, 0, true, true));
+    Serial.println(display.drawImage(url, display.PNG, 0, 0, true, false));
     display.display();
 
     Serial.println("Going to sleep");
@@ -52,7 +52,7 @@ void imageUrl(char *a)
 {
     String url;
     HTTPClient http;
-    if (http.begin("https://source.unsplash.com/random/800x600") && http.GET() > 0)
+    if (http.begin("https://source.unsplash.com/random/600x448") && http.GET() > 0)
     {
         url = http.getString();
 
@@ -60,7 +60,7 @@ void imageUrl(char *a)
         int urlEnd = url.indexOf("\">", urlStart);
 
         url = url.substring(urlStart, urlEnd);
-        url = url.substring(0, url.indexOf("?")) + "?crop=entropy&fit=crop&fm=png&h=600&w=800";
+        url = url.substring(0, url.indexOf("?")) + "?crop=entropy&fit=crop&fm=png&h=448&w=600";
 
         Serial.println(url);
         strcpy(a, url.c_str());

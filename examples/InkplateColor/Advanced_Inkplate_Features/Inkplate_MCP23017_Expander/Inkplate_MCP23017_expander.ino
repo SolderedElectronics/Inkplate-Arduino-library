@@ -1,8 +1,8 @@
 /*
-   Inkplate_MCP23017 example for e-radionica.com Inkplate COLOR
-   For this example you will need only a micro USB cable, Inkplate COLOR, 330 Ohm resistor and LED diode.
-   Select "Inkplate COLOR(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_MCP23017 example for e-radionica.com Inkplate 6COLOR
+   For this example you will need only a micro USB cable, Inkplate 6COLOR, 330 Ohm resistor and LED diode.
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Connect resistor to GPB7 pin on MCP23017 header at bottom right corner on the backside (component side) of Inkplate.
@@ -26,7 +26,7 @@
 
 #include "Inkplate.h" //Include Inkplate library to the sketch
 
-#define LED_PIN MCP23017_PIN_B7            // We are going to use pin GPB7 (remember! GPA0 = 0, GPA1 = 1, ..., GPA7 = 7, GPB0 = 8, GBP1 = 9, ..., GPB7 = 15)
+#define LED_PIN MCP23017_PIN_B7 // We are going to use pin GPB7 (remember! GPA0 = 0, GPA1 = 1, ..., GPA7 = 7, GPB0 = 8, GBP1 = 9, ..., GPB7 = 15)
 
 Inkplate display; // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 

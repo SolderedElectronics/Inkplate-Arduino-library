@@ -1,8 +1,8 @@
 /*
-   Inkplate_Touchpads example for e-radionica.com Inkplate 6
-   For this example you will need only a micro USB cable and Inkplate 6.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_Touchpads example for e-radionica.com Inkplate 6COLOR
+   For this example you will need only a micro USB cable and an Inkplate 6COLOR.
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can use built-in touchpads (on PCB marked with numbers 1, 2 and 3).
@@ -27,8 +27,8 @@
 #error "Wrong board selection for this example, please select Inkplate color in the boards menu."
 #endif
 
-#include "Inkplate.h"            //Include Inkplate library to the sketch
-Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+#include "Inkplate.h" //Include Inkplate library to the sketch
+Inkplate display;     // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
 int number = 0; // Variable that stores our number
 int n = 0;      // Variable that keeps track on how many times display is partially updated
@@ -77,8 +77,8 @@ void displayNumber()
     display.setCursor(520, 560); // Set new print position (right above third touchpad)
     display.print('+');          // Print plus sign
     if (n > 20)
-    { // Chech if screen has been partially refreshed more than 20 times. If it is, do a full refresh. If is not, do a
-      // partial refresh
+    {   // Chech if screen has been partially refreshed more than 20 times. If it is, do a full refresh. If is not, do a
+        // partial refresh
         display.display();
         n = 0;
     }

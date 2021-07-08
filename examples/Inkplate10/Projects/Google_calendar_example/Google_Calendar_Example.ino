@@ -76,7 +76,7 @@ struct entry
     char name[128];
     char time[128];
     char location[128];
-    int day;
+    int day = -1;
     int timeStamp;
 };
 

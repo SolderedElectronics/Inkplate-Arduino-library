@@ -1,11 +1,11 @@
 /*
-   Weather station example for e-radionica.com Inkplate 6
-   For this example you will need only USB cable and Inkplate 6.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Weather station example for e-radionica.com Inkplate 6COLOR
+   For this example you will need only USB cable and Inkplate 6COLOR.
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how you can use Inkplate 6 to display API data,
+   This example will show you how you can use Inkplate 6COLOR to display API data,
    e.g. Metaweather public weather API
 
    IMPORTANT:
@@ -63,8 +63,8 @@ Network network;
 // Contants used for drawing icons
 char abbrs[32][16] = {"sn", "sl", "h", "t", "hr", "lr", "s", "hc", "lc", "c"};
 const uint8_t *logos[16] = {icon_sn, icon_sl, icon_h, icon_t, icon_hr, icon_lr, icon_s, icon_hc, icon_lc, icon_c};
-const uint8_t *s_logos[16] = {icon_s_sn, icon_s_sl, icon_s_h,  icon_s_t,  icon_s_hr,
-                              icon_s_lr, icon_s_s,  icon_s_hc, icon_s_lc, icon_s_c};
+const uint8_t *s_logos[16] = {icon_s_sn, icon_s_sl, icon_s_h, icon_s_t, icon_s_hr,
+                              icon_s_lr, icon_s_s, icon_s_hc, icon_s_lc, icon_s_c};
 
 char abbr1[16];
 char abbr2[16];
@@ -161,7 +161,6 @@ void setup()
 
 void loop()
 {
-    
 }
 
 // Function for drawing weather info

@@ -1,7 +1,16 @@
-/**
- * Inkplate COLOR basic example showing how to draw basic geometrical shapes, use text and bitmap logo
- *  
- */
+/*
+   Inkplate_Maze_Color_basic sketch for e-radionica.com Inkplate 6COLOR
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   Simple Inkplate example showing drawing functionalities of the Inkplate 6COLOR library.
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   8 July 2021 by e-radionica.com
+*/
+
 #ifndef ARDUINO_INKPLATECOLOR
 #error "Wrong board selection for this example, please select Inkplate color in the boards menu."
 #endif
@@ -26,7 +35,7 @@ void setup()
     display.fillRect(0, 200, 50, 50, INKPLATE_RED);
     display.fillRect(0, 250, 50, 50, INKPLATE_YELLOW);
     display.fillRect(0, 300, 50, 50, INKPLATE_ORANGE);
-    
+
     display.drawRect(55, 0, 50, 50, INKPLATE_BLACK);
     display.drawRect(55, 50, 50, 50, INKPLATE_WHITE);
     display.drawRect(55, 100, 50, 50, INKPLATE_GREEN);
@@ -74,32 +83,32 @@ void setup()
     display.setCursor(265, 0);
     display.setTextSize(2);
     display.print("Welcome to Inkplate Color!");
-    
+
     display.setTextColor(INKPLATE_WHITE);
     display.setCursor(265, 50);
     display.setTextSize(2);
     display.print("Welcome to Inkplate Color!");
-        
+
     display.setTextColor(INKPLATE_GREEN);
     display.setCursor(265, 100);
     display.setTextSize(2);
     display.print("Welcome to Inkplate Color!");
-    
+
     display.setTextColor(INKPLATE_BLUE);
     display.setCursor(265, 150);
     display.setTextSize(2);
     display.print("Welcome to Inkplate Color!");
-    
+
     display.setTextColor(INKPLATE_RED);
     display.setCursor(265, 200);
     display.setTextSize(2);
     display.print("Welcome to Inkplate Color!");
-    
+
     display.setTextColor(INKPLATE_YELLOW);
     display.setCursor(265, 250);
     display.setTextSize(2);
     display.print("Welcome to Inkplate Color!");
-    
+
     display.setTextColor(INKPLATE_ORANGE);
     display.setCursor(265, 300);
     display.setTextSize(2);
@@ -112,7 +121,7 @@ void setup()
     display.drawBitmap(300, 350, logo, logo_w, logo_h, INKPLATE_BLUE);
     display.drawBitmap(400, 350, logo, logo_w, logo_h, INKPLATE_RED);
     display.drawBitmap(500, 350, logo, logo_w, logo_h, INKPLATE_YELLOW);
-    
+
     display.display();
 }
 

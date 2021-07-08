@@ -47,7 +47,7 @@ Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Gra
 void Inkplate::clearDisplay()
 {
 #ifdef ARDUINO_INKPLATECOLOR
-    memset(DMemory4Bit, 255, E_INK_WIDTH * E_INK_HEIGHT / 2);
+    memset(DMemory4Bit, WHITE << 4 | WHITE, E_INK_WIDTH * E_INK_HEIGHT / 2);
 #else
     // Clear 1 bit per pixel display buffer
     if (getDisplayMode() == 0)

@@ -1,7 +1,7 @@
 /*
-   Inkplate_Mandelbrot_set sketch for e-radionica.com Inkplate 6
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_Mandelbrot_set sketch for e-radionica.com Inkplate 6COLOR
+   Select "Inkplate 6COLOR" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example renders the mandelbrot set to coordiantes to Inkplate.
@@ -77,7 +77,6 @@ double modulusComplexSqr(struct complex *z)
 {
     return z->re * z->re + z->im * z->im;
 }
-
 
 uint8_t colorAt(double x, double y)
 {

@@ -1,8 +1,8 @@
 /*
-   Weather station example for e-radionica.com Inkplate 6
-   For this example you will need only USB cable and Inkplate 6.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Weather station example for e-radionica.com Inkplate 6COLOR
+   For this example you will need only USB cable and Inkplate 6COLOR.
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can use Inkplate 6 to display API data,
@@ -38,7 +38,7 @@
 
 #include "OpenWeatherOneCall.h"
 #define HOMESSID ""
-#define HOMEPW   ""
+#define HOMEPW ""
 
 // Openweather set up information
 #define ONECALLKEY ""
@@ -83,10 +83,10 @@ enum alignment
 };
 
 const char *moonphasenames[29] = {
-    "New Moon",        "Waxing Crescent", "Waxing Crescent", "Waxing Crescent", "Waxing Crescent", "Waxing Crescent",
-    "Waxing Crescent", "Quarter",         "Waxing Gibbous",  "Waxing Gibbous",  "Waxing Gibbous",  "Waxing Gibbous",
-    "Waxing Gibbous",  "Waxing Gibbous",  "Full Moon",       "Waning Gibbous",  "Waning Gibbous",  "Waning Gibbous",
-    "Waning Gibbous",  "Waning Gibbous",  "Waning Gibbous",  "Last Quarter",    "Waning Crescent", "Waning Crescent",
+    "New Moon", "Waxing Crescent", "Waxing Crescent", "Waxing Crescent", "Waxing Crescent", "Waxing Crescent",
+    "Waxing Crescent", "Quarter", "Waxing Gibbous", "Waxing Gibbous", "Waxing Gibbous", "Waxing Gibbous",
+    "Waxing Gibbous", "Waxing Gibbous", "Full Moon", "Waning Gibbous", "Waning Gibbous", "Waning Gibbous",
+    "Waning Gibbous", "Waning Gibbous", "Waning Gibbous", "Last Quarter", "Waning Crescent", "Waning Crescent",
     "Waning Crescent", "Waning Crescent", "Waning Crescent", "Waning Crescent", "Waning Crescent"};
 
 // Constant to determine when to full update
@@ -245,7 +245,6 @@ void setup()
     // Initial cleaning of buffer and physical screen
     display.clearDisplay();
     display.display();
-
 
     // Welcome screen
     display.setCursor(50, 290);

@@ -1,11 +1,11 @@
 /*
-   Real time Weather station example for e-radionica.com Inkplate 6
-   For this example you will need only USB cable and Inkplate 6.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Real time Weather station example for e-radionica.com Inkplate 6COLOR
+   For this example you will need only USB cable and Inkplate 6COLOR.
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how you can use Inkplate 6 to display API data,
+   This example will show you how you can use Inkplate 6COLOR to display API data,
    e.g. Metaweather public weather API, and weatherstack for real time data
 
    IMPORTANT:
@@ -74,13 +74,45 @@ Network network;
 char abbrs[32][32] = {"01d", "02d", "03d", "04d", "09d", "10d", "11d", "13d", "50d",
                       "01n", "02n", "03n", "04n", "09n", "10n", "11n", "13n", "50n"};
 const uint8_t *logos[18] = {
-    icon_01d, icon_02d, icon_03d, icon_04d, icon_09d, icon_10d, icon_11d, icon_13d, icon_50d,
-    icon_01n, icon_02n, icon_03n, icon_04n, icon_09n, icon_10n, icon_11n, icon_13n, icon_50n,
+    icon_01d,
+    icon_02d,
+    icon_03d,
+    icon_04d,
+    icon_09d,
+    icon_10d,
+    icon_11d,
+    icon_13d,
+    icon_50d,
+    icon_01n,
+    icon_02n,
+    icon_03n,
+    icon_04n,
+    icon_09n,
+    icon_10n,
+    icon_11n,
+    icon_13n,
+    icon_50n,
 };
 
 const uint8_t *s_logos[18] = {
-    icon_s_01d, icon_s_02d, icon_s_03d, icon_s_04d, icon_s_09d, icon_s_10d, icon_s_11d, icon_s_13d, icon_s_50d,
-    icon_s_01n, icon_s_02n, icon_s_03n, icon_s_04n, icon_s_09n, icon_s_10n, icon_s_11n, icon_s_13n, icon_s_50n,
+    icon_s_01d,
+    icon_s_02d,
+    icon_s_03d,
+    icon_s_04d,
+    icon_s_09d,
+    icon_s_10d,
+    icon_s_11d,
+    icon_s_13d,
+    icon_s_50d,
+    icon_s_01n,
+    icon_s_02n,
+    icon_s_03n,
+    icon_s_04n,
+    icon_s_09n,
+    icon_s_10n,
+    icon_s_11n,
+    icon_s_13n,
+    icon_s_50n,
 };
 
 // Variables for storing temperature

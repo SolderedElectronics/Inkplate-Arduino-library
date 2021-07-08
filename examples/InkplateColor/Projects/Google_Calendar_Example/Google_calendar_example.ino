@@ -1,11 +1,11 @@
 /*
-   3-Google_calendar_example for e-radionica.com Inkplate 6
-   For this example you will need only USB cable and Inkplate 6.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   3-Google_calendar_example for e-radionica.com Inkplate 6COLOR
+   For this example you will need only USB cable and Inkplate 6COLOR.
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This project shows you how Inkplate 6 can be used to display
+   This project shows you how Inkplate 6COLOR can be used to display
    events in your Google Calendar using their provided API
 
    For this to work you need to change your timezone, wifi credentials and your private calendar url
@@ -76,7 +76,7 @@ struct entry
     char name[128];
     char time[128];
     char location[128];
-    int day;
+    int day = -1;
     int timeStamp;
 };
 

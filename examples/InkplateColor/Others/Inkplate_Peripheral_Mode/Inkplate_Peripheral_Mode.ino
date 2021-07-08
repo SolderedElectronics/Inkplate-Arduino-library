@@ -1,12 +1,12 @@
 /*
-   Inkplate_Peripheral_Mode sketch for e-radionica.com Inkplate COLOR
-   Select "Inkplate COLOR(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate COLOR(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_Peripheral_Mode sketch for e-radionica.com Inkplate 6COLOR
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Using this sketch, you don't have to program and control e-paper using Arduino code.
    Instead, you can send UART command (explained in documentation that can be found inside folder of this sketch).
-   This give you flexibility that you can use this Inkplate COLOR on any platform!
+   This give you flexibility that you can use this Inkplate 6COLOR on any platform!
 
    Because it uses UART, it's little bit slower and it's not recommended to send bunch of
    drawPixel command to draw some image. Instead, load bitmaps and pictures on SD card and load image from SD.
@@ -253,7 +253,6 @@ void loop()
                 if (c == INKPLATE_3BIT)
                     display.selectDisplayMode(INKPLATE_3BIT);
                 break;
-
 
             case 'K':
                 sscanf(s + 3, "%c", &b);
