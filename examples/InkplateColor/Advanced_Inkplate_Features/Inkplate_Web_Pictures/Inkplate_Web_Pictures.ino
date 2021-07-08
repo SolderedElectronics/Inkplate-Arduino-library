@@ -1,6 +1,6 @@
 /*
-   Web_BMP_pictures example for e-radionica Inkplate6
-   For this example you will need a micro USB cable, Inkplate6, and an available WiFi connection.
+   Web_BMP_pictures example for e-radionica Inkplate 6COLOR
+   For this example you will need a micro USB cable, Inkplate 6COLOR, and an available WiFi connection.
    Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -52,7 +52,7 @@ void setup()
     // NOTE: Both drawImage methods allow for an optional fifth "invert" parameter. Setting this parameter to true
     // will flip all colors on the image, making black white and white black. This may be necessary when exporting
     // bitmaps from certain softwares. Forth parameter will dither the image. Photo taken by: Roberto Fernandez
-    if (!display.drawImage("https://varipass.org/neowise_mono.bmp", 0, 0, false, false))
+    if (!display.drawImage("https://varipass.org/neowise_mono.bmp", 0, 0, true, false))
     {
         // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
         // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
@@ -61,42 +61,14 @@ void setup()
     }
     display.display();
 
-    // Draw the second image from web, this time using a HTTPClient to fetch the response manually.
-    // Full color 24 bit images are large and take a long time to load, will take around 20 secs.
-    HTTPClient http;
-    // Set parameters to speed up the download process.
-    http.getStream().setNoDelay(true);
-    http.getStream().setTimeout(1);
-
-    // Photo taken by: Roberto Fernandez
-    http.begin("https://varipass.org/neowise.bmp");
-
-    // Check response code.
-    int httpCode = http.GET();
-    if (httpCode == 200)
+    if (!display.drawImage("https://varipass.org/neowise.bmp", 0, 0, true, false))
     {
-        // Get the response length and make sure it is not 0.
-        int32_t len = http.getSize();
-        if (len > 0)
-        {
-            if (!display.drawBitmapFromWeb(http.getStreamPtr(), 0, 0, len))
-            {
-                // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-                // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no
-                // compression!
-                Serial.println("Image open error");
-            }
-            display.display();
-        }
-        else
-        {
-            Serial.println("Invalid response length");
-        }
+        // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
+        // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
+        display.println("Image open error");
+        display.display();
     }
-    else
-    {
-        Serial.println("HTTP error");
-    }
+    display.display();
 
     display.clearDisplay();
     delay(3000);
@@ -105,15 +77,13 @@ void setup()
     // NOTE: Both drawJpegFromWeb methods allow for an optional fifth "invert" parameter. Setting this parameter to
     // true will flip all colors on the image, making black white and white black. forth parameter will dither the
     // image.
-    if (!display.drawImage("https://varipass.org/destination.jpg", 0, 100, true, false))
+    if (!display.drawImage("https://varipass.org/destination.jpg", 0, 25, true, false))
     {
         // If is something failed (wrong filename or format), write error message on the screen.
         display.println("Image open error");
         display.display();
     }
     display.display();
-
-    http.end();
 
     WiFi.mode(WIFI_OFF);
 }

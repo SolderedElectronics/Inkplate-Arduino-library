@@ -68,10 +68,13 @@ void setup()
     delay(5000);
 
     // Now try to load image using SdFat library class (for more advanced users) and display image on epaper.
-    if (file.open("image2.bmp", O_RDONLY))
+    if (display.drawImage("image2.bmp", 0, 0, 0))
     {
-        display.drawBitmapFromSd(&file, 0, 0);
         display.display();
+    }
+    else
+    {
+        Serial.println("Image error.");
     }
 }
 
