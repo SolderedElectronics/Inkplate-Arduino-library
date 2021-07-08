@@ -10,7 +10,7 @@ extern Inkplate display;
 int rect0_a_x = 7;
 int rect0_a_y = 7;
 int rect0_b_x = 564;
-int rect0_b_y = 564;
+int rect0_b_y = 438;
 int rect0_fill = -1;
 int rect0_radius = -1;
 int rect0_color = BLACK;
@@ -168,7 +168,7 @@ void mainDraw()
     //Serial.println(text2_content);
 
     // Manual edit:
-    GFXcanvas1 canvas(750, 150);
+    GFXcanvas1 canvas(300, 150);
     canvas.setFont(text3_font);
     canvas.setTextColor(BLACK, WHITE);
     canvas.setTextSize(1);
@@ -178,7 +178,7 @@ void mainDraw()
     //Serial.print("Text 3: ");
     //Serial.println(text3_content);
 
-    display.drawBitmap(text3_cursor_x, text3_cursor_y, canvas.getBuffer(), 750, 150, BLACK, WHITE);
+    display.drawBitmap(text3_cursor_x, text3_cursor_y, canvas.getBuffer(), 300, 150, BLACK, WHITE);
 
     display.setFont(text4_font);
     display.setTextColor(BLACK, WHITE);
