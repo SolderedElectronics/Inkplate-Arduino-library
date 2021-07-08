@@ -1,6 +1,6 @@
 /*
-   Web_BMP_pictures example for e-radionica Inkplate6
-   For this example you will need a micro USB cable, Inkplate6, and an available WiFi connection.
+   Web_BMP_pictures example for e-radionica Inkplate 6COLOR
+   For this example you will need a micro USB cable, Inkplate 6COLOR, and an available WiFi connection.
    Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
