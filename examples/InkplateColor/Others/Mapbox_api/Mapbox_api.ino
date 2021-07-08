@@ -44,7 +44,7 @@ void setup()
 
     // Format URL string
     char URL[256];
-    sprintf(URL, "https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/[%lf,%lf,%lf,%lf]/600x448?access_token=%s", LAT1, LON1, LAT2, LON2, API_KEY);
+    sprintf(URL, "https://api.mapbox.com/styles/v1/mapbox/navigation-day-v1/static/[%lf,%lf,%lf,%lf]/600x448?access_token=%s", LAT1, LON1, LAT2, LON2, API_KEY);
 
     Serial.println("Fetching:");
     Serial.println(URL);
