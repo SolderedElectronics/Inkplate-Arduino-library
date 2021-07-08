@@ -5,138 +5,137 @@
 #include "Fonts/Open_Sans_SemiBold_56.h"
 #include "Inkplate.h"
 
-
 extern Inkplate display;
 
-int rect0_a_x = 10;
-int rect0_a_y = 10;
-int rect0_b_x = 790;
-int rect0_b_y = 790;
+int rect0_a_x = 7;
+int rect0_a_y = 7;
+int rect0_b_x = 564;
+int rect0_b_y = 564;
 int rect0_fill = -1;
 int rect0_radius = -1;
 int rect0_color = BLACK;
 
 String text1_content;
-int text1_cursor_x = 40;
-int text1_cursor_y = 40;
+int text1_cursor_x = 42;
+int text1_cursor_y = 42;
 const GFXfont *text1_font = &Open_Sans_SemiBold_32;
 
 String text2_content;
-int text2_cursor_x = 40;
-int text2_cursor_y = 80;
+int text2_cursor_x = 42;
+int text2_cursor_y = 60;
 const GFXfont *text2_font = &Open_Sans_SemiBold_16;
 
 String text3_content;
-int text3_cursor_x = 30;
-int text3_cursor_y = 150;
+int text3_cursor_x = 80;
+int text3_cursor_y = 107;
 const GFXfont *text3_font = &Open_Sans_SemiBold_16;
 //
 
 String text4_content;
-int text4_cursor_x = 70;
-int text4_cursor_y = 305;
+int text4_cursor_x = 46;
+int text4_cursor_y = 217;
 const GFXfont *text4_font = &Open_Sans_SemiBold_32;
 
 String text5_content = "$";
-int text5_cursor_x = 50;
-int text5_cursor_y = 300;
+int text5_cursor_x = 32;
+int text5_cursor_y = 214;
 const GFXfont *text5_font = &Open_Sans_SemiBold_24;
 
 String text6_content = "raised";
-int text6_cursor_x = 220;
-int text6_cursor_y = 305;
+int text6_cursor_x = 171;
+int text6_cursor_y = 217;
 const GFXfont *text6_font = &Open_Sans_SemiBold_24;
 
 String text7_content;
-int text7_cursor_x = 70;
-int text7_cursor_y = 405;
+int text7_cursor_x = 46;
+int text7_cursor_y = 289;
 const GFXfont *text7_font = &Open_Sans_SemiBold_32;
 
 String text8_content = "$";
-int text8_cursor_x = 50;
-int text8_cursor_y = 395;
+int text8_cursor_x = 32;
+int text8_cursor_y = 282;
 const GFXfont *text8_font = &Open_Sans_SemiBold_24;
 
 String text9_content = "goal";
-int text9_cursor_x = 220;
-int text9_cursor_y = 405;
+int text9_cursor_x = 171;
+int text9_cursor_y = 289;
 const GFXfont *text9_font = &Open_Sans_SemiBold_24;
 
-int rect1_a_x = 40;
-int rect1_a_y = 250;
-int rect1_b_x = 350;
-int rect1_b_y = 525;
+int rect1_a_x = 28;
+int rect1_a_y = 178;
+int rect1_b_x = 250;
+int rect1_b_y = 375;
 int rect1_fill = -1;
 int rect1_radius = -1;
 int rect1_color = BLACK;
 
-int rect2_a_x = 450;
-int rect2_a_y = 250;
-int rect2_b_x = 760;
-int rect2_b_y = 525;
+int rect2_a_x = 321;
+int rect2_a_y = 178;
+int rect2_b_x = 542;
+int rect2_b_y = 375;
 int rect2_fill = -1;
 int rect2_radius = -1;
 int rect2_color = BLACK;
 
-int rect3_a_x = 50;
-int rect3_a_y = 450;
-int rect3_b_x = 340;
-int rect3_b_y = 477;
+int rect3_a_x = 35;
+int rect3_a_y = 321;
+int rect3_b_x = 235;
+int rect3_b_y = 340;
 int rect3_fill = -1;
 int rect3_radius = -1;
 int rect3_color = BLACK;
 
-int line0_start_x = 50;
-int line0_start_y = 463;
-int line0_end_x = 340;
-int line0_end_y = 463;
+int line0_start_x = 35;
+int line0_start_y = 330;
+int line0_end_x = 235;
+int line0_end_y = 330;
 int line0_color = BLACK;
-int line0_thickness = 26;
+int line0_thickness = 18;
 int line0_gradient = 0;
 
 String text11_content = "100%";
-int text11_cursor_x = 175;
-int text11_cursor_y = 445;
+int text11_cursor_x = 125;
+int text11_cursor_y = 308;
 const GFXfont *text11_font = &Open_Sans_SemiBold_16;
 
 String text12_content = "Funded!";
-int text12_cursor_x = 150;
-int text12_cursor_y = 500;
+int text12_cursor_x = 107;
+int text12_cursor_y = 357;
 const GFXfont *text12_font = &Open_Sans_SemiBold_16;
 
 String text13_content;
-int text13_cursor_x = 460;
-int text13_cursor_y = 305;
+int text13_cursor_x = 335;
+int text13_cursor_y = 217;
 const GFXfont *text13_font = &Open_Sans_SemiBold_32;
 
 String text14_content;
-int text14_cursor_x = 460;
-int text14_cursor_y = 406;
+int text14_cursor_x = 335;
+int text14_cursor_y = 290;
 const GFXfont *text14_font = &Open_Sans_SemiBold_32;
 
 String text15_content;
-int text15_cursor_x = 600;
-int text15_cursor_y = 406;
+int text15_cursor_x = 442;
+int text15_cursor_y = 290;
 const GFXfont *text15_font = &Open_Sans_SemiBold_32;
 
 String text16_content = "updates";
-int text16_cursor_x = 600;
-int text16_cursor_y = 305;
+int text16_cursor_x = 442;
+int text16_cursor_y = 217;
 const GFXfont *text16_font = &Open_Sans_SemiBold_24;
 
 String text17_content;
-int text17_cursor_x = 460;
-int text17_cursor_y = 470;
+int text17_cursor_x = 335;
+int text17_cursor_y = 335;
 const GFXfont *text17_font = &Open_Sans_SemiBold_24;
 
 String text18_content = "backers";
-int text18_cursor_x = 600;
-int text18_cursor_y = 470;
+int text18_cursor_x = 442;
+int text18_cursor_y = 335;
 const GFXfont *text18_font = &Open_Sans_SemiBold_24;
 
 String text19_content = "Last update posted Feb 17, 2021";
-int text19_cursor_x = 275;
-int text19_cursor_y = 570;
+int text19_cursor_x = 196;
+int text19_cursor_y = 407;
 const GFXfont *text19_font = &Open_Sans_SemiBold_16;
 
 void mainDraw()

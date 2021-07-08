@@ -1,8 +1,8 @@
 /*
-   Campaing tracker example for e-radionica.com Inkplate 6
-   For this example you will need only USB cable and Inkplate 6.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Campaing tracker example for e-radionica.com Inkplate 6COLOR
+   For this example you will need only USB cable and Inkplate 6COLOR.
+   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can use Inkplate 6 to display html data.
@@ -15,6 +15,11 @@
 
 #include "Inkplate.h"
 #include "generatedUI.h"
+
+// Change here to your wifi ssid and pass and the url to display info for
+
+#define ssid "e-radionica.com" // Name of the WiFi network (SSID) that you want to connect Inkplate to
+#define pass "croduino"        // Password of that WiFi network
 
 #define DELAY_MS 60000 * 60
 //#define URL      "https://www.crowdsupply.com/byte-mix-labs/microbyte"
@@ -34,25 +39,16 @@ void setup()
     Serial.begin(115200);
     display.begin();
 
-    if (refreshes == 0)
-    {
-        // Welcome screen
-        display.setCursor(70, 270);
-        display.setTextSize(2);
-        display.print(F("Welcome to Inkplate Crowdsupply tracker example!"));
-        display.display();
-
-        display.clearDisplay();
-        delay(5000);
-    }
-
+    // Connect to WiFi
     while (!display.joinAP("e-radionica.com", "croduino"))
     {
         Serial.println("Connecting to wifi");
     }
 
+    // Allocate buffer to download Crowdsupply webpage
     buf = (char *)ps_malloc(100000);
 
+    // download the whole webpage
     HTTPClient http;
     if (http.begin(URL) && http.GET() > 0)
     {
@@ -65,6 +61,7 @@ void setup()
     }
     Serial.println("Buffer load complete!");
 
+    // Search for data to display
     text1_content = textInTag("<h1 class=\"mobile-break project-title\">", "</h1>");
     text2_content = textInTag("<h4 class=\"mobile-break tiny-text project-organization-name\">", "</h4>");
     text3_content = textInTag("<h3 class=\"project-teaser\">", "</h3>");
@@ -75,6 +72,7 @@ void setup()
     text11_content.replace(",", "");
     sscanf(text11_content.c_str(), "%d%", &percent);
 
+    // Draw parcent slider
     if (percent < 100 && percent > 0)
     {
         float per = (float)(percent / 100.00);
@@ -91,6 +89,7 @@ void setup()
         line0_end_x = line0_start_x;
     }
 
+    // Draw factoids
     int j = 0;
     String s = textInTag("<div class=\"factoids\">", "</div>", 3);
     Serial.println(s);
