@@ -43,8 +43,8 @@
 
 // CHANGE HERE ---------------
 
-char *ssid = "";
-char *pass = "";
+char *ssid = "e-radionica.com";
+char *pass = "croduino";
 char *calendarURL = "";
 int timeZone = 2;
 
@@ -54,11 +54,7 @@ int timeZone = 2;
 //---------------------------
 
 // Delay between API calls
-#define DELAY_MS 5000
-
-// Variables to keep count of when to get new data, and when to just update time
-int refreshes = 0;
-const int refreshesToGet = 10;
+#define DELAY_MS 15 * 60 * 1000
 
 // Initiate out Inkplate object
 Inkplate display;
@@ -82,7 +78,7 @@ struct entry
 
 // Here we store calendar entries
 int entriesNum = 0;
-entry entries[128];
+entry entries[100];
 
 // All our functions declared below setup and loop
 void drawInfo();
@@ -103,57 +99,31 @@ void setup()
     display.begin();
 
     display.clearDisplay();
-    display.display();
     display.setRotation(ROTATION);
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    // Welcome screen
-    display.setCursor(5, 230);
-    display.setTextSize(2);
-    display.println(F("Welcome to Inkplate 6 Google Calendar example!"));
-    display.setCursor(5, 250);
-    display.println(F("Connecting to WiFi..."));
-    display.display();
-
-    delay(5000);
     network.begin();
+
+    if (network.getData(data)) // Try getting data
+    {
+        // Drawing all data, functions for that are above
+        drawInfo();
+        drawGrid();
+        drawData();
+
+        // Actually display all data
+        display.display();
+    }
+
+    // Go to sleep before checking again
+    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+    esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Keep trying to get data if it fails the first time
-    if (refreshes % refreshesToGet == 0)
-        while (!network.getData(data))
-        {
-            Serial.println("Failed getting data, retrying");
-            delay(1000);
-        }
-
-    // Initial screen clearing
-    display.clearDisplay();
-
-    // Drawing all data, functions for that are above
-    if (refreshes % refreshesToGet == 0)
-    {
-        drawInfo();
-        drawGrid();
-        drawData();
-    }
-    drawTime();
-
-    // Actually display all data
-    if (refreshes % refreshesToGet == 0)
-        display.display();
-    else
-        display.display();
-
-    // Increment refreshes
-    ++refreshes;
-
-    // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
+    // Never here
 }
 
 // Function for drawing calendar info
@@ -185,31 +155,12 @@ void drawInfo()
     display.println(temp);
 }
 
-// Drawing what time it is
-void drawTime()
-{
-    // Initial text settings
-    display.setTextColor(0, 7);
-    display.setFont(&FreeSans12pt7b);
-    display.setTextSize(1);
-
-    display.setCursor(410, 20);
-
-    // Our function to get time
-    network.getTime(date);
-
-    int t = date[16];
-    date[16] = 0;
-    display.println(date);
-    date[16] = t;
-}
-
 // Draw lines in which to put events
 void drawGrid()
 {
     // upper left and low right coordinates
     int x1 = 3, y1 = 30;
-    int x2 = 600 - 3, y2 = 798;
+    int x2 = 448 - 3, y2 = 598;
 
     // header size, for day info
     int header = 30;
@@ -313,7 +264,7 @@ void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp)
 bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeeded)
 {
     // Upper left coordintes
-    int x1 = 3 + 4 + (594 / 3) * day;
+    int x1 = 3 + 4 + (440 / 3) * day;
     int y1 = beginY + 3;
 
     // Setting text font
@@ -341,7 +292,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
         display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
 
         // Char out of bounds, put in next line
-        if (w > 590 / 3 - 30)
+        if (w > 420 / 3 - 30)
         {
             // if there was a space 5 chars before, break line there
             if (n - lastSpace < 5)
@@ -389,7 +340,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
             // Gets text bounds
             display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
 
-            if (w > (594 / 3))
+            if (w > (442 / 3))
             {
                 for (int j = i - 1; j > max(-1, i - 4); --j)
                     line[j] = '.';
@@ -406,7 +357,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
 
     int bx1 = x1 + 2;
     int by1 = y1;
-    int bx2 = x1 + 590 / 3 - 7;
+    int bx2 = x1 + 440 / 3 - 7;
     int by2 = display.getCursorY() + 7;
 
     // Draw event rect bounds
@@ -490,7 +441,7 @@ void drawData()
 
         // We store how much height did one event take up
         int shift = 0;
-        bool s = drawEvent(&entries[i], entries[i].day, columns[entries[i].day] + 64, 800 - 4, &shift);
+        bool s = drawEvent(&entries[i], entries[i].day, columns[entries[i].day] + 64, 600 - 4, &shift);
 
         columns[entries[i].day] += shift;
 
@@ -508,8 +459,8 @@ void drawData()
         if (clogged[i])
         {
             // Draw notification showing that there are more events than drawn ones
-            display.fillRoundRect(6 + i * (594 / 3), 800 - 24, (594 / 3) - 5, 20, 10, 0);
-            display.setCursor(10, 800 - 6);
+            display.fillRoundRect(6 + i * (442 / 3), 600 - 24, (442 / 3) - 5, 20, 10, 0);
+            display.setCursor(10, 600 - 6);
             display.setTextColor(7, 0);
             display.setFont(&FreeSans9pt7b);
             display.print(cloggedCount[i]);

@@ -107,26 +107,26 @@ char *months[] = {
 
 // Out UI elements data
 textElement elements[] = {
-    {50 / 1.4, 130 / 1.4, &Roboto_Light_100, currencyAbbr, 0},
-    {390 / 1.4, 80 / 1.4, &Roboto_Light_20, date, 0},
-    {190 / 1.4, 185 / 1.4, &Roboto_Light_20, fromToDate, 0},
-    {570 / 1.4, 140 / 1.4, &Roboto_Light_20, "Current price:", 0},
-    {790 / 1.4, 190 / 1.4, &Roboto_Light_20, current, 1},
-    {630 / 1.4, 275 / 1.4, &Roboto_Light_20, "Minimum:", 0},
-    {790 / 1.4, 320 / 1.4, &Roboto_Light_20, minimum, 1},
-    {625 / 1.4, 420 / 1.4, &Roboto_Light_20, "Maximum:", 0},
-    {790 / 1.4, 466 / 1.4, &Roboto_Light_20, maximum, 1},
+    {36, 93, &Roboto_Light_100, currencyAbbr, 0},
+    {278, 57, &Roboto_Light_20, date, 0},
+    {135, 132, &Roboto_Light_20, fromToDate, 0},
+    {407, 100, &Roboto_Light_20, "Current price:", 0},
+    {564, 135, &Roboto_Light_20, current, 1},
+    {450, 196, &Roboto_Light_20, "Minimum:", 0},
+    {564, 228, &Roboto_Light_20, minimum, 1},
+    {446, 300, &Roboto_Light_20, "Maximum:", 0},
+    {564, 332, &Roboto_Light_20, maximum, 1},
 
-    {18 / 1.4, 570 / 1.4, &Roboto_Light_20, dates, 0},
-    {122 / 1.4, 570 / 1.4, &Roboto_Light_20, dates + 8, 0},
-    {227 / 1.4, 570 / 1.4, &Roboto_Light_20, dates + 16, 0},
-    {342 / 1.4, 570 / 1.4, &Roboto_Light_20, dates + 24, 0},
-    {466 / 1.4, 570 / 1.4, &Roboto_Light_20, dates + 32, 0},
+    {13, 407, &Roboto_Light_20, dates, 0},
+    {87, 407, &Roboto_Light_20, dates + 8, 0},
+    {162, 407, &Roboto_Light_20, dates + 16, 0},
+    {244, 407, &Roboto_Light_20, dates + 24, 0},
+    {332, 407, &Roboto_Light_20, dates + 32, 0},
 
-    {450 / 1.4, 240 / 1.4, &Roboto_Light_20, prices, 0},
-    {450 / 1.4, 322 / 1.4, &Roboto_Light_20, prices + 16, 0},
-    {450 / 1.4, 401 / 1.4, &Roboto_Light_20, prices + 32, 0},
-    {450 / 1.4, 483 / 1.4, &Roboto_Light_20, prices + 48, 0},
+    {321, 171, &Roboto_Light_20, prices, 0},
+    {321, 230, &Roboto_Light_20, prices + 16, 0},
+    {321, 286, &Roboto_Light_20, prices + 32, 0},
+    {321, 345, &Roboto_Light_20, prices + 48, 0},
 };
 
 // Our functions declared below setup and loop
@@ -141,19 +141,8 @@ void setup()
     // Initial display settings
     display.begin();
     display.clearDisplay();
-    display.display();
     display.setTextWrap(false);
     display.setTextColor(0, 7);
-
-    // Welcome screen
-    display.setCursor(30, 230);
-    display.setTextSize(2);
-    display.println(F("Welcome to Inkplate Color cryptocurrency tracker example!"));
-    display.setCursor(30, 250);
-    display.println(F("Connecting to WiFi..."));
-    display.display();
-
-    delay(5000);
 
     // Our begin function
     network.begin();
@@ -312,6 +301,8 @@ void drawAll()
 
     // Save current date string, more about it in Network.cpp
     network.getTime(date);
+
+    date[6] = 0; // Remove hours and seconds
 
     // Find current day from string
     int day;
