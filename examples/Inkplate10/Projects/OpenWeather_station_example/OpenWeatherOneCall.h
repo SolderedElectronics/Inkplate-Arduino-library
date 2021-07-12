@@ -145,9 +145,9 @@ class OpenWeatherOneCall
         float rain;           // 0.12
         float snow;           // 5.14
         int id;               // 201
-        char main[50];        // "moderate rain"
-        char description[50]; // "moderate rain"
-        char icon[50];        // "clear-day"
+        const char *main;        // "moderate rain"
+        const char *description; // "moderate rain"
+        const char *icon;  
 #ifdef DARKSKY
         // Not supported by OpenWeatherOneCall or legacy names
         long dayTime;                     // 1582151288

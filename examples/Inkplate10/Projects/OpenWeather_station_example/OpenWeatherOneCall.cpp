@@ -11,7 +11,6 @@
 */
 
 #include "OpenWeatherOneCall.h"
-#include "Arduino.h"     // Basic Arduino Library
 #include <ArduinoJson.h> // Version 6 Required
 #include <HTTPClient.h>  // Required
 
@@ -283,9 +282,9 @@ int OpenWeatherOneCall::parseWeather(char *DKEY, char *GKEY, float SEEK_LATITUDE
         forecast[x].rain = daily[x]["rain"];                                                 // 23.31
         forecast[x].snow = daily[x]["snow"];                                                 // 23.31
         forecast[x].id = daily[x]["weather"][0]["id"];                                       // 500
-        strcpy(forecast[x].main, daily[x]["weather"][0]["main"].as<char *>());               // "rain"
-        strcpy(forecast[x].description, daily[x]["weather"][0]["description"].as<char *>()); // "moderate rain"
-        strcpy(forecast[x].icon, daily[x]["weather"][0]["icon"].as<char *>());               // "10d"
+        forecast[x].main = daily[x]["weather"][0]["main"];                     // "rain"
+        forecast[x].description = daily[x]["weather"][0]["description"];       // "moderate rain"
+        forecast[x].icon = daily[x]["weather"][0]["icon"];                   // "10d"
 #ifdef DARKSKY
         // Legacy DarkSky compatibility
         forecast[x].dayTime = (long)daily[x]["dt"] + current.timezone_offset;          // 1586793600
