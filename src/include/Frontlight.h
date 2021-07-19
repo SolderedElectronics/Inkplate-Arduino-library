@@ -29,10 +29,11 @@
  * @brief       Frontlight class designed to work with inkplates that support
  * frontlight (Inkplate 6 plus)
  */
-class Frontlight : virtual public Mcp {
-public:
-  void setFrontlight(uint8_t _v);
-  void frontlight(bool _e);
+class Frontlight : virtual public Mcp
+{
+  public:
+    void setFrontlight(uint8_t _v);
+    void frontlight(bool _e);
 };
 
 #endif

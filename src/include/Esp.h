@@ -24,9 +24,10 @@
 /**
  * @brief       Esp class
  */
-class Esp {
-public:
-private:
+class Esp
+{
+  public:
+  private:
 };
 
 #endif

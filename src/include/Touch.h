@@ -31,33 +31,34 @@
  * @brief       Touch class holds functionality for interaction with touchscreen
  * displays
  */
-class Touch : virtual public Mcp {
-public:
-  bool touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h);
+class Touch : virtual public Mcp
+{
+  public:
+    bool touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h);
 
-  bool tsInit(uint8_t _pwrState);
-  void tsShutdown();
-  bool tsAvailable();
-  void tsSetPowerState(uint8_t _s);
-  uint8_t tsGetPowerState();
-  uint8_t tsGetData(uint16_t *xPos, uint16_t *yPos);
+    bool tsInit(uint8_t _pwrState);
+    void tsShutdown();
+    bool tsAvailable();
+    void tsSetPowerState(uint8_t _s);
+    uint8_t tsGetPowerState();
+    uint8_t tsGetData(uint16_t *xPos, uint16_t *yPos);
 
-  virtual int getRotation() = 0;
+    virtual int getRotation() = 0;
 
-private:
-  const char hello_packet[4] = {0x55, 0x55, 0x55, 0x55};
+  private:
+    const char hello_packet[4] = {0x55, 0x55, 0x55, 0x55};
 
-  uint8_t tsWriteRegs(uint8_t _addr, const uint8_t *_buff, uint8_t _size);
-  void tsReadRegs(uint8_t _addr, uint8_t *_buff, uint8_t _size);
-  void tsHardwareReset();
-  bool tsSoftwareReset();
-  void tsGetRawData(uint8_t *b);
-  void tsGetXY(uint8_t *_d, uint16_t *x, uint16_t *y);
-  void tsGetResolution(uint16_t *xRes, uint16_t *yRes);
+    uint8_t tsWriteRegs(uint8_t _addr, const uint8_t *_buff, uint8_t _size);
+    void tsReadRegs(uint8_t _addr, uint8_t *_buff, uint8_t _size);
+    void tsHardwareReset();
+    bool tsSoftwareReset();
+    void tsGetRawData(uint8_t *b);
+    void tsGetXY(uint8_t *_d, uint16_t *x, uint16_t *y);
+    void tsGetResolution(uint16_t *xRes, uint16_t *yRes);
 
-  uint8_t touchN;
-  uint16_t touchX[2], touchY[2];
-  uint32_t touchT = 0;
+    uint8_t touchN;
+    uint16_t touchX[2], touchY[2];
+    uint32_t touchT = 0;
 };
 
 #endif

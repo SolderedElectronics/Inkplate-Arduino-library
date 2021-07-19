@@ -30,11 +30,12 @@
  * @note        can only be used in inkplate 6PLUS, others don't suport
  * frontlight
  */
-void Frontlight::setFrontlight(uint8_t _v) {
-  Wire.beginTransmission(0x5C >> 1);
-  Wire.write(0);
-  Wire.write(63 - (_v & 0b00111111));
-  Wire.endTransmission();
+void Frontlight::setFrontlight(uint8_t _v)
+{
+    Wire.beginTransmission(0x5C >> 1);
+    Wire.write(0);
+    Wire.write(63 - (_v & 0b00111111));
+    Wire.endTransmission();
 }
 
 /**
@@ -43,14 +44,18 @@ void Frontlight::setFrontlight(uint8_t _v) {
  * @param       bool _e
  *              enable value, 1 turns on, 0 off
  */
-void Frontlight::frontlight(bool _e) {
-  if (_e) {
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, HIGH);
-  } else {
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, LOW);
-  }
+void Frontlight::frontlight(bool _e)
+{
+    if (_e)
+    {
+        pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, OUTPUT);
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, HIGH);
+    }
+    else
+    {
+        pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, OUTPUT);
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, LOW);
+    }
 }
 
 #endif
