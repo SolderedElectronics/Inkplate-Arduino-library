@@ -2,23 +2,25 @@
  **************************************************
  * @file        ImageDitherColorKernels.h
  * @brief       color kernels for dither
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     e-radionica.com
  ***************************************************/
 
 #ifndef __IMAGE_DITHER_COLOR_KERNELS
 #define __IMAGE_DITHER_COLOR_KERNELS
 
-// If you want to experiment with different color dither kernels, uncomment the one you want below
+// If you want to experiment with different color dither kernels, uncomment the
+// one you want below
 
 // Floyd Steinberg
 const int _coef = 16;
