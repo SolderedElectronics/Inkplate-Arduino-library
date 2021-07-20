@@ -37,7 +37,7 @@ char pass[] = "croduino";
 // OPTIONAL:
 // change to a different currency
 char currency[] = "bitcoin";
-char *currencyAbbr = "BTC";
+char currencyAbbr[] = "BTC";
 
 
 // Used for storing raw price values

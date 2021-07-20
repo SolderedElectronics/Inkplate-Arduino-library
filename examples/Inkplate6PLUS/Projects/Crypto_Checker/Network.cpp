@@ -26,8 +26,8 @@ Distributed as-is; no warranty is given.
 #include <ArduinoJson.h>
 
 // external parameters from our main file
-extern char *ssid;
-extern char *pass;
+extern char ssid[];
+extern char pass[];
 extern char *currency;
 
 // Get our Inkplate object from main file to draw debug info on
@@ -160,11 +160,11 @@ bool Network::getData(double *data)
             Serial.println("Success");
 
             // Save our data to data pointer from main file
-            
+
             data[0] = doc[currency]["usd"].as<double>();
             data[1] = doc[currency]["eur"].as<double>();
             data[2] = doc[currency]["gbp"].as<double>();
-            
+
             Serial.println(data[0]);
             Serial.println(data[1]);
             Serial.println(data[2]);

@@ -38,7 +38,7 @@ char pass[] = "croduino";
 // OPTIONAL:
 // change to a different currency
 char currency[] = "bitcoin";
-char *currencyAbbr = "BTC";
+char currencyAbbr[] = "BTC";
 
 // You can find your currency id here:
 // https://api.coingecko.com/api/v3/coins

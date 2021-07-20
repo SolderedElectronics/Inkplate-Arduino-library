@@ -26,8 +26,8 @@ Distributed as-is; no warranty is given.
 #include <ArduinoJson.h>
 
 // external parameters from our main file
-extern char *ssid;
-extern char *pass;
+extern char ssid[];
+extern char pass[];
 extern char *currency;
 
 // Get our Inkplate object from main file to draw debug info on
