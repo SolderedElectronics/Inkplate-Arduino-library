@@ -8,24 +8,19 @@ jobs:
         include:
           - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate6
-            examples: |
-              - examples/Inkplate6
+            examples: examples/Inkplate6
           - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate10
-            examples: |
-              - examples/Inkplate10
+            examples: examples/Inkplate10
           - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate5
-            examples: |
-              - examples/Inkplate5
+            examples: examples/Inkplate5
           - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate6plus
-            examples: |
-              - examples/Inkplate6PLUS
+            examples: examples/Inkplate6PLUS
           - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplatecolor
-            examples: |
-              - examples/InkplateColor
+              examples: examples/InkplateColor
     steps:
       - name: Checkout
         uses: actions/checkout@v2
