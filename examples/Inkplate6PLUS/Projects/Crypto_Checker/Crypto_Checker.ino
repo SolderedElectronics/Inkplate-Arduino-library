@@ -225,12 +225,12 @@ void setBlackButton()
         text2_color_text = WHITE;
         text2_color_bg = BLACK;
     }
-    else if (strcmp(currency, "binance") == 0))
-        {
-            rect2_fill = 1;
-            text3_color_text = WHITE;
-            text3_color_bg = BLACK;
-        }
+    else if (strcmp(currency, "binance") == 0)
+    {
+        rect2_fill = 1;
+        text3_color_text = WHITE;
+        text3_color_bg = BLACK;
+    }
     else if (strcmp(currency, "ripple") == 0)
     {
         rect3_fill = 1;
