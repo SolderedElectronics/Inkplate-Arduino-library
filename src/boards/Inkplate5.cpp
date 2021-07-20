@@ -185,7 +185,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         int x_sub = x0 % 2;
         uint8_t temp;
         temp = *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + x);
-        *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + x) = pixelMaskGLUT[x_sub] & temp | (x_sub ? color : color << 4);
+        *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
     }
 }
 
@@ -347,7 +347,6 @@ void Inkplate::partialUpdate(bool _forced)
     uint8_t data;
     uint8_t diffw, diffb;
     uint32_t n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
-    uint8_t dram;
 
     for (int i = 0; i < E_INK_HEIGHT; i++)
     {
