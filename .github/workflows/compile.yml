@@ -37,4 +37,4 @@ jobs:
           libraries: |
             - name: InkplateLibrary
           sketch-paths: |
-            ${{ matrix.examples }}
+            ${{ matrix.board.examples }}
