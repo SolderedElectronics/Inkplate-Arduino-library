@@ -7,20 +7,20 @@ jobs:
       matrix:
         include:
           - board: Inkplate6
-            fbqn: Dasduino_Boards:Inkplate:Inkplate6
-            examples: examples/Inkplate6
+              fbqn: Dasduino_Boards:Inkplate:Inkplate6
+              examples: examples/Inkplate6
           - board: Inkplate10
-            fbqn: Dasduino_Boards:Inkplate:Inkplate10
-            examples: examples/Inkplate10
+              fbqn: Dasduino_Boards:Inkplate:Inkplate10
+              examples: examples/Inkplate10
           - board: Inkplate5
-            fbqn: Dasduino_Boards:Inkplate:Inkplate5
-            examples: examples/Inkplate5
+              fbqn: Dasduino_Boards:Inkplate:Inkplate5
+              examples: examples/Inkplate5
           - board: Inkplate6PLUS
-            fbqn: Dasduino_Boards:Inkplate:Inkplate6plus
-            examples: examples/Inkplate6PLUS
+              fbqn: Dasduino_Boards:Inkplate:Inkplate6plus
+              examples: examples/Inkplate6PLUS
           - board: InkplateColor
-            fbqn: Dasduino_Boards:Inkplate:Inkplatecolor
-            examples: examples/InkplateColor
+              fbqn: Dasduino_Boards:Inkplate:Inkplatecolor
+              examples: examples/InkplateColor
     steps:
       - name: Checkout
         uses: actions/checkout@v2
