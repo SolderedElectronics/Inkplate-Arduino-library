@@ -32,8 +32,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Install ESP32 platform dependencies
         run: pip3 install pyserial
-      - name: Debug
-        run: echo ${{ matrix.board.additional-sketch-paths }}
       - name: Compile examples
         uses: arduino/compile-sketches@v1
         with:
@@ -43,6 +41,6 @@ jobs:
               name: Dasduino_Boards:Inkplate
           fqbn: ${{ matrix.board.fqbn }}
           libraries: |
-            - name: InkplateLibrary
+            - name: "Adafruit BME680 Library"
           sketch-paths: |
             ${{ matrix.additional-sketch-paths }}
