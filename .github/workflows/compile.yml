@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Compile Examples
 on: [push]
 jobs:
   build:
@@ -6,15 +6,35 @@ jobs:
     strategy:
       matrix:
         include:
-          - node-version: 10.x
-            site: "prod"
-            datacenter: "site-a"
-          - node-version: 12.x
-            site: "dev"
-            datacenter: "site-b"
+          - board: Inkplate6
+            fbqn: Dasduino_Boards:Inkplate:Inkplate6
+            examples: examples/Inkplate6
+          - board: Inkplate10
+            fbqn: Dasduino_Boards:Inkplate:Inkplate10
+            examples: examples/Inkplate10
+          - board: Inkplate5
+            fbqn: Dasduino_Boards:Inkplate:Inkplate5
+            examples: examples/Inkplate5
+          - board: Inkplate6PLUS
+            fbqn: Dasduino_Boards:Inkplate:Inkplate6plus
+            examples: examples/Inkplate6PLUS
+          - board: InkplateColor
+            fbqn: Dasduino_Boards:Inkplate:Inkplatecolor
+            examples: examples/InkplateColor
     steps:
-      - name: Echo site details
-        env:
-          SITE: ${{ matrix.site }}
-          DATACENTER: ${{ matrix.datacenter }}
-        run: echo $SITE $DATACENTER
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install ESP32 platform dependencies
+        run: pip3 install pyserial
+      - name: Compile examples
+        uses: arduino/compile-sketches@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          platforms:
+            - name: Dasduino_Boards:Inkplate
+              source-url: https://github.com/e-radionicacom/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json
+          fqbn: ${{ matrix.board.fqbn }}
+          libraries: |
+            - name: InkplateLibrary
+          sketch-paths: |
+            ${{ matrix.examples }}
