@@ -45,4 +45,4 @@ jobs:
           libraries: |
             - name: InkplateLibrary
           sketch-paths: |
-            ${{ matrix.board.additional-sketch-paths }}
+            ${{ matrix.additional-sketch-paths }}
