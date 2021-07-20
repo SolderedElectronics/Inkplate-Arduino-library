@@ -16,9 +16,9 @@
 
 #include "BluetoothSerial.h"
 
-#include "Peripheral.h"
-
 #define BUFFER_SIZE 1000
+
+#include "Peripheral.h"
 
 // Declare Inkplate and SerialBluetooth objects
 Inkplate display(INKPLATE_1BIT);

@@ -30,7 +30,7 @@ extern int timeZone;
 extern char ssid[];
 extern char pass[];
 
-extern char *lon;
+extern char lon[];
 extern char lat[];
 
 extern char *apiKey;

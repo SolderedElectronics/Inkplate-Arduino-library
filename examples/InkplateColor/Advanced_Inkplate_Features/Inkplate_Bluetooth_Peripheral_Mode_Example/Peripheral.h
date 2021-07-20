@@ -60,7 +60,6 @@ void run(char commandBuffer[], size_t n)
         {
             int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n, rx, ry, xc, yc;
             char b;
-            char temp[150];
             switch (*(s + 1))
             {
             case '?':
@@ -250,16 +249,17 @@ void run(char commandBuffer[], size_t n)
                     //} else {
                     //  Serial.println("#J(1)*");
                     //}
-                    if (display.getDisplayMode() == INKPLATE_1BIT)
-                    {
-                        Serial.println("#J(0)*");
-                        Serial.flush();
-                    }
-                    if (display.getDisplayMode() == INKPLATE_3BIT)
-                    {
-                        Serial.println("#J(1)*");
-                        Serial.flush();
-                    }
+                    // if (display.getDisplayMode() == INKPLATE_1BIT)
+                    // {
+
+                    // }
+                    // if (display.getDisplayMode() == INKPLATE_3BIT)
+                    // {
+                    //     Serial.println("#J(1)*");
+                    //     Serial.flush();
+                    // }
+                    Serial.println("#J(0)*");
+                    Serial.flush();
                 }
                 break;
 
@@ -285,7 +285,7 @@ void run(char commandBuffer[], size_t n)
                 sscanf(s + 3, "%d,%d,%d", &y1, &x2, &y2);
                 // sprintf(temp, "display.partialUpdate(%d, %d, %d);\n", y1, x2, y2);
                 // Serial.print(temp);
-                display.partialUpdate();
+                // display.partialUpdate();
                 break;
 
             case 'N':
@@ -329,10 +329,10 @@ void run(char commandBuffer[], size_t n)
                 c &= 1;
                 // if (c == 0) Serial.print("display.einkOff();\n");
                 // if (c == 1) Serial.print("display.einkOn();\n");
-                if (c == 0)
-                    display.einkOff();
-                if (c == 1)
-                    display.einkOn();
+                // if (c == 0)
+                //     display.einkOff();
+                // if (c == 1)
+                //     display.einkOn();
                 break;
 
             case 'R':
@@ -340,7 +340,7 @@ void run(char commandBuffer[], size_t n)
                 if (b == '?')
                 {
                     Serial.print("#R(");
-                    Serial.print(display.getPanelState(), DEC);
+                    Serial.print(0, DEC);
                     // Serial.print(1, DEC);
                     Serial.println(")*");
                     Serial.flush();
@@ -399,15 +399,4 @@ void run(char commandBuffer[], size_t n)
             *e = 0;
         }
     }
-}
-
-int hexToChar(char c)
-{
-    if (c >= '0' && c <= '9')
-        return c - '0';
-    if (c >= 'A' && c <= 'F')
-        return c - 'A' + 10;
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
-    return -1;
 }
