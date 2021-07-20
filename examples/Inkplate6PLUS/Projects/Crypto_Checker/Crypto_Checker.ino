@@ -36,8 +36,8 @@ char pass[] = "croduino";
 
 // OPTIONAL:
 // change to a different currency
-char currency[] = "bitcoin";
-char currencyAbbr[] = "BTC";
+char currency[32] = "bitcoin";
+char currencyAbbr[32] = "BTC";
 
 
 // Used for storing raw price values
@@ -88,9 +88,8 @@ void keysEvents()
 
     if (display.touchInArea(600, 10, 400, 80)) // Bitcoin
     {
-
-        currency = "bitcoin";
-        currencyAbbr = "BTC";
+        strcpy(currency, "bitcoin");
+        strcpy(currencyAbbr, "BTC");
 
         drawAll();
         getCoinPrices();
@@ -99,8 +98,8 @@ void keysEvents()
 
     if (display.touchInArea(600, 110, 400, 80)) // Ethereum
     {
-        currency = "ethereum";
-        currencyAbbr = "ETH";
+        strcpy(currency, "ethereum");
+        strcpy(currencyAbbr, "ETH");
 
         drawAll();
         getCoinPrices();
@@ -109,8 +108,8 @@ void keysEvents()
 
     if (display.touchInArea(600, 210, 400, 80)) // Binance
     {
-        currency = "binancecoin";
-        currencyAbbr = "BNB";
+        strcpy(currency, "binance");
+        strcpy(currencyAbbr, "BNB");
 
         drawAll();
         getCoinPrices();
@@ -119,8 +118,8 @@ void keysEvents()
 
     if (display.touchInArea(600, 310, 400, 80)) // XRP
     {
-        currency = "ripple";
-        currencyAbbr = "XRP";
+        strcpy(currency, "ripple");
+        strcpy(currencyAbbr, "XRP");
 
         drawAll();
         getCoinPrices();
@@ -129,8 +128,8 @@ void keysEvents()
 
     if (display.touchInArea(600, 410, 400, 80)) // Dogecoin
     {
-        currency = "dogecoin";
-        currencyAbbr = "DOGE";
+        strcpy(currency, "dogecoin");
+        strcpy(currencyAbbr, "DOGE");
 
         drawAll();
         getCoinPrices();
@@ -139,8 +138,8 @@ void keysEvents()
 
     if (display.touchInArea(600, 510, 400, 80)) // Tether
     {
-        currency = "tether";
-        currencyAbbr = "USDT";
+        strcpy(currency, "tether");
+        strcpy(currencyAbbr, "USDT");
 
         drawAll();
         getCoinPrices();
@@ -214,37 +213,37 @@ void setBlackButton()
     text6_color_text = BLACK;
     text6_color_bg = WHITE;
 
-    if (currency == "bitcoin")
+    if (strcmp(currency, "bitcoin") == 0)
     {
         rect0_fill = 1;
         text1_color_text = WHITE;
         text1_color_bg = BLACK;
     }
-    else if (currency == "ethereum")
+    else if (strcmp(currency, "ethereum") == 0)
     {
         rect1_fill = 1;
         text2_color_text = WHITE;
         text2_color_bg = BLACK;
     }
-    else if (currency == "binancecoin")
-    {
-        rect2_fill = 1;
-        text3_color_text = WHITE;
-        text3_color_bg = BLACK;
-    }
-    else if (currency == "ripple")
+    else if (strcmp(currency, "binance") == 0))
+        {
+            rect2_fill = 1;
+            text3_color_text = WHITE;
+            text3_color_bg = BLACK;
+        }
+    else if (strcmp(currency, "ripple") == 0)
     {
         rect3_fill = 1;
         text4_color_text = WHITE;
         text4_color_bg = BLACK;
     }
-    else if (currency == "dogecoin")
+    else if (strcmp(currency, "dogecoin") == 0)
     {
         rect4_fill = 1;
         text5_color_text = WHITE;
         text5_color_bg = BLACK;
     }
-    else if (currency == "tether")
+    else if (strcmp(currency, "tether") == 0)
     {
         rect5_fill = 1;
         text6_color_text = WHITE;
@@ -254,27 +253,27 @@ void setBlackButton()
 
 void drawCoinIcons()
 {
-    if (currency == "bitcoin")
+    if (strcmp(currency, "bitcoin") == 0)
     {
         display.drawImage(btc, COIN_ICON_X, COIN_ICON_Y, btc_w, btc_h);
     }
-    else if (currency == "ethereum")
+    else if (strcmp(currency, "ethereum") == 0)
     {
         display.drawImage(eth, COIN_ICON_X, COIN_ICON_Y, eth_w, eth_h);
     }
-    else if (currency == "binancecoin")
+    else if (strcmp(currency, "binance") == 0)
     {
         display.drawImage(bnc, COIN_ICON_X, COIN_ICON_Y, bnc_w, bnc_h);
     }
-    else if (currency == "ripple")
+    else if (strcmp(currency, "ripple") == 0)
     {
         display.drawImage(xrp, COIN_ICON_X, COIN_ICON_Y, xrp_w, xrp_h);
     }
-    else if (currency == "dogecoin")
+    else if (strcmp(currency, "dogecoin") == 0)
     {
         display.drawImage(doge, COIN_ICON_X, COIN_ICON_Y, doge_w, doge_h);
     }
-    else if (currency == "tether")
+    else if (strcmp(currency, "tether") == 0)
     {
         display.drawImage(tether, COIN_ICON_X, COIN_ICON_Y, tether_w, tether_h);
     }

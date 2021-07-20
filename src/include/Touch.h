@@ -45,6 +45,8 @@ class Touch : virtual public Mcp
 
     virtual int getRotation() = 0;
 
+    void tsGetRawData(uint8_t *b);
+
   private:
     const char hello_packet[4] = {0x55, 0x55, 0x55, 0x55};
 
@@ -52,7 +54,6 @@ class Touch : virtual public Mcp
     void tsReadRegs(uint8_t _addr, uint8_t *_buff, uint8_t _size);
     void tsHardwareReset();
     bool tsSoftwareReset();
-    void tsGetRawData(uint8_t *b);
     void tsGetXY(uint8_t *_d, uint16_t *x, uint16_t *y);
     void tsGetResolution(uint16_t *xRes, uint16_t *yRes);
 
