@@ -424,7 +424,7 @@ void setup()
 }
 
 void loop()
-{
+
     // Example will demostrate funcionality one by one. You always first set everything in the frame buffer and
     // afterwards you show it on the screen using display.display().
 
