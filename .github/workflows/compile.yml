@@ -33,7 +33,7 @@ jobs:
       - name: Install ESP32 platform dependencies
         run: pip3 install pyserial
       - name: Debug
-        run: echo ${{ matrix.board.fqbn }}
+        run: echo ${{ matrix.board.additional-sketch-paths }}
       - name: Compile examples
         uses: arduino/compile-sketches@v1
         with:
@@ -45,4 +45,4 @@ jobs:
           libraries: |
             - name: InkplateLibrary
           sketch-paths: |
-            - examples/Inkplate6
+            ${{ matrix.board.additional-sketch-paths }}
