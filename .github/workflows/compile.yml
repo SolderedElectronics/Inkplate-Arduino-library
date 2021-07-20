@@ -26,6 +26,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Install ESP32 platform dependencies
         run: pip3 install pyserial
+      -debug:
+        run: echo ${{ matrix.board.fqbn }} 
       - name: Compile examples
         uses: arduino/compile-sketches@v1
         with:
