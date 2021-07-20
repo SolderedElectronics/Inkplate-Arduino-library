@@ -41,6 +41,7 @@ jobs:
               name: Dasduino_Boards:Inkplate
           fqbn: ${{ matrix.board.fqbn }}
           libraries: |
+            - source-path: ./
             - name: "Adafruit BME680 Library"
           sketch-paths: |
             ${{ matrix.additional-sketch-paths }}
