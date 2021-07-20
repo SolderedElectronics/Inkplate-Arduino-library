@@ -6,23 +6,23 @@ jobs:
     strategy:
       matrix:
         include:
-          - board: Inkplate6
+          - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate6
             examples: |
               - examples/Inkplate6
-          - board: Inkplate10
+          - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate10
             examples: |
               - examples/Inkplate10
-          - board: Inkplate5
+          - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate5
             examples: |
               - examples/Inkplate5
-          - board: Inkplate6PLUS
+          - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate6plus
             examples: |
               - examples/Inkplate6PLUS
-          - board: InkplateColor
+          - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplatecolor
             examples: |
               - examples/InkplateColor
