@@ -60,8 +60,8 @@ bool metric = true; //<------------------------------TRUE is METRIC, FALSE is IM
 #include "Fonts/Roboto_Light_120.h"
 #include "Fonts/Roboto_Light_36.h"
 #include "Fonts/Roboto_Light_48.h"
-#include "Fonts/moon_phases20pt7b.h"
-#include "Fonts/moon_phases36pt7b.h"
+#include "Fonts/moon_Phases20pt7b.h"
+#include "Fonts/moon_Phases36pt7b.h"
 
 // Delay between API calls
 #define DELAY_MS 59000
@@ -257,7 +257,7 @@ void setup()
 
     connectWifi();
 
-        // Clear display
+    // Clear display
     t = now();
 
     if ((minute(t) % 30) == 0) // Also returns 0 when time isn't set
@@ -290,7 +290,6 @@ void setup()
 
 void loop()
 {
-
 }
 
 // Function for drawing weather info
@@ -540,7 +539,7 @@ void drawMoon()
     int moonage = 29.5305882 * moonphase;
     // Serial.println("moon age: " + String(moonage));
     // convert to appropriate icon
-    display.setFont(&moon_phases36pt7b);
+    display.setFont(&moon_Phases36pt7b);
     sprintf(Output, "%c", (char)((int)'A' + (int)(moonage * 25. / 30)));
     alignText(CENTRE, Output, MoonCentreX, MoonCentreY);
 
