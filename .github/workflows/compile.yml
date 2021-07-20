@@ -43,5 +43,6 @@ jobs:
           libraries: |
             - source-path: ./
             - name: "Adafruit BME680 Library"
+            - name: ArduinoJson
           sketch-paths: |
             ${{ matrix.additional-sketch-paths }}

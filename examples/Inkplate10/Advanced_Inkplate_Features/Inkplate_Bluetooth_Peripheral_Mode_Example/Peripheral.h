@@ -1,64 +1,53 @@
-#include "EEPROM.h"
+/*
+   Inkplate_Peripheral_Mode sketch for e-radionica.com Inkplate 6
+   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   Using this sketch, you don't have to program and control e-paper using Arduino code.
+   Instead, you can send UART command (explained in documentation that can be found inside folder of this sketch).
+   This give you flexibility that you can use this Inkplate 6 on any platform!
+
+   Because it uses UART, it's little bit slower and it's not recommended to send bunch of
+   drawPixel command to draw some image. Instead, load bitmaps and pictures on SD card and load image from SD.
+   If we missed some function, you can modify this and make yor own.
+   Also, every Inkplate comes with this peripheral mode right from the factory.
+
+   Learn more about Peripheral Mode in this update:
+   https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates
+
+   UART settings are: 115200 baud, standard parity, ending with "\n\r" (both)
+   You can send commands via USB port or by directly connecting to ESP32 TX and RX pins.
+   Don't forget you need to send #L(1)* after each command to show it on the display
+   (equal to display.display()).
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   15 July 2020 by e-radionica.com
+*/
+
 #include "Inkplate.h"
-#include "image.h"
-#include <Wire.h>
 
-Inkplate display(INKPLATE_1BIT);
+extern Inkplate display;
 
-double vcomVoltage;
-int EEPROMaddress = 0;
-
-// Peripheral mode variables and arrays
-#define BUFFER_SIZE 1000
-char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
 
-// Internal registers of MCP
-uint8_t mcpRegsInt[22];
-
-void setup()
+int hexToChar(char c)
 {
-    display.begin();
-    Serial.begin(115200);
-    EEPROM.begin(64);
-
-    vcomVoltage = -1.19;
-
-    if (EEPROM.read(EEPROMaddress) != 170)
-    {
-        display.pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 6, INPUT_PULLUP);
-        writeVCOMToEEPROM(vcomVoltage);
-        EEPROM.write(EEPROMaddress, 170);
-        EEPROM.commit();
-        display.selectDisplayMode(INKPLATE_1BIT);
-    }
-    else
-    {
-        Serial.println("Vcom already set!");
-        // vcomVoltage = (double)EEPROM.read(EEPROMaddress) / 100;
-    }
-    memset(commandBuffer, 0, BUFFER_SIZE);
-
-    showSplashScreen();
+    if (c >= '0' && c <= '9')
+        return c - '0';
+    if (c >= 'A' && c <= 'F')
+        return c - 'A' + 10;
+    if (c >= 'a' && c <= 'f')
+        return c - 'a' + 10;
+    return -1;
 }
 
-void loop()
+void run(char commandBuffer[], size_t n)
 {
-
-    if (Serial.available())
-    {
-        while (Serial.available())
-        {
-            for (int i = 0; i < (BUFFER_SIZE - 1); i++)
-            {
-                commandBuffer[i] = commandBuffer[i + 1];
-            }
-            commandBuffer[BUFFER_SIZE - 1] = Serial.read();
-        }
-    }
     char *s = NULL;
     char *e = NULL;
-    for (int i = 0; i < BUFFER_SIZE; i++)
+    for (int i = 0; i < n; i++)
     {
         if (commandBuffer[i] == '#' && s == NULL)
             s = &commandBuffer[i];
@@ -69,9 +58,9 @@ void loop()
     {
         if ((e - s) > 0)
         {
-            int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n;
+            int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n, rx, ry, xc, yc;
             char b;
-            // char temp[150];
+            char temp[150];
             switch (*(s + 1))
             {
             case '?':
@@ -357,146 +346,57 @@ void loop()
                     Serial.flush();
                 }
                 break;
+            case 'S':
+                sscanf(s + 3, "%d,%d,\"%149[^\"]\"", &x, &y, strTemp);
+                n = strlen(strTemp);
+                for (int i = 0; i < n; i++)
+                {
+                    strTemp[i] = toupper(strTemp[i]);
+                }
+                for (int i = 0; i < n; i += 2)
+                {
+                    strTemp[i / 2] = (hexToChar(strTemp[i]) << 4) | (hexToChar(strTemp[i + 1]) & 0x0F);
+                }
+                strTemp[n / 2] = 0;
+                r = display.sdCardInit();
+                if (r)
+                {
+                    r = display.drawImage(strTemp, x, y);
+                    Serial.print("#H(");
+                    Serial.print(r, DEC);
+                    Serial.println(")*");
+                    Serial.flush();
+                    // sprintf(temp, "display.drawBitmap(%d, %d, %s)\n", x, y, strTemp);
+                    // Serial.print(temp);
+                }
+                else
+                {
+                    Serial.println("#H(-1)*");
+                    Serial.flush();
+                }
+                break;
+            case 'T':
+                int t;
+                sscanf(s + 3, "%d,%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &c, &t);
+                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
+                // Serial.print(temp);
+                display.drawThickLine(x1, y1, x2, y2, c, t);
+                break;
+            case 'U':
+                sscanf(s + 3, "%d,%d,%d,%d,%d", &rx, &ry, &xc, &yc, &c);
+                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
+                // Serial.print(temp);
+                display.drawElipse(rx, ry, xc, yc, c);
+                break;
+            case 'V':
+                sscanf(s + 3, "%d,%d,%d,%d,%d", &rx, &ry, &xc, &yc, &c);
+                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
+                // Serial.print(temp);
+                display.fillElipse(rx, ry, xc, yc, c);
+                break;
             }
             *s = 0;
             *e = 0;
         }
-    }
-}
-
-int hexToChar(char c)
-{
-    if (c >= '0' && c <= '9')
-        return c - '0';
-    if (c >= 'A' && c <= 'F')
-        return c - 'A' + 10;
-    if (c >= 'a' && c <= 'f')
-        return c - 'a' + 10;
-    return -1;
-}
-
-void writeReg(uint8_t _reg, uint8_t _data)
-{
-    Wire.beginTransmission(0x48);
-    Wire.write(_reg);
-    Wire.write(_data);
-    Wire.endTransmission();
-}
-
-uint8_t readReg(uint8_t _reg)
-{
-    Wire.beginTransmission(0x48);
-    Wire.write(_reg);
-    Wire.endTransmission(false);
-    Wire.requestFrom(0x48, 1);
-    return Wire.read();
-}
-
-void showSplashScreen()
-{
-    display.clean(0, 1);
-    display.display();
-    display.selectDisplayMode(INKPLATE_3BIT);
-    display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
-    display.setTextColor(0, 7);
-    display.setTextSize(1);
-    display.setCursor(10, 10);
-    display.print(vcomVoltage, 2);
-    display.print("V");
-    display.display();
-}
-
-// Need to be changed to inkplate 10 Null waveform
-void writeToScreen()
-{
-    display.clean(1, 8);
-    display.clean(0, 2);
-    display.clean(2, 10);
-    // delay(10);
-}
-
-// Do not use until until null waveform is set correctly
-double readVCOM()
-{
-    double vcomVolts;
-    writeReg(0x01, B00111111); // enable all rails
-    writeReg(0x04, (readReg(0x04) | B00100000));
-    writeToScreen();
-    writeReg(0x04, (readReg(0x04) | B10000000));
-    delay(10);
-    while (display.digitalReadMCP(6))
-    {
-        delay(1);
-    };
-    readReg(0x07);
-    uint16_t vcom = ((readReg(0x04) & 1) << 8) | readReg(0x03);
-    vcomVolts = vcom * 10 / 1000.0;
-    display.einkOff();
-    return -vcomVolts;
-}
-
-void writeVCOMToEEPROM(double v)
-{
-    int vcom = int(abs(v) * 100);
-    vcomH = (vcom >> 8) & 1;
-    vcomL = vcom & 0xFF;
-    // First, we have to power up TPS65186
-    // Pull TPS65186 WAKEUP pin to High
-    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 3, HIGH);
-
-    // Pull TPS65186 PWR pin to High
-    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 4, HIGH);
-    delay(10);
-
-    // Send to TPS65186 first 8 bits of VCOM
-    writeReg(0x03, vcomL);
-
-    // Send new value of register to TPS
-    writeReg(0x04, vcomH);
-    delay(1);
-
-    // Program VCOM value to EEPROM
-    writeReg(0x04, vcomH | (1 << 6));
-
-    // Wait until EEPROM has been programmed
-    delay(1);
-    do
-    {
-        delay(1);
-    } while (display.digitalReadInternal(MCP23017_INT_ADDR, mcpRegsInt, 6));
-
-    // Clear Interrupt flag by reading INT1 register
-    readReg(0x07);
-
-    // Now, power off whole TPS
-    // Pull TPS65186 WAKEUP pin to Low
-    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 3, LOW);
-
-    // Pull TPS65186 PWR pin to Low
-    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 4, LOW);
-
-    // Wait a little bit...
-    delay(1000);
-
-    // Power up TPS again
-    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 3, HIGH);
-
-    delay(10);
-
-    // Read VCOM valuse from registers
-    vcomL = readReg(0x03);
-    vcomH = readReg(0x04);
-    Serial.print("Vcom: ");
-    Serial.println(vcom);
-    Serial.print("Vcom register: ");
-    Serial.println(vcomL | (vcomH << 8));
-
-    if (vcom != (vcomL | (vcomH << 8)))
-    {
-        Serial.println("\nVCOM EEPROM PROGRAMMING FAILED!\n");
-    }
-    else
-    {
-        Serial.println("\nVCOM EEPROM PROGRAMMING OK\n");
     }
 }

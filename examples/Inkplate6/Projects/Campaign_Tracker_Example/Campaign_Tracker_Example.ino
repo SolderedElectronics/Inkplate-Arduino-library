@@ -18,7 +18,7 @@
 
 #define DELAY_MS 60000 * 60
 //#define URL      "https://www.crowdsupply.com/byte-mix-labs/microbyte"
-#define URL      "https://www.crowdsupply.com/e-radionica/inkplate-10"
+#define URL "https://www.crowdsupply.com/e-radionica/inkplate-10"
 
 Inkplate display(INKPLATE_1BIT);
 
@@ -46,7 +46,7 @@ void setup()
         delay(5000);
     }
 
-    while(!display.joinAP("e-radionica.com", "croduino"))
+    while (!display.joinAP("e-radionica.com", "croduino"))
     {
         Serial.println("Connecting to wifi");
     }
@@ -73,9 +73,9 @@ void setup()
     text11_content = textInTag("<div class=\"status-bar status-bar-primary\">", "</span>");
     int percent;
     text11_content.replace(",", "");
-    sscanf(text11_content.c_str(), "%d%", &percent);
+    sscanf(text11_content.c_str(), "%d%%", &percent);
 
-    if(percent < 100 && percent > 0)
+    if (percent < 100 && percent > 0)
     {
         float per = (float)(percent / 100.00);
         int diff = line0_end_x - line0_start_x;
@@ -85,7 +85,6 @@ void setup()
     }
     else if (percent >= 100)
     {
-
     }
     else
     {
@@ -95,9 +94,10 @@ void setup()
     int j = 0;
     String s = textInTag("<div class=\"factoids\">", "</div>", 3);
     Serial.println(s);
-    String *arr[] = {&text13_content, &text14_content, &text15_content, &text17_content, &text17_content, &text17_content};
+    String *arr[] = {&text13_content, &text14_content, &text15_content,
+                     &text17_content, &text17_content, &text17_content};
     for (int i = 0; i < 6; ++i)
-    {           
+    {
         while (isspace(s[j++]))
             ;
         --j;
@@ -131,7 +131,7 @@ String textInTag(const char *tag, const char *tagEnd, int dt)
     while (dt--)
         end = strstr(end + 1, tagEnd);
 
-    int d = 0, i = 0, rc = 0;
+    int d = 0, rc = 0;
     for (char *t = start; t < end; ++t)
     {
         if (*t == '<')

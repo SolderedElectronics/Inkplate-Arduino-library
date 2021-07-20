@@ -70,7 +70,7 @@ void setup()
     text11_content = textInTag("<div class=\"status-bar status-bar-primary\">", "</span>");
     int percent;
     text11_content.replace(",", "");
-    sscanf(text11_content.c_str(), "%d%", &percent);
+    sscanf(text11_content.c_str(), "%d%%", &percent);
 
     // Draw parcent slider
     if (percent < 100 && percent > 0)
@@ -93,7 +93,8 @@ void setup()
     int j = 0;
     String s = textInTag("<div class=\"factoids\">", "</div>", 3);
     Serial.println(s);
-    String *arr[] = {&text13_content, &text14_content, &text15_content, &text17_content, &text17_content, &text17_content};
+    String *arr[] = {&text13_content, &text14_content, &text15_content,
+                     &text17_content, &text17_content, &text17_content};
     for (int i = 0; i < 6; ++i)
     {
         while (isspace(s[j++]))
@@ -129,7 +130,7 @@ String textInTag(const char *tag, const char *tagEnd, int dt)
     while (dt--)
         end = strstr(end + 1, tagEnd);
 
-    int d = 0, i = 0, rc = 0;
+    int d = 0, rc = 0;
     for (char *t = start; t < end; ++t)
     {
         if (*t == '<')

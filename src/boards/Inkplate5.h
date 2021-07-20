@@ -58,6 +58,14 @@
 #define MCP23017_GPIOB    0x13
 #define MCP23017_OLATB    0x15
 
+#define MCP23017_PIN_B1 9
+#define MCP23017_PIN_B2 10
+#define MCP23017_PIN_B3 11
+#define MCP23017_PIN_B4 12
+#define MCP23017_PIN_B5 13
+#define MCP23017_PIN_B6 14
+#define MCP23017_PIN_B7 15
+
 #define WAVEFORM3BIT                                                                                                   \
     {                                                                                                                  \
         {0, 0, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 0, 0, 0, 0, 0}, {0, 2, 2, 2, 2, 1, 1, 0}, {2, 2, 2, 2, 2, 1, 1, 0},        \

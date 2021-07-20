@@ -79,7 +79,7 @@ void loop()
         {
             int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n;
             char b;
-            char temp[150];
+            // char temp[150];
             switch (*(s + 1))
             {
             case '?':
@@ -402,7 +402,6 @@ uint8_t readReg(uint8_t _reg)
 
 void showSplashScreen()
 {
-    display.clean();
     display.display();
     display.selectDisplayMode(INKPLATE_3BIT);
     display.drawBitmap3Bit(0, 0, picture1, picture1_w, picture1_h);
@@ -416,9 +415,6 @@ void showSplashScreen()
 
 void writeToScreen()
 {
-    display.cleanFast(1, 8);
-    display.cleanFast(0, 2);
-    display.cleanFast(2, 10);
     // delay(10);
 }
 
@@ -444,7 +440,6 @@ double readVCOM()
 void writeVCOMToEEPROM(double v)
 {
     int vcom = int(abs(v) * 100);
-    uint8_t vcomH, vcomL, vcom2Reg;
     vcomH = (vcom >> 8) & 1;
     vcomL = vcom & 0xFF;
     // First, we have to power up TPS65186

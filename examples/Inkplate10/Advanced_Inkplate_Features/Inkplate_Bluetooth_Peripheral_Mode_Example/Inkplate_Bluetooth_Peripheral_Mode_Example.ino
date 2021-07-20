@@ -1,8 +1,8 @@
 /*
    Inkplate_Bluetooth_Peripheral_Mode_Example example for e-radionica Inkplate 6
    For this example you will need USB cable and an Inkplate 6
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Select "Inkplate 10(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example shows how to use Inkplate as a peripheral device over Bluetooth.
@@ -12,7 +12,6 @@
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
    15 July 2020 by e-radionica.com
 */
-
 #include "Inkplate.h"
 
 #include "BluetoothSerial.h"
