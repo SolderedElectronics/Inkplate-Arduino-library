@@ -3,28 +3,29 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         include:
           - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate6
-            examples: |
+            additional-sketch-paths: |
               - examples/Inkplate6
           - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate10
-            examples: |
+            additional-sketch-paths: |
               - examples/Inkplate10
           - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate5
-            examples: |
+            additional-sketch-paths: |
               - examples/Inkplate5
           - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate6plus
-            examples: |
+            additional-sketch-paths: |
               - examples/Inkplate6PLUS
           - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplatecolor
-            examples: |
+            additional-sketch-paths: |
               - examples/InkplateColor
     steps:
       - name: Checkout
@@ -44,4 +45,4 @@ jobs:
           libraries: |
             - name: InkplateLibrary
           sketch-paths: |
-            ${{ matrix.board.examples }}
+            - examples/Inkplate6
