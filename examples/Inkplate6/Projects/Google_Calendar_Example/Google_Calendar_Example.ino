@@ -45,7 +45,7 @@
 
 char *ssid = "";
 char *pass = "";
-char *calendarURL = "";
+char calendarURL[] = "";
 int timeZone = 2;
 
 // Set to 3 to flip the screen 180 degrees

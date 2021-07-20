@@ -30,12 +30,12 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char *ssid = "e-radionica.com";
-char *pass = "croduino";
+char ssid[] = "e-radionica.com";
+char pass[] = "croduino";
 
 // OPTIONAL:
 // change to a different currency
-char *currency = "bitcoin";
+char currency[] = "bitcoin";
 char *currencyAbbr = "BTC";
 
 // You can find your currency id here:

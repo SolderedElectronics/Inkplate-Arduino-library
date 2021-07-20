@@ -30,12 +30,12 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char *ssid = "e-radionica.com";
-char *pass = "croduino";
+char ssid[] = "e-radionica.com";
+char pass[] = "croduino";
 
 // OPTIONAL:
 // change to a different currency
-char *currency = "bitcoin";
+char currency[] = "bitcoin";
 char *currencyAbbr = "BTC";
 
 // You can find your currency id here:
@@ -107,26 +107,18 @@ char *months[] = {
 
 // Out UI elements data
 textElement elements[] = {
-    {36, 93, &Roboto_Light_100, currencyAbbr, 0},
-    {278, 57, &Roboto_Light_20, date, 0},
-    {135, 132, &Roboto_Light_20, fromToDate, 0},
-    {407, 100, &Roboto_Light_20, "Current price:", 0},
-    {564, 135, &Roboto_Light_20, current, 1},
-    {450, 196, &Roboto_Light_20, "Minimum:", 0},
-    {564, 228, &Roboto_Light_20, minimum, 1},
-    {446, 300, &Roboto_Light_20, "Maximum:", 0},
+    {36, 93, &Roboto_Light_100, currencyAbbr, 0}, {278, 57, &Roboto_Light_20, date, 0},
+    {135, 132, &Roboto_Light_20, fromToDate, 0},  {407, 100, &Roboto_Light_20, "Current price:", 0},
+    {564, 135, &Roboto_Light_20, current, 1},     {450, 196, &Roboto_Light_20, "Minimum:", 0},
+    {564, 228, &Roboto_Light_20, minimum, 1},     {446, 300, &Roboto_Light_20, "Maximum:", 0},
     {564, 332, &Roboto_Light_20, maximum, 1},
 
-    {13, 407, &Roboto_Light_20, dates, 0},
-    {87, 407, &Roboto_Light_20, dates + 8, 0},
-    {162, 407, &Roboto_Light_20, dates + 16, 0},
-    {244, 407, &Roboto_Light_20, dates + 24, 0},
+    {13, 407, &Roboto_Light_20, dates, 0},        {87, 407, &Roboto_Light_20, dates + 8, 0},
+    {162, 407, &Roboto_Light_20, dates + 16, 0},  {244, 407, &Roboto_Light_20, dates + 24, 0},
     {332, 407, &Roboto_Light_20, dates + 32, 0},
 
-    {321, 171, &Roboto_Light_20, prices, 0},
-    {321, 230, &Roboto_Light_20, prices + 16, 0},
-    {321, 286, &Roboto_Light_20, prices + 32, 0},
-    {321, 345, &Roboto_Light_20, prices + 48, 0},
+    {321, 171, &Roboto_Light_20, prices, 0},      {321, 230, &Roboto_Light_20, prices + 16, 0},
+    {321, 286, &Roboto_Light_20, prices + 32, 0}, {321, 345, &Roboto_Light_20, prices + 48, 0},
 };
 
 // Our functions declared below setup and loop
@@ -312,8 +304,7 @@ void drawAll()
     for (int i = 0; i < 12; ++i)
     {
         if (strncmp(months[i], date, 3) == 0)
-            sprintf(fromToDate, "%d.%d. to %d.%d.", day, ((i + 1) % 12 ? i + 1 : 12), day,
-                    ((i + 2) % 12 ? i + 2 : 12));
+            sprintf(fromToDate, "%d.%d. to %d.%d.", day, ((i + 1) % 12 ? i + 1 : 12), day, ((i + 2) % 12 ? i + 2 : 12));
     }
 
     // Draw graph

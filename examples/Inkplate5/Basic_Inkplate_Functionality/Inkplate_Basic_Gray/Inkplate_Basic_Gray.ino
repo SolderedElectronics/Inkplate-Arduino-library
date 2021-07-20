@@ -28,9 +28,10 @@ Inkplate display(INKPLATE_3BIT); // Create object on Inkplate library and set li
                                  // Other option is BW mode, which is demonstrated in next example
                                  // "Inkplate_basic_BW"
 
-#define DELAY_MS                                                                                                       \
-    5000 //Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not recommended \
-                      //Want to refresh faster? Use partial update! Find example in "Inkplate-basic_partial_update"
+
+// Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not recommended
+#define DELAY_MS 5000
+// Want to refresh faster? Use partial update! Find example in "Inkplate-basic_partial_update"
 
 void setup()
 {

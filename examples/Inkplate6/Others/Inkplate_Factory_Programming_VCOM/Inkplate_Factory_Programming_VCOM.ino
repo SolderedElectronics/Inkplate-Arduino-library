@@ -449,8 +449,8 @@ double readVCOM()
 void writeVCOMToEEPROM(double v)
 {
     int vcom = int(abs(v) * 100);
-    vcomH = (vcom >> 8) & 1;
-    vcomL = vcom & 0xFF;
+    int vcomH = (vcom >> 8) & 1;
+    int vcomL = vcom & 0xFF;
     // First, we have to power up TPS65186
     // Pull TPS65186 WAKEUP pin to High
     display.digitalWriteInternal(MCP23017_ADDR, mcpRegsInt, 3, HIGH);

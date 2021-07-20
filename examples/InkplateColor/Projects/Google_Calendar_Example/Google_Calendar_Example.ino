@@ -43,9 +43,9 @@
 
 // CHANGE HERE ---------------
 
-char *ssid = "e-radionica.com";
-char *pass = "croduino";
-char *calendarURL = "";
+char ssid[] = "e-radionica.com";
+char pass[] = "croduino";
+char calendarURL[] = "";
 int timeZone = 2;
 
 // Set to 3 to flip the screen 180 degrees

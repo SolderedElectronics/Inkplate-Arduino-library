@@ -35,7 +35,7 @@ char *pass = "";
 
 // OPTIONAL:
 // change to a different currency
-char *currency = "bitcoin";
+char currency[] = "bitcoin";
 char *currencyAbbr = "BTC";
 
 // You can find your currency id here:

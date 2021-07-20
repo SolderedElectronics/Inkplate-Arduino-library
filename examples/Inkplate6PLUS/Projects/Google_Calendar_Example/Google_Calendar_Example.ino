@@ -43,8 +43,8 @@
 
 // CHANGE HERE ---------------
 
-char *ssid = "e-radionica.com";
-char *pass = "croduino";
+char ssid[] = "e-radionica.com";
+char pass[] = "croduino";
 char *calendarURL = "https://calendar.google.com/calendar/ical/nitko12%40hotmail.com/"
                     "private-b201b93428ac8d800b00d19b982a892b/basic.ics";
 int timeZone = 2;

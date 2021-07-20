@@ -32,12 +32,12 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char *ssid = "e-radionica.com";
-char *pass = "croduino";
+char ssid[] = "e-radionica.com";
+char pass[] = "croduino";
 
 // OPTIONAL:
 // change to a different currency
-char *currency = "bitcoin";
+char currency[] = "bitcoin";
 char *currencyAbbr = "BTC";
 
 // You can find your currency id here:
@@ -146,21 +146,21 @@ void setup()
         delay(1000);
     }
 
-        // Our begin function
-        network.begin();
+    // Our begin function
+    network.begin();
 
-        while (!network.getData(data))
-        {
-            Serial.println("Retrying retriving data!");
-            delay(1000);
-        }
+    while (!network.getData(data))
+    {
+        Serial.println("Retrying retriving data!");
+        delay(1000);
+    }
 
-        // Our main drawing function
-        drawAll();
-        // Time drawing function
-        drawTime();
-        // Full refresh
-        display.display();
+    // Our main drawing function
+    drawAll();
+    // Time drawing function
+    drawTime();
+    // Full refresh
+    display.display();
 
     ++refreshes;
 
