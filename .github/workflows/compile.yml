@@ -30,9 +30,9 @@ jobs:
         uses: arduino/compile-sketches@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          platforms:
-            name: Dasduino_Boards:Inkplate
-            source-url: https://github.com/e-radionicacom/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json
+          platforms: |
+            - source-url: https://github.com/e-radionicacom/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json
+              name: Dasduino_Boards:Inkplate
           fqbn: ${{ matrix.board.fqbn }}
           libraries: |
             - name: InkplateLibrary
