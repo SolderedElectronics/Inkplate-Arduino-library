@@ -28,7 +28,7 @@ Distributed as-is; no warranty is given.
 // external parameters from our main file
 extern char ssid[];
 extern char pass[];
-extern char *currency;
+extern char currency[];
 
 // Get our Inkplate object from main file to draw debug info on
 extern Inkplate display;

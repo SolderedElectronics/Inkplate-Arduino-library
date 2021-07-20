@@ -33,7 +33,7 @@ extern char pass[];
 extern char lon[];
 extern char lat[];
 
-extern char *apiKey;
+extern char apiKey[];
 
 extern Inkplate display;
 

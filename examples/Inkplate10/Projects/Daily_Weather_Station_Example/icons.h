@@ -8,8 +8,8 @@
 #include "binary_Icons/icon_Lc.h"
 #include "binary_Icons/icon_Lr.h"
 #include "binary_Icons/icon_S.h"
-#include "binary_Icons/icon_SL.h"
 #include "binary_Icons/icon_SN.h"
+#include "binary_Icons/icon_Sl.h"
 #include "binary_Icons/icon_T.h"
 
 #include "binary_Icons/icon_S_C.h"

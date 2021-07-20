@@ -54,6 +54,9 @@ void setup()
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_34, 1);
 
+    // Enable wakup from deep sleep on gpio 36
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, 0);
+
     // Go to sleep
     esp_deep_sleep_start();
 }
