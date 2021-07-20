@@ -25,7 +25,7 @@ typedef struct
     GFXglyph *glyph; ///< Glyph array
     uint8_t first;   ///< ASCII extents (first char)
     uint8_t last;    ///< ASCII extents (last char)
-    int8_t yAdvance; ///< Newline distance (y axis)
+    int yAdvance;    ///< Newline distance (y axis)
 } GFXfont;
 
 #endif // _GFXFONT_H_

@@ -35,8 +35,8 @@ char lon[] = "45.5510548";
 char lat[] = "18.5947808";
 
 // Change to your wifi ssid and password
-char *ssid = "";
-char *pass = "";
+char ssid[] = "";
+char pass[] = "";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN

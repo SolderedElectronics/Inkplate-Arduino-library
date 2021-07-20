@@ -43,8 +43,8 @@
 
 // CHANGE HERE ---------------
 
-char *ssid = "";
-char *pass = "";
+char ssid[] = "";
+char pass[] = "";
 char calendarURL[] = "";
 int timeZone = 2;
 

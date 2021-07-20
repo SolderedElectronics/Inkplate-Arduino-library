@@ -30,8 +30,8 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char *ssid = "";
-char *pass = "";
+char ssid[] = "";
+char pass[] = "";
 
 // OPTIONAL:
 // change to a different currency
@@ -97,7 +97,7 @@ RTC_DATA_ATTR char minimum[16];
 RTC_DATA_ATTR char maximum[16];
 
 // All months in a year, for finding current date
-char *months[] = {
+char months[][12] = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 };
 

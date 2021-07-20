@@ -256,7 +256,7 @@ void Network::setTime()
 void Network::getHours(char *hour1, char *hour2, char *hour3, char *hour4)
 {
     // Format hours info
-    sprintf(hour1, "%2dh", (dataEpoch / 3600L + timeZone + 24) % 24);
+    sprintf(hour1, "%2ldh", (dataEpoch / 3600L + timeZone + 24) % 24);
     sprintf(hour2, "%2ldh", (dataEpoch / 3600L + 1 + timeZone + 24) % 24);
     sprintf(hour3, "%2ldh", (dataEpoch / 3600L + 2 + timeZone + 24) % 24);
     sprintf(hour4, "%2ldh", (dataEpoch / 3600L + 3 + timeZone + 24) % 24);

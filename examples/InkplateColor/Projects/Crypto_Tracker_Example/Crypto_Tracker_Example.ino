@@ -90,7 +90,7 @@ char minimum[16];
 char maximum[16];
 
 // All months in a year, for finding current date
-char *months[] = {
+char months[][12] = {
     "Jan"
     "Feb",
     "Mar",
