@@ -167,14 +167,21 @@ void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
                 formatTemp(currentTemp, doc["consolidated_weather"][0][F("the_temp")].as<float>());
                 formatWind(currentWind, doc["consolidated_weather"][0][F("wind_speed")].as<float>());
 
-                strcpy(city, doc["title"].as<char *>());
-                strcpy(currentWeather, doc["consolidated_weather"][0]["weather_state_name"].as<char *>());
-                strcpy(currentWeatherAbbr, doc["consolidated_weather"][0]["weather_state_abbr"].as<char *>());
+                strcpy(city, doc["title"].as<const char *>());
+                ;
+                strcpy(currentWeather, doc["consolidated_weather"][0]["weather_state_name"].as<const char *>());
+                ;
+                strcpy(currentWeatherAbbr, doc["consolidated_weather"][0]["weather_state_abbr"].as<const char *>());
+                ;
 
-                strcpy(abbr1, doc["consolidated_weather"][0]["weather_state_abbr"].as<char *>());
-                strcpy(abbr2, doc["consolidated_weather"][1]["weather_state_abbr"].as<char *>());
-                strcpy(abbr3, doc["consolidated_weather"][2]["weather_state_abbr"].as<char *>());
-                strcpy(abbr4, doc["consolidated_weather"][3]["weather_state_abbr"].as<char *>());
+                strcpy(abbr1, doc["consolidated_weather"][0]["weather_state_abbr"].as<const char *>());
+                ;
+                strcpy(abbr2, doc["consolidated_weather"][1]["weather_state_abbr"].as<const char *>());
+                ;
+                strcpy(abbr3, doc["consolidated_weather"][2]["weather_state_abbr"].as<const char *>());
+                ;
+                strcpy(abbr4, doc["consolidated_weather"][3]["weather_state_abbr"].as<const char *>());
+                ;
 
                 formatTemp(temp1, doc["consolidated_weather"][0][F("the_temp")].as<float>());
                 formatTemp(temp2, doc["consolidated_weather"][1][F("the_temp")].as<float>());

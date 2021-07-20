@@ -27,7 +27,7 @@ extern int timeZone;
 extern char ssid[];
 extern char pass[];
 
-extern char *calendarURL;
+extern char calendarURL[];
 
 #ifndef NETWORK_H
 #define NETWORK_H

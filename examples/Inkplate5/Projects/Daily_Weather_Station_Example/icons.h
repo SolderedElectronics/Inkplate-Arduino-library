@@ -3,8 +3,8 @@
 
 #include "binary_Icons/icon_C.h"
 #include "binary_Icons/icon_H.h"
-#include "binary_Icons/icon_HR.h"
 #include "binary_Icons/icon_Hc.h"
+#include "binary_Icons/icon_Hr.h"
 #include "binary_Icons/icon_LC.h"
 #include "binary_Icons/icon_LR.h"
 #include "binary_Icons/icon_S.h"

@@ -31,8 +31,8 @@ int timeZone = 2;
 char city[128] = "OSIJEK";
 
 // Coordinates sent to the api
-char *lon = "45.5510548";
-char *lat = "18.5947808";
+char lon[] = "45.5510548";
+char lat[] = "18.5947808";
 
 // Change to your wifi ssid and password
 char ssid[] = "e-radionica.com";
@@ -43,7 +43,7 @@ char pass[] = "croduino";
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char *apiKey = "";
+char apiKey[] = "";
 
 //----------------------------------
 
