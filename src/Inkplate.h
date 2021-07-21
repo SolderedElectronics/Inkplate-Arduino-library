@@ -60,7 +60,7 @@ class Inkplate : public System, public Graphics
 
     void setMCPForLowPower();
 #else
-    void einkOn();
+    int einkOn();
     void einkOff();
     void preloadScreen();
     uint8_t readPowerGood();
