@@ -2,17 +2,18 @@
  **************************************************
  *
  * @file        Inkplate.h
- * @brief       Basic funtions for controling inkplate 
- * 
+ * @brief       Basic funtions for controling inkplate
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     @ e-radionica.com
  ***************************************************/
 
@@ -36,7 +37,7 @@ extern SdFat sd;
  */
 class Inkplate : public System, public Graphics
 {
-public:
+  public:
 #ifdef ARDUINO_INKPLATECOLOR
     Inkplate();
 #else
@@ -51,7 +52,7 @@ public:
 #ifdef ARDUINO_INKPLATECOLOR
     void clean();
 
-    //These 4 functions need to refactored because conflicting functionalities
+    // These 4 functions need to refactored because conflicting functionalities
     void setPanelState(bool _state);
     bool getPanelState();
     void setPanelDeepSleep(bool _state);
@@ -83,7 +84,7 @@ public:
         return Graphics::getRotation();
     };
 
-private:
+  private:
     void precalculateGamma(uint8_t *c, float gamma);
 
 #ifdef ARDUINO_INKPLATECOLOR

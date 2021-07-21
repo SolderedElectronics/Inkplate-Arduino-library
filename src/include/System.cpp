@@ -2,16 +2,17 @@
  **************************************************
  * @file        System.cpp
  * @brief       Functionality for panel hardware interaction
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     @ e-radionica.com
  ***************************************************/
 
@@ -22,7 +23,7 @@ SdFat sd(&spi2);
 
 /**
  * @brief       setPanelState sets panel state (on/off)
- * 
+ *
  * @param       uint8_t s
  *              panel state ON or OFF (1 or 0)
  */
@@ -33,7 +34,7 @@ void System::setPanelState(uint8_t s)
 
 /**
  * @brief       getPanelState gets panel state (ON/OFF)
- * 
+ *
  * @return      returns value that represents ON/OFF state of the panel
  */
 uint8_t System::getPanelState()
@@ -43,8 +44,9 @@ uint8_t System::getPanelState()
 
 /**
  * @brief       readTemperature reads panel temperature
- * 
- * @return      returns  temperature in range from -10 to 85 degree C with accuracy of +-1 in range from 0 to 50
+ *
+ * @return      returns  temperature in range from -10 to 85 degree C with
+ * accuracy of +-1 in range from 0 to 50
  */
 int8_t System::readTemperature()
 {
@@ -78,10 +80,10 @@ int8_t System::readTemperature()
 
 /**
  * @brief       readTouchpad reads touchpad pin to check if triggered
- * 
+ *
  * @param       uint8_t _pad
  *              touchpad pin to check
- * 
+ *
  * @return      value to indicate if touchpad is triggered (TRUE or FALSE)
  */
 uint8_t System::readTouchpad(uint8_t _pad)
@@ -91,7 +93,7 @@ uint8_t System::readTouchpad(uint8_t _pad)
 
 /**
  * @brief       readBattery reads voltage of the battery
- * 
+ *
  * @return      returns battery voltage value
  */
 double System::readBattery()
@@ -109,14 +111,14 @@ double System::readBattery()
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
 #endif
     // Calculate the voltage using the following formula
-    // 1.1V is internal ADC reference of ESP32, 3.548133892 is 11dB in linear scale (Analog signal is attenuated by 11dB
-    // before ESP32 ADC input)
+    // 1.1V is internal ADC reference of ESP32, 3.548133892 is 11dB in linear
+    // scale (Analog signal is attenuated by 11dB before ESP32 ADC input)
     return (double(adc) / 4095 * 1.1 * 3.548133892 * 2);
 }
 
 /**
  * @brief       sdCardInit initializes sd card trough SPI
- * 
+ *
  * @return      0 if failed to initialise, 1 if successful
  */
 int16_t System::sdCardInit()
@@ -128,7 +130,7 @@ int16_t System::sdCardInit()
 
 /**
  * @brief       getSdFat gets sd card object
- * 
+ *
  * @return      sd card class object
  */
 SdFat System::getSdFat()
@@ -138,7 +140,7 @@ SdFat System::getSdFat()
 
 /**
  * @brief       getSPI gets SPI class object
- * 
+ *
  * @return      SPI class object
  */
 SPIClass System::getSPI()
@@ -148,7 +150,7 @@ SPIClass System::getSPI()
 
 /**
  * @brief       setSdCardOk sets sd card OK status
- * 
+ *
  * @param       int16_t s
  *              sd card OK status, can be 1 or 0
  */
@@ -159,7 +161,7 @@ void System::setSdCardOk(int16_t s)
 
 /**
  * @brief       setSdCardOk gets sd card OK status
- * 
+ *
  * @return      sd card OK status, can be 1 or 0
  */
 int16_t System::getSdCardOk()

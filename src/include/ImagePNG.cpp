@@ -2,16 +2,17 @@
  **************************************************
  * @file        ImagePNG.cpp
  * @brief       Basic functionalities to work with PNG images
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     e-radionica.com
  ***************************************************/
 
@@ -30,8 +31,8 @@ static uint16_t _pngY = 0;
 static Image::Position _pngPosition = Image::_npos;
 
 /**
- * @brief       pngle_on_draw 
- * 
+ * @brief       pngle_on_draw
+ *
  * @param       pngle_t *pngle
  *              pointer to image
  * @param       uint32_t x
@@ -83,7 +84,8 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
                 if (_pngDither)
                 {
 #ifdef ARDUINO_INKPLATECOLOR
-                    px = _imagePtrPng->ditherGetPixelBmp((r << 16) | (g << 8) | (b), x + i, y + j, _imagePtrPng->width(), 0);
+                    px = _imagePtrPng->ditherGetPixelBmp((r << 16) | (g << 8) | (b), x + i, y + j,
+                                                         _imagePtrPng->width(), 0);
 #else
                     px = _imagePtrPng->ditherGetPixelBmp(RGB8BIT(r, g, b), x + i, y + j, _imagePtrPng->width(), 0);
                     if (_pngInvert)
@@ -103,7 +105,7 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
 
 /**
  * @brief       drawPngFromSd function draws png image from sd file
- * 
+ *
  * @param       char *fileName
  *              pointer to png file
  * @param       int x
@@ -114,7 +116,7 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawPngFromSd(const char *fileName, int x, int y, bool dither, bool invert)
@@ -129,7 +131,7 @@ bool Image::drawPngFromSd(const char *fileName, int x, int y, bool dither, bool 
 
 /**
  * @brief       drawPngFromSd function draws png image from sd file
- * 
+ *
  * @param       SdFile *p
  *              pointer to png file
  * @param       int x
@@ -140,7 +142,7 @@ bool Image::drawPngFromSd(const char *fileName, int x, int y, bool dither, bool 
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawPngFromSd(SdFile *p, int x, int y, bool dither, bool invert)
@@ -187,7 +189,7 @@ bool Image::drawPngFromSd(SdFile *p, int x, int y, bool dither, bool invert)
 
 /**
  * @brief       drawPngFromWeb function draws png image from sd file
- * 
+ *
  * @param       char *url
  *              pointer to png file
  * @param       int x
@@ -198,7 +200,7 @@ bool Image::drawPngFromSd(SdFile *p, int x, int y, bool dither, bool invert)
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool invert)
@@ -233,7 +235,7 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
 
 /**
  * @brief       drawPngFromWeb function draws png image from sd file
- * 
+ *
  * @param       WiFiClient *s
  *              pointer to png file
  * @param       int x
@@ -246,7 +248,7 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawPngFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither, bool invert)
@@ -279,17 +281,19 @@ bool Image::drawPngFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither
 }
 
 /**
- * @brief       drawPngFromWebAtPosition function draws png image from web at screen position
- * 
+ * @brief       drawPngFromWebAtPosition function draws png image from web at
+ * screen position
+ *
  * @param       char *url
  *              pointer to png file
  * @param       Position &position
- *              Image position (center, topLeft, bottomLeft, topRight, bottomRight, _npos)
+ *              Image position (center, topLeft, bottomLeft, topRight,
+ * bottomRight, _npos)
  * @param       bool dither
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawPngFromWebAtPosition(const char *url, const Position &position, const bool dither, const bool invert)
@@ -324,17 +328,19 @@ bool Image::drawPngFromWebAtPosition(const char *url, const Position &position, 
 }
 
 /**
- * @brief       drawPngFromSdAtPosition function draws png image from sd card at screen position
- * 
+ * @brief       drawPngFromSdAtPosition function draws png image from sd card at
+ * screen position
+ *
  * @param       char *fileName
  *              pointer to png file
  * @param       Position &position
- *              Image position (center, topLeft, bottomLeft, topRight, bottomRight, _npos)
+ *              Image position (center, topLeft, bottomLeft, topRight,
+ * bottomRight, _npos)
  * @param       bool dither
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawPngFromSdAtPosition(const char *fileName, const Position &position, const bool dither,

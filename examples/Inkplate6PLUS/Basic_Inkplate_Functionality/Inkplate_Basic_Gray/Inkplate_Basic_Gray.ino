@@ -27,10 +27,9 @@
 Inkplate display(INKPLATE_3BIT); // Create object on Inkplate library and set library to work in gray mode (3-bit)
                                  // Other option is BW mode, which is demonstrated in next example
                                  // "Inkplate_basic_BW"
-
-#define DELAY_MS                                                                                                       \
-    5000 //Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not recommended \
-                      //Want to refresh faster? Use partial update! Find example in "Inkplate-basic_partial_update"
+// Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not recommended
+#define DELAY_MS 5000
+// Want to refresh faster? Use partial update! Find example in "Inkplate-basic_partial_update"
 
 void setup()
 {
@@ -277,7 +276,7 @@ void loop()
             i + 1); // textSize parameter starts at 0 and goes up to 10 (larger won't fit Inkplate 6 plus screen)
         display.setCursor(200, (i * i * 8)); // setCursor works as same as on LCD displays - sets "the cursor" at the
                                              // place you want to write someting next
-        display.print("INKPLATE 6PLUS!");         // The actual text you want to show on e-paper as String
+        display.print("INKPLATE 6PLUS!");    // The actual text you want to show on e-paper as String
     }
     displayCurrentAction("Text in different sizes and shadings");
     display.display(); // To show stuff on screen, you always need to call display.display();

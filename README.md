@@ -1,5 +1,7 @@
 # Inkplate Arduino library
 
+[![Compile Sketches](https://github.com/e-radionicacom/Inkplate-Arduino-library/actions/workflows/compile.yml/badge.svg?branch=dev)](https://github.com/e-radionicacom/Inkplate-Arduino-library/actions/workflows/compile.yml)
+
 ![](https://www.crowdsupply.com/img/cf95/compare-peripheral_jpg_project-body.jpg)
 
 Arduino library for all-in-one e-paper display family named Inkplate can be found in this repo. Inkplate is a series of powerful, Wi-Fi enabled ESP32-based e-paper display products. Its main feature is simplicity. Just plug in a USB cable, open Arduino IDE, and change the contents of the screen with few lines of code. Inkplate family currently includes Inkplate 10, Inkplate 6 and Inkplate 6PLUS - learn more about Inkplates on [official website](https://inkplate.io/). 

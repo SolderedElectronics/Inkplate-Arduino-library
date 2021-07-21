@@ -2,16 +2,17 @@
  **************************************************
  * @file        Touch.h
  * @brief       Touch screen functionality for panels that support touch
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     @ e-radionica.com
  ***************************************************/
 
@@ -24,7 +25,7 @@ uint16_t _tsYResolution;
 
 /**
  * @brief       touchInArea checks if touch occured in given rectangle area
- * 
+ *
  * @param       int16_t x1
  *              rectangle top left corner x plane
  * @param       int16_t y1
@@ -33,7 +34,7 @@ uint16_t _tsYResolution;
  *              rectangle width
  * @param       int16_t h
  *              rectangle height
- * 
+ *
  * @return      true if successful, false if failed
  */
 bool Touch::touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h)
@@ -56,7 +57,8 @@ bool Touch::touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h)
 
     if (millis() - touchT < 100)
     {
-        // Serial.printf("%d: %d, %d - %d, %d\n", touchN, touchX[0], touchY[0], touchX[1], touchY[1]);
+        // Serial.printf("%d: %d, %d - %d, %d\n", touchN, touchX[0], touchY[0],
+        // touchX[1], touchY[1]);
         if (touchN == 1 && BOUND(x1, touchX[0], x2) && BOUND(y1, touchY[0], y2))
             return true;
         if (touchN == 2 && ((BOUND(x1, touchX[0], x2) && BOUND(y1, touchY[0], y2)) ||
@@ -68,14 +70,14 @@ bool Touch::touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h)
 
 /**
  * @brief       tsWriteRegs writes data to touchscreen registers
- * 
+ *
  * @param       uint8_t _addr
  *              touchscreen register address
  * @param       uint8_t *_buff
  *              buffer to write into touchscreen registers
  * @param       uint8_t _size
  *              number of bytes to write
- * 
+ *
  * @return      returns 1 on successful write, 0 on fail
  */
 uint8_t Touch::tsWriteRegs(uint8_t _addr, const uint8_t *_buff, uint8_t _size)
@@ -87,7 +89,7 @@ uint8_t Touch::tsWriteRegs(uint8_t _addr, const uint8_t *_buff, uint8_t _size)
 
 /**
  * @brief       tsReadRegs returns touchscreen registers content
- * 
+ *
  * @param       uint8_t _addr
  *              touchscreen register address
  * @param       uint8_t *_buff
@@ -114,7 +116,7 @@ void Touch::tsHardwareReset()
 
 /**
  * @brief       tsSoftwareReset resets toucscreen software
- * 
+ *
  * @return      true if successful, false if failed
  */
 bool Touch::tsSoftwareReset()
@@ -151,7 +153,7 @@ bool Touch::tsSoftwareReset()
 
 /**
  * @brief       tsInit starts touchscreen and sets ts registers
- * 
+ *
  * @param       uint8_t _pwrState
  *              power state for touchScreen
  */
@@ -186,7 +188,7 @@ void Touch::tsShutdown()
 
 /**
  * @brief       tsGetRawData gets touchscreen register content
- * 
+ *
  * @param       uint8_t *b
  *              pointer to store register content
  */
@@ -198,9 +200,10 @@ void Touch::tsGetRawData(uint8_t *b)
 
 /**
  * @brief       tsGetXY gets x and y plane values
- * 
+ *
  * @param       uint8_t *_d
- *              pointer to register content of touchscreen register (data must be adapted, cant use raw data)
+ *              pointer to register content of touchscreen register (data must
+ * be adapted, cant use raw data)
  * @param       uint16_t *x
  *              pointer to store x plane data
  * @param       uint16_t *y
@@ -218,16 +221,18 @@ void Touch::tsGetXY(uint8_t *_d, uint16_t *x, uint16_t *y)
 }
 
 /**
- * @brief       tsGetData checks x, y position and returns number of fingers on screen
- * 
+ * @brief       tsGetData checks x, y position and returns number of fingers on
+ * screen
+ *
  * @param       uint16_t *xPos
  *              pointer to store x position of finger
  * @param       uint16_t *yPos
  *              pointer to store y position of finger
- * 
+ *
  * @return      returns number of fingers currently on screen
- * 
- * @note        touch screen doesn't return data for two fingers when fingers are align at the y axis, or one above another
+ *
+ * @note        touch screen doesn't return data for two fingers when fingers
+ * are align at the y axis, or one above another
  */
 uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos)
 {
@@ -270,7 +275,7 @@ uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos)
 
 /**
  * @brief       tsGetResolution gets touchscreen resolution for x and y
- * 
+ *
  * @param       uint16_t *xRes
  *              pointer to store x resolution
  * @param       uint16_t *yRes
@@ -292,7 +297,7 @@ void Touch::tsGetResolution(uint16_t *xRes, uint16_t *yRes)
 
 /**
  * @brief       tsSetPowerState sets power state of touchscreen
- * 
+ *
  * @param       uint8_t _s
  *              touchscreen power state to be set (0 or 1)
  */
@@ -306,7 +311,7 @@ void Touch::tsSetPowerState(uint8_t _s)
 
 /**
  * @brief       tsGetPowerState checks if touchscreen is powered up
- * 
+ *
  * @return      touchscreen power state, 1 if powered, 0 if not
  */
 uint8_t Touch::tsGetPowerState()
@@ -321,7 +326,7 @@ uint8_t Touch::tsGetPowerState()
 
 /**
  * @brief       tsAvailable checks for touch screen functionality
- * 
+ *
  * @return      tsflag, 1 for available touchscreen, 0 if not
  */
 bool Touch::tsAvailable()

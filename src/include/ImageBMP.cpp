@@ -2,16 +2,17 @@
  **************************************************
  * @file        ImageBMP.cpp
  * @brief       Basic functionalities to work with BMP images
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     e-radionica.com
  ***************************************************/
 
@@ -19,10 +20,10 @@
 
 /**
  * @brief       legalBmp function checks file header for BMP image signature
- * 
+ *
  * @param       bitmspHeader bmpHeader
  *              Bitmap image header wirh signature and BMP data
- * 
+ *
  * @return      1 if legal BMP, 0 if not (wrong or damaged file)
  */
 bool Image::legalBmp(bitmapHeader *bmpHeader)
@@ -30,14 +31,16 @@ bool Image::legalBmp(bitmapHeader *bmpHeader)
     return bmpHeader->signature == 0x4D42;
 
     // removed
-    // && bmpHeader->compression == 0 && (bmpHeader->color == 1 || bmpHeader->color == 4 || bmpHeader->color == 8 ||
-    // bmpHeader->color == 16 || bmpHeader->color == 24 || bmpHeader->color == 32)
-    // because some converters don't set image depth
+    // && bmpHeader->compression == 0 && (bmpHeader->color == 1 ||
+    // bmpHeader->color == 4 || bmpHeader->color == 8 || bmpHeader->color == 16 ||
+    // bmpHeader->color == 24 || bmpHeader->color == 32) because some converters
+    // don't set image depth
 }
 
 /**
- * @brief       readBmpHeaderSd function saves BMP file header when file is on sd card
- * 
+ * @brief       readBmpHeaderSd function saves BMP file header when file is on
+ * sd card
+ *
  * @param       SdFile *_f
  *              pointer to file on sd card
  * @param       bitmspHeader *_h
@@ -74,7 +77,7 @@ void Image::readBmpHeaderSd(SdFile *_f, bitmapHeader *_h)
 
 /**
  * @brief       readBmpHeader function saves BMP file header
- * 
+ *
  * @param       uint8_t *buf
  *              pointer to file on sd card
  * @param       bitmspHeader *_h
@@ -125,7 +128,7 @@ void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
 
 /**
  * @brief       drawBitmapFromSd function draws bitmap image from sd file
- * 
+ *
  * @param       char *fileName
  *              pointer to BMP file
  * @param       int x
@@ -136,7 +139,7 @@ void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawBitmapFromSd(const char *fileName, int x, int y, bool dither, bool invert)
@@ -150,7 +153,7 @@ bool Image::drawBitmapFromSd(const char *fileName, int x, int y, bool dither, bo
 
 /**
  * @brief       drawBitmapFromSd function draws bitmap image from sd file
- * 
+ *
  * @param       SdFile *p
  *              pointer to BMP file on sd card
  * @param       int x
@@ -161,7 +164,7 @@ bool Image::drawBitmapFromSd(const char *fileName, int x, int y, bool dither, bo
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawBitmapFromSd(SdFile *p, int x, int y, bool dither, bool invert)
@@ -190,7 +193,7 @@ bool Image::drawBitmapFromSd(SdFile *p, int x, int y, bool dither, bool invert)
 
 /**
  * @brief       drawBitmapFromWeb function draws bitmap image from web
- * 
+ *
  * @param       char *url
  *              pointer to BMP file on web
  * @param       int x
@@ -201,7 +204,7 @@ bool Image::drawBitmapFromSd(SdFile *p, int x, int y, bool dither, bool invert)
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool invert)
@@ -218,7 +221,7 @@ bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool i
 
 /**
  * @brief       drawBitmapFromWeb function draws bitmap image from web
- * 
+ *
  * @param       WifiClient *s
  *              pointer to BMP file on web
  * @param       int x
@@ -231,7 +234,7 @@ bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool i
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither, bool invert)
@@ -247,7 +250,7 @@ bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dit
 
 /**
  * @brief       drawBitmapFromBuffer function draws bitmap image from buffer
- * 
+ *
  * @param       uint8_t *buf
  *              pointer to BMP file buffer
  * @param       int x
@@ -258,7 +261,7 @@ bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dit
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert)
@@ -285,7 +288,7 @@ bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool i
 
 /**
  * @brief       displayBmpLine function writes one line of horizontal pixels
- * 
+ *
  * @param       int16_t x
  *              top left x image position
  * @param       int16_t y
@@ -315,9 +318,9 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, (invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
 #endif
             break;
-        // as for 2 bit, literally cannot find an example online or in PS, so skipped
-        case 4:
-        {
+        // as for 2 bit, literally cannot find an example online or in PS, so
+        // skipped
+        case 4: {
             uint8_t px = pixelBuffer[j >> 1] & (j & 1 ? 0x0F : 0xF0) >> (j & 1 ? 0 : 4);
             uint8_t val;
 
@@ -337,8 +340,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, val);
             break;
         }
-        case 8:
-        {
+        case 8: {
             uint8_t px = pixelBuffer[j];
             uint8_t val;
 
@@ -358,8 +360,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, val);
             break;
         }
-        case 16:
-        {
+        case 16: {
             uint16_t px = ((uint16_t)pixelBuffer[(j << 1) | 1] << 8) | pixelBuffer[(j << 1)];
 
             uint8_t r = (px & 0x7C00) >> 7;
@@ -392,8 +393,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, val);
             break;
         }
-        case 24:
-        {
+        case 24: {
             uint32_t b = pixelBuffer[j * 3];
             uint32_t g = pixelBuffer[j * 3 + 1];
             uint32_t r = pixelBuffer[j * 3 + 2];
@@ -460,17 +460,19 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 }
 
 /**
- * @brief       drawBmpFromWebAtPosition function draws bitmap image from web at screen position
- * 
+ * @brief       drawBmpFromWebAtPosition function draws bitmap image from web at
+ * screen position
+ *
  * @param       char *url
  *              pointer to BMP file on web
  * @param       Position &position
- *              Image position (center, topLeft, bottomLeft, topRight, bottomRight, _npos)              
+ *              Image position (center, topLeft, bottomLeft, topRight,
+ * bottomRight, _npos)
  * @param       bool dither
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, const bool dither, const bool invert)
@@ -491,17 +493,19 @@ bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, 
 }
 
 /**
- * @brief       drawBmpFromSdAtPosition function draws bitmap image from sd card at screen position
- * 
+ * @brief       drawBmpFromSdAtPosition function draws bitmap image from sd card
+ * at screen position
+ *
  * @param       char *fileName
  *              pointer to BMP file on web
  * @param       Position &position
- *              Image position (center, topLeft, bottomLeft, topRight, bottomRight, _npos)              
+ *              Image position (center, topLeft, bottomLeft, topRight,
+ * bottomRight, _npos)
  * @param       bool dither
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawBmpFromSdAtPosition(const char *fileName, const Position &position, const bool dither,

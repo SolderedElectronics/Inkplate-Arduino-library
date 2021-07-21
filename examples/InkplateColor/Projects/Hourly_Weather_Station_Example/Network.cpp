@@ -179,18 +179,24 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
             formatTemp(currentTemp, doc["current"]["temp"].as<float>() - 273.15);
             formatWind(currentWind, doc["current"][F("wind_speed")].as<float>());
 
-            strcpy(currentWeather, doc["current"]["weather"][0]["main"].as<char *>());
-            strcpy(currentWeatherAbbr, doc["current"]["weather"][0]["icon"].as<char *>());
+            strcpy(currentWeather, doc["current"]["weather"][0]["main"].as<const char *>());
+            ;
+            strcpy(currentWeatherAbbr, doc["current"]["weather"][0]["icon"].as<const char *>());
+            ;
 
             formatTemp(temp1, doc["hourly"][0]["temp"].as<float>() - 273.15);
             formatTemp(temp2, doc["hourly"][1]["temp"].as<float>() - 273.15);
             formatTemp(temp3, doc["hourly"][2]["temp"].as<float>() - 273.15);
             formatTemp(temp4, doc["hourly"][3]["temp"].as<float>() - 273.15);
 
-            strcpy(abbr1, doc["hourly"][0]["weather"][0]["icon"].as<char *>());
-            strcpy(abbr2, doc["hourly"][1]["weather"][0]["icon"].as<char *>());
-            strcpy(abbr3, doc["hourly"][2]["weather"][0]["icon"].as<char *>());
-            strcpy(abbr4, doc["hourly"][3]["weather"][0]["icon"].as<char *>());
+            strcpy(abbr1, doc["hourly"][0]["weather"][0]["icon"].as<const char *>());
+            ;
+            strcpy(abbr2, doc["hourly"][1]["weather"][0]["icon"].as<const char *>());
+            ;
+            strcpy(abbr3, doc["hourly"][2]["weather"][0]["icon"].as<const char *>());
+            ;
+            strcpy(abbr4, doc["hourly"][3]["weather"][0]["icon"].as<const char *>());
+            ;
 
             Serial.println(abbr1);
             Serial.println(abbr2);
@@ -250,8 +256,8 @@ void Network::setTime()
 void Network::getHours(char *hour1, char *hour2, char *hour3, char *hour4)
 {
     // Format hours info
-    sprintf(hour1, "%2dh", (dataEpoch / 3600L + timeZone + 24) % 24);
-    sprintf(hour2, "%2dh", (dataEpoch / 3600L + 1 + timeZone + 24) % 24);
-    sprintf(hour3, "%2dh", (dataEpoch / 3600L + 2 + timeZone + 24) % 24);
-    sprintf(hour4, "%2dh", (dataEpoch / 3600L + 3 + timeZone + 24) % 24);
+    sprintf(hour1, "%2ldh", (dataEpoch / 3600L + timeZone + 24) % 24);
+    sprintf(hour2, "%2ldh", (dataEpoch / 3600L + 1 + timeZone + 24) % 24);
+    sprintf(hour3, "%2ldh", (dataEpoch / 3600L + 2 + timeZone + 24) % 24);
+    sprintf(hour4, "%2ldh", (dataEpoch / 3600L + 3 + timeZone + 24) % 24);
 }

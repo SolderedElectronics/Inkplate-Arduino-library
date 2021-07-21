@@ -2,17 +2,18 @@
  **************************************************
  *
  * @file        Inkplate.cpp
- * @brief       Basic funtions for controling inkplate 
- * 
+ * @brief       Basic funtions for controling inkplate
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     @ e-radionica.com
  ***************************************************/
 
@@ -41,8 +42,9 @@ Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Gra
 
 /**
  * @brief       clearDisplay function clears memory buffer for display
- * 
- * @note        This does not clears display, only buffer, you need to call display() function after this to clear display
+ *
+ * @note        This does not clears display, only buffer, you need to call
+ * display() function after this to clear display
  */
 void Inkplate::clearDisplay()
 {
@@ -80,8 +82,9 @@ void Inkplate::preloadScreen()
     memcpy(DMemoryNew, _partial, 60000);
 }
 
-/** 
- * @brief       einkOff turns off epaper power supply and put all digital IO pins in high Z state
+/**
+ * @brief       einkOff turns off epaper power supply and put all digital IO
+ * pins in high Z state
  */
 void Inkplate::einkOff()
 {
@@ -110,8 +113,9 @@ void Inkplate::einkOff()
 }
 
 /**
- * @brief       einkOn turns on supply for epaper display (TPS65186) [+15 VDC, -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
- * 
+ * @brief       einkOn turns on supply for epaper display (TPS65186) [+15 VDC,
+ * -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
+ *
  * @note        its important to use this order when turning epaper on.
  *              using wrong order can irreparably damage epaper
  */
@@ -158,7 +162,7 @@ void Inkplate::einkOn()
 
 /**
  * @brief       readPowerGood reads ok status for each rail
- * 
+ *
  * @return      power good status register
  */
 uint8_t Inkplate::readPowerGood()
@@ -174,7 +178,8 @@ uint8_t Inkplate::readPowerGood()
 // LOW LEVEL FUNCTIONS
 
 /**
- * @brief       vscan_start starts writing new frame and skips first two lines that are invisible on screen
+ * @brief       vscan_start starts writing new frame and skips first two lines
+ * that are invisible on screen
  */
 void Inkplate::vscan_start()
 {
@@ -203,7 +208,7 @@ void Inkplate::vscan_start()
 
 /**
  * @brief       hscan_start starts writing data into current row
- * 
+ *
  * @param       uint32_t _d
  *              data to be written into current row
  */
@@ -229,7 +234,7 @@ void Inkplate::vscan_end()
 
 /**
  * @brief       pinsZstate sets all tps pins at high z state
- * 
+ *
  * @note        this is used only when turning off epaper
  */
 void Inkplate::pinsZstate()

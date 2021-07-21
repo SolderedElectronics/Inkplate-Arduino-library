@@ -123,7 +123,7 @@ void loop()
                     cell_next = cell_maxage;
             }
 
-            if (cell_next != 0 && cell_curr == 0 || cell_next == 0 && cell_curr != 0)
+            if ((cell_next != 0 && cell_curr == 0) || (cell_next == 0 && cell_curr != 0))
                 cell_delta++;
 
             if (cell_next)

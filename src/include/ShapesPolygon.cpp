@@ -2,23 +2,25 @@
  **************************************************
  * @file        ShapesPolygon.cpp
  * @brief       Basic shapes polygon functionalities
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     @ e-radionica.com
  ***************************************************/
 
 #include "Shapes.h"
 
 /**
- * @brief       initedgeTable initiates edge table and sets all values inside struct to 0
+ * @brief       initedgeTable initiates edge table and sets all values inside
+ * struct to 0
  */
 void Shapes::initedgeTable()
 {
@@ -30,7 +32,7 @@ void Shapes::initedgeTable()
 
 /**
  * @brief       insertionSort sorts buckets inside edgeTableTuple
- * 
+ *
  * @param       edgeTableTuple *ett
  *              pointer to edgeTableTuple to be sorted
  */
@@ -61,7 +63,7 @@ void Shapes::insertionSort(edgeTableTuple *ett)
 
 /**
  * @brief       storeEdgeInTuple stores values in tuple structure
- * 
+ *
  * @param       edgeTableTuple *receiver
  *              pointer to edgeTableTuple structure
  * @param       int ym
@@ -83,12 +85,13 @@ void Shapes::storeEdgeInTuple(edgeTableTuple *receiver, int ym, int xm, float sl
 }
 
 /**
- * @brief       storeEdgeInTable calculates edge values of edgeTableTuple and stores them
- * 
+ * @brief       storeEdgeInTable calculates edge values of edgeTableTuple and
+ * stores them
+ *
  * @param       int x1
  *              x plane starting position
  * @param       int y1
- *              y plane starting position 
+ *              y plane starting position
  * @param       int x2
  *              x plane ending position
  * @param       int y2
@@ -130,7 +133,7 @@ void Shapes::storeEdgeInTable(int x1, int y1, int x2, int y2)
 
 /**
  * @brief       removeEdgeByYmax removes edge by given yy
- * 
+ *
  * @param       edgeTableTuple *tup
  *              pointer to edgeTableTuple to work on
  * @param       int yy
@@ -156,7 +159,8 @@ void Shapes::removeEdgeByYmax(edgeTableTuple *tup, int yy)
 }
 
 /**
- * @brief       updatexbyslopeinv updates all xofymin by adding slopeinverse value
+ * @brief       updatexbyslopeinv updates all xofymin by adding slopeinverse
+ * value
  * @param       edgeTableTuple *tup
  *              pointer to edgeTableTuple to work on
  */
@@ -172,7 +176,7 @@ void Shapes::updatexbyslopeinv(edgeTableTuple *tup)
 
 /**
  * @brief       scanlineFill dravs horizontal line based on edge table
- * 
+ *
  * @param       uint8_t c
  *              color
  */
@@ -259,7 +263,7 @@ void Shapes::scanlineFill(uint8_t c)
 
 /**
  * @brief       drawPolygon draws polygon line by line (horizontally)
- * 
+ *
  * @param       int *x
  *              pointer to x plane point
  * @param       int *y
@@ -277,7 +281,7 @@ void Shapes::drawPolygon(int *x, int *y, int n, int color)
 
 /**
  * @brief       drawPolygon draws filled polygon line by line (horizontally)
- * 
+ *
  * @param       int *x
  *              pointer to x plane point
  * @param       int *y

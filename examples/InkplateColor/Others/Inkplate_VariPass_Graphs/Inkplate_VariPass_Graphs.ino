@@ -33,8 +33,8 @@
 #include "WiFi.h"     //Include library for WiFi
 Inkplate display;     // Create an object of Inkplate library
 
-const char *ssid = "e-radionica.com"; // Your WiFi SSID
-const char *password = "croduino";    // Your WiFi password
+const char ssid[] = "e-radionica.com"; // Your WiFi SSID
+const char *password = "croduino";     // Your WiFi password
 
 void setup()
 {

@@ -2,16 +2,17 @@
  **************************************************
  * @file        Image.cpp
  * @brief       Basic functionalities to work with images
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     e-radionica.com
  ***************************************************/
 
@@ -35,7 +36,7 @@ Image::Image(int16_t w, int16_t h) : Adafruit_GFX(w, h)
 
 /**
  * @brief       drawImage function draws image from string path
- * 
+ *
  * @param       String path
  *              path to image file
  * @param       int x
@@ -47,7 +48,7 @@ Image::Image(int16_t w, int16_t h) : Adafruit_GFX(w, h)
  * @param       bool invert
  *              1 if inverting, 0 if not
  *
- * @return      1 if succesfuly drawn, 0 if not             
+ * @return      1 if succesfuly drawn, 0 if not
  */
 bool Image::drawImage(const String path, int x, int y, bool dither, bool invert)
 {
@@ -56,7 +57,7 @@ bool Image::drawImage(const String path, int x, int y, bool dither, bool invert)
 
 /**
  * @brief       drawImage function draws image from char path
- * 
+ *
  * @param       char *path
  *              char pointer path to image file
  * @param       int x
@@ -68,7 +69,7 @@ bool Image::drawImage(const String path, int x, int y, bool dither, bool invert)
  * @param       bool invert
  *              1 if inverting, 0 if not
  *
- * @return      1 if succesfuly drawn, 0 if not             
+ * @return      1 if succesfuly drawn, 0 if not
  */
 bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
 {
@@ -95,7 +96,7 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
 
 /**
  * @brief       drawImage function draws image from buffer
- * 
+ *
  * @param       uint8_t *buf
  *              char pointer path to image file
  * @param       int x
@@ -110,8 +111,8 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
  *              image color
  * @param       bool bg
  *              16 bit color to draw background with
- * 
- * @return      1 if succesfuly drawn, 0 if not             
+ *
+ * @return      1 if succesfuly drawn, 0 if not
  */
 bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c, uint8_t bg)
 {
@@ -131,7 +132,7 @@ bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, ui
 
 /**
  * @brief       drawImage function draws image from string path
- * 
+ *
  * @param       String path
  *              path to image file
  * @param       Format &format
@@ -145,7 +146,7 @@ bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, ui
  * @param       bool invert
  *              1 if inverting, 0 if not
  *
- * @return      1 if succesfuly drawn, 0 if not             
+ * @return      1 if succesfuly drawn, 0 if not
  */
 bool Image::drawImage(const String path, const Format &format, const int x, const int y, const bool dither,
                       const bool invert)
@@ -155,7 +156,7 @@ bool Image::drawImage(const String path, const Format &format, const int x, cons
 
 /**
  * @brief       drawImage function draws image from string path
- * 
+ *
  * @param       char *path
  *              path to image file
  * @param       Format &format
@@ -169,7 +170,7 @@ bool Image::drawImage(const String path, const Format &format, const int x, cons
  * @param       bool invert
  *              1 if inverting, 0 if not
  *
- * @return      1 if succesfuly drawn, 0 if not             
+ * @return      1 if succesfuly drawn, 0 if not
  */
 bool Image::drawImage(const char *path, const Format &format, const int x, const int y, const bool dither,
                       const bool invert)
@@ -197,19 +198,20 @@ bool Image::drawImage(const char *path, const Format &format, const int x, const
 
 /**
  * @brief       drawImage function draws image from string path
- * 
+ *
  * @param       char *path
  *              path to image file
  * @param       Format &format
  *              Image format (bmp, jpg, png)
  * @param       Position position
- *              Image position (center, topLeft, bottomLeft, topRight, bottomRight, _npos)
+ *              Image position (center, topLeft, bottomLeft, topRight,
+ * bottomRight, _npos)
  * @param       bool dither
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if inverting, 0 if not
  *
- * @return      1 if succesfuly drawn, 0 if not             
+ * @return      1 if succesfuly drawn, 0 if not
  */
 bool Image::drawImage(const char *path, const Format &format, const Position &position, const bool dither,
                       const bool invert)
@@ -239,7 +241,7 @@ bool Image::drawImage(const char *path, const Format &format, const Position &po
 
 /**
  * @brief       drawBitmap3Bit function draws bitmap 3 bit image
- * 
+ *
  * @param       int16_t _x
  *              x position for image top left cornere
  * @param       int16_t _y

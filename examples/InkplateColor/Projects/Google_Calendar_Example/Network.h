@@ -24,10 +24,10 @@ Distributed as-is; no warranty is given.
 extern int timeZone;
 
 // Wifi ssid and password
-extern char *ssid;
-extern char *pass;
+extern char ssid[];
+extern char pass[];
 
-extern char *calendarURL;
+extern char calendarURL[];
 
 #ifndef NETWORK_H
 #define NETWORK_H

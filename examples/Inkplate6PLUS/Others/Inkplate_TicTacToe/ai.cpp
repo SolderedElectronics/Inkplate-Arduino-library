@@ -60,7 +60,7 @@ struct best minimax(char player, char max, char board[3][3], int depth)
     }
 
     // Try all possible moves, and return min or max, depending on who's move it is
-    struct best bs = {-1, player == max ? -1e8 : 1e8};
+    struct best bs = {-1, player == max ? -100000000 : 100000000};
 
     // List possible moves and shuffle them
     int pos[9], n = 0;

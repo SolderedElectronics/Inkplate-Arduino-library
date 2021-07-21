@@ -43,10 +43,9 @@
 
 // CHANGE HERE ---------------
 
-char *ssid = "e-radionica.com";
-char *pass = "croduino";
-char *calendarURL = "https://calendar.google.com/calendar/ical/nitko12%40hotmail.com/"
-                    "private-b201b93428ac8d800b00d19b982a892b/basic.ics";
+char ssid[] = "e-radionica.com";
+char pass[] = "croduino";
+char calendarURL[] = "";
 int timeZone = 2;
 
 // Set to 3 to flip the screen 180 degrees

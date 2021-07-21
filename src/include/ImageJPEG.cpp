@@ -2,16 +2,17 @@
  **************************************************
  * @file        ImageJPEG.cpp
  * @brief       Basic functionalities to work with JPEG images
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     e-radionica.com
  ***************************************************/
 
@@ -24,7 +25,7 @@ extern Image *_imagePtrJpeg;
 
 /**
  * @brief       drawJpegFromSd function draws jpeg image from sd file
- * 
+ *
  * @param       char *fileName
  *              pointer to jpeg file
  * @param       int x
@@ -35,7 +36,7 @@ extern Image *_imagePtrJpeg;
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawJpegFromSd(const char *fileName, int x, int y, bool dither, bool invert)
@@ -48,7 +49,7 @@ bool Image::drawJpegFromSd(const char *fileName, int x, int y, bool dither, bool
 
 /**
  * @brief       drawJpegFromSd function draws jpeg image from sd file
- * 
+ *
  * @param       SdFile *p
  *              pointer to jpeg file
  * @param       int x
@@ -59,7 +60,7 @@ bool Image::drawJpegFromSd(const char *fileName, int x, int y, bool dither, bool
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawJpegFromSd(SdFile *p, int x, int y, bool dither, bool invert)
@@ -103,7 +104,7 @@ bool Image::drawJpegFromSd(SdFile *p, int x, int y, bool dither, bool invert)
 
 /**
  * @brief       drawJpegFromWeb function draws jpeg image from web
- * 
+ *
  * @param       char *url
  *              pointer to jpeg file
  * @param       int x
@@ -114,7 +115,7 @@ bool Image::drawJpegFromSd(SdFile *p, int x, int y, bool dither, bool invert)
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool invert)
@@ -131,17 +132,19 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
 }
 
 /**
- * @brief       drawJpegFromWebAtPosition function draws jpeg image from web at screen position
- * 
+ * @brief       drawJpegFromWebAtPosition function draws jpeg image from web at
+ * screen position
+ *
  * @param       char *url
  *              pointer to jpeg file
  * @param       Position &position
- *              Image position (center, topLeft, bottomLeft, topRight, bottomRight, _npos)
+ *              Image position (center, topLeft, bottomLeft, topRight,
+ * bottomRight, _npos)
  * @param       bool dither
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position, const bool dither, const bool invert)
@@ -171,17 +174,19 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position,
 }
 
 /**
- * @brief       drawJpegFromSdAtPosition function draws jpeg image from sd card at screen position
- * 
+ * @brief       drawJpegFromSdAtPosition function draws jpeg image from sd card
+ * at screen position
+ *
  * @param       char *fileName
  *              pointer to jpeg file
  * @param       Position &position
- *              Image position (center, topLeft, bottomLeft, topRight, bottomRight, _npos)
+ *              Image position (center, topLeft, bottomLeft, topRight,
+ * bottomRight, _npos)
  * @param       bool dither
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawJpegFromSdAtPosition(const char *fileName, const Position &position, const bool dither,
@@ -242,11 +247,12 @@ bool Image::drawJpegFromSdAtPosition(const char *fileName, const Position &posit
 
 /**
  * @brief       drawJpegFromWeb function draws jpeg image from web
- * 
+ *
  * @param       WiFiClient *s
  *              pointer to jpeg file on web
  * @param       Position &position
- *              Image position (center, topLeft, bottomLeft, topRight, bottomRight, _npos)
+ *              Image position (center, topLeft, bottomLeft, topRight,
+ * bottomRight, _npos)
  * @param       int x
  *              x position for top left image corner
  * @param       int y
@@ -257,7 +263,7 @@ bool Image::drawJpegFromSdAtPosition(const char *fileName, const Position &posit
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither, bool invert)
@@ -272,7 +278,7 @@ bool Image::drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dithe
 
 /**
  * @brief       drawJpegFromBuffer function draws jpeg image from buffer
- * 
+ *
  * @param       uint8_t *buff
  *              pointer to jpeg buffer file
  * @param       int32_t len
@@ -285,7 +291,7 @@ bool Image::drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dithe
  *              1 if using dither, 0 if not
  * @param       bool invert
  *              1 if using invert, 0 if not
- * 
+ *
  * @return      1 if drawn successfully, 0 if not
  */
 bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool dither, bool invert)
@@ -311,7 +317,7 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
 
 /**
  * @brief       drawJpegChunk draws one chunk of image
- * 
+ *
  * @param       int16_t x
  *              x plane starting point
  * @param       int16_t y

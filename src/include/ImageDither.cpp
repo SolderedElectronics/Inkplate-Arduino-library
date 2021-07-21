@@ -2,16 +2,17 @@
  **************************************************
  * @file        ImageDither.cpp
  * @brief       dither functionalities for images
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     e-radionica.com
  ***************************************************/
 
@@ -20,8 +21,9 @@
 #ifndef ARDUINO_INKPLATECOLOR
 
 /**
- * @brief       ditherGetPixelBmp calculates dither for given pixel in bmp images
- * 
+ * @brief       ditherGetPixelBmp calculates dither for given pixel in bmp
+ * images
+ *
  * @param       uint32_t px
  *              pixel value with color information
  * @param       int i
@@ -30,7 +32,7 @@
  *              image width
  * @param       bool paletted
  *              1 if paletted image, 0 if not
- * 
+ *
  * @return      new pixel value (dithered pixel)
  */
 uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted)
@@ -59,8 +61,9 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
 }
 
 /**
- * @brief       ditherGetPixelJpeg calculates dither for given pixel in jpeg images
- * 
+ * @brief       ditherGetPixelJpeg calculates dither for given pixel in jpeg
+ * images
+ *
  * @param       uint8_t px
  *              pixel value with color information
  * @param       int i
@@ -75,7 +78,7 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
  *              image width
  * @param       int h
  *              image height
- * 
+ *
  * @return      new pixel value (dithered pixel)
  */
 uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h)
@@ -107,7 +110,7 @@ uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w,
 
 /**
  * @brief       ditherSwap swaps ditherBuffer values
- * 
+ *
  * @param       int w
  *              screen width
  */
@@ -122,7 +125,7 @@ void Image::ditherSwap(int w)
 
 /**
  * @brief       ditherSwapBlockJpeg swaps ditherBuffer values
- * 
+ *
  * @param       int x
  *              x plane image starting point
  */

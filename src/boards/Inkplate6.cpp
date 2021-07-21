@@ -3,16 +3,17 @@
  *
  * @file        Inkplate6.cpp
  * @brief       Basic funtions for controling inkplate 6
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     @ e-radionica.com
  ***************************************************/
 
@@ -26,9 +27,11 @@
 #ifdef ARDUINO_ESP32_DEV
 
 /**
- * @brief       begin function initialize Inkplate object with predefined settings
- * 
- * @return      True if initialization is successful, false if failed or already initialized
+ * @brief       begin function initialize Inkplate object with predefined
+ * settings
+ *
+ * @return      True if initialization is successful, false if failed or already
+ * initialized
  */
 bool Inkplate::begin(void)
 {
@@ -117,35 +120,36 @@ bool Inkplate::begin(void)
 }
 
 /**
- * 
+ *
  * @brief       writePixel funtion sets pixel data for (x, y) pixel position
- * 
+ *
  * @param       int16_t x0
  *              default position for x, will be changed depending on rotation
  * @param       int16_t y0
  *              default position for y, will be changed depending on rotation
  * @param       uint16_t color
  *              pixel color, in 3bit mode have values in range 0-7
- * 
- * @note        If x0 or y0 are out of inkplate screen borders, function will exit.
+ *
+ * @note        If x0 or y0 are out of inkplate screen borders, function will
+ * exit.
  */
 void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
 {
     if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
         return;
 
-    //set x, y depending on selected rotation
+    // set x, y depending on selected rotation
     switch (rotation)
     {
-    case 1:                         //90 degree left
+    case 1: // 90 degree left
         _swap_int16_t(x0, y0);
         x0 = height() - x0 - 1;
         break;
-    case 2:                         //180 degree, or upside down
+    case 2: // 180 degree, or upside down
         x0 = width() - x0 - 1;
         y0 = height() - y0 - 1;
         break;
-    case 3:                         //90 degree right
+    case 3: // 90 degree right
         _swap_int16_t(x0, y0);
         y0 = width() - y0 - 1;
         break;
@@ -170,7 +174,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
 }
 
 /**
- * 
+ *
  * @brief       display1b function writes black and white data to display
  */
 void Inkplate::display1b()
@@ -287,7 +291,7 @@ void Inkplate::display1b()
 
 /**
  * @brief       display3b function writes grayscale data to display
- */ 
+ */
 void Inkplate::display3b()
 {
     einkOn();
@@ -337,11 +341,13 @@ void Inkplate::display3b()
 }
 
 /**
- * @brief       partialUpdate function updates changed parts of the screen without need to refresh whole display
- * 
- * @param       bool _forced 
- *              For advanced use with deep sleep. Can force partial update in deep sleep
- * 
+ * @brief       partialUpdate function updates changed parts of the screen
+ * without need to refresh whole display
+ *
+ * @param       bool _forced
+ *              For advanced use with deep sleep. Can force partial update in
+ * deep sleep
+ *
  * @note        Partial update only works in black and white mode
  */
 void Inkplate::partialUpdate(bool _forced)
@@ -410,16 +416,17 @@ void Inkplate::partialUpdate(bool _forced)
 
 /**
  * @brief       clean function cleans screen of any potential burn in
- * 
- *              Based on c param it will: if c=0 light screen, c=1 darken the screen, c=2 discharge the screen or 3 skip all pixels
- * 
+ *
+ *              Based on c param it will: if c=0 light screen, c=1 darken the
+ * screen, c=2 discharge the screen or 3 skip all pixels
+ *
  * @param       uint8_t c
  *              one of four posible pixel states
- *              
+ *
  * @param       uint8_t rep
- *              Number of repetitions 
- *              
- * 
+ *              Number of repetitions
+ *
+ *
  * @note        Should not be used in intervals smaller than 5 seconds
  */
 void Inkplate::clean(uint8_t c, uint8_t rep)

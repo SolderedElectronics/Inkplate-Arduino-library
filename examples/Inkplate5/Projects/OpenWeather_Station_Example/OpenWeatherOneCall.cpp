@@ -273,22 +273,23 @@ int OpenWeatherOneCall::parseWeather(char *DKEY, char *GKEY, float SEEK_LATITUDE
         forecast[x].feels_like_eve = daily[x]["feels_like"]["eve"];     // 280.11
         forecast[x].feels_like_night = daily[x]["feels_like"]["night"]; // 280.29
 
-        forecast[x].pressure = daily[x]["pressure"];                           // 1006
-        forecast[x].humidity = daily[x]["humidity"];                           // 91
-        forecast[x].dew_point = daily[x]["dew_point"];                         // 287.28
-        forecast[x].wind_speed = daily[x]["wind_speed"];                       // 14.2
-        forecast[x].wind_gust = daily[x]["wind_gust"];                         // 14.2
-        forecast[x].wind_deg = daily[x]["wind_deg"];                           // 180
-        forecast[x].clouds = daily[x]["clouds"];                               // 95
-        forecast[x].uvi = daily[x]["uvi"];                                     // 6.31
-        forecast[x].visibility = daily[x]["visibility"];                       // 10000
-        forecast[x].pop = daily[x]["pop"];                                     // 0.57
-        forecast[x].rain = daily[x]["rain"];                                   // 23.31
-        forecast[x].snow = daily[x]["snow"];                                   // 23.31
-        forecast[x].id = daily[x]["weather"][0]["id"];                         // 500
-        forecast[x].main = daily[x]["weather"][0]["main"];                     // "rain"
-        forecast[x].description = daily[x]["weather"][0]["description"];       // "moderate rain"
-        strcpy(forecast[x].icon, daily[x]["weather"][0]["icon"].as<char *>()); // "10d"
+        forecast[x].pressure = daily[x]["pressure"];                     // 1006
+        forecast[x].humidity = daily[x]["humidity"];                     // 91
+        forecast[x].dew_point = daily[x]["dew_point"];                   // 287.28
+        forecast[x].wind_speed = daily[x]["wind_speed"];                 // 14.2
+        forecast[x].wind_gust = daily[x]["wind_gust"];                   // 14.2
+        forecast[x].wind_deg = daily[x]["wind_deg"];                     // 180
+        forecast[x].clouds = daily[x]["clouds"];                         // 95
+        forecast[x].uvi = daily[x]["uvi"];                               // 6.31
+        forecast[x].visibility = daily[x]["visibility"];                 // 10000
+        forecast[x].pop = daily[x]["pop"];                               // 0.57
+        forecast[x].rain = daily[x]["rain"];                             // 23.31
+        forecast[x].snow = daily[x]["snow"];                             // 23.31
+        forecast[x].id = daily[x]["weather"][0]["id"];                   // 500
+        forecast[x].main = daily[x]["weather"][0]["main"];               // "rain"
+        forecast[x].description = daily[x]["weather"][0]["description"]; // "moderate rain"
+        strcpy(forecast[x].icon, daily[x]["weather"][0]["icon"].as<const char *>());
+        ; // "10d"
 #ifdef DARKSKY
         // Legacy DarkSky compatibility
         forecast[x].dayTime = (long)daily[x]["dt"] + current.timezone_offset;          // 1586793600
