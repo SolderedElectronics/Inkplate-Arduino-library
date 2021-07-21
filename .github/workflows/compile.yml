@@ -16,17 +16,9 @@ jobs:
             additional-sketch-paths: |
               - examples/Inkplate10
           - board:
-              fqbn: Dasduino_Boards:Inkplate:Inkplate5
-            additional-sketch-paths: |
-              - examples/Inkplate5
-          - board:
               fqbn: Dasduino_Boards:Inkplate:Inkplate6plus
             additional-sketch-paths: |
               - examples/Inkplate6PLUS
-          - board:
-              fqbn: Dasduino_Boards:Inkplate:Inkplatecolor
-            additional-sketch-paths: |
-              - examples/InkplateColor
     steps:
       - name: Checkout
         uses: actions/checkout@v2
