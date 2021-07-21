@@ -3,16 +3,17 @@
  *
  * @file        InkplateColor.cpp
  * @brief       Basic funtions for controling inkplate color
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     @ e-radionica.com
  ***************************************************/
 
@@ -23,16 +24,19 @@
 #ifdef ARDUINO_INKPLATECOLOR
 
 /**
- * @brief       begin function initialize Inkplate object with predefined settings
- * 
- * @return      True if initialization is successful, false if failed or already initialized
+ * @brief       begin function initialize Inkplate object with predefined
+ * settings
+ *
+ * @return      True if initialization is successful, false if failed or already
+ * initialized
  */
 bool Inkplate::begin(void)
 {
     unsigned long _timeout = 0;
 
-    // Check if begin is called already. If it is, that means that panel needs to be reseted in order to be woken up
-    // from deep sleep. If is this first time begin has been called, init SPI, init pins, allocate memory for frame
+    // Check if begin is called already. If it is, that means that panel needs to
+    // be reseted in order to be woken up from deep sleep. If is this first time
+    // begin has been called, init SPI, init pins, allocate memory for frame
     // buffer and clear frame buffer
     if (!_beginDone)
     {
@@ -104,6 +108,8 @@ bool Inkplate::begin(void)
     sendCommand(0x50);
     sendData(0x37);
 
+    setMCPForLowPower();
+
     _panelState = true;
     return true;
 }
@@ -143,23 +149,24 @@ void Inkplate::display()
 }
 
 /**
- * 
+ *
  * @brief       writePixel funtion sets pixel data for (x, y) pixel position
- * 
+ *
  * @param       int16_t x0
  *              default position for x, will be changed depending on rotation
  * @param       int16_t y0
  *              default position for y, will be changed depending on rotation
  * @param       uint16_t color
  *              pixel color, in 3bit mode have values in range 0-7
- * 
- * @note        If x0 or y0 are out of inkplate screen borders, function will exit.
+ *
+ * @note        If x0 or y0 are out of inkplate screen borders, function will
+ * exit.
  */
 void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
 {
     if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
         return;
-    if (_color > 6 || _color < 0)
+    if (_color > 6)
         return;
 
     switch (rotation)
@@ -182,12 +189,12 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
     int _x_sub = x0 % 2;
     uint8_t temp;
     temp = *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + _x);
-    *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + _x) = pixelMaskGLUT[_x_sub] & temp | (_x_sub ? _color : _color << 4);
+    *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + _x) = (pixelMaskGLUT[_x_sub] & temp) | (_x_sub ? _color : _color << 4);
 }
 
 /**
  * @brief       clean function cleans screen of any potential burn in
- * 
+ *
  * @note        Should not be used in intervals smaller than 5 seconds
  */
 void Inkplate::clean()
@@ -237,9 +244,9 @@ void Inkplate::resetPanel()
 
 /**
  * @brief       sendCommand sends SPI command to inkplate color
- * 
+ *
  * @param       uint8_t _command
- *              predefined command for epaper control 
+ *              predefined command for epaper control
  */
 void Inkplate::sendCommand(uint8_t _command)
 {
@@ -253,7 +260,7 @@ void Inkplate::sendCommand(uint8_t _command)
 
 /**
  * @brief       sendData sends SPI data to inkplate color
- * 
+ *
  * @param       uint8_t *_data
  *              pointer to data buffer to be sent to epaper
  * @param       int _n
@@ -271,7 +278,7 @@ void Inkplate::sendData(uint8_t *_data, int _n)
 
 /**
  * @brief       sendData sends SPI data to inkplate color
- * 
+ *
  * @param       uint8_t _data
  *              data buffer to be sent to epaper
  */
@@ -286,18 +293,21 @@ void Inkplate::sendData(uint8_t _data)
 }
 
 /**
- * @brief       setPanelDeepSleep puts color epaper in deep sleep, or starts epaper, depending on given arguments.
- * 
+ * @brief       setPanelDeepSleep puts color epaper in deep sleep, or starts
+ * epaper, depending on given arguments.
+ *
  * @param       bool _state
- *              HIGH or LOW (1 or 0) 1 will start panel, 0 will put it into deep sleep
+ *              HIGH or LOW (1 or 0) 1 will start panel, 0 will put it into deep
+ * sleep
  */
 void Inkplate::setPanelDeepSleep(bool _state)
 {
-    _panelState = _state==0?false:true;
-    
+    _panelState = _state == 0 ? false : true;
+
     if (_panelState)
     {
-        // Send commands to power up panel. According to the datasheet, it can be powered up from deep sleep only by reseting it and doing reinit.
+        // Send commands to power up panel. According to the datasheet, it can be
+        // powered up from deep sleep only by reseting it and doing reinit.
         begin();
     }
     else
@@ -313,8 +323,8 @@ void Inkplate::setPanelDeepSleep(bool _state)
 }
 
 /**
- * @brief        getPanelDeepSleepState returns current state of the panel
- * 
+ * @brief       getPanelDeepSleepState returns current state of the panel
+ *
  * @return      bool _panelState
  */
 bool Inkplate::getPanelDeepSleepState()
@@ -322,4 +332,51 @@ bool Inkplate::getPanelDeepSleepState()
     return _panelState;
 }
 
+/**
+ * @brief       setMCPAForLowPower initiates MCP pins for low power, and puts
+ * them in OUTPUT LOW because they are using least amount of current in deep
+ * sleep that way
+ */
+void Inkplate::setMCPForLowPower()
+{
+    Wire.begin();
+    memset(mcpRegsInt, 0, 22);
+    mcpBegin(MCP23017_INT_ADDR, mcpRegsInt);
+
+    // TOUCHPAD PINS
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B2, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B3, INPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B4, INPUT);
+
+    // Battery voltage Switch MOSFET
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B1, OUTPUT);
+
+    // Rest of pins go to OUTPUT LOW state because in deepSleep mode they are
+    // using least amount of power
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A0, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A1, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A2, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A3, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A4, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A5, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A6, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A7, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B0, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B5, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B6, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B7, OUTPUT);
+
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A0, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A1, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A2, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A3, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A4, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A5, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A6, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A7, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B0, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B5, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B6, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B7, LOW);
+}
 #endif

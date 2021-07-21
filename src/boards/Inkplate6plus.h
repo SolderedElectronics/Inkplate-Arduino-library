@@ -3,19 +3,19 @@
  *
  * @file        Inkplate6plus.h
  * @brief       Basic funtions for controling inkplate 6PLUS
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     @ e-radionica.com
  ***************************************************/
-
 
 #ifndef __INKPLATE6PLUS_H__
 #define __INKPLATE6PLUS_H__
@@ -58,36 +58,36 @@
 #define MCP23017_GPIOB    0x13
 #define MCP23017_OLATB    0x15
 
-//User pins on MCP for Inkplate 6PLUS
-//If using MCP with address 0x20 (MCP23017_INT_ADDR) use only pins B1-B7
-//Do not use others(0-8) cause they can permanently damage your screen 
-#define MCP23017_PIN_B1     9
-#define MCP23017_PIN_B2     10
-#define MCP23017_PIN_B3     11
-#define MCP23017_PIN_B4     12
-#define MCP23017_PIN_B5     13
-#define MCP23017_PIN_B6     14
-#define MCP23017_PIN_B7     15
+// User pins on MCP for Inkplate 6PLUS
+// If using MCP with address 0x20 (MCP23017_INT_ADDR) use only pins B1-B7
+// Do not use others(0-8) cause they can permanently damage your screen
+#define MCP23017_PIN_B1 9
+#define MCP23017_PIN_B2 10
+#define MCP23017_PIN_B3 11
+#define MCP23017_PIN_B4 12
+#define MCP23017_PIN_B5 13
+#define MCP23017_PIN_B6 14
+#define MCP23017_PIN_B7 15
 
-//Rest of the pins can be used only with MCP with address 0x22 (MCP23017_EXT_ADDR)
-//MCP high level functions (those without address in signature) in Inkplate 10 use MCP23017_EXT_ADDR by default
-#define MCP23017_PIN_A0     0
-#define MCP23017_PIN_A1     1
-#define MCP23017_PIN_A2     2
-#define MCP23017_PIN_A3     3
-#define MCP23017_PIN_A4     4
-#define MCP23017_PIN_A5     5
-#define MCP23017_PIN_A6     6
-#define MCP23017_PIN_A7     7
-#define MCP23017_PIN_B0     8
-
+// Rest of the pins can be used only with MCP with address 0x22
+// (MCP23017_EXT_ADDR) MCP high level functions (those without address in
+// signature) in Inkplate 10 use MCP23017_EXT_ADDR by default
+#define MCP23017_PIN_A0 0
+#define MCP23017_PIN_A1 1
+#define MCP23017_PIN_A2 2
+#define MCP23017_PIN_A3 3
+#define MCP23017_PIN_A4 4
+#define MCP23017_PIN_A5 5
+#define MCP23017_PIN_A6 6
+#define MCP23017_PIN_A7 7
+#define MCP23017_PIN_B0 8
 
 #define E_INK_WIDTH   1024
 #define E_INK_HEIGHT  758
 #define GPIO0_ENABLE  8
 #define INKPLATE_1BIT 0
 #define INKPLATE_3BIT 1
-#define FRONTLIGHT_EN  11
+#define FRONTLIGHT_EN 11
 #define PWR_GOOD_OK   0b11111010
 
 #define DATA 0x0E8C0030 // D0-D7 = GPIO4 GPIO5 GPIO18 GPIO19 GPIO23 GPIO25 GPIO26 GPIO27

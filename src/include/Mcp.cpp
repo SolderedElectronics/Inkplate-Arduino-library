@@ -2,16 +2,17 @@
  **************************************************
  * @file        Mcp.cpp
  * @brief       class for controling mcp expander
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     e-radionica.com
  ***************************************************/
 
@@ -21,15 +22,16 @@
 
 /**
  * @brief       mcpBegin function starts mcp expander and sets registers values
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_r
  *              pointer to array to be writen in registers
- * 
+ *
  * @return      true if successful, false otherwise
- * 
- * @note        updates register 0 and 1 with 0xFF regardless of what array is passed as _r
+ *
+ * @note        updates register 0 and 1 with 0xFF regardless of what array is
+ * passed as _r
  */
 bool Mcp::mcpBegin(uint8_t _addr, uint8_t *_r)
 {
@@ -46,7 +48,7 @@ bool Mcp::mcpBegin(uint8_t _addr, uint8_t *_r)
 
 /**
  * @brief       readMCPRegisters function uses i2c to read all mcp registers
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_k
@@ -65,8 +67,9 @@ void Mcp::readMCPRegisters(uint8_t _addr, uint8_t *k)
 }
 
 /**
- * @brief       readMCPRegisters function uses i2c to read selected mcp registers
- * 
+ * @brief       readMCPRegisters function uses i2c to read selected mcp
+ * registers
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t _regName
@@ -89,8 +92,9 @@ void Mcp::readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t 
 }
 
 /**
- * @brief       readMCPRegisters function uses i2c to read one selected mcp register
- * 
+ * @brief       readMCPRegisters function uses i2c to read one selected mcp
+ * register
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t _regName
@@ -108,8 +112,9 @@ void Mcp::readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k)
 }
 
 /**
- * @brief       updateAllRegisters function uses i2c to updates all mcp registers
- * 
+ * @brief       updateAllRegisters function uses i2c to updates all mcp
+ * registers
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_k
@@ -128,7 +133,7 @@ void Mcp::updateAllRegisters(uint8_t _addr, uint8_t *k)
 
 /**
  * @brief       updateRegister function uses i2c to update selected mcp register
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t _regName
@@ -145,8 +150,9 @@ void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d)
 }
 
 /**
- * @brief       updateRegister function uses i2c to update some selected mcp registers
- * 
+ * @brief       updateRegister function uses i2c to update some selected mcp
+ * registers
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t _regName
@@ -173,7 +179,7 @@ void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n
 
 /**
  * @brief       pinModeInternal sets mcp internal pin mode
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_r
@@ -181,7 +187,8 @@ void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n
  * @param       uint8_t _pin
  *              pin to set mode
  * @param       uint8_t _mode
- *              mode for pi to be set (INPUT=0x01, OUTPUT=0x02, INPUT_PULLUP=0x05)
+ *              mode for pi to be set (INPUT=0x01, OUTPUT=0x02,
+ * INPUT_PULLUP=0x05)
  *
  * @note        modes are defined in @esp32-hal-gpio.h
  */
@@ -217,19 +224,20 @@ void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mod
 
 /**
  * @brief       digitalWriteInternal sets internal output pin state (1 or 0)
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_r
  *              pointer to array that holds mcp registers
  * @param       uint8_t _pin
- *              pin to set output (DO NOT USE GPA0-GPA7 and GPB0. In code those are pins from 0-8) only use 9-15
+ *              pin to set output (DO NOT USE GPA0-GPA7 and GPB0. In code those
+ * are pins from 0-8) only use 9-15
  * @param       uint8_t _state
  *              output pin state (0 or 1)
  *
- * @note        DO NOT USE GPA0-GPA7 and GPB0. In code those are pins from 0-8!!! Using those, you might permanently damage
- *              the screen. You should only use pins from 9-15.
- *              Function will exit if pin mode isnt OUTPUT.
+ * @note        DO NOT USE GPA0-GPA7 and GPB0. In code those are pins from
+ * 0-8!!! Using those, you might permanently damage the screen. You should only
+ * use pins from 9-15. Function will exit if pin mode isnt OUTPUT.
  */
 void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state)
 {
@@ -244,7 +252,7 @@ void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t
 
 /**
  * @brief       digitalReadInternal reads mcp internal pin state
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_r
@@ -264,7 +272,7 @@ uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 
 /**
  * @brief       setIntOutputInternal sets mcp interrupt port state
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_r
@@ -272,9 +280,11 @@ uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
  * @param       uint8_t intPort
  *              portA or portB
  * @param       uint8_t mirroring
- *              set 1 to make ports mirror each other so that any interrupt will cause both to go HIGH
+ *              set 1 to make ports mirror each other so that any interrupt will
+ * cause both to go HIGH
  * @param       uint8_t openDrain
- *              set 1 to set interupt port as open drain, this will override port polarity
+ *              set 1 to set interupt port as open drain, this will override
+ * port polarity
  * @param       uint8_t polarity
  *              sets port interrupt polarity, 1 active high, 0 active low
  */
@@ -293,7 +303,7 @@ void Mcp::setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint
 
 /**
  * @brief       setIntPinInternal function sets mcp interupt internal mode
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_r
@@ -330,11 +340,12 @@ void Mcp::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _m
 
 /**
  * @brief       pinModeMCP function sets internal pin mode
- * 
+ *
  * @param       uint8_t _pin
  *              pin to set mode
  * @param       uint8_t _mode
- *              mode for pin to be set (INPUT=0x01, OUTPUT=0x02, INPUT_PULLUP=0x05)
+ *              mode for pin to be set (INPUT=0x01, OUTPUT=0x02,
+ * INPUT_PULLUP=0x05)
  */
 void Mcp::pinModeMCP(uint8_t _pin, uint8_t _mode)
 {
@@ -343,9 +354,10 @@ void Mcp::pinModeMCP(uint8_t _pin, uint8_t _mode)
 
 /**
  * @brief       digitalWriteMCP sets internal output pin state (1 or 0)
- * 
+ *
  * @param       uint8_t _pin
- *              pin to set output (DO NOT USE GPA0-GPA7 and GPB0. In code those are pins from 0-8) only use 9-15
+ *              pin to set output (DO NOT USE GPA0-GPA7 and GPB0. In code those
+ * are pins from 0-8) only use 9-15
  * @param       uint8_t _state
  *              output pin state (0 or 1)
  */
@@ -369,13 +381,15 @@ uint8_t Mcp::digitalReadMCP(uint8_t _pin)
 
 /**
  * @brief       setIntOutput sets mcp interrupt port state
- * 
+ *
  * @param       uint8_t intPort
  *              portA or portB
  * @param       uint8_t mirroring
- *              set 1 to make ports mirror each other so that any interrupt will cause both to go HIGH
+ *              set 1 to make ports mirror each other so that any interrupt will
+ * cause both to go HIGH
  * @param       uint8_t openDrain
- *              set 1 to set interupt port as open drain, this will override port polarity
+ *              set 1 to set interupt port as open drain, this will override
+ * port polarity
  * @param       uint8_t polarity
  *              sets port interrupt polarity, 1 active high, 0 active low
  */
@@ -386,7 +400,7 @@ void Mcp::setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, ui
 
 /**
  * @brief       setIntPin function sets mcp interupt internal mode
- * 
+ *
  * @param       uint8_t _pin
  *              pin to set interrupt mode to
  * @param       uint8_t _mode
@@ -399,7 +413,7 @@ void Mcp::setIntPin(uint8_t _pin, uint8_t _mode)
 
 /**
  * @brief       removeIntPin function removes Interrupt from pin
- * 
+ *
  * @param       uint8_t _pin
  *              pin to remove interrupt from
  */
@@ -410,10 +424,11 @@ void Mcp::removeIntPin(uint8_t _pin)
 
 /**
  * @brief       getINTInternal function reads Interrupt from pin
- * 
+ *
  * @return      returns interupt registers state
- * 
- * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is PORTA PIN1
+ *
+ * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
+ * PORTA PIN1
  */
 uint16_t Mcp::getINT()
 {
@@ -421,11 +436,13 @@ uint16_t Mcp::getINT()
 }
 
 /**
- * @brief       getINTstate function reads Interrupt pins state at the time interrupt occured
- * 
+ * @brief       getINTstate function reads Interrupt pins state at the time
+ * interrupt occured
+ *
  * @return      returns interupt registers state at the time interrupt occured
- * 
- * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is PORTA PIN1
+ *
+ * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
+ * PORTA PIN1
  */
 uint16_t Mcp::getINTstate()
 {
@@ -434,10 +451,10 @@ uint16_t Mcp::getINTstate()
 
 /**
  * @brief       setPorts sets internal state of PORTAB registers
- * 
+ *
  * @param       uint16_t _d
  *              data to be set to PORTAB registers
- * 
+ *
  * @note        MSB byte is for PORTB, LSB byte for PORTA
  */
 void Mcp::setPorts(uint16_t _d)
@@ -447,9 +464,9 @@ void Mcp::setPorts(uint16_t _d)
 
 /**
  * @brief       getPortsInternal gets register state of PORTSAB
- * 
+ *
  * @return      returns register states of PORTSAB
- * 
+ *
  * @note        MSB byte is for PORTB, LSB is for PORTA
  */
 uint16_t Mcp::getPorts()
@@ -459,7 +476,7 @@ uint16_t Mcp::getPorts()
 
 /**
  * @brief       removeIntPinInternal function removes Interrupt from pin
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_r
@@ -477,15 +494,15 @@ void Mcp::removeIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 
 /**
  * @brief       getINTInternal function reads Interrupt pin state for all pins
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_r
  *              pointer to array that holds mcp registers
  * @return      returns interrupt state of both ports (INTF)
- * 
- * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is PORTA PIN1,
- *              bit can be set only if interrupt is enabled
+ *
+ * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
+ * PORTA PIN1, bit can be set only if interrupt is enabled
  */
 uint16_t Mcp::getINTInternal(uint8_t _addr, uint8_t *_r)
 {
@@ -494,17 +511,19 @@ uint16_t Mcp::getINTInternal(uint8_t _addr, uint8_t *_r)
 }
 
 /**
- * @brief       getINTstateInternal gets interrupt pins state at the time interrupt occured
- * 
+ * @brief       getINTstateInternal gets interrupt pins state at the time
+ * interrupt occured
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_r
  *              pointer to array that holds mcp registers
- * 
- * @return      returns interrupt state of both ports, at the time the interrupt occured (INTCAP)
- * 
- * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is PORTA PIN1,
- *              bit can be set only if interrupt is enabled
+ *
+ * @return      returns interrupt state of both ports, at the time the interrupt
+ * occured (INTCAP)
+ *
+ * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
+ * PORTA PIN1, bit can be set only if interrupt is enabled
  */
 uint16_t Mcp::getINTstateInternal(uint8_t _addr, uint8_t *_r)
 {
@@ -514,14 +533,14 @@ uint16_t Mcp::getINTstateInternal(uint8_t _addr, uint8_t *_r)
 
 /**
  * @brief       setPortsInternal sets internal state of PORTAB registers
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_r
  *              pointer to array that holds mcp registers
  * @param       uint16_t _d
  *              data to be set to PORTAB registers
- * 
+ *
  * @note        MSB byte is for PORTB, LSB byte for PORTA
  */
 void Mcp::setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d)
@@ -533,14 +552,14 @@ void Mcp::setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d)
 
 /**
  * @brief       getPortsInternal gets register state of PORTSAB
- * 
+ *
  * @param       uint8_t _addr
  *              mcp i2c address
  * @param       uint8_t *_r
  *              pointer to array that holds mcp registers
- * 
+ *
  * @return      returns register states of PORTSAB
- * 
+ *
  * @note        MSB byte is for PORTB, LSB is for PORTA
  */
 uint16_t Mcp::getPortsInternal(uint8_t _addr, uint8_t *_r)

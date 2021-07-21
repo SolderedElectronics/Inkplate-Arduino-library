@@ -2,23 +2,22 @@
  **************************************************
  * @file        Image.h
  * @brief       Basic functionalities to work with images
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     e-radionica.com
  ***************************************************/
 
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
-
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 #include "../libs/Adafruit-GFX-Library/Adafruit_GFX.h"
 #include "../libs/SdFat/SdFat.h"
@@ -74,8 +73,9 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
                    const bool invert = 0);
 
     // Defined in Adafruit-GFX-Library, but should fit here
-    // void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
-    // void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color,
+    // void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w,
+    // int16_t h, uint16_t color); void drawBitmap(int16_t x, int16_t y, const
+    // uint8_t *bitmap, int16_t w, int16_t h, uint16_t color,
     //                        uint16_t bg);
 
     void drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h);
@@ -108,6 +108,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     void getPointsForPosition(const Position &position, const uint16_t imageWidth, const uint16_t imageHeight,
                               const uint16_t screenWidth, const uint16_t screenHeight, uint16_t *posX, uint16_t *posY);
+    uint8_t findClosestPalette(uint32_t c);
 
   private:
     virtual void startWrite(void) = 0;
@@ -122,7 +123,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     uint8_t pixelBuffer[E_INK_WIDTH * 4 + 5];
 #ifdef ARDUINO_INKPLATECOLOR
-    int8_t ditherBuffer[3][MAX(_kernelHeight, 16)][E_INK_WIDTH + 20];
+    int8_t ditherBuffer[3][16][E_INK_WIDTH + 20];
 
     int8_t (*ditherBuffer_r)[E_INK_WIDTH + 20] = ditherBuffer[0];
     int8_t (*ditherBuffer_g)[E_INK_WIDTH + 20] = ditherBuffer[1];
@@ -136,7 +137,6 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     const unsigned char (*kernel)[_kernelWidth] = _kernel;
 
-    uint8_t findClosestPalette(uint32_t c);
 #else
     uint8_t ditherBuffer[2][E_INK_WIDTH + 20];
 #endif

@@ -38,7 +38,8 @@ void setup()
         Serial.print(vcomVoltage, 2);
         Serial.println("V");
         delay(1000);
-        display.pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 6, INPUT_PULLUP);// Declaring this again since it gets reset somewhere.
+        display.pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 6,
+                                INPUT_PULLUP); // Declaring this again since it gets reset somewhere.
         writeVCOMToEEPROM(vcomVoltage);
         EEPROM.write(EEPROMaddress, 170);
         EEPROM.commit();
@@ -82,7 +83,7 @@ void loop()
         {
             int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n;
             char b;
-            char temp[150];
+            // char temp[150];
             switch (*(s + 1))
             {
             case '?':
@@ -417,7 +418,7 @@ void showSplashScreen()
     display.display();
 }
 
-//Inkplate 6 Null waveform
+// Inkplate 6 Null waveform
 void writeToScreen()
 {
     display.clean(1, 8);
@@ -434,7 +435,7 @@ double readVCOM()
     writeToScreen();
     writeReg(0x04, (readReg(0x04) | B10000000));
     delay(10);
-    while (display.digitalReadInternal(MCP23017_ADDR, mcpRegsInt,6))
+    while (display.digitalReadInternal(MCP23017_ADDR, mcpRegsInt, 6))
     {
         delay(1);
     };
@@ -448,9 +449,8 @@ double readVCOM()
 void writeVCOMToEEPROM(double v)
 {
     int vcom = int(abs(v) * 100);
-    uint8_t vcomH, vcomL, vcom2Reg;
-    vcomH = (vcom >> 8) & 1;
-    vcomL = vcom & 0xFF;
+    int vcomH = (vcom >> 8) & 1;
+    int vcomL = vcom & 0xFF;
     // First, we have to power up TPS65186
     // Pull TPS65186 WAKEUP pin to High
     display.digitalWriteInternal(MCP23017_ADDR, mcpRegsInt, 3, HIGH);

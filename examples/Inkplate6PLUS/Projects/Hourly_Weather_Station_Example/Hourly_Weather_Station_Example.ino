@@ -31,19 +31,19 @@ int timeZone = 2;
 char city[128] = "OSIJEK";
 
 // Coordinates sent to the api
-char *lon = "45.5510548";
-char *lat = "18.5947808";
+char lon[] = "45.5510548";
+char lat[] = "18.5947808";
 
 // Change to your wifi ssid and password
-char *ssid = "";
-char *pass = "";
+char ssid[] = "";
+char pass[] = "";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char *apiKey = "";
+char apiKey[] = "";
 
 //----------------------------------
 
@@ -100,7 +100,7 @@ char hours[4][8] = {
 };
 
 // Variable for counting partial refreshes
- long refreshes = 0;
+long refreshes = 0;
 
 // Constant to determine when to full update
 const int fullRefresh = 10;
@@ -186,7 +186,7 @@ void setup()
 
 void loop()
 {
-    //nothing here
+    // nothing here
 }
 
 // Function for drawing weather info

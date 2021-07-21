@@ -3,19 +3,19 @@
  *
  * @file        InkplateColor.h
  * @brief       Basic funtions for controling inkplate color
- * 
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     @ e-radionica.com
  ***************************************************/
-
 
 #ifndef INKPLATECOLOR_H
 #define INKPLATECOLOR_H
@@ -34,7 +34,6 @@
 // Epaper registers
 #define PANEL_SET_REGISTER          0x00
 #define POWER_SET_REGISTER          0x01
-#define POWER_OFF_REGISTER          0x02
 #define POWER_OFF_SEQ_SET_REGISTER  0x03
 #define POWER_OFF_REGISTER          0x04
 #define BOOSTER_SOFTSTART_REGISTER  0x06
@@ -102,22 +101,23 @@
 #define MCP23017_GPIOB    0x13
 #define MCP23017_OLATB    0x15
 
-//User pins on MCP for Inkplate COLOR
-#define MCP23017_PIN_A0     0
-#define MCP23017_PIN_A1     1
-#define MCP23017_PIN_A2     2
-#define MCP23017_PIN_A3     3
-#define MCP23017_PIN_A4     4
-#define MCP23017_PIN_A5     5
-#define MCP23017_PIN_A6     6
-#define MCP23017_PIN_A7     7
-#define MCP23017_PIN_B0     8
-#define MCP23017_PIN_B1     9
-#define MCP23017_PIN_B2     10
-#define MCP23017_PIN_B3     11
-#define MCP23017_PIN_B4     12
-#define MCP23017_PIN_B5     13
-#define MCP23017_PIN_B6     14
-#define MCP23017_PIN_B7     15
+// User pins on MCP for Inkplate COLOR
+#define MCP23017_PIN_A0 0
+#define MCP23017_PIN_A1 1
+#define MCP23017_PIN_A2 2
+#define MCP23017_PIN_A3 3
+#define MCP23017_PIN_A4 4
+#define MCP23017_PIN_A5 5
+#define MCP23017_PIN_A6 6
+#define MCP23017_PIN_A7 7
+
+#define MCP23017_PIN_B0 8
+#define MCP23017_PIN_B1 9
+#define MCP23017_PIN_B2 10
+#define MCP23017_PIN_B3 11
+#define MCP23017_PIN_B4 12
+#define MCP23017_PIN_B5 13
+#define MCP23017_PIN_B6 14
+#define MCP23017_PIN_B7 15
 
 #endif

@@ -33,8 +33,8 @@
 #include "WiFi.h"                //Include library for WiFi
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
-const char *ssid = "e-radionica.com";     // Your WiFi SSID
-const char *password = "croduino"; // Your WiFi password
+const char ssid[] = "e-radionica.com"; // Your WiFi SSID
+const char *password = "croduino";     // Your WiFi password
 
 void setup()
 {

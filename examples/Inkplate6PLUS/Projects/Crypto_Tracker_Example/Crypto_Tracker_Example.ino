@@ -30,13 +30,13 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char *ssid = "";
-char *pass = "";
+char ssid[] = "";
+char pass[] = "";
 
 // OPTIONAL:
 // change to a different currency
-char *currency = "bitcoin";
-char *currencyAbbr = "BTC";
+char currency[] = "bitcoin";
+char currencyAbbr[] = "BTC";
 
 // You can find your currency id here:
 // https://api.coingecko.com/api/v3/coins
@@ -97,7 +97,7 @@ RTC_DATA_ATTR char minimum[16];
 RTC_DATA_ATTR char maximum[16];
 
 // All months in a year, for finding current date
-char *months[] = {
+char months[][12] = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 };
 

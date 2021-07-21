@@ -1,17 +1,18 @@
 /**
  **************************************************
  * @file        Graphics.h
- * @brief       Basic graphics functionalities 
- * 
+ * @brief       Basic graphics functionalities
+ *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
- *              This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
- *              Please review the LICENSE file included with this example.
- *              If you have any questions about licensing, please contact techsupport@e-radionica.com
- *              Distributed as-is; no warranty is given.
- * 
+ *              This code is released under the GNU Lesser General Public
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
  * @authors     e-radionica.com
  ***************************************************/
 
@@ -42,7 +43,8 @@
 #endif
 
 /**
- * @brief       Graphics class that holds basic functionalities for Inkplate display
+ * @brief       Graphics class that holds basic functionalities for Inkplate
+ * display
  */
 class Graphics : public Shapes, public Image
 {
@@ -82,7 +84,6 @@ class Graphics : public Shapes, public Image
     const uint8_t discharge[16] = {0xFF, 0xFC, 0xF3, 0xF0, 0xCF, 0xCC, 0xC3, 0xC0,
                                    0x3F, 0x3C, 0x33, 0x30, 0xF,  0xC,  0x3,  0x0};
     uint8_t _blockPartial = 1;
-
 
   private:
     void startWrite(void) override;
