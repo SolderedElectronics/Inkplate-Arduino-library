@@ -184,7 +184,11 @@ void Inkplate::display1b()
     uint32_t _send;
     uint8_t data;
     uint8_t dram;
-    einkOn();
+
+    if (!einkOn())
+    {
+        return;
+    }
 
     clean(0, 1);
     clean(1, 21);
@@ -294,7 +298,10 @@ void Inkplate::display1b()
  */
 void Inkplate::display3b()
 {
-    einkOn();
+    if (!einkOn())
+    {
+        return;
+    }
     clean(0, 1);
     clean(1, 21);
     clean(2, 1);
@@ -381,7 +388,11 @@ void Inkplate::partialUpdate(bool _forced)
         }
     }
 
-    einkOn();
+    if (!einkOn())
+    {
+        return;
+    }
+
     for (int k = 0; k < 5; ++k)
     {
         vscan_start();

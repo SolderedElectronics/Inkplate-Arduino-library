@@ -118,13 +118,15 @@ void Inkplate::einkOff()
  *
  * @note        its important to use this order when turning epaper on.
  *              using wrong order can irreparably damage epaper
+ *
+ * @return      1 if succesfully turned on, 0 if failed
  */
-void Inkplate::einkOn()
+int Inkplate::einkOn()
 {
     if (getPanelState() == 1)
         return;
     WAKEUP_SET;
-    delay(1);
+    delay(2);
     PWRUP_SET;
 
     // Enable all rails
@@ -153,11 +155,13 @@ void Inkplate::einkOn()
         WAKEUP_CLEAR;
         VCOM_CLEAR;
         PWRUP_CLEAR;
-        return;
+        return 0;
     }
 
     OE_SET;
     setPanelState(1);
+
+    return 1;
 }
 
 /**
