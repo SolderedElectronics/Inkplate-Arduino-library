@@ -203,12 +203,12 @@ void Inkplate::display1b()
     uint32_t _pos;
     uint8_t data;
     uint8_t dram;
-    
-    if(!einkOn())
+
+    if (!einkOn())
     {
         return;
     }
-    
+
     clean(0, 17);
     clean(1, 17);
     clean(0, 17);
@@ -284,7 +284,7 @@ void Inkplate::display1b()
  */
 void IRAM_ATTR Inkplate::display3b()
 {
-    if(!einkOn())
+    if (!einkOn())
     {
         return;
     }
@@ -370,11 +370,11 @@ void Inkplate::partialUpdate(bool _forced)
         }
     }
 
-    if(!einkOn())
+    if (!einkOn())
     {
         return;
     }
-    
+
     for (int k = 0; k < 5; k++)
     {
         vscan_start();

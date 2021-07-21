@@ -118,7 +118,7 @@ void Inkplate::einkOff()
  *
  * @note        its important to use this order when turning epaper on.
  *              using wrong order can irreparably damage epaper
- * 
+ *
  * @return      1 if succesfully turned on, 0 if failed
  */
 int Inkplate::einkOn()
