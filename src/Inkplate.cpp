@@ -124,7 +124,7 @@ void Inkplate::einkOff()
 int Inkplate::einkOn()
 {
     if (getPanelState() == 1)
-        return;
+        return 1;
     WAKEUP_SET;
     delay(2);
     PWRUP_SET;
