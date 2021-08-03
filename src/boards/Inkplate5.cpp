@@ -426,7 +426,7 @@ void Inkplate::partialUpdate(bool _forced)
 void Inkplate::clean(uint8_t c, uint8_t rep)
 {
     einkOn();
-    uint8_t data;
+    uint8_t data = 0;
     if (c == 0)
     {
         data = B10101010; // White
