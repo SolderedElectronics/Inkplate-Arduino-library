@@ -131,7 +131,7 @@ String textInTag(const char *tag, const char *tagEnd, int dt)
     while (dt--)
         end = strstr(end + 1, tagEnd);
 
-    int d = 0, rc = 0;
+    int d = 0;
     for (char *t = start; t < end; ++t)
     {
         if (*t == '<')
