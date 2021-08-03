@@ -41,7 +41,7 @@ void setup()
         display.println("SD Card ok! Reading data...");
         display.partialUpdate();
 
-        // Try to load text with max lenght of 200 chars.
+        // Try to load text with max lenght of 2000 chars.
         if (!file.open("/text.txt", O_RDONLY))
         { // If it fails to open, send error message to display, otherwise read the file.
             display.println("File open error");
@@ -51,10 +51,10 @@ void setup()
         {
             display.clearDisplay();    // Clear everything that is stored in frame buffer of epaper
             display.setCursor(0, 0);   // Set print position at the begining of the screen
-            char text[201];            // Array where data from SD card is stored (max 200 chars here)
+            char text[2001];            // Array where data from SD card is stored (max 2000 chars here)
             int len = file.fileSize(); // Read how big is file that we are opening
-            if (len > 200)
-                len = 200;        // If it's more than 200 bytes (200 chars), limit to max 200 bytes
+            if (len > 2000)
+                len = 2000;        // If it's more than 2000 bytes (2000 chars), limit to max 2000 bytes
             file.read(text, len); // Read data from file and save it in text array
             text[len] = 0;        // Put null terminating char at the and of data
             display.print(text);  // Print data/text
