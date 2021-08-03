@@ -30,8 +30,8 @@
 #include <WiFiClient.h> //Include ESP32 WiFi library for AP
 #include <uri/UriBraces.h>
 
-#define ssid "Inkplate"
-#define pass "e-radionica"
+#define ssid ""
+#define pass ""
 
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 WebServer server(80);            // Create Web server on port 80 (HTTP port number)

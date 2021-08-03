@@ -46,7 +46,7 @@ void setup()
         delay(5000);
     }
 
-    while (!display.joinAP("e-radionica.com", "croduino"))
+    while (!display.joinAP("", ""))
     {
         Serial.println("Connecting to wifi");
     }
