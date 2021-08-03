@@ -33,8 +33,8 @@
 #include "WiFi.h"                //Include library for WiFi
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
-const char ssid[] = "";    // Your WiFi SSID
-const char *password = ""; // Your WiFi password
+const char ssid[] = "Soldered";    // Your WiFi SSID
+const char *password = "dasduino"; // Your WiFi password
 
 void setup()
 {
@@ -66,8 +66,8 @@ void setup()
     //  height - Height of the generated graph, here set to half the Inkplate's height.
     //  eink   - Should be set to true to generate a BW 1 bit bitmap better suitable for Inkplate.
     // For more detailed explanation and more parameters, please visit the docs page: https://varipass.org/docs/
-    if (!display.drawBitmapFromWeb("https://api.varipass.org/?action=sgraph&id=kbg3eQfA&width=400&height=300&eink=true",
-                                   200, 150))
+    if (!display.drawBitmapFromWeb("https://api.varipass.org/?action=sgraph&id=kbg3eQfA&width=500&height=400&eink=true",
+                                   150, 100))
     {
         display.println("Image open error");
         display.partialUpdate();
