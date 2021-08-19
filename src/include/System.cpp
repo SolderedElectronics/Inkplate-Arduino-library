@@ -139,13 +139,13 @@ SdFat System::getSdFat()
 }
 
 /**
- * @brief       getSPI gets SPI class object
+ * @brief       getSPIptr gets SPI class object pointer
  *
  * @return      SPI class object
  */
-SPIClass System::getSPI()
+SPIClass *System::getSPIptr()
 {
-    return spi2;
+    return &spi2;
 }
 
 /**
