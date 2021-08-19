@@ -40,6 +40,8 @@ Inkplate display(INKPLATE_3BIT); // Create an object on Inkplate library and als
 void setup()
 {
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
+    display.frontlight(0);  // Turn off the front light
+    display.tsShutdown();   // Turn off the touch screen
     display.clearDisplay(); // Clear frame buffer of display
     display.drawImage(
         pictures[slide], 0, 43, 1024,
