@@ -1,0 +1,12 @@
+{
+  "additionalFiles": "",
+  "builtInLibrariesFolders": "/Applications/Arduino.app/Contents/Java/libraries",
+  "builtInToolsFolders": "/Applications/Arduino.app/Contents/Java/tools-builder,/Applications/Arduino.app/Contents/Java/hardware/tools/avr,/Users/nitkonitkic/Library/Arduino15/packages",
+  "compiler.optimization_flags": "",
+  "customBuildProperties": "build.path=/Users/nitkonitkic/Documents/Arduino/libraries/Inkplate-Arduino-library/Build,build.warn_data_percentage=75,runtime.tools.xtensa-esp32-elf-gcc.path=/Users/nitkonitkic/Library/Arduino15/packages/Dasduino_Boards/tools/xtensa-esp32-elf-gcc/1.22.0-96-g2852398-5.2.0,runtime.tools.xtensa-esp32-elf-gcc-1.22.0-96-g2852398-5.2.0.path=/Users/nitkonitkic/Library/Arduino15/packages/Dasduino_Boards/tools/xtensa-esp32-elf-gcc/1.22.0-96-g2852398-5.2.0,runtime.tools.mkspiffs.path=/Users/nitkonitkic/Library/Arduino15/packages/Dasduino_Boards/tools/mkspiffs/0.2.3,runtime.tools.mkspiffs-0.2.3.path=/Users/nitkonitkic/Library/Arduino15/packages/Dasduino_Boards/tools/mkspiffs/0.2.3,runtime.tools.esptool_py.path=/Users/nitkonitkic/Library/Arduino15/packages/Dasduino_Boards/tools/esptool_py/3.0.0,runtime.tools.esptool_py-3.0.0.path=/Users/nitkonitkic/Library/Arduino15/packages/Dasduino_Boards/tools/esptool_py/3.0.0",
+  "fqbn": "Dasduino_Boards:Inkplate:Inkplate6:PSRAM=enabled,PartitionScheme=huge_app,CPUFreq=240,UploadSpeed=115200,DebugLevel=none",
+  "hardwareFolders": "/Applications/Arduino.app/Contents/Java/hardware,/Users/nitkonitkic/Library/Arduino15/packages",
+  "otherLibrariesFolders": "/Users/nitkonitkic/Documents/Arduino/libraries",
+  "runtime.ide.version": "10815",
+  "sketchLocation": "/Users/nitkonitkic/Documents/Arduino/libraries/Inkplate-Arduino-library/examples/Inkplate6/Basic_Inkplate_Functionality/Inkplate_Basic_Partial_Update/Inkplate_Basic_Partial_Update.ino"
+}

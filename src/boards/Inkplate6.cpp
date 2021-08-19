@@ -357,7 +357,7 @@ void Inkplate::display3b()
  *
  * @note        Partial update only works in black and white mode
  */
-void Inkplate::partialUpdate(bool _forced)
+void Inkplate::partialUpdate(bool _forced, bool liveOn)
 {
     if (getDisplayMode() == 1)
         return;
@@ -388,9 +388,12 @@ void Inkplate::partialUpdate(bool _forced)
         }
     }
 
-    if (!einkOn())
+    if (!liveOn)
     {
-        return;
+        if (!einkOn())
+        {
+            return;
+        }
     }
 
     for (int k = 0; k < 5; ++k)
@@ -420,7 +423,9 @@ void Inkplate::partialUpdate(bool _forced)
     clean(2, 2);
     clean(3, 1);
     vscan_start();
-    einkOff();
+
+    if (!liveOn)
+        einkOff();
 
     memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
 }
