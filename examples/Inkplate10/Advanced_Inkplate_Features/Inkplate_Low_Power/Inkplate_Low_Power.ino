@@ -50,7 +50,7 @@ void setup()
     if (slide > 2)
         slide = 0; // We do not have more than 3 images, so roll back to zero
 
-    // Uncomment this line if your Inkplate is newer than Aug 2021 as newer Inkplates have ESP32 wrover-e chips
+    // Uncomment this line if your Inkplate is older than Aug 2021 as older Inkplates have ESP32 wrover-e chips
     // rtc_gpio_isolate(GPIO_NUM_12); // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Activate wake-up timer -- wake up after 20s here
     esp_deep_sleep_start();                                        // Put ESP32 into deep sleep. Program stops here.
