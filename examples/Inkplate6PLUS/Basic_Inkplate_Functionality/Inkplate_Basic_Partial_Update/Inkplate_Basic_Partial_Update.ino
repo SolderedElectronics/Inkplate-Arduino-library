@@ -79,8 +79,8 @@ void loop()
     }
     else
     {
-        display.partialUpdate(); // Do partial update
-        n++;                     // Keep track on how many times screen has been partially updated
+        display.partialUpdate(false, true); // Do partial update
+        n++;                                // Keep track on how many times screen has been partially updated
     }
     offset -= 20; // Move text into new position
     if (offset < 0)
