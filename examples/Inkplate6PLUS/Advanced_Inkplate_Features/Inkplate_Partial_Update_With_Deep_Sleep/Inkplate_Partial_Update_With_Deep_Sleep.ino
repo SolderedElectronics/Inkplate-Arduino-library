@@ -64,8 +64,11 @@ void setup()
     }
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP *
                                   uS_TO_S_FACTOR); // Set EPS32 to be woken up in 10 seconds (in this case)
-    rtc_gpio_isolate(GPIO_NUM_12); // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
-    esp_deep_sleep_start();        // Put ESP32 into deep sleep (low power mode)
+
+    // Uncomment this line if your Inkplate is older than Aug 2021 as older Inkplates have ESP32 wrover-e chips
+    // rtc_gpio_isolate(GPIO_NUM_12); // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
+
+    esp_deep_sleep_start(); // Put ESP32 into deep sleep (low power mode)
 }
 
 void loop()

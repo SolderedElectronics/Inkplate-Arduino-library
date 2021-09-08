@@ -7,7 +7,7 @@ Inkplate		KEYWORD3
 begin				KEYWORD2
 sdCardInit			KEYWORD2
 getSdFat			KEYWORD2
-getSPI				KEYWORD2
+getSPIptr			KEYWORD2
 getPanelState		KEYWORD2
 readTouchpad		KEYWORD2
 readTemperature		KEYWORD2
