@@ -27,7 +27,9 @@ void setup()
     display.clearDisplay();
     display.display();
 
-    //Draw many rectangles
+    display.fillScreen(INKPLATE_WHITE);
+
+    // Draw many rectangles
     display.fillRect(0, 0, 50, 50, INKPLATE_BLACK);
     display.fillRect(0, 50, 50, 50, INKPLATE_WHITE);
     display.fillRect(0, 100, 50, 50, INKPLATE_GREEN);
@@ -44,7 +46,7 @@ void setup()
     display.drawRect(55, 250, 50, 50, INKPLATE_YELLOW);
     display.drawRect(55, 300, 50, 50, INKPLATE_ORANGE);
 
-    //Draw many circles
+    // Draw many circles
     display.fillCircle(135, 25, 24, INKPLATE_BLACK);
     display.fillCircle(135, 75, 24, INKPLATE_WHITE);
     display.fillCircle(135, 125, 24, INKPLATE_GREEN);
@@ -61,7 +63,7 @@ void setup()
     display.drawCircle(190, 275, 24, INKPLATE_YELLOW);
     display.drawCircle(190, 325, 24, INKPLATE_ORANGE);
 
-    //Draw many triangles
+    // Draw many triangles
     display.fillTriangle(210, 50, 260, 50, 235, 0, INKPLATE_BLACK);
     display.fillTriangle(210, 100, 260, 100, 235, 50, INKPLATE_WHITE);
     display.fillTriangle(210, 150, 260, 150, 235, 100, INKPLATE_GREEN);
@@ -78,7 +80,7 @@ void setup()
     display.drawTriangle(210, 300, 260, 300, 235, 250, INKPLATE_YELLOW);
     display.drawTriangle(210, 350, 260, 350, 235, 300, INKPLATE_ORANGE);
 
-    //Show some pretty text
+    // Show some pretty text
     display.setTextColor(INKPLATE_BLACK);
     display.setCursor(265, 0);
     display.setTextSize(2);
@@ -114,7 +116,7 @@ void setup()
     display.setTextSize(2);
     display.print("Welcome to Inkplate Color!");
 
-    //Draw logo
+    // Draw logo
     display.drawBitmap(0, 350, logo, logo_w, logo_h, INKPLATE_BLACK);
     display.drawBitmap(100, 350, logo, logo_w, logo_h, INKPLATE_WHITE);
     display.drawBitmap(200, 350, logo, logo_w, logo_h, INKPLATE_GREEN);
