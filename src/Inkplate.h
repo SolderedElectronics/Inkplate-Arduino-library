@@ -45,7 +45,7 @@ class Inkplate : public System, public Graphics
 #endif
     bool begin(void); // In boards
     void clearDisplay();
-    void display();
+    void display(bool leaveOn = false);
     // void writeRow(uint8_t data);
     void partialUpdate(bool _forced = false, bool leaveOn = false);
 
@@ -95,8 +95,8 @@ class Inkplate : public System, public Graphics
     void sendData(uint8_t *_data, int _n);
     void sendData(uint8_t _data);
 #else
-    void display1b();
-    void display3b();
+    void display1b(bool leaveOn = false);
+    void display3b(bool leaveOn = false);
 
     void vscan_start();
     void vscan_end();

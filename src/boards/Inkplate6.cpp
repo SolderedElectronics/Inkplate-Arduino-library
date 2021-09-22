@@ -177,7 +177,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
  *
  * @brief       display1b function writes black and white data to display
  */
-void Inkplate::display1b()
+void Inkplate::display1b(bool leaveOn)
 {
     memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
 
@@ -185,7 +185,7 @@ void Inkplate::display1b()
     uint8_t data;
     uint8_t dram;
 
-    if (!einkOn())
+    if (!leaveOn && !einkOn())
     {
         return;
     }
@@ -289,16 +289,19 @@ void Inkplate::display1b()
     delayMicroseconds(230);
 
     vscan_start();
-    einkOff();
+
+    if (!leaveOn)
+        einkOff();
+
     _blockPartial = 0;
 }
 
 /**
  * @brief       display3b function writes grayscale data to display
  */
-void Inkplate::display3b()
+void Inkplate::display3b(bool leaveOn)
 {
-    if (!einkOn())
+    if (!leaveOn && !einkOn())
     {
         return;
     }
@@ -344,7 +347,9 @@ void Inkplate::display3b()
     }
     clean(3, 1);
     vscan_start();
-    einkOff();
+
+    if (!leaveOn)
+        einkOff();
 }
 
 /**
@@ -364,7 +369,7 @@ void Inkplate::partialUpdate(bool _forced, bool leaveOn)
 
     if (_blockPartial == 1 && !_forced)
     {
-        display1b();
+        display1b(leaveOn);
         return;
     }
 

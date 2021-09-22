@@ -261,7 +261,7 @@ void Inkplate::clean(uint8_t c, uint8_t rep)
  *
  * @brief       display1b function writes black and white data to display
  */
-void Inkplate::display1b()
+void Inkplate::display1b(bool leaveOn)
 {
     for (int i = 0; i < (E_INK_HEIGHT * E_INK_WIDTH) / 8; i++)
     {
@@ -271,7 +271,7 @@ void Inkplate::display1b()
     uint32_t _pos;
     uint8_t data;
     uint8_t dram;
-    if (!einkOn())
+    if (!leaveOn && !einkOn())
     {
         return;
     }
@@ -343,16 +343,18 @@ void Inkplate::display1b()
     clean(2, 2);
     clean(3, 1);
     vscan_start();
-    einkOff();
+
+    if (leaveOn)
+        einkOff();
     _blockPartial = 0;
 }
 
 /**
  * @brief       display3b function writes grayscale data to display
  */
-void Inkplate::display3b()
+void Inkplate::display3b(bool leaveOn)
 {
-    if (!einkOn())
+    if (!leaveOn && !einkOn())
     {
         return;
     }
@@ -397,7 +399,9 @@ void Inkplate::display3b()
     }
     clean(3, 1);
     vscan_start();
-    einkOff();
+
+    if (!leaveOn)
+        einkOff();
 }
 
 /**
@@ -416,7 +420,7 @@ void Inkplate::partialUpdate(bool _forced, bool leaveOn)
         return;
     if (_blockPartial == 1 && !_forced)
     {
-        display1b();
+        display1b(leaveOn);
         return;
     }
 
