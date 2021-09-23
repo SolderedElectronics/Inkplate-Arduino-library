@@ -66,12 +66,12 @@ void Inkplate::clearDisplay()
 /**
  * @brief       display function update display with new data from buffer
  */
-void Inkplate::display()
+void Inkplate::display(bool leaveOn)
 {
     if (getDisplayMode() == 0)
-        display1b();
+        display1b(leaveOn);
     else if (getDisplayMode() == 1)
-        display3b();
+        display3b(leaveOn);
 }
 
 /**

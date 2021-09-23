@@ -39,7 +39,12 @@ Inkplate display(INKPLATE_3BIT); // Create an object on Inkplate library and als
 
 void setup()
 {
-    display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
+    display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
+
+    // Turn frontlight on
+    display.frontlight(1);
+    display.setFrontlight(50);
+
     display.clearDisplay(); // Clear frame buffer of display
     display.drawImage(
         pictures[slide], 0, 43, 1024,
@@ -49,6 +54,10 @@ void setup()
              // screen
     if (slide > 2)
         slide = 0; // We do not have more than 3 images, so roll back to zero
+
+    // Turn off touchscreen and frontlight to save energy duiring deep sleep
+    display.tsShutdown();  // Turn off the display touchscreen
+    display.frontlight(0); // Turn off the frontlight
 
     rtc_gpio_isolate(GPIO_NUM_12); // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Activate wake-up timer -- wake up after 20s here

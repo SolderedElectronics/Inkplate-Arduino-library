@@ -50,7 +50,10 @@ void setup()
     Serial.println("Going to sleep...");
     esp_sleep_enable_timer_wakeup(SLIDES_CHANGE_SECONDS *
                                   USEC); // Set EPS32 to be woken up in SLIDES_CHANGE_SECONDS seconds (in this case)
-    rtc_gpio_isolate(GPIO_NUM_12);       // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
+
+    // Uncomment this line if your Inkplate is older than Aug 2021 as older Inkplates have ESP32 wrover-e chips
+    // rtc_gpio_isolate(GPIO_NUM_12); // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
+
     esp_deep_sleep_start();
 }
 

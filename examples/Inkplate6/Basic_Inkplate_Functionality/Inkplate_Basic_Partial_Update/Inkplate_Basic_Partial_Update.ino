@@ -43,6 +43,8 @@ void setup()
 
 void loop()
 {
+    // BASIC USAGE
+
     display.clearDisplay();         // Clear content in frame buffer
     display.setCursor(offset, 300); // Set new position for text
     display.print(text);            // Write text at new position
@@ -53,8 +55,32 @@ void loop()
     }
     else
     {
-        display.partialUpdate(); // Do partial update
-        n++;                     // Keep track on how many times screen has been partially updated
+        display.partialUpdate(false, true); // Do partial update
+        n++;                                // Keep track on how many times screen has been partially updated
+    }
+    offset -= 20; // Move text into new position
+    if (offset < 0)
+        offset = 800; // Text is scrolled till the end of the screen? Get it back on the start!
+    delay(500);       // Delay between refreshes.
+
+
+    // ADVANCED USAGE
+
+    display.clearDisplay();         // Clear content in frame buffer
+    display.setCursor(offset, 300); // Set new position for text
+    display.print(text);            // Write text at new position
+
+    display.einkOn(); // Turn on e-ink display
+    if (n > 9)        // Check if you need to do full refresh or you can do partial update
+    {
+        display.einkOff(); // Turn off e-ink display after partial updates
+        display.display(); // Do a full refresh
+        n = 0;
+    }
+    else
+    {
+        display.partialUpdate(false, true); // Do partial update
+        n++;                                // Keep track on how many times screen has been partially updated
     }
     offset -= 20; // Move text into new position
     if (offset < 0)
