@@ -28,7 +28,7 @@ static uint32_t pallete[] = {
 };
 */
 
-static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0x438A1C, 0x6440FF, 0xBF0000, 0xFFF338, 0xE87E00, 0xC2A4F4};
+static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0x438A1C, 0x555E7E, 0x8A4C5B, 0xFFF338, 0xE87E00, 0xC2A4F4};
 
 static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
 
