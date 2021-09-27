@@ -98,19 +98,19 @@ uint8_t System::readTouchpad(uint8_t _pad)
  */
 double System::readBattery()
 {
-	pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, INPUT);
-	int state = digitalReadInternal(MCP23017_INT_ADDR, mcpRegsInt, 9);
-	pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, OUTPUT);
-	
-	if (state)
-	{
-		digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
-	}
-	else
-	{
-		digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
-	}
-	/*
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, INPUT);
+    int state = digitalReadInternal(MCP23017_INT_ADDR, mcpRegsInt, 9);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, OUTPUT);
+
+    if (state)
+    {
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
+    }
+    else
+    {
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
+    }
+    /*
 #ifdef ARDUINO_ESP32_DEV
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
 #else
@@ -119,19 +119,18 @@ double System::readBattery()
 */
     delay(1);
     int adc = analogRead(35);
-	if (state)
-	{
-		pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, INPUT);
-	}
-	else
-	{		
-		digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
-	}
-	
-	
-	
-	/*
-	
+    if (state)
+    {
+        pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, INPUT);
+    }
+    else
+    {
+        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
+    }
+
+
+    /*
+
 #ifdef ARDUINO_ESP32_DEV
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
 #else
