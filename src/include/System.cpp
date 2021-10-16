@@ -169,7 +169,7 @@ int16_t System::getSdCardOk()
     return _sdCardOk;
 }
 
-#ifdef ARDUINO_INKPLATE6PLUS
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE10)
 
 
 /**
@@ -614,4 +614,4 @@ uint8_t System::rtcBcdToDec(uint8_t val)
 }
 
 
-#endif
+#endif // INKPLATE6PLUS or INKPLATE10

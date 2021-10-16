@@ -28,7 +28,7 @@
 #include "NetworkClient.h"
 
 
-#ifdef ARDUINO_INKPLATE6PLUS
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE10)
 
 #define I2C_ADDR 0x51
 
@@ -69,7 +69,7 @@
 #define RTC_CTRL_2_DEFAULT 0x00
 #define RTC_TIMER_FLAG     0x08
 
-#endif
+#endif // INKPLATE6PLUS or INKPLATE10
 
 #ifdef ARDUINO_INKPLATE6PLUS
 #include "Frontlight.h"
@@ -114,7 +114,7 @@ class System : public Esp,
     };
 
 
-#ifdef ARDUINO_INKPLATE6PLUS
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE10)
 
     enum rtcCountdownSrcClock
     {
@@ -152,10 +152,10 @@ class System : public Esp,
     uint8_t rtcGetAlarmDay();
     uint8_t rtcGetAlarmWeekday();
 
-#endif
+#endif // INKPLATE6PLUS or INKPLATE10
 
   private:
-#ifdef ARDUINO_INKPLATE6PLUS
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE10)
     uint8_t rtcDecToBcd(uint8_t val);
     uint8_t rtcBcdToDec(uint8_t val);
     /* time variables */
@@ -174,7 +174,7 @@ class System : public Esp,
     uint8_t rtcAlarmWeekday;
     /* support */
     uint8_t rtcControl2;
-#endif
+#endif // INKPLATE6PLUS or INKPLATE10
 
     uint8_t _panelOn = 0;
     int16_t _sdCardOk = 0;
