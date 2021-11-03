@@ -413,15 +413,17 @@ void Inkplate::display3b(bool leaveOn)
  * deep sleep
  *
  * @note        Partial update only works in black and white mode
+ *
+ * @return      Number of pixels changed from black to white, leaving blur
  */
-void Inkplate::partialUpdate(bool _forced, bool leaveOn)
+uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
 {
     if (getDisplayMode() == 1)
-        return;
+        return 0;
     if (_blockPartial == 1 && !_forced)
     {
         display1b(leaveOn);
-        return;
+        return 0;
     }
 
     uint32_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
@@ -430,12 +432,22 @@ void Inkplate::partialUpdate(bool _forced, bool leaveOn)
     uint8_t diffw, diffb;
     uint32_t n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
 
-    for (int i = 0; i < E_INK_HEIGHT; i++)
+    uint32_t changeCount = 0;
+
+    for (int i = 0; i < E_INK_HEIGHT; ++i)
     {
-        for (int j = 0; j < E_INK_WIDTH / 8; j++)
+        for (int j = 0; j < E_INK_WIDTH / 8; ++j)
         {
-            diffw = ((*(DMemoryNew + _pos)) ^ (*(_partial + _pos))) & (~(*(_partial + _pos)));
-            diffb = ((*(DMemoryNew + _pos)) ^ (*(_partial + _pos))) & ((*(_partial + _pos)));
+            diffw = *(DMemoryNew + _pos) & ~*(_partial + _pos);
+            diffb = ~*(DMemoryNew + _pos) & *(_partial + _pos);
+            if (diffw) // count pixels turning from black to white as these are visible blur
+            {
+                for (int bv = 1; bv < 256; bv <<= 1)
+                {
+                    if (diffw & bv)
+                        ++changeCount;
+                }
+            }
             _pos--;
             *(_pBuffer + n) = LUTW[diffw >> 4] & (LUTB[diffb >> 4]);
             n--;
@@ -448,7 +460,7 @@ void Inkplate::partialUpdate(bool _forced, bool leaveOn)
     {
         if (!einkOn())
         {
-            return;
+            return 0;
         }
     }
 
@@ -506,6 +518,8 @@ void Inkplate::partialUpdate(bool _forced, bool leaveOn)
     if (!leaveOn)
         einkOff();
     memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
+
+    return changeCount;
 }
 
 #endif

@@ -15,42 +15,37 @@ char strTemp[2001];
 
 void setup()
 {
-  display.begin();
-  Serial.begin(115200);
-  EEPROM.begin(64);
+    display.begin();
+    Serial.begin(115200);
+    EEPROM.begin(64);
 
-  // Init the touchscreen - you need to touch the bottom right edge to activate it
-  if (display.tsInit(true))
-  {
-    Serial.println("Touchscreen init ok");
-  }
-  else
-  {
-    Serial.println("Touchscreen init fail");
-    display.setTextSize(4);
-    display.setTextColor(0, 7);
-    display.setCursor(300, 300);
-    display.print("Touch error");
-    display.display();
-    while (true);
-  }
+    if (EEPROM.read(EEPROMaddress) != 170)
+    {
+        display.einkOn();
+        display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
+        display.display();
+        display.einkOn();
+        delay(100);
+        vcomVoltage = readVCOM();
+        display.einkOff();
+        delay(1000);
+        Serial.print("\n\nStarting VCOM measurment...");
+        Serial.print("\nVCOM: ");
+        Serial.print(vcomVoltage, 2);
+        Serial.println("V");
+        delay(1000);
+        writeVCOMToEEPROM(vcomVoltage);
+        EEPROM.write(EEPROMaddress, 170);
+        EEPROM.commit();
+        display.selectDisplayMode(INKPLATE_1BIT);
+    }
+    else
+    {
+        vcomVoltage = (double)EEPROM.read(EEPROMaddress) / 100;
+    }
+    memset(commandBuffer, 0, BUFFER_SIZE);
 
-  // Turn on the frontlight
-  display.frontlight(true);
-
-  if (EEPROM.read(EEPROMaddress) != 170)
-  {
-    writeVCOMToEEPROM(vcomVoltage);
-    EEPROM.write(EEPROMaddress, 170);
-    EEPROM.commit();
-  }
-  else
-  {
-    vcomVoltage = (double)EEPROM.read(EEPROMaddress) / 100;
-  }
-  memset(commandBuffer, 0, BUFFER_SIZE);
-
-  showSplashScreen();
+    showSplashScreen();
 }
 
 void loop()
@@ -429,21 +424,21 @@ void writeToScreen()
 
 double readVCOM()
 {
-  double vcomVolts;
-  writeReg(0x01, B00111111); // enable all rails
-  writeReg(0x04, (readReg(0x04) | B00100000));
-  writeToScreen();
-  writeReg(0x04, (readReg(0x04) | B10000000));
-  delay(10);
-  while (display.digitalReadMCP(6))
-  {
-    delay(1);
-  };
-  readReg(0x07);
-  uint16_t vcom = ((readReg(0x04) & 1) << 8) | readReg(0x03);
-  vcomVolts = vcom * 10 / 1000.0;
-  display.einkOff();
-  return -vcomVolts;
+    double vcomVolts;
+    display.einkOn();
+    writeReg(0x04, (readReg(0x04) | B00100000));
+    writeToScreen();
+    writeReg(0x04, (readReg(0x04) | B10000000));
+    delay(10);
+    while (display.digitalReadMCP(6))
+    {
+        delay(1);
+    };
+    readReg(0x07);
+    uint16_t vcom = ((readReg(0x04) & 1) << 8) | readReg(0x03);
+    vcomVolts = vcom * 10 / 1000.0;
+    display.einkOff();
+    return -vcomVolts;
 }
 
 void writeVCOMToEEPROM(double v)
@@ -451,13 +446,12 @@ void writeVCOMToEEPROM(double v)
   int vcom = int(abs(v) * 100);
   int vcomH = (vcom >> 8) & 1;
   int vcomL = vcom & 0xFF;
-  // First, we have to power up TPS65186
-  // Pull TPS65186 WAKEUP pin to High
-  display.digitalWriteMCP(3, HIGH);
 
-  // Pull TPS65186 PWR pin to High
-  display.digitalWriteMCP(4, HIGH);
-  delay(10);
+  // Set MCP23017 pin where TPS65186 INT pin is connectet to input pull up
+  display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
+
+  // First power up TPS65186 so we can communicate with it
+  display.einkOn();
 
   // Send to TPS65186 first 8 bits of VCOM
   writeReg(0x03, vcomL);
@@ -474,23 +468,19 @@ void writeVCOMToEEPROM(double v)
   do
   {
     delay(1);
-  } while (display.digitalReadMCP(6));
+  } while (display.digitalReadInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6));
 
   // Clear Interrupt flag by reading INT1 register
   readReg(0x07);
 
   // Now, power off whole TPS
-  // Pull TPS65186 WAKEUP pin to Low
-  display.digitalWriteMCP(3, LOW);
-
-  // Pull TPS65186 PWR pin to Low
-  display.digitalWriteMCP(4, LOW);
+  display.einkOff();
 
   // Wait a little bit...
   delay(1000);
 
   // Power up TPS again
-  display.digitalWriteMCP(3, HIGH);
+  display.einkOn();
 
   delay(10);
 
