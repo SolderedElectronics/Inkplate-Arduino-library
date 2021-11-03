@@ -106,7 +106,7 @@ void Inkplate::einkOff()
     // Wait for all PWR rails to shut down
     delay(100);
 
-    // Disable 3V3 to the panel 
+    // Disable 3V3 to the panel
     Wire.beginTransmission(0x48);
     Wire.write(0x01);
     Wire.write(0x4f);
