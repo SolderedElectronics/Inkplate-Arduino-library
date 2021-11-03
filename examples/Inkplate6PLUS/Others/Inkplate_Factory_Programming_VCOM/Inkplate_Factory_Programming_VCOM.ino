@@ -21,10 +21,8 @@ void setup()
 
     if (EEPROM.read(EEPROMaddress) != 170)
     {
-        display.digitalWriteMCP(3, HIGH);
-        display.digitalWriteMCP(4, HIGH);
-        display.digitalWriteMCP(5, HIGH);
-        display.pinModeMCP(6, INPUT_PULLUP);
+        display.einkOn();
+        display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
         display.display();
         display.einkOn();
         delay(100);
@@ -421,7 +419,7 @@ void writeToScreen()
 double readVCOM()
 {
     double vcomVolts;
-    writeReg(0x01, B00111111); // enable all rails
+    display.einkOn();
     writeReg(0x04, (readReg(0x04) | B00100000));
     writeToScreen();
     writeReg(0x04, (readReg(0x04) | B10000000));
@@ -439,62 +437,57 @@ double readVCOM()
 
 void writeVCOMToEEPROM(double v)
 {
-    int vcom = int(abs(v) * 100);
-    int vcomH = (vcom >> 8) & 1;
-    int vcomL = vcom & 0xFF;
-    // First, we have to power up TPS65186
-    // Pull TPS65186 WAKEUP pin to High
-    display.digitalWriteMCP(3, HIGH);
+  int vcom = int(abs(v) * 100);
+  int vcomH = (vcom >> 8) & 1;
+  int vcomL = vcom & 0xFF;
 
-    // Pull TPS65186 PWR pin to High
-    display.digitalWriteMCP(4, HIGH);
-    delay(10);
+  // Set MCP23017 pin where TPS65186 INT pin is connectet to input pull up
+  display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
 
-    // Send to TPS65186 first 8 bits of VCOM
-    writeReg(0x03, vcomL);
+  // First power up TPS65186 so we can communicate with it
+  display.einkOn();
 
-    // Send new value of register to TPS
-    writeReg(0x04, vcomH);
+  // Send to TPS65186 first 8 bits of VCOM
+  writeReg(0x03, vcomL);
+
+  // Send new value of register to TPS
+  writeReg(0x04, vcomH);
+  delay(1);
+
+  // Program VCOM value to EEPROM
+  writeReg(0x04, vcomH | (1 << 6));
+
+  // Wait until EEPROM has been programmed
+  delay(1);
+  do
+  {
     delay(1);
+  } while (display.digitalReadInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6));
 
-    // Program VCOM value to EEPROM
-    writeReg(0x04, vcomH | (1 << 6));
+  // Clear Interrupt flag by reading INT1 register
+  readReg(0x07);
 
-    // Wait until EEPROM has been programmed
-    delay(1);
-    do
-    {
-        delay(1);
-    } while (display.digitalReadMCP(6));
+  // Now, power off whole TPS
+  display.einkOff();
 
-    // Clear Interrupt flag by reading INT1 register
-    readReg(0x07);
+  // Wait a little bit...
+  delay(1000);
 
-    // Now, power off whole TPS
-    // Pull TPS65186 WAKEUP pin to Low
-    display.digitalWriteMCP(3, LOW);
+  // Power up TPS again
+  display.einkOn();
 
-    // Pull TPS65186 PWR pin to Low
-    display.digitalWriteMCP(4, LOW);
+  delay(10);
 
-    // Wait a little bit...
-    delay(1000);
+  // Read VCOM valuse from registers
+  vcomL = readReg(0x03);
+  vcomH = readReg(0x04);
 
-    // Power up TPS again
-    display.digitalWriteMCP(3, HIGH);
-
-    delay(10);
-
-    // Read VCOM valuse from registers
-    vcomL = readReg(0x03);
-    vcomH = readReg(0x04);
-
-    if (vcom != (vcomL | (vcomH << 8)))
-    {
-        Serial.println("\nVCOM EEPROM PROGRAMMING FAILED!\n");
-    }
-    else
-    {
-        Serial.println("\nVCOM EEPROM PROGRAMMING OK\n");
-    }
+  if (vcom != (vcomL | (vcomH << 8)))
+  {
+    Serial.println("\nVCOM EEPROM PROGRAMMING FAILED!\n");
+  }
+  else
+  {
+    Serial.println("\nVCOM EEPROM PROGRAMMING OK\n");
+  }
 }

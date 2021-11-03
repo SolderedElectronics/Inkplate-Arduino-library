@@ -344,7 +344,7 @@ void Inkplate::display1b(bool leaveOn)
     clean(3, 1);
     vscan_start();
 
-    if (leaveOn)
+    if (!leaveOn)
         einkOff();
     _blockPartial = 0;
 }

@@ -97,16 +97,20 @@ void Inkplate::einkOff()
     SPH_CLEAR;
     SPV_CLEAR;
 
-    VCOM_CLEAR;
-    delay(6);
-    PWRUP_CLEAR;
-    WAKEUP_CLEAR;
+    // Put TPS65186 into standby mode (leaving 3V3 SW active)
+    Wire.beginTransmission(0x48);
+    Wire.write(0x01);
+    Wire.write(0x6f);
+    Wire.endTransmission();
 
-    unsigned long timer = millis();
-    do
-    {
-        delay(1);
-    } while ((readPowerGood() != 0) && (millis() - timer) < 250);
+    // Wait for all PWR rails to shut down
+    delay(100);
+
+    // Disable 3V3 to the panel 
+    Wire.beginTransmission(0x48);
+    Wire.write(0x01);
+    Wire.write(0x4f);
+    Wire.endTransmission();
 
     pinsZstate();
     setPanelState(0);
