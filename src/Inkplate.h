@@ -43,7 +43,13 @@ class Inkplate : public System, public Graphics
 #else
     Inkplate(uint8_t _mode);
 #endif
+
+#ifdef ARDUINO_INKPLATE10
+    bool begin(uint8_t lightWaveform = 0); // In boards
+#else
     bool begin(void); // In boards
+#endif
+
     void clearDisplay();
     void display(bool leaveOn = false);
     // void writeRow(uint8_t data);
@@ -112,7 +118,7 @@ class Inkplate : public System, public Graphics
     uint8_t _beginDone = 0;
 
 #ifdef WAVEFORM3BIT
-    const uint8_t waveform3Bit[8][9] = WAVEFORM3BIT;
+    uint8_t waveform3Bit[8][9] = WAVEFORM3BIT;
 #endif
 };
 
