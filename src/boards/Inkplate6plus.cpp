@@ -554,7 +554,7 @@ void Inkplate::einkOff()
     Wire.endTransmission();
 
     // Clearing WAKEUP pin can cause vertical lines on panel
-    //WAKEUP_CLEAR;
+    // WAKEUP_CLEAR;
 
     pinsZstate();
     setPanelState(0);

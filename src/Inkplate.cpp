@@ -95,7 +95,7 @@ int Inkplate::einkOn()
 {
     if (getPanelState() == 1)
         return 1;
-    
+
     WAKEUP_SET;
     VCOM_SET;
     delay(2);
