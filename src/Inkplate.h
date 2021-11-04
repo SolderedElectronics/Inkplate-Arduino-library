@@ -45,7 +45,7 @@ class Inkplate : public System, public Graphics
 #endif
 
 #ifdef ARDUINO_INKPLATE10
-    bool begin(uint8_t lightWaveform = 0); // In boards
+    bool begin(uint8_t lightWaveform = 0); // Special case for Inkplate10
 #else
     bool begin(void); // In boards
 #endif

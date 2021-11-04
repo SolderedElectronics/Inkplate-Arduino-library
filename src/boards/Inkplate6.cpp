@@ -185,10 +185,8 @@ void Inkplate::display1b(bool leaveOn)
     uint8_t data;
     uint8_t dram;
 
-    if (!leaveOn && !einkOn())
-    {
+    if (!einkOn())
         return;
-    }
 
     clean(0, 1);
     clean(1, 21);
@@ -301,10 +299,9 @@ void Inkplate::display1b(bool leaveOn)
  */
 void Inkplate::display3b(bool leaveOn)
 {
-    if (!leaveOn && !einkOn())
-    {
+    if (!einkOn())
         return;
-    }
+
     clean(0, 1);
     clean(1, 21);
     clean(2, 1);
@@ -405,13 +402,8 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         }
     }
 
-    if (!leaveOn)
-    {
-        if (!einkOn())
-        {
-            return 0;
-        }
-    }
+    if (!einkOn())
+        return 0;
 
     for (int k = 0; k < 5; ++k)
     {

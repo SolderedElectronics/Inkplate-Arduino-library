@@ -271,10 +271,9 @@ void Inkplate::display1b(bool leaveOn)
     uint32_t _pos;
     uint8_t data;
     uint8_t dram;
-    if (!leaveOn && !einkOn())
-    {
+    
+    if (!einkOn())
         return;
-    }
 
     clean(0, 1);
     clean(1, 15);
@@ -354,10 +353,9 @@ void Inkplate::display1b(bool leaveOn)
  */
 void Inkplate::display3b(bool leaveOn)
 {
-    if (!leaveOn && !einkOn())
-    {
+    if (!einkOn())
         return;
-    }
+
     clean(0, 1);
     clean(1, 15);
     clean(2, 1);
@@ -456,13 +454,8 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         }
     }
 
-    if (!leaveOn)
-    {
-        if (!einkOn())
-        {
-            return 0;
-        }
-    }
+    if (!einkOn())
+        return 0;
 
     for (int k = 0; k < 5; k++)
     {
@@ -554,7 +547,7 @@ void Inkplate::einkOff()
     Wire.endTransmission();
 
     // Clearing WAKEUP pin can cause vertical lines on panel
-    // WAKEUP_CLEAR;
+    //WAKEUP_CLEAR;
 
     pinsZstate();
     setPanelState(0);
