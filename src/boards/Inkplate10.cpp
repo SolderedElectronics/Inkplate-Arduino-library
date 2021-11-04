@@ -30,8 +30,13 @@
  * @return      True if initialization is successful, false if failed or already
  * initialized
  */
-bool Inkplate::begin(void)
+bool Inkplate::begin(uint8_t lightWaveform)
 {
+    if (lightWaveform)
+    {
+        uint8_t alternateWaveform[8][9] = WAVEFORM3BIT_LIGHT;
+        memcpy(waveform3Bit, alternateWaveform, sizeof(waveform3Bit));
+    }
     if (_beginDone == 1)
         return 0;
 
@@ -200,10 +205,10 @@ void Inkplate::display1b(bool leaveOn)
     uint32_t _pos;
     uint8_t data;
     uint8_t dram;
-    if (!leaveOn && !einkOn())
-    {
+
+    if (!einkOn())
         return;
-    }
+
     clean(0, 10);
     clean(1, 10);
     clean(0, 10);
@@ -253,10 +258,9 @@ void Inkplate::display1b(bool leaveOn)
  */
 void IRAM_ATTR Inkplate::display3b(bool leaveOn)
 {
-    if (!leaveOn && !einkOn())
-    {
+    if (!einkOn())
         return;
-    }
+
     clean(0, 10);
     clean(1, 10);
     clean(0, 10);
@@ -354,13 +358,8 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         }
     }
 
-    if (!leaveOn)
-    {
-        if (!einkOn())
-        {
-            return 0;
-        }
-    }
+    if (!einkOn())
+        return 0;
 
     for (int k = 0; k < 5; ++k)
     {
@@ -448,6 +447,43 @@ void Inkplate::clean(uint8_t c, uint8_t rep)
         }
         delayMicroseconds(230);
     }
+}
+
+/**
+ * @brief       einkOff turns off epaper power supply and put all digital IO
+ * pins in high Z state
+ */
+void Inkplate::einkOff()
+{
+    if (getPanelState() == 0)
+        return;
+    OE_CLEAR;
+    GMOD_CLEAR;
+    GPIO.out &= ~(DATA | LE | CL);
+    CKV_CLEAR;
+    SPH_CLEAR;
+    SPV_CLEAR;
+
+    // Put TPS65186 into standby mode (leaving 3V3 SW active)
+    VCOM_CLEAR;
+    Wire.beginTransmission(0x48);
+    Wire.write(0x01);
+    Wire.write(0x6f);
+    Wire.endTransmission();
+
+    // Wait for all PWR rails to shut down
+    delay(100);
+
+    // Disable 3V3 to the panel
+    Wire.beginTransmission(0x48);
+    Wire.write(0x01);
+    Wire.write(0x4f);
+    Wire.endTransmission();
+
+    WAKEUP_CLEAR;
+
+    pinsZstate();
+    setPanelState(0);
 }
 
 #endif

@@ -83,40 +83,6 @@ void Inkplate::preloadScreen()
 }
 
 /**
- * @brief       einkOff turns off epaper power supply and put all digital IO
- * pins in high Z state
- */
-void Inkplate::einkOff()
-{
-    if (getPanelState() == 0)
-        return;
-    OE_CLEAR;
-    GMOD_CLEAR;
-    GPIO.out &= ~(DATA | LE | CL);
-    CKV_CLEAR;
-    SPH_CLEAR;
-    SPV_CLEAR;
-
-    // Put TPS65186 into standby mode (leaving 3V3 SW active)
-    Wire.beginTransmission(0x48);
-    Wire.write(0x01);
-    Wire.write(0x6f);
-    Wire.endTransmission();
-
-    // Wait for all PWR rails to shut down
-    delay(100);
-
-    // Disable 3V3 to the panel
-    Wire.beginTransmission(0x48);
-    Wire.write(0x01);
-    Wire.write(0x4f);
-    Wire.endTransmission();
-
-    pinsZstate();
-    setPanelState(0);
-}
-
-/**
  * @brief       einkOn turns on supply for epaper display (TPS65186) [+15 VDC,
  * -15VDC, +22VDC, -20VDC, +3.3VDC, VCOM]
  *
@@ -129,16 +95,27 @@ int Inkplate::einkOn()
 {
     if (getPanelState() == 1)
         return 1;
+
     WAKEUP_SET;
+    VCOM_SET;
     delay(2);
-    PWRUP_SET;
 
     // Enable all rails
     Wire.beginTransmission(0x48);
     Wire.write(0x01);
-    Wire.write(B00111111);
+    Wire.write(B00101111);
     Wire.endTransmission();
+
+    delay(1);
+
+    // Switch TPS65186 into active mode
+    Wire.beginTransmission(0x48);
+    Wire.write(0x01);
+    Wire.write(B10101111);
+    Wire.endTransmission();
+
     pinsAsOutputs();
+
     LE_CLEAR;
     OE_CLEAR;
     CL_CLEAR;
@@ -147,7 +124,6 @@ int Inkplate::einkOn()
     SPV_SET;
     CKV_CLEAR;
     OE_CLEAR;
-    VCOM_SET;
 
     unsigned long timer = millis();
     do
