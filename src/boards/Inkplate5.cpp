@@ -286,7 +286,7 @@ void IRAM_ATTR Inkplate::display3b(bool leaveOn)
 {
     if (!einkOn())
         return;
- 
+
     clean(0, 17);
     clean(1, 17);
     clean(0, 17);
@@ -383,7 +383,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         }
     }
 
-    
+
     if (!einkOn())
         return 0;
 
