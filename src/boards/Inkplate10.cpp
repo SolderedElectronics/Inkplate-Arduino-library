@@ -402,7 +402,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
 
     if (!einkOn())
         return 0;
-    
+
     if (_useLightMode)
     {
         _repeat = 4;
