@@ -117,6 +117,10 @@ class Inkplate : public System, public Graphics
 
     uint8_t _beginDone = 0;
 
+#ifdef ARDUINO_INKPLATE10
+    uint8_t _useLightMode = 0;
+#endif
+
 #ifdef WAVEFORM3BIT
     uint8_t waveform3Bit[8][9] = WAVEFORM3BIT;
 #endif

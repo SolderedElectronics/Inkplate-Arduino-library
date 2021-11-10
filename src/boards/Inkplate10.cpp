@@ -34,6 +34,7 @@ bool Inkplate::begin(uint8_t lightWaveform)
 {
     if (lightWaveform)
     {
+        _useLightMode = 1;
         uint8_t alternateWaveform[8][9] = WAVEFORM3BIT_LIGHT;
         memcpy(waveform3Bit, alternateWaveform, sizeof(waveform3Bit));
     }
@@ -205,34 +206,56 @@ void Inkplate::display1b(bool leaveOn)
     uint32_t _pos;
     uint8_t data;
     uint8_t dram;
+    uint8_t _repeat;
 
     if (!einkOn())
         return;
 
-    clean(0, 10);
-    clean(1, 10);
-    clean(0, 10);
-    clean(1, 10);
-    for (int k = 0; k < 5; k++)
+    if (_useLightMode)
+    {
+        clean(0, 1);
+        clean(1, 12);
+        clean(2, 1);
+        clean(0, 9);
+        clean(2, 1);
+        clean(1, 12);
+        clean(2, 1);
+        clean(0, 9);
+        _repeat = 3;
+    }
+    else
+    {
+        clean(0, 1);
+        clean(1, 10);
+        clean(2, 1);
+        clean(0, 10);
+        clean(2, 1);
+        clean(1, 10);
+        clean(2, 1);
+        clean(0, 10);
+        _repeat = 5;
+    }
+
+    for (int k = 0; k < _repeat; k++)
     {
         _pos = (E_INK_HEIGHT * E_INK_WIDTH / 8) - 1;
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; i++)
         {
-            dram = ~(*(DMemoryNew + _pos));
-            data = LUTW[(dram >> 4) & 0x0F];
+            dram = (*(DMemoryNew + _pos));
+            data = LUTB[(dram >> 4) & 0x0F];
             hscan_start(pinLUT[data]);
-            data = LUTW[dram & 0x0F];
+            data = LUTB[dram & 0x0F];
             GPIO.out_w1ts = pinLUT[data] | CL;
             GPIO.out_w1tc = DATA | CL;
             _pos--;
             for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); j++)
             {
-                dram = ~(*(DMemoryNew + _pos));
-                data = LUTW[(dram >> 4) & 0x0F];
+                dram = (*(DMemoryNew + _pos));
+                data = LUTB[(dram >> 4) & 0x0F];
                 GPIO.out_w1ts = pinLUT[data] | CL;
                 GPIO.out_w1tc = DATA | CL;
-                data = LUTW[dram & 0x0F];
+                data = LUTB[dram & 0x0F];
                 GPIO.out_w1ts = pinLUT[data] | CL;
                 GPIO.out_w1tc = DATA | CL;
                 _pos--;
@@ -261,10 +284,28 @@ void IRAM_ATTR Inkplate::display3b(bool leaveOn)
     if (!einkOn())
         return;
 
-    clean(0, 10);
-    clean(1, 10);
-    clean(0, 10);
-    clean(1, 10);
+    if (_useLightMode)
+    {
+        clean(1, 1);
+        clean(0, 7);
+        clean(2, 1);
+        clean(1, 12);
+        clean(2, 1);
+        clean(0, 7);
+        clean(2, 1);
+        clean(1, 12);
+    }
+    else
+    {
+        clean(1, 1);
+        clean(0, 10);
+        clean(2, 1);
+        clean(1, 10);
+        clean(2, 1);
+        clean(0, 10);
+        clean(2, 1);
+        clean(1, 10);
+    }
 
     for (int k = 0; k < 8; k++)
     {
@@ -333,6 +374,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
     uint8_t data = 0;
     uint8_t diffw, diffb;
     uint32_t n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
+    uint8_t _repeat;
 
     uint32_t changeCount = 0;
 
@@ -360,8 +402,17 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
 
     if (!einkOn())
         return 0;
+    
+    if (_useLightMode)
+    {
+        _repeat = 4;
+    }
+    else
+    {
+        _repeat = 5;
+    }
 
-    for (int k = 0; k < 5; ++k)
+    for (int k = 0; k < _repeat; ++k)
     {
         vscan_start();
         n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
