@@ -1,8 +1,8 @@
 /*
-   Inkplate_RTC_Basic_Example example for e-radionica Inkplate 6PLUS
-   For this example you will need USB cable and Inkplate 6PLUS.
-   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_RTC_Basic_Example example for e-radionica Inkplate 10
+   For this example you will need USB cable and Inkplate 10.
+   Select "Inkplate 10(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Example will shows how to use basic clock functions of PCF85063A RTC on Inkplate board.
@@ -16,8 +16,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE6PLUS
-#error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
+#ifndef ARDUINO_INKPLATE10
+#error "Wrong board selection for this example, please select Inkplate 10 in the boards menu."
 #endif
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch

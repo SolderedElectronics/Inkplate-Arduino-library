@@ -1,12 +1,12 @@
 /*
-   Inkplate_RTC_Basic_Example example for e-radionica Inkplate 6PLUS
+   Inkplate_RTC_Interrupt_Alarm_Example example for e-radionica Inkplate 6PLUS
    For this example you will need USB cable and Inkplate 6PLUS.
    Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   Example will shows how to use basic clock functions of PCF85063A RTC on Inkplate board.
-   This example will show how to set time and date, how to read time and how to print time on Inkplate using partial updates.
+   In this example we will show how to use PCF85063A RTC Alarm functionality with interrupt.
+   This example will show how to set time and date, how to set up a alarm, how to read time, how to print time on Inkplate using partial updates and how to handle interrupt.
    NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it on first refresh after
    power up. It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture quality.
 
@@ -20,48 +20,54 @@
 #error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
 #endif
 
-#include "Inkplate.h"            // Include Inkplate library to the sketch
-Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
+#include "Inkplate.h"             // Include Inkplate library to the sketch
+Inkplate display(INKPLATE_1BIT);  // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
-// Set clock
-uint8_t hour = 12;
-uint8_t minutes = 50;
-uint8_t seconds = 30;
+volatile int _alarmFlag = 0;      // Variable to store alarm flag
 
-// Set date and weekday (NOTE: In weekdays 0 means Sunday, 1 menas Monday, ...)
-uint8_t weekday = 4;
-uint8_t day = 11;
-uint8_t month = 11;
-uint8_t year = 21;
+void IRAM_ATTR alarmISR()         // This function will be called when alarm interrupt event happens
+{                                 // NOTE: Function must be above setup() and loop()!
+  _alarmFlag = 1;                 // Set alarm flag
+}
 
 void setup()
 {
+    pinMode(39, INPUT_PULLUP);      // Set RTC INT pin on ESP32 GPIO39 as input with pullup resistor enabled
+
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
     display.setTextSize(5); // Set text to be 5 times bigger than classic 5x7 px text
+  
+    display.rtcSetEpoch(1589610300);
+    display.rtcSetAlarmEpoch(display.rtcGetEpoch() + 10, RTC_ALARM_MATCH_DHHMMSS);
 
-    display.rtcSetTime(hour, minutes, seconds);    // Send time to RTC
-    display.rtcSetDate(weekday, day, month, year); // Send date to RTC
+    // display.rtcSetTime(6, 25, 0);        // Or you can use other way to set the time and date
+    // display.rtcSetDate(6, 16, 5, 2020);
+    // display.rtcSetAlarm(10, 25, 6, 16, 6); // Set alarm 10 seconds from now
+  
+    attachInterrupt(39, alarmISR, FALLING); // Set interrupt function and interrupt mode
 }
 
 // Variable that keeps count on how much screen has been partially updated
 int n = 0;
 void loop()
 {
-    display.rtcReadTime();             // Get the time and date from RTC
-    seconds = display.rtcGetSecond();  // Store senconds in a variable
-    minutes = display.rtcGetMinute();  // Store minutes in a variable
-    hour = display.rtcGetHour();       // Store hours in a variable
-    day = display.rtcGetDay();         // Store day of month in a variable
-    weekday = display.rtcGetWeekday(); // Store day of week in a variable
-    month = display.rtcGetMonth();     // Store month in a variable
-    year = display.rtcGetYear();       // Store year in a variable
+    display.clearDisplay();         // Clear frame buffer of display
+    display.setCursor(100, 100);    // Set position of the text
+    display.rtcReadTime();          // Get the time and date from RTC
 
-    display.clearDisplay();                                       // Clear content in frame buffer
-    display.setCursor(100, 300);                                  // Set position of the text
-    printTime(hour, minutes, seconds, day, weekday, month, year); // Print the time on screen
-
+    // Print the time on screen
+    printTime(display.rtcGetHour(), display.rtcGetMinute(), display.rtcGetSecond(), display.rtcGetDay(), display.rtcGetWeekday(), display.rtcGetMonth(), display.rtcGetYear());
+    
+    if (_alarmFlag)     // Check alarm flag
+    {
+        // _alarmFlag = 0;              // Uncomment if you want to clear this flag
+        display.rtcClearAlarmFlag();    // It's recommended to clear alarm flag after alarm has occurred
+        display.setCursor(200, 200);    // Set position of the text
+        display.print("ALARM");         // Print text
+    }
+    
     if (n > 9) // Check if you need to do full refresh or you can do partial update
     {
         display.display(true); // Do a full refresh

@@ -1,12 +1,12 @@
 /*
-   Inkplate_RTC_Basic_Example example for e-radionica Inkplate 6PLUS
-   For this example you will need USB cable and Inkplate 6PLUS.
-   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_RTC_Alarm_Example example for e-radionica Inkplate 5
+   For this example you will need USB cable and Inkplate 5.
+   Select "Inkplate 5(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 5(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   Example will shows how to use basic clock functions of PCF85063A RTC on Inkplate board.
-   This example will show how to set time and date, how to read time and how to print time on Inkplate using partial updates.
+   In this example we will show how to use basic alarm and clock functions of PCF85063 RTC on Inkplate board.
+   This example will show how to set time and date, how to set alarm, how to read time and how to print time on Inkplate using partial updates.
    NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it on first refresh after
    power up. It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture quality.
 
@@ -16,8 +16,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE6PLUS
-#error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
+#ifndef ARDUINO_INKPLATE5
+#error "Wrong board selection for this example, please select Inkplate 5 in the boards menu."
 #endif
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch
@@ -34,15 +34,25 @@ uint8_t day = 11;
 uint8_t month = 11;
 uint8_t year = 21;
 
+// Set alarm time and date (alarm will be generated 10 seconds after board power up)
+uint8_t alarmHour = 12;
+uint8_t alarmMinutes = 50;
+uint8_t alarmSeconds = 40;
+uint8_t alarmWeekday = 4;
+uint8_t alarmDay = 11;
+
 void setup()
 {
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
-    display.setTextSize(5); // Set text to be 5 times bigger than classic 5x7 px text
+    display.setTextSize(4); // Set text to be 4 times bigger than classic 5x7 px text
+
+    pinMode(39, INPUT_PULLUP);
 
     display.rtcSetTime(hour, minutes, seconds);    // Send time to RTC
     display.rtcSetDate(weekday, day, month, year); // Send date to RTC
+    display.rtcSetAlarm(alarmSeconds, alarmMinutes, alarmHour, alarmDay, alarmWeekday); // Set alarm
 }
 
 // Variable that keeps count on how much screen has been partially updated
@@ -62,6 +72,13 @@ void loop()
     display.setCursor(100, 300);                                  // Set position of the text
     printTime(hour, minutes, seconds, day, weekday, month, year); // Print the time on screen
 
+    if (display.rtcCheckAlarmFlag())  // Check if alarm has occurred
+    {
+      display.rtcClearAlarmFlag();    // It's recommended to clear alarm flag after alarm has occurred
+      display.setCursor(400, 400);    // Set new position for cursor
+      display.print("ALARM!");
+    }
+
     if (n > 9) // Check if you need to do full refresh or you can do partial update
     {
         display.display(true); // Do a full refresh
@@ -76,8 +93,8 @@ void loop()
     delay(700);                             // Delay between refreshes.
 }
 
-void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, uint8_t _weekday, uint8_t _month,
-               uint16_t _year)
+void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, uint8_t _weekday, uint16_t _month,
+               uint8_t _year)
 {
     // Write time and date info on screen
     char *wday[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};

@@ -1,53 +1,55 @@
 /*
    Inkplate_RTC_Timer_Example example for e-radionica Inkplate 6PLUS
-   For this example you will need only USB cable and Inkplate 6PLUS
+   For this example you will need USB cable and Inkplate 6PLUS.
    Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example shows you timer usage of Inkplate RTC.
+   In this example we will show how to use PCF85063A RTC Timer functionality.
+   This example will show how to set time and date, how to set up a timer, how to read time and how to print time on Inkplate using partial updates.
+   NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it on first refresh after
+   power up. It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture quality.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   19 August 2021 by e-radionica.com
+   12 November 2021 by e-radionica.com
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6PLUS
 #error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
 #endif
 
-#include "Inkplate.h"      // Include Inkplate library to the sketch
-#include "driver/rtc_io.h" // Include ESP32 library for RTC pin I/O (needed for rtc_gpio_isolate() function)
-#include <rom/rtc.h>       // Include ESP32 library for RTC (needed for rtc_get_reset_reason() function)
-
-#define uS_TO_S_FACTOR 1000000 // Conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  10      // Time how long ESP32 will be in deep sleep (in seconds). In this case 10 seconds.
-
+#include "Inkplate.h"            // Include Inkplate library to the sketch
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
-int countdown_time = 10;
+// Set clock
+uint8_t hour = 12;
+uint8_t minutes = 50;
+uint8_t seconds = 30;
+
+// Set date and weekday (NOTE: In weekdays 0 means Sunday, 1 menas Monday, ...)
+uint8_t weekday = 4;
+uint8_t day = 11;
+uint8_t month = 11;
+uint8_t year = 21;
+
+// Set up a 15 seconds timer
+int countdown_time = 15;
 
 void setup()
 {
-    Serial.begin(115200);
-    display.begin();
+    display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
+    display.clearDisplay(); // Clear frame buffer of display
+    display.display();      // Put clear image on display
+    display.setTextSize(5); // Set text to be 5 times bigger than classic 5x7 px text
 
-    display.rtcSetTime(6, 54, 00);      // 24H mode, ex. 6:54:00
-    display.rtcSetDate(6, 16, 5, 2020); // 0 for Sunday, ex. Saturday, 16.5.2020.
+    pinMode(39, INPUT_PULLUP);
 
-    display.setCursor(0, 100);
-    display.setTextSize(3);
-    display.print("Now is:");
-}
+    display.rtcSetTime(hour, minutes, seconds);    // Send time to RTC
+    display.rtcSetDate(weekday, day, month, year); // Send date to RTC
 
-void loop()
-{
-    printCurrentTime();
-    display.print("Setting timer countdown, waking up in ");
-    display.print(countdown_time);
-    display.println(" seconds.");
-    // while(!display.available());
-
+    // Set up a timer
     /*   source_clock
      *       Inkplate::TIMER_CLOCK_4096HZ     -> clk = 4096Hz -> min timer = 244uS -> MAX timer = 62.256mS
      *       Inkplate::TIMER_CLOCK_64HZ       -> clk = 64Hz   -> min timer = 15.625mS -> MAX timer = 3.984s
@@ -61,55 +63,73 @@ void loop()
      *       true = interrupt generate a pulse; false = interrupt follows timer flag
      */
     display.rtcTimerSet(Inkplate::TIMER_CLOCK_1HZ, countdown_time, false, false);
-
-    display.print("Waiting for a countdown");
-    while (!display.rtcCheckTimerFlag())
-    {
-        display.print(".");
-        delay(1000);
-    }
-
-    display.print("\nInterrupt triggered on: ");
 }
 
-void printCurrentTime()
+// Variable that keeps count on how much screen has been partially updated
+int n = 0;
+void loop()
 {
-    switch (display.rtcGetWeekday())
+    display.rtcReadTime();             // Get the time and date from RTC
+    seconds = display.rtcGetSecond();  // Store senconds in a variable
+    minutes = display.rtcGetMinute();  // Store minutes in a variable
+    hour = display.rtcGetHour();       // Store hours in a variable
+    day = display.rtcGetDay();         // Store day of month in a variable
+    weekday = display.rtcGetWeekday(); // Store day of week in a variable
+    month = display.rtcGetMonth();     // Store month in a variable
+    year = display.rtcGetYear();       // Store year in a variable
+
+    display.clearDisplay();                                       // Clear content in frame buffer
+    display.setCursor(100, 300);                                  // Set position of the text
+    printTime(hour, minutes, seconds, day, weekday, month, year); // Print the time on screen
+
+    if (n > 9) // Check if you need to do full refresh or you can do partial update
     {
-    case 0:
-        display.print("Sunday , ");
-        break;
-    case 1:
-        display.print("Monday , ");
-        break;
-    case 2:
-        display.print("Tuesday , ");
-        break;
-    case 3:
-        display.print("Wednesday , ");
-        break;
-    case 4:
-        display.print("Thursday , ");
-        break;
-    case 5:
-        display.print("Friday , ");
-        break;
-    case 6:
-        display.print("Saturday , ");
-        break;
+        display.display(true); // Do a full refresh
+        n = 0;
+    }
+    else
+    {
+        display.partialUpdate(false, true); // Do partial update and keep e-papr power supply on
+        n++;                                // Keep track on how many times screen has been partially updated
     }
 
-    display.print(display.rtcGetDay());
-    display.print(".");
-    display.print(display.rtcGetMonth());
-    display.print(".");
-    display.print(display.rtcGetYear());
-    display.print(". ");
-    display.print(display.rtcGetHour());
-    display.print(":");
-    display.print(display.rtcGetMinute());
-    display.print(":");
-    display.println(display.rtcGetSecond());
+    delay(700);                             // Delay between refreshes.
+}
 
-    display.display();
+void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, uint8_t _weekday, uint8_t _month,
+               uint16_t _year)
+{
+    // Write time and date info on screen
+    char *wday[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+    print2Digits(_hour);
+    display.print(':');
+    print2Digits(_minutes);
+    display.print(':');
+    print2Digits(_seconds);
+
+    display.print(' ');
+
+    display.print(wday[_weekday]);
+    display.print(", ");
+    print2Digits(_day);
+    display.print('/');
+    print2Digits(_month);
+    display.print('/');
+    display.print(_year, DEC);
+
+    if (display.rtcCheckTimerFlag())  // Check if timer event has occurred
+    {
+      display.rtcClearTimerFlag();  // It's recommended to clear timer flag after timer has occurred
+      display.rtcDisableTimer();    // Disable timer if you want to make it one time only. Is you want to be repeatable, comment this line
+      display.setCursor(400, 400);  // Set new position for cursor
+      display.print("Timer!");
+    }
+}
+
+void print2Digits(uint8_t _d)
+{
+    if (_d < 10)
+        display.print('0');
+    display.print(_d, DEC);
 }
