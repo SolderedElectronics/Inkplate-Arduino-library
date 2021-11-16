@@ -1,11 +1,11 @@
 /*
-   Inkplate_RTC_Basic_Example example for e-radionica Inkplate 6PLUS
-   For this example you will need USB cable and Inkplate 6PLUS.
-   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_RTC_Basic_Example example for e-radionica Inkplate 5
+   For this example you will need USB cable and Inkplate 5.
+   Select "Inkplate 5(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 5(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   Example will shows how to use basic clock functions of PCF85063A RTC on Inkplate board.
+   Example shows how to use basic clock functions of PCF85063A RTC on Inkplate board.
    This example will show how to set time and date, how to read time and how to print time on Inkplate using partial updates.
    NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it on first refresh after
    power up. It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture quality.
@@ -16,8 +16,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE6PLUS
-#error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
+#ifndef ARDUINO_INKPLATE5
+#error "Wrong board selection for this example, please select Inkplate 5 in the boards menu."
 #endif
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch
@@ -39,7 +39,7 @@ void setup()
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
-    display.setTextSize(5); // Set text to be 5 times bigger than classic 5x7 px text
+    display.setTextSize(4); // Set text to be 4 times bigger than classic 5x7 px text
 
     display.rtcSetTime(hour, minutes, seconds);    // Send time to RTC
     display.rtcSetDate(weekday, day, month, year); // Send date to RTC

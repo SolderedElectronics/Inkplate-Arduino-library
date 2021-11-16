@@ -196,9 +196,6 @@ int16_t System::getSdCardOk()
     return _sdCardOk;
 }
 
-#ifdef ARDUINO_INKPLATE6PLUS
-
-
 /**
  * @brief                   Method to set time
  *
@@ -209,7 +206,8 @@ int16_t System::getSdCardOk()
 void System::rtcSetTime(uint8_t rtcHour, uint8_t rtcMinute, uint8_t rtcSecond)
 {
     Wire.beginTransmission(I2C_ADDR);
-    Wire.write(RTC_SECOND_ADDR);
+    Wire.write(RTC_RAM_by);
+    Wire.write(170); // Write in RAM 170 to know that RTC is set
     Wire.write(rtcDecToBcd(rtcSecond));
     Wire.write(rtcDecToBcd(rtcMinute));
     Wire.write(rtcDecToBcd(rtcHour));
@@ -229,12 +227,67 @@ void System::rtcSetDate(uint8_t rtcWeekday, uint8_t rtcDay, uint8_t rtcMonth, ui
     rtcYear = yr - 1970; // convert to RTC rtcYear format 0-99
 
     Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_RAM_by);
+    Wire.write(170); // Write in RAM 170 to know that RTC is set
+    Wire.endTransmission();
+
+    Wire.beginTransmission(I2C_ADDR);
     Wire.write(RTC_DAY_ADDR);
     Wire.write(rtcDecToBcd(rtcDay));
     Wire.write(rtcDecToBcd(rtcWeekday));
     Wire.write(rtcDecToBcd(rtcMonth));
     Wire.write(rtcDecToBcd(rtcYear));
     Wire.endTransmission();
+}
+
+/**
+ * @brief                   Method to set time and date using epoch
+ *
+ * @param uint32_t _epoch   Set RTC epoch
+ */
+void System::rtcSetEpoch(uint32_t _epoch)
+{
+    struct tm _t;
+    time_t _e = _epoch;
+    memcpy(&_t, localtime((const time_t *)&_e), sizeof(_t));
+
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_RAM_by);
+    Wire.write(170);
+    Wire.write(rtcDecToBcd(_t.tm_sec));
+    Wire.write(rtcDecToBcd(_t.tm_min));
+    Wire.write(rtcDecToBcd(_t.tm_hour));
+    Wire.write(rtcDecToBcd(_t.tm_mday));
+    Wire.write(rtcDecToBcd(_t.tm_wday));
+    Wire.write(rtcDecToBcd(_t.tm_mon + 1));
+    Wire.write(rtcDecToBcd(_t.tm_year + 1900 - 1970));
+    Wire.endTransmission();
+}
+
+/**
+ * @brief                   Method to get time and date using epoch
+ *
+ * @returns uint32_t        Returns the current epoch
+ */
+uint32_t System::rtcGetEpoch()
+{
+    struct tm _t;
+
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_SECOND_ADDR);
+    Wire.endTransmission();
+
+    Wire.requestFrom(I2C_ADDR, 7); // ignore bit 7
+    _t.tm_sec = rtcBcdToDec(Wire.read() & 0x7F);
+    _t.tm_min = rtcBcdToDec(Wire.read() & 0x7F);
+    _t.tm_hour = rtcBcdToDec(Wire.read() & 0x3F);
+    _t.tm_mday = rtcBcdToDec(Wire.read() & 0x3F);
+    _t.tm_wday = rtcBcdToDec(Wire.read() & 0x07);
+    _t.tm_mon = rtcBcdToDec(Wire.read() & 0x1F) - 1;
+    _t.tm_year = rtcBcdToDec(Wire.read()) + 1970 - 1900;
+    Wire.endTransmission();
+
+    return (uint32_t)(mktime(&_t));
 }
 
 /**
@@ -436,6 +489,31 @@ void System::rtcSetAlarm(uint8_t rtcAlarmSecond, uint8_t rtcAlarmMinute, uint8_t
     Wire.endTransmission();
 }
 
+/**
+ * @brief                   Set alarm using epoch
+ *
+ * @param uint32_t _epoch   RTC Epoch alarm
+ * @param uint8_t _match    RTC Match
+ */
+void System::rtcSetAlarmEpoch(uint32_t _epoch, uint8_t _match)
+{
+    struct tm _t;
+    time_t _e = _epoch;
+
+    memcpy(&_t, localtime((const time_t *)&_e), sizeof(_t));
+
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_SECOND_ALARM);
+    Wire.write(rtcDecToBcd(_t.tm_sec) & (~((_match & 1) << 7)));
+    Wire.write(rtcDecToBcd(_t.tm_min) & (~(((_match >> 1) & 1) << 7)));
+    Wire.write(rtcDecToBcd(_t.tm_hour) & (~(((_match >> 2) & 1) << 7)));
+    Wire.write(rtcDecToBcd(_t.tm_mday) & (~(((_match >> 3) & 1) << 7)));
+    Wire.write(rtcDecToBcd(_t.tm_wday) & (~(((_match >> 4) & 1) << 7)));
+    Wire.endTransmission();
+
+    rtcEnableAlarm();
+}
+
 
 /**
  * @brief                   Reads the alarm of the RTC
@@ -614,6 +692,101 @@ bool System::rtcCheckTimerFlag()
 }
 
 /**
+ * @brief                   Returns is the alarm flag on
+ *
+ * @returns bool            Returns true if the alarm flag is on
+ */
+bool System::rtcCheckAlarmFlag()
+{
+    uint8_t _crtl_2 = RTC_ALARM_AF;
+
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_CTRL_2);
+    Wire.endTransmission();
+    Wire.requestFrom(I2C_ADDR, 1);
+    _crtl_2 &= Wire.read();
+
+    return _crtl_2;
+}
+
+/**
+ * @brief                   Clears alarm flag
+ */
+void System::rtcClearAlarmFlag()
+{
+    uint8_t _crtl_2;
+
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_CTRL_2);
+    Wire.endTransmission();
+    Wire.requestFrom(I2C_ADDR, 1);
+
+    _crtl_2 = Wire.read() & ~(RTC_ALARM_AF);
+
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_CTRL_2);
+    Wire.write(_crtl_2);
+    Wire.endTransmission();
+}
+
+/**
+ * @brief                   Clears timer flag
+ */
+void System::rtcClearTimerFlag()
+{
+    uint8_t _crtl_2;
+
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_CTRL_2);
+    Wire.endTransmission();
+    Wire.requestFrom(I2C_ADDR, 1);
+
+    _crtl_2 = Wire.read() & ~(RTC_TIMER_FLAG);
+
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_CTRL_2);
+    Wire.write(_crtl_2);
+    Wire.endTransmission();
+}
+
+/**
+ * @brief                   Disables the timer
+ */
+void System::rtcDisableTimer()
+{
+    uint8_t _timerMode;
+
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_TIMER_MODE);
+    Wire.endTransmission();
+    Wire.requestFrom(I2C_ADDR, 1);
+
+    _timerMode = Wire.read() & ~(RTC_TIMER_TE);
+
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_TIMER_MODE);
+    Wire.write(_timerMode);
+    Wire.endTransmission();
+}
+
+/**
+ * @brief                   Check if the RTC is already set
+ *
+ * @returns bool            Returns true if RTC is set, false if it's not
+ */
+bool System::rtcIsSet()
+{
+    uint8_t _ramByte;
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_RAM_by);
+    Wire.endTransmission();
+
+    Wire.requestFrom(I2C_ADDR, 1);
+    _ramByte = Wire.read();
+    return ((_ramByte == 170) ? true : false);
+}
+
+/**
  * @brief                   Resets the timer
  */
 void System::rtcReset() // datasheet 8.2.1.3.
@@ -639,6 +812,3 @@ uint8_t System::rtcBcdToDec(uint8_t val)
 {
     return ((val / 16 * 10) + (val % 16));
 }
-
-
-#endif

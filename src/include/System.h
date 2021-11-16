@@ -22,13 +22,11 @@
 #include "../libs/SdFat/SdFat.h"
 #include "Arduino.h"
 #include "SPI.h"
+#include "time.h"
 
 #include "Esp.h"
 #include "Mcp.h"
 #include "NetworkClient.h"
-
-
-#ifdef ARDUINO_INKPLATE6PLUS
 
 #define I2C_ADDR 0x51
 
@@ -69,7 +67,11 @@
 #define RTC_CTRL_2_DEFAULT 0x00
 #define RTC_TIMER_FLAG     0x08
 
-#endif
+#define RTC_ALARM_MATCH_SS      0b00000001
+#define RTC_ALARM_MATCH_MMSS    0b00000011
+#define RTC_ALARM_MATCH_HHMMSS  0b00000111
+#define RTC_ALARM_MATCH_DHHMMSS 0b00001111
+#define RTC_ALARM_MATCH_WHHMSS  0b00011111
 
 #ifdef ARDUINO_INKPLATE6PLUS
 #include "Frontlight.h"
@@ -114,8 +116,6 @@ class System : public Esp,
     };
 
 
-#ifdef ARDUINO_INKPLATE6PLUS
-
     enum rtcCountdownSrcClock
     {
         TIMER_CLOCK_4096HZ = 0,
@@ -128,14 +128,22 @@ class System : public Esp,
 
     void rtcSetTime(uint8_t hour, uint8_t minute, uint8_t sec);
     void rtcSetDate(uint8_t weekday, uint8_t day, uint8_t month, uint16_t yr);
+    void rtcSetEpoch(uint32_t _epoch);
+    uint32_t rtcGetEpoch();
     void rtcReadTime();
     void rtcEnableAlarm(); // called on setAlarm()
     void rtcSetAlarm(uint8_t alarm_second, uint8_t alarm_minute, uint8_t alarm_hour, uint8_t alarm_day,
                      uint8_t alarm_weekday);
+    void rtcSetAlarmEpoch(uint32_t _epoch, uint8_t _match);
     void rtcReadAlarm();
     bool rtcChangeTimeFormat(); // returns false for 24H format & true for 12H format
     void rtcTimerSet(rtcCountdownSrcClock source_clock, uint8_t value, bool int_enable, bool int_pulse);
     bool rtcCheckTimerFlag();
+    bool rtcCheckAlarmFlag();
+    void rtcClearAlarmFlag();
+    void rtcClearTimerFlag();
+    void rtcDisableTimer();
+    bool rtcIsSet();
     void rtcReset();
     /* read RTC times */
     uint8_t rtcGetSecond();
@@ -152,10 +160,7 @@ class System : public Esp,
     uint8_t rtcGetAlarmDay();
     uint8_t rtcGetAlarmWeekday();
 
-#endif
-
   private:
-#ifdef ARDUINO_INKPLATE6PLUS
     uint8_t rtcDecToBcd(uint8_t val);
     uint8_t rtcBcdToDec(uint8_t val);
     /* time variables */
@@ -174,8 +179,6 @@ class System : public Esp,
     uint8_t rtcAlarmWeekday;
     /* support */
     uint8_t rtcControl2;
-#endif
-
     uint8_t _panelOn = 0;
     int16_t _sdCardOk = 0;
 };

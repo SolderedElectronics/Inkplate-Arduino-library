@@ -1,23 +1,23 @@
 /*
-   Inkplate_RTC_Basic_Example example for e-radionica Inkplate 6PLUS
-   For this example you will need USB cable and Inkplate 6PLUS.
-   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_RTC_Timer_Example example for e-radionica Inkplate 5
+   For this example you will need USB cable and Inkplate 5.
+   Select "Inkplate 5(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 5(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   Example will shows how to use basic clock functions of PCF85063A RTC on Inkplate board.
-   This example will show how to set time and date, how to read time and how to print time on Inkplate using partial updates.
+   In this example we will show how to use PCF85063A RTC Timer functionality.
+   This example will show how to set time and date, how to set up a timer, how to read time and how to print time on Inkplate using partial updates.
    NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it on first refresh after
    power up. It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture quality.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   12 November 2021 by e-radionica.com
+   15 November 2021 by e-radionica.com
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE6PLUS
-#error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
+#ifndef ARDUINO_INKPLATE5
+#error "Wrong board selection for this example, please select Inkplate 5 in the boards menu."
 #endif
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch
@@ -34,15 +34,35 @@ uint8_t day = 11;
 uint8_t month = 11;
 uint8_t year = 21;
 
+// Set up a 15 seconds timer
+int countdown_time = 15;
+
 void setup()
 {
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
-    display.setTextSize(5); // Set text to be 5 times bigger than classic 5x7 px text
+    display.setTextSize(4); // Set text to be 4 times bigger than classic 5x7 px text
+
+    pinMode(39, INPUT_PULLUP);
 
     display.rtcSetTime(hour, minutes, seconds);    // Send time to RTC
     display.rtcSetDate(weekday, day, month, year); // Send date to RTC
+
+    // Set up a timer
+    /*   source_clock
+     *       Inkplate::TIMER_CLOCK_4096HZ     -> clk = 4096Hz -> min timer = 244uS -> MAX timer = 62.256mS
+     *       Inkplate::TIMER_CLOCK_64HZ       -> clk = 64Hz   -> min timer = 15.625mS -> MAX timer = 3.984s
+     *       Inkplate::TIMER_CLOCK_1HZ        -> clk = 1Hz    -> min timer = 1s -> MAX timer = 255s
+     *       Inkplate::TIMER_CLOCK_1PER60HZ   -> clk = 1/60Hz -> min timer = 60s -> MAX timer = 4h15min
+     *   value
+     *       coundowntime in seconds
+     *   int_enable
+     *       true = enable interrupt; false = disable interrupt
+     *   int_pulse
+     *       true = interrupt generate a pulse; false = interrupt follows timer flag
+     */
+    display.rtcTimerSet(Inkplate::TIMER_CLOCK_1HZ, countdown_time, false, false);
 }
 
 // Variable that keeps count on how much screen has been partially updated
@@ -97,6 +117,14 @@ void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, 
     print2Digits(_month);
     display.print('/');
     display.print(_year, DEC);
+
+    if (display.rtcCheckTimerFlag())  // Check if timer event has occurred
+    {
+      display.rtcClearTimerFlag();  // It's recommended to clear timer flag after timer has occurred
+      display.rtcDisableTimer();    // Disable timer if you want to make it one time only. Is you want to be repeatable, comment this line
+      display.setCursor(400, 400);  // Set new position for cursor
+      display.print("Timer!");
+    }
 }
 
 void print2Digits(uint8_t _d)
