@@ -105,6 +105,12 @@ int Inkplate::einkOn()
     Wire.write(0x01);
     Wire.write(B00101111);
     Wire.endTransmission();
+	
+	// Modify power up sequence  (VEE and VNEG are swapped)
+	Wire.beginTransmission(0x48);
+    Wire.write(0x09);
+    Wire.write(B11100001);
+    Wire.endTransmission();
 
     delay(1);
 
