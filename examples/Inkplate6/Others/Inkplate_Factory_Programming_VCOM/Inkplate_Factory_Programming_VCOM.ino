@@ -13,6 +13,9 @@ int EEPROMaddress = 0;
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
 
+const char sdCardTestStringLength = 100;
+const char *testString = {"This is some test string..."};
+
 uint8_t mcpRegsInt[22];
 
 void setup()
@@ -20,6 +23,8 @@ void setup()
     display.begin();
     Serial.begin(115200);
     EEPROM.begin(64);
+
+    microSDCardTest();
 
     if (EEPROM.read(EEPROMaddress) != 170)
     {
@@ -511,4 +516,63 @@ void writeVCOMToEEPROM(double v)
     {
         Serial.println("\nVCOM EEPROM PROGRAMMING OK\n");
     }
+}
+
+int checkMicroSDCard()
+{
+    int sdInitOk = 0;
+    sdInitOk = display.sdCardInit();
+
+    if (sdInitOk)
+    {
+        File file;
+
+        if (file.open("/testFile.txt", O_CREAT | O_RDWR))
+        {
+            file.print(testString);
+            file.close();
+        }
+        else
+        {
+            return 0;
+        }
+
+        delay(250);
+
+        if (file.open("/testFile.txt", O_RDWR))
+        {
+            char sdCardString[sdCardTestStringLength];
+            file.read(sdCardString, sizeof(sdCardString));
+            sdCardString[file.fileSize()] = 0;
+            int stringCompare = strcmp(testString, sdCardString);
+            file.remove();
+            file.close();
+            if (stringCompare != 0)
+                return 0;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+    return 1;
+}
+
+void microSDCardTest()
+{
+    display.setTextSize(4);
+    display.setCursor(100, 100);
+    display.print("microSD card slot test ");
+
+    if (!checkMicroSDCard())
+    {
+        display.print("FAIL!");
+        display.display();
+        while(1);
+    }
+    display.clearDisplay();
 }

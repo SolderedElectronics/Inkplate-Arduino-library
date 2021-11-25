@@ -556,18 +556,11 @@ void microSDCardTest()
     display.setCursor(100, 100);
     display.print("microSD card slot test ");
 
-    if (checkMicroSDCard())
-    {
-        display.print("OK!");
-        display.display();
-    }
-    else
+    if (!checkMicroSDCard())
     {
         display.print("FAIL!");
         display.display();
         while(1);
     }
-
     display.clearDisplay();
-    delay(2500);
 }
