@@ -13,18 +13,21 @@ int EEPROMaddress = 0;
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
 
+const char sdCardTestStringLength = 100;
+const char *testString = {"This is some test string..."};
+
 void setup()
 {
     display.begin();
     Serial.begin(115200);
     EEPROM.begin(64);
 
+    microSDCardTest();
+
     if (EEPROM.read(EEPROMaddress) != 170)
     {
-        display.digitalWriteMCP(3, HIGH);
-        display.digitalWriteMCP(4, HIGH);
-        display.digitalWriteMCP(5, HIGH);
-        display.pinModeMCP(6, INPUT_PULLUP);
+        display.einkOn();
+        display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
         display.display();
         display.einkOn();
         delay(100);
@@ -421,7 +424,7 @@ void writeToScreen()
 double readVCOM()
 {
     double vcomVolts;
-    writeReg(0x01, B00111111); // enable all rails
+    display.einkOn();
     writeReg(0x04, (readReg(0x04) | B00100000));
     writeToScreen();
     writeReg(0x04, (readReg(0x04) | B10000000));
@@ -442,13 +445,12 @@ void writeVCOMToEEPROM(double v)
     int vcom = int(abs(v) * 100);
     int vcomH = (vcom >> 8) & 1;
     int vcomL = vcom & 0xFF;
-    // First, we have to power up TPS65186
-    // Pull TPS65186 WAKEUP pin to High
-    display.digitalWriteMCP(3, HIGH);
 
-    // Pull TPS65186 PWR pin to High
-    display.digitalWriteMCP(4, HIGH);
-    delay(10);
+    // Set MCP23017 pin where TPS65186 INT pin is connectet to input pull up
+    display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
+
+    // First power up TPS65186 so we can communicate with it
+    display.einkOn();
 
     // Send to TPS65186 first 8 bits of VCOM
     writeReg(0x03, vcomL);
@@ -464,24 +466,20 @@ void writeVCOMToEEPROM(double v)
     delay(1);
     do
     {
-        delay(1);
-    } while (display.digitalReadMCP(6));
+      delay(1);
+    } while (display.digitalReadInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6));
 
     // Clear Interrupt flag by reading INT1 register
     readReg(0x07);
 
     // Now, power off whole TPS
-    // Pull TPS65186 WAKEUP pin to Low
-    display.digitalWriteMCP(3, LOW);
-
-    // Pull TPS65186 PWR pin to Low
-    display.digitalWriteMCP(4, LOW);
+    display.einkOff();
 
     // Wait a little bit...
     delay(1000);
 
     // Power up TPS again
-    display.digitalWriteMCP(3, HIGH);
+    display.einkOn();
 
     delay(10);
 
@@ -491,10 +489,69 @@ void writeVCOMToEEPROM(double v)
 
     if (vcom != (vcomL | (vcomH << 8)))
     {
-        Serial.println("\nVCOM EEPROM PROGRAMMING FAILED!\n");
+      Serial.println("\nVCOM EEPROM PROGRAMMING FAILED!\n");
     }
     else
     {
-        Serial.println("\nVCOM EEPROM PROGRAMMING OK\n");
+      Serial.println("\nVCOM EEPROM PROGRAMMING OK\n");
     }
+}
+
+int checkMicroSDCard()
+{
+    int sdInitOk = 0;
+    sdInitOk = display.sdCardInit();
+
+    if (sdInitOk)
+    {
+        File file;
+
+        if (file.open("/testFile.txt", O_CREAT | O_RDWR))
+        {
+            file.print(testString);
+            file.close();
+        }
+        else
+        {
+            return 0;
+        }
+
+        delay(250);
+
+        if (file.open("/testFile.txt", O_RDWR))
+        {
+            char sdCardString[sdCardTestStringLength];
+            file.read(sdCardString, sizeof(sdCardString));
+            sdCardString[file.fileSize()] = 0;
+            int stringCompare = strcmp(testString, sdCardString);
+            file.remove();
+            file.close();
+            if (stringCompare != 0)
+                return 0;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+    return 1;
+}
+
+void microSDCardTest()
+{
+    display.setTextSize(4);
+    display.setCursor(100, 100);
+    display.print("microSD card slot test ");
+
+    if (!checkMicroSDCard())
+    {
+        display.print("FAIL!");
+        display.display();
+        while(1);
+    }
+    display.clearDisplay();
 }
