@@ -24,10 +24,11 @@
 // Time ESP32 will go to sleep (in seconds)
 #define TIME_TO_SLEEP 30
 
+// bitmask for GPIO_34 which is connected to MCP INTB
+#define TOUCHPAD_WAKE_MASK (int64_t(1)<<GPIO_NUM_34)
+
 // Initiate Inkplate object
 Inkplate display(INKPLATE_1BIT);
-
-byte touchPadPin = PAD1;
 
 // Store int in rtc data, to remain persistent during deep sleep
 RTC_DATA_ATTR int bootCount = 0;
@@ -38,21 +39,24 @@ void setup()
     display.begin();
 
     // Setup mcp interrupts
-    display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, touchPadPin, INPUT);
     display.setIntOutput(1, false, false, HIGH);
-    display.setIntPin(touchPadPin, RISING);
+    display.setIntPin(PAD1, RISING);
+    display.setIntPin(PAD2, RISING);
+    display.setIntPin(PAD3, RISING);
 
     ++bootCount;
 
     // Our function declared below
     displayInfo();
 
-    // Go to sleep for TIME_TO_SLEEP seconds, but also enable wake up from gpio 34
-    // Gpio 34 is where the mcp interrupt is connected, check
-    // https://github.com/e-radionicacom/Inkplate-6-hardware/blob/master/Schematics%2C%20Gerber%2C%20BOM/Inkplate6%20Schematics.pdf
-    // for more detail
+    // Go to sleep for TIME_TO_SLEEP seconds
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_34, 1);
+
+    // Enable wakeup from deep sleep on gpio 36 (wake button)
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
+
+    // enable wake from MCP port expander on gpio 34
+    esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
 
     // Go to sleep
     esp_deep_sleep_start();
