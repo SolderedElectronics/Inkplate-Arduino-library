@@ -25,12 +25,11 @@ void setup()
     Serial.begin(115200);
     EEPROM.begin(64);
 
-    microSDCardTest();
-
     vcomVoltage = -1.19;
 
     if (EEPROM.read(EEPROMaddress) != 170)
     {
+        microSDCardTest();
         display.pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 6, INPUT_PULLUP);
         writeVCOMToEEPROM(vcomVoltage);
         EEPROM.write(EEPROMaddress, 170);
