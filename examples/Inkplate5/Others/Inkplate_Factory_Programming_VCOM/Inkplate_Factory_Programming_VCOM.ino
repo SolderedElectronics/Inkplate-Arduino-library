@@ -22,10 +22,9 @@ void setup()
     Serial.begin(115200);
     EEPROM.begin(64);
 
-    microSDCardTest();
-
     if (EEPROM.read(EEPROMaddress) != 170)
     {
+        microSDCardTest();
         display.einkOn();
         display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
         display.display();

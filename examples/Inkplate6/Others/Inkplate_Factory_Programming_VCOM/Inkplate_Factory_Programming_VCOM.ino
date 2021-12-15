@@ -24,10 +24,9 @@ void setup()
     Serial.begin(115200);
     EEPROM.begin(64);
 
-    microSDCardTest();
-
     if (EEPROM.read(EEPROMaddress) != 170)
     {
+        microSDCardTest();
         display.digitalWriteInternal(MCP23017_ADDR, mcpRegsInt, 3, HIGH);
         display.digitalWriteInternal(MCP23017_ADDR, mcpRegsInt, 4, HIGH);
         display.digitalWriteInternal(MCP23017_ADDR, mcpRegsInt, 5, HIGH);
