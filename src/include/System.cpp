@@ -224,7 +224,7 @@ void System::rtcSetTime(uint8_t rtcHour, uint8_t rtcMinute, uint8_t rtcSecond)
  */
 void System::rtcSetDate(uint8_t rtcWeekday, uint8_t rtcDay, uint8_t rtcMonth, uint16_t yr)
 {
-    rtcYear = yr - 1970; // convert to RTC rtcYear format 0-99
+    rtc_time.rtcYear = yr - 1970; // convert to RTC rtcYear format 0-99
 
     Wire.beginTransmission(I2C_ADDR);
     Wire.write(RTC_RAM_by);
@@ -236,7 +236,7 @@ void System::rtcSetDate(uint8_t rtcWeekday, uint8_t rtcDay, uint8_t rtcMonth, ui
     Wire.write(rtcDecToBcd(rtcDay));
     Wire.write(rtcDecToBcd(rtcWeekday));
     Wire.write(rtcDecToBcd(rtcMonth));
-    Wire.write(rtcDecToBcd(rtcYear));
+    Wire.write(rtcDecToBcd(rtc_time.rtcYear));
     Wire.endTransmission();
 }
 
@@ -293,7 +293,7 @@ uint32_t System::rtcGetEpoch()
 /**
  * @brief                   Reads time and date from the RTC
  */
-void System::rtcReadTime()
+void System::rtcGetRtcData()
 {
     Wire.beginTransmission(I2C_ADDR);
     Wire.write(RTC_SECOND_ADDR); // datasheet 8.4.
@@ -303,13 +303,13 @@ void System::rtcReadTime()
 
     while (Wire.available())
     {
-        rtcSecond = rtcBcdToDec(Wire.read() & 0x7F); // ignore bit 7
-        rtcMinute = rtcBcdToDec(Wire.read() & 0x7F);
-        rtcHour = rtcBcdToDec(Wire.read() & 0x3F); // ignore bits 7 & 6
-        rtcDay = rtcBcdToDec(Wire.read() & 0x3F);
-        rtcWeekday = rtcBcdToDec(Wire.read() & 0x07); // ignore bits 7,6,5,4 & 3
-        rtcMonth = rtcBcdToDec(Wire.read() & 0x1F);   // ignore bits 7,6 & 5
-        rtcYear = rtcBcdToDec(Wire.read()) + 1970;
+        rtc_time.rtcSecond = rtcBcdToDec(Wire.read() & 0x7F); // ignore bit 7
+        rtc_time.rtcMinute = rtcBcdToDec(Wire.read() & 0x7F);
+        rtc_time.rtcHour = rtcBcdToDec(Wire.read() & 0x3F); // ignore bits 7 & 6
+        rtc_time.rtcDay = rtcBcdToDec(Wire.read() & 0x3F);
+        rtc_time.rtcWeekday = rtcBcdToDec(Wire.read() & 0x07); // ignore bits 7,6,5,4 & 3
+        rtc_time.rtcMonth = rtcBcdToDec(Wire.read() & 0x1F);   // ignore bits 7,6 & 5
+        rtc_time.rtcYear = rtcBcdToDec(Wire.read()) + 1970;
     }
 }
 
@@ -320,8 +320,7 @@ void System::rtcReadTime()
  */
 uint8_t System::rtcGetSecond()
 {
-    rtcReadTime();
-    return rtcSecond;
+    return rtc_time.rtcSecond;
 }
 
 /**
@@ -331,8 +330,7 @@ uint8_t System::rtcGetSecond()
  */
 uint8_t System::rtcGetMinute()
 {
-    rtcReadTime();
-    return rtcMinute;
+    return rtc_time.rtcMinute;
 }
 
 /**
@@ -342,8 +340,7 @@ uint8_t System::rtcGetMinute()
  */
 uint8_t System::rtcGetHour()
 {
-    rtcReadTime();
-    return rtcHour;
+    return rtc_time.rtcHour;
 }
 
 /**
@@ -353,8 +350,7 @@ uint8_t System::rtcGetHour()
  */
 uint8_t System::rtcGetDay()
 {
-    rtcReadTime();
-    return rtcDay;
+    return rtc_time.rtcDay;
 }
 
 /**
@@ -364,8 +360,7 @@ uint8_t System::rtcGetDay()
  */
 uint8_t System::rtcGetWeekday()
 {
-    rtcReadTime();
-    return rtcWeekday;
+    return rtc_time.rtcWeekday;
 }
 
 /**
@@ -375,8 +370,7 @@ uint8_t System::rtcGetWeekday()
  */
 uint8_t System::rtcGetMonth()
 {
-    rtcReadTime();
-    return rtcMonth;
+    return rtc_time.rtcMonth;
 }
 
 /**
@@ -386,8 +380,7 @@ uint8_t System::rtcGetMonth()
  */
 uint16_t System::rtcGetYear()
 {
-    rtcReadTime();
-    return rtcYear;
+    return rtc_time.rtcYear;
 }
 
 /**

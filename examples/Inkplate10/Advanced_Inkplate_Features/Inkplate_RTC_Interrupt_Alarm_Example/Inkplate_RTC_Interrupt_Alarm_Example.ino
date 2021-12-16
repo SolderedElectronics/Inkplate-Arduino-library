@@ -55,7 +55,7 @@ void loop()
 {
     display.clearDisplay();         // Clear frame buffer of display
     display.setCursor(100, 100);    // Set position of the text
-    display.rtcReadTime();          // Get the time and date from RTC
+    display.rtcGetRtcData();          // Get the time and date from RTC
 
     // Print the time on screen
     printTime(display.rtcGetHour(), display.rtcGetMinute(), display.rtcGetSecond(), display.rtcGetDay(), display.rtcGetWeekday(), display.rtcGetMonth(), display.rtcGetYear());
