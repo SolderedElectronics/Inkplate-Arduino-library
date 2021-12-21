@@ -6,7 +6,9 @@
 Inkplate display(INKPLATE_1BIT);
 
 double vcomVoltage = -2.95;
-int EEPROMaddress = 100;
+
+// EEPROMAddress must be smaller than 64.
+int EEPROMaddress = 10;
 
 // Peripheral mode variables and arrays
 #define BUFFER_SIZE 1000
@@ -22,30 +24,35 @@ void setup()
     Serial.begin(115200);
     EEPROM.begin(64);
 
-    if (EEPROM.read(EEPROMaddress) != 170)
+    // Init the touchscreen - you need to touch the bottom right edge to activate it
+    if (display.tsInit(true))
     {
-        microSDCardTest();
-        display.einkOn();
-        display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
-        display.display();
-        display.einkOn();
-        delay(100);
-        vcomVoltage = readVCOM();
-        display.einkOff();
-        delay(1000);
-        Serial.print("\n\nStarting VCOM measurment...");
-        Serial.print("\nVCOM: ");
-        Serial.print(vcomVoltage, 2);
-        Serial.println("V");
-        delay(1000);
-        writeVCOMToEEPROM(vcomVoltage);
-        EEPROM.write(EEPROMaddress, 170);
-        EEPROM.commit();
-        display.selectDisplayMode(INKPLATE_1BIT);
+        Serial.println("Touchscreen init ok");
     }
     else
     {
-        vcomVoltage = (double)EEPROM.read(EEPROMaddress) / 100;
+        Serial.println("Touchscreen init fail");
+        display.setTextSize(4);
+        display.setTextColor(0, 7);
+        display.setCursor(300, 300);
+        display.print("Touch error");
+        display.display();
+        while (true);
+    }
+
+    // Turn on the frontlight
+    display.frontlight(true);
+
+    if (EEPROM.read(EEPROMaddress) != 170)
+    {
+        microSDCardTest();
+        writeVCOMToEEPROM(vcomVoltage);
+        EEPROM.write(EEPROMaddress, 170);
+        EEPROM.commit();
+    }
+    else
+    {
+        vcomVoltage = getVCOM();
     }
     memset(commandBuffer, 0, BUFFER_SIZE);
 
@@ -443,6 +450,15 @@ double readVCOM()
     vcomVolts = vcom * 10 / 1000.0;
     display.einkOff();
     return -vcomVolts;
+}
+
+double getVCOM()
+{
+  display.einkOn();
+  uint16_t vcom = ((readReg(0x04) & 1) << 8) | readReg(0x03);
+  double vcomVolts = vcom * 10.0 / 1000.0;
+  display.einkOff();
+  return vcomVolts;
 }
 
 void writeVCOMToEEPROM(double v)
