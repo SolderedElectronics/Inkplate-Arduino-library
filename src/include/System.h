@@ -173,17 +173,16 @@ class System : public Esp,
     uint8_t rtcControl2;
     uint8_t _panelOn = 0;
     int16_t _sdCardOk = 0;
-    /* time variables structure */
-    struct date_time
-    {
-        uint8_t rtcHour;
-        uint8_t rtcMinute;
-        uint8_t rtcSecond;
-        uint8_t rtcDay;
-        uint8_t rtcWeekday;
-        uint8_t rtcMonth;
-        uint16_t rtcYear;
-    } rtc_time;
+    /* time variables*/
+
+    uint8_t rtcHour;
+    uint8_t rtcMinute;
+    uint8_t rtcSecond;
+    uint8_t rtcDay;
+    uint8_t rtcWeekday;
+    uint8_t rtcMonth;
+    uint16_t rtcYear;
+    
 };
 
 #endif
