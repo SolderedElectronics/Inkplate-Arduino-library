@@ -182,7 +182,6 @@ class System : public Esp,
     uint8_t rtcWeekday;
     uint8_t rtcMonth;
     uint16_t rtcYear;
-    
 };
 
 #endif
