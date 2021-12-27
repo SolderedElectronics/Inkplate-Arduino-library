@@ -1182,7 +1182,7 @@ void Adafruit_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
     GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c);
     uint8_t *bitmap = pgm_read_bitmap_ptr(gfxFont);
 
-    uint16_t bo = pgm_read_word(&glyph->bitmapOffset);
+    uint32_t bo = pgm_read_dword(&glyph->bitmapOffset);
     uint8_t w = pgm_read_byte(&glyph->width), h = pgm_read_byte(&glyph->height);
     int8_t xo = pgm_read_byte(&glyph->xOffset),
            yo = pgm_read_byte(&glyph->yOffset);
