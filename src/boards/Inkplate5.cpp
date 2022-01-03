@@ -197,7 +197,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
  *              if set to 1, it will disable turning supply for eink after
  *              display update in order to save some time needed for power supply
  *              to save some time at next display update or increase refreshing speed
- *              
+ *
  */
 void Inkplate::display1b(bool leaveOn)
 {
