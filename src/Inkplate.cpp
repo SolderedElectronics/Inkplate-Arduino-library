@@ -65,6 +65,11 @@ void Inkplate::clearDisplay()
 
 /**
  * @brief       display function update display with new data from buffer
+ *
+ * @param       bool leaveOn
+ *              if set to 1, it will disable turning supply for eink after
+ *              display update in order to save some time needed for power supply
+ *              to save some time at next display update or increase refreshing speed
  */
 void Inkplate::display(bool leaveOn)
 {

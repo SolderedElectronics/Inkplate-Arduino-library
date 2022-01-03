@@ -630,6 +630,20 @@ uint8_t System::rtcGetAlarmWeekday()
 
 /**
  * @brief                   Sets the timer countdown
+ *
+ * @param                   rtcCountdownSrcClock source_clock
+ *                          timer clock frequency
+ *
+ * @param                   timer clock frequency
+ *                          value to write in timer register
+ *
+ * @param                   bool int_enable
+ *                          timer interrupt enable, 0 means no interrupt generated from timer
+ *                          , 1 means interrupt is generated from timer
+ *
+ * @param                   bool int_pulse
+ *                          timer interrupt mode, 0 means interrupt follows timer flag
+ *                          , 1 means interrupt generates a pulse
  */
 void System::rtcTimerSet(rtcCountdownSrcClock source_clock, uint8_t value, bool int_enable, bool int_pulse)
 {
@@ -650,7 +664,7 @@ void System::rtcTimerSet(rtcCountdownSrcClock source_clock, uint8_t value, bool 
     // reconfigure timer
     timer_reg[1] |= RTC_TIMER_TE; // enable timer
     if (int_enable)
-        timer_reg[1] |= RTC_TIMER_TIE; // enable interrupr
+        timer_reg[1] |= RTC_TIMER_TIE; // enable interrupt
     if (int_pulse)
         timer_reg[1] |= RTC_TIMER_TI_TP; // interrupt mode
     timer_reg[1] |= source_clock << 3;   // clock source
@@ -792,6 +806,9 @@ void System::rtcReset() // datasheet 8.2.1.3.
 
 /**
  * @brief                   Converts decimal to BCD
+ *
+ * @param                   uint8_t val
+ *                          number which needs to be converted from decimal to Bcd value
  */
 uint8_t System::rtcDecToBcd(uint8_t val)
 {
@@ -800,6 +817,9 @@ uint8_t System::rtcDecToBcd(uint8_t val)
 
 /**
  * @brief                   Converts BCD to decimal
+ *
+ * @param                   uint8_t val
+ *                          number which needs to be converted from Bcd to decimal value
  */
 uint8_t System::rtcBcdToDec(uint8_t val)
 {
