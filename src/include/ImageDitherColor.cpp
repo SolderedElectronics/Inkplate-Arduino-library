@@ -109,6 +109,17 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
 /**
  * @brief       ditherGetPixelJpeg finds dithered value for given pixel
  *
+ * @param       uint32_t px
+ *              pixel to find value for
+ * @param       int i
+ *              x plane pixel position
+ * @param       int j
+ *              y plane pixel position
+ * @param       int w
+ *              image width
+ * @param       bool paletted
+ *              1 if palleted image, 0 if not
+ *
  * @note        currently not used
  */
 uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h)
