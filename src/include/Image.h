@@ -24,7 +24,6 @@
 #include "Arduino.h"
 #include "ImageDitherColorKernels.h"
 #include "NetworkClient.h"
-#include "WiFiClient.h"
 #include "defines.h"
 
 /**
