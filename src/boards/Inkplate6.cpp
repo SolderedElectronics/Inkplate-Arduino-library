@@ -39,6 +39,19 @@ bool Inkplate::begin(void)
         return 0;
 
     Wire.begin();
+
+#ifndef ARDUINO_INKPLATECOLOR
+    for (uint32_t i = 0; i < 256; ++i)
+        pinLUT[i] = ((i & B00000011) << 4) | (((i & B00001100) >> 2) << 18) | (((i & B00010000) >> 4) << 23) |
+                    (((i & B11100000) >> 5) << 25);
+#endif
+
+#ifdef ARDUINO_ESP32_DEV
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
+#else
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
+#endif
+
     memset(mcpRegsInt, 0, 22);
     mcpBegin(MCP23017_ADDR, mcpRegsInt);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, VCOM, OUTPUT);
