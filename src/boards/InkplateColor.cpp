@@ -40,6 +40,8 @@ bool Inkplate::begin(void)
     // buffer and clear frame buffer
     if (!_beginDone)
     {
+        Wire.begin();
+
         _beginDone = true;
         SPI.begin();
         pinMode(EPAPER_BUSY_PIN, INPUT);
