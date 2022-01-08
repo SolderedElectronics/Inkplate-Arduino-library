@@ -52,9 +52,6 @@ void setup()
     // Go to sleep for TIME_TO_SLEEP seconds
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 
-    // Enable wakeup from deep sleep on gpio 36 (wake button)
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
-
     // enable wake from MCP port expander on gpio 34
     esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
 
