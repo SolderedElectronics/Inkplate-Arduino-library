@@ -1,11 +1,12 @@
 /*
-   Inkplate_Wake_up_on_touchpads example for e-radionica.com Inkplate 6
+   Inkplate_Wake_up_on_touchscreen example for e-radionica.com Inkplate 6
    For this example you will need USB cable and an Inkplate 6
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   Here is shown how to use MCP and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.
+   Here is shown how to use MCP and ESP interrupts to wake up the MCU from deepsleep when touchscreen or wake up button
+   is pressed.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
@@ -25,7 +26,7 @@
 #define TIME_TO_SLEEP 30
 
 // bitmask for GPIO_34 which is connected to MCP INTB
-#define TOUCHPAD_WAKE_MASK (int64_t(1)<<GPIO_NUM_34)
+#define TOUCHPAD_WAKE_MASK (int64_t(1) << GPIO_NUM_34)
 
 // Initiate Inkplate object
 Inkplate display(INKPLATE_1BIT);
@@ -44,6 +45,18 @@ void setup()
     display.setIntPin(PAD2, RISING);
     display.setIntPin(PAD3, RISING);
 
+
+    // Init touchscreen and power it on after init (send false as argument to put it in deep sleep right after init)
+    if (display.tsInit(true))
+    {
+        Serial.println("Touchscreen init ok");
+    }
+    else
+    {
+        Serial.println("Touchscreen init fail");
+        while (true)
+            ;
+    }
 
     ++bootCount;
 
