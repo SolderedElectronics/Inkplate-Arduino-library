@@ -55,7 +55,7 @@ void setup()
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_34, 1);
 
     // GPIO 36 is where the wake up button is connected
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, 0);
+    esp_sleep_enable_ext1_wakeup((1ULL << 36), ESP_EXT1_WAKEUP_ALL_LOW);
 
     // Go to sleep
     esp_deep_sleep_start();

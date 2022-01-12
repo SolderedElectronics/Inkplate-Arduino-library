@@ -39,8 +39,8 @@ void setup()
 
     // Setup mcp interrupts
     display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, touchPadPin, INPUT);
-    display.setIntOutput(1, false, false, HIGH);
-    display.setIntPin(touchPadPin, RISING);
+    display.setIntOutputInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 1, false, false, HIGH);
+    display.setIntPinInternal(MCP23017_INT_ADDR, display.mcpRegsInt, touchPadPin, RISING);
 
     ++bootCount;
 
