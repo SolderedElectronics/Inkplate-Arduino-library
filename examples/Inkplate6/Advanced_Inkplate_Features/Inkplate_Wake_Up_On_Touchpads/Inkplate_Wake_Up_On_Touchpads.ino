@@ -25,7 +25,7 @@
 #define TIME_TO_SLEEP 30
 
 // bitmask for GPIO_34 which is connected to MCP INTB
-#define TOUCHPAD_WAKE_MASK (int64_t(1)<<GPIO_NUM_34)
+#define TOUCHPAD_WAKE_MASK (int64_t(1) << GPIO_NUM_34)
 
 // Initiate Inkplate object
 Inkplate display(INKPLATE_1BIT);
@@ -39,10 +39,9 @@ void setup()
     display.begin();
 
     // Setup mcp interrupts
-    display.setIntOutput(1, false, false, HIGH);
-    display.setIntPin(PAD1, RISING);
-    display.setIntPin(PAD2, RISING);
-    display.setIntPin(PAD3, RISING);
+    display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, touchPadPin, INPUT);
+    display.setIntOutputInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 1, false, false, HIGH);
+    display.setIntPinInternal(MCP23017_INT_ADDR, display.mcpRegsInt, touchPadPin, RISING);
 
     ++bootCount;
 

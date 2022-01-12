@@ -25,7 +25,7 @@
 #define TIME_TO_SLEEP 30
 
 // bitmask for GPIO_34 which is connected to MCP INTB
-#define TOUCHPAD_WAKE_MASK (int64_t(1)<<GPIO_NUM_34)
+#define TOUCHPAD_WAKE_MASK (int64_t(1) << GPIO_NUM_34)
 
 // Initiate Inkplate object
 Inkplate display(INKPLATE_1BIT);
@@ -52,11 +52,8 @@ void setup()
     // Go to sleep for TIME_TO_SLEEP seconds
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 
-    // Enable wakeup from deep sleep on gpio 36 (wake button)
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
-
-    // enable wake from MCP port expander on gpio 34
-    esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
+    // Enable wakup from deep sleep on gpio 36
+    esp_sleep_enable_ext1_wakeup((1ULL << 36), ESP_EXT1_WAKEUP_ALL_LOW);
 
     // Go to sleep
     esp_deep_sleep_start();
