@@ -1,11 +1,12 @@
 /*
-   Inkplate_Wake_up_on_touchpads example for e-radionica.com Inkplate 6
+   Inkplate_Wake_up_on_touchscreen example for e-radionica.com Inkplate 6
    For this example you will need USB cable and an Inkplate 6
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   Here is shown how to use MCP and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.
+   Here is shown how to use MCP and ESP interrupts to wake up the MCU from deepsleep when touchscreen or wake up button
+   is pressed.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
@@ -42,19 +43,29 @@ void setup()
     display.setIntOutput(1, false, false, HIGH);
     display.setIntPin(touchPadPin, RISING);
 
+    // Init touchscreen and power it on after init (send false as argument to put it in deep sleep right after init)
+    if (display.tsInit(true))
+    {
+        Serial.println("Touchscreen init ok");
+    }
+    else
+    {
+        Serial.println("Touchscreen init fail");
+        while (true)
+            ;
+    }
+
     ++bootCount;
 
     // Our function declared below
     displayInfo();
 
-    // Go to sleep for TIME_TO_SLEEP seconds, but also enable wake up from gpio 34
-    // Gpio 34 is where the mcp interrupt is connected, check
-    // https://github.com/e-radionicacom/Inkplate-6-hardware/blob/master/Schematics%2C%20Gerber%2C%20BOM/Inkplate6%20Schematics.pdf
-    // for more detail
+    // Go to sleep for TIME_TO_SLEEP seconds.
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_34, 1);
 
-    // Enable wakup from deep sleep on gpio 36
+    // Enable wake up from deep sleep on gpio 36 (wake up button and Touch INT pin), check
+    // https://github.com/e-radionicacom/Inkplate-6PLUS-Hardware/blob/main/Schematics%2C%20Gerber%2C%20BOM/v1.0/Inkplate%206PLUS%20Schematics%20v1.0.pdf
+    // for more detail
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, 0);
 
     // Go to sleep
