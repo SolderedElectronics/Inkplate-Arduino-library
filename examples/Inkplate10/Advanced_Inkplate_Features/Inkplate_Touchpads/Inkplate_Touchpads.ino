@@ -5,17 +5,17 @@
    Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how you can use built-in touchpads (on PCB marked with numbers 1, 2 and 3).
+   This example will show you how you can use the built-in touchpads (on PCB marked with numbers 1, 2 and 3).
    These are basically touch sensitive switches. You can read state each of these with function readTouchpad()
    and the argument you need to pass to this function is PAD1 if you want to read the state of touchpad marked
    as "1" on PCB, PAD2 for second touchpad, PAD3 for third. You can also use numbers as arguments.
-   For that you need to pass number 0 for touchpad that is marked as 1 on PCB, 1 for second touchpad and 2 for third.
-   Function will return 1 if selected touchpad is pressed, zero if not.
+   For that you need to pass number 0 for touchpad that is marked as 1 on the PCB, 1 for the second touchpad and 2 for the third.
+   The function readTouchpad() will return 1 if selected touchpad is pressed, zero if not.
 
-   In this example, if you touch first pad, ti will decrese number showed on screen, if you touch thirs touch pad,
-   it will increase the number, if you touch second touchpad, it will reset number to zero.
+   In this example, if you touch the first pad, it will decrese number showed on screen, if you touch the third touch pad,
+   it will increase the number, if you touch second touchpad, it will reset the number to zero.
 
-   NOTE: You can not use touch pads when enclosure is fitted on the Inkplate - they are not that sensitive!
+   NOTE: You can not use touch pads when an enclosure is fitted on the Inkplate - they are not that sensitive!
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
