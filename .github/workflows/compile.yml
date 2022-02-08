@@ -8,23 +8,23 @@ jobs:
       matrix:
         include:
           - board:
-              fqbn: Dasduino_Boards:Inkplate:Inkplate6
+              fqbn: Dasduino_Boards:esp32:Inkplate6
             additional-sketch-paths: |
               - examples/Inkplate6
           - board:
-              fqbn: Dasduino_Boards:Inkplate:Inkplate10
+              fqbn: Dasduino_Boards:esp32:Inkplate10
             additional-sketch-paths: |
               - examples/Inkplate10
           - board:
-              fqbn: Dasduino_Boards:Inkplate:Inkplate5
+              fqbn: Dasduino_Boards:esp32:Inkplate5
             additional-sketch-paths: |
               - examples/Inkplate5
           - board:
-              fqbn: Dasduino_Boards:Inkplate:Inkplate6plus
+              fqbn: Dasduino_Boards:esp32:Inkplate6plus
             additional-sketch-paths: |
               - examples/Inkplate6PLUS
           - board:
-              fqbn: Dasduino_Boards:Inkplate:Inkplatecolor
+              fqbn: Dasduino_Boards:esp32:Inkplate6COLOR
             additional-sketch-paths: |
               - examples/Inkplate6COLOR
     steps:
@@ -38,7 +38,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           platforms: |
             - source-url: https://github.com/e-radionicacom/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json
-              name: Dasduino_Boards:Inkplate
+              name: Dasduino_Boards:esp32
           fqbn: ${{ matrix.board.fqbn }}
           libraries: |
             - source-path: ./
