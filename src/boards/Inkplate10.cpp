@@ -27,6 +27,11 @@
  * @brief       begin function initialize Inkplate object with predefined
  * settings
  *
+ * @param       uint8_t lightWaveform
+ *              if inkplate doesn't work well or if it is fading after turning off
+ *              lightWaveform should be set to 1 in order to fix that, but older boards
+ *              may not support it
+ *
  * @return      True if initialization is successful, false if failed or already
  * initialized
  */
@@ -211,6 +216,11 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
 /**
  *
  * @brief       display1b function writes black and white data to display
+ *
+ * @param       bool leaveOn
+ *              if set to 1, it will disable turning supply for eink after
+ *              display update in order to save some time needed for power supply
+ *              to save some time at next display update or increase refreshing speed
  */
 void Inkplate::display1b(bool leaveOn)
 {
@@ -291,6 +301,11 @@ void Inkplate::display1b(bool leaveOn)
 
 /**
  * @brief       display3b function writes grayscale data to display
+ *
+ * @param       bool leaveOn
+ *              if set to 1, it will disable turning supply for eink after
+ *              display update in order to save some time needed for power supply
+ *              to save some time at next display update or increase refreshing speed
  */
 void IRAM_ATTR Inkplate::display3b(bool leaveOn)
 {
@@ -367,6 +382,11 @@ void IRAM_ATTR Inkplate::display3b(bool leaveOn)
  * @param       bool _forced
  *              For advanced use with deep sleep. Can force partial update in
  * deep sleep
+ *
+ * @param       bool leaveOn
+ *              if set to 1, it will disable turning supply for eink after
+ *              display update in order to save some time needed for power supply
+ *              to save some time at next display update or increase refreshing speed
  *
  * @note        Partial update only works in black and white mode
  *

@@ -73,7 +73,7 @@ void setup()
 int n = 0;
 void loop()
 {
-    display.rtcReadTime();             // Get the time and date from RTC
+    display.rtcGetRtcData();             // Get the time and date from RTC
     seconds = display.rtcGetSecond();  // Store senconds in a variable
     minutes = display.rtcGetMinute();  // Store minutes in a variable
     hour = display.rtcGetHour();       // Store hours in a variable

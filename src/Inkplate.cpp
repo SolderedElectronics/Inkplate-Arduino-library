@@ -26,7 +26,9 @@ Inkplate::Inkplate() : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_W
 Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
 #endif
 {
+#ifndef ARDUINO_INKPLATECOLOR
     setDisplayMode(_mode);
+#endif
 }
 
 /**
@@ -54,6 +56,11 @@ void Inkplate::clearDisplay()
 
 /**
  * @brief       display function update display with new data from buffer
+ *
+ * @param       bool leaveOn
+ *              if set to 1, it will disable turning supply for eink after
+ *              display update in order to save some time needed for power supply
+ *              to save some time at next display update or increase refreshing speed
  */
 void Inkplate::display(bool leaveOn)
 {
@@ -93,6 +100,12 @@ int Inkplate::einkOn()
     Wire.beginTransmission(0x48);
     Wire.write(0x01);
     Wire.write(B00101111);
+    Wire.endTransmission();
+
+    // Modify power up sequence  (VEE and VNEG are swapped)
+    Wire.beginTransmission(0x48);
+    Wire.write(0x09);
+    Wire.write(B11100001);
     Wire.endTransmission();
 
     delay(1);

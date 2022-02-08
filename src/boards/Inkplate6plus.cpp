@@ -274,6 +274,11 @@ void Inkplate::clean(uint8_t c, uint8_t rep)
 /**
  *
  * @brief       display1b function writes black and white data to display
+ *
+ * @param       bool leaveOn
+ *              if set to 1, it will disable turning supply for eink after
+ *              display update in order to save some time needed for power supply
+ *              to save some time at next display update or increase refreshing speed
  */
 void Inkplate::display1b(bool leaveOn)
 {
@@ -364,6 +369,11 @@ void Inkplate::display1b(bool leaveOn)
 
 /**
  * @brief       display3b function writes grayscale data to display
+ *
+ * @param       bool leaveOn
+ *              if set to 1, it will disable turning supply for eink after
+ *              display update in order to save some time needed for power supply
+ *              to save some time at next display update or increase refreshing speed
  */
 void Inkplate::display3b(bool leaveOn)
 {
@@ -423,6 +433,11 @@ void Inkplate::display3b(bool leaveOn)
  * @param       bool _forced
  *              For advanced use with deep sleep. Can force partial update in
  * deep sleep
+ *
+ * @param       bool leaveOn
+ *              if set to 1, it will disable turning supply for eink after
+ *              display update in order to save some time needed for power supply
+ *              to save some time at next display update or increase refreshing speed
  *
  * @note        Partial update only works in black and white mode
  *

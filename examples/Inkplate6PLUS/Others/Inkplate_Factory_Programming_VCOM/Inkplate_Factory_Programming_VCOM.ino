@@ -3,15 +3,20 @@
 #include "image.h"
 #include <Wire.h>
 
-Inkplate display(INKPLATE_3BIT);
+Inkplate display(INKPLATE_1BIT);
 
 double vcomVoltage = -2.95;
-int EEPROMaddress = 100;
+
+// EEPROMAddress must be smaller than 64.
+int EEPROMaddress = 10;
 
 // Peripheral mode variables and arrays
 #define BUFFER_SIZE 1000
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
+
+const char sdCardTestStringLength = 100;
+const char *testString = {"This is some test string..."};
 
 void setup()
 {
@@ -19,29 +24,35 @@ void setup()
     Serial.begin(115200);
     EEPROM.begin(64);
 
-    if (EEPROM.read(EEPROMaddress) != 170)
+    // Init the touchscreen - you need to touch the bottom right edge to activate it
+    if (display.tsInit(true))
     {
-        display.einkOn();
-        display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
-        display.display();
-        display.einkOn();
-        delay(100);
-        vcomVoltage = readVCOM();
-        display.einkOff();
-        delay(1000);
-        Serial.print("\n\nStarting VCOM measurment...");
-        Serial.print("\nVCOM: ");
-        Serial.print(vcomVoltage, 2);
-        Serial.println("V");
-        delay(1000);
-        writeVCOMToEEPROM(vcomVoltage);
-        EEPROM.write(EEPROMaddress, 170);
-        EEPROM.commit();
-        display.selectDisplayMode(INKPLATE_1BIT);
+        Serial.println("Touchscreen init ok");
     }
     else
     {
-        vcomVoltage = (double)EEPROM.read(EEPROMaddress) / 100;
+        Serial.println("Touchscreen init fail");
+        display.setTextSize(4);
+        display.setTextColor(0, 7);
+        display.setCursor(300, 300);
+        display.print("Touch error");
+        display.display();
+        while (true);
+    }
+
+    // Turn on the frontlight
+    display.frontlight(true);
+
+    if (EEPROM.read(EEPROMaddress) != 170)
+    {
+        microSDCardTest();
+        writeVCOMToEEPROM(vcomVoltage);
+        EEPROM.write(EEPROMaddress, 170);
+        EEPROM.commit();
+    }
+    else
+    {
+        vcomVoltage = getVCOM();
     }
     memset(commandBuffer, 0, BUFFER_SIZE);
 
@@ -441,6 +452,15 @@ double readVCOM()
     return -vcomVolts;
 }
 
+double getVCOM()
+{
+  display.einkOn();
+  uint16_t vcom = ((readReg(0x04) & 1) << 8) | readReg(0x03);
+  double vcomVolts = vcom * 10.0 / 1000.0;
+  display.einkOff();
+  return vcomVolts;
+}
+
 void writeVCOMToEEPROM(double v)
 {
   int vcom = int(abs(v) * 100);
@@ -496,4 +516,63 @@ void writeVCOMToEEPROM(double v)
   {
     Serial.println("\nVCOM EEPROM PROGRAMMING OK\n");
   }
+}
+
+int checkMicroSDCard()
+{
+    int sdInitOk = 0;
+    sdInitOk = display.sdCardInit();
+
+    if (sdInitOk)
+    {
+        File file;
+
+        if (file.open("/testFile.txt", O_CREAT | O_RDWR))
+        {
+            file.print(testString);
+            file.close();
+        }
+        else
+        {
+            return 0;
+        }
+
+        delay(250);
+
+        if (file.open("/testFile.txt", O_RDWR))
+        {
+            char sdCardString[sdCardTestStringLength];
+            file.read(sdCardString, sizeof(sdCardString));
+            sdCardString[file.fileSize()] = 0;
+            int stringCompare = strcmp(testString, sdCardString);
+            file.remove();
+            file.close();
+            if (stringCompare != 0)
+                return 0;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+    return 1;
+}
+
+void microSDCardTest()
+{
+    display.setTextSize(5);
+    display.setCursor(100, 100);
+    display.print("microSD card slot test ");
+
+    if (!checkMicroSDCard())
+    {
+        display.print("FAIL!");
+        display.display();
+        while(1);
+    }
+    display.clearDisplay();
 }

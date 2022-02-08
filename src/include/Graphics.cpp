@@ -75,6 +75,9 @@ uint8_t Graphics::getRotation()
  *              x position, will change depending on rotation
  * @param       int16_t y0
  *              y position, will change depending on rotation
+ *
+ * @param       uint16_t color
+ *              pixel color, in 3bit mode have values in range 0-7
  */
 void Graphics::drawPixel(int16_t x0, int16_t y0, uint16_t color)
 {
@@ -97,8 +100,8 @@ void Graphics::startWrite()
  *              rectangle width
  * @param       int16_t h
  *              rectangle height
- * @param       int16_t c
- *              rectangle grayscale color (1-7)
+ * @param       uint16_t color
+ *              pixel color, in 3bit mode have values in range 0-7
  */
 void Graphics::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
@@ -117,8 +120,8 @@ void Graphics::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_
  *              starting y position for vertical line
  * @param       int16_t h
  *              vertical line height
- * @param       int16_t c
- *              vertical line grayscale color (1-7)
+ * @param       uint16_t color
+ *              pixel color, in 3bit mode have values in range 0-7
  */
 void Graphics::writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color)
 {
@@ -136,8 +139,8 @@ void Graphics::writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color)
  *              starting y position for horizontal line
  * @param       int16_t w
  *              horizontal line width
- * @param       int16_t c
- *              horizontal line grayscale color (1-7)
+ * @param       uint16_t color
+ *              pixel color, in 3bit mode have values in range 0-7
  */
 void Graphics::writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color)
 {
@@ -156,8 +159,8 @@ void Graphics::writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color)
  *              ending x position for line
  * @param       int16_t y1
  *              ending y position for line
- * @param       int16_t c
- *              line grayscale color (1-7)
+ * @param       uint16_t color
+ *              pixel color, in 3bit mode have values in range 0-7
  */
 void Graphics::writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
 {

@@ -28,14 +28,14 @@
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
 // Set clock
-uint8_t hour = 12;
-uint8_t minutes = 50;
-uint8_t seconds = 30;
+uint8_t hour = 8;
+uint8_t minutes = 25;
+uint8_t seconds = 0;
 
 // Set date and weekday (NOTE: In weekdays 0 means Sunday, 1 menas Monday, ...)
 uint8_t weekday = 4;
-uint8_t day = 11;
-uint8_t month = 11;
+uint8_t day = 16;
+uint8_t month = 12;
 uint8_t year = 21;
 
 void setup()
@@ -52,8 +52,8 @@ void setup()
 // Variable that keeps count on how much screen has been partially updated
 int n = 0;
 void loop()
-{
-    display.rtcReadTime();             // Get the time and date from RTC
+{   
+    display.rtcGetRtcData();             // Get the time and date from RTC
     seconds = display.rtcGetSecond();  // Store senconds in a variable
     minutes = display.rtcGetMinute();  // Store minutes in a variable
     hour = display.rtcGetHour();       // Store hours in a variable

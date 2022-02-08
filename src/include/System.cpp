@@ -224,7 +224,7 @@ void System::rtcSetTime(uint8_t rtcHour, uint8_t rtcMinute, uint8_t rtcSecond)
  */
 void System::rtcSetDate(uint8_t rtcWeekday, uint8_t rtcDay, uint8_t rtcMonth, uint16_t yr)
 {
-    rtcYear = yr - 1970; // convert to RTC rtcYear format 0-99
+    rtcYear = yr - 2000; // convert to RTC rtcYear format 0-99
 
     Wire.beginTransmission(I2C_ADDR);
     Wire.write(RTC_RAM_by);
@@ -260,7 +260,7 @@ void System::rtcSetEpoch(uint32_t _epoch)
     Wire.write(rtcDecToBcd(_t.tm_mday));
     Wire.write(rtcDecToBcd(_t.tm_wday));
     Wire.write(rtcDecToBcd(_t.tm_mon + 1));
-    Wire.write(rtcDecToBcd(_t.tm_year + 1900 - 1970));
+    Wire.write(rtcDecToBcd(_t.tm_year + 1900 - 2000));
     Wire.endTransmission();
 }
 
@@ -284,7 +284,7 @@ uint32_t System::rtcGetEpoch()
     _t.tm_mday = rtcBcdToDec(Wire.read() & 0x3F);
     _t.tm_wday = rtcBcdToDec(Wire.read() & 0x07);
     _t.tm_mon = rtcBcdToDec(Wire.read() & 0x1F) - 1;
-    _t.tm_year = rtcBcdToDec(Wire.read()) + 1970 - 1900;
+    _t.tm_year = rtcBcdToDec(Wire.read()) + 2000 - 1900;
     Wire.endTransmission();
 
     return (uint32_t)(mktime(&_t));
@@ -293,7 +293,7 @@ uint32_t System::rtcGetEpoch()
 /**
  * @brief                   Reads time and date from the RTC
  */
-void System::rtcReadTime()
+void System::rtcGetRtcData()
 {
     Wire.beginTransmission(I2C_ADDR);
     Wire.write(RTC_SECOND_ADDR); // datasheet 8.4.
@@ -309,7 +309,7 @@ void System::rtcReadTime()
         rtcDay = rtcBcdToDec(Wire.read() & 0x3F);
         rtcWeekday = rtcBcdToDec(Wire.read() & 0x07); // ignore bits 7,6,5,4 & 3
         rtcMonth = rtcBcdToDec(Wire.read() & 0x1F);   // ignore bits 7,6 & 5
-        rtcYear = rtcBcdToDec(Wire.read()) + 1970;
+        rtcYear = rtcBcdToDec(Wire.read()) + 2000;
     }
 }
 
@@ -320,7 +320,6 @@ void System::rtcReadTime()
  */
 uint8_t System::rtcGetSecond()
 {
-    rtcReadTime();
     return rtcSecond;
 }
 
@@ -331,7 +330,6 @@ uint8_t System::rtcGetSecond()
  */
 uint8_t System::rtcGetMinute()
 {
-    rtcReadTime();
     return rtcMinute;
 }
 
@@ -342,7 +340,6 @@ uint8_t System::rtcGetMinute()
  */
 uint8_t System::rtcGetHour()
 {
-    rtcReadTime();
     return rtcHour;
 }
 
@@ -353,7 +350,6 @@ uint8_t System::rtcGetHour()
  */
 uint8_t System::rtcGetDay()
 {
-    rtcReadTime();
     return rtcDay;
 }
 
@@ -364,7 +360,6 @@ uint8_t System::rtcGetDay()
  */
 uint8_t System::rtcGetWeekday()
 {
-    rtcReadTime();
     return rtcWeekday;
 }
 
@@ -375,7 +370,6 @@ uint8_t System::rtcGetWeekday()
  */
 uint8_t System::rtcGetMonth()
 {
-    rtcReadTime();
     return rtcMonth;
 }
 
@@ -386,7 +380,6 @@ uint8_t System::rtcGetMonth()
  */
 uint16_t System::rtcGetYear()
 {
-    rtcReadTime();
     return rtcYear;
 }
 
@@ -637,6 +630,20 @@ uint8_t System::rtcGetAlarmWeekday()
 
 /**
  * @brief                   Sets the timer countdown
+ *
+ * @param                   rtcCountdownSrcClock source_clock
+ *                          timer clock frequency
+ *
+ * @param                   timer clock frequency
+ *                          value to write in timer register
+ *
+ * @param                   bool int_enable
+ *                          timer interrupt enable, 0 means no interrupt generated from timer
+ *                          , 1 means interrupt is generated from timer
+ *
+ * @param                   bool int_pulse
+ *                          timer interrupt mode, 0 means interrupt follows timer flag
+ *                          , 1 means interrupt generates a pulse
  */
 void System::rtcTimerSet(rtcCountdownSrcClock source_clock, uint8_t value, bool int_enable, bool int_pulse)
 {
@@ -657,7 +664,7 @@ void System::rtcTimerSet(rtcCountdownSrcClock source_clock, uint8_t value, bool 
     // reconfigure timer
     timer_reg[1] |= RTC_TIMER_TE; // enable timer
     if (int_enable)
-        timer_reg[1] |= RTC_TIMER_TIE; // enable interrupr
+        timer_reg[1] |= RTC_TIMER_TIE; // enable interrupt
     if (int_pulse)
         timer_reg[1] |= RTC_TIMER_TI_TP; // interrupt mode
     timer_reg[1] |= source_clock << 3;   // clock source
@@ -799,6 +806,9 @@ void System::rtcReset() // datasheet 8.2.1.3.
 
 /**
  * @brief                   Converts decimal to BCD
+ *
+ * @param                   uint8_t val
+ *                          number which needs to be converted from decimal to Bcd value
  */
 uint8_t System::rtcDecToBcd(uint8_t val)
 {
@@ -807,6 +817,9 @@ uint8_t System::rtcDecToBcd(uint8_t val)
 
 /**
  * @brief                   Converts BCD to decimal
+ *
+ * @param                   uint8_t val
+ *                          number which needs to be converted from Bcd to decimal value
  */
 uint8_t System::rtcBcdToDec(uint8_t val)
 {
