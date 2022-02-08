@@ -38,6 +38,7 @@ bool Inkplate::begin(void)
     Wire.begin();
 
 #ifndef ARDUINO_INKPLATECOLOR
+    setDisplayMode(_mode);
     for (uint32_t i = 0; i < 256; ++i)
         pinLUT[i] = ((i & B00000011) << 4) | (((i & B00001100) >> 2) << 18) | (((i & B00010000) >> 4) << 23) |
                     (((i & B11100000) >> 5) << 25);
