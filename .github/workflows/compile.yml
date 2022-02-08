@@ -39,6 +39,7 @@ jobs:
           platforms: |
             - source-url: https://github.com/e-radionicacom/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json
               name: Inkplate_Boards:esp32
+
           fqbn: ${{ matrix.board.fqbn }}
           libraries: |
             - source-path: ./
