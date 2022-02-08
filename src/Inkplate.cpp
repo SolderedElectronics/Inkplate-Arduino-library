@@ -26,7 +26,9 @@ Inkplate::Inkplate() : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_W
 Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
 #endif
 {
+#ifndef ARDUINO_INKPLATECOLOR
     setDisplayMode(_mode);
+#endif
 }
 
 /**
