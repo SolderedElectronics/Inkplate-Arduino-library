@@ -5,7 +5,7 @@
    Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how you can use Inkplate 6 to display html data.
+   This example will show you how you can use Inkplate 6COLOR to display html data.
    This example gets html data from crowdsource campaing and displays them on Inkplate screen.
 
    Want to learn more about Inkplate? Visit www.inkplate.io

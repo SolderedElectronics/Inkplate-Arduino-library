@@ -1,6 +1,6 @@
 
 #ifndef ARDUINO_INKPLATECOLOR
-#error "Please select Inkplate color from board selection"
+#error "Please select Inkplate 6COLOR from board selection"
 #endif
 
 #include "Inkplate.h"

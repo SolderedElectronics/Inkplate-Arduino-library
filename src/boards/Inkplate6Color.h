@@ -2,7 +2,7 @@
  **************************************************
  *
  * @file        InkplateColor.h
- * @brief       Basic funtions for controling inkplate color
+ * @brief       Basic funtions for controling Inkplate 6COLOR
  *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -101,7 +101,7 @@
 #define MCP23017_GPIOB    0x13
 #define MCP23017_OLATB    0x15
 
-// User pins on MCP for Inkplate COLOR
+// User pins on MCP for Inkplate 6COLOR
 #define MCP23017_PIN_A0 0
 #define MCP23017_PIN_A1 1
 #define MCP23017_PIN_A2 2

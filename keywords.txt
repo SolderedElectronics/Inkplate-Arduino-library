@@ -1,4 +1,4 @@
-# Syntax Coloring Map For Arduino-SIM800L-driver
+# Syntax Coloring Map For Arduino-Inkplate-driver
 
 # Datatypes (KEYWORD1)
 Inkplate		KEYWORD3

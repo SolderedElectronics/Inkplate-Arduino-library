@@ -12,7 +12,7 @@
 */
 
 #ifndef ARDUINO_INKPLATECOLOR
-#error "Wrong board selection for this example, please select Inkplate color in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6COLOR in the boards menu."
 #endif
 
 #include "Inkplate.h"
@@ -84,37 +84,37 @@ void setup()
     display.setTextColor(INKPLATE_BLACK);
     display.setCursor(265, 0);
     display.setTextSize(2);
-    display.print("Welcome to Inkplate Color!");
+    display.print("Welcome to Inkplate 6COLOR!");
 
     display.setTextColor(INKPLATE_WHITE);
     display.setCursor(265, 50);
     display.setTextSize(2);
-    display.print("Welcome to Inkplate Color!");
+    display.print("Welcome to Inkplate 6COLOR!");
 
     display.setTextColor(INKPLATE_GREEN);
     display.setCursor(265, 100);
     display.setTextSize(2);
-    display.print("Welcome to Inkplate Color!");
+    display.print("Welcome to Inkplate 6COLOR!");
 
     display.setTextColor(INKPLATE_BLUE);
     display.setCursor(265, 150);
     display.setTextSize(2);
-    display.print("Welcome to Inkplate Color!");
+    display.print("Welcome to Inkplate 6COLOR!");
 
     display.setTextColor(INKPLATE_RED);
     display.setCursor(265, 200);
     display.setTextSize(2);
-    display.print("Welcome to Inkplate Color!");
+    display.print("Welcome to Inkplate 6COLOR!");
 
     display.setTextColor(INKPLATE_YELLOW);
     display.setCursor(265, 250);
     display.setTextSize(2);
-    display.print("Welcome to Inkplate Color!");
+    display.print("Welcome to Inkplate 6COLOR!");
 
     display.setTextColor(INKPLATE_ORANGE);
     display.setCursor(265, 300);
     display.setTextSize(2);
-    display.print("Welcome to Inkplate Color!");
+    display.print("Welcome to Inkplate 6COLOR!");
 
     // Draw logo
     display.drawBitmap(0, 350, logo, logo_w, logo_h, INKPLATE_BLACK);
