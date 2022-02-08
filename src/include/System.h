@@ -8,10 +8,10 @@
  *              For more info about the product, please check: www.inkplate.io
  *
  *              This code is released under the GNU Lesser General Public
- *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
- *LICENSE file included with this example. If you have any questions about
- *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
- *warranty is given.
+ *              License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *              LICENSE file included with this example. If you have any questions about
+ *              licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *              warranty is given.
  *
  * @authors     @ e-radionica.com
  ***************************************************/
@@ -42,7 +42,7 @@
 #define RTC_DAY_ADDR    0x07
 #define RTC_WDAY_ADDR   0x08
 #define RTC_MONTH_ADDR  0x09
-// years 0-99; calculate real year = 1970 + RCC reg year
+// years 0-99; calculate real year = 2000 + RCC reg year
 #define RTC_YEAR_ADDR 0x0A
 // registar overview - alarm reg
 #define RTC_SECOND_ALARM 0x0B
@@ -174,7 +174,6 @@ class System : public Esp,
     uint8_t _panelOn = 0;
     int16_t _sdCardOk = 0;
     /* time variables*/
-
     uint8_t rtcHour;
     uint8_t rtcMinute;
     uint8_t rtcSecond;
