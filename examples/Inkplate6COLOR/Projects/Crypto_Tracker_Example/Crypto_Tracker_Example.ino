@@ -5,7 +5,7 @@
    Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how you can use Inkplate 6 to display API data.
+   This example will show you how you can use Inkplate 6COLOR to display API data.
    Here we use Coingecko API to get latest cryptocurrency prices and display
    them on the Inkplate screen. If you wish to change the currecny, you can
    edit it below.
@@ -21,7 +21,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATECOLOR
-#error "Wrong board selection for this example, please select Inkplate color in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6COLOR in the boards menu."
 #endif
 
 //---------- CHANGE HERE  -------------:

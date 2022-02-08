@@ -2,7 +2,7 @@
  **************************************************
  *
  * @file        InkplateColor.cpp
- * @brief       Basic funtions for controling inkplate color
+ * @brief       Basic funtions for controling Inkplate 6COLOR
  *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -239,7 +239,7 @@ void Inkplate::clean()
 }
 
 /**
- * @brief       resetPanel resets inkplate color
+ * @brief       resetPanel resets Inkplate 6COLOR
  */
 void Inkplate::resetPanel()
 {
@@ -250,7 +250,7 @@ void Inkplate::resetPanel()
 }
 
 /**
- * @brief       sendCommand sends SPI command to inkplate color
+ * @brief       sendCommand sends SPI command to Inkplate 6COLOR
  *
  * @param       uint8_t _command
  *              predefined command for epaper control
@@ -266,7 +266,7 @@ void Inkplate::sendCommand(uint8_t _command)
 }
 
 /**
- * @brief       sendData sends SPI data to inkplate color
+ * @brief       sendData sends SPI data to Inkplate 6COLOR
  *
  * @param       uint8_t *_data
  *              pointer to data buffer to be sent to epaper
@@ -284,7 +284,7 @@ void Inkplate::sendData(uint8_t *_data, int _n)
 }
 
 /**
- * @brief       sendData sends SPI data to inkplate color
+ * @brief       sendData sends SPI data to Inkplate 6COLOR
  *
  * @param       uint8_t _data
  *              data buffer to be sent to epaper
