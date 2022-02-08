@@ -24,7 +24,7 @@ jobs:
             additional-sketch-paths: |
               - examples/Inkplate6PLUS
           - board:
-              fqbn: Dasduino_Boards:esp32:Inkplatecolor
+              fqbn: Dasduino_Boards:esp32:Inkplate6COLOR
             additional-sketch-paths: |
               - examples/Inkplate6COLOR
     steps:
