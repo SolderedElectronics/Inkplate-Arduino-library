@@ -30,7 +30,7 @@
 #elif ARDUINO_INKPLATE6PLUS
 #include "../boards/Inkplate6plus.h"
 #elif ARDUINO_INKPLATECOLOR
-#include "../boards/InkplateColor.h"
+#include "../boards/Inkplate6Color.h"
 #endif
 
 #ifdef ARDUINO_INKPLATECOLOR

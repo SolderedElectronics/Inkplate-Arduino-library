@@ -1,5 +1,5 @@
 /*
-   Inkplate_easyC example for e-radionica.com Inkplate COLOR
+   Inkplate_easyC example for e-radionica.com Inkplate 6COLOR
    For this example you will need a micro USB cable, Inkplate 6COLOR,
    BME680 sensor with easyC connector on it: https://e-radionica.com/en/bme680-breakout-made-by-e-radionica.html
    and a easyC cable: https://e-radionica.com/en/easyc-cable-20cm.html
@@ -20,7 +20,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATECOLOR
-#error "Wrong board selection for this example, please select Inkplate color in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6COLOR in the boards menu."
 #endif
 
 #include "Adafruit_BME680.h" //Adafruit library for BME680 Sensor

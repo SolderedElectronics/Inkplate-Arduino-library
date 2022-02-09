@@ -14,7 +14,7 @@
 #include "Inkplate.h"
 
 #ifndef ARDUINO_INKPLATECOLOR
-#error "Wrong board selection for this example, please select Inkplate color in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6COLOR in the boards menu."
 #endif
 
 // Declare Inkplate object
