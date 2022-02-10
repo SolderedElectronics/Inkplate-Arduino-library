@@ -40,7 +40,7 @@ bool Inkplate::begin(uint8_t lightWaveform)
     if (lightWaveform)
     {
         _useLightMode = 1;
-        uint8_t alternateWaveform[8][9] = WAVEFORM3BIT_LIGHT;
+        uint8_t alternateWaveform[8][8] = WAVEFORM3BIT_LIGHT;
         memcpy(waveform3Bit, alternateWaveform, sizeof(waveform3Bit));
     }
     if (_beginDone == 1)
