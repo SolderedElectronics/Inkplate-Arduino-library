@@ -42,8 +42,10 @@ bool NetworkClient::joinAP(const char *ssid, const char *pass)
     {
         Serial.print(".");
         if (cnt > 20)
+        {
             Serial.println();
-        return 0;
+            return 0;
+        }
         delay(1000);
         ++cnt;
     }
