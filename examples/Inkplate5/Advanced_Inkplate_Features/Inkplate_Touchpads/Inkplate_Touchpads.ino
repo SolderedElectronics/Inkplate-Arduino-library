@@ -14,8 +14,7 @@
 
    In this example, if you touch first pad, ti will decrese number showed on screen, if you touch thirs touch pad,
    it will increase the number, if you touch second touchpad, it will reset number to zero.
-
-   NOTE: You can not use touch pads when enclosure is fitted on the Inkplate - they are not that sensitive!
+   Though with a bit of hacking you can get them to work!
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/

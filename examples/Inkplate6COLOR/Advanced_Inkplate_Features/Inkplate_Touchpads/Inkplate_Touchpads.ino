@@ -15,8 +15,6 @@
    In this example, if you touch first pad, ti will decrese number showed on screen, if you touch thirs touch pad,
    it will increase the number, if you touch second touchpad, it will reset number to zero.
 
-   NOTE: You can not use touch pads when enclosure is fitted on the Inkplate - they are not that sensitive!
-
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
    15 July 2020 by e-radionica.com
@@ -35,9 +33,9 @@ int n = 0;      // Variable that keeps track on how many times display is partia
 void setup()
 {
     Serial.begin(115200);
-    display.begin();                    // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay();             // Clear frame buffer of display
-    display.display();                  // Put clear image on display
+    display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
+    display.clearDisplay(); // Clear frame buffer of display
+    display.display();      // Put clear image on display
 
     display.setTextColor(INKPLATE_BLACK);
     display.setCursor(10, 10);
