@@ -4,9 +4,7 @@
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
-
    Here is shown how to use MCP and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.
-
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
    15 July 2020 by e-radionica.com
