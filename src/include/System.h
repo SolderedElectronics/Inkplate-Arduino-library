@@ -25,7 +25,6 @@
 #include "time.h"
 
 #include "Esp.h"
-#include "Mcp.h"
 #include "NetworkClient.h"
 
 #define I2C_ADDR 0x51
@@ -78,16 +77,24 @@
 #include "Touch.h"
 #endif
 
+#ifndef ARDUINO_INKPLATE2
+#include "Mcp.h"
+#endif
+
 #include "defines.h"
 
 /**
  * @brief       System class for interaction with panel harware
  */
 class System : public Esp,
+
+#ifndef ARDUINO_INKPLATE2
                virtual public Mcp,
+#endif
+
                virtual public NetworkClient
+
 #ifdef ARDUINO_INKPLATE6PLUS
-    ,
                public Touch,
                public Frontlight
 #endif
@@ -95,6 +102,8 @@ class System : public Esp,
   public:
     void setPanelState(uint8_t s);
     uint8_t getPanelState();
+
+#ifndef ARDUINO_INKPLATE2
 
     void setSdCardOk(int16_t s);
     int16_t getSdCardOk();
@@ -114,7 +123,6 @@ class System : public Esp,
     {
         return _getRotation();
     };
-
 
     enum rtcCountdownSrcClock
     {
@@ -160,6 +168,7 @@ class System : public Esp,
     uint8_t rtcGetAlarmDay();
     uint8_t rtcGetAlarmWeekday();
 
+#endif
   private:
     uint8_t rtcDecToBcd(uint8_t val);
     uint8_t rtcBcdToDec(uint8_t val);

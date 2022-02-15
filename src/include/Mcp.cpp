@@ -18,6 +18,8 @@
 
 #include "Mcp.h"
 
+#ifndef ARDUINO_INKPLATE2
+
 // LOW LEVEL:
 
 /**
@@ -567,3 +569,5 @@ uint16_t Mcp::getPortsInternal(uint8_t _addr, uint8_t *_r)
     readMCPRegisters(_addr, MCP23017_GPIOA, _r, 2);
     return ((_r[MCP23017_GPIOB] << 8) | (_r[MCP23017_GPIOA]));
 }
+
+#endif

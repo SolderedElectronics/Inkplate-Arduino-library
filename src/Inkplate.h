@@ -38,7 +38,7 @@ extern SdFat sd;
 class Inkplate : public System, public Graphics
 {
   public:
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
     Inkplate();
 #else
     Inkplate(uint8_t _mode);
@@ -55,7 +55,7 @@ class Inkplate : public System, public Graphics
     // void writeRow(uint8_t data);
     uint32_t partialUpdate(bool _forced = false, bool leaveOn = false);
 
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR)
     void clean();
 
     // These 4 functions need to refactored because conflicting functionalities
@@ -65,6 +65,14 @@ class Inkplate : public System, public Graphics
     bool getPanelDeepSleepState();
 
     void setMCPForLowPower();
+#elif defined(ARDUINO_INKPLATE2)
+    void clean();
+
+    // These 4 functions need to refactored because conflicting functionalities
+    void setPanelState(bool _state);
+    bool getPanelState();
+    void setPanelDeepSleep(bool _state);
+    bool getPanelDeepSleepState();
 #else
     int einkOn();
     void einkOff();
@@ -93,7 +101,7 @@ class Inkplate : public System, public Graphics
   private:
     void precalculateGamma(uint8_t *c, float gamma);
 
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
     bool _panelState = false;
 
     void resetPanel();
@@ -123,6 +131,10 @@ class Inkplate : public System, public Graphics
 
 #ifdef WAVEFORM3BIT
     uint8_t waveform3Bit[8][9] = WAVEFORM3BIT;
+#endif
+
+#ifdef ARDUINO_INKPLATE2
+    bool waitForEpd(uint16_t _timeout);
 #endif
 };
 
