@@ -92,7 +92,7 @@ class System : public Esp,
                virtual public Mcp,
 #endif
 
-               virtual public NetworkClient
+               virtual public NetworkClient,
 
 #ifdef ARDUINO_INKPLATE6PLUS
                public Touch,
