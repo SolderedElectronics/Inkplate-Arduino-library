@@ -98,6 +98,8 @@ class System : public Esp,
                public Touch,
                public Frontlight
 #endif
+
+
 {
   public:
     void setPanelState(uint8_t s);
