@@ -24,7 +24,7 @@
 #define E_INK_HEIGHT 825
 
 #define MCP23017_INT_ADDR      0x20
-#define MCP23017_EXT_ADDR      0x22
+#define MCP23017_EXT_ADDR      0x21
 #define MCP23017_INT_PORTA     0x00
 #define MCP23017_INT_PORTB     0x01
 #define MCP23017_INT_NO_MIRROR false
