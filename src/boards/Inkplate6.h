@@ -39,7 +39,7 @@
 #define MCP23017_GPIOB    0x13
 
 #define MCP23017_INT_ADDR 0x20
-#define MCP23017_EXT_ADDR 0x21
+#define MCP23017_EXT_ADDR 0x20
 
 // User pins on MCP for Inkplate 6
 // Do not use others(0-8) cause they can permanently damage your screen
