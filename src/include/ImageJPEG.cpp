@@ -165,7 +165,7 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position,
     }
 
     uint16_t posX, posY;
-    getPointsForPosition(position, w, h, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
+    getPointsForPosition(position, w, h, width(), height(), &posX, &posY);
 
     ret = drawJpegFromBuffer(buff, defaultLen, posX, posY, dither, invert);
     free(buff);
@@ -236,7 +236,7 @@ bool Image::drawJpegFromSdAtPosition(const char *fileName, const Position &posit
         return 0;
     }
 
-    getPointsForPosition(position, w, h, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
+    getPointsForPosition(position, w, h, width(), height(), &posX, &posY);
 
     if (TJpgDec.drawJpg(posX, posY, buff, total, dither, invert) == 0)
         ret = 1;
