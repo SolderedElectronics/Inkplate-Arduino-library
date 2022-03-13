@@ -50,8 +50,8 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
 {
     if (_pngPosition != Image::_npos)
     {
-        _imagePtrPng->getPointsForPosition(_pngPosition, pngle_get_width(pngle), pngle_get_height(pngle), E_INK_WIDTH,
-                                           E_INK_HEIGHT, &_pngX, &_pngY);
+        _imagePtrPng->getPointsForPosition(_pngPosition, pngle_get_width(pngle), pngle_get_height(pngle),
+                                           _imagePtrPng->width(), _imagePtrPng->height(), &_pngX, &_pngY);
         lastY = _pngY;
         _pngPosition = Image::_npos;
     }
