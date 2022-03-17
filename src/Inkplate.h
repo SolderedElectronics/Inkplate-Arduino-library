@@ -32,6 +32,17 @@
 extern SPIClass spi2;
 extern SdFat sd;
 
+#ifdef ARDUINO_INKPLATE10
+struct waveformData
+{
+    uint8_t header = 'W';
+    uint8_t waveformId;
+    uint8_t waveform[8][9];
+    uint8_t temp = 20;
+    uint8_t checksum;
+};
+#endif
+
 /**
  * @brief       Base class for inkplate functionalities
  */
@@ -45,10 +56,12 @@ class Inkplate : public System, public Graphics
 #endif
 
 #ifdef ARDUINO_INKPLATE10
-    bool begin(uint8_t lightWaveform = 0); // Special case for Inkplate10
-#else
-    bool begin(void); // In boards
+    void changeWaveform(uint8_t *_wf);
+    uint8_t calculateChecksum(struct waveformData _w);
+    bool getWaveformFromEEPROM(struct waveformData *_w);
+    void burnWaveformToEEPROM(struct waveformData _w);
 #endif
+    bool begin(void); // In boards
 
     void clearDisplay();
     void display(bool leaveOn = false);
@@ -109,6 +122,10 @@ class Inkplate : public System, public Graphics
     void sendData(uint8_t *_data, int _n);
     void sendData(uint8_t _data);
 #else
+
+#ifdef ARDUINO_INKPLATE10
+    void calculateLUTs();
+#endif
     void display1b(bool leaveOn = false);
     void display3b(bool leaveOn = false);
 
@@ -126,7 +143,7 @@ class Inkplate : public System, public Graphics
     uint8_t _beginDone = 0;
 
 #ifdef ARDUINO_INKPLATE10
-    uint8_t _useLightMode = 0;
+    struct waveformData waveformEEPROM;
 #endif
 
 #ifdef WAVEFORM3BIT

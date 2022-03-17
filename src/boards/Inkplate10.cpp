@@ -20,6 +20,7 @@
 #include "../Inkplate.h"
 #include "../include/Graphics.h"
 #include "../include/defines.h"
+#include "EEPROM.h"
 
 #ifdef ARDUINO_INKPLATE10
 
@@ -35,18 +36,27 @@
  * @return      True if initialization is successful, false if failed or already
  * initialized
  */
-bool Inkplate::begin(uint8_t lightWaveform)
+bool Inkplate::begin()
 {
-    if (lightWaveform)
-    {
-        _useLightMode = 1;
-        uint8_t alternateWaveform[8][8] = WAVEFORM3BIT_LIGHT;
-        memcpy(waveform3Bit, alternateWaveform, sizeof(waveform3Bit));
-    }
     if (_beginDone == 1)
         return 0;
-
     Wire.begin();
+    EEPROM.begin(512);
+
+    if (!getWaveformFromEEPROM(&waveformEEPROM) || waveformEEPROM.waveformId < INKPLATE10_WAVEFORM1 ||
+        waveformEEPROM.waveformId > INKPLATE10_WAVEFORM3)
+    {
+        Serial.println("Wavefrom load failed! Upload new waveform in EEPROM. Using default waveform.");
+        uint8_t defaultWaveform[8][9] = {{0, 0, 0, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 2, 2, 2, 1, 1, 0},
+                                         {0, 0, 2, 1, 1, 2, 2, 1, 0}, {0, 1, 2, 2, 1, 2, 2, 1, 0},
+                                         {0, 0, 2, 1, 2, 2, 2, 1, 0}, {0, 2, 2, 2, 2, 2, 2, 1, 0},
+                                         {0, 0, 0, 0, 0, 2, 1, 2, 0}, {0, 0, 0, 2, 2, 2, 2, 2, 0}};
+        memcpy(waveform3Bit, defaultWaveform, sizeof(waveform3Bit));
+    }
+    else
+    {
+        memcpy(waveform3Bit, waveformEEPROM.waveform, sizeof(waveform3Bit));
+    }
 
 #ifndef ARDUINO_INKPLATECOLOR
     for (uint32_t i = 0; i < 256; ++i)
@@ -143,18 +153,7 @@ bool Inkplate::begin(uint8_t lightWaveform)
     memset(_pBuffer, 0, E_INK_WIDTH * E_INK_HEIGHT / 4);
     memset(DMemory4Bit, 255, E_INK_WIDTH * E_INK_HEIGHT / 2);
 
-    for (int j = 0; j < 8; ++j)
-    {
-        for (uint32_t i = 0; i < 256; ++i)
-        {
-            uint8_t z = (waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j]);
-            GLUT[j * 256 + i] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
-                                (((z & B00010000) >> 4) << 23) | (((z & B11100000) >> 5) << 25);
-            z = ((waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j])) << 4;
-            GLUT2[j * 256 + i] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
-                                 (((z & B00010000) >> 4) << 23) | (((z & B11100000) >> 5) << 25);
-        }
-    }
+    calculateLUTs();
 
     _beginDone = 1;
     return 1;
@@ -234,7 +233,7 @@ void Inkplate::display1b(bool leaveOn)
     if (!einkOn())
         return;
 
-    if (_useLightMode)
+    if (waveformEEPROM.waveformId != INKPLATE10_WAVEFORM1)
     {
         clean(0, 1);
         clean(1, 12);
@@ -312,7 +311,7 @@ void IRAM_ATTR Inkplate::display3b(bool leaveOn)
     if (!einkOn())
         return;
 
-    if (_useLightMode)
+    if (waveformEEPROM.waveformId != INKPLATE10_WAVEFORM1)
     {
         clean(1, 1);
         clean(0, 7);
@@ -335,7 +334,7 @@ void IRAM_ATTR Inkplate::display3b(bool leaveOn)
         clean(1, 10);
     }
 
-    for (int k = 0; k < 8; k++)
+    for (int k = 0; k < 9; k++)
     {
         uint8_t *dp = DMemory4Bit + (E_INK_HEIGHT * E_INK_WIDTH / 2);
 
@@ -436,7 +435,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
     if (!einkOn())
         return 0;
 
-    if (_useLightMode)
+    if (waveformEEPROM.waveformId != INKPLATE10_WAVEFORM1)
     {
         _repeat = 4;
     }
@@ -568,6 +567,94 @@ void Inkplate::einkOff()
 
     pinsZstate();
     setPanelState(0);
+}
+
+/**
+ * @brief       Function allows grayscale waveform to be changed
+ *
+ * @param       uint8_t *_wf
+ *              Waveform array with 8 rows where every row represents one color and 9 columns where every column
+ * represents one phase or frame of each color.
+ */
+void Inkplate::changeWaveform(uint8_t *_wf)
+{
+    memcpy(waveform3Bit, _wf, sizeof(waveform3Bit));
+    calculateLUTs();
+}
+
+/**
+ * @brief       Calculation of LUTs for fast conversion pixels to waveform
+ */
+void Inkplate::calculateLUTs()
+{
+    for (int j = 0; j < 9; ++j)
+    {
+        for (uint32_t i = 0; i < 256; ++i)
+        {
+            uint8_t z = (waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j]);
+            GLUT[j * 256 + i] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
+                                (((z & B00010000) >> 4) << 23) | (((z & B11100000) >> 5) << 25);
+            z = ((waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j])) << 4;
+            GLUT2[j * 256 + i] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
+                                 (((z & B00010000) >> 4) << 23) | (((z & B11100000) >> 5) << 25);
+        }
+    }
+}
+
+/**
+ * @brief       Function calculates checksum of wavefrom data read from EEPROM
+ *
+ * @param       struct waveformData _w
+ *              Structure for waveform data read from EEPROM. Struct can be found in Inkplate.h file
+ *
+ * @return      Value of checksum from data read from EEPROM
+ */
+uint8_t Inkplate::calculateChecksum(struct waveformData _w)
+{
+    uint8_t *_d = (uint8_t *)&_w;
+    uint16_t _sum = 0;
+    int _n = sizeof(struct waveformData) - 1;
+
+    for (int i = 0; i < _n; i++)
+    {
+        _sum += _d[i];
+    }
+    return _sum % 256;
+}
+
+/**
+ * @brief       Function reads waveform data from EEPROM and checks it's validity.
+ *
+ * @param       struct waveformData *_w
+ *              Pointer to structure for waveform data read from EEPROM. Struct can be found in Inkplate.h file
+ *
+ * @return      True if data is vaild, false if not
+ */
+bool Inkplate::getWaveformFromEEPROM(struct waveformData *_w)
+{
+    uint8_t *_ptr = (uint8_t *)_w;
+    for (int i = 0; i < sizeof(struct waveformData); i++)
+    {
+        _ptr[i] = EEPROM.read(i);
+    }
+
+    return (calculateChecksum(*_w) != _w->checksum) ? false : true;
+}
+
+/**
+ * @brief       Function writes waveform data to EEPROM
+ *
+ * @param       struct waveformData *_w
+ *              Structure for waveform data read from EEPROM. Struct can be found in Inkplate.h file
+ */
+void Inkplate::burnWaveformToEEPROM(struct waveformData _w)
+{
+    uint8_t *_ptr = (uint8_t *)&_w;
+    for (int i = 0; i < sizeof(struct waveformData); i++)
+    {
+        EEPROM.write(i, _ptr[i]);
+    }
+    EEPROM.commit();
 }
 
 #endif

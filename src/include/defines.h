@@ -35,6 +35,12 @@
 #include "../boards/Inkplate2.h"
 #endif
 
+#define INKPLATE6_WAVEFORM1         0
+#define INKPLATE10_WAVEFORM1        20
+#define INKPLATE10_WAVEFORM2        21
+#define INKPLATE10_WAVEFORM3        22
+#define INKPLATE6PLUS_WAVEFORM1     40
+
 #ifdef ARDUINO_INKPLATECOLOR
 
 #define BLACK 0
