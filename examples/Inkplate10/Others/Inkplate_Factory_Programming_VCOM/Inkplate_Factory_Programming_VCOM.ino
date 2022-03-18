@@ -6,7 +6,10 @@
 Inkplate display(INKPLATE_1BIT);
 
 double vcomVoltage;
-int EEPROMaddress = 0;
+
+// EEPROMOffset must be between 0 and 20
+const int EEPROMOffset = 0;
+int EEPROMaddress = sizeof(waveformData) + EEPROMOffset;
 
 // Peripheral mode variables and arrays
 #define BUFFER_SIZE 1000
@@ -19,14 +22,35 @@ const char *testString = {"This is some test string..."};
 // Internal registers of MCP
 uint8_t mcpRegsInt[22];
 
+// All waveforms for Inkplate 10 boards
+uint8_t waveform1[8][9] = {{0, 0, 0, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 2, 2, 2, 1, 1, 0}, {0, 0, 2, 1, 1, 2, 2, 1, 0},
+                           {0, 1, 2, 2, 1, 2, 2, 1, 0}, {0, 0, 2, 1, 2, 2, 2, 1, 0}, {0, 2, 2, 2, 2, 2, 2, 1, 0},
+                           {0, 0, 0, 0, 0, 2, 1, 2, 0}, {0, 0, 0, 2, 2, 2, 2, 2, 0}};
+uint8_t waveform2[8][9] = {{0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 2, 1, 2, 1, 1, 0}, {0, 0, 0, 2, 2, 1, 2, 1, 0},
+                           {0, 0, 2, 2, 1, 2, 2, 1, 0}, {0, 0, 0, 2, 1, 1, 1, 2, 0}, {0, 0, 2, 2, 2, 1, 1, 2, 0},
+                           {0, 0, 0, 0, 0, 1, 2, 2, 0}, {0, 0, 0, 0, 2, 2, 2, 2, 0}};
+uint8_t waveform3[8][9] = {{0, 3, 3, 3, 3, 3, 3, 3, 0}, {0, 1, 2, 1, 1, 2, 2, 1, 0}, {0, 2, 2, 2, 1, 2, 2, 1, 0},
+                           {0, 0, 2, 2, 2, 2, 2, 1, 0}, {0, 3, 3, 2, 1, 1, 1, 2, 0}, {0, 3, 3, 2, 2, 1, 1, 2, 0},
+                           {0, 2, 1, 2, 1, 2, 1, 2, 0}, {0, 3, 3, 3, 2, 2, 2, 2, 0}};
+uint8_t *waveformList[] = {&waveform1[0][0], &waveform2[0][0], &waveform3[0][0]};
+
+// Calculate number of possible waveforms
+uint8_t waveformListSize = (sizeof(waveformList) / sizeof(uint8_t *));
+
+// Struct for reading waveform from EEPROM memory of ESP32
+struct waveformData waveformEEPROM;
+
+int currentWaveform = 0;
+
 void setup()
 {
-    display.begin();
     Serial.begin(115200);
-    EEPROM.begin(64);
+    display.begin();
+    EEPROM.begin(512);
 
-    vcomVoltage = -1.19;
+    vcomVoltage = -1.3;
 
+    // Check if VCOM and waveform programming is not already done
     if (EEPROM.read(EEPROMaddress) != 170)
     {
         microSDCardTest();
@@ -34,21 +58,53 @@ void setup()
         writeVCOMToEEPROM(vcomVoltage);
         EEPROM.write(EEPROMaddress, 170);
         EEPROM.commit();
-        display.selectDisplayMode(INKPLATE_1BIT);
+        display.selectDisplayMode(INKPLATE_3BIT);
+
+        // Display all shades of gray on epaper with first waveform
+        showGradient(currentWaveform);
+
+        // Until "Load" key is not pressed, user can select one of the waveforms
+        while (!display.readTouchpad(PAD2))
+        {
+            // Select and show next waveform
+            if (display.readTouchpad(PAD3))
+            {
+                currentWaveform++;
+                if (currentWaveform > waveformListSize - 1)
+                    currentWaveform = 0;
+                showGradient(currentWaveform);
+            }
+
+            // Select and show prev. waveform
+            if (display.readTouchpad(PAD1))
+            {
+                currentWaveform--;
+                if (currentWaveform < 0)
+                    currentWaveform = waveformListSize - 1;
+                showGradient(currentWaveform);
+            }
+        }
+
+        // Load waveform in EEPROM memory of ESP32
+        waveformEEPROM.waveformId = INKPLATE10_WAVEFORM1 + currentWaveform;
+        memcpy(&waveformEEPROM.waveform, waveformList[currentWaveform], sizeof(waveformEEPROM.waveform));
+        waveformEEPROM.checksum = display.calculateChecksum(waveformEEPROM);
+        display.burnWaveformToEEPROM(waveformEEPROM);
     }
     else
     {
-        Serial.println("Vcom already set!");
-        // vcomVoltage = (double)EEPROM.read(EEPROMaddress) / 100;
+        Serial.println("Vcom and waveform already set!");
+        display.einkOn();
+        vcomVoltage = (double)(readReg(0x03) | ((uint16_t)(readReg(0x04 & 1) << 8))) / -100;
+        display.getWaveformFromEEPROM(&waveformEEPROM) ? waveformEEPROM.waveformId : -1;
     }
     memset(commandBuffer, 0, BUFFER_SIZE);
 
-    showSplashScreen();
+    showSplashScreen(waveformEEPROM);
 }
 
 void loop()
 {
-
     if (Serial.available())
     {
         while (Serial.available())
@@ -396,9 +452,9 @@ uint8_t readReg(uint8_t _reg)
     return Wire.read();
 }
 
-void showSplashScreen()
+void showSplashScreen(struct waveformData _w)
 {
-    display.clean(0, 1);
+    display.clearDisplay();
     display.display();
     display.selectDisplayMode(INKPLATE_3BIT);
     display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
@@ -407,6 +463,9 @@ void showSplashScreen()
     display.setCursor(10, 10);
     display.print(vcomVoltage, 2);
     display.print("V");
+    display.setCursor(10, 20);
+    display.print("Waveform");
+    display.print(_w.waveformId - 20 + 1, DEC);
     display.display();
 }
 
@@ -559,7 +618,35 @@ void microSDCardTest()
     {
         display.print("FAIL!");
         display.display();
-        while(1);
+        while (1)
+            ;
     }
     display.clearDisplay();
+}
+
+void showGradient(int _selected)
+{
+    int w = display.width() / 8;
+    int h = display.height() - 100;
+
+    display.changeWaveform(waveformList[currentWaveform]);
+
+    display.fillRect(0, 725, 1200, 100, 7);
+
+    display.setTextSize(4);
+    display.setTextColor(0);
+    display.setCursor(420, 743);
+    display.print("Waveform select");
+    display.setCursor(432, 792);
+    display.print("Prev Load Next");
+
+    display.setCursor(800, 743);
+    display.print("1 2 3");
+    display.drawRect((_selected * 6 * 4 * 2) + 800 - 3, 740, (6 * 4) + 2, (8 * 4) + 2, 0);
+
+    for (int i = 0; i < 8; i++)
+    {
+        display.fillRect(i * w, 0, w, h, i);
+    }
+    display.display();
 }

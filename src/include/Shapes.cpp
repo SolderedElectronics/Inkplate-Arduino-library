@@ -228,3 +228,18 @@ void Shapes::drawGradientLine(int x1, int y1, int x2, int y2, int color1, int co
                           thickness);
     }
 }
+
+#ifdef ARDUINO_INKPLATE2
+
+// Function writes text with shadow
+void Shapes::drawTextWithShadow(int x, int y, const char *_c, uint8_t _color1, uint8_t color2)
+{
+    setTextColor(_color1);
+    setCursor(x, y);
+    print(_c);
+    setTextColor(color2);
+    setCursor(x + 1, y + 1);
+    print(_c);
+}
+
+#endif

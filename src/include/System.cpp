@@ -17,6 +17,7 @@
  ***************************************************/
 
 #include "System.h"
+#include "Wire.h"
 
 SPIClass spi2(HSPI);
 SdFat sd(&spi2);
@@ -41,6 +42,8 @@ uint8_t System::getPanelState()
 {
     return _panelOn;
 }
+
+#ifndef ARDUINO_INKPLATE2
 
 /**
  * @brief       readTemperature reads panel temperature
@@ -825,3 +828,5 @@ uint8_t System::rtcBcdToDec(uint8_t val)
 {
     return ((val / 16 * 10) + (val % 16));
 }
+
+#endif

@@ -31,7 +31,15 @@
 #include "../boards/Inkplate6plus.h"
 #elif ARDUINO_INKPLATECOLOR
 #include "../boards/Inkplate6Color.h"
+#elif ARDUINO_INKPLATE2
+#include "../boards/Inkplate2.h"
 #endif
+
+#define INKPLATE6_WAVEFORM1     0
+#define INKPLATE10_WAVEFORM1    20
+#define INKPLATE10_WAVEFORM2    21
+#define INKPLATE10_WAVEFORM3    22
+#define INKPLATE6PLUS_WAVEFORM1 40
 
 #ifdef ARDUINO_INKPLATECOLOR
 
@@ -99,9 +107,10 @@
 #define READ16(c)     (uint16_t)(*(c) | (*((c) + 1) << 8))
 #define ROWSIZE(w, c) (((int16_t)c * w + 31) >> 5) << 2
 
-#define RED(a)   ((((a)&0xf800) >> 11) << 3)
-#define GREEN(a) ((((a)&0x07e0) >> 5) << 2)
-#define BLUE(a)  (((a)&0x001f) << 3)
+#define _RED(a)   ((((a)&0xf800) >> 11) << 3)
+#define _GREEN(a) ((((a)&0x07e0) >> 5) << 2)
+#define _BLUE(a)  (((a)&0x001f) << 3)
+
 
 #define RED8(a)   (((a) >> 16) & 0xff)
 #define GREEN8(a) (((a) >> 8) & 0xff)

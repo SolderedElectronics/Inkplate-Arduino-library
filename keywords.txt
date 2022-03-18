@@ -56,7 +56,9 @@ getCursorY			KEYWORD2
 touchInArea         KEYWORD2
 setFrontlight       KEYWORD2
 frontlight          KEYWORD2
-setTextColor			KEYWORD2
+setTextColor		KEYWORD2
+setPanelDeepSleep   KEYWORD2
+drawTextWithShadow  KEYWORD2
 
 # Instances (KEYWORD2)
 

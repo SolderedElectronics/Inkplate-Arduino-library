@@ -19,14 +19,14 @@
 
 #include "Inkplate.h"
 
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
 Inkplate::Inkplate() : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
 #else
 
 Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
 #endif
 {
-#ifndef ARDUINO_INKPLATECOLOR
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
     setDisplayMode(_mode);
 #endif
 }
@@ -39,8 +39,10 @@ Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Gra
  */
 void Inkplate::clearDisplay()
 {
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR)
     memset(DMemory4Bit, WHITE << 4 | WHITE, E_INK_WIDTH * E_INK_HEIGHT / 2);
+#elif defined(ARDUINO_INKPLATE2)
+    memset(DMemory4Bit, 255, E_INK_WIDTH * E_INK_HEIGHT / 4);
 #else
     // Clear 1 bit per pixel display buffer
     if (getDisplayMode() == 0)
@@ -52,7 +54,7 @@ void Inkplate::clearDisplay()
 #endif
 }
 
-#ifndef ARDUINO_INKPLATECOLOR
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
 
 /**
  * @brief       display function update display with new data from buffer

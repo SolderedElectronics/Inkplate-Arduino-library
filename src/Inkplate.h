@@ -32,30 +32,43 @@
 extern SPIClass spi2;
 extern SdFat sd;
 
+#ifdef ARDUINO_INKPLATE10
+struct waveformData
+{
+    uint8_t header = 'W';
+    uint8_t waveformId;
+    uint8_t waveform[8][9];
+    uint8_t temp = 20;
+    uint8_t checksum;
+};
+#endif
+
 /**
  * @brief       Base class for inkplate functionalities
  */
 class Inkplate : public System, public Graphics
 {
   public:
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
     Inkplate();
 #else
     Inkplate(uint8_t _mode);
 #endif
 
 #ifdef ARDUINO_INKPLATE10
-    bool begin(uint8_t lightWaveform = 0); // Special case for Inkplate10
-#else
-    bool begin(void); // In boards
+    void changeWaveform(uint8_t *_wf);
+    uint8_t calculateChecksum(struct waveformData _w);
+    bool getWaveformFromEEPROM(struct waveformData *_w);
+    void burnWaveformToEEPROM(struct waveformData _w);
 #endif
+    bool begin(void); // In boards
 
     void clearDisplay();
     void display(bool leaveOn = false);
     // void writeRow(uint8_t data);
     uint32_t partialUpdate(bool _forced = false, bool leaveOn = false);
 
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR)
     void clean();
 
     // These 4 functions need to refactored because conflicting functionalities
@@ -65,6 +78,14 @@ class Inkplate : public System, public Graphics
     bool getPanelDeepSleepState();
 
     void setMCPForLowPower();
+#elif defined(ARDUINO_INKPLATE2)
+    void clean();
+
+    // These 4 functions need to refactored because conflicting functionalities
+    void setPanelState(bool _state);
+    bool getPanelState();
+    void setPanelDeepSleep(bool _state);
+    bool getPanelDeepSleepState();
 #else
     int einkOn();
     void einkOff();
@@ -93,7 +114,7 @@ class Inkplate : public System, public Graphics
   private:
     void precalculateGamma(uint8_t *c, float gamma);
 
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
     bool _panelState = false;
 
     void resetPanel();
@@ -101,6 +122,10 @@ class Inkplate : public System, public Graphics
     void sendData(uint8_t *_data, int _n);
     void sendData(uint8_t _data);
 #else
+
+#ifdef ARDUINO_INKPLATE10
+    void calculateLUTs();
+#endif
     void display1b(bool leaveOn = false);
     void display3b(bool leaveOn = false);
 
@@ -118,11 +143,15 @@ class Inkplate : public System, public Graphics
     uint8_t _beginDone = 0;
 
 #ifdef ARDUINO_INKPLATE10
-    uint8_t _useLightMode = 0;
+    struct waveformData waveformEEPROM;
 #endif
 
 #ifdef WAVEFORM3BIT
     uint8_t waveform3Bit[8][9] = WAVEFORM3BIT;
+#endif
+
+#ifdef ARDUINO_INKPLATE2
+    bool waitForEpd(uint16_t _timeout);
 #endif
 };
 

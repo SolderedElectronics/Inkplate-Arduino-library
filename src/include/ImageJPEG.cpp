@@ -352,7 +352,7 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
             uint32_t rgb = bitmap[j * w + i];
             uint32_t val;
 
-            uint8_t r = RED(rgb), g = GREEN(rgb), b = BLUE(rgb);
+            uint8_t r = _RED(rgb), g = _GREEN(rgb), b = _BLUE(rgb);
 
 #ifdef ARDUINO_INKPLATECOLOR
             if (invert)

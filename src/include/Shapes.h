@@ -41,6 +41,10 @@ class Shapes : virtual public Adafruit_GFX
     virtual uint8_t getDisplayMode() = 0;
 #endif
 
+#ifdef ARDUINO_INKPLATE2
+    void drawTextWithShadow(int x, int y, const char *_c, uint8_t _color1, uint8_t color2);
+#endif
+
     void drawElipse(int rx, int ry, int xc, int yc, int c);
     void fillElipse(int rx, int ry, int xc, int yc, int c);
     void drawPolygon(int *x, int *y, int n, int color);
