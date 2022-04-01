@@ -42,7 +42,7 @@ void setup()
   { // Init. BME680 library. e-radionica.com BME680 sensor board uses 0x76 I2C address for sensor
     display.println("Sensor init failed!");
     display.println("Check sensor wiring/connection!");
-    display.partialUpdate();
+    display.display();
     while (1)
       ;
   }
