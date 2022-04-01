@@ -1,7 +1,7 @@
 /*
-   Inkplate_Web_Server example for e-radionica.com Inkplate 6
-   For this example you will need a micro USB cable, Inkplate 6 and a device with WiFi and Internet brower (PC, Laptop,
-   Smartphone, ...). Select "Inkplate 6(ESP32)" from Tools -> Board menu. Don't have "Inkplate 6(ESP32)" option? Follow
+   Inkplate_Web_Server example for e-radionica.com Inkplate 2
+   For this example you will need a micro USB cable, Inkplate 2 and a device with WiFi and Internet brower (PC, Laptop,
+   Smartphone, ...). Select "Inkplate 2(ESP32)" from Tools -> Board menu. Don't have "Inkplate 2(ESP32)" option? Follow
    our tutorial and add it: https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can use Inkplate as a small and simple standlone Web Server.
@@ -15,12 +15,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   29 March 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
 #endif
 
 #include "Inkplate.h"   //Include Inkplate library to the sketch
@@ -33,7 +33,7 @@
 #define ssid "Inkplate"
 #define pass "e-radionica"
 
-Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 WebServer server(80);            // Create Web server on port 80 (HTTP port number)
 
 IPAddress serverIP;
@@ -59,7 +59,7 @@ void setup()
               handleString); // If you send some text to Inkplate, go to handleString function. Note that {} brackets at
                              // the end of address. That means that web address has some arguments (our text!).
     server.begin();          // Start the web server
-    updatePaper();
+    printInfo();
 }
 
 void loop()
@@ -82,27 +82,38 @@ void handleString()
   // address and refresh screen with new text
     txt = server.arg(0);
     updateHTML();
-    updatePaper();
+    printText();
 }
 
-void updatePaper()
+void printInfo()
 {                              // This function updates screen with new data (text)
     display.clearDisplay();    // Clear everything from epaper frame buffer
-    display.setCursor(20, 40); // Print out instruction on how to connect to Inkplate WiFi and how to open a web page
+    display.setTextSize(1);             // Scale text to original size (5x7 px)
+    display.setCursor(10, 10); // Print out instruction on how to connect to Inkplate WiFi and how to open a web page
+    display.setTextColor(BLACK,WHITE);
     display.print("Connect to ");
     display.print(ssid);
     display.println(" WiFi with pass: ");
-    display.setCursor(240, 100);
+    display.setCursor(10, 30);
     display.println(pass);
-    display.setCursor(100, 150);
+    display.setCursor(10, 50);
     display.print("Open Your web browser and open");
-    display.setCursor(240, 210);
+    display.setCursor(10, 70);
     display.print("http://");
     display.print(serverIP);
     display.println('/');
-    display.println();
-    display.fillRect(10, 240, 780, 4, BLACK);
-    display.println("User text:"); // Print out what user typed in web page
-    display.print(txt);
-    display.display(); // Send everything to screen (refresh the screen)
+    display.display();
+}
+
+void printText()
+{
+  display.setTextSize(1);   // Scale text to an original size (5x7 px)
+  display.clearDisplay();
+  display.setTextColor(BLACK,WHITE);
+  display.setCursor(5,5);
+  display.println("User text:"); // Print out what user typed in web page
+  display.setTextSize(2);             // Scale text to two times of original size (5x7 px)
+  display.setTextColor(RED,WHITE);
+  display.print(txt);
+ display.display(); // Send everything to screen (refresh the screen)
 }

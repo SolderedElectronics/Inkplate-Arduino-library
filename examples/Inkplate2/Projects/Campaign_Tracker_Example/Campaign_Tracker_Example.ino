@@ -2,7 +2,7 @@
    Campaing tracker example for e-radionica.com Inkplate 2
    For this example you will need only USB cable and Inkplate 2.
    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Don't have "Inkplate 2 (ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can use Inkplate 6 to display html data.
@@ -10,7 +10,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   28 July 2020 by e-radionica.com
+   30 March 2022 by Soldered
 */
 
 #include "Inkplate.h"

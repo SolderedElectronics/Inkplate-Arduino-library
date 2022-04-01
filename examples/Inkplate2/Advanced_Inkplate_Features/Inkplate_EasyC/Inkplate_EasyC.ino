@@ -15,12 +15,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   28 March 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
 #endif
 
 #include "Adafruit_BME680.h" //Adafruit library for BME680 Sensor
@@ -71,28 +71,28 @@ void loop()
     display.clearDisplay(); // Print out new data
     display.setCursor(0, 0);
     display.print("Air temperature: ");
-    //display.print(bme.temperature);
+    display.print(bme.temperature);
     display.println(" *C");
 
     display.setTextColor(RED);
 
     display.setCursor(0, 25);
     display.print("Air pressure: ");
-    //display.print(bme.pressure / 100.0);
+    display.print(bme.pressure / 100.0);
     display.println(" hPa");
 
     display.setTextColor(BLACK);
 
     display.setCursor(0, 50);
     display.print("Air humidity: ");
-    //display.print(bme.humidity);
+    display.print(bme.humidity);
     display.println(" %");
 
     display.setTextColor(RED);
 
     display.setCursor(0, 75);
     display.print("Gas sensor resistance: ");
-    //display.print(bme.gas_resistance / 1000.0);
+    display.print(bme.gas_resistance / 1000.0);
     display.println(" kOhms");
 
     display.display();

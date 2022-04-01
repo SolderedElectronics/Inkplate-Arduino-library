@@ -1,11 +1,11 @@
 /*
-   Weather station example for e-radionica.com Inkplate 6
-   For this example you will need only USB cable and Inkplate 6.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Weather station example for e-radionica.com Inkplate 2
+   For this example you will need only USB cable and Inkplate 2.
+   Select "Inkplate 2(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how you can use Inkplate 6 to display API data,
+   This example will show you how you can use Inkplate 2 to display API data,
    e.g. Metaweather public weather API
 
    IMPORTANT:
@@ -14,7 +14,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   28 July 2020 by e-radionica.com
+   30 March 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -31,8 +31,8 @@ int timeZone = 2;
 char city[128] = "ZAGREB";
 
 // Change to your wifi ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // ----------------------------------
 

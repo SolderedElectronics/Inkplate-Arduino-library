@@ -5,7 +5,7 @@
    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how you can use Inkplate 6 to display API data,
+   This example will show you how you can use Inkplate 2 to display API data,
    e.g. Metaweather public weather API, and weatherstack for real time data
 
    IMPORTANT:
@@ -35,15 +35,15 @@ char lon[] = "18.5947808";
 char lat[] = "45.5510548";
 
 // Change to your wifi ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "bf11bcaae795116ccc21beec25850aa0";
+char apiKey[] = "";
 
 //----------------------------------
 

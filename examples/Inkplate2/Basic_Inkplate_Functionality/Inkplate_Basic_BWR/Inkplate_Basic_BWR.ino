@@ -1,8 +1,8 @@
 /*
-   Basic_monochorme example for e-radionica.com Inkplate 6
-   For this example you will need only USB cable and Inkplate 6.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Basic_monochorme example for e-radionica.com Inkplate 2
+   For this example you will need only USB cable and Inkplate 2.
+   Select "Inkplate 2(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can draw some simple graphics using
@@ -11,7 +11,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   30 March 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
