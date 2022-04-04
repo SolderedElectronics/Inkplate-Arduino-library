@@ -30,8 +30,8 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
 
 // OPTIONAL:
 // change to a different currency
@@ -64,12 +64,6 @@ Inkplate display;
 
 // Delay between API calls in miliseconds
 #define DELAY_MS 3 * 60 * 1000
-
-// Variable for counting partial refreshes
-RTC_DATA_ATTR unsigned refreshes = 0;
-
-// Constant to determine when to full update
-const int fullRefresh = 20;
 
 // Used for storing raw price values
 double data[64];
@@ -124,10 +118,9 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    if (refreshes == 0)
-    {
         // Welcome screen
-        display.setCursor(10, 10);
+        display.setCursor(10, 10); // Set cursor, custom font uses different method for setting cursor
+                              // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
         display.setTextSize(2);
         display.println(F("Welcome to Inkplate 2 cryptocurrency tracker example!"));
         display.setCursor(70, 250);
@@ -135,10 +128,7 @@ void setup()
         display.display();
         display.clearDisplay();
         delay(1000);
-    }
 
-    if (refreshes % fullRefresh == 0)
-    {
         // Our begin function
         network.begin();
 
@@ -154,32 +144,28 @@ void setup()
         //drawTime();
         // Full refresh
         display.display();
-    }
-    else
-    {
-        Serial.println("heree");
-        // Reset screen where date is drawn
-        int16_t x1, y1;
-        uint16_t w1, h1;
-        display.setFont(elements[1].font);
-        display.setTextSize(1);
-        network.getTime(date);
-        display.getTextBounds(date, (int)(elements[1].x * 0.96), (int)(elements[1].y), &x1, &y1, &w1, &h1);
 
-        Serial.printf("%d %d %d %d\n", x1, y1, w1, h1);
-        display.fillRect(x1, y1, w1, h1, BLACK);
-        display.display();
-        display.fillRect(x1, y1, w1, h1, WHITE);
-        display.display();
+//        Serial.println("heree");
+//        // Reset screen where date is drawn
+//        int16_t x1, y1;
+//        uint16_t w1, h1;
+//        display.setFont(elements[1].font);
+//        display.setTextSize(1);
+//        network.getTime(date);
+//        display.getTextBounds(date, (int)(elements[1].x * 0.96), (int)(elements[1].y), &x1, &y1, &w1, &h1);
+//
+//        Serial.printf("%d %d %d %d\n", x1, y1, w1, h1);
+//        display.fillRect(x1, y1, w1, h1, BLACK);
+//        display.display();
+//        display.fillRect(x1, y1, w1, h1, WHITE);
+//        display.display();
+//
+//        // Time drawing function
+//        drawAll();
+//
+//        // Just update time
+//        display.display();
 
-        // Time drawing function
-        drawAll();
-
-        // Just update time
-        display.display();
-    }
-
-    ++refreshes;
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS);
@@ -233,18 +219,6 @@ void getCurrencyData()
     {
         if (strncmp(months[i], date, 3) == 0)
             month = i + 1;
-    }
-
-    // Find days to display underneath the graph
-    for (int i = 0; i < 5; ++i)
-    {
-        itoa(((day - i * 7) % 31 + 31) % 31, temp, 10);
-        itoa(month - ((day - i * 7) <= 0), temp + 32, 10);
-
-        strncpy(dates + 8 * (4 - i), temp, 8);
-        strcat(dates + 8 * (4 - i), ".");
-        strcat(dates + 8 * (4 - i), temp + 32);
-        strcat(dates + 8 * (4 - i), ".");
     }
 }
 

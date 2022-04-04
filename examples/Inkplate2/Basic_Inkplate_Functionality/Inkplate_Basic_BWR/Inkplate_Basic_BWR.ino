@@ -129,14 +129,14 @@ void loop()
     display.display();
     delay(DELAY_MS);
 
-    // Draw rectangle at X = 200, Y = 200 and size of 400x300 pixels
+    // Draw rectangle at X = 20, Y = 20 and size of 100x35 pixels
     display.clearDisplay();
     display.drawRect(20, 20, 100, 35, random(1,3)); // Arguments are: start X, start Y, size X, size Y, color
     displayCurrentAction("Drawing rectangle");
     display.display();
     delay(DELAY_MS);
 
-    // Draw rectangles on random location, size 100x150 pixels
+    // Draw rectangles on random location, size 10x15 pixels
     display.clearDisplay();
     for (int i = 0; i < 20; i++)
     {
@@ -197,7 +197,7 @@ void loop()
     display.display(); // To show stuff on screen, you always need to call display.display();
     delay(DELAY_MS);
 
-    // Draw rounded rectangle at X = 200, Y = 200 and size of 400x300 pixels and radius of 10 pixels
+    // Draw rounded rectangle at X = 20, Y = 20 and size of 40x30 pixels and radius of 10 pixels
     display.clearDisplay();
     display.drawRoundRect(20, 20, 40, 30, 10,
                           random(1,3)); // Arguments are: start X, start Y, size X, size Y, radius, color
@@ -205,7 +205,7 @@ void loop()
     display.display();
     delay(DELAY_MS);
 
-    // Draw rounded rectangles on random location, size 100x150 pixels, radius of 5 pixels
+    // Draw rounded rectangles on random location, size 30x20 pixels, radius of 5 pixels
     display.clearDisplay();
     for (int i = 0; i < 20; i++)
     {
@@ -223,7 +223,7 @@ void loop()
     display.display();
     delay(DELAY_MS);
 
-    // Draw filled black rects on random location, size of 30x30 pixels, radius of 3 pixels
+    // Draw filled black rects on random location, size of 15x15 pixels, radius of 3 pixels
     display.clearDisplay();
     for (int i = 0; i < 20; i++)
     {
@@ -244,15 +244,6 @@ void loop()
     displayCurrentAction("Drawing filled triangle inside exsisting one");
     display.display();
     delay(DELAY_MS);
-
-    // Display some bitmap on screen. We are going to display e-radionica logo on display at location X = 200, Y = 200
-    // Image is 576x100 pixels and we want to every pixel of this bitmap to be black.
-    /*display.clearDisplay();
-    display.drawImage(logo, 100, 250, 576, 100,
-                      BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
-    displayCurrentAction("Drawing e-radionica.com logo");
-    display.display();
-    delay(DELAY_MS);*/
 
     // Draws an elipse with x radius, y radius, center x, center y and color
     display.clearDisplay();

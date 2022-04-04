@@ -22,8 +22,6 @@
 
 Inkplate display;
 
-RTC_DATA_ATTR unsigned refreshes = 0;
-
 uint32_t n;
 char *buf;
 
@@ -31,133 +29,129 @@ String textInTag(const char *tag, const char *tagEnd, int dt = 1);
 
 void setup()
 {
-    Serial.begin(115200);
-    display.begin();
+  Serial.begin(115200); //Initialize UART communication with PC
+  display.begin();  //Initialize e-paper
 
-    if (refreshes == 0)
+  // Welcome screen
+  display.setCursor(20, 50);
+  display.setTextSize(2);
+  display.drawTextWithShadow(0, 20, "Welcome to Inkpl-", RED, BLACK);
+  display.drawTextWithShadow(0, 40, "ate Crowdsupply ", RED, BLACK);
+  display.drawTextWithShadow(0, 60, "tracker example!", RED, BLACK);
+  display.display();
+
+  display.clearDisplay(); //Clear display buffer
+  delay(5000);
+
+  while (!display.joinAP("", ""))
+  {
+    Serial.println("Connecting to wifi");
+  }
+
+  buf = (char *)ps_malloc(100000);
+
+  HTTPClient http;
+  if (http.begin(URL) && http.GET() > 0) //Check if ESP got answer from server and if data is available
+  {
+    while (http.getStreamPtr()->available()) //Check if there is data incoming
     {
-        // Welcome screen
-        display.setCursor(20, 50);
-        display.setTextSize(2);
-        display.drawTextWithShadow(0, 20,"Welcome to Inkpl-", RED, BLACK);
-        display.drawTextWithShadow(0, 40,"ate Crowdsupply ", RED, BLACK);
-        display.drawTextWithShadow(0, 60,"tracker example!", RED, BLACK);
-        //display.display();
-
-        display.clearDisplay();
-        //delay(5000);
+      char c = http.getStreamPtr()->read(); //Read data and save it in buffer
+      buf[n++] = c;
+      delayMicroseconds(5); //Make small delay before getting next data
     }
+    buf[n] = 0;
+  }
+  Serial.println("Buffer load complete!");
 
-    while (!display.joinAP("e-radionica.com", "croduino"))
-    { 
-        Serial.println("Connecting to wifi");
-    }
+  text1_content = textInTag("<h1>", "</h1>"); //Find text beetwen tags
+  text2_content = textInTag("<h4>", "</h4>"); //Find text beetwen tags
+  text3_content = textInTag("<h3>", "</h3>"); //Find text beetwen tags
+  text4_content = textInTag("<span><sup>$</sup>", "</span>"); //Find text beetwen tags
+  text7_content = textInTag("of&nbsp;<span><sup>$</sup>", "</span>"); //Find text beetwen tags
 
-    buf = (char *)ps_malloc(100000);
+  int j = 0;
+  String s = textInTag("<div class=\"factoids\">", "</div>", 3); //Find text beetwen tags
+  Serial.println(s); //Print on serial monitor string
+  String dummy;
+  String *arr[] = {&dummy, &dummy, &dummy
+                   , &text17_content, &text17_content, &text17_content
+                  };
+  for (int i = 0; i < 6; ++i)
+  {
+    while (isspace(s[j++])); //Check if symbol in string is whitespace
+    --j;
+    while (!isspace(s[j]) && j < s.length()) //String s contains 6 substrings, this function saves substrings in arr array
+      *(arr[i]) += s[j++];
+  }
 
-    HTTPClient http;
-    if (http.begin(URL) && http.GET() > 0)
-    {
-        while (http.getStreamPtr()->available())
-        {
-            char c = http.getStreamPtr()->read();
-            buf[n++] = c;
-            delayMicroseconds(5);
-        }
-        buf[n] = 0;
-    }
-    Serial.println("Buffer load complete!");
+  mainDraw();// Call function to draw UI
+  display.display(); //Display content of display buffer on display
 
-    text1_content = textInTag("<h1>", "</h1>");
-    text2_content = textInTag("<h4>", "</h4>");
-    text3_content = textInTag("<h3>", "</h3>");
-    text4_content = textInTag("<span><sup>$</sup>", "</span>");
-    text7_content = textInTag("of&nbsp;<span><sup>$</sup>", "</span>");
-
-    int j = 0;
-    String s = textInTag("<div class=\"factoids\">", "</div>", 3);
-    Serial.println(s);
-    String dummy;
-    String *arr[] = {&dummy, &dummy, &dummy 
-    ,&text17_content, &text17_content, &text17_content};
-    for (int i = 0; i < 6; ++i)
-    {
-        while (isspace(s[j++]))
-            ;
-        --j;
-        while (!isspace(s[j]) && j < s.length())
-            *(arr[i]) += s[j++];
-    }
-    
-    mainDraw();
-    display.display();
-
-    ++refreshes;
-
-    free(buf);
-    // Go to sleep
-    esp_sleep_enable_timer_wakeup(1000LL * DELAY_MS);
-    (void)esp_deep_sleep_start();
+  free(buf);  // Free dynamically allocated memory; if memory is not freed, it may overflow (Almost always will, but compiler 
+              // will not show error for overflowing memory)
+  // Go to sleep
+  esp_sleep_enable_timer_wakeup(1000LL * DELAY_MS);
+  (void)esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Never here
+  // Never here
 }
 
 String textInTag(const char *tag, const char *tagEnd, int dt)
 {
-    String r;
-    char *start = strstr(buf, tag) + strlen(tag);
-    char *end = start - 1;
-    while (dt--)
-        end = strstr(end + 1, tagEnd);
+  String r;
+  char *start = strstr(buf, tag) + strlen(tag);
+  char *end = start - 1;
+  while (dt--)
+    end = strstr(end + 1, tagEnd);
 
-    int d = 0;
-    for (char *t = start; t < end; ++t)
+  int d = 0;
+  for (char *t = start; t < end; ++t)
+  {
+    if (*t == '<')
+      ++d;
+    if (d == 0 && *t != '\n')
     {
-        if (*t == '<')
-            ++d;
-        if (d == 0 && *t != '\n')
-        {
-            r += *t;
-        }
-        if (*t == '>')
-            --d;
+      r += *t;
     }
+    if (*t == '>')
+      --d;
+  }
 
-    // Hacky solution:
+  // Hacky solution:
 
-    r.replace("&#34;", "\"");
-    r.replace("&nbsp;", " ");
+  r.replace("&#34;", "\"");
+  r.replace("&nbsp;", " ");
 
-    r.replace("raised", "");
-    r.replace("goal", "");
-    r.replace("Funded!", "");
-    r.replace("funded", "");
-    r.replace(" on", "");
+  r.replace("raised", "");
+  r.replace("goal", "");
+  r.replace("Funded!", "");
+  r.replace("funded", "");
+  r.replace(" on", "");
 
-    r.replace("updates", "");
+  r.replace("updates", "");
 
-    if (r.indexOf("hours left") != -1)
-    {
-        r.replace("hours left", "");
-        text17_content = "hours left";
-    }
-    if (r.indexOf("days left") != -1)
-    {
-        r.replace("days left", "");
-        text17_content = "days left";
-    }
+  if (r.indexOf("hours left") != -1)
+  {
+    r.replace("hours left", "");
+    text17_content = "hours left";
+  }
+  if (r.indexOf("days left") != -1)
+  {
+    r.replace("days left", "");
+    text17_content = "days left";
+  }
 
-    r.replace("backers", "");
+  r.replace("backers", "");
 
-    r.replace("Subscribe to Updates", "");
+  r.replace("Subscribe to Updates", "");
 
-    r.trim();
+  r.trim();
 
-    if (r.indexOf("$") != -1)
-        r = r.substring(r.indexOf("$") + 1);
+  if (r.indexOf("$") != -1)
+    r = r.substring(r.indexOf("$") + 1);
 
-    return r;
+  return r;
 }

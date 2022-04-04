@@ -88,9 +88,9 @@ void drawData();
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(115200); //Initialize UART communication with PC
 
-    data = (char *)ps_malloc(2000000LL);
+    data = (char *)ps_malloc(2000000LL); //Allocate 2 million chars from PSRAM for data buffer
 
     // Initial display settings
     display.begin();
@@ -145,19 +145,20 @@ void drawEvent()
   if(next_event == entriesNum)
   {
     display.setTextSize(1);
-    display.setCursor(5,20);
-    display.setFont(&Roboto_Regular8);
-    display.print("No upcoming events.");
+    display.setCursor(5,20); // Set cursor, custom font uses different method for setting cursor
+                              // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
+    display.setFont(&Roboto_Regular8); //Set custom font
+    display.print("No upcoming events."); //Print information message
   }
   else
   {
-    display.setTextSize(1);
+    display.setTextSize(1); //Set font size
     display.setCursor(5,8);
     display.setFont(&Roboto_Regular8);
     display.print("Next event starts at:");
     display.setCursor(10,32);
     display.setTextColor(RED,WHITE);
-    display.print(asctime(localtime(&(entries[next_event].timeStampStart))));
+    display.print(asctime(localtime(&(entries[next_event].timeStampStart)))); //Convert time to string and print it 
     display.setCursor(5,52);
     display.setTextColor(BLACK,WHITE);
     display.print("Lasting: ");
@@ -181,22 +182,22 @@ void getToFrom(char *dst, char *from, char *to, int *day, time_t *timeStampEnd, 
     // ANSI C time struct
     struct tm ltm = {0}, ltm2 = {0};
     char temp[128], temp2[128];
-    strncpy(temp, from, 16);
+    strncpy(temp, from, 16); //Copy string temp into string from
     temp[16] = 0;
 
     // https://github.com/esp8266/Arduino/issues/5141, quickfix
-    memmove(temp + 5, temp + 4, 16);
+    memmove(temp + 5, temp + 4, 16); //Format time for strptime function
     memmove(temp + 8, temp + 7, 16);
     memmove(temp + 14, temp + 13, 16);
     memmove(temp + 16, temp + 15, 16);
     temp[4] = temp[7] = temp[13] = temp[16] = '-';
 
     // time.h function
-    strptime(temp, "%Y-%m-%dT%H-%M-%SZ", &ltm);
+    strptime(temp, "%Y-%m-%dT%H-%M-%SZ", &ltm); //Convert string containing time into time struct
 
     // create start and end event structs
     struct tm event, event2;
-    time_t epoch = mktime(&ltm) + (time_t)timeZone * 3600L;
+    time_t epoch = mktime(&ltm) + (time_t)timeZone * 3600L; //Get epoch 
     gmtime_r(&epoch, &event);
     strncpy(dst, asctime(&event) + 11, 5);
 
@@ -208,15 +209,15 @@ void getToFrom(char *dst, char *from, char *to, int *day, time_t *timeStampEnd, 
     // Same as above
 
     // https://github.com/esp8266/Arduino/issues/5141, quickfix
-    memmove(temp2 + 5, temp2 + 4, 16);
+    memmove(temp2 + 5, temp2 + 4, 16);//Format time for strptime function
     memmove(temp2 + 8, temp2 + 7, 16);
     memmove(temp2 + 14, temp2 + 13, 16);
     memmove(temp2 + 16, temp2 + 15, 16);
     temp2[4] = temp2[7] = temp2[13] = temp2[16] = '-';
 
-    strptime(temp2, "%Y-%m-%dT%H-%M-%SZ", &ltm2);
+    strptime(temp2, "%Y-%m-%dT%H-%M-%SZ", &ltm2); //Convert string containing time into time struct
 
-    time_t epoch2 = mktime(&ltm2) + (time_t)timeZone * 3600L;
+    time_t epoch2 = mktime(&ltm2) + (time_t)timeZone * 3600L; //Get epoch 
     gmtime_r(&epoch2, &event2);
     strncpy(dst + 6, asctime(&event2) + 11, 5);
 
@@ -250,7 +251,7 @@ int cmp(const void *a, const void *b)
     entry *entryA = (entry *)a;
     entry *entryB = (entry *)b;
 
-    return (entryA->timeStampEnd - entryB->timeStampEnd);
+    return (entryA->timeStampEnd - entryB->timeStampEnd); //Compare timestamps of two objects
 }
 
 // Main data drawing data
@@ -280,15 +281,15 @@ void getEvents()
 
         if (summary && summary < end)
         {
-            strncpy(entries[entriesNum].name, summary, strchr(summary, '\n') - summary);
+            strncpy(entries[entriesNum].name, summary, strchr(summary, '\n') - summary); //Copy summary to struct variable name
             entries[entriesNum].name[strchr(summary, '\n') - summary] = 0;
         }
         if (location && location < end)
         {
-            strncpy(entries[entriesNum].location, location, strchr(location, '\n') - location);
+            strncpy(entries[entriesNum].location, location, strchr(location, '\n') - location); //Copy location to struct variable location
             entries[entriesNum].location[strchr(location, '\n') - location] = 0;
         }
-        if (timeStart && timeStart < end && timeEnd < end)
+        if (timeStart && timeStart < end && timeEnd < end) //Copy time to struct variable timeEnd
         {
             getToFrom(entries[entriesNum].time, timeStart, timeEnd, &entries[entriesNum].day,
                       &entries[entriesNum].timeStampEnd, &entries[entriesNum].timeStampStart);
@@ -297,5 +298,5 @@ void getEvents()
     }
 
     // Sort entries by time
-    qsort(entries, entriesNum, sizeof(entry), cmp);
+    qsort(entries, entriesNum, sizeof(entry), cmp); //Call function qsort
 }

@@ -71,28 +71,28 @@ void loop()
     display.clearDisplay(); // Print out new data
     display.setCursor(0, 0);
     display.print("Air temperature: ");
-    display.print(bme.temperature);
+    display.print(bme.temperature); // Print air temperature
     display.println(" *C");
 
     display.setTextColor(RED);
 
     display.setCursor(0, 25);
     display.print("Air pressure: ");
-    display.print(bme.pressure / 100.0);
+    display.print(bme.pressure / 100.0);  //Convert to air pressure hPa and print on display
     display.println(" hPa");
 
     display.setTextColor(BLACK);
 
     display.setCursor(0, 50);
     display.print("Air humidity: ");
-    display.print(bme.humidity);
+    display.print(bme.humidity); //Print humidity
     display.println(" %");
 
     display.setTextColor(RED);
 
     display.setCursor(0, 75);
     display.print("Gas sensor resistance: ");
-    display.print(bme.gas_resistance / 1000.0);
+    display.print(bme.gas_resistance / 1000.0); // Print sensor resistance
     display.println(" kOhms");
 
     display.display();

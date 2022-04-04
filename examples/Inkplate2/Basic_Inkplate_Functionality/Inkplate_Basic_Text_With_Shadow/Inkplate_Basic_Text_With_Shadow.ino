@@ -43,6 +43,7 @@ void setup()
     display.print("Test");
 
     // Draw text with shadow, specify color for text and background
+    // (x coordinate, y coordinate, string to write, text color, shadow color)
     display.drawTextWithShadow(0, 40, "Test", RED, BLACK);
 
     display.setTextSize(1);

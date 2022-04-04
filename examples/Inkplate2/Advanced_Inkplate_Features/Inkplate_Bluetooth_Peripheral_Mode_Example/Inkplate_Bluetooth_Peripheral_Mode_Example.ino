@@ -30,25 +30,25 @@ char commandBuffer[BUFFER_SIZE + 1];
 
 void setup() // Initialize everything
 {
-    Serial.begin(115200);
+    Serial.begin(115200);  //Initialize UART communication with PC
 
-    if (!SerialBT.begin("ESP32"))
+    if (!SerialBT.begin("ESP32")) //Check if bluetooth is initialized successfully
     {
-        Serial.println("An error occurred initializing Bluetooth");
+        Serial.println("An error occurred initializing Bluetooth"); //If not, print error message
     }
 
-    display.begin();
+    display.begin(); //Initialize e-paper
 }
 
 void loop()
 {
     while (SerialBT.available()) // When Bluetooth available save it and pass to Peripheral.h code
     {
-        for (int i = 0; i < (BUFFER_SIZE - 1); i++)
+        for (int i = 0; i < (BUFFER_SIZE - 1); i++) //Loop through all commands
         {
             commandBuffer[i] = commandBuffer[i + 1];
         }
-        commandBuffer[BUFFER_SIZE - 1] = SerialBT.read();
+        commandBuffer[BUFFER_SIZE - 1] = SerialBT.read();  //Save incoming command in buffer
         Serial.print(commandBuffer[BUFFER_SIZE - 1]);
     }
 

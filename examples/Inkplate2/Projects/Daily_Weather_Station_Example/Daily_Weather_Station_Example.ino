@@ -153,12 +153,10 @@ void setup()
     network.getTime(currentTime);
 
     display.clearDisplay();
-    drawTemps();
+    drawTemps(); //Call function
 
     display.display();
   }
-
-  ++refreshes;
 
   // Go to sleep
   esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
@@ -176,15 +174,16 @@ void drawTemps()
 {
   // Drawing 4 black rectangles in which temperatures will be written
 
-  display.fillRect(5, 5, 60, 94, BLACK);
+  display.fillRect(5, 5, 60, 94, BLACK); //Draw some rectangles
   display.fillRect(75, 5, 60, 94, BLACK);
   display.fillRect(145, 5, 60, 94, BLACK);
 
-  display.setFont(&Roboto_Light8);
-  display.setTextSize(1);
-  display.setTextColor(RED, BLACK);
+  display.setFont(&Roboto_Light8); //Set custom font; it needs to be included as .h file
+  display.setTextSize(1); //Set font size
+  display.setTextColor(RED, BLACK); // Set text and background color
 
-  display.setCursor(10, 20);
+  display.setCursor(10, 20);  // Set cursor, custom font uses different method for setting cursor
+                              // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
   display.println("Today");
 
   display.setCursor(80, 20);
