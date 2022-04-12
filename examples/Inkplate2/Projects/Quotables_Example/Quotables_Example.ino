@@ -55,7 +55,7 @@ Inkplate display;
 // Our functions declared below setup and loop
 void drawAll();
 
-char quote[128];
+char quote[128]; // Buffer to store quote
 
 void setup()
 {
@@ -64,7 +64,7 @@ void setup()
 
   // Initial display settings
   display.begin();
-  display.setTextWrap(true);
+  display.setTextWrap(true); // Set text wrapping to true
   display.setTextColor(BLACK, WHITE);
 
   // Welcome screen
@@ -103,9 +103,9 @@ void loop()
 // Our main drawing function
 void drawAll()
 {
-  display.setFont(&LoveLetter_Regular10);
+  display.setFont(&LoveLetter_Regular10); // Set custom font
   display.setTextSize(1);
   display.setTextColor(BLACK,WHITE);
-  display.setCursor(0,0);
-  display.println(quote);
+  display.setCursor(0,15);
+  display.println(quote); // Print quote
 }

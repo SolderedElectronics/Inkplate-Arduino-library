@@ -71,12 +71,12 @@ double data[64];
 // Used to simplify UI design
 struct textElement
 {
-    int x;
-    int y;
-    const GFXfont *font;
-    char *text;
-    char align;
-    uint8_t text_color;
+  int x;
+  int y;
+  const GFXfont *font;
+  char *text;
+  char align;
+  uint8_t text_color;
 };
 
 // Variables for storing all displayed data as char arrays
@@ -92,16 +92,16 @@ char maximum[16];
 
 // All months in a year, for finding current date
 char months[][12] = {
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 };
 
 // Out UI elements data
 textElement elements[] = {
-    {10, 25, &Roboto_Light16, currencyAbbr, 0 , BLACK}, {100, 18, &Roboto_Light8, date, 0, BLACK},
-    {10, 150, &Roboto_Light8, fromToDate, 0, BLACK},   {10, 40, &Roboto_Light8, "Current price:", 0, BLACK},
-    {10, 60, &Roboto_Light8, current, 0, RED},      {130, 40, &Roboto_Light8, "Minimum:", 0, BLACK},
-    {130, 60, &Roboto_Light8, minimum, 0, RED},      {130, 80, &Roboto_Light8, "Maximum:", 0, BLACK},
-    {130, 100, &Roboto_Light8, maximum, 0, RED}
+  {10, 25, &Roboto_Light16, currencyAbbr, 0 , BLACK}, {100, 18, &Roboto_Light8, date, 0, BLACK},
+  {10, 150, &Roboto_Light8, fromToDate, 0, BLACK},   {10, 40, &Roboto_Light8, "Current price:", 0, BLACK},
+  {10, 60, &Roboto_Light8, current, 0, RED},      {130, 40, &Roboto_Light8, "Minimum:", 0, BLACK},
+  {130, 60, &Roboto_Light8, minimum, 0, RED},      {130, 80, &Roboto_Light8, "Maximum:", 0, BLACK},
+  {130, 100, &Roboto_Light8, maximum, 0, RED}
 };
 
 // Our functions declared below setup and loop
@@ -110,182 +110,158 @@ void getCurrencyData();
 
 void setup()
 {
-    // Begin serial communitcation, sed for debugging
-    Serial.begin(115200);
+  // Begin serial communitcation, sed for debugging
+  Serial.begin(115200);
 
-    // Initial display settings
-    display.begin();
-    display.setTextWrap(false);
-    display.setTextColor(0, 7);
+  // Initial display settings
+  display.begin();
+  display.setTextWrap(false); //Disable text wrapping
+  display.setTextColor(0, 7);
 
-        // Welcome screen
-        display.setCursor(10, 10); // Set cursor, custom font uses different method for setting cursor
-                              // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
-        display.setTextSize(2);
-        display.println(F("Welcome to Inkplate 2 cryptocurrency tracker example!"));
-        display.setCursor(70, 250);
-        display.println(F("Connecting to WiFi..."));
-        display.display();
-        display.clearDisplay();
-        delay(1000);
+  // Welcome screen
+  display.setCursor(10, 10); // Set cursor, custom font uses different method for setting cursor
+  // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
+  display.setTextSize(2); //Set size of font in comparison to original 5x7 font
+  display.println(F("Welcome to Inkplate 2 cryptocurrency tracker example!"));
+  display.setCursor(0, 0);
+  display.println(F("Connecting to WiFi..."));
+  display.display();
+  display.clearDisplay();
+  delay(1000);
 
-        // Our begin function
-        network.begin();
+  // Our begin function
+  network.begin();
 
-        while (!network.getData(data))
-        {
-            Serial.println("Retrying retriving data!");
-            delay(1000);
-        }
+  while (!network.getData(data)) //Get data and check if data is successfully fetched
+  {
+    Serial.println("Retrying retriving data!");
+    delay(1000);
+  }
 
-        // Our main drawing function
-        drawAll();
-        // Time drawing function
-        //drawTime();
-        // Full refresh
-        display.display();
+  // Our main drawing function
+  drawAll();
+  // Full refresh
+  display.display();
 
-//        Serial.println("heree");
-//        // Reset screen where date is drawn
-//        int16_t x1, y1;
-//        uint16_t w1, h1;
-//        display.setFont(elements[1].font);
-//        display.setTextSize(1);
-//        network.getTime(date);
-//        display.getTextBounds(date, (int)(elements[1].x * 0.96), (int)(elements[1].y), &x1, &y1, &w1, &h1);
-//
-//        Serial.printf("%d %d %d %d\n", x1, y1, w1, h1);
-//        display.fillRect(x1, y1, w1, h1, BLACK);
-//        display.display();
-//        display.fillRect(x1, y1, w1, h1, WHITE);
-//        display.display();
-//
-//        // Time drawing function
-//        drawAll();
-//
-//        // Just update time
-//        display.display();
-
-
-    // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS);
-    (void)esp_deep_sleep_start();
+  // Go to sleep before checking again
+  esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS);
+  (void)esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Never here
+  // Never here
 }
 
 void getCurrencyData()
 {
-    // Set min to a very high value, and max to very low, so that any real world data changes it
-    double minData = 1e9F;
-    double maxData = -1e9F;
+  // Set min to a very high value, and max to very low, so that any real world data changes it
+  double minData = 1e9F;
+  double maxData = -1e9F;
 
-    // Find min and max in data
-    for (int i = 0; i < 31; ++i)
-    {
-        minData = min(minData, data[i]);
-        maxData = max(maxData, data[i]);
-    }
+  // Find min and max in data
+  for (int i = 0; i < 31; ++i)
+  {
+    minData = min(minData, data[i]);
+    maxData = max(maxData, data[i]);
+  }
 
-    double span = max(0.3D, (double)abs(maxData - minData));
+  double span = max(0.3D, (double)abs(maxData - minData));
 
-    // Copy current, min and max data to char arrays to be displayed
-    dtostrf(data[30], 8, 2, current);
-    strcat(current, "$");
-    dtostrf(minData, 8, 2, minimum);
-    strcat(minimum, "$");
-    dtostrf(maxData, 8, 2, maximum);
-    strcat(maximum, "$");
+  // Copy current, min and max data to char arrays to be displayed
+  dtostrf(data[30], 8, 2, current);
+  strcat(current, "$");
+  dtostrf(minData, 8, 2, minimum);
+  strcat(minimum, "$");
+  dtostrf(maxData, 8, 2, maximum);
+  strcat(maximum, "$");
 
-    // Temporary buffer
-    char temp[64];
+  // Temporary buffer
+  char temp[64];
 
-    for (int i = 0; i < 4; ++i)
-    {
-        dtostrf(minData + (double)i / 4 * span, 5, (maxData < 10.0D ? 3 : 0), temp);
-        strncpy(prices + 16 * (3 - i), temp, 16);
-    }
+  for (int i = 0; i < 4; ++i)
+  {
+    dtostrf(minData + (double)i / 4 * span, 5, (maxData < 10.0D ? 3 : 0), temp);
+    strncpy(prices + 16 * (3 - i), temp, 16);
+  }
 
-    // Find current day in a month
-    int day;
-    sscanf(date + 3, "%d", &day);
+  // Find current day in a month
+  int day;
+  sscanf(date + 3, "%d", &day);
 
-    // Find current month
-    int month = 0;
-    for (int i = 0; i < 12; ++i)
-    {
-        if (strncmp(months[i], date, 3) == 0)
-            month = i + 1;
-    }
+  // Find current month
+  int month = 0;
+  for (int i = 0; i < 12; ++i)
+  {
+    if (strncmp(months[i], date, 3) == 0)
+      month = i + 1;
+  }
 }
 
 // Function to draw time
 void drawTime()
 {
-    // Just draw time
-    int i = 1;
+  // Just draw time
+  int i = 1;
 
-    // Save current date string, more about it in Network.cpp
-    network.getTime(date);
+  // Save current date string, more about it in Network.cpp
+  network.getTime(date);
 
-    // Text settings
-    display.setTextColor(BLACK, WHITE);
-    display.setFont(elements[i].font);
-    display.setTextSize(1);
+  // Text settings
+  display.setTextColor(BLACK, WHITE);
+  display.setFont(elements[i].font);
+  display.setTextSize(1);
 
-    // 0 is aligned by left bottom corner, 1 by right
-    if (elements[i].align == 0)
-        display.setCursor((int)(elements[i].x * 0.96), (int)(elements[i].y));
+  // 0 is aligned by left bottom corner, 1 by right
+  if (elements[i].align == 0)
+    display.setCursor((int)(elements[i].x * 0.96), (int)(elements[i].y));
 
-    // Print out text to above set cursor location
-    display.print(date);
+  // Print out text to above set cursor location
+  display.print(date);
 }
 
 // Our main drawing function
 void drawAll()
 {
-    // Save current date string, more about it in Network.cpp
-    network.getTime(date);
+  // Save current date string, more about it in Network.cpp
+  network.getTime(date);
 
-    // Find current day from string
-    int day;
-    sscanf(date + 3, "%d", &day);
+  // Find current day from string
+  int day;
+  sscanf(date + 3, "%d", &day);
 
-    getCurrencyData();
-    
-    // Find what month is it numericly and display it
-    for (int i = 0; i < 12; ++i)
+  getCurrencyData();
+
+  // Find what month is it numericly and display it
+  for (int i = 0; i < 12; ++i)
+  {
+    if (strncmp(months[i], date, 3) == 0)
+      sprintf(fromToDate, "%d.%d. to %d.%d.", day, ((i + 1) % 12 ? i + 1 : 12), day, ((i + 2) % 12 ? i + 2 : 12));
+  }
+
+  // Draw our UI elements
+  for (int i = 0; i < sizeof(elements) / sizeof(elements[0]); ++i)
+  {
+    // Text settings
+    display.setTextColor(elements[i].text_color, WHITE);
+    display.setFont(elements[i].font);
+    display.setTextSize(1);
+
+    // 0 is aligned by left bottom corner, 1 by right
+    if (elements[i].align == 0)
+      display.setCursor((int)(elements[i].x * 0.96), (int)(elements[i].y));
+    else if (elements[i].align == 1)
     {
-        if (strncmp(months[i], date, 3) == 0)
-            sprintf(fromToDate, "%d.%d. to %d.%d.", day, ((i + 1) % 12 ? i + 1 : 12), day, ((i + 2) % 12 ? i + 2 : 12));
+      int16_t x, y;
+      uint16_t w, h;
+
+      // Get how much the textx offsets pointer and draw it that much more left
+      display.getTextBounds(elements[i].text, 0, 0, &x, &y, &w, &h);
+
+      display.setCursor((int)(elements[i].x * 0.96) - w, (int)(elements[i].y));
     }
-    
-    // Draw our UI elements
-    for (int i = 0; i < sizeof(elements) / sizeof(elements[0]); ++i)
-    {
-        // Text settings
-        display.setTextColor(elements[i].text_color, WHITE);
-        display.setFont(elements[i].font);
-        display.setTextSize(1);
 
-        // 0 is aligned by left bottom corner, 1 by right
-        if (elements[i].align == 0)
-            display.setCursor((int)(elements[i].x * 0.96), (int)(elements[i].y));
-        else if (elements[i].align == 1)
-        {
-            int16_t x, y;
-            uint16_t w, h;
-
-            // Get how much the textx offsets pointer and draw it that much more left
-            display.getTextBounds(elements[i].text, 0, 0, &x, &y, &w, &h);
-
-            display.setCursor((int)(elements[i].x * 0.96) - w, (int)(elements[i].y));
-        }
-
-        // Print out text to above set cursor location
-        display.print(elements[i].text);
-    }
+    // Print out text to above set cursor location
+    display.print(elements[i].text);
+  }
 }

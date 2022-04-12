@@ -35,7 +35,7 @@ void setup()
   // Welcome screen
   display.setCursor(20, 50);
   display.setTextSize(2);
-  display.drawTextWithShadow(0, 20, "Welcome to Inkpl-", RED, BLACK);
+  display.drawTextWithShadow(0, 20, "Welcome to Inkpl-", RED, BLACK); //Print text with shadow
   display.drawTextWithShadow(0, 40, "ate Crowdsupply ", RED, BLACK);
   display.drawTextWithShadow(0, 60, "tracker example!", RED, BLACK);
   display.display();
@@ -43,7 +43,7 @@ void setup()
   display.clearDisplay(); //Clear display buffer
   delay(5000);
 
-  while (!display.joinAP("", ""))
+  while (!display.joinAP("", "")) //Connect to WiFi, first argument is SSID, second is password
   {
     Serial.println("Connecting to wifi");
   }
@@ -102,8 +102,8 @@ void loop()
 String textInTag(const char *tag, const char *tagEnd, int dt)
 {
   String r;
-  char *start = strstr(buf, tag) + strlen(tag);
-  char *end = start - 1;
+  char *start = strstr(buf, tag) + strlen(tag); //Find pointer to opened tag
+  char *end = start - 1; // End of opened tag
   while (dt--)
     end = strstr(end + 1, tagEnd);
 
@@ -120,9 +120,9 @@ String textInTag(const char *tag, const char *tagEnd, int dt)
       --d;
   }
 
-  // Hacky solution:
+  // Hacky solution to remove excess text
 
-  r.replace("&#34;", "\"");
+  r.replace("&#34;", "\""); // Find text and replace it with nothing
   r.replace("&nbsp;", " ");
 
   r.replace("raised", "");

@@ -1,18 +1,14 @@
 /*
-   Cryptocurrency tracker example for e-radionica.com Inkplate 2
+   Clock example for e-radionica.com Inkplate 2
    For this example you will need only USB cable and Inkplate 2.
    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how you can use Inkplate 6 to display API data.
-   Here we use Coingecko API to get latest cryptocurrency prices and display
-   them on the Inkplate screen. If you wish to change the currecny, you can
-   edit it below.
-
-   IMPORTANT:
-   Make sure to change your timezone and wifi credentials below
-   Also have ArduinoJSON installed in your Arduino libraries, download here: https://arduinojson.org/
+   This example contains three types of clocks. First type is digital clock
+   with 4 digits which displays hours and minutes. Second type is binary clock,
+   which also have digits but displayed in binary numbers. Third type is analog 
+   clock with needles.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
@@ -88,9 +84,9 @@ void setup()
   // Our begin function
   network.begin();
 
-  drawTime();
+  drawTime(); //Call function drawTime
 
-  display.display();
+  display.display(); //Display content from buffer on Inkplate
 
   // Go to sleep before checking again
   esp_sleep_enable_timer_wakeup(100000000);
@@ -181,7 +177,7 @@ void drawTime()
         display.fillRect(45, 44, 5, 5, BLACK);
         display.fillRect(145, 58, 5, 5, BLACK);
 
-        //Draw number that represents values opf circles
+        //Draw number that represents values of circles
         display.setTextSize(1);
         display.setCursor(190, 7);
         display.print("8");
@@ -192,7 +188,7 @@ void drawTime()
         display.setCursor(190, 55);
         display.print("1");
 
-        //Draw number that represents values opf circles
+        //Draw number that represents values of circles
         display.setTextSize(1);
         display.setCursor(90, 7);
         display.print("8");
@@ -246,7 +242,6 @@ void drawTime()
       y_hour = 52 - 30 * cos((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
       display.drawThickLine(106, 52, x_minute, y_minute, RED, 2); //needle for minutes
       display.drawThickLine(106, 52, x_hour, y_hour, BLACK, 3); //needle for hours
-
       break;
 
   }
