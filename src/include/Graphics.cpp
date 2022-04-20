@@ -208,7 +208,7 @@ void Graphics::endWrite()
 {
 }
 
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) 
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
 
 /**
  * @brief       setDisplayMode sets display mode
