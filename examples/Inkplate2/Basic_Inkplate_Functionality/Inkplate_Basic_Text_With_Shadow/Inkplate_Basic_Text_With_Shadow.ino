@@ -1,5 +1,5 @@
 /*
-   Inkplate_Basic example for e-radionica.com Inkplate 2
+   Inkplate_Basic_Text_With_Shadow example for e-radionica.com Inkplate 2
    For this example you will need only USB cable and Inkplate 2.
    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:

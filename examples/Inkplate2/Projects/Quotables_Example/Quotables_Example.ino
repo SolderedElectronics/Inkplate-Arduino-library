@@ -5,16 +5,16 @@
    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example show how to use Google API to show info about some youtube chhannel. 
-   You need to register on https://developers.google.com/ and get API key of any kind so you,
-   can use yxour API key in API call. That key you should copy in variable api_key.
-   Second thing you need to get ID of any youtube channel and copy it in channel_id variable.
-   You can get ID by going on any youtube channel profile and copy part of URL link after
-   https://www.youtube.com/channel/ (so just some random text after last backslash).
+   This example shows you how to use simple API call without API key. Response
+   from server is in JSON format, so that will be shown too how it is used. What happens
+   here is basically ESP32 sends API call and server returns HTML document containing one
+   random quote and some information about it, then using library ArduinoJSON we extract only quote
+   from JSON data and show it on Inkplate 2. 
 
    IMPORTANT:
    Make sure to change wifi credentials below
    Also have ArduinoJSON installed in your Arduino libraries, download here: https://arduinojson.org/
+   You can deserialize JSON data easily using JSON assistant https://arduinojson.org/v6/assistant/
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
