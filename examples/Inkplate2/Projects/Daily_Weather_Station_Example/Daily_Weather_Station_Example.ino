@@ -19,7 +19,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 5 in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
 #endif
 
 // ---------- CHANGE HERE  -------------:
@@ -31,8 +31,8 @@ int timeZone = 2;
 char city[128] = "ZAGREB";
 
 // Change to your wifi ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
 
 // ----------------------------------
 
@@ -210,7 +210,7 @@ void drawTemps()
   display.println(F("C"));
 
 
-  for (int i = 0; i < 18; ++i)
+  for (int i = 0; i < 10; ++i)
   {
     // If found draw specified icon
     if (strcmp(abbr1, abbrs[i]) == 0)
@@ -218,7 +218,7 @@ void drawTemps()
                          WHITE, BLACK);
   }
 
-  for (int i = 0; i < 18; ++i)
+  for (int i = 0; i < 10; ++i)
   {
     // If found draw specified icon
     if (strcmp(abbr2, abbrs[i]) == 0)
@@ -226,7 +226,7 @@ void drawTemps()
                          WHITE, BLACK);
   }
 
-  for (int i = 0; i < 18; ++i)
+  for (int i = 0; i < 10; ++i)
   {
     // If found draw specified icon
     if (strcmp(abbr3, abbrs[i]) == 0)
