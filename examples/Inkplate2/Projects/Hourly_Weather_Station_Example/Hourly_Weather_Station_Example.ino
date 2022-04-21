@@ -6,7 +6,7 @@
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can use Inkplate 2 to display API data,
-   e.g. Metaweather public weather API, and weatherstack for real time data
+   e.g. OpenWeatherMap API, and weatherstack for real time data
 
    IMPORTANT:
    Make sure to change your desired city, timezone and wifi credentials below
@@ -14,7 +14,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   28 July 2020 by e-radionica.com
+   5 April 2022 by e-radionica.com
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

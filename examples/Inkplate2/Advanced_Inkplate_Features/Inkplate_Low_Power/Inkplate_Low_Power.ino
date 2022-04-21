@@ -28,7 +28,7 @@
 #include "picture3.h"
 const uint8_t *pictures[] = {pic1, pic2, pic3}; // This array of pinters holds address of every picture in the memory,
 // so we can easly select it by selecting index in array
-const uint8_t w[] = {159, 148, 186};
+const uint8_t w[] = {159, 148, 186}; // Widths of pictures
 #define uS_TO_S_FACTOR 1000000 // Conversion factor for micro seconds to seconds
 #define TIME_TO_SLEEP  20      // How long ESP32 will be in deep sleep (in seconds)
 RTC_DATA_ATTR int slide = 0;

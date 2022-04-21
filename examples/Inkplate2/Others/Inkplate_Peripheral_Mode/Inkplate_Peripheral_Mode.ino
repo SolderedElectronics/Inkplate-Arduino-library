@@ -28,7 +28,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   14 April 2022 by soldered.com
 */
 
 #include <Inkplate.h>
@@ -214,27 +214,6 @@ void loop()
                 display.setRotation(c);
                 break;
 
-            case 'J':
-                sscanf(s + 3, "%c", &b);
-                if (b == '?')
-                {
-                    // if (0 == 0) {
-                    //  Serial.println("#J(0)*");
-                    //} else {
-                    //  Serial.println("#J(1)*");
-                    //}
-                    if (display.getDisplayMode() == INKPLATE_1BIT)
-                    {
-                        Serial.println("#J(0)*");
-                        Serial.flush();
-                    }
-                    if (display.getDisplayMode() == INKPLATE_3BIT)
-                    {
-                        Serial.println("#J(1)*");
-                        Serial.flush();
-                    }
-                }
-                break;
 
             case 'K':
                 sscanf(s + 3, "%c", &b);

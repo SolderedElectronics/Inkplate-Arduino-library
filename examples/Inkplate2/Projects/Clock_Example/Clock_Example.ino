@@ -8,7 +8,7 @@
    This example contains three types of clocks. First type is digital clock
    with 4 digits which displays hours and minutes. Second type is binary clock,
    which also have digits but displayed in binary numbers. Third type is analog 
-   clock with needles.
+   clock with hands.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
@@ -21,6 +21,12 @@
 #endif
 
 //---------- CHANGE HERE  -------------:
+
+// Change mode of clock
+// 0 is digital clock
+// 1 is binary clock
+// 2 is analog clock
+uint8_t MODE = 1;
 
 // Adjust your time zone, 2 means UTC+2
 int timeZone = 2;
@@ -51,15 +57,13 @@ char pass[] = "dasduino";
 
 const uint8_t *numbers[] = {zero, one, two, three, four, five, six, seven, eight, nine};
 
-uint8_t clockMode = 2;
-
 // create object with all networking functions
 Network network;
 
 // create display object
 Inkplate display;
 
-struct tm t;
+struct tm t; // Structure that contains time info
 
 void setup()
 {
@@ -70,16 +74,6 @@ void setup()
   display.begin();
   display.setTextWrap(true);
   display.setTextColor(BLACK, WHITE);
-
-  // Welcome screen
-  display.setCursor(10, 10); // Set cursor, custom font uses different method for setting cursor
-  // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
-  display.setTextSize(2);
-  display.println(F("Welcome to Inkplate 2 Clock example!"));
-  display.setCursor(10, 10);
-  display.display();
-  display.clearDisplay();
-  delay(1000);
 
   // Our begin function
   network.begin();
@@ -106,7 +100,7 @@ void drawTime()
   // Save current date string, more about it in Network.cpp
   network.getTime(&t);
   display.clearDisplay();
-  switch (clockMode)
+  switch (MODE)
   {
     case 0: //Digital clock
       display.drawBitmap(0, 10, numbers[t.tm_hour / 10], 48, 84, RED); // Get first number of hours and draw it
@@ -188,6 +182,8 @@ void drawTime()
         display.setCursor(190, 55);
         display.print("1");
 
+        display.drawLine(100, 0, 100, 104, BLACK);
+
         //Draw number that represents values of circles
         display.setTextSize(1);
         display.setCursor(90, 7);
@@ -205,10 +201,6 @@ void drawTime()
       //this part of code draws analog clock
       display.drawCircle(106, 52, 50, 1); //Draw outer circles
       display.drawCircle(106, 52, 51, 1);
-      //display.drawThickLine(20,220,40,220,1,2); //draws lines instead of numbers
-      //display.drawThickLine(220,20,220,40,1,2);
-      //display.drawThickLine(400,220,420,220,1,2);
-      //display.drawThickLine(220,400,220,420,1,2);
 
       // Draw lines that represents 5, 10, 20, 25, 35, 40, 50, 55
       display.drawThickLine(63, 27, 67, 30, 1, 1); 
@@ -234,14 +226,14 @@ void drawTime()
       //Draw dot in middle
       display.fillCircle(106, 52, 5, 1);
       
-      //this part of code draws needles and calculates their angles
+      //this part of code draws hands and calculates their angles
       int x_minute, y_minute, x_hour, y_hour;
       x_minute = 106 + 40 * (float) sin((t.tm_min / (float)60) * 2 * (float)3.14);
       y_minute = 52 - 40 * (float) cos((t.tm_min / (float)60) * 2 * (float)3.14);
       x_hour = 106  + 30 * sin((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
       y_hour = 52 - 30 * cos((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
-      display.drawThickLine(106, 52, x_minute, y_minute, RED, 2); //needle for minutes
-      display.drawThickLine(106, 52, x_hour, y_hour, BLACK, 3); //needle for hours
+      display.drawThickLine(106, 52, x_minute, y_minute, RED, 2); //hand for minutes
+      display.drawThickLine(106, 52, x_hour, y_hour, BLACK, 3); //hand for hours
       break;
 
   }

@@ -28,9 +28,9 @@
 #include "thermometer.h"
 #include "pressure.h"
 
-Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+Inkplate display; // Create an object on Inkplate library
 Bmp_180 myBmp; // Create an object BMP180 library
-//(with no arguments sent to constructor, that means we are using I2C communication for BME680 sensor)
+//(with no arguments sent to constructor, that means we are using I2C communication for BMP180 sensor)
 
 void setup()
 {

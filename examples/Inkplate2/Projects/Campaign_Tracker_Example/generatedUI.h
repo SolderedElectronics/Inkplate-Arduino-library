@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "Fonts/Open_Sans_SemiBold_16.h"
+#include "Fonts/Inter8pt7b.h"
 #include "Inkplate.h"
 
 
@@ -16,58 +16,58 @@ int rect0_color = BLACK;
 String text1_content;
 int text1_cursor_x = 5;
 int text1_cursor_y = 20;
-const GFXfont *text1_font = &Open_Sans_SemiBold_16;
+const GFXfont *text1_font = &Inter8pt7b;
 
 String text2_content;
 int text2_cursor_x = 5;
 int text2_cursor_y = 40;
-const GFXfont *text2_font = &Open_Sans_SemiBold_16;
+const GFXfont *text2_font = &Inter8pt7b;
 
 String text3_content;
 int text3_cursor_x = 5;
 int text3_cursor_y = 60;
-const GFXfont *text3_font = &Open_Sans_SemiBold_16;
+const GFXfont *text3_font = &Inter8pt7b;
 //
 
 String text4_content;
 int text4_cursor_x = 15;
 int text4_cursor_y = 60;
-const GFXfont *text4_font = &Open_Sans_SemiBold_16;
+const GFXfont *text4_font = &Inter8pt7b;
 
 String text5_content = "$";
 int text5_cursor_x = 5;
 int text5_cursor_y = 60;
-const GFXfont *text5_font = &Open_Sans_SemiBold_16;
+const GFXfont *text5_font = &Inter8pt7b;
 
 String text6_content = "raised";
 int text6_cursor_x = 100;
 int text6_cursor_y = 60;
-const GFXfont *text6_font = &Open_Sans_SemiBold_16;
+const GFXfont *text6_font = &Inter8pt7b;
 
 String text7_content;
 int text7_cursor_x = 15;
 int text7_cursor_y = 80;
-const GFXfont *text7_font = &Open_Sans_SemiBold_16;
+const GFXfont *text7_font = &Inter8pt7b;
 
 String text8_content = "$";
 int text8_cursor_x = 5;
 int text8_cursor_y = 80;
-const GFXfont *text8_font = &Open_Sans_SemiBold_16;
+const GFXfont *text8_font = &Inter8pt7b;
 
 String text9_content = "goal";
 int text9_cursor_x = 100;
 int text9_cursor_y = 80;
-const GFXfont *text9_font = &Open_Sans_SemiBold_16;
+const GFXfont *text9_font = &Inter8pt7b;
 
 String text17_content;
 int text17_cursor_x = 5;
 int text17_cursor_y = 100;
-const GFXfont *text17_font = &Open_Sans_SemiBold_16;
+const GFXfont *text17_font = &Inter8pt7b;
 
 String text18_content = "backers";
 int text18_cursor_x = 65;
 int text18_cursor_y = 100;
-const GFXfont *text18_font = &Open_Sans_SemiBold_16;
+const GFXfont *text18_font = &Inter8pt7b;
 
 void mainDraw()
 {
