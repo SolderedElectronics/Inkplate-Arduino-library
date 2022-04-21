@@ -1,17 +1,23 @@
 /*
-   Inkplate_Bluetooth_Peripheral_Mode_Example example for e-radionica Inkplate 2
-   For this example you will need USB cable and an Inkplate 2
-   Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
-   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+    Inkplate_Bluetooth_Peripheral_Mode_Example example for e-radionica Inkplate 2
+    For this example you will need USB cable and an Inkplate 2 and bluetooth supporting device
+    like phone or laptop.
+    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
+    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example shows how to use Inkplate as a peripheral device over Bluetooth.
-   Note: for this to work you need to use ESP32 Wroover Board definition, as ours currently has a bug :(
+    This example shows how to use Inkplate as a peripheral device over Bluetooth.
+    Note: for this to work you need to use ESP32 Wroover Board definition, as ours currently has a bug :(
 
-   Want to learn more about Inkplate? Visit www.inkplate.io
-   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   29 March 2022 by Soldered
+    Want to learn more about Inkplate? Visit www.inkplate.io
+    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+    29 March 2022 by Soldered
 */
+
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATE2
+#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#endif
 
 #include "Inkplate.h"
 

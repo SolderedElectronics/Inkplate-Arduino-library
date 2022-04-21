@@ -200,16 +200,6 @@ void run(char commandBuffer[], size_t n)
                 // Serial.print(temp);
                 display.setRotation(c);
                 break;
-                
-            case 'I':
-                sscanf(s + 3, "%d", &c);
-                // sprintf(temp, "display.setDisplayMode(%s)\n", c == 0 ? "INKPLATE_1BIT" : "INKPLATE_3BIT");
-                // Serial.print(temp);
-                if (c == 1)
-                    display.selectDisplayMode(INKPLATE_1BIT);
-                if (c == 3)
-                    display.selectDisplayMode(INKPLATE_3BIT);
-                break;
 
             case 'K':
                 sscanf(s + 3, "%c", &b);

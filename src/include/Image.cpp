@@ -120,7 +120,7 @@ bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, ui
     drawBitmap3Bit(x, y, buf, w, h);
     return 1;
 #elif defined(ARDUINO_INKPLATE2)
-    uint16_t scaled_w = ceil(w / 4);
+    uint16_t scaled_w = ceil(w / 4.0);
     for (int i = 0; i < h; i++)
     {
         for (int j = 0; j < scaled_w; j++)
