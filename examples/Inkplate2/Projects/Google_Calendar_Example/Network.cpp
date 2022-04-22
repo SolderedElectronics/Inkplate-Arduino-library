@@ -20,6 +20,8 @@ Distributed as-is; no warranty is given.
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 
+extern struct tm timeinfo;
+
 void Network::begin()
 {
     // Initiating wifi, like in BasicHttpClient example
@@ -56,8 +58,9 @@ void Network::getTime(char *timeStr, long offSet)
     // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr) + (long)timeZone * 3600L + offSet;
 
+
+    
     // Used to store time
-    struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
 
     // Copies time string into timeStr

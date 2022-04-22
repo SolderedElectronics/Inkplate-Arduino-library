@@ -141,6 +141,7 @@ void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
     sprintf(url, "https://www.metaweather.com/api/location/%d/", location);
 
     // Initiate http
+    http.useHTTP10(true);
     http.begin(url);
 
     // Actually do request
@@ -148,7 +149,7 @@ void Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
     if (httpCode == 200)
     {
         int32_t len = http.getSize();
-
+        
         if (len > 0)
         {
             // Try parsing JSON object
@@ -328,7 +329,6 @@ void Network::findCity(char *city)
     // Clear document and end http
     doc.clear();
     http.end();
-
     // Return module to initial state
     WiFi.setSleep(sleep);
 };

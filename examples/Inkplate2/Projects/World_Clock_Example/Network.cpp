@@ -28,7 +28,6 @@
 // external parameters from our main file
 extern char ssid[];
 extern char pass[];
-extern char currency[];
 extern const char *city1_name;
 extern const char *city2_name;
 
@@ -69,7 +68,7 @@ void Network::begin()
 void Network::getTime(tm *t)
 {
   // Get seconds since 1.1.1970.
-  time_t nowSecs = time(nullptr);
+  time_t nowSecs = time(nullptr) + 3600ULL * timeZone;
 
   // Used to store time
   struct tm timeinfo;

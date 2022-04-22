@@ -1,20 +1,20 @@
 /*
-   Weather station example for e-radionica.com Inkplate 2
-   For this example you will need only USB cable and Inkplate 2.
-   Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
-   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+    Weather station example for e-radionica.com Inkplate 2
+    For this example you will need only USB cable and Inkplate 2.
+    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
+    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how you can use Inkplate 2 to display API data,
-   e.g. Metaweather public weather API
+    This example will show you how you can use Inkplate 2 to display API data,
+    e.g. Metaweather public weather API
 
-   IMPORTANT:
-   Make sure to change your desired city, timezone and wifi credentials below
-   Also have ArduinoJSON installed in your Arduino libraries
+    IMPORTANT:
+    Make sure to change your desired city, timezone and wifi credentials below
+    Also have ArduinoJSON installed in your Arduino libraries
 
-   Want to learn more about Inkplate? Visit www.inkplate.io
-   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   30 March 2020 by Soldered
+    Want to learn more about Inkplate? Visit www.inkplate.io
+    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+    30 March 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -31,8 +31,8 @@ int timeZone = 2;
 char city[128] = "ZAGREB";
 
 // Change to your wifi ssid and password
-char ssid[] = "Besest";
-char pass[] = "12345678";
+char ssid[] = "";
+char pass[] = "";
 
 // ----------------------------------
 
@@ -70,18 +70,18 @@ RTC_DATA_ATTR char abbr4[16];
 
 // Variables for storing temperature
 RTC_DATA_ATTR char temps[8][4] = {
-  "0F",
-  "0F",
-  "0F",
-  "0F",
+    "0F",
+    "0F",
+    "0F",
+    "0F",
 };
 
 // Variables for storing days of the week
 RTC_DATA_ATTR char days[8][4] = {
-  "",
-  "",
-  "",
-  "",
+    "",
+    "",
+    "",
+    "",
 };
 
 // Variables for storing current time and weather info
@@ -98,27 +98,27 @@ void drawTemps();
 
 void setup()
 {
-  // Begin serial and display
-  Serial.begin(115200);
-  display.begin();
-  
-  display.clearDisplay();
-  // Wait a bit before proceeding
-  delay(5000);
+    // Begin serial and display
+    Serial.begin(115200);
+    display.begin();
 
-  // Calling our begin from network.h file
-  network.begin(city);
+    display.clearDisplay();
+    // Wait a bit before proceeding
+    delay(5000);
 
-  // If city not found, do nothing
-  if (network.location == -1)
-  {
-    display.setCursor(50, 290);
-    display.setTextSize(3);
-    display.print(F("City not in Metaweather Database"));
-    display.display();
-    while (1)
-      ;
+    // Calling our begin from network.h file
+    network.begin(city);
 
+    // If city not found, do nothing
+    if (network.location == -1)
+    {
+        display.setCursor(50, 290);
+        display.setTextSize(3);
+        display.print(F("City not in Metaweather Database"));
+        display.display();
+        while (1)
+            ;
+    }
 
     // Get all relevant data, see Network.cpp for info
     network.getTime(currentTime);
@@ -131,92 +131,81 @@ void setup()
     drawTemps();
 
     display.display();
-  }
-  else
-  {
-    // Refresh only the clock
-    network.getTime(currentTime);
 
-    display.clearDisplay();
-    drawTemps(); //Call function
-
-    display.display();
-  }
-
-  // Go to sleep
-  esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-  (void)esp_deep_sleep_start();
+    // Go to sleep
+    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+    (void)esp_deep_sleep_start();
 }
 
 void loop()
 {
-  // Never here
+    // Never here
 }
 
 
 // Function for drawing temperatures
 void drawTemps()
 {
-  // Drawing 4 black rectangles in which temperatures will be written
+    // Drawing 4 black rectangles in which temperatures will be written
 
-  display.fillRect(5, 5, 60, 94, BLACK); //Draw some rectangles
-  display.fillRect(75, 5, 60, 94, BLACK);
-  display.fillRect(145, 5, 60, 94, BLACK);
+    display.drawRect(5, 5, 60, 94, BLACK); //Draw some rectangles
+    display.drawRect(75, 5, 60, 94, BLACK);
+    display.drawRect(145, 5, 60, 94, BLACK);
 
-  display.setFont(&Inter8pt7b); //Set custom font; it needs to be included as .h file
-  display.setTextSize(1); //Set font size
-  display.setTextColor(RED, BLACK); // Set text and background color
+    display.setFont(&Inter8pt7b); //Set custom font; it needs to be included as .h file
+    display.setTextSize(1); //Set font size
+    display.setTextColor(RED, WHITE); // Set text and background color
 
-  display.setCursor(10, 20);  // Set cursor, custom font uses different method for setting cursor
-                              // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
-  display.println("Today");
+    display.setCursor(10, 20);  // Set cursor, custom font uses different method for setting cursor
+    // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
+    display.println("Today");
 
-  display.setCursor(80, 20);
-  display.println(days[1]);
+    display.setCursor(90, 20);
+    display.println(days[1]);
 
-  display.setCursor(150, 20);
-  display.println(days[2]);
+    display.setCursor(160, 20);
+    display.println(days[2]);
 
-  // Drawing temperature values into black rectangles
-  display.setFont(&Inter8pt7b);
-  display.setTextSize(1);
-  display.setTextColor(WHITE, BLACK);
+    // Drawing temperature values into black rectangles
+    display.setFont(&Inter8pt7b);
+    display.setTextSize(1);
+    display.setTextColor(BLACK, WHITE);
 
-  display.setCursor(15, 40);
-  display.print(temps[0]);
-  display.println(F("C"));
+    display.setCursor(20, 40);
+    display.print(temps[0]);
+    display.println(F("C"));
 
-  display.setCursor(85, 40);
-  display.print(temps[1]);
-  display.println(F("C"));
+    display.setCursor(90, 40);
+    display.print(temps[1]);
+    display.println(F("C"));
 
-  display.setCursor(155, 40);
-  display.print(temps[2]);
-  display.println(F("C"));
+    display.setCursor(160, 40);
+    display.print(temps[2]);
+    display.println(F("C"));
 
 
-  for (int i = 0; i < 10; ++i)
-  {
-    // If found draw specified icon
-    if (strcmp(abbr1, abbrs[i]) == 0)
-      display.drawBitmap(11, 48, s_logos[i], 48, 48,
-                         WHITE, BLACK);
-  }
+    for (int i = 0; i < 10; ++i)
+    {
+        // If found draw specified icon
+        if (strcmp(abbr1, abbrs[i]) == 0)
+            display.drawBitmap(11, 48, s_logos[i], 48, 48,
+                               BLACK, WHITE);
+    }
 
-  for (int i = 0; i < 10; ++i)
-  {
-    // If found draw specified icon
-    if (strcmp(abbr2, abbrs[i]) == 0)
-      display.drawBitmap(81, 48, s_logos[i], 48, 48,
-                         WHITE, BLACK);
-  }
+    for (int i = 0; i < 10; ++i)
+    {
+        // If found draw specified icon
+        if (strcmp(abbr2, abbrs[i]) == 0)
+            display.drawBitmap(81, 48, s_logos[i], 48, 48,
+                               BLACK, WHITE);
+    }
 
-  for (int i = 0; i < 10; ++i)
-  {
-    // If found draw specified icon
-    if (strcmp(abbr3, abbrs[i]) == 0)
-      display.drawBitmap(151, 48, s_logos[i], 48, 48,
-                         WHITE, BLACK);
-  }
+    for (int i = 0; i < 10; ++i)
+    {
+        // If found draw specified icon
+        if (strcmp(abbr3, abbrs[i]) == 0)
+            display.drawBitmap(151, 48, s_logos[i], 48, 48,
+                               BLACK, WHITE);
+    }
 
 }

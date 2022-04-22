@@ -11,7 +11,7 @@
    to few letters, any city containig that letters will be found.
 
    IMPORTANT:
-   Make sure to change your timezone and wifi credentials below
+   Make sure to change your wifi credentials below
    Also have ArduinoJSON installed in your Arduino libraries, download here: https://arduinojson.org/
 
    Want to learn more about Inkplate? Visit www.inkplate.io
@@ -104,8 +104,8 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool color, const char *city_name)
 {
   uint16_t w = 80; //Clock width
   // This part of code draws analog clock
-  display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2, 1 + color); //Draw outer circles
-  display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2 + 1, 1 + color);
+  display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2, BLACK); //Draw outer circles
+  display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2 + 1, BLACK);
 
   //Draws lines that represents 3, 6 ,9 and 12 hours on the clocks face
   display.drawThickLine(x_pos + w / 2, y_pos        , x_pos + w / 2, y_pos + 5, 1 + color, 2); 

@@ -1,15 +1,15 @@
 /*
-   3-Google_calendar_example for e-radionica.com Inkplate 2
-   For this example you will need only USB cable and Inkplate 2.
-   Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
-   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+    3-Google_calendar_example for e-radionica.com Inkplate 2
+    For this example you will need only USB cable and Inkplate 2.
+    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
+    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This project shows you how Inkplate 2 can be used to display
-   events in your Google Calendar using their provided API
+    This project shows you how Inkplate 2 can be used to display
+    events in your Google Calendar using their provided API
 
-   For this to work you need to change your timezone, wifi credentials and your private calendar url
-   which you can find following these steps:
+    For this to work you need to change your timezone, wifi credentials and your private calendar url
+    which you can find following these steps:
 
     1. Open your google calendar
     2. Click the 3 menu dots of the calendar you want to access at the bottom of left hand side
@@ -17,11 +17,11 @@
     4. Navigate to 'Integrate Calendar'
     5. Take the 'Secret address in iCal format'
 
-   (https://support.google.com/calendar/thread/2408874?hl=en)
+    (https://support.google.com/calendar/thread/2408874?hl=en)
 
-   Want to learn more about Inkplate? Visit www.inkplate.io
-   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   29 March 2022 by Soldered
+    Want to learn more about Inkplate? Visit www.inkplate.io
+    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+    29 March 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -33,7 +33,8 @@
 #include "Inkplate.h"
 
 // Including fonts
-#include "Fonts/Roboto_Regular8.h"
+#include "Fonts/Inter8pt7b.h"
+#include "Fonts/Inter12pt7b.h"
 
 // Includes
 #include "Network.h"
@@ -50,13 +51,15 @@ int timeZone = 2;
 //---------------------------
 
 // Delay between API calls
-#define DELAY_MS 4 * 60000
+#define DELAY_MS 4 * 60000 // 4 minutes times 60000 miliseconds in minute
 
 // Initiate out Inkplate object
 Inkplate display;
 
 // Our networking functions, see Network.cpp for info
 Network network;
+
+struct tm timeinfo;
 
 // Variables for time and raw event info
 char date[64];
@@ -77,6 +80,8 @@ struct entry
 int entriesNum = 0;
 entry entries[128];
 
+const char months[][4] = {{"JAN"}, {"FEB"}, {"MAR"}, {"APR"}, {"MAY"}, {"JUN"}, {"JUL"}, {"AUG"}, {"SEP"}, {"OCT"}, {"NOV"}, {"DEC"}};
+
 // All our functions declared below setup and loop
 void drawInfo();
 void drawTime();
@@ -94,19 +99,11 @@ void setup()
 
     // Initial display settings
     display.begin();
-    
+
     display.setTextWrap(false);
     display.setTextColor(BLACK, WHITE);
 
-    // Welcome screen
-    display.setTextSize(2);
-    display.drawTextWithShadow(0, 20,"Welcome to Inkpl-", RED, BLACK);
-    display.drawTextWithShadow(0, 40,"ate 2 Google", RED, BLACK);
-    display.drawTextWithShadow(0, 60,"Calendar example!", RED, BLACK);
-    display.display();
-
-    delay(5000);
-    network.begin();
+    network.begin(); //Connect to wifi and get data
 
     // Keep trying to get data if it fails the first time
     while (!network.getData(data))
@@ -118,13 +115,14 @@ void setup()
     // Initial screen clearing
     display.clearDisplay();
 
-    getEvents();
-    drawEvent();
+    getEvents(); // Call function
+    drawEvent(); // Call function
 
-    display.display();
+    display.display(); // Show data on display
 
     // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS); //Enable wake up while sleep is enabled after 4 minutes
+                                                     // 1000L * is here because function accepts microseconds
     (void)esp_deep_sleep_start();
 }
 
@@ -136,44 +134,49 @@ void loop()
 
 void drawEvent()
 {
-  uint8_t next_event = 0;
-  time_t curr_timestamp = network.getEpoch();
-  while(entries[next_event].timeStampEnd < curr_timestamp && entriesNum > next_event)
-  {
-    next_event++;
-  }
-  if(next_event == entriesNum)
-  {
-    display.setTextSize(1);
-    display.setCursor(5,20); // Set cursor, custom font uses different method for setting cursor
-                              // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
-    display.setFont(&Roboto_Regular8); //Set custom font
-    display.print("No upcoming events."); //Print information message
-  }
-  else
-  {
-    display.setTextSize(1); //Set font size
-    display.setCursor(5,8);
-    display.setFont(&Roboto_Regular8);
-    display.print("Next event starts at:");
-    display.setCursor(10,32);
-    display.setTextColor(RED,WHITE);
-    display.print(asctime(localtime(&(entries[next_event].timeStampStart)))); //Convert time to string and print it 
-    display.setCursor(5,52);
-    display.setTextColor(BLACK,WHITE);
-    display.print("Lasting: ");
-    display.setTextColor(RED,WHITE);
-    display.print(entries[next_event].time);
-    display.setCursor(5,72);
-    display.setTextColor(BLACK,WHITE);
-    display.print("Event name: ");
-    display.setTextColor(RED,WHITE);
-    display.print(entries[next_event].name);
+    uint8_t next_event = 0;
+    time_t curr_timestamp = network.getEpoch(); // Get current time in epoch format
+    while (entries[next_event].timeStampEnd < curr_timestamp && entriesNum > next_event)
+    {
+        next_event++;
+    } // Find next event and reject all events that already happened
 
-    /*display.setCursor(10,50);
-    display.print("Event name: ");
-    display.print(entries[next_event].name);*/
-  }
+    //Next part of code draws UI
+    display.drawRect(4, 40 , 48, 55, BLACK);
+    display.drawRect(72, 4 , 133, 46, BLACK);
+    display.drawRect(72, 55 , 133, 46, BLACK);
+    display.setFont(&Inter8pt7b);
+    display.setCursor(10, 22);
+    timeinfo.tm_hour < 10 ? display.print("0") : 0;
+    display.print(timeinfo.tm_hour);
+    display.print(":");
+    timeinfo.tm_min < 10 ? display.print("0") : 0;
+    display.print(timeinfo.tm_min);
+    timeinfo.tm_mday < 10 ? display.setCursor(22, 62) : display.setCursor(18, 62);
+    display.print(timeinfo.tm_mday);
+    display.setCursor(11, 85);
+    
+    display.setTextColor(RED, WHITE);
+    display.print(months[timeinfo.tm_mon]);
+    display.setTextColor(BLACK, WHITE);
+    if (next_event <= entriesNum)
+    {
+        display.setCursor(78, 18);
+        entries[next_event].name[14] = '\0';
+        display.print(entries[next_event].name);
+        display.setCursor(82, 38);
+        display.print(entries[next_event].time);
+        next_event++;
+    }
+
+    if (next_event <= entriesNum)
+    {
+        display.setCursor(78, 70);
+        entries[next_event].name[14] = '\0';
+        display.print(entries[next_event].name);
+        display.setCursor(82, 90);
+        display.print(entries[next_event].time);
+    }
 }
 
 // Format event times, example 13:00 to 14:00
@@ -197,7 +200,7 @@ void getToFrom(char *dst, char *from, char *to, int *day, time_t *timeStampEnd, 
 
     // create start and end event structs
     struct tm event, event2;
-    time_t epoch = mktime(&ltm) + (time_t)timeZone * 3600L; //Get epoch 
+    time_t epoch = mktime(&ltm) + (time_t)timeZone * 3600L; //Get epoch
     gmtime_r(&epoch, &event);
     strncpy(dst, asctime(&event) + 11, 5);
 
@@ -217,7 +220,7 @@ void getToFrom(char *dst, char *from, char *to, int *day, time_t *timeStampEnd, 
 
     strptime(temp2, "%Y-%m-%dT%H-%M-%SZ", &ltm2); //Convert string containing time into time struct
 
-    time_t epoch2 = mktime(&ltm2) + (time_t)timeZone * 3600L; //Get epoch 
+    time_t epoch2 = mktime(&ltm2) + (time_t)timeZone * 3600L; //Get epoch
     gmtime_r(&epoch2, &event2);
     strncpy(dst + 6, asctime(&event2) + 11, 5);
 

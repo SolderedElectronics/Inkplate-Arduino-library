@@ -42,8 +42,8 @@ char api_key[] = "AIzaSyASxGJ2D3OcgtkEEgR3Iq0RaZ9_cA7x6PI"; //API key, you can g
 #include "Inkplate.h"
 
 // Include fonts used
-#include "Fonts/Roboto_Light16.h"
-#include "Fonts/Roboto_Light8.h"
+#include "Fonts/Inter16pt7b.h"
+#include "Fonts/Inter8pt7b.h"
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
