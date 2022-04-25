@@ -31,6 +31,14 @@ int offset = 800;
 
 // Variable that keeps count on how much screen has been partially updated
 int n = 0;
+
+// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
+// otherwise your code could hang out when you send code to your Inkplate.
+// You can easily check if your Inkplate has second MCP by turning it over and 
+// if there is missing chip near place where "MCP23017-2" is written, but if there is
+// chip soldered, you don't have to uncomment line and use external MCP I/O expander
+//#define ONE_MCP_MODE
+
 void setup()
 {
     display.begin();                    // Init Inkplate library (you should call this function ONLY ONCE)

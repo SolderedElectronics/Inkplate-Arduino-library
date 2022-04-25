@@ -32,6 +32,13 @@ Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and als
 
 int number = 0; // Variable that stores our number
 int n = 0;      // Variable that keeps track on how many times display is partially updated
+// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
+// otherwise your code could hang out when you send code to your Inkplate.
+// You can easily check if your Inkplate has second MCP by turning it over and 
+// if there is missing chip near place where "MCP23017-2" is written, but if there is
+// chip soldered, you don't have to uncomment line and use external MCP I/O expander
+//#define ONE_MCP_MODE
+
 void setup()
 {
     display.begin();                    // Init Inkplate library (you should call this function ONLY ONCE)
