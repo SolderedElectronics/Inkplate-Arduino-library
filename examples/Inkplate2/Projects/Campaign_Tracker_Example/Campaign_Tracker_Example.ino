@@ -26,8 +26,8 @@ char *buf;
 
 String textInTag(const char *tag, const char *tagEnd, int dt = 1);
 
-#define ssid "Soldered" // Name of the WiFi network (SSID) that you want to connect Inkplate to
-#define pass "dasduino" // Password of that WiFi network
+#define ssid "" // Name of the WiFi network (SSID) that you want to connect Inkplate to
+#define pass "" // Password of that WiFi network
 
 void setup()
 {

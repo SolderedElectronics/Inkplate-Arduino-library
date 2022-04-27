@@ -29,8 +29,8 @@
 //---------- CHANGE HERE  -------------:
 
 // Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 char channel_id[] = "UC2ppjz9TLbBCuGPmmafptrg"; // Youtube channel ID, read in example
                                                 // description how to get it

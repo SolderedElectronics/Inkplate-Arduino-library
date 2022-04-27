@@ -25,8 +25,8 @@
 #endif
 
 // Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 //----------------------------------
 
@@ -63,18 +63,6 @@ void setup()
 
   // Initial display settings
   display.begin();
-  display.setTextWrap(true);
-  display.setTextColor(BLACK, WHITE);
-
-  // Welcome screen
-  display.setCursor(10, 10); // Set cursor, custom font uses different method for setting cursor
-  // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
-  display.setTextSize(2);
-  display.println(F("Welcome to Inkplate 2 World Clock example!"));
-  display.setCursor(10, 10);
-  display.display();
-  display.clearDisplay();
-  delay(1000);
 
   // Our begin function
   network.begin();
@@ -89,10 +77,10 @@ void setup()
   drawTime(115, 1, t.tm_hour > 12 ? 1 : 0, city2_name);
 
   display.display();
-
-  // Go to sleep before checking again
-  esp_sleep_enable_timer_wakeup(100000000); //Go to sleep for 100 million microseconds or 100 seconds
-  (void)esp_deep_sleep_start();
+  
+  // Go to sleep before checking again, uncomment if you want to use 
+  //esp_sleep_enable_timer_wakeup(100000000); //Go to sleep for 100 million microseconds or 100 seconds
+  //(void)esp_deep_sleep_start();
 }
 
 void loop()
@@ -139,6 +127,7 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool color, const char *city_name)
   
   display.setTextSize(1); // Set text size in comparison to original text 5x7
   display.setFont(&Inter8pt7b); // Set customn font
+  display.setTextColor(BLACK, WHITE);
   char *temp_city_name = strstr(city_name , "/") + 1;
   display.setCursor(x_pos + 40 - strlen(temp_city_name) * 5, 100); // Center city name
   

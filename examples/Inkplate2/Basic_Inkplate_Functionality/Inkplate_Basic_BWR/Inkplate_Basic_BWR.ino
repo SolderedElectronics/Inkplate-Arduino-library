@@ -36,10 +36,7 @@ void setup()
     display.drawTextWithShadow(0, 50, "Inkplate 2!", RED, BLACK); //Draw text with shadow
     display.display(); // Write hello message
     delay(5000);       // Wait a little bit
-}
 
-void loop()
-{
     // Example will demostrate funcionality one by one. You always first set everything in the frame buffer and
     // afterwards you show it on the screen using display.display().
 
@@ -307,6 +304,12 @@ void loop()
         r++;
         delay(DELAY_MS);
     }
+}
+
+
+void loop()
+{
+
 }
 
 // Small function that will write on the screen what function is currently in demonstration.

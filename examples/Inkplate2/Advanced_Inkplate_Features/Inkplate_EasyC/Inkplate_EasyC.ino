@@ -81,5 +81,5 @@ void loop()
     display.println(" hPa");
 
     display.display();
-    delay(60000);
+    delay(60000); // Wait 60000 miliseconds or 1 second
 }

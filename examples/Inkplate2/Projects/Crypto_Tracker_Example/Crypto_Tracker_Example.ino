@@ -30,8 +30,8 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // OPTIONAL:
 // change to a different currency

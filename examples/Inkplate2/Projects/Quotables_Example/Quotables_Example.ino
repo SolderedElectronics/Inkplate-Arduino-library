@@ -29,8 +29,8 @@
 //---------- CHANGE HERE  -------------:
 
 // Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 //----------------------------------
 

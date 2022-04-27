@@ -131,6 +131,7 @@ bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, ui
             writePixel(4 * j + x + 3, i + y, (buf[scaled_w * i + j] & 0x03));
         }
     }
+    return 1;
 #else
     if (getDisplayMode() == INKPLATE_1BIT && bg == 0xFF)
         drawBitmap(x, y, buf, w, h, c);
@@ -265,7 +266,7 @@ bool Image::drawImage(const char *path, const Format &format, const Position &po
  */
 void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)
 {
-#ifndef ARDUINO_INKPLATECOLOR
+#if !defined(ARDUINO_INKPLATECOLOR) & !defined(ARDUINO_INKPLATE2)
     if (getDisplayMode() != INKPLATE_3BIT)
         return;
 #endif
