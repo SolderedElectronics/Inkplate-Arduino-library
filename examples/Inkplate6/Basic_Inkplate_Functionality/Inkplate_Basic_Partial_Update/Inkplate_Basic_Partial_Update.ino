@@ -63,7 +63,6 @@ void loop()
         offset = 800; // Text is scrolled till the end of the screen? Get it back on the start!
     delay(500);       // Delay between refreshes.
 
-
     // ADVANCED USAGE
 
     display.clearDisplay();         // Clear content in frame buffer

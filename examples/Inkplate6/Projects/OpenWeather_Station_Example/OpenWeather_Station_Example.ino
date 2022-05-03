@@ -246,7 +246,6 @@ void setup()
     display.clearDisplay();
     display.display();
 
-
     // Welcome screen
     display.setCursor(50, 290);
     display.setTextSize(3);

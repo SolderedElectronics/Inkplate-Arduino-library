@@ -37,7 +37,6 @@ int n = 0;
 // You can easily check if your Inkplate has second MCP by turning it over and 
 // if there is missing chip near place where "MCP23017-2" is written, but if there is
 // chip soldered, you don't have to uncomment line and use external MCP I/O expander
-//#define ONE_MCP_MODE
 
 void setup()
 {
@@ -70,7 +69,6 @@ void loop()
     if (offset < 0)
         offset = 800; // Text is scrolled till the end of the screen? Get it back on the start!
     delay(500);       // Delay between refreshes.
-
 
     // ADVANCED USAGE
 

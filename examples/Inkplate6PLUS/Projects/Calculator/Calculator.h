@@ -277,7 +277,6 @@ int text22_cursor_x = 60;
 int text22_cursor_y = 95;
 const GFXfont *text22_font = &FreeSansBold24pt7b;
 
-
 void mainDraw() {
     //Serial.println("Main draw");
 
@@ -527,7 +526,6 @@ void mainDraw() {
     display.setFont(text20_font);
     display.setTextColor(BLACK, WHITE);    display.setTextSize(1);    display.setCursor(text20_cursor_x, text20_cursor_y);
     display.print(text20_content);
-
 
     if (rect19_radius != -1 && rect19_fill != -1)
        display.fillRoundRect(rect19_a_x, rect19_a_y, rect19_b_x - rect19_a_x, rect19_b_y - rect19_a_y, rect19_radius, rect19_color);

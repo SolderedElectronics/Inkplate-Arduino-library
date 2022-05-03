@@ -12,7 +12,6 @@ String s =  "<head>"
             "  font-size: 150%;"
             "}"
 
-
             "t1 {"
             "  font-size: 150%;"
             "  font-weight: bold;"

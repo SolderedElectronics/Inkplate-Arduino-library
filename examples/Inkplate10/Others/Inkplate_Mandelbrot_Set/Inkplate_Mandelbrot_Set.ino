@@ -35,7 +35,6 @@ double yFrom = 0.1092, yTo = 0.2102;
 // You can easily check if your Inkplate has second MCP by turning it over and 
 // if there is missing chip near place where "MCP23017-2" is written, but if there is
 // chip soldered, you don't have to uncomment line and use external MCP I/O expander
-//#define ONE_MCP_MODE
 
 void setup()
 {
@@ -83,7 +82,6 @@ double modulusComplexSqr(struct complex *z)
 {
     return z->re * z->re + z->im * z->im;
 }
-
 
 uint8_t colorAt(double x, double y)
 {

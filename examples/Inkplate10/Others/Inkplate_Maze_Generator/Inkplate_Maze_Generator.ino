@@ -39,7 +39,6 @@ int dy[] = {0, -1, 1, 0};
 // You can easily check if your Inkplate has second MCP by turning it over and 
 // if there is missing chip near place where "MCP23017-2" is written, but if there is
 // chip soldered, you don't have to uncomment line and use external MCP I/O expander
-//#define ONE_MCP_MODE
 
 void setup()
 {

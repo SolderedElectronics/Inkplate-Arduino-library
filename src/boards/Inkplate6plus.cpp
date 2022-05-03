@@ -104,11 +104,9 @@ bool Inkplate::begin(void)
 
     memset(mcpRegsInt, 0, 22);
     memset(mcpRegsEx, 0, 22);
-    mcpBegin(MCP23017_INT_ADDR, mcpRegsInt);
 
-#ifndef ONE_MCP_MODE
+    mcpBegin(MCP23017_INT_ADDR, mcpRegsInt);
     mcpBegin(MCP23017_EXT_ADDR, mcpRegsEx);
-#endif
 
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, VCOM, OUTPUT);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, OUTPUT);
@@ -128,16 +126,15 @@ bool Inkplate::begin(void)
     delay(1);
     WAKEUP_CLEAR;
 
-#ifndef ONE_MCP_MODE
     // Set all pins of seconds I/O expander to outputs, low.
     // For some reason, it draw more current in deep sleep when pins are set as
     // inputs...
+
     for (int i = 0; i < 15; i++)
     {
         pinModeInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, OUTPUT);
         digitalWriteInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, LOW);
     }
-#endif
 
     // For same reason, unused pins of first I/O expander have to be also set as
     // outputs, low.

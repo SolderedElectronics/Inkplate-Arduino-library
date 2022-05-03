@@ -77,7 +77,6 @@ double modulusComplexSqr(struct complex *z)
     return z->re * z->re + z->im * z->im;
 }
 
-
 uint8_t colorAt(double x, double y)
 {
     struct complex z = {0.0, 0.0};
