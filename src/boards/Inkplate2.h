@@ -35,7 +35,7 @@
 // in defines.h
 #define INKPLATE2_WHITE 0
 #define INKPLATE2_BLACK 1
-#define INKPLATE2_RED 2
+#define INKPLATE2_RED   2
 
 #ifndef _swap_int16_t
 #define _swap_int16_t(a, b)                                                                                            \
