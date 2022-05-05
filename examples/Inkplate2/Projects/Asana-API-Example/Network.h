@@ -27,12 +27,12 @@ extern int timeZone;
 extern char ssid[];
 extern char pass[];
 
-struct channelInfo
+struct task
 {
-    char name[64];
-    uint32_t subscribers;
-    uint32_t total_views;
-    uint16_t video_count;
+    char gid[20];
+    char name[256];
+    char res_type[12];
+    struct task *next;
 };
 
 #ifndef NETWORK_H

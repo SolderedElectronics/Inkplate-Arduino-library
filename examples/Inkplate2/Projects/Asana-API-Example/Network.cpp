@@ -28,14 +28,15 @@ Distributed as-is; no warranty is given.
 // external parameters from our main file
 extern char ssid[];
 extern char pass[];
-extern char channel_id[];
-extern char api_key[];
+extern char user_task_list_gid[];
 
 // Get our Inkplate object from main file to draw debug info on
 extern Inkplate display;
 
 // Static Json from ArduinoJson library
 StaticJsonDocument<30000> doc;
+
+extern struct task *tasks = NULL;
 
 void Network::begin()
 {
@@ -88,7 +89,7 @@ void Network::getTime(char *timeStr)
     timeStr[8] = hr % 10 + '0';
 }
 
-bool Network::getData(channelInfo* channel)
+bool Network::getData(channelInfo *channel)
 {
     bool f = 0;
 
@@ -129,9 +130,9 @@ bool Network::getData(channelInfo* channel)
 
     // Initiate http
     char temp[182];
-    sprintf(temp, "https://www.googleapis.com/youtube/v3/channels?part=statistics&id=%s&key=%s", channel_id, api_key);
+    sprintf(temp, "https://app.asana.com/api/1.0/projects/%s/tasks", user_task_list_gid);
     http.begin(temp);
-    
+
     // Actually do request
     int httpCode = http.GET();
     if (httpCode == 200)
@@ -148,28 +149,21 @@ bool Network::getData(channelInfo* channel)
             Serial.println(error.c_str());
             f = 1;
         }
-        else if (doc["items"].size() > 0)
+        for (JsonObject data_item : doc["data"].as<JsonArray>())
         {
-            // Set all data got from internet using formatTemp and formatWind defined above
-            // This part relies heavily on ArduinoJson library
-
-            Serial.println("Success");
-
-            channel->total_views = doc["items"][0]["statistics"]["viewCount"].as<int>();
-            Serial.print("Total views: ");
-            Serial.println(channel->total_views);
-            
-            channel->subscribers = doc["items"][0]["statistics"]["subscriberCount"].as<int>();
-            Serial.print("Subscribers: ");
-            Serial.println(channel->subscribers);
-            
-            channel->video_count = doc["items"][0]["statistics"]["videoCount"].as<int>();
-            Serial.print("Subscribers: ");
-            Serial.println(channel->video_count);
-            
-
-            // Save our data to data pointer from main file
-            f = 0;
+            if(tasks == NULL)
+            {
+                tasks = new struct task;
+                curr_task = tasks;
+            }
+            else
+            {
+                curr_task->next = new struct task;
+                curr_task = curr_task->next;
+            }
+            strcpy(curr_task->gid, data_item["gid"]);   // "1202207920290418", "1202207459957201", ...
+            strcpy(curr_task->name, data_item["name"]); // "Napisati firmware za tester za MQ s easyC", "LoRa ...
+            strcpy(curr_task->res_type, data_item["resource_type"]); // "task", "task", "task", "task", ...
         }
     }
     else if (httpCode == 404)
@@ -192,16 +186,16 @@ bool Network::getData(channelInfo* channel)
     doc.clear();
     http.end();
 
-    // Second API call, same as first but different URL 
+    // Second API call, same as first but different URL
 
-    http.getStream().setTimeout(10);
+    /*http.getStream().setTimeout(10);
     http.getStream().flush();
 
     // Initiate http
-    memset(temp, 0 , 182 * sizeof(char));
+    memset(temp, 0, 182 * sizeof(char));
     sprintf(temp, "https://www.googleapis.com/youtube/v3/channels?part=snippet&id=%s&key=%s", channel_id, api_key);
     http.begin(temp);
-    
+
     // Actually do request
     httpCode = http.GET();
     if (httpCode == 200)
@@ -227,7 +221,7 @@ bool Network::getData(channelInfo* channel)
 
             const char *buff = doc["items"][0]["snippet"]["title"];
             strcpy(channel->name, buff);
-            
+
             Serial.print("Channel name: ");
             Serial.println(channel->name);
 
@@ -253,7 +247,7 @@ bool Network::getData(channelInfo* channel)
 
     // Clear document and end http
     doc.clear();
-    http.end();
+    http.end();*/
 
     // Return to initial state
     WiFi.setSleep(sleep);

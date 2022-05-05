@@ -32,9 +32,8 @@
 char ssid[] = "";
 char pass[] = "";
 
-char channel_id[] = "UC2ppjz9TLbBCuGPmmafptrg"; // Youtube channel ID, read in example
+char user_task_list_gid[] = "UC2ppjz9TLbBCuGPmmafptrg"; // Youtube channel ID, read in example
                                                 // description how to get it
-char api_key[] = "AIzaSyASxGJ2D3OcgtkEEgR3Iq0RaZ9_cA7x6PI"; //API key, you can get one on https://developers.google.com/
 
 //----------------------------------
 
@@ -71,7 +70,8 @@ struct textElement
     uint8_t text_color;
 };
 
-struct channelInfo channel;
+struct task *tasks = NULL;
+struct task *curr_task = NULL;
 
 char structData[30];
 
@@ -83,6 +83,8 @@ textElement elements[] = {
     {110, 70, &Roboto_Light8, "Total views:", 0, BLACK}, {110, 90, &Roboto_Light8, (char*)NULL, 0, RED}
 
 };
+
+
 
 // Our functions declared below setup and loop
 void drawAll();
