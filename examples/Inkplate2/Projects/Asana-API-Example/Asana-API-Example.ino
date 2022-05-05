@@ -77,10 +77,10 @@ char structData[30];
 
 // Out UI elements data
 textElement elements[] = {
-    {5, 20, &Roboto_Light8, "Channel:", 0 , BLACK}, {75, 20, &Roboto_Light8, channel.name, 0 , RED},
-    {5, 40, &Roboto_Light8, "Videos count:", 0, BLACK}, {105, 40, &Roboto_Light8, (char*)NULL, 0, RED},
-    {5, 70, &Roboto_Light8, "Subscribers:", 0, BLACK}, {5, 90, &Roboto_Light8, (char*)NULL, 0, RED},
-    {110, 70, &Roboto_Light8, "Total views:", 0, BLACK}, {110, 90, &Roboto_Light8, (char*)NULL, 0, RED}
+    {5, 20, &Roboto_Light8, "Channel:", 0 , INKPLATE2_BLACK}, {75, 20, &Roboto_Light8, channel.name, 0 , INKPLATE2_RED},
+    {5, 40, &Roboto_Light8, "Videos count:", 0, INKPLATE2_BLACK}, {105, 40, &Roboto_Light8, (char*)NULL, 0, INKPLATE2_RED},
+    {5, 70, &Roboto_Light8, "Subscribers:", 0, INKPLATE2_BLACK}, {5, 90, &Roboto_Light8, (char*)NULL, 0, INKPLATE2_RED},
+    {110, 70, &Roboto_Light8, "Total views:", 0, INKPLATE2_BLACK}, {110, 90, &Roboto_Light8, (char*)NULL, 0, INKPLATE2_RED}
 
 };
 
@@ -97,7 +97,7 @@ void setup()
     // Initial display settings
     display.begin();
     display.setTextWrap(true);
-    display.setTextColor(BLACK, WHITE);
+    display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
     // Welcome screen
     display.setCursor(20, 90); // Set cursor, custom font uses different method for setting cursor
@@ -150,7 +150,7 @@ void drawAll()
     for (int i = 0; i < sizeof(elements) / sizeof(elements[0]); ++i)
     {
         // Text settings
-        display.setTextColor(elements[i].text_color, WHITE);
+        display.setTextColor(elements[i].text_color, INKPLATE2_WHITE);
         display.setFont(elements[i].font);
         display.setTextSize(1);
 

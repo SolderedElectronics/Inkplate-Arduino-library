@@ -37,7 +37,7 @@ void setup()
     display.display();                                // Put clear image on display
     display.setTextSize(1);                           // Set text scaling to two (text will be two times bigger)
     display.setCursor(0, 0);                          // Set print position
-    display.setTextColor(BLACK, WHITE);               // Set text color to black and background color to white
+    display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);               // Set text color to black and background color to white
     display.println("Scanning for WiFi networks..."); // Write text
     display.display();                                // Send everything to display (refresh display)
 
@@ -58,11 +58,11 @@ void setup()
             n = 10; // If you did find, print name (SSID), encryption and signal strength of first 10 networks
         for (int i = 0; i < n; i++)
         {
-            display.setTextColor(BLACK, WHITE);               // Set text color to black and background color to white
+            display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);               // Set text color to black and background color to white
             display.print(WiFi.SSID(i));
             display.print((WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? 'O' : '*');
             display.print('\n');
-            display.setTextColor(RED, WHITE);               // Set text color to red and background color to white
+            display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);               // Set text color to red and background color to white
             display.println(WiFi.RSSI(i), DEC);
         }
         display.display(); // Refresh screen
@@ -102,10 +102,10 @@ void setup()
                 char *title = strstr(data, "<title>");  //Data we are fetching here is HTML, so we can find <title> tag
                 display.clearDisplay();
                 display.setCursor(0, 10);
-                display.setTextColor(BLACK, WHITE);
+                display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
                 display.println("Name of the site:");
                 display.setCursor(10, 30);
-                display.setTextColor(RED, WHITE);
+                display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
                 m = 7;
                 Serial.print("Title: ");
                 while (title[m] != '<') //Print title until next tag

@@ -148,13 +148,13 @@ void drawTemps()
 {
     // Drawing 4 black rectangles in which temperatures will be written
 
-    display.drawRect(5, 5, 60, 94, BLACK); //Draw some rectangles
-    display.drawRect(75, 5, 60, 94, BLACK);
-    display.drawRect(145, 5, 60, 94, BLACK);
+    display.drawRect(5, 5, 60, 94, INKPLATE2_BLACK); //Draw some rectangles
+    display.drawRect(75, 5, 60, 94, INKPLATE2_BLACK);
+    display.drawRect(145, 5, 60, 94, INKPLATE2_BLACK);
 
     display.setFont(&Inter8pt7b); //Set custom font; it needs to be included as .h file
     display.setTextSize(1); //Set font size
-    display.setTextColor(RED, WHITE); // Set text and background color
+    display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE); // Set text and background color
 
     display.setCursor(10, 20);  // Set cursor, custom font uses different method for setting cursor
     // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
@@ -169,7 +169,7 @@ void drawTemps()
     // Drawing temperature values into black rectangles
     display.setFont(&Inter8pt7b);
     display.setTextSize(1);
-    display.setTextColor(BLACK, WHITE);
+    display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
     display.setCursor(20, 40);
     display.print(temps[0]);
@@ -189,7 +189,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr1, abbrs[i]) == 0)
             display.drawBitmap(11, 48, s_logos[i], 48, 48,
-                               BLACK, WHITE);
+                               INKPLATE2_BLACK, INKPLATE2_WHITE);
     }
 
     for (int i = 0; i < 10; ++i)
@@ -197,7 +197,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr2, abbrs[i]) == 0)
             display.drawBitmap(81, 48, s_logos[i], 48, 48,
-                               BLACK, WHITE);
+                               INKPLATE2_BLACK, INKPLATE2_WHITE);
     }
 
     for (int i = 0; i < 10; ++i)
@@ -205,7 +205,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr3, abbrs[i]) == 0)
             display.drawBitmap(151, 48, s_logos[i], 48, 48,
-                               BLACK, WHITE);
+                               INKPLATE2_BLACK, INKPLATE2_WHITE);
     }
 
 }

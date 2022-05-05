@@ -100,10 +100,10 @@ char months[][12] = {
 
 // Out UI elements data
 textElement elements[] = {
-    {10, 42, &Inter16pt7b, currencyAbbr, 0 , BLACK}, {120, 18, &Inter8pt7b, date, 0, BLACK},
-    {10, 180, &Inter8pt7b, fromToDate, 0, BLACK}, {25, 55, &Inter16pt7b, current, 0, RED},
-    {10, 80, &Inter8pt7b, "Minimum:", 0, BLACK}, {10, 100, &Inter8pt7b, minimum, 0, RED},
-    {115, 80, &Inter8pt7b, "Maximum:", 0, BLACK}, {115, 100, &Inter8pt7b, maximum, 0, RED}
+    {10, 42, &Inter16pt7b, currencyAbbr, 0 , INKPLATE2_BLACK}, {120, 18, &Inter8pt7b, date, 0, INKPLATE2_BLACK},
+    {10, 180, &Inter8pt7b, fromToDate, 0, INKPLATE2_BLACK}, {25, 55, &Inter16pt7b, current, 0, INKPLATE2_RED},
+    {10, 80, &Inter8pt7b, "Minimum:", 0, INKPLATE2_BLACK}, {10, 100, &Inter8pt7b, minimum, 0, INKPLATE2_RED},
+    {115, 80, &Inter8pt7b, "Maximum:", 0, INKPLATE2_BLACK}, {115, 100, &Inter8pt7b, maximum, 0, INKPLATE2_RED}
 };
 
 // Our functions declared below setup and loop
@@ -210,7 +210,7 @@ void drawTime()
     network.getTime(date);
 
     // Text settings
-    display.setTextColor(BLACK, WHITE);
+    display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
     display.setFont(elements[i].font);
     display.setTextSize(1);
 
@@ -245,7 +245,7 @@ void drawAll()
     for (int i = 0; i < sizeof(elements) / sizeof(elements[0]); ++i)
     {
         // Text settings
-        display.setTextColor(elements[i].text_color, WHITE);
+        display.setTextColor(elements[i].text_color, INKPLATE2_WHITE);
         display.setFont(elements[i].font);
         display.setTextSize(1);
 

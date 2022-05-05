@@ -46,7 +46,7 @@ void setup()
     display.begin();                    // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();             // Clear frame buffer of display
     display.display();                  // Put clear image on display
-    display.setTextColor(BLACK, WHITE); // Set text color to black and background color to white
+    display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE); // Set text color to black and background color to white
     display.setTextWrap(true);          // If text does not fit on screen, send it to new line
     display.setFont(&Inter6pt7b);       // Change font to Inter
     
@@ -93,7 +93,7 @@ void printInfo()
     display.clearDisplay();    // Clear everything from epaper frame buffer
     display.setTextSize(1);             // Scale text to original size (5x7 px)
     display.setCursor(5, 16); // Print out instruction on how to connect to Inkplate WiFi and how to open a web page
-    display.setTextColor(BLACK, WHITE);
+    display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
     display.print("Connect to \"");
     display.print(ssid);
     display.print("\" WiFi");
@@ -119,7 +119,7 @@ void printText()
     display.setTextSize(1);   // Scale text to an original size
     display.clearDisplay();
     display.setCursor(display.width()/2 - w/2 - 3, display.height()/2 - h / 2 + 3);
-    display.setTextColor(RED, WHITE);
+    display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
     uint16_t cnt = 0;
     uint8_t row = 0;
     char text[255];

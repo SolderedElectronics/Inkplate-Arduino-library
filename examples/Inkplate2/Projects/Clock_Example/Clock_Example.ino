@@ -73,7 +73,7 @@ void setup()
   // Initial display settings
   display.begin();
   display.setTextWrap(true);
-  display.setTextColor(BLACK, WHITE);
+  display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
   // Our begin function
   network.begin();
@@ -103,12 +103,12 @@ void drawTime()
   switch (MODE)
   {
     case 0: //Digital clock
-      display.drawBitmap(0, 10, numbers[t.tm_hour / 10], 48, 84, RED); // Get first number of hours and draw it
-      display.drawBitmap(50, 10, numbers[t.tm_hour % 10], 48, 84, RED); // Get second number of hours and draw it
-      display.drawBitmap(112, 10, numbers[t.tm_min / 10], 48, 84, RED); // Get first number of minutes and draw it
-      display.drawBitmap(162, 10, numbers[t.tm_min % 10], 48, 84, RED); // Get second number of minutes and draw it
-      display.fillRect(101, 32, 8, 8, BLACK);
-      display.fillRect(101, 64, 8, 8, BLACK); // Draw rectangles to separate hours and minutes
+      display.drawBitmap(0, 10, numbers[t.tm_hour / 10], 48, 84, INKPLATE2_RED); // Get first number of hours and draw it
+      display.drawBitmap(50, 10, numbers[t.tm_hour % 10], 48, 84, INKPLATE2_RED); // Get second number of hours and draw it
+      display.drawBitmap(112, 10, numbers[t.tm_min / 10], 48, 84, INKPLATE2_RED); // Get first number of minutes and draw it
+      display.drawBitmap(162, 10, numbers[t.tm_min % 10], 48, 84, INKPLATE2_RED); // Get second number of minutes and draw it
+      display.fillRect(101, 32, 8, 8, INKPLATE2_BLACK);
+      display.fillRect(101, 64, 8, 8, INKPLATE2_BLACK); // Draw rectangles to separate hours and minutes
       break;
     case 1:
       uint8_t buf1, buf2;
@@ -137,21 +137,21 @@ void drawTime()
         {
           if (buf2 & (1 << (3 - j))) // Compare numbers bitwise, if they match, draw red circle for that bit, if not draw black outline of circle
           {
-            display.fillCircle(30 + 50 * i , 10 + 16 * j, 6, RED);
+            display.fillCircle(30 + 50 * i , 10 + 16 * j, 6, INKPLATE2_RED);
           }
           else
           {
-            display.drawCircle(30 + 50 * i , 10 + 16 * j, 6, BLACK);
+            display.drawCircle(30 + 50 * i , 10 + 16 * j, 6, INKPLATE2_BLACK);
           }
           if (j > 0) // Do not do this if j is 0
           {
             if (buf1 & (1 << (3 - j))) // Compare numbers bitwise, if they match, draw red circle for that bit, if not draw black outline of circle
             {
-              display.fillCircle(14 + 50 * i , 10 + 16 * j, 6, RED);
+              display.fillCircle(14 + 50 * i , 10 + 16 * j, 6, INKPLATE2_RED);
             }
             else
             {
-              display.drawCircle(14 + 50 * i , 10 + 16 * j, 6, BLACK);
+              display.drawCircle(14 + 50 * i , 10 + 16 * j, 6, INKPLATE2_BLACK);
             }
 
           }
@@ -159,7 +159,7 @@ void drawTime()
         //This block of code draws informations what which part of screen represents
         display.setCursor(10, 72);
         display.setTextSize(2);
-        display.setTextColor(BLACK, WHITE);
+        display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
         display.print("HH");
         display.setCursor(62, 72);
         display.print("MM");
@@ -167,9 +167,9 @@ void drawTime()
         display.print("DD");
         display.setCursor(162, 72);
         display.print("MM");
-        display.fillRect(45, 21, 5, 5, BLACK);
-        display.fillRect(45, 44, 5, 5, BLACK);
-        display.fillRect(145, 58, 5, 5, BLACK);
+        display.fillRect(45, 21, 5, 5, INKPLATE2_BLACK);
+        display.fillRect(45, 44, 5, 5, INKPLATE2_BLACK);
+        display.fillRect(145, 58, 5, 5, INKPLATE2_BLACK);
 
         //Draw number that represents values of circles
         display.setTextSize(1);
@@ -182,7 +182,7 @@ void drawTime()
         display.setCursor(190, 55);
         display.print("1");
 
-        display.drawLine(100, 0, 100, 104, BLACK);
+        display.drawLine(100, 0, 100, 104, INKPLATE2_BLACK);
 
         //Draw number that represents values of circles
         display.setTextSize(1);
@@ -232,8 +232,8 @@ void drawTime()
       y_minute = 52 - 40 * (float) cos((t.tm_min / (float)60) * 2 * (float)3.14);
       x_hour = 106  + 30 * sin((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
       y_hour = 52 - 30 * cos((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
-      display.drawThickLine(106, 52, x_minute, y_minute, RED, 2); //hand for minutes
-      display.drawThickLine(106, 52, x_hour, y_hour, BLACK, 3); //hand for hours
+      display.drawThickLine(106, 52, x_minute, y_minute, INKPLATE2_RED, 2); //hand for minutes
+      display.drawThickLine(106, 52, x_hour, y_hour, INKPLATE2_BLACK, 3); //hand for hours
       break;
 
   }

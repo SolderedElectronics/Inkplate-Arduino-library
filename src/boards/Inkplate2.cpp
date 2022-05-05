@@ -144,7 +144,7 @@ bool Inkplate::begin()
  * @brief       Display function that updates display with new data from buffer
  *
  */
-void Inkplate::display(bool leaveOn) // Leave on does nothing
+void Inkplate::display()
 {
     // First write B&W pixels to epaper
     sendCommand(0x10);

@@ -37,7 +37,7 @@ void setup()
     Serial.begin(115200); // Initialize Serial communication with PC
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
-    display.setTextColor(BLACK, WHITE);
+    display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
     if (!myBmp.begin())
     {   // Init. BMP180 library. e-radionica.com BMP180 sensor board uses 0x76 I2C address for sensor
@@ -68,7 +68,7 @@ void loop()
     }
 
     display.setTextSize(2); // Set text scaling to two (text will be two times bigger than normal)
-    display.setTextColor(BLACK);
+    display.setTextColor(INKPLATE2_BLACK);
     display.clearDisplay(); // Print out new data
     display.drawImage(thermometer, 20, 8 , 18, 45); //Draw icon
     display.setCursor(60, 22);

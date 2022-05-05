@@ -35,7 +35,7 @@ void setup()
     display.begin();
 
     display.setTextSize(2);      // Set text size
-    display.setTextColor(BLACK); // Set text color
+    display.setTextColor(INKPLATE2_BLACK); // Set text color
     display.setCursor(0, 0);     // Set cursor position
 
     display.print("Test"); // Print text
@@ -46,13 +46,13 @@ void setup()
 
     // Draw text with shadow, specify color for text and background
     // (x coordinate, y coordinate, string to write, text color, shadow color)
-    display.drawTextWithShadow(0, 40, "Test", RED, BLACK);
+    display.drawTextWithShadow(0, 40, "Test", INKPLATE2_RED, INKPLATE2_BLACK);
 
     display.setTextSize(1);
-    display.drawTextWithShadow(110, 80, "By soldered.com", RED, BLACK);
+    display.drawTextWithShadow(110, 80, "By soldered.com", INKPLATE2_RED, INKPLATE2_BLACK);
 
     // Other basic drawing functions supported
-    display.drawLine(10, 80, 100, 100, RED);
+    display.drawLine(10, 80, 100, 100, INKPLATE2_RED);
 
     // Display to screen
     display.display();

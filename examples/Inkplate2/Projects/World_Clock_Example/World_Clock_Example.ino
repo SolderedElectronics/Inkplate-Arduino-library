@@ -92,8 +92,8 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool color, const char *city_name)
 {
   uint16_t w = 80; //Clock width
   // This part of code draws analog clock
-  display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2, BLACK); //Draw outer circles
-  display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2 + 1, BLACK);
+  display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2, INKPLATE2_BLACK); //Draw outer circles
+  display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2 + 1, INKPLATE2_BLACK);
 
   //Draws lines that represents 3, 6 ,9 and 12 hours on the clocks face
   display.drawThickLine(x_pos + w / 2, y_pos        , x_pos + w / 2, y_pos + 5, 1 + color, 2); 
@@ -122,12 +122,12 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool color, const char *city_name)
   x_hour = x_pos + w / 2  + 22 * sin((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
   y_hour = y_pos + w / 2 - 22 * cos((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
   
-  display.drawThickLine(x_pos + w / 2, y_pos + w / 2, x_minute, y_minute, RED - color, 2); // Needle for minutes
-  display.drawThickLine(x_pos + w / 2, y_pos + w / 2, x_hour, y_hour, BLACK  + color, 3); // Needle for hours
+  display.drawThickLine(x_pos + w / 2, y_pos + w / 2, x_minute, y_minute, INKPLATE2_RED - color, 2); // Needle for minutes
+  display.drawThickLine(x_pos + w / 2, y_pos + w / 2, x_hour, y_hour, INKPLATE2_BLACK  + color, 3); // Needle for hours
   
   display.setTextSize(1); // Set text size in comparison to original text 5x7
   display.setFont(&Inter8pt7b); // Set customn font
-  display.setTextColor(BLACK, WHITE);
+  display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
   char *temp_city_name = strstr(city_name , "/") + 1;
   display.setCursor(x_pos + 40 - strlen(temp_city_name) * 5, 100); // Center city name
   

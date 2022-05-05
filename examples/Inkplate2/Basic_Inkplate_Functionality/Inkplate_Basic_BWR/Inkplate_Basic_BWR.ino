@@ -32,8 +32,8 @@ void setup()
     display.display(); // Clear everything that has previously been on a screen
     display.setCursor(10, 10);
     display.setTextSize(2);
-    display.drawTextWithShadow(0, 30, "Welcome to", RED, BLACK); //Draw text with shadow
-    display.drawTextWithShadow(0, 50, "Inkplate 2!", RED, BLACK); //Draw text with shadow
+    display.drawTextWithShadow(0, 30, "Welcome to", INKPLATE2_RED, INKPLATE2_BLACK); //Draw text with shadow
+    display.drawTextWithShadow(0, 50, "Inkplate 2!", INKPLATE2_RED, INKPLATE2_BLACK); //Draw text with shadow
     display.display(); // Write hello message
     delay(5000);       // Wait a little bit
 
@@ -45,9 +45,9 @@ void setup()
     displayCurrentAction(
         "Drawing two pixels in different colors"); // Function which writes small text at bottom left indicating what's currently done
     // NOTE: you do not need displayCurrentAction function to use Inkplate!
-    display.drawPixel(100, 50, BLACK); // Draw one black pixel at X = 100, Y = 50 position in BLACK color (must be black
+    display.drawPixel(100, 50, INKPLATE2_BLACK); // Draw one black pixel at X = 100, Y = 50 position in INKPLATE2_BLACK color (must be black
     // since Inkplate is in BW mode)
-    display.drawPixel(50, 100, RED); // Draw one black pixel at X = 100, Y = 50 position in BLACK color (must be black
+    display.drawPixel(50, 100, INKPLATE2_RED); // Draw one black pixel at X = 100, Y = 50 position in INKPLATE2_BLACK color (must be black
     // since Inkplate is in BW mode)
     display.display(); // Send image to display. You need to call this one each time you want to transfer frame buffer
     // to the screen.
@@ -67,8 +67,8 @@ void setup()
     display.clearDisplay();
     display.drawLine(
         0, 0, 211, 80,
-        BLACK); // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already familiar
-    display.drawLine(211, 0, 0, 80, BLACK); // with those. Arguments are: start X, start Y, ending X, ending Y, color.
+        INKPLATE2_BLACK); // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already familiar
+    display.drawLine(211, 0, 0, 80, INKPLATE2_BLACK); // with those. Arguments are: start X, start Y, ending X, ending Y, color.
     displayCurrentAction("Drawing two diagonal lines");
     display.display();
     delay(DELAY_MS);
@@ -87,7 +87,7 @@ void setup()
     display.clearDisplay();
     for (int i = 0; i < 20; i++)
     {
-        display.drawThickLine(random(0, 211), random(0, 80), random(0, 211), random(0, 80), BLACK,
+        display.drawThickLine(random(0, 211), random(0, 80), random(0, 211), random(0, 80), INKPLATE2_BLACK,
                               (float)random(1, 20));
     }
     displayCurrentAction("Drawing 20 random lines");
@@ -112,11 +112,11 @@ void setup()
     display.clearDisplay();
     for (int i = 0; i < 212; i += 8)
     {
-        display.drawFastVLine(i, 0, 80, BLACK);
+        display.drawFastVLine(i, 0, 80, INKPLATE2_BLACK);
     }
     for (int i = 0; i < 81; i += 4)
     {
-        display.drawFastHLine(0, i, 212, RED);
+        display.drawFastHLine(0, i, 212, INKPLATE2_RED);
     }
     displayCurrentAction("Drawing a grid using horizontal and vertical lines");
     display.display();
@@ -275,7 +275,7 @@ void setup()
 
     // Draws a polygon, from x and y coordinate arrays of n points in color c
     display.clearDisplay();
-    display.drawPolygon(xt, yt, n, BLACK);
+    display.drawPolygon(xt, yt, n, INKPLATE2_BLACK);
     displayCurrentAction("Drawing a polygon");
     display.display();
 
@@ -285,7 +285,7 @@ void setup()
     // Points need to be counter clockwise sorted
     // Method can be quite slow for now, probably will improve
     display.clearDisplay();
-    display.fillPolygon(xt, yt, n, RED);
+    display.fillPolygon(xt, yt, n, INKPLATE2_RED);
     displayCurrentAction("Drawing a filled polygon");
     display.display();
 
@@ -294,7 +294,7 @@ void setup()
     // Write text and rotate it by 90 deg. forever
     int r = 0;
     display.setTextSize(3);
-    display.setTextColor(WHITE, BLACK);
+    display.setTextColor(INKPLATE2_WHITE, INKPLATE2_BLACK);
     while (true)
     {
         display.setCursor(10, 10);

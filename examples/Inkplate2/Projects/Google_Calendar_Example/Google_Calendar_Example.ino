@@ -101,7 +101,7 @@ void setup()
     display.begin();
 
     display.setTextWrap(false);
-    display.setTextColor(BLACK, WHITE);
+    display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
     network.begin(); //Connect to wifi and get data
 
@@ -142,9 +142,9 @@ void drawEvent()
     } // Find next event and reject all events that already happened
 
     //Next part of code draws UI
-    display.drawRect(4, 40 , 48, 55, BLACK);
-    display.drawRect(72, 4 , 133, 46, BLACK);
-    display.drawRect(72, 55 , 133, 46, BLACK);
+    display.drawRect(4, 40 , 48, 55, INKPLATE2_BLACK);
+    display.drawRect(72, 4 , 133, 46, INKPLATE2_BLACK);
+    display.drawRect(72, 55 , 133, 46, INKPLATE2_BLACK);
     display.setFont(&Inter8pt7b);
     display.setCursor(10, 22);
     timeinfo.tm_hour < 10 ? display.print("0") : 0;
@@ -156,9 +156,9 @@ void drawEvent()
     display.print(timeinfo.tm_mday);
     display.setCursor(11, 85);
     
-    display.setTextColor(RED, WHITE);
+    display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
     display.print(months[timeinfo.tm_mon]);
-    display.setTextColor(BLACK, WHITE);
+    display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
     if (next_event <= entriesNum)
     {
         display.setCursor(78, 18);
