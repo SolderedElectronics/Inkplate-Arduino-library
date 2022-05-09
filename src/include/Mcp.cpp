@@ -60,7 +60,7 @@ bool Mcp::mcpBegin(uint8_t _addr, uint8_t *_r)
  */
 void Mcp::readMCPRegisters(uint8_t _addr, uint8_t *k)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(0x00);
@@ -87,7 +87,7 @@ void Mcp::readMCPRegisters(uint8_t _addr, uint8_t *k)
  */
 void Mcp::readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(_regName);
@@ -112,7 +112,7 @@ void Mcp::readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t 
  */
 void Mcp::readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(_regName);
@@ -132,7 +132,7 @@ void Mcp::readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k)
  */
 void Mcp::updateAllRegisters(uint8_t _addr, uint8_t *k)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(0x00);
@@ -155,7 +155,7 @@ void Mcp::updateAllRegisters(uint8_t _addr, uint8_t *k)
  */
 void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(_regName);
@@ -178,7 +178,7 @@ void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d)
  */
 void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(_regName);
@@ -210,7 +210,7 @@ void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n
  */
 void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     uint8_t _port = (_pin / 8) & 1;
     uint8_t _p = _pin % 8;
@@ -259,7 +259,7 @@ void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mod
  */
 void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     uint8_t _port = (_pin / 8) & 1;
     uint8_t _p = _pin % 8;
@@ -284,7 +284,7 @@ void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t
  */
 uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return 0;
     uint8_t _port = (_pin / 8) & 1;
     uint8_t _p = _pin % 8;
@@ -313,7 +313,7 @@ uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 void Mcp::setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint8_t mirroring, uint8_t openDrain,
                                uint8_t polarity)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     intPort &= 1;
     mirroring &= 1;
@@ -339,7 +339,7 @@ void Mcp::setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint
  */
 void Mcp::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     uint8_t _port = (_pin / 8) & 1;
     uint8_t _p = _pin % 8;
@@ -532,7 +532,7 @@ uint16_t Mcp::getPorts()
  */
 void Mcp::removeIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     uint8_t _port = (_pin / 8) & 1;
     uint8_t _p = _pin % 8;
@@ -554,7 +554,7 @@ void Mcp::removeIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
  */
 uint16_t Mcp::getINTInternal(uint8_t _addr, uint8_t *_r)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return 0;
     readMCPRegisters(_addr, MCP23017_INTFA, _r, 2);
     return ((_r[MCP23017_INTFB] << 8) | _r[MCP23017_INTFA]);
@@ -577,7 +577,7 @@ uint16_t Mcp::getINTInternal(uint8_t _addr, uint8_t *_r)
  */
 uint16_t Mcp::getINTstateInternal(uint8_t _addr, uint8_t *_r)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return 0;
     readMCPRegisters(_addr, MCP23017_INTCAPA, _r, 2);
     return ((_r[MCP23017_INTCAPB] << 8) | _r[MCP23017_INTCAPA]);
@@ -597,7 +597,7 @@ uint16_t Mcp::getINTstateInternal(uint8_t _addr, uint8_t *_r)
  */
 void Mcp::setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return;
     _r[MCP23017_GPIOA] = _d & 0xff;
     _r[MCP23017_GPIOB] = (_d >> 8) & 0xff;
@@ -618,7 +618,7 @@ void Mcp::setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d)
  */
 uint16_t Mcp::getPortsInternal(uint8_t _addr, uint8_t *_r)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited )
+    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
         return 0;
     readMCPRegisters(_addr, MCP23017_GPIOA, _r, 2);
     return ((_r[MCP23017_GPIOB] << 8) | (_r[MCP23017_GPIOA]));
