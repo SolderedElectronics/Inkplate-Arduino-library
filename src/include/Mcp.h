@@ -56,7 +56,6 @@ class Mcp
     uint16_t getPortsInternal(uint8_t _addr, uint8_t *_r);
 
   private:
-    bool first_mcp_inited = 0;
     bool second_mcp_inited = 0;
     void readMCPRegisters(uint8_t _addr, uint8_t *k);
     void readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
