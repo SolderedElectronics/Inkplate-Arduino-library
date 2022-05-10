@@ -38,8 +38,8 @@ class Shapes : virtual public Adafruit_GFX
 
 #if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
     virtual void selectDisplayMode(uint8_t _mode) = 0;
-    virtual uint8_t getDisplayMode() = 0;
 #endif
+    virtual uint8_t getDisplayMode() = 0;
 
 #ifdef ARDUINO_INKPLATE2
     void drawTextWithShadow(int x, int y, const char *_c, uint8_t _color1, uint8_t color2);

@@ -16,7 +16,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
 #endif
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
@@ -302,6 +302,7 @@ void setup()
         display.print("INKPLATE2");
         display.display();
         r++;
+        display.setRotation(r % 4);
         delay(DELAY_MS);
     }
 }

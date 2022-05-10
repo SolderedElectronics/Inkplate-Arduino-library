@@ -43,6 +43,7 @@ void setup()
     while (WiFi.status() != WL_CONNECTED)
     {
       Serial.print(".");
+      delay(1000);
     }
     Serial.println("Connected!");
     
@@ -61,6 +62,8 @@ void setup()
     }
     display.display();
 
+    delay(8000);
+    
     // Draw the second image from web, this time using a HTTPClient to fetch the response manually.
     // Full color 24 bit images are large and take a long time to load, will take around 20 secs.
     HTTPClient http;
@@ -101,7 +104,7 @@ void setup()
     }
 
     display.clearDisplay();
-    delay(3000);
+    delay(8000);
 
     // Try to load image and display it on e-paper at position X=0, Y=0
     // NOTE: Both drawJpegFromWeb methods allow for an optional fifth "invert" parameter. Setting this parameter to

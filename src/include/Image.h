@@ -55,8 +55,8 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
 #if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
     virtual void selectDisplayMode(uint8_t _mode) = 0;
-    virtual uint8_t getDisplayMode() = 0;
 #endif
+    virtual uint8_t getDisplayMode() = 0;
 
     virtual int16_t width() = 0;
     virtual int16_t height() = 0;

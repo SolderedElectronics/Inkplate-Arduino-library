@@ -6,8 +6,8 @@
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how you can draw some simple graphics using
-    Adafruit GFX functions. It will draw text in different colors and red text
-    with black shadow. Inkplate library is 100% compatible with Adafruit GFX lib!
+    Adafruit GFX functions. It will draw red text with black shadow.
+    Inkplate library is 100% compatible with Adafruit GFX lib!
     Learn more about Adafruit GFX: https://learn.adafruit.com/adafruit-gfx-graphics-library )
 
 

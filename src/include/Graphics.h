@@ -59,8 +59,8 @@ class Graphics : public Shapes, public Image
 #if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
     void selectDisplayMode(uint8_t _mode);
     void setDisplayMode(uint8_t _mode);
-    uint8_t getDisplayMode();
 #endif
+    uint8_t getDisplayMode();
 
     int16_t width() override;
     int16_t height() override;

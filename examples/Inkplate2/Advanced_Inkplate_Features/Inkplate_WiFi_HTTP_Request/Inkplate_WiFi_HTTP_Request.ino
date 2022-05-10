@@ -31,7 +31,7 @@ Inkplate display; // Create an object on Inkplate library and also set library i
 
 void setup()
 {
-  Serial.begin(115200);                             // Initialize serial communication with PC
+    Serial.begin(115200);                             // Initialize serial communication with PC
     display.begin();                                  // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();                           // Clear frame buffer of display
     display.display();                                // Put clear image on display
@@ -43,7 +43,7 @@ void setup()
 
     int n = WiFi.scanNetworks(); // Start searching WiFi networks and put the nubmer of found WiFi networks in variable
     // n
-    Serial.println("Scanning networks"); 
+    Serial.println("Scanning networks");
     display.setCursor(0, 0);                          // Set print position
     if (n == 0)
     {   // If you did not find any network, show the message and stop the program.

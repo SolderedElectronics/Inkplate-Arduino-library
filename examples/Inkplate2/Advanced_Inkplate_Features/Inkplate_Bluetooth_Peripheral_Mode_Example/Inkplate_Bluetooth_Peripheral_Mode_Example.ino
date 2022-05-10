@@ -1,7 +1,8 @@
 /*
     Inkplate_Bluetooth_Peripheral_Mode_Example example for e-radionica Inkplate 2
     For this example you will need USB cable and an Inkplate 2 and bluetooth supporting device
-    like phone or laptop.
+    like phone or laptop. If you are using phone, you will need to download app which
+    allows you to send commands via bluetooth like "Bluetooth serial monitor".
     Select "Inkplate 2(ESP32)" from Tools -> Board menu.
     Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
