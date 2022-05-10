@@ -208,6 +208,17 @@ void Graphics::endWrite()
 {
 }
 
+/**
+ * @brief       getDisplayMode gets display mode
+ *
+ * @return      0 for black and white, 1 for grayscale
+ */
+uint8_t Graphics::getDisplayMode()
+{
+    return _displayMode;
+}
+
+
 #if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
 
 /**
@@ -220,16 +231,6 @@ void Graphics::endWrite()
 void Graphics::setDisplayMode(uint8_t _mode)
 {
     _displayMode = _mode;
-}
-
-/**
- * @brief       getDisplayMode gets display mode
- *
- * @return      0 for black and white, 1 for grayscale
- */
-uint8_t Graphics::getDisplayMode()
-{
-    return _displayMode;
 }
 
 /**
