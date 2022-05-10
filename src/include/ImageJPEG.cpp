@@ -354,7 +354,7 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
 
             uint8_t r = _RED(rgb), g = _GREEN(rgb), b = _BLUE(rgb);
 
-#if defined(ARDUINO_INKPLATECOLOR)
+#ifdef ARDUINO_INKPLATECOLOR
             if (invert)
             {
                 r = 255 - r;
@@ -393,7 +393,7 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
         }
     }
 
-#if !defined(ARDUINO_INKPLATECOLOR) & !defined(ARDUINO_INKPLATE2)
+#ifndef ARDUINO_INKPLATECOLOR
     if (dither)
         _imagePtrJpeg->ditherSwapBlockJpeg(x);
     _imagePtrJpeg->endWrite();

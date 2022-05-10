@@ -83,7 +83,7 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
 
                 if (_pngDither)
                 {
-#if defined(ARDUINO_INKPLATECOLOR) | defined(ARDUINO_INKPLATE2)
+#ifdef ARDUINO_INKPLATECOLOR
                     px = _imagePtrPng->ditherGetPixelBmp((r << 16) | (g << 8) | (b), x + i, y + j,
                                                          _imagePtrPng->width(), 0);
 #else
