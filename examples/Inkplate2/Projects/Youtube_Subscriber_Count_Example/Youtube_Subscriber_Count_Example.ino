@@ -33,8 +33,12 @@ char ssid[] = "";
 char pass[] = "";
 
 char channel_id[] = "UC2ppjz9TLbBCuGPmmafptrg"; // Youtube channel ID, read in example
-                                                // description how to get it
-char api_key[] = "AIzaSyASxGJ2D3OcgtkEEgR3Iq0RaZ9_cA7x6PI"; //API key, you can get one on https://developers.google.com/
+                                                // description how to get it, this ID is
+                                                // public and you can easily get any channel ID
+                                                
+char api_key[] = ""; // API key, you can get one on https://console.developers.google.com/
+                                                            // After you register and fill needed data you can create 
+                                                            // YouTube Data API v3 in Credentials submenu.
 
 //----------------------------------
 
@@ -77,10 +81,10 @@ char structData[30];
 
 // Out UI elements data
 textElement elements[] = {
-    {5, 20, &Roboto_Light8, "Channel:", 0 , INKPLATE2_BLACK}, {75, 20, &Roboto_Light8, channel.name, 0 , INKPLATE2_RED},
-    {5, 40, &Roboto_Light8, "Videos count:", 0, INKPLATE2_BLACK}, {105, 40, &Roboto_Light8, (char*)NULL, 0, INKPLATE2_RED},
-    {5, 70, &Roboto_Light8, "Subscribers:", 0, INKPLATE2_BLACK}, {5, 90, &Roboto_Light8, (char*)NULL, 0, INKPLATE2_RED},
-    {110, 70, &Roboto_Light8, "Total views:", 0, INKPLATE2_BLACK}, {110, 90, &Roboto_Light8, (char*)NULL, 0, INKPLATE2_RED}
+    {5, 20, &Inter8pt7b, "Channel:", 0 , INKPLATE2_BLACK}, {75, 20, &Inter8pt7b, channel.name, 0 , INKPLATE2_RED},
+    {5, 40, &Inter8pt7b, "Videos count:", 0, INKPLATE2_BLACK}, {125, 40, &Inter8pt7b, (char*)NULL, 0, INKPLATE2_RED},
+    {5, 70, &Inter8pt7b, "Subscribers:", 0, INKPLATE2_BLACK}, {5, 90, &Inter8pt7b, (char*)NULL, 0, INKPLATE2_RED},
+    {110, 70, &Inter8pt7b, "Total views:", 0, INKPLATE2_BLACK}, {110, 90, &Inter8pt7b, (char*)NULL, 0, INKPLATE2_RED}
 
 };
 
@@ -94,7 +98,7 @@ void setup()
 
     // Initial display settings
     display.begin();
-    display.setTextWrap(true);
+    display.setTextWrap(false);
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
     // Welcome screen

@@ -40,7 +40,7 @@ void setup()
 
     display.print("Test"); // Print text
 
-    display.setTextColor(RED);
+    display.setTextColor(INKPLATE2_RED);
     display.setCursor(0, 20);
     display.print("Test");
 

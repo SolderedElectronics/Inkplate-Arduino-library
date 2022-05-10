@@ -22,7 +22,7 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE2
+/*#ifndef ARDUINO_INKPLATE2
 #error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
 #endif
 
@@ -47,8 +47,6 @@ char user_task_list_gid[] = "UC2ppjz9TLbBCuGPmmafptrg"; // Youtube channel ID, r
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
 
-// Include header files
-#include "youtube_icon.h"
 
 // create object with all networking functions
 Network network;
@@ -171,4 +169,4 @@ void drawAll()
         // Print out text to above set cursor location
         display.print(elements[i].text);
     }
-}
+}*/

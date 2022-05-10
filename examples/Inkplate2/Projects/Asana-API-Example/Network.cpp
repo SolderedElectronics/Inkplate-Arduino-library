@@ -13,7 +13,7 @@ Please review the LICENSE file included with this example.
 If you have any questions about licensing, please contact techsupport@e-radionica.com
 Distributed as-is; no warranty is given.
 */
-
+/*
 #include "Network.h"
 
 #include <HTTPClient.h>
@@ -188,7 +188,7 @@ bool Network::getData(channelInfo *channel)
 
     // Second API call, same as first but different URL
 
-    /*http.getStream().setTimeout(10);
+    http.getStream().setTimeout(10);
     http.getStream().flush();
 
     // Initiate http
@@ -247,7 +247,7 @@ bool Network::getData(channelInfo *channel)
 
     // Clear document and end http
     doc.clear();
-    http.end();*/
+    http.end();
 
     // Return to initial state
     WiFi.setSleep(sleep);
@@ -279,4 +279,4 @@ void Network::setTime()
 
     Serial.print(F("Current time: "));
     Serial.print(asctime(&timeinfo));
-}
+}*/

@@ -35,8 +35,8 @@ char pass[] = "";
 
 // OPTIONAL:
 // change to a different currency
-char currency[] = "bitcoin";
-char currencyAbbr[] = "BTC";
+char currency[] = "ethereum";
+char currencyAbbr[] = "ETH";
 
 // You can find your currency id here:
 // https://api.coingecko.com/api/v3/coins
@@ -100,8 +100,8 @@ char months[][12] = {
 
 // Out UI elements data
 textElement elements[] = {
-    {10, 42, &Inter16pt7b, currencyAbbr, 0 , INKPLATE2_BLACK}, {120, 18, &Inter8pt7b, date, 0, INKPLATE2_BLACK},
-    {10, 180, &Inter8pt7b, fromToDate, 0, INKPLATE2_BLACK}, {25, 55, &Inter16pt7b, current, 0, INKPLATE2_RED},
+    {32, 30, &Inter16pt7b, currencyAbbr, 0 , INKPLATE2_BLACK}, {120, 18, &Inter8pt7b, date, 0, INKPLATE2_BLACK},
+    {10, 180, &Inter8pt7b, fromToDate, 0, INKPLATE2_BLACK}, {25, 60, &Inter16pt7b, current, 0, INKPLATE2_RED},
     {10, 80, &Inter8pt7b, "Minimum:", 0, INKPLATE2_BLACK}, {10, 100, &Inter8pt7b, minimum, 0, INKPLATE2_RED},
     {115, 80, &Inter8pt7b, "Maximum:", 0, INKPLATE2_BLACK}, {115, 100, &Inter8pt7b, maximum, 0, INKPLATE2_RED}
 };
@@ -269,14 +269,14 @@ void drawAll()
 
     if(strstr(currencyAbbr, "BTC"))
     {
-      display.drawBitmap(5,5, bitcoin, 22, 30);
+      display.drawBitmap(5,5, bitcoin, 22, 30, INKPLATE2_BLACK);
     }
     else if(strstr(currencyAbbr, "ETH"))
     {
-      display.drawBitmap(5,5, ethereum, 18, 28);
+      display.drawBitmap(5,5, ethereum, 18, 28, INKPLATE2_BLACK);
     }
     else if(strstr(currencyAbbr, "TET"))
     {
-      display.drawBitmap(5,5, tether, 26, 30);
+      display.drawBitmap(5,5, tether, 26, 30, INKPLATE2_BLACK);
     }
 }
