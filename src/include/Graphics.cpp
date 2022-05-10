@@ -215,9 +215,9 @@ void Graphics::endWrite()
  */
 uint8_t Graphics::getDisplayMode()
 {
-    #if defined(ARDUINO_INKPLATECOLOR) | defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATECOLOR) | defined(ARDUINO_INKPLATE2)
     return 0;
-    #endif
+#endif
     return _displayMode;
 }
 

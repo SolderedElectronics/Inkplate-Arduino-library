@@ -105,7 +105,7 @@ uint8_t Image::ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w,
 #else
     uint8_t newPixel = oldPixel & (getDisplayMode() == INKPLATE_1BIT ? B10000000 : B11100000);
 #endif
-    
+
     uint8_t quantError = oldPixel - newPixel;
 
     jpegDitherBuffer[j + 1 + 1][i + 0 + 1] += (quantError * 5) >> 4;
