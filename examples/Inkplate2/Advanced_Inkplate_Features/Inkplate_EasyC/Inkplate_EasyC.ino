@@ -22,7 +22,7 @@
 #error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
 #endif
 
-#include "BMP180-SOLDERED.h" //Adafruit library for BMP180 Sensor
+#include "libs/bmp180/BMP180-SOLDERED.h" //Adafruit library for BMP180 Sensor
 #include "Inkplate.h"        //Include Inkplate library to the sketch
 
 #include "thermometer.h"

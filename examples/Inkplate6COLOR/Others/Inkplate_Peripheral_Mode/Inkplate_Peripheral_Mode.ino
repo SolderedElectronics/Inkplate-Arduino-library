@@ -245,16 +245,6 @@ void loop()
                 }
                 break;
 
-            case 'I':
-                sscanf(s + 3, "%d", &c);
-                // sprintf(temp, "display.setDisplayMode(%s)\n", c == 0 ? "INKPLATE_1BIT" : "INKPLATE_3BIT");
-                // Serial.print(temp);
-                if (c == INKPLATE_1BIT)
-                    display.selectDisplayMode(INKPLATE_1BIT);
-                if (c == INKPLATE_3BIT)
-                    display.selectDisplayMode(INKPLATE_3BIT);
-                break;
-
             case 'K':
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')

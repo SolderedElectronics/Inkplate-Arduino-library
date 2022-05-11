@@ -230,39 +230,6 @@ void run(char commandBuffer[], size_t n)
                 }
                 break;
 
-            case 'I':
-                sscanf(s + 3, "%d", &c);
-                // sprintf(temp, "display.setDisplayMode(%s)\n", c == 0 ? "INKPLATE_1BIT" : "INKPLATE_3BIT");
-                // Serial.print(temp);
-                if (c == INKPLATE_1BIT)
-                    display.selectDisplayMode(INKPLATE_1BIT);
-                if (c == INKPLATE_3BIT)
-                    display.selectDisplayMode(INKPLATE_3BIT);
-                break;
-
-            case 'J':
-                sscanf(s + 3, "%c", &b);
-                if (b == '?')
-                {
-                    // if (0 == 0) {
-                    //  Serial.println("#J(0)*");
-                    //} else {
-                    //  Serial.println("#J(1)*");
-                    //}
-                    // if (display.getDisplayMode() == INKPLATE_1BIT)
-                    // {
-
-                    // }
-                    // if (display.getDisplayMode() == INKPLATE_3BIT)
-                    // {
-                    //     Serial.println("#J(1)*");
-                    //     Serial.flush();
-                    // }
-                    Serial.println("#J(0)*");
-                    Serial.flush();
-                }
-                break;
-
             case 'K':
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')
@@ -281,12 +248,6 @@ void run(char commandBuffer[], size_t n)
                 }
                 break;
 
-            case 'M':
-                sscanf(s + 3, "%d,%d,%d", &y1, &x2, &y2);
-                // sprintf(temp, "display.partialUpdate(%d, %d, %d);\n", y1, x2, y2);
-                // Serial.print(temp);
-                // display.partialUpdate();
-                break;
 
             case 'N':
                 sscanf(s + 3, "%c", &b);

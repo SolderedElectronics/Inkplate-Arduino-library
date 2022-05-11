@@ -86,7 +86,7 @@ textElement elements[] = {
 
 // Our functions declared below setup and loop
 void drawAll();
-
+*/
 void setup()
 {
     // Begin serial communitcation, sed for debugging
@@ -136,7 +136,7 @@ void loop()
 {
     // Never here
 }
-
+/*
 // Our main drawing function
 void drawAll()
 {

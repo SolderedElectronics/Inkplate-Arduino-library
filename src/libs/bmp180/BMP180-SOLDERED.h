@@ -14,7 +14,7 @@
 
 #include "Arduino.h"
 
-#include "SFE_BMP180.h"
+#include "libs/BMP180_Breakout_Arduino_Library/src/SFE_BMP180.h"
 
 class Bmp_180 : public SFE_BMP180
 {
