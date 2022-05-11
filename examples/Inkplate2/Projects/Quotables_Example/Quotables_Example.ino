@@ -83,7 +83,9 @@ void setup()
     display.display();
 
     // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000 * DELAY_S);
+    // This is set in microseconds, so it needs to be
+    // multiplied by million to get seconds
+    esp_sleep_enable_timer_wakeup(1000000 * DELAY_S);
     (void)esp_deep_sleep_start();
 }
 
