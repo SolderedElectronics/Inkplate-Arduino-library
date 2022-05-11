@@ -49,8 +49,8 @@ Network network;
 // create display object
 Inkplate display;
 
-// Delay between API calls in miliseconds
-#define DELAY_MS 3 * 60 * 1000
+// Delay between API calls in seconds, 300 seconds is 5 minutes
+#define DELAY_S 300
 
 // Our functions declared below setup and loop
 void drawAll();
@@ -83,7 +83,7 @@ void setup()
     display.display();
 
     // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS);
+    esp_sleep_enable_timer_wakeup(1000 * DELAY_S);
     (void)esp_deep_sleep_start();
 }
 
