@@ -56,6 +56,7 @@ Inkplate display;
 void drawAll();
 
 char quote[128]; // Buffer to store quote
+char author[64];
 
 void setup()
 {
@@ -70,7 +71,7 @@ void setup()
     // Our begin function
     network.begin();
 
-    while (!network.getData(quote))
+    while (!network.getData(quote, author))
     {
         Serial.println("Retrying retriving data!");
         delay(1000);
@@ -98,21 +99,8 @@ void drawAll()
     display.setTextSize(1);
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
     display.setCursor(0, 15);
-    uint16_t cnt = 0;
-    uint8_t len = strlen(quote);
-    uint8_t rows = 0, colls = 0, row = 0;
-    rows = len / 20;
-    colls = ceil(len / (float)rows);
-    display.setCursor(106 - colls * 10, 52 - rows * 20);
-    while(*(quote + cnt) != '\0')
-    {
-        display.print(*(quote + cnt));
-        cnt++;
-        if(display.getCursorY() > 106 + colls * 10)
-        {
-          row++;
-          display.setCursor(106 - colls * 10, 52 - rows * 20 + rows * 20);   
-        }
-    }
-display.println(quote); // Print quote
+    display.println(quote); // Print quote
+    display.setCursor(30,100);
+    display.print("-");
+    display.println(author); // Print quote
 }

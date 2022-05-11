@@ -43,7 +43,7 @@ char pass[] = "";
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "bf11bcaae795116ccc21beec25850aa0";
+char apiKey[] = "";
 
 //----------------------------------
 
@@ -93,12 +93,6 @@ char hours[4][8] = {
   "",
   "",
 };
-
-// Variable for counting partial refreshes
-RTC_DATA_ATTR long refreshes = 0;
-
-// Constant to determine when to full update
-const int fullRefresh = 10;
 
 // Variables for storing current time and weather info
 char currentTemp[16] = "0F";
@@ -156,7 +150,6 @@ void setup()
 
   // Go to sleep before checking again
 
-  ++refreshes;
   esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
   (void)esp_deep_sleep_start();
 }
