@@ -7,9 +7,10 @@
 
     This example shows you how to use simple API call without API key. Response
     from server is in JSON format, so that will be shown too how it is used. What happens
-    here is basically ESP32 sends API call and server returns HTML document containing one
-    quote and some information about it, then using library ArduinoJSON we extract only quote
-    from JSON data and show it on Inkplate 2.
+    here is basically ESP32 connects to WiFi and sends API call and server returns HTML 
+    document containing one quote and some information about it, then using library ArduinoJSON
+    we extract only quote from JSON data and show it on Inkplate 2. After displaying quote
+    ESP32 goes to sleep and wakes up every 300 seconds to show new quote(you can change time interval).
 
     IMPORTANT:
     Make sure to change wifi credentials below
