@@ -1,5 +1,5 @@
 /*
-    Youtube subscribers tracker example for Soldered Inkplate 2
+    Quotables example for Soldered Inkplate 2
     For this example you will need only USB cable and Inkplate 2.
     Select "Inkplate 2(ESP32)" from Tools -> Board menu.
     Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
@@ -7,9 +7,10 @@
 
     This example shows you how to use simple API call without API key. Response
     from server is in JSON format, so that will be shown too how it is used. What happens
-    here is basically ESP32 sends API call and server returns HTML document containing one
-    quote and some information about it, then using library ArduinoJSON we extract only quote
-    from JSON data and show it on Inkplate 2.
+    here is basically ESP32 connects to WiFi and sends API call and server returns HTML 
+    document containing one quote and some information about it, then using library ArduinoJSON
+    we extract only quote from JSON data and show it on Inkplate 2. After displaying quote
+    ESP32 goes to sleep and wakes up every 300 seconds to show new quote(you can change time interval).
 
     IMPORTANT:
     Make sure to change wifi credentials below
@@ -49,8 +50,8 @@ Network network;
 // create display object
 Inkplate display;
 
-// Delay between API calls in miliseconds
-#define DELAY_MS 3 * 60 * 1000
+// Delay between API calls in seconds, 300 seconds is 5 minutes
+#define DELAY_S 300
 
 // Our functions declared below setup and loop
 void drawAll();
@@ -83,7 +84,9 @@ void setup()
     display.display();
 
     // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS);
+    // This is set in microseconds, so it needs to be
+    // multiplied by million to get seconds
+    esp_sleep_enable_timer_wakeup(1000000 * DELAY_S);
     (void)esp_deep_sleep_start();
 }
 
