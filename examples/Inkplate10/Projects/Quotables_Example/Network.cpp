@@ -57,9 +57,6 @@ void Network::begin()
         }
     }
     Serial.println(F(" connected"));
-
-    // Find internet time
-    setTime();
 }
 
 bool Network::getData(char* text, char* auth)
