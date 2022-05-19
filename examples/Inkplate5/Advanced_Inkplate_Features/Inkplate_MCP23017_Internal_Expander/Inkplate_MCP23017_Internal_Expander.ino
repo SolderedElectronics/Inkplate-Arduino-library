@@ -1,6 +1,6 @@
 /*
    Inkplate_MCP23017 example for e-radionica.com Inkplate 5
-   For this example you will need only a micro USB cable, Inkplate6, 330 Ohm resistor and LED diode.
+   For this example you will need only a micro USB cable, Inkplate5, 330 Ohm resistor and LED diode.
    Select "Inkplate 5(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 5(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -9,12 +9,19 @@
    You will have to connect one side of 330 Ohm resistor to GPB7, than other side to anode of LED and finally, cathode
    pin of LED to GND.
 
-   This example will show you how you can manipulate with I/Os of external MCP23017 Expander.
-   On this expander all pins are free to use, nothing is connected by the default.
+   This example will show you how you can manipulate with I/Os of internal MCP23017 Expander.
+   You can only manipulate with Port B of MCP23017 (GPB1-GPB7). Port A is used for epaper panel and TPS65186 PMIC.
+   GPB0 is used for ESP32 GPIO0 so you can't use it either.
+   GPB1 is used for enabling battery reading (if Batt solder bridge is bridged between second and third pad)
+   GPB2, GPB3 and GPB4 are used for reading touchpad (if Touchpad solder bridges are bridged between second pad and
+   third pad). If every thing is connected ok, after you upload code, LED should blink.
+
+   DANGER: DO NOT USE GPA0-GPA7 and GPB0. In code those are pins from 0-8!!! Using those, you might permanently damage
+   the screen. You should only use pins from 9-15.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   19 May 2022 by Soldered.com
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -34,15 +41,14 @@ void setup()
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
     display.pinModeMCP(
         LED_PIN,
-        OUTPUT); // Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
-                 // If we do not specify which MCP we want to use, by the default external MCP will be used of the one
-                 // with header named MCP23017-2
+        OUTPUT, MCP23017_INT_ADDR); // Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
+                                    // and specify that we want use internal MCP or MCP with header named MCP23017-1
 }
 
 void loop()
 {
-    display.digitalWriteMCP(LED_PIN, LOW);  // Set output to low (LED does not light up)
+    display.digitalWriteMCP(LED_PIN, LOW, MCP23017_INT_ADDR);  // Set output to low (LED does not light up)
     delay(1000);                            // Wait for one second
-    display.digitalWriteMCP(LED_PIN, HIGH); // Set output to high (LED lights up)
+    display.digitalWriteMCP(LED_PIN, HIGH, MCP23017_INT_ADDR); // Set output to high (LED lights up)
     delay(1000);                            // Wait for one second
 }

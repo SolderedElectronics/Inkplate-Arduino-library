@@ -62,30 +62,6 @@ void Network::begin()
     setTime();
 }
 
-// Gets time from ntp server
-void Network::getTime(char *timeStr)
-{
-    // Get seconds since 1.1.1970.
-    time_t nowSecs = time(nullptr);
-
-    // Used to store time
-    struct tm timeinfo;
-    gmtime_r(&nowSecs, &timeinfo);
-
-    // Copies time string into timeStr
-    strncpy(timeStr, asctime(&timeinfo) + 4, 12);
-
-    // Setting time string timezone
-    int hr = 10 * timeStr[7] + timeStr[8] + timeZone;
-
-    // Better defined modulo, in case timezone makes hours to go below 0
-    hr = (hr % 24 + 24) % 24;
-
-    // Adding time to '0' char makes it into whatever time char, for both digits
-    timeStr[7] = hr / 10 + '0';
-    timeStr[8] = hr % 10 + '0';
-}
-
 bool Network::getData(char* text, char* auth)
 {
     bool f = 0;
@@ -188,30 +164,4 @@ bool Network::getData(char* text, char* auth)
     WiFi.setSleep(sleep);
 
     return !f;
-}
-
-// Function for initial time setting ovet the ntp server
-void Network::setTime()
-{
-    // Used for setting correct time
-    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-
-    Serial.print(F("Waiting for NTP time sync: "));
-    time_t nowSecs = time(nullptr);
-    while (nowSecs < 8 * 3600 * 2)
-    {
-        delay(500);
-        Serial.print(F("."));
-        yield();
-        nowSecs = time(nullptr);
-    }
-
-    Serial.println();
-
-    // Used to store time info
-    struct tm timeinfo;
-    gmtime_r(&nowSecs, &timeinfo);
-
-    Serial.print(F("Current time: "));
-    Serial.print(asctime(&timeinfo));
 }

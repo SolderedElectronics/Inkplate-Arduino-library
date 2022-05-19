@@ -29,16 +29,16 @@
 class Mcp
 {
   public:
-    void pinModeMCP(uint8_t _pin, uint8_t _mode);
-    void digitalWriteMCP(uint8_t _pin, uint8_t _state);
-    uint8_t digitalReadMCP(uint8_t _pin);
-    void setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, uint8_t polarity);
-    void setIntPin(uint8_t _pin, uint8_t _mode);
-    void removeIntPin(uint8_t _pin);
-    uint16_t getINT();
-    uint16_t getINTstate();
-    void setPorts(uint16_t _d);
-    uint16_t getPorts();
+    void pinModeMCP(uint8_t _pin, uint8_t _mode, uint8_t _mcp_id = MCP23017_EXT_ADDR);
+    void digitalWriteMCP(uint8_t _pin, uint8_t _state, uint8_t _mcp_id = MCP23017_EXT_ADDR);
+    uint8_t digitalReadMCP(uint8_t _pin, uint8_t _mcp_id = MCP23017_EXT_ADDR);
+    void setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, uint8_t polarity, uint8_t _mcp_id = MCP23017_EXT_ADDR);
+    void setIntPin(uint8_t _pin, uint8_t _mode, uint8_t _mcp_id = MCP23017_EXT_ADDR);
+    void removeIntPin(uint8_t _pin, uint8_t _mcp_id = MCP23017_EXT_ADDR);
+    uint16_t getINT(uint8_t _mcp_id = MCP23017_EXT_ADDR);
+    uint16_t getINTstate(uint8_t _mcp_id = MCP23017_EXT_ADDR);
+    void setPorts(uint16_t _d, uint8_t _mcp_id = MCP23017_EXT_ADDR);
+    uint16_t getPorts(uint8_t _mcp_id = MCP23017_EXT_ADDR);
     uint8_t mcpRegsInt[22], mcpRegsEx[22];
 
     bool mcpBegin(uint8_t _addr, uint8_t *_r);
