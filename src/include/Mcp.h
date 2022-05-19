@@ -32,7 +32,8 @@ class Mcp
     void pinModeMCP(uint8_t _pin, uint8_t _mode, uint8_t _mcp_id = MCP23017_EXT_ADDR);
     void digitalWriteMCP(uint8_t _pin, uint8_t _state, uint8_t _mcp_id = MCP23017_EXT_ADDR);
     uint8_t digitalReadMCP(uint8_t _pin, uint8_t _mcp_id = MCP23017_EXT_ADDR);
-    void setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, uint8_t polarity, uint8_t _mcp_id = MCP23017_EXT_ADDR);
+    void setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, uint8_t polarity,
+                      uint8_t _mcp_id = MCP23017_EXT_ADDR);
     void setIntPin(uint8_t _pin, uint8_t _mode, uint8_t _mcp_id = MCP23017_EXT_ADDR);
     void removeIntPin(uint8_t _pin, uint8_t _mcp_id = MCP23017_EXT_ADDR);
     uint16_t getINT(uint8_t _mcp_id = MCP23017_EXT_ADDR);
