@@ -57,6 +57,7 @@ void Network::begin()
         }
     }
     Serial.println(F(" connected"));
+
 }
 
 bool Network::getData(char* text, char* auth)

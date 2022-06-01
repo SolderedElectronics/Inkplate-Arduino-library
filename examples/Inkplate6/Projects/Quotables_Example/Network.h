@@ -24,14 +24,6 @@
 extern char ssid[];
 extern char pass[];
 
-struct channelInfo
-{
-  char name[64];
-  uint32_t subscribers;
-  uint32_t total_views;
-  uint16_t video_count;
-};
-
 #ifndef NETWORK_H
 #define NETWORK_H
 
