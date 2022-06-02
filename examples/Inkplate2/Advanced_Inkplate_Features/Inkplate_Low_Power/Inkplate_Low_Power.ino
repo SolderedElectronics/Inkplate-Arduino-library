@@ -30,7 +30,7 @@ const uint8_t *pictures[] = {pic1, pic2, pic3}; // This array of pinters holds a
 // so we can easly select it by selecting index in array
 const uint8_t w[] = {159, 148, 186}; // Widths of pictures
 #define uS_TO_S_FACTOR 1000000 // Conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  20      // How long ESP32 will be in deep sleep (in seconds)
+#define TIME_TO_SLEEP  300      // How long ESP32 will be in deep sleep (in seconds)
 RTC_DATA_ATTR int slide = 0;
 
 Inkplate display; // Create an object on Inkplate library and also set library into 3 Bit mode (gray)
@@ -40,9 +40,8 @@ void setup()
     Serial.begin(115200);
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
-    display.drawImage(pictures[slide], 0, 0, w[slide],
+    display.drawImage(pictures[slide], 106 - w[slide] / 2, 0, w[slide],
                       104); // Display selected picture at location X=0, Y=0. All three pictures have different resolutions
-
     display.display(); // Refresh the screen with new picture
     slide++; // Update counter for pictures. With this variable, we choose what picture is going to be displayed on
     // screen

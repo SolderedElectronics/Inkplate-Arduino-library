@@ -297,12 +297,12 @@ void setup()
     display.setTextColor(INKPLATE2_WHITE, INKPLATE2_BLACK);
     while (true)
     {
+        display.setRotation(r % 4);
         display.setCursor(10, 10);
         display.clearDisplay();
         display.print("INKPLATE2");
         display.display();
         r++;
-        display.setRotation(r % 4);
         delay(DELAY_MS);
     }
 }

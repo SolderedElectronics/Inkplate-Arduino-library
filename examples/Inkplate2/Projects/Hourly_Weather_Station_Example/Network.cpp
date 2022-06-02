@@ -106,7 +106,7 @@ void formatWind(char *str, float wind)
     dtostrf(wind, 2, 0, str);
 }
 
-bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp,
+bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, uint8_t hours,
                       char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1,
                       char *abbr2, char *abbr3, char *abbr4)
 {

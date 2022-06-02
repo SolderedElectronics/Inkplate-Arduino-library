@@ -7,9 +7,12 @@
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how you can use wake up on touch feature. 
-    You need to specify which pin (only pins which supports wkae on touch)
-    will be used and which callback will be called on wake up(optional).
-    When woken up, Inkplate will make API call to fetch time and display it on display
+    You need to specify which pin (only pins which supports wake on touch)
+    will be used and which callback will be called on wake up(optional). In
+    this example we will be using TS3 pin which is attached to GPIO15. For all touch pins
+    you can refer to ESP32 documentation, Touch Sensor on link:
+    https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/touch_pad.html
+    When woken up, Inkplate will make API call to fetch time and display it on display.
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
