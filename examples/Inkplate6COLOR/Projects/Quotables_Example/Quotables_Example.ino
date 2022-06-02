@@ -109,7 +109,7 @@ void drawAll()
     uint16_t cnt = 0;
     while (quote[cnt] != '\0')
     {
-        if (display.getCursorX() > display.width() - 75)
+        if (display.getCursorX() > display.width() - 90 && quote[cnt] == ' ')
         {
             row++;
             display.setCursor(48, display.height() / 2 - 24 * rows + row * 48);
@@ -117,7 +117,10 @@ void drawAll()
         display.print(quote[cnt]);
         cnt++;
     }
-    display.setCursor(display.width() - 32 * strlen(author), display.height() - 30); // Set cursor to fit author name in lower right corner
+    uint16_t w,h;
+    int16_t x,y;
+    display.getTextBounds(author, 0, 0, &x, &y, &w, &h);
+    display.setCursor(display.width() - w - 50, display.height() - 30); // Set cursor to fit author name in lower right corner
     display.print("-");
     display.println(author); // Print author
 }

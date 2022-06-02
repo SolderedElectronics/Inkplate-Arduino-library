@@ -43,6 +43,8 @@ char pass[] = "";
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
+#include "driver/rtc_io.h" // Include ESP32 library for RTC pin I/O (needed for rtc_gpio_isolate() function)
+#include <rom/rtc.h>       // Include ESP32 library for RTC (needed for rtc_get_reset_reason() function)
 
 // create object with all networking functions
 Network network;
@@ -68,6 +70,10 @@ void setup()
     display.begin();
     display.setTextWrap(false); // Set text wrapping to true
     display.setTextColor(BLACK);
+    display.setTextSize(3);
+
+    display.clearDisplay();
+    display.display();
 
     // Our begin function
     network.begin();
@@ -78,9 +84,8 @@ void setup()
         delay(1000);
     }
 
-    // Our main drawing function
-    drawAll();
-    // Full refresh
+    display.clearDisplay();
+    drawAll(); //Call funtion to draw screen
     display.display();
 
     // Go to sleep before checking again
@@ -106,7 +111,7 @@ void drawAll()
     uint16_t cnt = 0;
     while (quote[cnt] != '\0')
     {
-        if (display.getCursorX() > display.width() - 75)
+        if (display.getCursorX() > display.width() - 100 && quote[cnt] == ' ')
         {
             row++;
             display.setCursor(48, display.height() / 2 - 24 * rows + row * 48);
@@ -114,7 +119,10 @@ void drawAll()
         display.print(quote[cnt]);
         cnt++;
     }
-    display.setCursor(display.width() - 32 * strlen(author), display.height() - 30); // Set cursor to fit author name in lower right corner
+    uint16_t w, h;
+    int16_t x, y;
+    display.getTextBounds(author, 0, 0, &x, &y, &w, &h);
+    display.setCursor(display.width() - w - 50, display.height() - 30); // Set cursor to fit author name in lower right corner
     display.print("-");
     display.println(author); // Print author
 }
