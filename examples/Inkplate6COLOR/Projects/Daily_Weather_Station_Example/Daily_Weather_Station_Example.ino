@@ -34,15 +34,15 @@ char lat[] = "45.5510548";
 char lon[] = "18.695463";
 
 // Change to your wifi ssid and password
-char ssid[] = "Besest";
-char pass[] = "12345678";
+char ssid[] = "";
+char pass[] = "";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "bf11bcaae795116ccc21beec25850aa0";
+char apiKey[] = "";
 // ----------------------------------
 
 // Include Inkplate library to the sketch
@@ -61,7 +61,7 @@ char apiKey[] = "bf11bcaae795116ccc21beec25850aa0";
 #include "icons.h"
 
 // Delay between API calls
-#define DELAY_MS 1000 * 60 * 10 // 10 minute time
+#define DELAY_MS (uint32_t)10 * 60 * 1000 // 10 minute time
 
 // Inkplate object
 Inkplate display;
