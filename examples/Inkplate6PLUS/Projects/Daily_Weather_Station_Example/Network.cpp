@@ -14,21 +14,17 @@
     Distributed as-is; no warranty is given.
 */
 
-// Uncomment for American output
-// #define AMERICAN
-
 // Network.cpp contains various functions and classes that enable Weather station
 // They have been declared in seperate file to increase readability
 #include "Network.h"
 
 #include <HTTPClient.h>
 #include <WiFi.h>
-#include <WiFiClientSecure.h>
 
 #include <ArduinoJson.h>
 
 // Static Json from ArduinoJson library
-StaticJsonDocument<64000> doc;
+StaticJsonDocument<30000> doc;
 
 void Network::begin(char *city)
 {
@@ -56,8 +52,6 @@ void Network::begin(char *city)
     // Find internet time
     setTime();
 
-    // reduce power by making WiFi module sleep
-    WiFi.setSleep(1);
 }
 
 // Gets time from ntp server
@@ -74,7 +68,7 @@ void Network::getTime(char *timeStr)
     strncpy(timeStr, asctime(&timeinfo) + 11, 5);
 
     // Setting time string timezone
-    int hr = 10 * (timeStr[0] - '0') + (timeStr[1] - '0') + timeZone;
+    int hr = 10 * timeStr[0] + timeStr[1] + timeZone;
 
     // Better defined modulo, in case timezone makes hours to go below 0
     hr = (hr % 24 + 24) % 24;
@@ -86,31 +80,20 @@ void Network::getTime(char *timeStr)
 
 void formatTemp(char *str, float temp)
 {
-    // Converting to Fahrenheit
-#ifdef AMERICAN
-    temp = (temp * 9.0 / 5.0 + 32.0);
-#endif
-
     // Built in function for float to char* conversion
     dtostrf(temp, 2, 0, str);
 }
 
 void formatWind(char *str, float wind)
 {
-    // Converting to MPH
-#ifdef AMERICAN
-    wind = wind * 2.237;
-#endif
-
     // Built in function for float to char* conversion
     dtostrf(wind, 2, 0, str);
 }
 
-bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, uint8_t *hours,
+bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp,
                       char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1,
-                      char *abbr2, char *abbr3, char *abbr4)
+                      char *abbr2, char *abbr3, char *abbr4, uint8_t *hours)
 {
-    bool f = 0;
     // If not connected to wifi reconnect wifi
     if (WiFi.status() != WL_CONNECTED)
     {
@@ -146,7 +129,7 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1);
 
-    // Make API call
+    // Add woeid to api call
     char url[256];
     sprintf(url, "https://api.openweathermap.org/data/2.5/forecast?lat=%s&lon=%s&appid=%s", lat, lon, apiKey);
 
@@ -157,74 +140,85 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
     int httpCode = http.GET();
     if (httpCode == 200)
     {
+        int32_t len = http.getSize();
 
-        // Try parsing JSON object
-        DeserializationError error = deserializeJson(doc, http.getStream());
-
-        // If an error happens print it to Serial monitor
-        if (error)
+        if (len > 0)
         {
-            Serial.print(F("deserializeJson() failed: "));
-            Serial.println(error.c_str());
+            // Try parsing JSON object
+            DeserializationError error = deserializeJson(doc, http.getStream());
 
-            f = 1;
-        }
-        else
-        {
-            // Set all data got from internet using formatTemp and formatWind defined above
-            // This part relies heavily on ArduinoJson library
-            uint8_t cnt = 0, i = 0;
-            Serial.println("JSON");
-            while (cnt < 3)
+            // If an error happens print it to Serial monitor
+            if (error)
             {
-                char temp[48];
-                strcpy(temp, doc["list"][i]["dt_txt"]);
-                Serial.println(temp);
-                if (strstr(temp, "15:00:00")) // Show time in 15:00 for every day
+                Serial.print(F("deserializeJson() failed: "));
+                Serial.println(error.c_str());
+                return 0;
+            }
+            else
+            {
+                // Set all data got from internet using formatTemp and formatWind defined above
+                // This part relies heavily on ArduinoJson library
+                uint8_t cnt = 0, i = 0;
+                
+                formatTemp(currentTemp, doc["list"][0]["main"]["temp"].as<float>() - 273.15);
+                sprintf(currentWind, "%.1f", (float)(doc["list"][0]["wind"]["speed"]));
+                strcpy(currentWeather, doc["list"][0]["weather"][0]["main"]);
+                strcpy(currentWeatherAbbr, doc["list"][0]["weather"][0]["icon"]);
+                
+                while (cnt < 4)
                 {
-                    struct tm t;
-                    time_t dataEpoch = doc["list"][i]["dt"].as<time_t>();
-                    t = *gmtime(&dataEpoch);
-                    if (cnt == 0)
+                    char temp[48];
+                    strcpy(temp, doc["list"][i]["dt_txt"]);
+                    Serial.println(temp);
+
+                    
+                    if (strstr(temp, "15:00:00")) // Show time in 15:00 for every day
                     {
-                        *hours = t.tm_wday;
-                        formatTemp(temp1, doc["list"][i]["main"]["temp"].as<float>() - 273.15); // Format temperature to make it readable
-                        strcpy(abbr1, doc["list"][i]["weather"][0]["icon"].as<const char *>()); // Copy name of icon for that day forecast
+                        struct tm t;
+                        time_t dataEpoch = doc["list"][i]["dt"].as<time_t>();
+                        t = *gmtime(&dataEpoch);
+                        if (cnt == 0)
+                        {
+                            *hours = t.tm_wday;
+                            (*hours)--;
+                            if(*hours == 255)
+                            {
+                              *hours = 6;
+                            }
+                            formatTemp(temp1, doc["list"][i]["main"]["temp"].as<float>() - 273.15); // Format temperature to make it readable
+                            strcpy(abbr1, doc["list"][i]["weather"][0]["icon"].as<const char *>()); // Copy name of icon for that day forecast
+                        }
+                        else if (cnt == 1)
+                        {
+                            formatTemp(temp2, doc["list"][i]["main"]["temp"].as<float>() - 273.15); // Format temperature to make it readable
+                            strcpy(abbr2, doc["list"][i]["weather"][0]["icon"].as<const char *>()); // Copy name of icon for that day forecast
+                        }
+                        else if (cnt == 2)
+                        {
+                            formatTemp(temp3, doc["list"][i]["main"]["temp"].as<float>() - 273.15); // Format temperature to make it readable
+                            strcpy(abbr3, doc["list"][i]["weather"][0]["icon"].as<const char *>()); // Copy name of icon for that day forecast
+                        }
+                        else
+                        {
+                            formatTemp(temp4, doc["list"][i]["main"]["temp"].as<float>() - 273.15); // Format temperature to make it readable
+                            strcpy(abbr4, doc["list"][i]["weather"][0]["icon"].as<const char *>()); // Copy name of icon for that day forecast
+                        }
+                        cnt++;
                     }
-                    else if (cnt == 1)
-                    {
-                        formatTemp(temp2, doc["list"][i]["main"]["temp"].as<float>() - 273.15); // Format temperature to make it readable
-                        strcpy(abbr2, doc["list"][i]["weather"][0]["icon"].as<const char *>()); // Copy name of icon for that day forecast
-                    }
-                    else
-                    {
-                        formatTemp(temp3, doc["list"][i]["main"]["temp"].as<float>() - 273.15); // Format temperature to make it readable
-                        strcpy(abbr3, doc["list"][i]["weather"][0]["icon"].as<const char *>()); // Copy name of icon for that day forecast
-                    }
-                    cnt++;
+                    i++;
                 }
-                i++;
             }
         }
     }
-    else if (httpCode == 401)
-    {
-        display.setCursor(50, 290);
-        display.setTextSize(3);
-        display.print(F("Network error, probably wrong api key"));
-        display.display();
-        while (1)
-            ;
-    }
 
-    // Stop http and clear document
+    // Clear document and end http
     doc.clear();
     http.end();
 
     // Return to initial state
     WiFi.setSleep(sleep);
 
-    return !f;
+    return 1;
 }
 
 void Network::setTime()
@@ -251,4 +245,23 @@ void Network::setTime()
 
     Serial.print(F("Current time: "));
     Serial.print(asctime(&timeinfo));
+}
+
+void Network::getDays(char *day, char *day1, char *day2, char *day3)
+{
+    // Seconds since 1.1.1970.
+    time_t nowSecs = time(nullptr);
+
+    // Find weekday
+
+    // We get seconds since 1970, add 3600 (1 hour) times the time zone and add 3 to
+    // make monday the first day of the week, as 1.1.1970. was a thursday
+    // finally do mod 7 to insure our day is within [0, 6]
+    int dayWeek = ((long)((nowSecs + 3600L * timeZone) / 86400L) + 3) % 7;
+
+    // Copy day data to globals in main file
+    strncpy(day, wDays[dayWeek], 3);
+    strncpy(day1, wDays[(dayWeek + 1) % 7], 3);
+    strncpy(day2, wDays[(dayWeek + 2) % 7], 3);
+    strncpy(day3, wDays[(dayWeek + 3) % 7], 3);
 }

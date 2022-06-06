@@ -16,6 +16,8 @@ Distributed as-is; no warranty is given.
 
 #include "Arduino.h"
 
+#include "Inkplate.h"
+
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
@@ -27,10 +29,22 @@ extern int timeZone;
 extern char ssid[];
 extern char pass[];
 
+extern char lon[];
+extern char lat[];
+
+extern char apiKey[];
+
+extern Inkplate display;
+
 #ifndef NETWORK_H
 #define NETWORK_H
 
 // All functions defined in Network.cpp
+
+// Declared week days
+static char wDays[8][8] = {
+    "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun",
+};
 
 class Network
 {
@@ -40,7 +54,7 @@ class Network
     void getTime(char *timeStr);
     bool getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp,
                       char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1,
-                      char *abbr2, char *abbr3, char *abbr4);
+                      char *abbr2, char *abbr3, char *abbr4, uint8_t *hours);
     void getDays(char *day, char *day1, char *day2, char *day3);
 
     // Used to store loaction woeid (world id), set in findCity()
