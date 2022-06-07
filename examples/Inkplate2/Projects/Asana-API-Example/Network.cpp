@@ -35,7 +35,7 @@ extern char user_PAT[];
 extern Inkplate display;
 
 // Static Json from ArduinoJson library
-StaticJsonDocument<30000> doc;
+StaticJsonDocument<10000> doc;
 
 void Network::begin()
 {
@@ -88,9 +88,12 @@ void Network::getTime(char *timeStr)
     timeStr[8] = hr % 10 + '0';
 }
 
-bool Network::getData(struct task *tasks, struct task *curr_task)
+struct task* Network::getData()
 {
     bool f = 0;
+
+    struct task *tasks = NULL;
+    struct task *curr_task = NULL;
 
     // If not connected to wifi reconnect wifi
     if (WiFi.status() != WL_CONNECTED)
@@ -136,7 +139,6 @@ bool Network::getData(struct task *tasks, struct task *curr_task)
 
     // Actually do request
     int httpCode = http.GET();
-    Serial.println(httpCode);
     if (httpCode == 200)
     {
         while (http.getStream().available() && http.getStream().peek() != '{')
@@ -155,20 +157,20 @@ bool Network::getData(struct task *tasks, struct task *curr_task)
         {
             if(tasks == NULL)
             {
-                tasks = new struct task;
+                tasks =(struct task*)ps_malloc(sizeof(struct task));
                 curr_task = tasks;
             }
             else
             {
-                curr_task->next = new struct task;
+                curr_task->next = (struct task*)ps_malloc(sizeof(struct task));
                 curr_task = curr_task->next;
             }
             strcpy(curr_task->gid, data_item["gid"]);   // "1202207920290418", "1202207459957201", ...
             strcpy(curr_task->name, data_item["name"]); // "Napisati firmware za tester za MQ s easyC", "LoRa ...
             strcpy(curr_task->res_type, data_item["resource_type"]); // "task", "task", "task", "task", ...
-            Serial.println(curr_task->gid);
             curr_task->next = NULL;
         }
+        curr_task = tasks;
     }
     else if (httpCode == 404)
     {
@@ -193,7 +195,92 @@ bool Network::getData(struct task *tasks, struct task *curr_task)
     // Return to initial state
     WiFi.setSleep(sleep);
 
-    return !f;
+    return tasks;
+}
+
+void Network::getDue(struct task *task)
+{
+    // If not connected to wifi reconnect wifi
+    if (WiFi.status() != WL_CONNECTED)
+    {
+        WiFi.reconnect();
+
+        delay(5000);
+
+        int cnt = 0;
+        Serial.println(F("Waiting for WiFi to reconnect..."));
+        while ((WiFi.status() != WL_CONNECTED))
+        {
+            // Prints a dot every second that wifi isn't connected
+            Serial.print(F("."));
+            delay(1000);
+            ++cnt;
+
+            if (cnt == 7)
+            {
+                Serial.println("Can't connect to WIFI, restart initiated.");
+                delay(100);
+                ESP.restart();
+            }
+        }
+    }
+
+    // Wake up if sleeping and save inital state
+    bool sleep = WiFi.getSleep();
+    WiFi.setSleep(false);
+
+    // Http object used to make get request
+    HTTPClient http;
+
+    http.getStream().setTimeout(10);
+    http.getStream().flush();
+
+    // Initiate http
+    char temp[182], header[256];
+    sprintf(temp, "https://app.asana.com/api/1.0/tasks/%s", task->gid);
+    sprintf(header, "Bearer %s", user_PAT);
+    http.begin(temp);
+    http.addHeader("Authorization", header); 
+
+    // Actually do request
+    int httpCode = http.GET();
+    if (httpCode == 200)
+    {
+        while (http.getStream().available() && http.getStream().peek() != '{')
+            (void)http.getStream().read();
+
+        // Try parsing JSON object
+        DeserializationError error = deserializeJson(doc, http.getStream());
+
+        if (error)
+        {
+            Serial.print(F("deserializeJson() failed: "));
+            Serial.println(error.c_str());
+        }
+        if(!doc["data"]["due_on"].isNull())
+        {
+          strcpy(task->due, doc["data"]["due_on"]);
+        }
+        else
+        {
+          strcpy(task->due, "No due!\0");
+        }
+    }
+    else if (httpCode == 404)
+    {
+        // Coin id not found
+        display.clearDisplay();
+        display.setCursor(50, 230);
+        display.setTextSize(2);
+        display.println(F("Info has not been found!"));
+        display.display();
+        while (1)
+            ;
+    }
+
+    // Clear document and end http
+    doc.clear();
+    http.end();
 }
 
 // Function for initial time setting ovet the ntp server

@@ -32,8 +32,11 @@ struct task
     char gid[20];
     char name[256];
     char res_type[12];
+    char due[24];
     struct task *next;
 };
+
+
 
 #ifndef NETWORK_H
 #define NETWORK_H
@@ -46,7 +49,8 @@ class Network
     // Functions we can access in main file
     void begin();
     void getTime(char *timeStr);
-    bool getData(struct task *tasks, struct task *curr_task);
+    struct task* getData();
+    void getDue(struct task *task);
     
   private:
     // Functions called from within our class

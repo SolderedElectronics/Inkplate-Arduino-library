@@ -4,14 +4,11 @@
    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
-
    This example will show you how you can use Inkplate 2 to display API data,
    e.g. OpenWeatherMap API, and weatherstack for real time data
-
    IMPORTANT:
    Make sure to change your desired city, timezone and wifi credentials below
    Also have ArduinoJSON installed in your Arduino libraries
-
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
    5 April 2022 by e-radionica.com
@@ -35,15 +32,15 @@ char lon[] = "18.5947808";
 char lat[] = "45.5510548";
 
 // Change to your wifi ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "bf11bcaae795116ccc21beec25850aa0";
+char apiKey[] = "";
 
 //----------------------------------
 
@@ -87,7 +84,12 @@ char temps[4][8] = {
 };
 
 // Variables for storing hour strings
-uint8_t hours = 0;
+char hours[4][8] = {
+  "",
+  "",
+  "",
+  "",
+};
 
 // Variables for storing current time and weather info
 char currentTemp[16] = "0F";
@@ -127,7 +129,7 @@ void setup()
   // Get all relevant data, see Network.cpp for info
   network.getTime(currentTime);
 
-  while (!network.getData(city, temps[0], temps[1], temps[2], temps[3], hours, currentWind, currentTime,
+  while (!network.getData(city, temps[0], temps[1], temps[2], temps[3], currentTemp, currentWind, currentTime,
                           currentWeather, currentWeatherAbbr, abbr1, abbr2, abbr3, abbr4))
   {
     Serial.println("Retrying fetching data!");
@@ -168,13 +170,13 @@ void drawTemps()
 
   display.setCursor(18, 20);// Set cursor, custom font uses different method for setting cursor
                               // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
-  display.println(weekDays[]);
+  display.println("Now");
 
   display.setCursor(92, 20);
-  display.println(weekDays[1]);
+  display.println(hours[1]);
 
   display.setCursor(162, 20);
-  display.println(weekDays[2]);
+  display.println(hours[2]);
 
   // Drawing temperature values into black rectangles
   display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
