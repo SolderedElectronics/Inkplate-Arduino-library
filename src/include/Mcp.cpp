@@ -16,9 +16,9 @@
  * @authors     e-radionica.com
  ***************************************************/
 
-#include "Mcp.h"
+#if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATECOLOR)
 
-#ifndef ARDUINO_INKPLATE2
+#include "Mcp.h"
 
 // LOW LEVEL:
 

@@ -43,7 +43,7 @@ uint8_t System::getPanelState()
     return _panelOn;
 }
 
-#ifndef ARDUINO_INKPLATE2
+#if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATECOLOR)
 
 /**
  * @brief       readTemperature reads panel temperature
@@ -145,6 +145,10 @@ double System::readBattery()
     // scale (Analog signal is attenuated by 11dB before ESP32 ADC input)
     return (double(adc) / 4095 * 1.1 * 3.548133892 * 2);
 }
+
+#endif
+
+#ifndef ARDUINO_INKPLATE2
 
 /**
  * @brief       sdCardInit initializes sd card trough SPI

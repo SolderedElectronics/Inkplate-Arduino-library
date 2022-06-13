@@ -77,8 +77,12 @@
 #include "Touch.h"
 #endif
 
-#ifndef ARDUINO_INKPLATE2
+#if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATECOLOR)
 #include "Mcp.h"
+#endif
+
+#ifdef ARDUINO_INKPLATECOLOR
+#include "Pcal.h"
 #endif
 
 #include "defines.h"
@@ -88,8 +92,12 @@
  */
 class System : public Esp,
 
-#ifndef ARDUINO_INKPLATE2
+#if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATECOLOR)
                virtual public Mcp,
+#endif
+
+#ifdef ARDUINO_INKPLATECOLOR
+               virtual public Pcal,
 #endif
 
 #ifdef ARDUINO_INKPLATE6PLUS
@@ -104,16 +112,19 @@ class System : public Esp,
     void setPanelState(uint8_t s);
     uint8_t getPanelState();
 
-#ifndef ARDUINO_INKPLATE2
-
-    void setSdCardOk(int16_t s);
-    int16_t getSdCardOk();
+#if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATECOLOR)
 
     int8_t readTemperature();
 
     uint8_t readTouchpad(uint8_t _pad);
     double readBattery();
 
+#endif
+
+#ifndef ARDUINO_INKPLATE2
+
+    void setSdCardOk(int16_t s);
+    int16_t getSdCardOk();
     int16_t sdCardInit();
 
     SdFat getSdFat();

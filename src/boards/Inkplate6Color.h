@@ -65,59 +65,59 @@
 #define INKPLATE_YELLOW 0b00000101
 #define INKPLATE_ORANGE 0b00000110
 
-#define MCP23017_INT_ADDR 0x20
-#define MCP23017_EXT_ADDR 0x20
+#define PCAL_INT_ADDR 0x20
+#define PCAL_EXT_ADDR 0x20
 
-#define MCP23017_INT_PORTA     0x00
-#define MCP23017_INT_PORTB     0x01
-#define MCP23017_INT_NO_MIRROR false
-#define MCP23017_INT_MIRROR    true
-#define MCP23017_INT_PUSHPULL  false
-#define MCP23017_INT_OPENDRAIN true
-#define MCP23017_INT_ACTLOW    false
-#define MCP23017_INT_ACTHIGH   true
+#define PCAL_INT_PORTA     0x00
+#define PCAL_INT_PORTB     0x01
+#define PCAL_INT_NO_MIRROR false
+#define PCAL_INT_MIRROR    true
+#define PCAL_INT_PUSHPULL  false
+#define PCAL_INT_OPENDRAIN true
+#define PCAL_INT_ACTLOW    false
+#define PCAL_INT_ACTHIGH   true
 
-#define MCP23017_IODIRA   0x00
-#define MCP23017_IPOLA    0x02
-#define MCP23017_GPINTENA 0x04
-#define MCP23017_DEFVALA  0x06
-#define MCP23017_INTCONA  0x08
-#define MCP23017_IOCONA   0x0A
-#define MCP23017_GPPUA    0x0C
-#define MCP23017_INTFA    0x0E
-#define MCP23017_INTCAPA  0x10
-#define MCP23017_GPIOA    0x12
-#define MCP23017_OLATA    0x14
+#define PCAL_IODIRA   0x00
+#define PCAL_IPOLA    0x02
+#define PCAL_GPINTENA 0x04
+#define PCAL_DEFVALA  0x06
+#define PCAL_INTCONA  0x08
+#define PCAL_IOCONA   0x0A
+#define PCAL_GPPUA    0x0C
+#define PCAL_INTFA    0x0E
+#define PCAL_INTCAPA  0x10
+#define PCAL_GPIOA    0x12
+#define PCAL_OLATA    0x14
 
-#define MCP23017_IODIRB   0x01
-#define MCP23017_IPOLB    0x03
-#define MCP23017_GPINTENB 0x05
-#define MCP23017_DEFVALB  0x07
-#define MCP23017_INTCONB  0x09
-#define MCP23017_IOCONB   0x0B
-#define MCP23017_GPPUB    0x0D
-#define MCP23017_INTFB    0x0F
-#define MCP23017_INTCAPB  0x11
-#define MCP23017_GPIOB    0x13
-#define MCP23017_OLATB    0x15
+#define PCAL_IODIRB   0x01
+#define PCAL_IPOLB    0x03
+#define PCAL_GPINTENB 0x05
+#define PCAL_DEFVALB  0x07
+#define PCAL_INTCONB  0x09
+#define PCAL_IOCONB   0x0B
+#define PCAL_GPPUB    0x0D
+#define PCAL_INTFB    0x0F
+#define PCAL_INTCAPB  0x11
+#define PCAL_GPIOB    0x13
+#define PCAL_OLATB    0x15
 
 // User pins on MCP for Inkplate 6COLOR
-#define MCP23017_PIN_A0 0
-#define MCP23017_PIN_A1 1
-#define MCP23017_PIN_A2 2
-#define MCP23017_PIN_A3 3
-#define MCP23017_PIN_A4 4
-#define MCP23017_PIN_A5 5
-#define MCP23017_PIN_A6 6
-#define MCP23017_PIN_A7 7
+#define PCAL_PIN_A0 0
+#define PCAL_PIN_A1 1
+#define PCAL_PIN_A2 2
+#define PCAL_PIN_A3 3
+#define PCAL_PIN_A4 4
+#define PCAL_PIN_A5 5
+#define PCAL_PIN_A6 6
+#define PCAL_PIN_A7 7
 
-#define MCP23017_PIN_B0 8
-#define MCP23017_PIN_B1 9
-#define MCP23017_PIN_B2 10
-#define MCP23017_PIN_B3 11
-#define MCP23017_PIN_B4 12
-#define MCP23017_PIN_B5 13
-#define MCP23017_PIN_B6 14
-#define MCP23017_PIN_B7 15
+#define PCAL_PIN_B0 8
+#define PCAL_PIN_B1 9
+#define PCAL_PIN_B2 10
+#define PCAL_PIN_B3 11
+#define PCAL_PIN_B4 12
+#define PCAL_PIN_B5 13
+#define PCAL_PIN_B6 14
+#define PCAL_PIN_B7 15
 
 #endif

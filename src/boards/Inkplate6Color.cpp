@@ -347,43 +347,43 @@ bool Inkplate::getPanelDeepSleepState()
 void Inkplate::setMCPForLowPower()
 {
     Wire.begin();
-    memset(mcpRegsInt, 0, 22);
-    mcpBegin(MCP23017_INT_ADDR, mcpRegsInt);
+    memset(pcalRegsInt, 0, 22);
+    pcalBegin(pcalRegsInt);
 
     // TOUCHPAD PINS
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B2, INPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B3, INPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B4, INPUT);
+    pinModePCAL(PCAL_PIN_B2, INPUT);
+    pinModePCAL(PCAL_PIN_B3, INPUT);
+    pinModePCAL(PCAL_PIN_B4, INPUT);
 
     // Battery voltage Switch MOSFET
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B1, OUTPUT);
+    pinModePCAL(PCAL_PIN_B1, OUTPUT);
 
     // Rest of pins go to OUTPUT LOW state because in deepSleep mode they are
     // using least amount of power
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A0, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A1, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A2, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A3, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A4, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A5, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A6, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A7, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B0, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B5, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B6, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B7, OUTPUT);
+    pinModePCAL(PCAL_PIN_A0, OUTPUT);
+    pinModePCAL(PCAL_PIN_A1, OUTPUT);
+    pinModePCAL(PCAL_PIN_A2, OUTPUT);
+    pinModePCAL(PCAL_PIN_A3, OUTPUT);
+    pinModePCAL(PCAL_PIN_A4, OUTPUT);
+    pinModePCAL(PCAL_PIN_A5, OUTPUT);
+    pinModePCAL(PCAL_PIN_A6, OUTPUT);
+    pinModePCAL(PCAL_PIN_A7, OUTPUT);
+    pinModePCAL(PCAL_PIN_B0, OUTPUT);
+    pinModePCAL(PCAL_PIN_B5, OUTPUT);
+    pinModePCAL(PCAL_PIN_B6, OUTPUT);
+    pinModePCAL(PCAL_PIN_B7, OUTPUT);
 
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A0, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A1, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A2, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A3, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A4, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A5, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A6, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_A7, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B0, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B5, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B6, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, MCP23017_PIN_B7, LOW);
+    digitalWrite(PCAL_PIN_A0, LOW);
+    digitalWrite(PCAL_PIN_A1, LOW);
+    digitalWrite(PCAL_PIN_A2, LOW);
+    digitalWrite(PCAL_PIN_A3, LOW);
+    digitalWrite(PCAL_PIN_A4, LOW);
+    digitalWrite(PCAL_PIN_A5, LOW);
+    digitalWrite(PCAL_PIN_A6, LOW);
+    digitalWrite(PCAL_PIN_A7, LOW);
+    digitalWrite(PCAL_PIN_B0, LOW);
+    digitalWrite(PCAL_PIN_B5, LOW);
+    digitalWrite(PCAL_PIN_B6, LOW);
+    digitalWrite(PCAL_PIN_B7, LOW);
 }
 #endif
