@@ -48,12 +48,6 @@ struct waveformData waveformEEPROM;
 
 int currentWaveform = 0;
 
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
-
 void setup()
 {
     Serial.begin(115200);
@@ -506,15 +500,14 @@ void test()
         Serial.println("MCP /2 not found");
     }
 
-    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, HIGH);
-    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, HIGH);
+    display.einkOn();
+
+    delay(200);
     
     Wire.beginTransmission(0x48);
 
     if (Wire.endTransmission() == 0)
     {
-        Serial.println("TPS found");
-
         if (display.readPowerGood())
         {
             Serial.println("TPS working!");

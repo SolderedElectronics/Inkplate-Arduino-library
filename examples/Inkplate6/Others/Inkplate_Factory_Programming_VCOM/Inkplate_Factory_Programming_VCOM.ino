@@ -451,15 +451,14 @@ void test()
         Serial.println("MCP /2 not found");
     }
 
-    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, HIGH);
-    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, HIGH);
+    display.einkOn();
 
     Wire.beginTransmission(0x48);
 
+    delay(200);
+
     if (Wire.endTransmission() == 0)
     {
-        Serial.println("TPS found");
-
         if (display.readPowerGood())
         {
             Serial.println("TPS working!");
@@ -474,8 +473,6 @@ void test()
     {
         Serial.println("TPS not found!");
     }
-    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, LOW);
-    display.digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, LOW);
 
     delay(5000);
 
