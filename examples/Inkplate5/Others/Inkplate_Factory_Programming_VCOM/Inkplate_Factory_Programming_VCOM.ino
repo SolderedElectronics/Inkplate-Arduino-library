@@ -390,7 +390,7 @@ void test()
         // alive.
         cnt++;
     }
-    if (WiFi.status() == WL_CONNECTED)
+    if (WiFi.status() == WL_CONNECTED) // Check if board is connected to WiFi
     {
         Serial.println("WiFi is working!");
     }
@@ -399,11 +399,11 @@ void test()
         Serial.println("Not connected to WiFi network!");
     }
 
-    Wire.beginTransmission(0x51);
+    Wire.beginTransmission(0x51); // Send address 0x51 on I2C
 
     time_t begined = 0;
 
-    if (Wire.endTransmission() == 0)
+    if (Wire.endTransmission() == 0) // Check if there was an error in communication
     {
         begined = millis();
         display.rtcReset();
@@ -423,9 +423,9 @@ void test()
         Serial.println("SD card slot is not working");
     }
 
-    Wire.beginTransmission(0x20);
+    Wire.beginTransmission(0x20); // Send address 0x20 on I2C
 
-    if (Wire.endTransmission() == 0)
+    if (Wire.endTransmission() == 0) // Check if there was an error in communication
     {
         Serial.println("MCP /1 found");
     }
@@ -434,9 +434,9 @@ void test()
         Serial.println("MCP /1 not found");
     }
 
-    Wire.beginTransmission(0x22);
+    Wire.beginTransmission(0x22); // Send address 0x22 on I2C
 
-    if (Wire.endTransmission() == 0)
+    if (Wire.endTransmission() == 0) // Check if there was an error in communication
     {
         Serial.println("MCP /2 found");
     }
@@ -447,13 +447,13 @@ void test()
 
     display.einkOn();
 
-    Wire.beginTransmission(0x48);
+    Wire.beginTransmission(0x48); // Send address 0x48 on I2C
 
     delay(200);
 
-    if (Wire.endTransmission() == 0)
+    if (Wire.endTransmission() == 0) // Check if there was an error in communication
     {
-        if (display.readPowerGood())
+        if (display.readPowerGood())  // Test if power supply for e-ink is OK
         {
             Serial.println("TPS working!");
         }
@@ -470,15 +470,15 @@ void test()
 
     delay(5000);
 
-    if (begined != 0)
+    if (begined != 0) // Check if RTC measures time correctly
     {
-        display.rtcGetRtcData();
+        display.rtcGetRtcData(); // Get data from RTC
 
-        begined = (millis() - begined) / 1000;
+        begined = (millis() - begined) / 1000; // Get time esp32 has measured
 
         time_t diff = display.rtcGetEpoch() - 1600000000ULL;
 
-        if ( abs(begined - diff) < 2)
+        if ( abs(begined - diff) < 2) // Compare times
         {
             Serial.println("RTC is working");
         }
