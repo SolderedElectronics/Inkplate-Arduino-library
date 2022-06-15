@@ -20,8 +20,8 @@
 #ifndef __INKPLATE6PLUS_H__
 #define __INKPLATE6PLUS_H__
 
-#define E_INK_WIDTH  1024
-#define E_INK_HEIGHT 758
+#define E_INK_WIDTH   1024
+#define E_INK_HEIGHT  758
 #define GPIO0_ENABLE  8
 #define INKPLATE_1BIT 0
 #define INKPLATE_3BIT 1
@@ -74,61 +74,61 @@
 #define GMOD 1 // GPIOA1
 #define GMOD_SET                                                                                                       \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, GMOD, HIGH);                                               \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, GMOD, HIGH);                                                      \
     }
 #define GMOD_CLEAR                                                                                                     \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, GMOD, LOW);                                                \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, GMOD, LOW);                                                       \
     }
 
 #define OE 0 // GPIOA0
 #define OE_SET                                                                                                         \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, OE, HIGH);                                                 \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, OE, HIGH);                                                        \
     }
 #define OE_CLEAR                                                                                                       \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, OE, LOW);                                                  \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, OE, LOW);                                                         \
     }
 
 #define SPV 2 // GPIOA5
 #define SPV_SET                                                                                                        \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SPV, HIGH);                                                \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SPV, HIGH);                                                       \
     }
 #define SPV_CLEAR                                                                                                      \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SPV, LOW);                                                 \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SPV, LOW);                                                        \
     }
 
 #define WAKEUP 3 // GPIOA3
 #define WAKEUP_SET                                                                                                     \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, WAKEUP, HIGH);                                             \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, WAKEUP, HIGH);                                                    \
     }
 #define WAKEUP_CLEAR                                                                                                   \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, WAKEUP, LOW);                                              \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, WAKEUP, LOW);                                                     \
     }
 
 #define PWRUP 4 // GPIOA4
 #define PWRUP_SET                                                                                                      \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, PWRUP, HIGH);                                              \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, PWRUP, HIGH);                                                     \
     }
 #define PWRUP_CLEAR                                                                                                    \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, PWRUP, LOW);                                               \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, PWRUP, LOW);                                                      \
     }
 
 #define VCOM 5 // GPIOA6
 #define VCOM_SET                                                                                                       \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, VCOM, HIGH);                                               \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, VCOM, HIGH);                                                      \
     }
 #define VCOM_CLEAR                                                                                                     \
     {                                                                                                                  \
-        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, VCOM, LOW);                                                \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, VCOM, LOW);                                                       \
     }
 
 #ifndef _swap_int16_t
