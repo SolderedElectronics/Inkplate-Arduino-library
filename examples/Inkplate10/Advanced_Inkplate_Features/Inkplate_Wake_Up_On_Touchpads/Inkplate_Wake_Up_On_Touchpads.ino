@@ -45,10 +45,10 @@ void setup()
     display.begin();
 
     // Setup mcp interrupts
-    display.setIntOutputInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 1, false, false, HIGH);
-    display.setIntPinInternal(MCP23017_INT_ADDR, display.mcpRegsInt, PAD1, RISING);
-    display.setIntPinInternal(MCP23017_INT_ADDR, display.mcpRegsInt, PAD2, RISING);
-    display.setIntPinInternal(MCP23017_INT_ADDR, display.mcpRegsInt, PAD3, RISING);
+    display.setIntOutputInternal(IO_INT_ADDR, display.ioRegsInt, 1, false, false, HIGH);
+    display.setIntPinInternal(IO_INT_ADDR, display.ioRegsInt, PAD1, RISING);
+    display.setIntPinInternal(IO_INT_ADDR, display.ioRegsInt, PAD2, RISING);
+    display.setIntPinInternal(IO_INT_ADDR, display.ioRegsInt, PAD3, RISING);
 
     ++bootCount;
 

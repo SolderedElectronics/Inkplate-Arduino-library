@@ -231,9 +231,9 @@ void Inkplate::pinsZstate()
     pinMode(2, INPUT);
     pinMode(32, INPUT);
     pinMode(33, INPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, OE, INPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, GMOD, INPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, SPV, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, OE, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, GMOD, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, SPV, INPUT);
 
     pinMode(4, INPUT);
     pinMode(5, INPUT);
@@ -254,9 +254,9 @@ void Inkplate::pinsAsOutputs()
     pinMode(2, OUTPUT);
     pinMode(32, OUTPUT);
     pinMode(33, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, OE, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, GMOD, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, SPV, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, OE, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, GMOD, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, SPV, OUTPUT);
 
     pinMode(4, OUTPUT);
     pinMode(5, OUTPUT);

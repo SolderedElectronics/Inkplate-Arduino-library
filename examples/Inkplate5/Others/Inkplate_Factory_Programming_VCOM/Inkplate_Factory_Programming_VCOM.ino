@@ -26,7 +26,7 @@ void setup()
     {
         microSDCardTest();
         display.einkOn();
-        display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
+        display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);
         display.display();
         display.einkOn();
         delay(100);
@@ -428,7 +428,7 @@ double readVCOM()
     writeToScreen();
     writeReg(0x04, (readReg(0x04) | B10000000));
     delay(10);
-    while (display.digitalReadMCP(6))
+    while (display.digitalReadIO(6))
     {
         delay(1);
     };
@@ -446,7 +446,7 @@ void writeVCOMToEEPROM(double v)
     int vcomL = vcom & 0xFF;
 
     // Set MCP23017 pin where TPS65186 INT pin is connectet to input pull up
-    display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
+    display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);
 
     // First power up TPS65186 so we can communicate with it
     display.einkOn();
@@ -466,7 +466,7 @@ void writeVCOMToEEPROM(double v)
     do
     {
       delay(1);
-    } while (display.digitalReadInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6));
+    } while (display.digitalReadInternal(IO_INT_ADDR, display.ioRegsInt, 6));
 
     // Clear Interrupt flag by reading INT1 register
     readReg(0x07);

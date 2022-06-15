@@ -97,22 +97,22 @@ bool Inkplate::begin(void)
 #endif
 
 #ifdef ARDUINO_ESP32_DEV
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
 #else
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
 #endif
 
-    memset(mcpRegsInt, 0, 22);
-    memset(mcpRegsEx, 0, 22);
+    memset(ioRegsInt, 0, 22);
+    memset(ioRegsEx, 0, 22);
 
-    mcpBegin(MCP23017_INT_ADDR, mcpRegsInt);
-    mcpBegin(MCP23017_EXT_ADDR, mcpRegsEx);
+    ioBegin(IO_INT_ADDR, ioRegsInt);
+    ioBegin(IO_EXT_ADDR, ioRegsEx);
 
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, VCOM, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, GPIO0_ENABLE, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, GPIO0_ENABLE, HIGH);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, VCOM, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, PWRUP, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, WAKEUP, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, GPIO0_ENABLE, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, GPIO0_ENABLE, HIGH);
 
     WAKEUP_SET;
     delay(1);
@@ -132,27 +132,27 @@ bool Inkplate::begin(void)
 
     for (int i = 0; i < 15; i++)
     {
-        pinModeInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, OUTPUT);
-        digitalWriteInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, LOW);
+        pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);
+        digitalWriteInternal(IO_EXT_ADDR, ioRegsEx, i, LOW);
     }
 
     // For same reason, unused pins of first I/O expander have to be also set as
     // outputs, low.
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 13, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 14, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 15, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 13, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 14, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 15, LOW);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 14, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 15, LOW);
 
     // CONTROL PINS
     pinMode(0, OUTPUT);
     pinMode(2, OUTPUT);
     pinMode(32, OUTPUT);
     pinMode(33, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, OE, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, GMOD, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, SPV, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, OE, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, GMOD, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, SPV, OUTPUT);
 
     // DATA PINS
     pinMode(4, OUTPUT); // D0
@@ -165,15 +165,15 @@ bool Inkplate::begin(void)
     pinMode(27, OUTPUT); // D7
 
     // Battery voltage Switch MOSFET
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
 
     // Disable/Enable Touchscreen PWR
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, TOUCHSCREEN_EN, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, TOUCHSCREEN_EN, HIGH);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, TOUCHSCREEN_EN, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, TOUCHSCREEN_EN, HIGH);
 
     // Disable/Enable Frontlight PWR
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, FRONTLIGHT_EN, LOW);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, LOW);
 
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);

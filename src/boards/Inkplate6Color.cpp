@@ -347,43 +347,43 @@ bool Inkplate::getPanelDeepSleepState()
 void Inkplate::setMCPForLowPower()
 {
     Wire.begin();
-    memset(pcalRegsInt, 0, 22);
-    pcalBegin(pcalRegsInt);
+    memset(ioRegsInt, 0, 22);
+    ioBegin(ioRegsInt);
 
     // TOUCHPAD PINS
-    pinModePCAL(PCAL_PIN_B2, INPUT);
-    pinModePCAL(PCAL_PIN_B3, INPUT);
-    pinModePCAL(PCAL_PIN_B4, INPUT);
+    pinModeIO(IO_PIN_B2, INPUT);
+    pinModeIO(IO_PIN_B3, INPUT);
+    pinModeIO(IO_PIN_B4, INPUT);
 
     // Battery voltage Switch MOSFET
-    pinModePCAL(PCAL_PIN_B1, OUTPUT);
+    pinModeIO(IO_PIN_B1, OUTPUT);
 
     // Rest of pins go to OUTPUT LOW state because in deepSleep mode they are
     // using least amount of power
-    pinModePCAL(PCAL_PIN_A0, OUTPUT);
-    pinModePCAL(PCAL_PIN_A1, OUTPUT);
-    pinModePCAL(PCAL_PIN_A2, OUTPUT);
-    pinModePCAL(PCAL_PIN_A3, OUTPUT);
-    pinModePCAL(PCAL_PIN_A4, OUTPUT);
-    pinModePCAL(PCAL_PIN_A5, OUTPUT);
-    pinModePCAL(PCAL_PIN_A6, OUTPUT);
-    pinModePCAL(PCAL_PIN_A7, OUTPUT);
-    pinModePCAL(PCAL_PIN_B0, OUTPUT);
-    pinModePCAL(PCAL_PIN_B5, OUTPUT);
-    pinModePCAL(PCAL_PIN_B6, OUTPUT);
-    pinModePCAL(PCAL_PIN_B7, OUTPUT);
+    pinModeIO(IO_PIN_A0, OUTPUT);
+    pinModeIO(IO_PIN_A1, OUTPUT);
+    pinModeIO(IO_PIN_A2, OUTPUT);
+    pinModeIO(IO_PIN_A3, OUTPUT);
+    pinModeIO(IO_PIN_A4, OUTPUT);
+    pinModeIO(IO_PIN_A5, OUTPUT);
+    pinModeIO(IO_PIN_A6, OUTPUT);
+    pinModeIO(IO_PIN_A7, OUTPUT);
+    pinModeIO(IO_PIN_B0, OUTPUT);
+    pinModeIO(IO_PIN_B5, OUTPUT);
+    pinModeIO(IO_PIN_B6, OUTPUT);
+    pinModeIO(IO_PIN_B7, OUTPUT);
 
-    digitalWrite(PCAL_PIN_A0, LOW);
-    digitalWrite(PCAL_PIN_A1, LOW);
-    digitalWrite(PCAL_PIN_A2, LOW);
-    digitalWrite(PCAL_PIN_A3, LOW);
-    digitalWrite(PCAL_PIN_A4, LOW);
-    digitalWrite(PCAL_PIN_A5, LOW);
-    digitalWrite(PCAL_PIN_A6, LOW);
-    digitalWrite(PCAL_PIN_A7, LOW);
-    digitalWrite(PCAL_PIN_B0, LOW);
-    digitalWrite(PCAL_PIN_B5, LOW);
-    digitalWrite(PCAL_PIN_B6, LOW);
-    digitalWrite(PCAL_PIN_B7, LOW);
+    digitalWrite(IO_PIN_A0, LOW);
+    digitalWrite(IO_PIN_A1, LOW);
+    digitalWrite(IO_PIN_A2, LOW);
+    digitalWrite(IO_PIN_A3, LOW);
+    digitalWrite(IO_PIN_A4, LOW);
+    digitalWrite(IO_PIN_A5, LOW);
+    digitalWrite(IO_PIN_A6, LOW);
+    digitalWrite(IO_PIN_A7, LOW);
+    digitalWrite(IO_PIN_B0, LOW);
+    digitalWrite(IO_PIN_B5, LOW);
+    digitalWrite(IO_PIN_B6, LOW);
+    digitalWrite(IO_PIN_B7, LOW);
 }
 #endif

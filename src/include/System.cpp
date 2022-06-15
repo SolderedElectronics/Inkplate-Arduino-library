@@ -91,7 +91,7 @@ int8_t System::readTemperature()
  */
 uint8_t System::readTouchpad(uint8_t _pad)
 {
-    return digitalReadInternal(MCP23017_INT_ADDR, mcpRegsInt, _pad);
+    return digitalReadInternal(IO_INT_ADDR, ioRegsInt, _pad);
 }
 
 /**
@@ -101,43 +101,43 @@ uint8_t System::readTouchpad(uint8_t _pad)
  */
 double System::readBattery()
 {
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, INPUT);
-    int state = digitalReadInternal(MCP23017_INT_ADDR, mcpRegsInt, 9);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, INPUT);
+    int state = digitalReadInternal(IO_INT_ADDR, ioRegsInt, 9);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
 
     if (state)
     {
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
     }
     else
     {
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
     }
     /*
 #ifdef ARDUINO_ESP32_DEV
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
 #else
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
 #endif
 */
     delay(1);
     int adc = analogRead(35);
     if (state)
     {
-        pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, INPUT);
+        pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, INPUT);
     }
     else
     {
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
     }
 
 
     /*
 
 #ifdef ARDUINO_ESP32_DEV
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
 #else
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
 #endif
 */
     // Calculate the voltage using the following formula

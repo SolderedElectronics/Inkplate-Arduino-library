@@ -16,15 +16,17 @@
  * @authors     e-radionica.com
  ***************************************************/
 
-#ifdef ARDUINO_INKPLATECOLOR
+#ifdef PCAL_IO
 
 #include "Pcal.h"
 
 // LOW LEVEL:
 
 /**
- * @brief       pcalBegin function starts pcal expander and sets registers values
+ * @brief       ioBegin function starts pcal expander and sets registers values
  *
+ * @param       uint8_t _addr
+ *              io exapnder i2c address
  * @param       uint8_t *_r
  *              pointer to array to be writen in registers
  *
@@ -33,16 +35,12 @@
  * @note        updates register 0 and 1 with 0xFF regardless of what array is
  * passed as _r
  */
-bool Pcal::pcalBegin(uint8_t *_r)
+bool Pcal::ioBegin(uint8_t _addr, uint8_t *_r)
 {
     Wire.beginTransmission(0x21);
     int error = Wire.endTransmission();
     if (error)
         return false;
-    // readPCALRegisters(_addr, _r);
-    //_r[0] = 0xFF;
-    //_r[1] = 0xFF;
-    // updateAllRegisters(_addr, _r);
     return true;
 }
 
@@ -54,6 +52,8 @@ bool Pcal::pcalBegin(uint8_t *_r)
  */
 void Pcal::readPCALRegisters(uint8_t *k)
 {
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
+        return;
     Wire.beginTransmission(0x21);
     Wire.write(0x00);
     Wire.endTransmission();
@@ -166,7 +166,7 @@ void Pcal::updateRegister(uint8_t _regName, uint8_t *k, uint8_t _n)
  */
 
 /**
- * @brief       pinModePCAL function sets internal pin mode
+ * @brief       pinModeIO function sets internal pin mode
  *
  * @param       uint8_t _pin
  *              pin to set mode
@@ -174,7 +174,98 @@ void Pcal::updateRegister(uint8_t _regName, uint8_t *k, uint8_t _n)
  *              mode for pin to be set (INPUT=0x01, OUTPUT=0x02,
  * INPUT_PULLUP=0x05)
  */
-void Pcal::pinModePCAL(uint8_t _pin, uint8_t _mode)
+void Pcal::pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
+{
+    if ((!second_io_inited) && _io_id == IO_EXT_ADDR)
+        return;
+    if ((_io_id == IO_INT_ADDR) && (_pin < 9))
+        return;
+    pinModeInternal(_io_id, _io_id == IO_INT_ADDR ? ioRegsInt : ioRegsEx, _pin, _mode);
+}
+
+/**
+ * @brief       digitalWriteIO sets internal output pin state (1 or 0)
+ *
+ * @param       uint8_t _pin
+ *              pin to set output (DO NOT USE GPA0-GPA7 and GPB0. In code those
+ * are pins from 0-8) only use 9-15
+ * @param       uint8_t _state
+ *              output pin state (0 or 1)
+ *
+ */
+void Pcal::digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _io_id)
+{
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
+        return;
+    if ((_io_id == IO_INT_ADDR) && (_pin < 9))
+        return;
+    digitalWriteInternal(_io_id, _io_id == IO_INT_ADDR ? ioRegsInt : ioRegsEx, _pin, _state);
+}
+
+/**
+ * @brief       digitalReadPCAL reads pcal internal pin state
+ *
+ * @param       uint8_t _pin
+ *              pin to set mode
+ *
+ * @return      HIGH or LOW (1 or 0) value
+ */
+uint8_t Pcal::digitalReadIO(uint8_t _pin, uint8_t _io_id)
+{
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
+        return 0;
+    if ((_io_id == IO_INT_ADDR) && (_pin < 9))
+        return 0;
+    return digitalReadInternal(_io_id, _io_id == IO_INT_ADDR ? ioRegsInt : ioRegsEx, _pin);
+}
+
+/**
+ * @brief       setIntPin function sets pcal interupt internal mode
+ *
+ * @param       uint8_t _pin
+ *              pin to set interrupt mode to
+ * @param       uint8_t _en
+ *              interurpt mode (CHANGE, FALLING, RISING)
+ */
+void Pcal::setIntPin(uint8_t _pin, uint8_t _en, uint8_t _io_id)
+{
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
+        return;
+    setIntOutputInternal(_io_id, _io_id == IO_INT_ADDR ? ioRegsInt : ioRegsEx, intPort, mirroring, openDrain, polarity);
+}
+
+/**
+ * @brief       getINTInternal function reads Interrupt from pin
+ *
+ * @return      returns interupt registers state
+ *
+ * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
+ * PORTA PIN1
+ */
+uint16_t Pcal::getINT(uint8_t _io_id)
+{
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
+        return 0;
+
+    return getINTInternal(_io_id, _io_id == IO_INT_ADDR ? ioRegsInt : ioRegsEx);
+}
+
+/**
+ * @brief       pinModeInternal sets io exapnder internal pin mode
+ *
+ * @param       uint8_t _addr
+ *              io exapnder i2c address
+ * @param       uint8_t *_r
+ *              pointer to array that holds io exapnder registers
+ * @param       uint8_t _pin
+ *              pin to set mode
+ * @param       uint8_t _mode
+ *              mode for pi to be set (INPUT=0x01, OUTPUT=0x02,
+ * INPUT_PULLUP=0x05)
+ *
+ * @note        modes are defined in @esp32-hal-gpio.h
+ */
+void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
 {
     if (_pin > 15)
         return;
@@ -216,16 +307,23 @@ void Pcal::pinModePCAL(uint8_t _pin, uint8_t _mode)
 }
 
 /**
- * @brief       digitalWritePCAL sets internal output pin state (1 or 0)
+ * @brief       digitalWriteInternal sets internal output pin state (1 or 0)
  *
+ * @param       uint8_t _addr
+ *              io exapnder i2c address
+ * @param       uint8_t *_r
+ *              pointer to array that holds io exapnder registers
  * @param       uint8_t _pin
  *              pin to set output (DO NOT USE GPA0-GPA7 and GPB0. In code those
  * are pins from 0-8) only use 9-15
  * @param       uint8_t _state
  *              output pin state (0 or 1)
  *
+ * @note        DO NOT USE GPA0-GPA7 and GPB0. In code those are pins from
+ * 0-8!!! Using those, you might permanently damage the screen. You should only
+ * use pins from 9-15. Function will exit if pin mode isnt OUTPUT.
  */
-void Pcal::digitalWritePCAL(uint8_t _pin, uint8_t _state)
+void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state)
 {
     if (_pin > 15)
         return;
@@ -240,14 +338,18 @@ void Pcal::digitalWritePCAL(uint8_t _pin, uint8_t _state)
 }
 
 /**
- * @brief       digitalReadPCAL reads pcal internal pin state
+ * @brief       digitalReadInternal reads io exapnder internal pin state
  *
+ * @param       uint8_t _addr
+ *              io exapnder i2c address
+ * @param       uint8_t *_r
+ *              pointer to array that holds io exapnder registers
  * @param       uint8_t _pin
  *              pin to set mode
  *
  * @return      HIGH or LOW (1 or 0) value
  */
-uint8_t Pcal::digitalReadPCAL(uint8_t _pin)
+uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 {
     if (_pin > 15)
         return -1;
@@ -261,14 +363,18 @@ uint8_t Pcal::digitalReadPCAL(uint8_t _pin)
 }
 
 /**
- * @brief       setIntPin function sets pcal interupt internal mode
+ * @brief       setIntPinInternal function sets io exapnder interupt internal mode
  *
- * @param       uint8_t _pin
+ * @param       uint8_t _addr
+ *              io exapnder i2c address
+ * @param       uint8_t *_r
+ *              pointer to array that holds io exapnder registers
+ * @param       uint8_t *_pin
  *              pin to set interrupt mode to
- * @param       uint8_t _en
+ * @param       uint8_t _mode
  *              interurpt mode (CHANGE, FALLING, RISING)
  */
-void Pcal::setIntPin(uint8_t _pin, uint8_t _en)
+void Mcp::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
 {
     if (_pin > 15)
         return;
@@ -282,19 +388,25 @@ void Pcal::setIntPin(uint8_t _pin, uint8_t _en)
     updateRegister(PCAL6416A_INTMSK_REG0 + _port, regs[PCAL6416A_INTMSK_REG0_ARRAY + _port]);
 }
 
+
 /**
- * @brief       getINTInternal function reads Interrupt from pin
+ * @brief       getINTInternal function reads Interrupt pin state for all pins
  *
- * @return      returns interupt registers state
+ * @param       uint8_t _addr
+ *              io exapnder i2c address
+ * @param       uint8_t *_r
+ *              pointer to array that holds io exapnder registers
+ * @return      returns interrupt state of both ports (INTF)
  *
  * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
- * PORTA PIN1
+ * PORTA PIN1, bit can be set only if interrupt is enabled
  */
-uint16_t Pcal::getINT()
+uint16_t Mcp::getINTInternal(uint8_t _addr, uint8_t *_r)
 {
     readPCALRegister(PCAL6416A_INTSTAT_REG0, &regs[PCAL6416A_INTSTAT_REG0_ARRAY]);
     readPCALRegister(PCAL6416A_INTSTAT_REG1, &regs[PCAL6416A_INTSTAT_REG1_ARRAY]);
 
     return ((regs[PCAL6416A_INTSTAT_REG1_ARRAY] << 8) | (regs[PCAL6416A_INTSTAT_REG0_ARRAY]));
 }
+
 #endif
