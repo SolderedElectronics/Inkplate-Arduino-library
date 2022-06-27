@@ -110,7 +110,7 @@ bool Inkplate::begin(void)
 
     // Battery voltage Switch MOSFET
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, OUTPUT);
-    
+
     // Set unused pins of the first MCP as outputs, low logic state
     // (to have the lowest current consumption in low power mode)
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 13, OUTPUT);
