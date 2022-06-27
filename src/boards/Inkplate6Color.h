@@ -65,4 +65,8 @@
 #define INKPLATE_YELLOW 0b00000101
 #define INKPLATE_ORANGE 0b00000110
 
+// PCAL6416A Register map
+#define IO_INT_ADDR 0x20
+#define IO_EXT_ADDR 0x20
+
 #endif

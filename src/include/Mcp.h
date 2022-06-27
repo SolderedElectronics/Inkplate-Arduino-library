@@ -23,9 +23,6 @@
 #include "Wire.h"
 #include "defines.h"
 
-
-#define IO_INT_ADDR            0x20
-#define IO_EXT_ADDR            0x22
 #define MCP23017_INT_PORTA     0x00
 #define MCP23017_INT_PORTB     0x01
 #define MCP23017_INT_NO_MIRROR false
@@ -84,9 +81,9 @@
 #define IO_PIN_B0 8
 
 /**
- * @brief       Mcp class to be used for work with MCP expander
+ * @brief       Expander class to be used for work with MCP expander
  */
-class Mcp
+class Expander
 {
   public:
     void pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _io_id = IO_EXT_ADDR);
@@ -98,8 +95,8 @@ class Mcp
     void removeIntPin(uint8_t _pin, uint8_t _io_id = IO_EXT_ADDR);
     uint16_t getINT(uint8_t _io_id = IO_EXT_ADDR);
     uint16_t getINTstate(uint8_t _io_id = IO_EXT_ADDR);
-    void setPorts(uint16_t _d, uint8_t _io_id = IO_EXT_ADDR);
     uint16_t getPorts(uint8_t _io_id = IO_EXT_ADDR);
+    void setIntPin(uint8_t _pin, uint8_t _mode, uint8_t _io_id = IO_EXT_ADDR);
 
     uint8_t ioRegsInt[22], ioRegsEx[22];
 

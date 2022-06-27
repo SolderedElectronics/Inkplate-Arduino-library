@@ -90,15 +90,7 @@
 /**
  * @brief       System class for interaction with panel harware
  */
-class System : public Esp,
-
-#if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATECOLOR)
-               virtual public Mcp,
-#endif
-
-#ifdef ARDUINO_INKPLATECOLOR
-               virtual public Pcal,
-#endif
+class System : public Esp, virtual public Expander,
 
 #ifdef ARDUINO_INKPLATE6PLUS
                public Touch,

@@ -16,7 +16,7 @@
  * @authors     e-radionica.com
  ***************************************************/
 
-#ifdef MCP_IO
+#ifdef ARDUINO_INKPLATE10
 
 #include "Mcp.h"
 
@@ -35,7 +35,7 @@
  * @note        updates register 0 and 1 with 0xFF regardless of what array is
  * passed as _r
  */
-bool Mcp::ioBegin(uint8_t _addr, uint8_t *_r)
+bool Expander::ioBegin(uint8_t _addr, uint8_t *_r)
 {
     Wire.beginTransmission(_addr);
     int error = Wire.endTransmission();
@@ -58,7 +58,7 @@ bool Mcp::ioBegin(uint8_t _addr, uint8_t *_r)
  * @param       uint8_t *_k
  *              pointer to array where io exapnder registers will be stored
  */
-void Mcp::readMCPRegisters(uint8_t _addr, uint8_t *k)
+void Expander::readMCPRegisters(uint8_t _addr, uint8_t *k)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
@@ -85,7 +85,7 @@ void Mcp::readMCPRegisters(uint8_t _addr, uint8_t *k)
  * @param       uint8_t _n
  *              number of bites/registers to read
  */
-void Mcp::readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
+void Expander::readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
@@ -110,7 +110,7 @@ void Mcp::readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t 
  * @param       uint8_t *_k
  *              pointer to array where io exapnder registers will be stored
  */
-void Mcp::readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k)
+void Expander::readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
@@ -130,7 +130,7 @@ void Mcp::readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k)
  * @param       uint8_t *_k
  *              pointer to array where data to be uploaded is stored
  */
-void Mcp::updateAllRegisters(uint8_t _addr, uint8_t *k)
+void Expander::updateAllRegisters(uint8_t _addr, uint8_t *k)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
@@ -153,7 +153,7 @@ void Mcp::updateAllRegisters(uint8_t _addr, uint8_t *k)
  * @param       uint8_t _d
  *              data to be uploaded
  */
-void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d)
+void Expander::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
@@ -176,7 +176,7 @@ void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d)
  * @param       uint8_t _n
  *              number of bites/registers to write to
  */
-void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
+void Expander::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
@@ -208,7 +208,7 @@ void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n
  *
  * @note        modes are defined in @esp32-hal-gpio.h
  */
-void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
+void Expander::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
@@ -257,7 +257,7 @@ void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mod
  * 0-8!!! Using those, you might permanently damage the screen. You should only
  * use pins from 9-15. Function will exit if pin mode isnt OUTPUT.
  */
-void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state)
+void Expander::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
@@ -282,7 +282,7 @@ void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t
  *
  * @return      HIGH or LOW (1 or 0) value
  */
-uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
+uint8_t Expander::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return 0;
@@ -310,7 +310,7 @@ uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
  * @param       uint8_t polarity
  *              sets port interrupt polarity, 1 active high, 0 active low
  */
-void Mcp::setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint8_t mirroring, uint8_t openDrain,
+void Expander::setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint8_t mirroring, uint8_t openDrain,
                                uint8_t polarity)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
@@ -337,7 +337,7 @@ void Mcp::setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint
  * @param       uint8_t _mode
  *              interurpt mode (CHANGE, FALLING, RISING)
  */
-void Mcp::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
+void Expander::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
@@ -375,7 +375,7 @@ void Mcp::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _m
  * @param       uint8_t _io_id
  *              internal or external io exapnder
  */
-void Mcp::pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
+void Expander::pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
 {
     if ((!second_io_inited) && _io_id == IO_EXT_ADDR)
         return;
@@ -396,7 +396,7 @@ void Mcp::pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
  *              internal or external io exapnder
  *
  */
-void Mcp::digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _io_id)
+void Expander::digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _io_id)
 {
     if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return;
@@ -415,7 +415,7 @@ void Mcp::digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _io_id)
  *
  * @return      HIGH or LOW (1 or 0) value
  */
-uint8_t Mcp::digitalReadIO(uint8_t _pin, uint8_t _io_id)
+uint8_t Expander::digitalReadIO(uint8_t _pin, uint8_t _io_id)
 {
     if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return 0;
@@ -440,7 +440,7 @@ uint8_t Mcp::digitalReadIO(uint8_t _pin, uint8_t _io_id)
  * @param       uint8_t _io_id
  *              internal or external io exapnder
  */
-void Mcp::setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, uint8_t polarity, uint8_t _io_id)
+void Expander::setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, uint8_t polarity, uint8_t _io_id)
 {
     if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return;
@@ -457,7 +457,7 @@ void Mcp::setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, ui
  * @param       uint8_t _io_id
  *              internal or external io exapnder
  */
-void Mcp::setIntPin(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
+void Expander::setIntPin(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
 {
     if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return;
@@ -474,7 +474,7 @@ void Mcp::setIntPin(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
  * @param       uint8_t _io_id
  *              internal or external io exapnder
  */
-void Mcp::removeIntPin(uint8_t _pin, uint8_t _io_id)
+void Expander::removeIntPin(uint8_t _pin, uint8_t _io_id)
 {
     if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return;
@@ -494,7 +494,7 @@ void Mcp::removeIntPin(uint8_t _pin, uint8_t _io_id)
  * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
  * PORTA PIN1
  */
-uint16_t Mcp::getINT(uint8_t _io_id)
+uint16_t Expander::getINT(uint8_t _io_id)
 {
     if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return 0;
@@ -514,7 +514,7 @@ uint16_t Mcp::getINT(uint8_t _io_id)
  * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
  * PORTA PIN1
  */
-uint16_t Mcp::getINTstate(uint8_t _io_id)
+uint16_t Expander::getINTstate(uint8_t _io_id)
 {
     if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return 0;
@@ -532,7 +532,7 @@ uint16_t Mcp::getINTstate(uint8_t _io_id)
  *
  * @note        MSB byte is for PORTB, LSB byte for PORTA
  */
-void Mcp::setPorts(uint16_t _d, uint8_t _io_id)
+void Expander::setPorts(uint16_t _d, uint8_t _io_id)
 {
     if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return;
@@ -549,7 +549,7 @@ void Mcp::setPorts(uint16_t _d, uint8_t _io_id)
  *
  * @note        MSB byte is for PORTB, LSB is for PORTA
  */
-uint16_t Mcp::getPorts(uint8_t _io_id)
+uint16_t Expander::getPorts(uint8_t _io_id)
 {
     if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return 0;
@@ -566,7 +566,7 @@ uint16_t Mcp::getPorts(uint8_t _io_id)
  * @param       uint8_t _pin
  *              pin to remove interrupt from
  */
-void Mcp::removeIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
+void Expander::removeIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
@@ -588,7 +588,7 @@ void Mcp::removeIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
  * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
  * PORTA PIN1, bit can be set only if interrupt is enabled
  */
-uint16_t Mcp::getINTInternal(uint8_t _addr, uint8_t *_r)
+uint16_t Expander::getINTInternal(uint8_t _addr, uint8_t *_r)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return 0;
@@ -611,7 +611,7 @@ uint16_t Mcp::getINTInternal(uint8_t _addr, uint8_t *_r)
  * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
  * PORTA PIN1, bit can be set only if interrupt is enabled
  */
-uint16_t Mcp::getINTstateInternal(uint8_t _addr, uint8_t *_r)
+uint16_t Expander::getINTstateInternal(uint8_t _addr, uint8_t *_r)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return 0;
@@ -631,7 +631,7 @@ uint16_t Mcp::getINTstateInternal(uint8_t _addr, uint8_t *_r)
  *
  * @note        MSB byte is for PORTB, LSB byte for PORTA
  */
-void Mcp::setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d)
+void Expander::setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
@@ -652,7 +652,7 @@ void Mcp::setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d)
  *
  * @note        MSB byte is for PORTB, LSB is for PORTA
  */
-uint16_t Mcp::getPortsInternal(uint8_t _addr, uint8_t *_r)
+uint16_t Expander::getPortsInternal(uint8_t _addr, uint8_t *_r)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return 0;

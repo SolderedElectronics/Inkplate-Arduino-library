@@ -16,7 +16,7 @@
  * @authors     e-radionica.com
  ***************************************************/
 
-#ifdef PCAL_IO
+#ifdef ARDUINO_INKPLATECOLOR
 
 #include "Pcal.h"
 
@@ -35,9 +35,9 @@
  * @note        updates register 0 and 1 with 0xFF regardless of what array is
  * passed as _r
  */
-bool Pcal::ioBegin(uint8_t _addr, uint8_t *_r)
+bool Expander::ioBegin(uint8_t _addr, uint8_t *_r)
 {
-    Wire.beginTransmission(0x21);
+    Wire.beginTransmission(_addr);
     int error = Wire.endTransmission();
     if (error)
         return false;
@@ -50,14 +50,12 @@ bool Pcal::ioBegin(uint8_t _addr, uint8_t *_r)
  * @param       uint8_t *_k
  *              pointer to array where pcal registers will be stored
  */
-void Pcal::readPCALRegisters(uint8_t *k)
+void Expander::readPCALRegisters(uint8_t _addr, uint8_t *k)
 {
-    if (_addr == IO_EXT_ADDR && !second_io_inited)
-        return;
-    Wire.beginTransmission(0x21);
+    Wire.beginTransmission(_addr);
     Wire.write(0x00);
     Wire.endTransmission();
-    Wire.requestFrom(0x21, (uint8_t)22);
+    Wire.requestFrom(_addr, (uint8_t)22);
     for (int i = 0; i < 22; ++i)
     {
         k[i] = Wire.read();
@@ -75,12 +73,12 @@ void Pcal::readPCALRegisters(uint8_t *k)
  * @param       uint8_t _n
  *              number of bites/registers to read
  */
-void Pcal::readPCALRegisters(uint8_t _regName, uint8_t *k, uint8_t _n)
+void Expander::readPCALRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
 {
-    Wire.beginTransmission(0x21);
+    Wire.beginTransmission(_addr);
     Wire.write(_regName);
     Wire.endTransmission();
-    Wire.requestFrom(0x21, _n);
+    Wire.requestFrom(_addr, _n);
     for (int i = 0; i < _n; ++i)
     {
         k[_regName + i] = Wire.read();
@@ -96,12 +94,12 @@ void Pcal::readPCALRegisters(uint8_t _regName, uint8_t *k, uint8_t _n)
  * @param       uint8_t *_k
  *              pointer to array where pcal registers will be stored
  */
-void Pcal::readPCALRegister(uint8_t _regName, uint8_t *k)
+void Expander::readPCALRegister(uint8_t _addr, uint8_t _regName, uint8_t *k)
 {
-    Wire.beginTransmission(0x21);
+    Wire.beginTransmission(_addr);
     Wire.write(_regName);
     Wire.endTransmission();
-    Wire.requestFrom(0x21, (uint8_t)1);
+    Wire.requestFrom(_addr, (uint8_t)1);
     k[_regName] = Wire.read();
 }
 
@@ -112,9 +110,9 @@ void Pcal::readPCALRegister(uint8_t _regName, uint8_t *k)
  * @param       uint8_t *_k
  *              pointer to array where data to be uploaded is stored
  */
-void Pcal::updateAllRegisters(uint8_t *k)
+void Expander::updateAllRegisters(uint8_t _addr, uint8_t *k)
 {
-    Wire.beginTransmission(0x21);
+    Wire.beginTransmission(_addr);
     Wire.write(0x00);
     for (int i = 0; i < 22; ++i)
     {
@@ -131,9 +129,9 @@ void Pcal::updateAllRegisters(uint8_t *k)
  * @param       uint8_t _d
  *              data to be uploaded
  */
-void Pcal::updateRegister(uint8_t _regName, uint8_t _d)
+void Expander::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d)
 {
-    Wire.beginTransmission(0x21);
+    Wire.beginTransmission(_addr);
     Wire.write(_regName);
     Wire.write(_d);
     Wire.endTransmission();
@@ -150,9 +148,9 @@ void Pcal::updateRegister(uint8_t _regName, uint8_t _d)
  * @param       uint8_t _n
  *              number of bites/registers to write to
  */
-void Pcal::updateRegister(uint8_t _regName, uint8_t *k, uint8_t _n)
+void Expander::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
 {
-    Wire.beginTransmission(0x21);
+    Wire.beginTransmission(_addr);
     Wire.write(_regName);
     for (int i = 0; i < _n; ++i)
     {
@@ -174,10 +172,8 @@ void Pcal::updateRegister(uint8_t _regName, uint8_t *k, uint8_t _n)
  *              mode for pin to be set (INPUT=0x01, OUTPUT=0x02,
  * INPUT_PULLUP=0x05)
  */
-void Pcal::pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
+void Expander::pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
 {
-    if ((!second_io_inited) && _io_id == IO_EXT_ADDR)
-        return;
     if ((_io_id == IO_INT_ADDR) && (_pin < 9))
         return;
     pinModeInternal(_io_id, _io_id == IO_INT_ADDR ? ioRegsInt : ioRegsEx, _pin, _mode);
@@ -193,10 +189,8 @@ void Pcal::pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
  *              output pin state (0 or 1)
  *
  */
-void Pcal::digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _io_id)
+void Expander::digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _io_id)
 {
-    if (!second_io_inited && _io_id == IO_EXT_ADDR)
-        return;
     if ((_io_id == IO_INT_ADDR) && (_pin < 9))
         return;
     digitalWriteInternal(_io_id, _io_id == IO_INT_ADDR ? ioRegsInt : ioRegsEx, _pin, _state);
@@ -210,10 +204,8 @@ void Pcal::digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _io_id)
  *
  * @return      HIGH or LOW (1 or 0) value
  */
-uint8_t Pcal::digitalReadIO(uint8_t _pin, uint8_t _io_id)
+uint8_t Expander::digitalReadIO(uint8_t _pin, uint8_t _io_id)
 {
-    if (!second_io_inited && _io_id == IO_EXT_ADDR)
-        return 0;
     if ((_io_id == IO_INT_ADDR) && (_pin < 9))
         return 0;
     return digitalReadInternal(_io_id, _io_id == IO_INT_ADDR ? ioRegsInt : ioRegsEx, _pin);
@@ -227,11 +219,9 @@ uint8_t Pcal::digitalReadIO(uint8_t _pin, uint8_t _io_id)
  * @param       uint8_t _en
  *              interurpt mode (CHANGE, FALLING, RISING)
  */
-void Pcal::setIntPin(uint8_t _pin, uint8_t _en, uint8_t _io_id)
+void Expander::setIntPin(uint8_t _pin, uint8_t _en, uint8_t _io_id)
 {
-    if (!second_io_inited && _io_id == IO_EXT_ADDR)
-        return;
-    setIntOutputInternal(_io_id, _io_id == IO_INT_ADDR ? ioRegsInt : ioRegsEx, intPort, mirroring, openDrain, polarity);
+    setIntPinInternal(_io_id, _io_id == IO_INT_ADDR ? ioRegsInt : ioRegsEx, _pin, _en);
 }
 
 /**
@@ -242,11 +232,8 @@ void Pcal::setIntPin(uint8_t _pin, uint8_t _en, uint8_t _io_id)
  * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
  * PORTA PIN1
  */
-uint16_t Pcal::getINT(uint8_t _io_id)
+uint16_t Expander::getINT(uint8_t _io_id)
 {
-    if (!second_io_inited && _io_id == IO_EXT_ADDR)
-        return 0;
-
     return getINTInternal(_io_id, _io_id == IO_INT_ADDR ? ioRegsInt : ioRegsEx);
 }
 
@@ -265,7 +252,7 @@ uint16_t Pcal::getINT(uint8_t _io_id)
  *
  * @note        modes are defined in @esp32-hal-gpio.h
  */
-void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
+void Expander::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
 {
     if (_pin > 15)
         return;
@@ -277,31 +264,31 @@ void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mod
     {
     case INPUT:
         regs[PCAL6416A_CFGPORT0_ARRAY + _port] |= (1 << _pin);
-        updateRegister(PCAL6416A_CFGPORT0 + _port, regs[PCAL6416A_CFGPORT0_ARRAY + _port]);
+        updateRegister(_addr, PCAL6416A_CFGPORT0 + _port, regs[PCAL6416A_CFGPORT0_ARRAY + _port]);
         break;
     case OUTPUT:
         // There is a one cacth! Pins are by default (POR) set as HIGH. So first change it to LOW and then set is as
         // output).
         regs[PCAL6416A_CFGPORT0_ARRAY + _port] &= ~(1 << _pin);
         regs[PCAL6416A_OUTPORT0_ARRAY + _port] &= ~(1 << _pin);
-        updateRegister(PCAL6416A_OUTPORT0 + _port, regs[PCAL6416A_OUTPORT0_ARRAY + _port]);
-        updateRegister(PCAL6416A_CFGPORT0 + _port, regs[PCAL6416A_CFGPORT0_ARRAY + _port]);
+        updateRegister(_addr, PCAL6416A_OUTPORT0 + _port, regs[PCAL6416A_OUTPORT0_ARRAY + _port]);
+        updateRegister(_addr, PCAL6416A_CFGPORT0 + _port, regs[PCAL6416A_CFGPORT0_ARRAY + _port]);
         break;
     case INPUT_PULLUP:
         regs[PCAL6416A_CFGPORT0_ARRAY + _port] |= (1 << _pin);
         regs[PCAL6416A_PUPDEN_REG0_ARRAY + _port] |= (1 << _pin);
         regs[PCAL6416A_PUPDSEL_REG0_ARRAY + _port] |= (1 << _pin);
-        updateRegister(PCAL6416A_CFGPORT0 + _port, regs[PCAL6416A_CFGPORT0_ARRAY + _port]);
-        updateRegister(PCAL6416A_PUPDEN_REG0 + _port, regs[PCAL6416A_PUPDEN_REG0_ARRAY + _port]);
-        updateRegister(PCAL6416A_PUPDSEL_REG0 + _port, regs[PCAL6416A_PUPDSEL_REG0_ARRAY + _port]);
+        updateRegister(_addr, PCAL6416A_CFGPORT0 + _port, regs[PCAL6416A_CFGPORT0_ARRAY + _port]);
+        updateRegister(_addr, PCAL6416A_PUPDEN_REG0 + _port, regs[PCAL6416A_PUPDEN_REG0_ARRAY + _port]);
+        updateRegister(_addr, PCAL6416A_PUPDSEL_REG0 + _port, regs[PCAL6416A_PUPDSEL_REG0_ARRAY + _port]);
         break;
     case INPUT_PULLDOWN:
         regs[PCAL6416A_CFGPORT0_ARRAY + _port] |= (1 << _pin);
         regs[PCAL6416A_PUPDEN_REG0_ARRAY + _port] |= (1 << _pin);
         regs[PCAL6416A_PUPDSEL_REG0_ARRAY + _port] &= ~(1 << _pin);
-        updateRegister(PCAL6416A_CFGPORT0 + _port, regs[PCAL6416A_CFGPORT0_ARRAY + _port]);
-        updateRegister(PCAL6416A_PUPDEN_REG0 + _port, regs[PCAL6416A_PUPDEN_REG0_ARRAY + _port]);
-        updateRegister(PCAL6416A_PUPDSEL_REG0 + _port, regs[PCAL6416A_PUPDSEL_REG0_ARRAY + _port]);
+        updateRegister(_addr, PCAL6416A_CFGPORT0 + _port, regs[PCAL6416A_CFGPORT0_ARRAY + _port]);
+        updateRegister(_addr, PCAL6416A_PUPDEN_REG0 + _port, regs[PCAL6416A_PUPDEN_REG0_ARRAY + _port]);
+        updateRegister(_addr, PCAL6416A_PUPDSEL_REG0 + _port, regs[PCAL6416A_PUPDSEL_REG0_ARRAY + _port]);
         break;
     }
 }
@@ -323,7 +310,7 @@ void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mod
  * 0-8!!! Using those, you might permanently damage the screen. You should only
  * use pins from 9-15. Function will exit if pin mode isnt OUTPUT.
  */
-void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state)
+void Expander::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state)
 {
     if (_pin > 15)
         return;
@@ -334,7 +321,7 @@ void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t
 
     _state ? regs[PCAL6416A_OUTPORT0_ARRAY + _port] |= (1 << _pin)
            : regs[PCAL6416A_OUTPORT0_ARRAY + _port] &= ~(1 << _pin);
-    updateRegister(PCAL6416A_OUTPORT0 + _port, regs[PCAL6416A_OUTPORT0_ARRAY + _port]);
+    updateRegister(_addr, PCAL6416A_OUTPORT0 + _port, regs[PCAL6416A_OUTPORT0_ARRAY + _port]);
 }
 
 /**
@@ -349,7 +336,7 @@ void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t
  *
  * @return      HIGH or LOW (1 or 0) value
  */
-uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
+uint8_t Expander::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 {
     if (_pin > 15)
         return -1;
@@ -357,7 +344,7 @@ uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
     uint8_t _port = _pin / 8;
     _pin %= 8;
 
-    readPCALRegister(PCAL6416A_INPORT0 + _port, &regs[PCAL6416A_INPORT0_ARRAY + _port]);
+    readPCALRegister(_addr,PCAL6416A_INPORT0 + _port, &regs[PCAL6416A_INPORT0_ARRAY + _port]);
 
     return ((regs[PCAL6416A_INPORT0_ARRAY + _port] >> _pin) & 1);
 }
@@ -374,7 +361,7 @@ uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
  * @param       uint8_t _mode
  *              interurpt mode (CHANGE, FALLING, RISING)
  */
-void Mcp::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
+void Expander::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
 {
     if (_pin > 15)
         return;
@@ -382,10 +369,10 @@ void Mcp::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _m
     uint8_t _port = _pin / 8;
     _pin %= 8;
 
-    _en ? regs[PCAL6416A_INTMSK_REG0_ARRAY + _port] &= ~(1 << _pin)
+    _mode ? regs[PCAL6416A_INTMSK_REG0_ARRAY + _port] &= ~(1 << _pin)
         : regs[PCAL6416A_INTMSK_REG0_ARRAY + _port] |= (1 << _pin);
 
-    updateRegister(PCAL6416A_INTMSK_REG0 + _port, regs[PCAL6416A_INTMSK_REG0_ARRAY + _port]);
+    updateRegister(_addr, PCAL6416A_INTMSK_REG0 + _port, regs[PCAL6416A_INTMSK_REG0_ARRAY + _port]);
 }
 
 
@@ -401,12 +388,27 @@ void Mcp::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _m
  * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
  * PORTA PIN1, bit can be set only if interrupt is enabled
  */
-uint16_t Mcp::getINTInternal(uint8_t _addr, uint8_t *_r)
+uint16_t Expander::getINTInternal(uint8_t _addr, uint8_t *_r)
 {
-    readPCALRegister(PCAL6416A_INTSTAT_REG0, &regs[PCAL6416A_INTSTAT_REG0_ARRAY]);
-    readPCALRegister(PCAL6416A_INTSTAT_REG1, &regs[PCAL6416A_INTSTAT_REG1_ARRAY]);
+    readPCALRegister(_addr, PCAL6416A_INTSTAT_REG0, &regs[PCAL6416A_INTSTAT_REG0_ARRAY]);
+    readPCALRegister(_addr, PCAL6416A_INTSTAT_REG1, &regs[PCAL6416A_INTSTAT_REG1_ARRAY]);
 
     return ((regs[PCAL6416A_INTSTAT_REG1_ARRAY] << 8) | (regs[PCAL6416A_INTSTAT_REG0_ARRAY]));
+}
+
+/**
+ * @brief       removeIntPin function removes Interrupt from pin
+ *
+ * @param       uint8_t _pin
+ *              pin to remove interrupt from
+ * @param       uint8_t _io_id
+ *              internal or external io exapnder
+ */
+void Expander::removeIntPin(uint8_t _pin, uint8_t _io_id)
+{
+    if ((_io_id == IO_INT_ADDR) && (_pin < 9))
+        return;
+    removeIntPinInternal(_io_id, ioRegsEx, _pin);
 }
 
 #endif

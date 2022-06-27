@@ -29,7 +29,7 @@
  * @brief       Frontlight class designed to work with inkplates that support
  * frontlight (Inkplate 6 plus)
  */
-class Frontlight : virtual public Mcp
+class Frontlight : virtual public Expander
 {
   public:
     void setFrontlight(uint8_t _v);

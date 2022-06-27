@@ -20,6 +20,9 @@
 #ifndef __INKPLATE6PLUS_H__
 #define __INKPLATE6PLUS_H__
 
+#define IO_INT_ADDR            0x20
+#define IO_EXT_ADDR            0x22
+
 #define E_INK_WIDTH   1024
 #define E_INK_HEIGHT  758
 #define GPIO0_ENABLE  8

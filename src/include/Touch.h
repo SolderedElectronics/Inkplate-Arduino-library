@@ -31,7 +31,7 @@
  * @brief       Touch class holds functionality for interaction with touchscreen
  * displays
  */
-class Touch : virtual public Mcp
+class Touch : virtual public Expander
 {
   public:
     bool touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h);

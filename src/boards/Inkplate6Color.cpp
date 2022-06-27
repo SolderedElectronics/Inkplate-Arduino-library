@@ -348,7 +348,7 @@ void Inkplate::setMCPForLowPower()
 {
     Wire.begin();
     memset(ioRegsInt, 0, 22);
-    ioBegin(ioRegsInt);
+    ioBegin(IO_INT_ADDR, ioRegsInt);
 
     // TOUCHPAD PINS
     pinModeIO(IO_PIN_B2, INPUT);
@@ -373,17 +373,17 @@ void Inkplate::setMCPForLowPower()
     pinModeIO(IO_PIN_B6, OUTPUT);
     pinModeIO(IO_PIN_B7, OUTPUT);
 
-    digitalWrite(IO_PIN_A0, LOW);
-    digitalWrite(IO_PIN_A1, LOW);
-    digitalWrite(IO_PIN_A2, LOW);
-    digitalWrite(IO_PIN_A3, LOW);
-    digitalWrite(IO_PIN_A4, LOW);
-    digitalWrite(IO_PIN_A5, LOW);
-    digitalWrite(IO_PIN_A6, LOW);
-    digitalWrite(IO_PIN_A7, LOW);
-    digitalWrite(IO_PIN_B0, LOW);
-    digitalWrite(IO_PIN_B5, LOW);
-    digitalWrite(IO_PIN_B6, LOW);
-    digitalWrite(IO_PIN_B7, LOW);
+    digitalWriteIO(IO_PIN_A0, LOW);
+    digitalWriteIO(IO_PIN_A1, LOW);
+    digitalWriteIO(IO_PIN_A2, LOW);
+    digitalWriteIO(IO_PIN_A3, LOW);
+    digitalWriteIO(IO_PIN_A4, LOW);
+    digitalWriteIO(IO_PIN_A5, LOW);
+    digitalWriteIO(IO_PIN_A6, LOW);
+    digitalWriteIO(IO_PIN_A7, LOW);
+    digitalWriteIO(IO_PIN_B0, LOW);
+    digitalWriteIO(IO_PIN_B5, LOW);
+    digitalWriteIO(IO_PIN_B6, LOW);
+    digitalWriteIO(IO_PIN_B7, LOW);
 }
 #endif

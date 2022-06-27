@@ -90,8 +90,8 @@ int8_t System::readTemperature()
  * @return      value to indicate if touchpad is triggered (TRUE or FALSE)
  */
 uint8_t System::readTouchpad(uint8_t _pad)
-{
-    return digitalReadInternal(IO_INT_ADDR, ioRegsInt, _pad);
+{       
+    return digitalReadInternal(IO_INT_ADDR, ioRegsInt,_pad);
 }
 
 /**
@@ -102,7 +102,7 @@ uint8_t System::readTouchpad(uint8_t _pad)
 double System::readBattery()
 {
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, INPUT);
-    int state = digitalReadInternal(IO_INT_ADDR, ioRegsInt, 9);
+    int state = digitalReadIO(9, IO_INT_ADDR);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
 
     if (state)
@@ -124,7 +124,7 @@ double System::readBattery()
     int adc = analogRead(35);
     if (state)
     {
-        pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, INPUT);
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
     }
     else
     {

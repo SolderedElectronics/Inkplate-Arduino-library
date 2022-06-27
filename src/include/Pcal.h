@@ -23,10 +23,6 @@
 #include "Wire.h"
 #include "defines.h"
 
-// PCAL6416A Register map
-#define IO_INT_ADDR 0x21
-#define IO_EXT_ADDR 0x21
-
 #define PCAL6416A_INPORT0        0x00
 #define PCAL6416A_INPORT1        0x01
 #define PCAL6416A_OUTPORT0       0x02
@@ -96,25 +92,25 @@
 /**
  * @brief       PCAL class to be used for work with PCAL expander
  */
-class Pcal
+class Expander
 {
   public:
     void pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _io_id = IO_EXT_ADDR);
     void digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _io_id = IO_EXT_ADDR);
-    uint8_t digitalReadPCAL(uint8_t _pin, uint8_t _io_id = IO_EXT_ADDR);
+    uint8_t digitalReadIO(uint8_t _pin, uint8_t _io_id = IO_EXT_ADDR);
     void setIntPin(uint8_t _pin, uint8_t _en, uint8_t _io_id = IO_EXT_ADDR);
     void setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, uint8_t polarity,
                       uint8_t _io_id = IO_EXT_ADDR);
     void setPorts(uint16_t _d, uint8_t _io_id = IO_EXT_ADDR);
+    void removeIntPin(uint8_t _pin, uint8_t _io_id = IO_EXT_ADDR);
     uint16_t getINT(uint8_t _io_id = IO_EXT_ADDR);
     uint16_t getINTstate(uint8_t _io_id = IO_EXT_ADDR);
-    void setPorts(uint16_t _d, uint8_t _io_id = IO_EXT_ADDR);
     uint16_t getPorts(uint8_t _io_id = IO_EXT_ADDR);
 
     uint8_t ioRegsInt[23], ioRegsEx[23];
     uint8_t regs[23];
 
-    bool ioBegin(uint8_t *_r);
+    bool ioBegin(uint8_t _addr, uint8_t *_r);
 
     void pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode);
     void digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state);
@@ -129,12 +125,12 @@ class Pcal
     uint16_t getPortsInternal(uint8_t _addr, uint8_t *_r);
 
   private:
-    void readPCALRegisters(uint8_t *k);
-    void readPCALRegisters(uint8_t _regName, uint8_t *k, uint8_t _n);
-    void readPCALRegister(uint8_t _regName, uint8_t *k);
-    void updateAllRegisters(uint8_t *k);
-    void updateRegister(uint8_t _regName, uint8_t _d);
-    void updateRegister(uint8_t _regName, uint8_t *k, uint8_t _n);
+    void readPCALRegisters(uint8_t _addr, uint8_t *k);
+    void readPCALRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
+    void readPCALRegister(uint8_t _addr, uint8_t _regName, uint8_t *k);
+    void updateAllRegisters(uint8_t _addr, uint8_t *k);
+    void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d);
+    void updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n);
 };
 
 #endif
