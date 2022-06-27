@@ -344,7 +344,7 @@ uint8_t Expander::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
     uint8_t _port = _pin / 8;
     _pin %= 8;
 
-    readPCALRegister(_addr,PCAL6416A_INPORT0 + _port, &regs[PCAL6416A_INPORT0_ARRAY + _port]);
+    readPCALRegister(_addr, PCAL6416A_INPORT0 + _port, &regs[PCAL6416A_INPORT0_ARRAY + _port]);
 
     return ((regs[PCAL6416A_INPORT0_ARRAY + _port] >> _pin) & 1);
 }
@@ -370,7 +370,7 @@ void Expander::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8
     _pin %= 8;
 
     _mode ? regs[PCAL6416A_INTMSK_REG0_ARRAY + _port] &= ~(1 << _pin)
-        : regs[PCAL6416A_INTMSK_REG0_ARRAY + _port] |= (1 << _pin);
+          : regs[PCAL6416A_INTMSK_REG0_ARRAY + _port] |= (1 << _pin);
 
     updateRegister(_addr, PCAL6416A_INTMSK_REG0 + _port, regs[PCAL6416A_INTMSK_REG0_ARRAY + _port]);
 }

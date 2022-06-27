@@ -90,8 +90,8 @@ int8_t System::readTemperature()
  * @return      value to indicate if touchpad is triggered (TRUE or FALSE)
  */
 uint8_t System::readTouchpad(uint8_t _pad)
-{       
-    return digitalReadInternal(IO_INT_ADDR, ioRegsInt,_pad);
+{
+    return digitalReadInternal(IO_INT_ADDR, ioRegsInt, _pad);
 }
 
 /**

@@ -20,8 +20,8 @@
 #ifndef INKPLATE6_H
 #define INKPLATE6_H
 
-#define IO_INT_ADDR            0x20
-#define IO_EXT_ADDR            0x22
+#define IO_INT_ADDR 0x20
+#define IO_EXT_ADDR 0x22
 
 #define E_INK_WIDTH  800
 #define E_INK_HEIGHT 600

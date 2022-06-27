@@ -90,7 +90,8 @@
 /**
  * @brief       System class for interaction with panel harware
  */
-class System : public Esp, virtual public Expander,
+class System : public Esp,
+               virtual public Expander,
 
 #ifdef ARDUINO_INKPLATE6PLUS
                public Touch,

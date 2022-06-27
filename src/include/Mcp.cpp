@@ -311,7 +311,7 @@ uint8_t Expander::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
  *              sets port interrupt polarity, 1 active high, 0 active low
  */
 void Expander::setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint8_t mirroring, uint8_t openDrain,
-                               uint8_t polarity)
+                                    uint8_t polarity)
 {
     if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
