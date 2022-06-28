@@ -34,15 +34,15 @@ char lat[] = "45.5510548";
 char lon[] = "18.695463";
 
 // Change to your wifi ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Besest";
+char pass[] = "12345678";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "";
+char apiKey[] = "bf11bcaae795116ccc21beec25850aa0";
 // ----------------------------------
 
 // Include Inkplate library to the sketch
@@ -129,7 +129,7 @@ void setup()
     // Welcome screen
     display.setCursor(50, 290);
     display.setTextSize(3);
-    display.print(F("Welcome to Inkplate 6 weather example!"));
+    display.print(F("Welcome to Inkplate 6 COLOR weather example!"));
     display.display();
     display.setTextSize(3);
     // Wait a bit before proceeding
@@ -175,14 +175,14 @@ void drawWeather()
     {
         // If found draw specified icon
         if (strcmp(abbrs[i], currentWeatherAbbr) == 0)
-            display.drawBitmap(10, 10, logos[i], 152, 152, INKPLATE_ORANGE);
+            display.drawBitmap(10, 10, logos[i], 152, 152, INKPLATE_BLUE);
     }
 
     // Draw weather state
     display.setTextColor(INKPLATE_BLUE);
     display.setFont(&Inter16pt7b);
     display.setTextSize(1);
-    display.setCursor(150, 50);
+    display.setCursor(50, 190);
     display.println(currentWeather);
 }
 
@@ -203,7 +203,7 @@ void drawCity()
 {
     // Drawing city name
     display.setTextColor(INKPLATE_BLUE);
-    display.setFont(&Inter16pt7b);
+    display.setFont(&Inter12pt7b);
     display.setTextSize(1);
 
     display.setCursor(300 - 9 * strlen(city), 430);
@@ -228,7 +228,7 @@ void drawTemps()
 
     display.setFont(&Inter16pt7b);
     display.setTextSize(1);
-    display.setTextColor(INKPLATE_BLUE);
+    display.setTextColor(INKPLATE_YELLOW);
 
     int dayOffset = 40;
 
@@ -244,12 +244,11 @@ void drawTemps()
     display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, yRectangleOffset + textMargin + dayOffset);
     display.println(wDays[hours + 3 > 6 ? hours + 3 - 6 : hours + 3]);
 
-    int tempOffset = 120;
+    int tempOffset = 80;
 
     // Drawing temperature values into black rectangles
     display.setFont(&Inter16pt7b);
     display.setTextSize(1);
-    display.setTextColor(INKPLATE_BLUE);
 
     display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, yRectangleOffset + textMargin + tempOffset);
     display.print(temps[0]);
@@ -274,7 +273,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr1, abbrs[i]) == 0)
             display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_WHITE, INKPLATE_BLACK);
+                               s_logos[i], 48, 48, INKPLATE_YELLOW, INKPLATE_BLACK);
     }
 
     for (int i = 0; i < 18; ++i)
@@ -282,7 +281,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr2, abbrs[i]) == 0)
             display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_WHITE, INKPLATE_BLACK);
+                               s_logos[i], 48, 48, INKPLATE_YELLOW, INKPLATE_BLACK);
     }
 
     for (int i = 0; i < 18; ++i)
@@ -290,7 +289,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr3, abbrs[i]) == 0)
             display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_WHITE, INKPLATE_BLACK);
+                               s_logos[i], 48, 48, INKPLATE_YELLOW, INKPLATE_BLACK);
     }
 
     for (int i = 0; i < 18; ++i)
@@ -298,7 +297,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr4, abbrs[i]) == 0)
             display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_WHITE, INKPLATE_BLACK);
+                               s_logos[i], 48, 48, INKPLATE_YELLOW, INKPLATE_BLACK);
     }
 }
 
@@ -312,7 +311,7 @@ void drawCurrent()
     display.setTextSize(1);
     display.setTextColor(INKPLATE_BLUE);
 
-    display.setCursor(150, 150);
+    display.setCursor(160, 145);
     display.print(currentTemp);
 
     int x = display.getCursorX();
@@ -329,7 +328,7 @@ void drawCurrent()
     display.setTextSize(1);
     display.setTextColor(INKPLATE_BLUE);
 
-    display.setCursor(350, 150);
+    display.setCursor(360, 145);
     display.print(currentWind);
 
     x = display.getCursorX();

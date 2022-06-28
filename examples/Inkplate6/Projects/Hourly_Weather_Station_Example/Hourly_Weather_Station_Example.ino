@@ -31,19 +31,19 @@ int timeZone = 2;
 char city[128] = "OSIJEK";
 
 // Coordinates sent to the api
-char lon[] = "45.5510548";
-char lat[] = "18.5947808";
+char lat[] = "45.5510548";
+char lon[] = "18.5947808";
 
 // Change to your wifi ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Besest";
+char pass[] = "12345678";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "";
+char apiKey[] = "bf11bcaae795116ccc21beec25850aa0";
 
 //----------------------------------
 
@@ -204,7 +204,7 @@ void drawWeather()
     display.setTextColor(BLACK, WHITE);
     display.setFont(&Roboto_Light_36);
     display.setTextSize(1);
-    display.setCursor(40, 270);
+    display.setCursor(80, 210);
     display.println(currentWeather);
 }
 

@@ -31,19 +31,19 @@ int timeZone = 2;
 char city[128] = "OSIJEK";
 
 // Coordinates sent to the api
-char lon[] = "45.5510548";
-char lat[] = "18.5947808";
+char lat[] = "45.5510548";
+char lon[] = "18.5947808";
 
 // Change to your wifi ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Besest";
+char pass[] = "12345678";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "";
+char apiKey[] = "bf11bcaae795116ccc21beec25850aa0";
 
 //----------------------------------
 
@@ -79,8 +79,8 @@ const uint8_t *logos[18] = {
 };
 
 const uint8_t *s_logos[18] = {
-    icon_s_01d, icon_s_02d, icon_s_03d, icon_s_04d, icon_s_09d, icon_s_10d, icon_s_11d, icon_s_13d, icon_s_50d,
-    icon_s_01n, icon_s_02n, icon_s_03n, icon_s_04n, icon_s_09n, icon_s_10n, icon_s_11n, icon_s_13n, icon_s_50n,
+    icon_S_01d, icon_S_02d, icon_S_03d, icon_S_04d, icon_S_09d, icon_S_10d, icon_S_11d, icon_S_13d, icon_S_50d,
+    icon_S_01n, icon_S_02n, icon_S_03n, icon_S_04n, icon_S_09n, icon_S_10n, icon_S_11n, icon_S_13n, icon_S_50n,
 };
 
 // Variables for storing temperature
@@ -203,14 +203,14 @@ void drawWeather()
     {
         // If found draw specified icon
         if (strcmp(abbrs[i], currentWeatherAbbr) == 0)
-            display.drawBitmap(50, 50, logos[i], 152, 152, BLACK);
+            display.drawBitmap(63, 63, logos[i], 152, 152, BLACK);
     }
 
     // Draw weather state
     display.setTextColor(BLACK, WHITE);
     display.setFont(&Roboto_Light_36);
     display.setTextSize(1);
-    display.setCursor(40, 270);
+    display.setCursor(100, 264);
     display.println(currentWeather);
 }
 
@@ -293,7 +293,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr1, abbrs[i]) == 0)
-            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 100, 100,
                                WHITE, BLACK);
     }
 
@@ -301,7 +301,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr2, abbrs[i]) == 0)
-            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 100, 100,
                                WHITE, BLACK);
     }
 
@@ -309,7 +309,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr3, abbrs[i]) == 0)
-            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 100, 100,
                                WHITE, BLACK);
     }
 
@@ -317,7 +317,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr4, abbrs[i]) == 0)
-            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 100, 100,
                                WHITE, BLACK);
     }
 }
