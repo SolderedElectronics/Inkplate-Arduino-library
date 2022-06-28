@@ -169,9 +169,7 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
                 {
                     char temp[48];
                     strcpy(temp, doc["list"][i]["dt_txt"]);
-                    Serial.println(temp);
 
-                    
                     if (strstr(temp, "15:00:00")) // Show time in 15:00 for every day
                     {
                         struct tm t;

@@ -97,6 +97,11 @@ char temps[4][8] = {
 
 // Variables for storing hour strings
 uint8_t hours = 0;
+// Variable for counting partial refreshes
+long refreshes = 0;
+
+// Constant to determine when to full update
+const int fullRefresh = 10;
 
 // Variables for storing current time and weather info
 char currentTemp[16] = "0F";
