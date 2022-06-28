@@ -15,10 +15,9 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE10
-#error "Wrong board selection for this example, please select Inkplate 10 in the boards menu."
+#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
+#error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
 #endif
-
 #include "Inkplate.h"            //Include Inkplate library to the sketch
 Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set library to work in monochorme mode
 // Other option is gray mode, which is demonstrated in next example "Inkplate_basic_gray"

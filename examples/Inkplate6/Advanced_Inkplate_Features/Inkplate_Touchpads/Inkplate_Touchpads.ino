@@ -21,8 +21,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_ESP32_DEV
-#error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
+#if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
+#error "Wrong board selection for this example, please select Inkplate 6 or Inkplate 6 V2 in the boards menu."
 #endif
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
