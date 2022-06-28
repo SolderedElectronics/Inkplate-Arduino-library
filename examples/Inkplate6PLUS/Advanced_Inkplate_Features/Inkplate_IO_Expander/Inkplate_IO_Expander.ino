@@ -1,15 +1,15 @@
 /*
-   Inkplate_MCP23017 example for e-radionica.com Inkplate 6PLUS
+   Inkplate_IO_expander example for e-radionica.com Inkplate 6PLUS
    For this example you will need only a micro USB cable, Inkplate 6PLUS, 330 Ohm resistor and LED diode.
    Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   Connect resistor to GPB7 pin on MCP23017 header at bottom right corner on the backside (component side) of Inkplate.
+   Connect resistor to GPB7 pin on IO Expander header at bottom right corner on the backside (component side) of Inkplate.
    You will have to connect one side of 330 Ohm resistor to GPB7, than other side to anode of LED and finally, cathode
    pin of LED to GND.
    
-   This example will show you how you can manipulate with I/Os of external MCP23017 Expander.
+   This example will show you how you can manipulate with I/Os of external IO Expander.
    On this expander all pins are free to use, nothing is connected by the default.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
@@ -35,8 +35,8 @@ void setup()
     display.pinModeIO(
         LED_PIN,
         OUTPUT);  // Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
-                 // If we do not specify which MCP we want to use, by the default external MCP will be used of the one
-                 // with header named MCP23017-2
+                 // If we do not specify which IO expander we want to use, by the default external IO expander will be used of the one
+                 // with header named IO_expander_name-2
 }
 
 void loop()
