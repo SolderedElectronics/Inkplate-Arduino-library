@@ -53,7 +53,7 @@ Network network;
 Inkplate display(INKPLATE_1BIT);
 
 // Delay between API calls in seconds, 300 seconds is 5 minutes
-#define DELAY_S 10
+#define DELAY_S 300
 
 // Our functions declared below setup and loop
 void drawAll();

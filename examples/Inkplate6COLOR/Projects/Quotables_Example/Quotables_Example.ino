@@ -79,7 +79,6 @@ void setup()
     }
 
     // Our main drawing function
-    Serial.println("22");
     drawAll();
     // Full refresh
     display.display();
