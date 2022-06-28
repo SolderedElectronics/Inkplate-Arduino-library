@@ -37,7 +37,7 @@ void setup()
     display.drawImage(
         picture1, 0, 0, 600,
         448); // Display picture from RAM  at location X=0, Y=0. It is also needed to specify width and height
-              // of picture (800x600 in this case). drawImage function is overloaded function and this parameters
+              // of picture (600x448 in this case). drawImage function is overloaded function and this parameters
               // specify to use function which draws image on screen from internal RAM and this function calls other
               // functions (drawBitmap or drawBitmap3Bit depends in which mode is Inkplate (INKPLATE_3BIT or INKPLATE_1BIT))
               // which draws content from buffer in RAM.
@@ -58,13 +58,11 @@ void setup()
     display.display(); // Refresh the screen with new picture
     
     delay(10000); // Wait a bit
-    
-    display.clearDisplay(); // Clear frame buffer of display
-    
-    display.drawBitmap3Bit(
-        0, 43, picture3, 600,
-        448);  // Display selected picture at location X=0, Y=0. All three pictures have resolution of 1100x825 pixels
 
+    display.drawBitmap3Bit(
+       0, 0, picture3, 600,
+        448);
+    
     display.display(); // Refresh the screen with new picture
 }
 
