@@ -35,7 +35,7 @@ extern char user_PAT[];
 extern Inkplate display;
 
 // Static Json from ArduinoJson library
-StaticJsonDocument<10000> doc;
+DynamicJsonDocument doc(80000);
 
 void Network::begin()
 {
@@ -73,19 +73,17 @@ void Network::getTime(char *timeStr)
     // Used to store time
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
-
-    // Copies time string into timeStr
-    strncpy(timeStr, asctime(&timeinfo) + 4, 12);
-
-    // Setting time string timezone
-    int hr = 10 * timeStr[7] + timeStr[8] + timeZone;
-
-    // Better defined modulo, in case timezone makes hours to go below 0
-    hr = (hr % 24 + 24) % 24;
-
-    // Adding time to '0' char makes it into whatever time char, for both digits
-    timeStr[7] = hr / 10 + '0';
-    timeStr[8] = hr % 10 + '0';
+    sprintf(timeStr,"%4d %2d %2d", timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday);
+    if(timeStr[5] == ' ')
+    {
+      timeStr[5] = '0';
+    }
+    if(timeStr[8] == ' ')
+    {
+      timeStr[8] = '0';
+    }
+    timeStr[4] = timeStr[7] = '-';
+    Serial.println(timeStr);
 }
 
 struct task* Network::getData()
