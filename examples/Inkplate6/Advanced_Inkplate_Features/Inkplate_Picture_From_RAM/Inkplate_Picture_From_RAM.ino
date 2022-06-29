@@ -20,6 +20,7 @@
 #endif
 
 #include "Inkplate.h"       // Include Inkplate library to the sketch
+#include "image.h"
 #include "picture1.h"       // Include .h files of 3 pictures. All three pictures were converted using Inkplate Image Converter
 #include "picture2.h"
 #include "picture3.h"       // This are headers in which are saved pictures that needs to be stored in RAM for showing.
@@ -27,7 +28,7 @@
                             // https://inkplate.io/home/image-converter/ just choose settings for your Inkplate
                             // and additional settings like dither and bit mode.
 
-Inkplate display(INKPLATE_3BIT); // Create an object on Inkplate library and also set library into 3 Bit mode (gray)
+Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 3 Bit mode (gray)
 
 void setup()
 {   
@@ -35,8 +36,8 @@ void setup()
     display.clearDisplay(); // Clear frame buffer of display
     
     display.drawImage(
-        pic1, 0, 0, 800,
-        600); // Display picture from RAM  at location X=0, Y=0. It is also needed to specify width and height
+        image, 0, 0, 800,
+        600, 0,1); // Display picture from RAM  at location X=0, Y=0. It is also needed to specify width and height
               // of picture (800x600 in this case). drawImage function is overloaded function and this parameters
               // specify to use function which draws image on screen from internal RAM and this function calls other
               // functions (drawBitmap or drawBitmap3Bit depends in which mode is Inkplate (INKPLATE_3BIT or INKPLATE_1BIT))

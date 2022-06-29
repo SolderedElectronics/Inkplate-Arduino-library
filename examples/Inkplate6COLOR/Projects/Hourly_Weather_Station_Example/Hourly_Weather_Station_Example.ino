@@ -35,15 +35,15 @@ char lat[] = "45.5510548";
 char lon[] = "18.5947808";
 
 // Change to your wifi ssid and password
-char ssid[] = "Besest";
-char pass[] = "12345678";
+char ssid[] = "";
+char pass[] = "";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "bf11bcaae795116ccc21beec25850aa0";
+char apiKey[] = "";
 
 //----------------------------------
 
@@ -155,6 +155,7 @@ void loop()
     drawCurrent();
     drawTemps();
     drawCity();
+    drawTime();
 
     // Refresh full screen
     display.display();

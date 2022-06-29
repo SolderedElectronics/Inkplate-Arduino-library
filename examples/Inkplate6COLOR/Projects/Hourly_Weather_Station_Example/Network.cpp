@@ -74,7 +74,7 @@ void Network::getTime(char *timeStr)
     strncpy(timeStr, asctime(&timeinfo) + 11, 5);
 
     // Setting time string timezone
-    int hr = 10 * (timeStr[0] - '0') + (timeStr[1] - '0') + timeZone;
+    int hr = 10 * timeStr[0] + timeStr[1] + timeZone;
 
     // Better defined modulo, in case timezone makes hours to go below 0
     hr = (hr % 24 + 24) % 24;
@@ -82,6 +82,7 @@ void Network::getTime(char *timeStr)
     // Adding time to '0' char makes it into whatever time char, for both digits
     timeStr[0] = hr / 10 + '0';
     timeStr[1] = hr % 10 + '0';
+    Serial.println(timeStr);
 }
 
 void formatTemp(char *str, float temp)

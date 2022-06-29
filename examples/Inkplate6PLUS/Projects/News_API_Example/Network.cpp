@@ -29,14 +29,13 @@
 extern char ssid[];
 extern char pass[];
 extern char api_key_news[];
-extern char api_key_kraken[];
-extern char api_secret[];
+extern int nentities;
 
 // Get our Inkplate object from main file to draw debug info on
 extern Inkplate display;
 
 // Static Json from ArduinoJson library
-StaticJsonDocument<35000> doc;
+DynamicJsonDocument doc(50000);
 
 void Network::begin()
 {
@@ -131,7 +130,7 @@ struct news* Network::getData()
 
     // Initiate http
     char temp[128];
-    sprintf(temp, "https://newsapi.org/v2/top-headlines?country=us&apiKey=%s", api_key_news);
+    sprintf(temp, "https://newsdata.io/api/1/news?apikey=%s&category=top&language=en", api_key_news);
 
     http.begin(temp);
 
@@ -153,41 +152,50 @@ struct news* Network::getData()
 
         else if (doc["status"])
         {
-            int n = doc["articles"].size();
-            Serial.println(n);
+            int n = doc["results"].size();
             ent = (struct news*)ps_malloc(n * sizeof(struct news));
-            int i = 0;
+            int i = 0, j = 0;
             while (i < n)
             {
-                Serial.println(i);
-                const char *temp_author = doc["articles"][i]["author"];
-                const char *temp_title = doc["articles"][i]["title"];
-                const char *temp_description = doc["articles"][i]["description"];
-                const char *temp_image = doc["articles"][i]["urlToImage"];
-                const char *temp_content = doc["articles"][i]["content"];
-                Serial.println("Fetched");
+                const char *temp_author = doc["results"][i]["creator"];
+                const char *temp_title = doc["results"][i]["title"];
+                const char *temp_description = doc["results"][i]["description"];
+                const char *temp_image = doc["results"][i]["link"];
+                const char *temp_content = doc["results"][i]["content"];
+                if (temp_content == NULL)
+                {
+                    i++;
+                    continue;
+                }
+                if (strlen(temp_content) < 10)
+                {
+                    i++;
+                    continue;
+                }
                 if (temp_author != NULL)
-                    strcpy(ent[i].author, temp_author);
+                    strncpy(ent[j].author, temp_author, 32);
                 else
-                    strcpy(ent[i].author, "\r\n");
+                    strcpy(ent[j].author, "\r\n");
                 if (temp_title != NULL)
-                    strcpy(ent[i].title, temp_title);
+                    strncpy(ent[j].title, temp_title, 128);
                 else
-                    strcpy(ent[i].title, "\r\n");
+                    strcpy(ent[j].title, "\r\n");
                 if (temp_description != NULL)
-                    strcpy(ent[i].description, temp_description);
+                    strncpy(ent[j].description, temp_description, 128);
                 else
-                    strcpy(ent[i].description, "\r\n");
+                    strcpy(ent[j].description, "\r\n");
                 if (temp_image != NULL)
-                    strcpy(ent[i].image, temp_image);
+                    strncpy(ent[j].image, temp_image, 200);
                 else
-                    strcpy(ent[i].image, "\r\n");
+                    strcpy(ent[j].image, "\r\n");
                 if (temp_content != NULL)
-                    strcpy(ent[i].content, temp_content);
+                    strncpy(ent[j].content, temp_content, 999);
                 else
-                    strcpy(ent[i].content, "\r\n");
+                    strcpy(ent[j].content, "\r\n");
                 i++;
+                j++;
             }
+            nentities = j;
         }
     }
     else if (httpCode == 404)

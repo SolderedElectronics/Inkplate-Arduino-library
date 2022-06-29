@@ -1,5 +1,5 @@
 /*
-    Cryptocurrency tracker example for e-radionica.com Inkplate 6COLOR
+    News API example for e-radionica.com Inkplate 6COLOR
     For this example you will need only USB cable and Inkplate 6COLOR.
     Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
     Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
@@ -8,7 +8,7 @@
     This example will show you how you can use Inkplate 6COLOR to display API data.
     Here we use News API to get headline news and short description and display
     them on the Inkplate screen. For this you will need an API key which you can obtain
-    here: https://newsapi.org/
+    here: https://newsdata.io
 
     IMPORTANT:
     Make sure to change your timezone and wifi credentials below
@@ -16,7 +16,7 @@
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-    28 July 2020 by e-radionica.com
+    29 June 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -26,13 +26,10 @@
 
 //---------- CHANGE HERE  -------------:
 
-// Adjust your time zone, 2 means UTC+2
-int timeZone = 2;
-
 // Put in your ssid and password
 char ssid[] = "";
 char pass[] = "";
-char api_key_news[] = ""; //You can obtain one here: https://newsapi.org/
+char api_key_news[] = ""; //You can obtain one here: https://newsdata.io
 
 //----------------------------------
 
@@ -41,8 +38,8 @@ char api_key_news[] = ""; //You can obtain one here: https://newsapi.org/
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
-#include "Inter12pt7b.h"
-#include "GT_Pressura16pt7b.h"
+#include "Inter8pt7b.h"
+#include "GT_Pressura12pt7b.h"
 
 
 // create object with all networking functions
@@ -59,6 +56,8 @@ RTC_DATA_ATTR unsigned refreshes = 0;
 
 // Constant to determine when to full update
 const int fullRefresh = 20;
+
+int nentities = 0; // Number of entities
 
 void setup()
 {
@@ -83,14 +82,10 @@ void setup()
 
     // Our begin function
     network.begin();
-
-    struct news *entities;
-
-    entities = network.getData();
-    drawNews(entities);
-
-    display.display();
-
+    struct news *entities; // Create pointer to struct array where are news contained
+    entities = network.getData(); // Create an API call and get data
+    drawNews(entities); // Call function drawNews and show new on display
+    display.display(); // Display all on display
     ++refreshes;
 
     // Go to sleep before checking again
@@ -101,67 +96,71 @@ void setup()
 void drawNews(struct news *entities)
 {
 
-    display.setRotation(3);
-    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
-    uint8_t coll = 0;
-    uint16_t y = 32;
-    uint8_t rows = 0;
-    int i = 0;
-    while (coll < 2)
+    display.setRotation(3); // Set rotation of display to set it in portrait mode
+    uint8_t coll = 0; // Counter for collumns
+    uint16_t y = 24; // Offset from top for first collumn
+    uint8_t rows = 0; // Counter for printed rows of text
+    int i = 0; // Counter for entities
+    while (coll < 2) // Print two collumns
     {
-        display.setCursor(10 + 224 * coll, y);
-        display.setFont(&GT_Pressura16pt7b);
-        uint16_t cnt = 0;
-        while (*(entities[i].title + cnt) != '\0')
-        {
+        display.setCursor(10 + 224 * coll, y); // Set cursor accordingly to collumn and height of printed text
+        display.setFont(&GT_Pressura12pt7b); // Set font for title
+        display.setTextColor(INKPLATE_RED, INKPLATE_WHITE); // Text color set
+        uint16_t cnt = 0; // Counter for printed characters
+        while (*(entities[i].title + cnt) != '\0') // Print until stop character
+        { // Check if characters are printed to end of line, if yes set new line
             if (display.getCursorX() > 224 * coll + 200 || (*(entities[i].title + cnt) == ' ' && display.getCursorX() > 224 * coll + 190))
-            {
-                *(entities[i].title + cnt) == ' ' ? cnt++ : 0;
-                rows++;
-                y += 32;
-                display.setCursor(10 + 224 * coll, y);
+            { // Check if characters are printed to end of line, if yes set new line
+                *(entities[i].title + cnt) == ' ' ? cnt++ : 0; // Do not print space on begining of line
+                rows++; // Increase row index
+                y += 24; // Increase height for new line by 24 pixels
+                display.setCursor(10 + 224 * coll, y); // Set cursor on beggining of next line
             }
             
-            if (display.getCursorY() > 560)
+            if (display.getCursorY() > 560) // If printed to bottom of page, create new collumn
             {
-                coll++;
-                y = 32;
-                display.setCursor(10 + 224 * coll, y);
-            }
-            display.print(*(entities[i].title + cnt));
-            cnt++;
+                coll++; // Increase collumn index
+                y = 24; // Offset from top for next collumn
+                display.setCursor(10 + 224 * coll, y); // Set cursor on beggining of next collumn
+            } 
+            display.print(*(entities[i].title + cnt)); // Print one character
+            cnt++; // Increase counter for characters
         }
-        y = y + 40;
-        display.setCursor(10 + 224 * coll, y);
-        display.print("  ");
+        y = y + 32; // Offset from title to content
+        display.setCursor(10 + 224 * coll, y); // Set cursor to print content
+        display.print("  "); // Print few spaces or one tabulator
         
-        cnt = 0;
-
-        display.setFont(&Inter12pt7b);
-        while (*(entities[i].description + cnt) != '\0')
+        cnt = 0; // Set characters counter to 0
+        
+        display.setTextColor(INKPLATE_BLUE, INKPLATE_WHITE); // Text color set
+        display.setFont(&Inter8pt7b); // Set font for content
+        while (*(entities[i].content + cnt) != '\0') // Print until stop character
+        { // Check if characters are printed to end of line, if yes set new line
+            if (display.getCursorX() > 224 * coll + 200 || (*(entities[i].content + cnt) == ' ' && display.getCursorX() > 224 * coll + 190))
+            {  // Check if characters are printed to end of line, if yes set new line
+                *(entities[i].content + cnt) == ' ' ? cnt++ : 0; // Do not print space on begining of line
+                rows++; // Increase row index
+                y += 22; // Increase height for new line by 22 pixels
+                display.setCursor(10 + 224 * coll, y); // Set cursor on beggining of next line
+            }
+            
+            if (display.getCursorY() > 580) // If printed to bottom of page, create new collumn
+            {
+                coll++; // Increase collumn index
+                y = 22; // Offset from top for next collumn
+                display.setCursor(10 + 224 * coll, y); // Set cursor on beggining of next collumn
+            }
+            display.print(*(entities[i].content + cnt)); // Print one character
+            cnt++; // Increase counter for characters
+        }
+        
+        y += 36; // Make offset for next new
+        i++; // Increase index of news
+        if(i > nentities) // If index of news is greater than number of new, break out of while loop
         {
-            if (display.getCursorX() > 224 * coll + 200 || (*(entities[i].description + cnt) == ' ' && display.getCursorX() > 224 * coll + 190))
-            {
-                *(entities[i].description + cnt) == ' ' ? cnt++ : 0;
-                rows++;
-                y += 26;
-                display.setCursor(10 + 224 * coll, y);
-            }
-            
-            if (display.getCursorY() > 580)
-            {
-                coll++;
-                y = 32;
-                display.setCursor(10 + 224 * coll, y);
-            }
-            display.print(*(entities[i].description + cnt));
-            cnt++;
+          break;
         }
-        
-        y += 48;
-        i++;
     }
-
 }
 
 void loop()

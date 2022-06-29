@@ -34,15 +34,15 @@ char lat[] = "45.5510548";
 char lon[] = "18.695463";
 
 // Change to your wifi ssid and password
-char ssid[] = "Besest";
-char pass[] = "12345678";
+char ssid[] = "";
+char pass[] = "";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "bf11bcaae795116ccc21beec25850aa0";
+char apiKey[] = "";
 // ----------------------------------
 
 // Include Inkplate library to the sketch
@@ -70,7 +70,7 @@ Inkplate display;
 Network network;
 
 // Contants used for drawing icons
-char abbrs[32][16] = {"sn", "sl", "h", "t", "hr", "lr", "s", "hc", "lc", "c"};
+char abbrs[32][16] = {"01d", "02d", "03d", "04d", "09d", "10d", "11d", "13d", "50d"};
 
 const uint8_t *logos[18] = {
     icon_01d, icon_02d, icon_03d, icon_04d, icon_09d, icon_10d, icon_11d, icon_13d, icon_50d,
@@ -175,7 +175,7 @@ void drawWeather()
     {
         // If found draw specified icon
         if (strcmp(abbrs[i], currentWeatherAbbr) == 0)
-            display.drawBitmap(10, 10, logos[i], 152, 152, INKPLATE_BLUE);
+            display.drawBitmap(10, 10, logos[i], 152, 152, INKPLATE_ORANGE);
     }
 
     // Draw weather state
