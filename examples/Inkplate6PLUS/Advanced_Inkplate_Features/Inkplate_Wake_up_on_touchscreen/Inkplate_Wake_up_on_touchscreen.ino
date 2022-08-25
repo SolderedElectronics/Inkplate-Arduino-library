@@ -25,9 +25,6 @@
 // Time ESP32 will go to sleep (in seconds)
 #define TIME_TO_SLEEP 30
 
-// bitmask for GPIO_34 which is connected to MCP INTB
-#define TOUCHPAD_WAKE_MASK (int64_t(1) << GPIO_NUM_34)
-
 // Initiate Inkplate object
 Inkplate display(INKPLATE_1BIT);
 
@@ -63,18 +60,6 @@ void setup()
             ;
     }
 
-    // Init touchscreen and power it on after init (send false as argument to put it in deep sleep right after init)
-    if (display.tsInit(true))
-    {
-        Serial.println("Touchscreen init ok");
-    }
-    else
-    {
-        Serial.println("Touchscreen init fail");
-        while (true)
-            ;
-    }
-
     ++bootCount;
 
     // Our function declared below
@@ -83,11 +68,8 @@ void setup()
     // Go to sleep for TIME_TO_SLEEP seconds
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 
-    // Enable wakeup from deep sleep on gpio 36 (wake button)
+    // Enable wakeup from deep sleep on gpio 36 (wake button or touchscreen)
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
-
-    // enable wake from MCP port expander on gpio 34
-    esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
 
     // Go to sleep
     esp_deep_sleep_start();
