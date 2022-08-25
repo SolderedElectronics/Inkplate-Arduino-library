@@ -30,6 +30,12 @@ Inkplate display(INKPLATE_1BIT);
 double xFrom = -0.7423, xTo = -0.8463;
 double yFrom = 0.1092, yTo = 0.2102;
 
+// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
+// otherwise your code could hang out when you send code to your Inkplate.
+// You can easily check if your Inkplate has second MCP by turning it over and 
+// if there is missing chip near place where "MCP23017-2" is written, but if there is
+// chip soldered, you don't have to uncomment line and use external MCP I/O expander
+
 void setup()
 {
     Serial.begin(115200);
@@ -76,7 +82,6 @@ double modulusComplexSqr(struct complex *z)
 {
     return z->re * z->re + z->im * z->im;
 }
-
 
 uint8_t colorAt(double x, double y)
 {

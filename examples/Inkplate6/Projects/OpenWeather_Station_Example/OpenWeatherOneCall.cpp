@@ -18,13 +18,11 @@ OpenWeatherOneCall::OpenWeatherOneCall()
 {
 }
 
-
 #define DS_URL1 "https://api.openweathermap.org/data/2.5/onecall"
 #define DS_URL2 "&units="
 #define DS_URL3 "&appid="
 
 #define GEOLOCATIONURL "https://www.googleapis.com/geolocation/v1/geolocate"
-
 
 String short_names[7] = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
 
@@ -75,7 +73,6 @@ int OpenWeatherOneCall::getCoordinates(String googleKey)
     jsonSend += ("]\n");
     jsonSend += ("}\n");
 
-
     // Setting up the url for the POST
 
     String geoLocURL = GEOLOCATIONURL;
@@ -97,7 +94,6 @@ int OpenWeatherOneCall::getCoordinates(String googleKey)
 
     const size_t capacity = 2 * JSON_OBJECT_SIZE(2) + 30;
     DynamicJsonDocument geo(capacity);
-
 
     deserializeJson(geo, http.getString()); // parsing the return from Google into geo Document
 
@@ -130,9 +126,7 @@ int OpenWeatherOneCall::parseWeather(char *DKEY, char *GKEY, float SEEK_LATITUDE
     else
         strcpy(units, "imperial");
 
-
     HTTPClient http;
-
 
     OpenWeatherOneCall::getCoordinates(GKEY);
     sprintf(getURL, "%s?lat=%.6f&lon=%.6f%s%s%s%s", DS_URL1, SEEK_LATITUDE, SEEK_LONGITUDE, DS_URL2, units, DS_URL3,

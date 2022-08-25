@@ -10,7 +10,6 @@
    28 July 2020 by e-radionica.com
 */
 
-
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE10
 #error "Wrong board selection for this example, please select Inkplate 10 in the boards menu."
@@ -22,6 +21,12 @@ Inkplate display(INKPLATE_3BIT);
 
 const char ssid[] = "";    // Your WiFi SSID
 const char *password = ""; // Your WiFi password
+
+// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
+// otherwise your code could hang out when you send code to your Inkplate.
+// You can easily check if your Inkplate has second MCP by turning it over and 
+// if there is missing chip near place where "MCP23017-2" is written, but if there is
+// chip soldered, you don't have to uncomment line and use external MCP I/O expander
 
 void setup()
 {

@@ -40,11 +40,9 @@ bool Inkplate::begin(void)
 
     Wire.begin();
 
-#ifndef ARDUINO_INKPLATECOLOR
     for (uint32_t i = 0; i < 256; ++i)
         pinLUT[i] = ((i & B00000011) << 4) | (((i & B00001100) >> 2) << 18) | (((i & B00010000) >> 4) << 23) |
                     (((i & B11100000) >> 5) << 25);
-#endif
 
 #ifdef ARDUINO_ESP32_DEV
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
@@ -53,7 +51,11 @@ bool Inkplate::begin(void)
 #endif
 
     memset(mcpRegsInt, 0, 22);
-    mcpBegin(MCP23017_ADDR, mcpRegsInt);
+    memset(mcpRegsEx, 0, 22);
+
+    mcpBegin(MCP23017_INT_ADDR, mcpRegsInt);
+    mcpBegin(MCP23017_EXT_ADDR, mcpRegsEx);
+
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, VCOM, OUTPUT);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, OUTPUT);
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, OUTPUT);
@@ -71,6 +73,16 @@ bool Inkplate::begin(void)
     Wire.endTransmission();
     delay(1);
     WAKEUP_CLEAR;
+
+    // Set all pins of seconds I/O expander to outputs, low.
+    // For some reason, it draw more current in deep sleep when pins are set as
+    // inputs...
+
+    for (int i = 0; i < 15; i++)
+    {
+        pinModeInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, OUTPUT);
+        digitalWriteInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, LOW);
+    }
 
     // CONTROL PINS
     pinMode(0, OUTPUT);
@@ -98,6 +110,15 @@ bool Inkplate::begin(void)
 
     // Battery voltage Switch MOSFET
     pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, OUTPUT);
+
+    // Set unused pins of the first MCP as outputs, low logic state
+    // (to have the lowest current consumption in low power mode)
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 13, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 14, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 15, OUTPUT);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 13, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 14, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 15, LOW);
 
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);

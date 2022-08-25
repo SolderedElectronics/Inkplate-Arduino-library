@@ -36,7 +36,6 @@ bool menu = 1;
 bool game = 0;
 int move = 0;
 
-
 // Global board array
 char board[3][3] = {
     {'_', '_', '_'},

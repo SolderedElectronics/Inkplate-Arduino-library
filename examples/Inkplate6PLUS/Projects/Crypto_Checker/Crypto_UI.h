@@ -146,7 +146,6 @@ int text15_cursor_x = 36;
 int text15_cursor_y = 471;
 const GFXfont *text15_font = &FreeMonoBold24pt7b;
 
-
 String text13_content = "";
 int text13_cursor_x = 320;
 int text13_cursor_y = 472;

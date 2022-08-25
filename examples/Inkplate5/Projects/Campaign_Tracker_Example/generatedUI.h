@@ -5,7 +5,6 @@
 #include "Fonts/Open_Sans_SemiBold_56.h"
 #include "Inkplate.h"
 
-
 extern Inkplate display;
 
 int rect0_a_x = 10;

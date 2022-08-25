@@ -208,7 +208,7 @@ void Graphics::endWrite()
 {
 }
 
-#ifndef ARDUINO_INKPLATECOLOR
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
 
 /**
  * @brief       setDisplayMode sets display mode
@@ -231,7 +231,6 @@ uint8_t Graphics::getDisplayMode()
 {
     return _displayMode;
 }
-#endif
 
 /**
  * @brief       selectDisplayMode selects display mode and sets memory
@@ -251,6 +250,7 @@ void Graphics::selectDisplayMode(uint8_t _mode)
         memset(DMemory4Bit, 255, 240000);
     }
 }
+#endif
 
 /**
  * @brief       width function returns screen width

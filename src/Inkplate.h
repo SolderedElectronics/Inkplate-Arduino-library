@@ -114,6 +114,7 @@ class Inkplate : public System, public Graphics
   private:
     void precalculateGamma(uint8_t *c, float gamma);
 
+
 #if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
     bool _panelState = false;
 
@@ -122,6 +123,7 @@ class Inkplate : public System, public Graphics
     void sendData(uint8_t *_data, int _n);
     void sendData(uint8_t _data);
 #else
+
 
 #ifdef ARDUINO_INKPLATE10
     void calculateLUTs();

@@ -56,9 +56,8 @@ class Graphics : public Shapes, public Image
 
     void drawPixel(int16_t x, int16_t y, uint16_t color) override;
 
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
     void selectDisplayMode(uint8_t _mode);
-
-#ifndef ARDUINO_INKPLATECOLOR
     void setDisplayMode(uint8_t _mode);
     uint8_t getDisplayMode();
 #endif

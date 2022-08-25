@@ -31,7 +31,6 @@
 #error "Wrong board selection for this example, please select Inkplate 6COLOR in the boards menu."
 #endif
 
-
 #include <Inkplate.h>
 Inkplate display;
 
