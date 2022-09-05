@@ -10,7 +10,7 @@
    pin of LED to GND.
 
    This example will show you how you can manipulate with I/Os of internal IO Expander.
-   You can only manipulate with Port B of MCP23017 (GPB1-GPB7). Port A is used for epaper panel and TPS65186 PMIC.
+   You can only manipulate with Port B of I/O Expander (GPB1-GPB7). Port A is used for epaper panel and TPS65186 PMIC.
    GPB0 is used for ESP32 GPIO0 so you can't use it either.
    GPB1 is used for enabling battery reading (if Batt solder bridge is bridged between second and third pad)
    GPB2, GPB3 and GPB4 are used for reading touchpad (if Touchpad solder bridges are bridged between second pad and

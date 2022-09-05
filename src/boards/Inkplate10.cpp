@@ -22,7 +22,7 @@
 #include "../include/defines.h"
 #include "EEPROM.h"
 
-#ifdef ARDUINO_INKPLATE10
+#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE10V2)
 
 /**
  * @brief       begin function initialize Inkplate object with predefined
@@ -58,7 +58,7 @@ bool Inkplate::begin()
         memcpy(waveform3Bit, waveformEEPROM.waveform, sizeof(waveform3Bit));
     }
 
-#ifndef ARDUINO_INKPLATECOLOR
+#if !defined(ARDUINO_INKPLATECOLOR) || !defined(ARDUINO_INKPLATE2)
     for (uint32_t i = 0; i < 256; ++i)
         pinLUT[i] = ((i & B00000011) << 4) | (((i & B00001100) >> 2) << 18) | (((i & B00010000) >> 4) << 23) |
                     (((i & B11100000) >> 5) << 25);

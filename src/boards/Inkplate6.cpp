@@ -24,7 +24,7 @@
 #include "../include/Graphics.h"
 #include "../include/defines.h"
 
-#ifdef ARDUINO_ESP32_DEV
+#if (defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6V2))
 
 /**
  * @brief       begin function initialize Inkplate object with predefined

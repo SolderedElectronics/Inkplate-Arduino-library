@@ -32,7 +32,7 @@
 extern SPIClass spi2;
 extern SdFat sd;
 
-#ifdef ARDUINO_INKPLATE10
+#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE10V2)
 struct waveformData
 {
     uint8_t header = 'W';
@@ -55,7 +55,7 @@ class Inkplate : public System, public Graphics
     Inkplate(uint8_t _mode);
 #endif
 
-#ifdef ARDUINO_INKPLATE10
+#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE10V2)
     void changeWaveform(uint8_t *_wf);
     uint8_t calculateChecksum(struct waveformData _w);
     bool getWaveformFromEEPROM(struct waveformData *_w);
@@ -125,7 +125,7 @@ class Inkplate : public System, public Graphics
 #else
 
 
-#ifdef ARDUINO_INKPLATE10
+#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE10V2)
     void calculateLUTs();
 #endif
     void display1b(bool leaveOn = false);
@@ -144,7 +144,7 @@ class Inkplate : public System, public Graphics
 
     uint8_t _beginDone = 0;
 
-#ifdef ARDUINO_INKPLATE10
+#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE10V2)
     struct waveformData waveformEEPROM;
 #endif
 

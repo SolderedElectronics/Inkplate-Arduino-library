@@ -1,5 +1,5 @@
 /*
-   Inkplate_PCAL example for e-radionica.com Inkplate 6COLOR
+   Inkplate_IO_Expander example for e-radionica.com Inkplate 6COLOR
    For this example you will need only a micro USB cable, Inkplate 6COLOR, 330 Ohm resistor and LED diode.
    Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
@@ -30,7 +30,7 @@ void setup()
     display.pinModeIO(
         LED_PIN,
         OUTPUT); // Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
-                 // If we do not specify which MCP we want to use, by the default external MCP will be used of the one
+                 // If we do not specify which I/O Expander we want to use
                  // with header named pca
 }
 

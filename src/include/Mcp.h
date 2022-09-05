@@ -86,6 +86,9 @@
 class Expander
 {
   public:
+    uint8_t ioRegsInt[22], ioRegsEx[22];
+
+    bool ioBegin(uint8_t _addr, uint8_t *_r);
     void pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _io_id = IO_EXT_ADDR);
     void digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _io_id = IO_EXT_ADDR);
     uint8_t digitalReadIO(uint8_t _pin, uint8_t _io_id = IO_EXT_ADDR);
@@ -97,10 +100,6 @@ class Expander
     uint16_t getINTstate(uint8_t _io_id = IO_EXT_ADDR);
     uint16_t getPorts(uint8_t _io_id = IO_EXT_ADDR);
     void setIntPin(uint8_t _pin, uint8_t _mode, uint8_t _io_id = IO_EXT_ADDR);
-
-    uint8_t ioRegsInt[22], ioRegsEx[22];
-
-    bool ioBegin(uint8_t _addr, uint8_t *_r);
 
     void pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode);
     void digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state);

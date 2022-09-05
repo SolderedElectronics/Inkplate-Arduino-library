@@ -21,7 +21,7 @@
 #include "../include/Graphics.h"
 #include "../include/defines.h"
 
-#ifdef ARDUINO_INKPLATE6PLUS
+#if (defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2))
 
 /**
  *
