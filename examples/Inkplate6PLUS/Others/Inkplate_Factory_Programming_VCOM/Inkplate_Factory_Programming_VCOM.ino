@@ -1,63 +1,71 @@
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
+#error "Wrong board selection for this example, please select Inkplate6Plus or Inkplate6Plus V2 in the boards menu."
+#endif
+
+// Do not forget to add WiFi SSID and WiFi Password in test.cpp!
+
 #include "EEPROM.h"
 #include "Inkplate.h"
 #include "image.h"
 #include <Wire.h>
-
-#define WSSID "Soldered"
-#define WPASS "dasduino"
+#include "test.h"
 
 Inkplate display(INKPLATE_1BIT);
 
-double vcomVoltage = -2.95;
+// Change the VCOM voltage here. There should be a sticker on epaper flex cable with this voltage.
+// Usually it's somewhere between -1V and -3V.
+double vcomVoltage;
 
-// EEPROMAddress must be smaller than 64.
-int EEPROMaddress = 10;
+// EEPROMaddress must be between 0 and 64
+int EEPROMaddress = 0;
 
 // Peripheral mode variables and arrays
 #define BUFFER_SIZE 1000
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
 
-const char sdCardTestStringLength = 100;
-const char *testString = {"This is some test string..."};
-
 void setup()
 {
-    display.begin();
     Serial.begin(115200);
-    EEPROM.begin(64);
+    display.begin();
+    EEPROM.begin(512);
 
-    test();
-
-    // Init the touchscreen - you need to touch the bottom right edge to activate it
-    if (display.tsInit(true))
-    {
-        Serial.println("Touchscreen init ok");
-    }
-    else
-    {
-        Serial.println("Touchscreen init fail");
-        display.setTextSize(4);
-        display.setTextColor(0, 7);
-        display.setCursor(300, 300);
-        display.print("Touch error");
-        display.display();
-        while (true);
-    }
-
-    // Turn on the frontlight
-    display.frontlight(true);
-
+    // Check if VCOM programming is not already done
     if (EEPROM.read(EEPROMaddress) != 170)
     {
-        microSDCardTest();
-        writeVCOMToEEPROM(vcomVoltage);
+        // Test all peripherals of the Inkplate (I/O expander, RTC, uSD card holder, etc).
+        // If for some reason second I/O expander needs to be skipped, use testPeripheral(1);
+        testPeripheral();
+
+        // Wait until valid VCOM has been recieved
+        uint8_t flag = getVCOMFromSerial(&vcomVoltage);
+
+        // If the flag is 1, use manual inserted VCOM voltage from UART
+        if (flag == 1)
+        {
+            display.printf("MANUAL VCOM: %.2lf ", vcomVoltage);
+            display.partialUpdate();
+            if (!writeVCOMToEEPROM(vcomVoltage))
+            {
+                display.println("VCOM PROG. FAIL");
+                failHandler();
+            }
+        }
+        else
+        {
+            display.println("VCOM ERROR");
+            failHandler();
+        }
+
         EEPROM.write(EEPROMaddress, 170);
         EEPROM.commit();
     }
     else
     {
-        vcomVoltage = getVCOM();
+        Serial.println("VCOM already set!");
+        display.einkOn();
+        vcomVoltage = (double)(readReg(0x03) | ((uint16_t)((readReg(0x04) & 1) << 8))) / (-100);
     }
     memset(commandBuffer, 0, BUFFER_SIZE);
 
@@ -66,13 +74,6 @@ void setup()
 
 void loop()
 {
-    if (display.touchInArea(900, 0, 124, 124)) {
-        display.setCursor(970, 10);
-        display.print("Touch OK!");
-        display.display();
-    }
-
-    // Peripheral mode
     if (Serial.available())
     {
         while (Serial.available())
@@ -99,7 +100,6 @@ void loop()
         {
             int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n;
             char b;
-            // char temp[150];
             switch (*(s + 1))
             {
                 case '?':
@@ -108,85 +108,61 @@ void loop()
 
                 case '0':
                     sscanf(s + 3, "%d,%d,%d", &x, &y, &c);
-                    // sprintf(temp, "display.drawPixel(%d, %d, %d)\n\r", x, y, c);
-                    // Serial.print(temp);
                     display.drawPixel(x, y, c);
                     break;
 
                 case '1':
                     sscanf(s + 3, "%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &c);
-                    // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
-                    // Serial.print(temp);
                     display.drawLine(x1, y1, x2, y2, c);
                     break;
 
                 case '2':
                     sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &l, &c);
-                    // sprintf(temp, "display.drawFastVLine(%d, %d, %d, %d)\n\r", x, y, l, c);
-                    // Serial.print(temp);
                     display.drawFastVLine(x, y, l, c);
                     break;
 
                 case '3':
                     sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &l, &c);
-                    // sprintf(temp, "display.drawFastHLine(%d, %d, %d, %d)\n\r", x, y, l, c);
-                    // Serial.print(temp);
                     display.drawFastHLine(x, y, l, c);
                     break;
 
                 case '4':
                     sscanf(s + 3, "%d,%d,%d,%d,%d", &x, &y, &w, &h, &c);
-                    // sprintf(temp, "display.drawRect(%d, %d, %d, %d, %d)\n\r", x, y, w, h, c);
-                    // Serial.print(temp);
                     display.drawRect(x, y, w, h, c);
                     break;
 
                 case '5':
                     sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &r, &c);
-                    // sprintf(temp, "display.drawCircle(%d, %d, %d, %d)\n\r", x, y, r, c);
-                    // Serial.print(temp);
                     display.drawCircle(x, y, r, c);
                     break;
 
                 case '6':
                     sscanf(s + 3, "%d,%d,%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &x3, &y3, &c);
-                    // sprintf(temp, "display.drawTriangle(%d, %d, %d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, x3, y3, c);
-                    // Serial.print(temp);
                     display.drawTriangle(x1, y1, x2, y2, x3, y3, c);
                     break;
 
                 case '7':
                     sscanf(s + 3, "%d,%d,%d,%d,%d,%d", &x, &y, &w, &h, &r, &c);
-                    // sprintf(temp, "display.drawRoundRect(%d, %d, %d, %d, %d, %d)\n\r", x, y, w, h, r, c);
-                    // Serial.print(temp);
                     display.drawRoundRect(x, y, w, h, r, c);
                     break;
 
                 case '8':
                     sscanf(s + 3, "%d,%d,%d,%d,%d", &x, &y, &w, &h, &c);
-                    // sprintf(temp, "display.fillRect(%d, %d, %d, %d, %d)\n\r", x, y, w, h, c);
-                    // Serial.print(temp);
                     display.fillRect(x, y, w, h, c);
                     break;
 
                 case '9':
                     sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &r, &c);
-                    // sprintf(temp, "display.fillCircle(%d, %d, %d, %d)\n\r", x, y, r, c);
-                    // Serial.print(temp);
                     display.fillCircle(x, y, r, c);
                     break;
 
                 case 'A':
                     sscanf(s + 3, "%d,%d,%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &x3, &y3, &c);
-                    // sprintf(temp, "display.fillTriangle(%d, %d, %d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, x3, y3, c);
-                    // Serial.print(temp);
                     display.fillTriangle(x1, y1, x2, y2, x3, y3, c);
                     break;
 
                 case 'B':
                     sscanf(s + 3, "%d,%d,%d,%d,%d,%d", &x, &y, &w, &h, &r, &c);
-                    // sprintf(temp, "display.fillRoundRect(%d, %d, %d, %d, %d, %d)\n\r", x, y, w, h, r, c);
-                    // Serial.print(temp);
                     display.fillRoundRect(x, y, w, h, r, c);
                     break;
 
@@ -202,30 +178,21 @@ void loop()
                         strTemp[i / 2] = (hexToChar(strTemp[i]) << 4) | (hexToChar(strTemp[i + 1]) & 0x0F);
                     }
                     strTemp[n / 2] = 0;
-                    // Serial.print("display.print(\"");
-                    // Serial.print(strTemp);
-                    // Serial.println("\");");
                     display.print(strTemp);
                     break;
 
                 case 'D':
                     sscanf(s + 3, "%d", &c);
-                    // sprintf(temp, "display.setTextSize(%d)\n", c);
-                    // Serial.print(temp);
                     display.setTextSize(c);
                     break;
 
                 case 'E':
                     sscanf(s + 3, "%d,%d", &x, &y);
-                    // sprintf(temp, "display.setCursor(%d, %d)\n", x, y);
-                    // Serial.print(temp);
                     display.setCursor(x, y);
                     break;
 
                 case 'F':
                     sscanf(s + 3, "%c", &b);
-                    // sprintf(temp, "display.setTextWrap(%s)\n", b == 'T' ? "True" : "False");
-                    // Serial.print(temp);
                     if (b == 'T')
                         display.setTextWrap(true);
                     if (b == 'F')
@@ -235,8 +202,6 @@ void loop()
                 case 'G':
                     sscanf(s + 3, "%d", &c);
                     c &= 3;
-                    // sprintf(temp, "display.setRotation(%d)\n", c);
-                    // Serial.print(temp);
                     display.setRotation(c);
                     break;
 
@@ -260,8 +225,6 @@ void loop()
                         Serial.print(r, DEC);
                         Serial.println(")*");
                         Serial.flush();
-                        // sprintf(temp, "display.drawBitmap(%d, %d, %s)\n", x, y, strTemp);
-                        // Serial.print(temp);
                     }
                     else
                     {
@@ -272,11 +235,9 @@ void loop()
 
                 case 'I':
                     sscanf(s + 3, "%d", &c);
-                    // sprintf(temp, "display.setDisplayMode(%s)\n", c == 0 ? "INKPLATE_1BIT" : "INKPLATE_3BIT");
-                    // Serial.print(temp);
-                    if (c == INKPLATE_1BIT)
+                    if (c == 1)
                         display.selectDisplayMode(INKPLATE_1BIT);
-                    if (c == INKPLATE_3BIT)
+                    if (c == 3)
                         display.selectDisplayMode(INKPLATE_3BIT);
                     break;
 
@@ -284,11 +245,6 @@ void loop()
                     sscanf(s + 3, "%c", &b);
                     if (b == '?')
                     {
-                        // if (0 == 0) {
-                        //  Serial.println("#J(0)*");
-                        //} else {
-                        //  Serial.println("#J(1)*");
-                        //}
                         if (display.getDisplayMode() == INKPLATE_1BIT)
                         {
                             Serial.println("#J(0)*");
@@ -306,7 +262,6 @@ void loop()
                     sscanf(s + 3, "%c", &b);
                     if (b == '1')
                     {
-                        // Serial.print("display.clearDisplay();\n");
                         display.clearDisplay();
                     }
                     break;
@@ -315,15 +270,12 @@ void loop()
                     sscanf(s + 3, "%c", &b);
                     if (b == '1')
                     {
-                        // Serial.print("display.display();\n");
                         display.display();
                     }
                     break;
 
                 case 'M':
                     sscanf(s + 3, "%d,%d,%d", &y1, &x2, &y2);
-                    // sprintf(temp, "display.partialUpdate(%d, %d, %d);\n", y1, x2, y2);
-                    // Serial.print(temp);
                     display.partialUpdate();
                     break;
 
@@ -333,7 +285,6 @@ void loop()
                     {
                         Serial.print("#N(");
                         Serial.print(display.readTemperature(), DEC);
-                        // Serial.print(23, DEC);
                         Serial.println(")*");
                         Serial.flush();
                     }
@@ -345,7 +296,6 @@ void loop()
                     {
                         Serial.print("#O(");
                         Serial.print(display.readTouchpad(c), DEC);
-                        // Serial.print(0, DEC);
                         Serial.println(")*");
                         Serial.flush();
                     }
@@ -357,7 +307,6 @@ void loop()
                     {
                         Serial.print("#P(");
                         Serial.print(display.readBattery(), 2);
-                        // Serial.print(3.54, 2);
                         Serial.println(")*");
                         Serial.flush();
                     }
@@ -366,8 +315,6 @@ void loop()
                 case 'Q':
                     sscanf(s + 3, "%d", &c);
                     c &= 1;
-                    // if (c == 0) Serial.print("display.einkOff();\n");
-                    // if (c == 1) Serial.print("display.einkOn();\n");
                     if (c == 0)
                         display.einkOff();
                     if (c == 1)
@@ -380,7 +327,6 @@ void loop()
                     {
                         Serial.print("#R(");
                         Serial.print(display.getPanelState(), DEC);
-                        // Serial.print(1, DEC);
                         Serial.println(")*");
                         Serial.flush();
                     }
@@ -388,116 +334,6 @@ void loop()
             }
             *s = 0;
             *e = 0;
-        }
-    }
-}
-
-void test()
-{
-    Serial.println("Testing WiFi...");
-    WiFi.begin(WSSID, WPASS); // Try to connect to WiFi network
-    uint8_t cnt = 0;
-    while ((WiFi.status() != WL_CONNECTED) && cnt < 15)
-    {
-        delay(1000); // While it is connecting to network, display dot every second, just to know that Inkplate is
-        // alive.
-        cnt++;
-    }
-    if (WiFi.status() == WL_CONNECTED) // Check if board is connected to WiFi
-    {
-        Serial.println("WiFi is working!");
-    }
-    else
-    {
-        Serial.println("Not connected to WiFi network!");
-    }
-
-    Wire.beginTransmission(0x51); // Send address 0x51 on I2C
-
-    time_t begined = 0;
-
-    if (Wire.endTransmission() == 0) // Check if there was an error in communication
-    {
-        begined = millis();
-        display.rtcReset();
-        display.rtcSetEpoch(1600000000ULL);
-    }
-    else
-    {
-        Serial.println("RTC IC not working!");
-    }
-
-    if (display.sdCardInit())
-    {
-        Serial.println("SD card slot is working");
-    }
-    else
-    {
-        Serial.println("SD card slot is not working");
-    }
-
-    Wire.beginTransmission(0x20); // Send address 0x20 on I2C
-
-    if (Wire.endTransmission() == 0) // Check if there was an error in communication
-    {
-        Serial.println("MCP /1 found");
-    }
-    else
-    {
-        Serial.println("MCP /1 not found");
-    }
-
-    Wire.beginTransmission(0x22); // Send address 0x22 on I2C
-
-    if (Wire.endTransmission() == 0) // Check if there was an error in communication
-    {
-        Serial.println("MCP /2 found");
-    }
-    else
-    {
-        Serial.println("MCP /2 not found");
-    }
-
-    display.einkOn();
-
-    Wire.beginTransmission(0x48); // Send address 0x48 on I2C
-
-    delay(200);
-
-    if (Wire.endTransmission() == 0) // Check if there was an error in communication
-    {
-        if (display.readPowerGood())  // Test if power supply for e-ink is OK
-        {
-            Serial.println("TPS working!");
-        }
-        else
-        {
-            Serial.println("TPS not working!");
-        }
-
-    }
-    else
-    {
-        Serial.println("TPS not found!");
-    }
-
-    delay(5000);
-
-    if (begined != 0) // Check if RTC measures time correctly
-    {
-        display.rtcGetRtcData(); // Get data from RTC
-
-        begined = (millis() - begined) / 1000; // Get time esp32 has measured
-
-        time_t diff = display.rtcGetEpoch() - 1600000000ULL;
-
-        if ( abs(begined - diff) < 2) // Compare times
-        {
-            Serial.println("RTC is working");
-        }
-        else
-        {
-            Serial.println("RTC is not working");
         }
     }
 }
@@ -532,62 +368,33 @@ uint8_t readReg(uint8_t _reg)
 
 void showSplashScreen()
 {
+    display.clearDisplay();
     display.display();
     display.selectDisplayMode(INKPLATE_3BIT);
-    display.drawBitmap3Bit(0, 0, picture1, picture1_w, picture1_h);
+    display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
     display.setTextColor(0, 7);
     display.setTextSize(1);
-    display.setCursor(970, 57);
+    display.setCursor(10, 10);
     display.print(vcomVoltage, 2);
     display.print("V");
     display.display();
 }
 
-void writeToScreen()
-{
-    // delay(10);
-}
-
-double readVCOM()
-{
-    double vcomVolts;
-    display.einkOn();
-    writeReg(0x04, (readReg(0x04) | B00100000));
-    writeToScreen();
-    writeReg(0x04, (readReg(0x04) | B10000000));
-    delay(10);
-    while (display.digitalReadMCP(6))
-    {
-        delay(1);
-    };
-    readReg(0x07);
-    uint16_t vcom = ((readReg(0x04) & 1) << 8) | readReg(0x03);
-    vcomVolts = vcom * 10 / 1000.0;
-    display.einkOff();
-    return -vcomVolts;
-}
-
-double getVCOM()
-{
-    display.einkOn();
-    uint16_t vcom = ((readReg(0x04) & 1) << 8) | readReg(0x03);
-    double vcomVolts = vcom * 10.0 / 1000.0;
-    display.einkOff();
-    return vcomVolts;
-}
-
-void writeVCOMToEEPROM(double v)
+uint8_t writeVCOMToEEPROM(double v)
 {
     int vcom = int(abs(v) * 100);
     int vcomH = (vcom >> 8) & 1;
     int vcomL = vcom & 0xFF;
-
+    
     // Set MCP23017 pin where TPS65186 INT pin is connectet to input pull up
     display.pinModeInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 6, INPUT_PULLUP);
 
     // First power up TPS65186 so we can communicate with it
     display.einkOn();
 
+    // Wait a little bit
+    delay(250);
+    
     // Send to TPS65186 first 8 bits of VCOM
     writeReg(0x03, vcomL);
 
@@ -599,7 +406,7 @@ void writeVCOMToEEPROM(double v)
     writeReg(0x04, vcomH | (1 << 6));
 
     // Wait until EEPROM has been programmed
-    delay(1);
+    delay(100);
     do
     {
         delay(1);
@@ -622,72 +429,20 @@ void writeVCOMToEEPROM(double v)
     // Read VCOM valuse from registers
     vcomL = readReg(0x03);
     vcomH = readReg(0x04);
+    Serial.print("Vcom: ");
+    Serial.println(vcom);
+    Serial.print("Vcom register: ");
+    Serial.println(vcomL | (vcomH << 8));
 
     if (vcom != (vcomL | (vcomH << 8)))
     {
         Serial.println("\nVCOM EEPROM PROGRAMMING FAILED!\n");
+        return 0;
     }
     else
     {
         Serial.println("\nVCOM EEPROM PROGRAMMING OK\n");
+        return 1;
     }
-}
-
-int checkMicroSDCard()
-{
-    int sdInitOk = 0;
-    sdInitOk = display.sdCardInit();
-
-    if (sdInitOk)
-    {
-        File file;
-
-        if (file.open("/testFile.txt", O_CREAT | O_RDWR))
-        {
-            file.print(testString);
-            file.close();
-        }
-        else
-        {
-            return 0;
-        }
-
-        delay(250);
-
-        if (file.open("/testFile.txt", O_RDWR))
-        {
-            char sdCardString[sdCardTestStringLength];
-            file.read(sdCardString, sizeof(sdCardString));
-            sdCardString[file.fileSize()] = 0;
-            int stringCompare = strcmp(testString, sdCardString);
-            file.remove();
-            file.close();
-            if (stringCompare != 0)
-                return 0;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-    else
-    {
-        return 0;
-    }
-    return 1;
-}
-
-void microSDCardTest()
-{
-    display.setTextSize(5);
-    display.setCursor(100, 100);
-    display.print("microSD card slot test ");
-
-    if (!checkMicroSDCard())
-    {
-        display.print("FAIL!");
-        display.display();
-        while (1);
-    }
-    display.clearDisplay();
+    return 0;
 }
