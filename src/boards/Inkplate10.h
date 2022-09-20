@@ -20,8 +20,15 @@
 #ifndef INKPLATE10_H
 #define INKPLATE10_H
 
+#ifdef ARDUINO_INKPLATE10
 #define IO_INT_ADDR 0x20
 #define IO_EXT_ADDR 0x22
+#endif
+
+#ifdef ARDUINO_INKPLATE10V2
+#define IO_INT_ADDR 0x20
+#define IO_EXT_ADDR 0x21
+#endif
 
 #define E_INK_WIDTH  1200
 #define E_INK_HEIGHT 825
