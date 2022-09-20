@@ -1,5 +1,5 @@
 /*
-    Inkplate_Bluetooth_Peripheral_Mode_Example example for e-radionica Inkplate 2
+    Inkplate_Bluetooth_Peripheral_Mode_Example example for Soldered Inkplate 2
     For this example you will need USB cable and an Inkplate 2 and bluetooth supporting device
     like phone or laptop. If you are using phone, you will need to download app which
     allows you to send commands via bluetooth like "Bluetooth serial monitor".
@@ -24,6 +24,7 @@
 
 #include "BluetoothSerial.h"
 
+// Size of the receive buffer for commands (in bytes).
 #define BUFFER_SIZE 1000
 
 #include "Peripheral.h"
@@ -32,30 +33,30 @@
 Inkplate display;
 BluetoothSerial SerialBT;
 
-// Temporary buffer to send to Peripheral mode code
+// Temporary data buffer for Peripheral mode code
 char commandBuffer[BUFFER_SIZE + 1];
 
 void setup() // Initialize everything
 {
-    Serial.begin(115200);  //Initialize UART communication with PC
+    Serial.begin(115200); // Initialize UART communication with PC
 
-    if (!SerialBT.begin("ESP32")) //Check if bluetooth is initialized successfully
+    if (!SerialBT.begin("ESP32")) // Check if bluetooth is initialized successfully
     {
-        Serial.println("An error occurred initializing Bluetooth"); //If not, print error message
+        Serial.println("An error occurred initializing Bluetooth"); // If not, print error message
     }
 
-    display.begin(); //Initialize e-paper
+    display.begin(); // Initialize Inkplate library.
 }
 
 void loop()
 {
-    while (SerialBT.available()) // When Bluetooth available save it and pass to Peripheral.h code
+    while (SerialBT.available()) // When there is some data available save it and pass to Peripheral.h code
     {
-        for (int i = 0; i < (BUFFER_SIZE - 1); i++) //Loop through all commands
+        for (int i = 0; i < (BUFFER_SIZE - 1); i++) // Loop through all commands
         {
             commandBuffer[i] = commandBuffer[i + 1];
         }
-        commandBuffer[BUFFER_SIZE - 1] = SerialBT.read();  //Save incoming command in buffer
+        commandBuffer[BUFFER_SIZE - 1] = SerialBT.read(); // Save incoming command in buffer
         Serial.print(commandBuffer[BUFFER_SIZE - 1]);
     }
 

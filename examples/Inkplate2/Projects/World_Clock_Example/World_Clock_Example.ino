@@ -1,6 +1,6 @@
 /*
-    World clock example for e-radionica.com Inkplate 2
-    For this example you will need only USB cable and Inkplate 2.
+    World clock example for Soldered Inkplate 2
+    For this example you will need only USB cable, Inkplate 2 and a WiFi with stable Internet connection.
     Select "Inkplate 2(ESP32)" from Tools -> Board menu.
     Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -24,20 +24,16 @@
 #error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
 #endif
 
-// Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
-
-//----------------------------------
-
 // Include Inkplate library to the sketch
 #include "Inkplate.h"
 
-
 // Our networking functions, declared in Network.cpp
-#include "Network.h"
 #include "Inter6pt7b.h"
 #include "Inter8pt7b.h"
+#include "Network.h"
+
+#define uS_TO_S_FACTOR 1000000 // Conversion factor for micro seconds to seconds
+#define TIME_TO_SLEEP  300     // How long ESP32 will be in deep sleep (in seconds)
 
 // Create object with all networking functions
 Network network;
@@ -45,9 +41,14 @@ Network network;
 // Create display object
 Inkplate display;
 
+// Put in your ssid and password
+char ssid[] = "";
+char pass[] = "";
+
+// Structure for time and date data
 struct tm t;
 
-// Here you can type part of city's and it will be found automatically.
+// You can type part of city's and it will be found automatically.
 // The more letters you type, the more chance is that your city will be found.
 // Refer to Network.h file for full list of cities. Instead of space use underline
 // and every word starts with CAPITAL letter and the rest of letters are not capitals.
@@ -68,20 +69,19 @@ void setup()
     // Our begin function
     network.begin();
 
-    network.getData((char*)city1, &t);
-    drawTime(17, 1, t.tm_hour > 12 ? 1 : 0, city1_name); // x coordinate, y coordinate, invert colors, pointer to city name
-    // Use ternary operator to specify if colors are inverted. If time is AM
-    // (less than 12 hours) then colors are not inverted and if 12 hours has past
-    // invert colors.
+    network.getData((char *)city1, &t);
+    drawTime(17, 1, t.tm_hour > 12 ? 1 : 0, city1_name); // x coordinate, y coordinate, PM/AM indicator, pointer to city
+                                                         // name Use ternary operator to specify PM or AM is currently.
 
-    network.getData((char*)city2, &t);
+    network.getData((char *)city2, &t);
     drawTime(115, 1, t.tm_hour > 12 ? 1 : 0, city2_name);
 
     display.display();
 
-    // Go to sleep before checking again, uncomment if you want to use
-    //esp_sleep_enable_timer_wakeup(100000000); //Go to sleep for 100 million microseconds or 100 seconds
-    //(void)esp_deep_sleep_start();
+    // Go to sleep before checking again
+    // rtc_gpio_isolate(GPIO_NUM_12);   // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Go to sleep
+    esp_deep_sleep_start();
 }
 
 void loop()
@@ -91,51 +91,59 @@ void loop()
 // Function to draw time
 void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city_name)
 {
-    uint16_t w = 80; //Clock width
+    uint16_t w = 80; // Clock width
     // This part of code draws analog clock
-    display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2, INKPLATE2_BLACK); //Draw outer circles
+    display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2, INKPLATE2_BLACK); // Draw outer circles
     display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2 + 1, INKPLATE2_BLACK);
 
-    //Draws lines that represents 3, 6 ,9 and 12 hours on the clocks face
-    display.drawThickLine(x_pos + w / 2, y_pos        , x_pos + w / 2, y_pos + 5, INKPLATE2_BLACK, 2);
-    display.drawThickLine(x_pos + w    , y_pos + w / 2, x_pos + w - 5, y_pos + w / 2, INKPLATE2_BLACK, 2);
-    display.drawThickLine(x_pos + w / 2, y_pos + w    , x_pos + w / 2, y_pos + w - 5, INKPLATE2_BLACK, 2);
-    display.drawThickLine(x_pos        , y_pos + w / 2, x_pos + 5    , y_pos + w / 2, INKPLATE2_BLACK, 2);
+    // Draws lines that represents 3, 6 ,9 and 12 hours on the clocks face
+    display.drawThickLine(x_pos + w / 2, y_pos, x_pos + w / 2, y_pos + 5, INKPLATE2_BLACK, 2);
+    display.drawThickLine(x_pos + w, y_pos + w / 2, x_pos + w - 5, y_pos + w / 2, INKPLATE2_BLACK, 2);
+    display.drawThickLine(x_pos + w / 2, y_pos + w, x_pos + w / 2, y_pos + w - 5, INKPLATE2_BLACK, 2);
+    display.drawThickLine(x_pos, y_pos + w / 2, x_pos + 5, y_pos + w / 2, INKPLATE2_BLACK, 2);
 
     // Draw lines that represents 5, 10, 20, 25, 35, 40, 50, 55 minutes on the clocks face
     // Lines are calculated from here https://www.desmos.com/calculator/l2mkh2guac
-    display.drawThickLine(x_pos + 0.750 * w, y_pos + 0.070 * w, x_pos + 0.725 * w, y_pos + 0.110 * w, INKPLATE2_BLACK, 1);
-    display.drawThickLine(x_pos + 0.930 * w, y_pos + 0.250 * w, x_pos + 0.895 * w, y_pos + 0.275 * w, INKPLATE2_BLACK, 1);
-    display.drawThickLine(x_pos + 0.930 * w, y_pos + 0.750 * w, x_pos + 0.895 * w, y_pos + 0.725 * w, INKPLATE2_BLACK, 1);
-    display.drawThickLine(x_pos + 0.750 * w, y_pos + 0.930 * w, x_pos + 0.725 * w, y_pos + 0.895 * w, INKPLATE2_BLACK, 1);
-    display.drawThickLine(x_pos + 0.250 * w, y_pos + 0.930 * w, x_pos + 0.275 * w, y_pos + 0.895 * w, INKPLATE2_BLACK, 1);
-    display.drawThickLine(x_pos + 0.070 * w, y_pos + 0.750 * w, x_pos + 0.111 * w, y_pos + 0.725 * w, INKPLATE2_BLACK, 1);
-    display.drawThickLine(x_pos + 0.070 * w, y_pos + 0.250 * w, x_pos + 0.111 * w, y_pos + 0.275 * w, INKPLATE2_BLACK, 1);
-    display.drawThickLine(x_pos + 0.250 * w, y_pos + 0.070 * w, x_pos + 0.275 * w, y_pos + 0.110 * w, INKPLATE2_BLACK, 1);
+    display.drawThickLine(x_pos + 0.750 * w, y_pos + 0.070 * w, x_pos + 0.725 * w, y_pos + 0.110 * w, INKPLATE2_BLACK,
+                          1);
+    display.drawThickLine(x_pos + 0.930 * w, y_pos + 0.250 * w, x_pos + 0.895 * w, y_pos + 0.275 * w, INKPLATE2_BLACK,
+                          1);
+    display.drawThickLine(x_pos + 0.930 * w, y_pos + 0.750 * w, x_pos + 0.895 * w, y_pos + 0.725 * w, INKPLATE2_BLACK,
+                          1);
+    display.drawThickLine(x_pos + 0.750 * w, y_pos + 0.930 * w, x_pos + 0.725 * w, y_pos + 0.895 * w, INKPLATE2_BLACK,
+                          1);
+    display.drawThickLine(x_pos + 0.250 * w, y_pos + 0.930 * w, x_pos + 0.275 * w, y_pos + 0.895 * w, INKPLATE2_BLACK,
+                          1);
+    display.drawThickLine(x_pos + 0.070 * w, y_pos + 0.750 * w, x_pos + 0.111 * w, y_pos + 0.725 * w, INKPLATE2_BLACK,
+                          1);
+    display.drawThickLine(x_pos + 0.070 * w, y_pos + 0.250 * w, x_pos + 0.111 * w, y_pos + 0.275 * w, INKPLATE2_BLACK,
+                          1);
+    display.drawThickLine(x_pos + 0.250 * w, y_pos + 0.070 * w, x_pos + 0.275 * w, y_pos + 0.110 * w, INKPLATE2_BLACK,
+                          1);
 
     // Draw filled circle in the middle
     display.fillCircle(x_pos + w / 2, y_pos + w / 2, 5, INKPLATE2_BLACK);
 
     // This part of code draws needles and calculates their angles
     int x_minute, y_minute, x_hour, y_hour;
-    x_minute = x_pos + w / 2 + 30 * (float) sin((t.tm_min / (float)60) * 2 * (float)3.14); //
-    y_minute = y_pos + w / 2 - 30 * (float) cos((t.tm_min / (float)60) * 2 * (float)3.14);
-    x_hour = x_pos + w / 2  + 22 * sin((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
+    x_minute = x_pos + w / 2 + 30 * (float)sin((t.tm_min / (float)60) * 2 * (float)3.14); //
+    y_minute = y_pos + w / 2 - 30 * (float)cos((t.tm_min / (float)60) * 2 * (float)3.14);
+    x_hour = x_pos + w / 2 + 22 * sin((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
     y_hour = y_pos + w / 2 - 22 * cos((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
 
     display.drawThickLine(x_pos + w / 2, y_pos + w / 2, x_minute, y_minute, INKPLATE2_RED, 2); // Needle for minutes
-    display.drawThickLine(x_pos + w / 2, y_pos + w / 2, x_hour, y_hour, INKPLATE2_BLACK, 3); // Needle for hours
+    display.drawThickLine(x_pos + w / 2, y_pos + w / 2, x_hour, y_hour, INKPLATE2_BLACK, 3);   // Needle for hours
 
-    display.setTextSize(1); // Set text size in comparison to original text 5x7
+    display.setTextSize(1);       // Set text size in comparison to original text 5x7
     display.setFont(&Inter8pt7b); // Set customn font
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
-    char *temp_city_name = strstr(city_name , "/") + 1;
+    char *temp_city_name = strstr(city_name, "/") + 1;
     display.setCursor(x_pos + 40 - strlen(temp_city_name) * 5, 100); // Center city name
 
     uint8_t cnt = 0;
     while (*(temp_city_name + cnt) != '\0') // Print city name letter by letter
     {
-        if (*(temp_city_name + cnt) != '_') //If current letter is underline symbol, replace it with space
+        if (*(temp_city_name + cnt) != '_') // If current letter is underline symbol, replace it with space
             display.print(*(temp_city_name + cnt));
         else
             display.print(" "); // Print space
@@ -144,5 +152,4 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city_name)
     display.setCursor(x_pos + 32, y_pos + 62);
     display.setFont(&Inter6pt7b); // Set customn font
     am ? display.print("PM") : display.print("AM");
-
 }

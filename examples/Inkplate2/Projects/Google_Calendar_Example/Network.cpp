@@ -1,6 +1,6 @@
 /*
 Network.cpp
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
 September 24, 2020
 https://github.com/e-radionicacom/Inkplate-6-Arduino-library
@@ -59,7 +59,6 @@ void Network::getTime(char *timeStr, long offSet)
     time_t nowSecs = time(nullptr) + (long)timeZone * 3600L + offSet;
 
 
-    
     // Used to store time
     gmtime_r(&nowSecs, &timeinfo);
 
@@ -162,6 +161,5 @@ void Network::setTime()
 
 time_t Network::getEpoch()
 {
-  return time(nullptr);
-  
+    return time(nullptr);
 }

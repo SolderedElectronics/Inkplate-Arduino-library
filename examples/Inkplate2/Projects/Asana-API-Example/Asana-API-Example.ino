@@ -1,6 +1,6 @@
 /*
     Asana API example for Soldered Inkplate 2
-    For this example you will need only USB cable and Inkplate 2.
+    For this example you will need only USB cable, Inkplate 2 and a WiFi with stable Internet connection.
     Select "Inkplate 2(ESP32)" from Tools -> Board menu.
     Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -40,7 +40,7 @@ char user_task_list_gid[] = ""; // Your task list GID, you can find it in URL
 // in your browser when you open your task list
 // It is long number starting with 120...
 
-char user_PAT[] = ""; //This is PAT (Personal Access Token) which
+char user_PAT[] = ""; // This is PAT (Personal Access Token) which
 // which is used to authentificate. You can learn more how to obtain
 // one and obtain one at this link: https://developers.asana.com/docs/authentication-quick-start
 // When you obtain PAT just copy it here.
@@ -87,6 +87,7 @@ void setup()
 
     // Welcome screen
     display.setCursor(20, 90); // Set cursor, custom font uses different method for setting cursor
+
     // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
     display.setTextSize(1);
     display.println(F("Asana API Example!"));
@@ -94,6 +95,7 @@ void setup()
     display.clearDisplay();
     delay(1000);
     Serial.println("Connecting to WiFi");
+
     // Our begin function
     network.begin();
     Serial.println("Getting tasks...");
@@ -105,10 +107,12 @@ void setup()
     Serial.println("Tasks fetched.");
     curr_task = tasks;
     network.getTime(today);
+
     // Our main drawing function
     Serial.println("Drawing...");
     display.clearDisplay();
     drawAll();
+
     // Refresh
     display.display();
 
@@ -141,19 +145,20 @@ void drawAll()
                 cnt++;
                 if (display.getCursorX() > 200) // Check if cursor is near border of display
                 {
-                    display.setCursor(10, display.getCursorY() + 10); // If cursor is near border, set cursor to new line
+                    display.setCursor(10,
+                                      display.getCursorY() + 10); // If cursor is near border, set cursor to new line
                 }
             }
             display.setCursor(10, display.getCursorY() + 10); // Set cursor to new line to print due
-            if (curr_task->due[0] != 'N') // If due is "No due!" don't execute this code
+            if (curr_task->due[0] != 'N')                     // If due is "No due!" don't execute this code
             {
                 curr_task->due[4] = curr_task->due[7] = ' '; // Replace '-' with space so sscanf can catch numbers
 
                 int mday, mon, yr; // Variables to store due date
-                sscanf(curr_task->due, "%d %d %d", &yr, &mon, &mday); // Due is in format "2022 06 09", so sscanf command can fetch it
-                // and store in variables
-                time_t nowSecs = time(nullptr);                       // Get epoch through NTP server
-                struct tm *t = gmtime(&nowSecs);                      // Convert epoch to time struct
+                sscanf(curr_task->due, "%d %d %d", &yr, &mon,
+                       &mday); // Due is in format "2022 06 09", so sscanf command can fetch it and store in variables
+                time_t nowSecs = time(nullptr);  // Get epoch through NTP server
+                struct tm *t = gmtime(&nowSecs); // Convert epoch to time struct
 
                 if ((t->tm_mday > mday) && (t->tm_mon >= mon) && (t->tm_year >= yr)) // Test if due has past
                 {
@@ -174,7 +179,8 @@ void drawAll()
             {
                 display.print("Due: No due!");
             }
-            display.drawRoundRect(5, tempY - 2, 202, display.getCursorY() - tempY + 12, 4, INKPLATE2_BLACK); // Draw rectangle around task details
+            display.drawRoundRect(5, tempY - 2, 202, display.getCursorY() - tempY + 12, 4,
+                                  INKPLATE2_BLACK);           // Draw rectangle around task details
             display.setCursor(10, display.getCursorY() + 15); // Set cursor for printing next task
         }
         curr_task = curr_task->next; // Select next task

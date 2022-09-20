@@ -1,6 +1,6 @@
 /*
     Quotables example for Soldered Inkplate 2
-    For this example you will need only USB cable and Inkplate 2.
+    For this example you will need only USB cable, Inkplate 2 and a WiFi with stable Internet connection.
     Select "Inkplate 2(ESP32)" from Tools -> Board menu.
     Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -27,14 +27,6 @@
 #error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
 #endif
 
-//---------- CHANGE HERE  -------------:
-
-// Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
-
-//----------------------------------
-
 // Include Inkplate library to the sketch
 #include "Inkplate.h"
 
@@ -44,17 +36,18 @@ char pass[] = "";
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
 
+// Delay between API calls in seconds, 300 seconds is 5 minutes
+#define DELAY_S 300
+
 // create object with all networking functions
 Network network;
 
 // create display object
 Inkplate display;
 
-// Delay between API calls in seconds, 300 seconds is 5 minutes
-#define DELAY_S 300
-
-// Our functions declared below setup and loop
-void drawAll();
+// Put in your ssid and password
+char ssid[] = "";
+char pass[] = "";
 
 char quote[128]; // Buffer to store quote
 char author[64];
@@ -72,6 +65,7 @@ void setup()
     // Our begin function
     network.begin();
 
+    // Try to get the new random quote from the Internet.
     while (!network.getData(quote, author))
     {
         Serial.println("Retrying retriving data!");

@@ -1,6 +1,6 @@
 /*
     Cryptocurrency tracker example for e-radionica.com Inkplate 2
-    For this example you will need only USB cable and Inkplate 2.
+    For this example you will need only USB cable, Inkplate 2 and a WiFi with stable Internet connection.
     Select "Inkplate 2(ESP32)" from Tools -> Board menu.
     Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -24,7 +24,27 @@
 #error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
 #endif
 
-//---------- CHANGE HERE  -------------:
+// Include Inkplate library to the sketch
+#include "Inkplate.h"
+
+// Include fonts used
+#include "Fonts/Inter8pt7b.h"
+#include "Fonts/Inter16pt7b.h"
+#include "ethereum.h"
+#include "bitcoin.h"
+#include "tether.h"
+
+// Our networking functions, declared in Network.cpp
+#include "Network.h"
+
+// Delay between API calls in miliseconds
+#define DELAY_MS 3 * 60 * 1000 // Every 3 minutes, minute has 60 seconds and second has 1000 miliseconds
+
+// Create object with all networking functions
+Network network;
+
+// Create object for Inkplate library
+Inkplate display;
 
 // Adjust your time zone, 2 means UTC+2
 int timeZone = 2;
@@ -43,30 +63,6 @@ char currencyAbbr[] = "ETH";
 
 // If it loads weirdly you can search the JSON using ctrl/command+f for
 // your crypto by name and then find it's id next to it's name and copy those above
-
-//----------------------------------
-
-// Include Inkplate library to the sketch
-#include "Inkplate.h"
-
-// Include fonts used
-#include "Fonts/Inter8pt7b.h"
-#include "Fonts/Inter16pt7b.h"
-#include "ethereum.h"
-#include "bitcoin.h"
-#include "tether.h"
-
-// Our networking functions, declared in Network.cpp
-#include "Network.h"
-
-// create object with all networking functions
-Network network;
-
-// create display object
-Inkplate display;
-
-// Delay between API calls in miliseconds
-#define DELAY_MS 3 * 60 * 1000 // Every 3 minutes, minute has 60 seconds and second has 1000 miliseconds
 
 // Used for storing raw price values
 double data[64];
@@ -146,8 +142,9 @@ void setup()
     display.display();
 
     // Go to sleep before checking again
+    // rtc_gpio_isolate(GPIO_NUM_12);   // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
     esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS);
-    (void)esp_deep_sleep_start();
+    esp_deep_sleep_start();
 }
 
 void loop()

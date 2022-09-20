@@ -1,6 +1,6 @@
 /*
 Network.cpp
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
 September 24, 2020
 https://github.com/e-radionicacom/Inkplate-6-Arduino-library
@@ -146,7 +146,7 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
 
     // Add woeid to api call
     char url[256];
-    sprintf(url, "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s", lat, lon, apiKey);
+    sprintf(url, "http://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s", lat, lon, apiKey);
 
     // Initiate http
     http.begin(url);
@@ -195,12 +195,6 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
             ;
             strcpy(abbr4, doc["hourly"][3]["weather"][0]["icon"].as<const char *>());
             ;
-
-            Serial.println(abbr1);
-            Serial.println(abbr2);
-            Serial.println(abbr3);
-            Serial.println(abbr4);
-            Serial.println();
 
             f = 0;
         }

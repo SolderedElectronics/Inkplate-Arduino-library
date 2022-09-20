@@ -26,22 +26,6 @@
 #error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
 #endif
 
-//---------- CHANGE HERE  -------------:
-
-// Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
-
-char channel_id[] = "UC2ppjz9TLbBCuGPmmafptrg"; // Youtube channel ID, read in example
-                                                // description how to get it, this ID is
-                                                // public and you can easily get any channel ID
-                                                
-char api_key[] = ""; // API key, you can get one on https://console.developers.google.com/
-                                                            // After you register and fill needed data you can create 
-                                                            // YouTube Data API v3 in Credentials submenu.
-
-//----------------------------------
-
 // Include Inkplate library to the sketch
 #include "Inkplate.h"
 
@@ -55,14 +39,30 @@ char api_key[] = ""; // API key, you can get one on https://console.developers.g
 // Include header files
 #include "youtube_icon.h"
 
+// Delay between API calls in miliseconds
+#define DELAY_MS 3 * 60 * 1000
+
 // create object with all networking functions
 Network network;
 
 // create display object
 Inkplate display;
 
-// Delay between API calls in miliseconds
-#define DELAY_MS 3 * 60 * 1000
+// Write your SSID and password
+char ssid[] = "";
+char pass[] = "";
+
+// e-radionica.com channel ID
+char channel_id[] = "UC2ppjz9TLbBCuGPmmafptrg"; // To get the channel ID of the public channel, go to the wanted Youtube
+                                                // channel in Google Chrome. Go to View Source (right-click on web page)
+                                                // and search for "externalId".
+
+char api_key[] =
+    ""; // API key, you can get one on https://console.developers.google.com/
+        // First create a project (name it whatever you like), then click on "Enable APIs and Services" (it's at the top
+        // of the screen, it has a plus sign). Next select "YouTube Data API v3" in Enabled APIs and Serivces. Go back
+        // at the homepage, click on "Create Credentials" and click "API Key". After the key has been created, edit API
+        // Key to restrict it only on use for Youtube API. YouTube Data API v3 in Credentials submenu.
 
 // Used to simplify UI design
 struct textElement
@@ -75,25 +75,27 @@ struct textElement
     uint8_t text_color;
 };
 
+// Struct for storing channel data sch as channel name, subscriber count etc.
+// It's defined in Network.h
 struct channelInfo channel;
 
 char structData[30];
 
 // Out UI elements data
-textElement elements[] = {
-    {5, 20, &Inter8pt7b, "Channel:", 0 , INKPLATE2_BLACK}, {75, 20, &Inter8pt7b, channel.name, 0 , INKPLATE2_RED},
-    {5, 40, &Inter8pt7b, "Videos count:", 0, INKPLATE2_BLACK}, {125, 40, &Inter8pt7b, (char*)NULL, 0, INKPLATE2_RED},
-    {5, 70, &Inter8pt7b, "Subscribers:", 0, INKPLATE2_BLACK}, {5, 90, &Inter8pt7b, (char*)NULL, 0, INKPLATE2_RED},
-    {110, 70, &Inter8pt7b, "Total views:", 0, INKPLATE2_BLACK}, {110, 90, &Inter8pt7b, (char*)NULL, 0, INKPLATE2_RED}
+textElement elements[] = {{5, 20, &Inter8pt7b, "Channel:", 0, INKPLATE2_BLACK},
+                          {75, 20, &Inter8pt7b, channel.name, 0, INKPLATE2_RED},
+                          {5, 40, &Inter8pt7b, "Videos count:", 0, INKPLATE2_BLACK},
+                          {125, 40, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_RED},
+                          {5, 70, &Inter8pt7b, "Subscribers:", 0, INKPLATE2_BLACK},
+                          {5, 90, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_RED},
+                          {110, 70, &Inter8pt7b, "Total views:", 0, INKPLATE2_BLACK},
+                          {110, 90, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_RED}
 
 };
 
-// Our functions declared below setup and loop
-void drawAll();
-
 void setup()
 {
-    // Begin serial communitcation, sed for debugging
+    // Begin serial communitcation (send some useful information; WiFi status, HTTP status, etc)
     Serial.begin(115200);
 
     // Initial display settings
@@ -103,7 +105,6 @@ void setup()
 
     // Welcome screen
     display.setCursor(20, 90); // Set cursor, custom font uses different method for setting cursor
-    // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
     display.setTextSize(1);
     display.drawImage(youtube_icon, 0, 0, 204, 84);
     display.println(F("Youtube subscribers tracker!"));
@@ -120,20 +121,24 @@ void setup()
         delay(1000);
     }
 
-    elements[3].text = itoa(channel.video_count, structData, 10); //This data should be copied into elements of UI after you get data
-    elements[5].text = itoa(channel.subscribers, &structData[8], 10); //This data should be copied into elements of UI after you get data
-    elements[7].text = itoa(channel.total_views, &structData[16], 10); //This data should be copied into elements of UI after you get data
-    //This functions takes integer as parameter and converts that int into
-    // number but in string format.
+    elements[3].text =
+        itoa(channel.video_count, structData, 10); // This data should be copied into elements of UI after you get data
+    elements[5].text = itoa(channel.subscribers, &structData[8],
+                            10); // This data should be copied into elements of UI after you get data
+    elements[7].text = itoa(channel.total_views, &structData[16],
+                            10); // This data should be copied into elements of UI after you get data
+    // This functions takes integer as parameter and converts that int into number but in string format.
 
     // Our main drawing function
     drawAll();
+
     // Refresh
     display.display();
 
     // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS);
-    (void)esp_deep_sleep_start();
+    // rtc_gpio_isolate(GPIO_NUM_12);   // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
+    esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS); // Go to sleep
+    esp_deep_sleep_start();
 }
 
 void loop()
@@ -144,15 +149,13 @@ void loop()
 // Our main drawing function
 void drawAll()
 {
-    // Save current date string, more about it in Network.cpp
-    //network.getTime(date);
-
-
     // Draw our UI elements
     for (int i = 0; i < sizeof(elements) / sizeof(elements[0]); ++i)
     {
         // Text settings
         display.setTextColor(elements[i].text_color, INKPLATE2_WHITE);
+        // Use custom font. You can find more about that here
+        // https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
         display.setFont(elements[i].font);
         display.setTextSize(1);
 

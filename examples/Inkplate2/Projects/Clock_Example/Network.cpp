@@ -1,6 +1,6 @@
 /*
 Network.cpp
-Inkplate 6 Arduino library
+Inkplate Arduino library
 David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
 September 24, 2020
 https://github.com/e-radionicacom/Inkplate-6-Arduino-library
@@ -28,7 +28,6 @@ Distributed as-is; no warranty is given.
 // external parameters from our main file
 extern char ssid[];
 extern char pass[];
-extern char currency[];
 
 // Get our Inkplate object from main file to draw debug info on
 extern Inkplate display;
@@ -59,11 +58,11 @@ void Network::begin()
     }
     Serial.println(F(" connected"));
 
-    // Find internet time
+    // Get Internet time from NTP.
     setTime();
 }
 
-// Gets time from ntp server
+// Get time from NTP server
 void Network::getTime(tm *t)
 {
     // Get seconds since 1.1.1970.

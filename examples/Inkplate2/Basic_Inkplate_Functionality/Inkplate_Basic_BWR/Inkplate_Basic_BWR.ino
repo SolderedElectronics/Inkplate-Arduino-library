@@ -19,8 +19,8 @@
 #error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
 #endif
 
-#include "Inkplate.h"            //Include Inkplate library to the sketch
-Inkplate display; // Create object on Inkplate library and set library to work in monochorme mode
+#include "Inkplate.h" //Include Inkplate library to the sketch
+Inkplate display;     // Create object on Inkplate library and set library to work in monochorme mode
 
 #define DELAY_MS 5000
 
@@ -32,31 +32,33 @@ void setup()
     display.display(); // Clear everything that has previously been on a screen
     display.setCursor(10, 10);
     display.setTextSize(2);
-    display.drawTextWithShadow(0, 30, "Welcome to", INKPLATE2_RED, INKPLATE2_BLACK); //Draw text with shadow
-    display.drawTextWithShadow(0, 50, "Inkplate 2!", INKPLATE2_RED, INKPLATE2_BLACK); //Draw text with shadow
-    display.display(); // Write hello message
-    delay(5000);       // Wait a little bit
+    display.drawTextWithShadow(0, 30, "Welcome to", INKPLATE2_RED, INKPLATE2_BLACK);  // Draw text with shadow
+    display.drawTextWithShadow(0, 50, "Inkplate 2!", INKPLATE2_RED, INKPLATE2_BLACK); // Draw text with shadow
+    display.display();                                                                // Write hello message
+    delay(5000);                                                                      // Wait a little bit
 
     // Example will demostrate funcionality one by one. You always first set everything in the frame buffer and
     // afterwards you show it on the screen using display.display().
 
     // Let's start by drawing a pixel at x = 100 and y = 50 location
     display.clearDisplay(); // Clear everytning that is inside frame buffer in ESP32
-    displayCurrentAction(
-        "Drawing two pixels in different colors"); // Function which writes small text at bottom left indicating what's currently done
+    displayCurrentAction("Drawing two pixels in different colors"); // Function which writes small text at bottom left
+                                                                    // indicating what's currently done
     // NOTE: you do not need displayCurrentAction function to use Inkplate!
-    display.drawPixel(100, 50, INKPLATE2_BLACK); // Draw one black pixel at X = 100, Y = 50 position in INKPLATE2_BLACK color (must be black
-    // since Inkplate is in BW mode)
-    display.drawPixel(50, 100, INKPLATE2_RED); // Draw one black pixel at X = 100, Y = 50 position in INKPLATE2_BLACK color (must be black
-    // since Inkplate is in BW mode)
+    display.drawPixel(100, 50,
+                      INKPLATE2_BLACK); // Draw one black pixel at X = 100, Y = 50 position in INKPLATE2_BLACK color
+
+    display.drawPixel(50, 100,
+                      INKPLATE2_RED); // Draw one black pixel at X = 100, Y = 50 position in INKPLATE2_BLACK color
+
     display.display(); // Send image to display. You need to call this one each time you want to transfer frame buffer
     // to the screen.
-    delay(DELAY_MS);   // Wait a little bit
+    delay(DELAY_MS); // Wait a little bit
 
     // Now, let's draw some random pixels!
     display.clearDisplay(); // Clear everything that is inside frame buffer in ESP32
     for (int i = 0; i < 300; i++)
-    {   // Write 600 black pixels at random locations
+    { // Write 300 black pixels at random locations
         display.drawPixel(random(0, 211), random(0, 80), random(1, 3));
     }
     displayCurrentAction("Drawing 300 random pixels");
@@ -65,10 +67,11 @@ void setup()
 
     // Draw two diagonal lines accros screen
     display.clearDisplay();
-    display.drawLine(
-        0, 0, 211, 80,
-        INKPLATE2_BLACK); // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already familiar
-    display.drawLine(211, 0, 0, 80, INKPLATE2_BLACK); // with those. Arguments are: start X, start Y, ending X, ending Y, color.
+    display.drawLine(0, 0, 211, 80,
+                     INKPLATE2_BLACK); // All of those drawing fuctions originate from Adafruit GFX library, so maybe
+                                       // you are already familiar
+    display.drawLine(211, 0, 0, 80,
+                     INKPLATE2_BLACK); // with those. Arguments are: start X, start Y, ending X, ending Y, color.
     displayCurrentAction("Drawing two diagonal lines");
     display.display();
     delay(DELAY_MS);
@@ -90,7 +93,7 @@ void setup()
         display.drawThickLine(random(0, 211), random(0, 80), random(0, 211), random(0, 80), INKPLATE2_BLACK,
                               (float)random(1, 20));
     }
-    displayCurrentAction("Drawing 20 random lines");
+    displayCurrentAction("Drawing 20 thick lines");
     display.display();
     delay(DELAY_MS);
 
@@ -108,7 +111,7 @@ void setup()
     display.display();
     delay(DELAY_MS);
 
-    // Now, let' make a grid using only horizontal and vertical lines
+    // Now, let's make a grid using only horizontal and vertical lines
     display.clearDisplay();
     for (int i = 0; i < 212; i += 8)
     {
@@ -133,7 +136,7 @@ void setup()
     display.clearDisplay();
     for (int i = 0; i < 20; i++)
     {
-        display.drawRect(random(0, 211), random(0, 60), 10, 15, random(1, 3));
+        display.drawRect(random(0, 211), random(0, 40), 10, 15, random(1, 3));
     }
     displayCurrentAction("Drawing many rectangles");
     display.display();
@@ -150,41 +153,41 @@ void setup()
     display.clearDisplay();
     for (int i = 0; i < 20; i++)
     {
-        display.fillRect(random(0, 211), random(0, 60), 30, 20, random(1, 3));
+        display.fillRect(random(0, 211), random(0, 40), 30, 20, random(1, 3));
     }
     displayCurrentAction("Drawing many filled rectangles randomly");
     display.display();
     delay(DELAY_MS);
 
-    // Draw circle at center of a screen with radius of 35 pixels
+    // Draw circle at center of a screen with radius of 20 pixels
     display.clearDisplay();
-    display.drawCircle(80, 50, 35, random(1, 3)); // Arguments are: start X, start Y, radius, color
+    display.drawCircle(80, 50, 20, random(1, 3)); // Arguments are: start X, start Y, radius, color
     displayCurrentAction("Drawing a circle");
     display.display();
     delay(DELAY_MS);
 
-    // Draw some circles at random location with radius of 25 pixels
+    // Draw some circles at random location with radius of 20 pixels
     display.clearDisplay();
     for (int i = 0; i < 15; i++)
     {
-        display.drawCircle(random(0, 211), random(0, 60), 20, random(1, 3));
+        display.drawCircle(random(0, 211), random(0, 40), 20, random(1, 3));
     }
     displayCurrentAction("Drawing many circles randomly");
     display.display();
     delay(DELAY_MS);
 
-    // Draw black filled circle at center of a screen with radius of 35 pixels
+    // Draw black filled circle at center of a screen with radius of 20 pixels
     display.clearDisplay();
-    display.fillCircle(80, 40, 35, random(1, 3)); // Arguments are: start X, start Y, radius, color
+    display.fillCircle(80, 40, 20, random(1, 3)); // Arguments are: start X, start Y, radius, color
     displayCurrentAction("Drawing black-filled circle");
     display.display();
     delay(DELAY_MS);
 
-    // Draw some black filled circles at random location with radius of 15 pixels
+    // Draw some black filled circles at random location with radius of 10 pixels
     display.clearDisplay();
     for (int i = 0; i < 40; i++)
     {
-        display.fillCircle(random(0, 211), random(0, 65), 15, random(1, 3));
+        display.fillCircle(random(0, 211), random(0, 40), 10, random(1, 3));
     }
     displayCurrentAction("Drawing many filled circles randomly");
     display.display(); // To show stuff on screen, you always need to call display.display();
@@ -202,7 +205,7 @@ void setup()
     display.clearDisplay();
     for (int i = 0; i < 20; i++)
     {
-        display.drawRoundRect(random(0, 211), random(0, 60), 30, 20, 5, random(1, 3));
+        display.drawRoundRect(random(0, 211), random(0, 40), 30, 20, 5, random(1, 3));
     }
     displayCurrentAction("Drawing many rounded edges rectangles");
     display.display();
@@ -220,7 +223,7 @@ void setup()
     display.clearDisplay();
     for (int i = 0; i < 20; i++)
     {
-        display.fillRoundRect(random(0, 211), random(0, 80), 15, 15, 3, random(1, 3));
+        display.fillRoundRect(random(0, 211), random(0, 60), 15, 15, 3, random(1, 3));
     }
     displayCurrentAction("Random rounded edge filled rectangles");
     display.display();
@@ -240,7 +243,7 @@ void setup()
 
     // Draws an elipse with x radius, y radius, center x, center y and color
     display.clearDisplay();
-    display.drawElipse(50, 50, 40, 30, random(1, 3));
+    display.drawElipse(50, 15, 40, 30, random(1, 3));
     displayCurrentAction("Drawing an elipse");
     display.display();
 
@@ -248,7 +251,7 @@ void setup()
 
     // Fills an elipse with x radius, y radius, center x, center y and color
     display.clearDisplay();
-    display.fillElipse(50, 50, 40, 30, random(1, 3));
+    display.fillElipse(50, 15, 40, 30, random(1, 3));
     displayCurrentAction("Drawing a filled elipse");
     display.display();
 
@@ -310,7 +313,6 @@ void setup()
 
 void loop()
 {
-
 }
 
 // Small function that will write on the screen what function is currently in demonstration.

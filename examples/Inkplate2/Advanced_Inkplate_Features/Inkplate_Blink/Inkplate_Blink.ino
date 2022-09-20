@@ -1,6 +1,6 @@
 /*
-    Inkplate_Blink example for e-radionica.com Inkplate 2
-    For this example you will need USB cable, Inkplate 2, resistor
+    Inkplate_Blink example for soldered.com Inkplate 2
+    For this example you will need USB cable, Inkplate 2, 330Ohm resistor
     and one LED (and some wires and breadboard to connect it).
     Select "Inkplate 2(ESP32)" from Tools -> Board menu.
     Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
@@ -12,7 +12,7 @@
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-    10 May 2022 by e-radionica.com
+    10 May 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -22,6 +22,9 @@
 
 #include "Inkplate.h"
 #include "Inter6pt7b.h"
+
+// LED is connected to ESP32 GPIO 14
+#define PIN_LED 14
 
 // Initialize Inkplate object
 Inkplate display;
@@ -36,24 +39,24 @@ void setup()
 
     display.setFont(&Inter6pt7b);
 
-    display.setTextSize(1);      // Set text size
-    display.setCursor(10, 20);     // Set cursor position
+    display.setTextSize(1);    // Set text size
+    display.setCursor(10, 20); // Set cursor position
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
     display.println("Blink example");
-    display.setCursor(10, 35);     // Set cursor position
-    display.println("Connect LED to IO14 and LED will blink once every two seconds.");
+    display.setCursor(10, 35); // Set cursor position
+    display.println("Connect LED to ESP32 GPIO14 and LED will blink once every two seconds.");
 
     // Display to screen
     display.display();
 
-    // Set pin 14 to be output pin
-    pinMode(14, OUTPUT);
+    // Set LED GPIO to be output pin
+    pinMode(PIN_LED, OUTPUT);
 }
 
 void loop()
 {
-    digitalWrite(14, HIGH); // Set pin 14 to HIGH state
-    delay(1000); // Wait a bit
-    digitalWrite(14, LOW); // Set pin 14 to LOW state
-    delay(1000); // Wait a bit
+    digitalWrite(PIN_LED, HIGH); // Turn on LED
+    delay(1000);                 // Wait a bit
+    digitalWrite(PIN_LED, LOW);  // Turn off LED
+    delay(1000);                 // Wait a bit
 }

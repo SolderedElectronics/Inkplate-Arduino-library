@@ -1,6 +1,6 @@
 /*
-    Campaing tracker example for e-radionica.com Inkplate 2
-    For this example you will need only USB cable and Inkplate 2.
+    Campaing tracker example for Soldered Inkplate 2
+    For this example you will need only USB cable, Inkplate 2 and a WiFi with stable Internet connection.
     Select "Inkplate 2(ESP32)" from Tools -> Board menu.
     Don't have "Inkplate 2 (ESP32)" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -21,8 +21,8 @@
 
 Inkplate display;
 
-uint32_t n;
-char *buf;
+char *buf;  // Buffer in the PSRAM for data received from the Internet.
+uint32_t n; // Counter for the buffer array.
 
 String textInTag(const char *tag, const char *tagEnd, int dt = 1);
 
