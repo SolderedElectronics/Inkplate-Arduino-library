@@ -31,8 +31,8 @@ Inkplate display(INKPLATE_1BIT);
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "e-radionica.com";
-char pass[] = "croduino";
+char ssid[] = "";
+char pass[] = "";
 
 // OPTIONAL:
 // change to a different currency

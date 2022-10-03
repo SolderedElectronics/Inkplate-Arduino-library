@@ -39,21 +39,11 @@ void setup()
     Serial.begin(115200);
     display.begin();
 
-    if (refreshes == 0)
+    Serial.print("Connecting to wifi");
+    while (!display.joinAP("", ""))
     {
-        // Welcome screen
-        display.setCursor(70, 270);
-        display.setTextSize(2);
-        display.print(F("Welcome to Inkplate Crowdsupply tracker example!"));
-        display.display();
-
-        display.clearDisplay();
-        delay(5000);
-    }
-
-    while (!display.joinAP("e-radionica.com", "croduino"))
-    {
-        Serial.println("Connecting to wifi");
+        Serial.print('.');
+        delay(1000);
     }
 
     buf = (char *)ps_malloc(100000);

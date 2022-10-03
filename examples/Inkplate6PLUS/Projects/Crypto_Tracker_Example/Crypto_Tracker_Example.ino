@@ -137,27 +137,15 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    // Welcome screen
-    if (refreshes == 0)
-    {
-        display.setCursor(90, 240);
-        display.setTextSize(2);
-        display.println(F("Welcome to Inkplate 6PLUS cryptocurrency tracker example!"));
-        display.setCursor(90, 280);
-        display.println(F("Connecting to WiFi..."));
-        display.display();
-        display.clearDisplay();
-        delay(1000);
-    }
-
     // Do a new network request every fullRefresh times, defined above
     if (refreshes % fullRefresh == 0)
     {
         // Our begin function
         network.begin();
+        Serial.print("Retrying retriving data");
         while (!network.getData(data))
         {
-            Serial.println("Retrying retriving data!");
+            Serial.print('.');
             delay(1000);
         }
         // Our main drawing function

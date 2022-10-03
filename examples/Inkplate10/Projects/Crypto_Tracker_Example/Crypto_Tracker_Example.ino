@@ -131,27 +131,15 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    if (refreshes == 0)
-    {
-        // Welcome screen
-        display.setCursor(70, 230);
-        display.setTextSize(2);
-        display.println(F("Welcome to Inkplate 10 cryptocurrency tracker example!"));
-        display.setCursor(70, 250);
-        display.println(F("Connecting to WiFi..."));
-        display.display();
-        display.clearDisplay();
-        delay(1000);
-    }
-
     if (refreshes % fullRefresh == 0)
     {
         // Our begin function
         network.begin();
 
+        Serial.print("Retrying retriving data");
         while (!network.getData(data))
         {
-            Serial.println("Retrying retriving data!");
+            Serial.print('.');
             delay(1000);
         }
 
@@ -165,7 +153,6 @@ void setup()
     else
     {
         display.setDisplayMode(INKPLATE_1BIT);
-        Serial.println("heree");
         // Reset screen where date is drawn
         int16_t x1, y1;
         uint16_t w1, h1;

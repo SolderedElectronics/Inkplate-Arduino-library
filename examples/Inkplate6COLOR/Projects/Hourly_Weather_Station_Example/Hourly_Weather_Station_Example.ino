@@ -35,8 +35,8 @@ char lon[] = "45.5510548";
 char lat[] = "18.5947808";
 
 // Change to your wifi ssid and password
-char ssid[] = "e-radionica.com";
-char pass[] = "croduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
@@ -85,15 +85,15 @@ const uint8_t *s_logos[18] = {
 };
 
 // Variables for storing temperature
-char temps[4][8] = {
-    "0F",
-    "0F",
-    "0F",
-    "0F",
+RTC_DATA_ATTR char temps[4][8] = {
+    "-F",
+    "-F",
+    "-F",
+    "-F",
 };
 
 // Variables for storing hour strings
-char hours[4][8] = {
+RTC_DATA_ATTR char hours[4][8] = {
     "",
     "",
     "",
@@ -101,18 +101,18 @@ char hours[4][8] = {
 };
 
 // Variables for storing current time and weather info
-char currentTemp[16] = "0F";
-char currentWind[16] = "0m/s";
+RTC_DATA_ATTR char currentTemp[16] = "-F";
+RTC_DATA_ATTR char currentWind[16] = "-m/s";
 
-char currentTime[16] = "9:41";
+RTC_DATA_ATTR char currentTime[16] = "--:--";
 
-char currentWeather[32] = "-";
-char currentWeatherAbbr[8] = "01d";
+RTC_DATA_ATTR char currentWeather[32] = "-";
+RTC_DATA_ATTR char currentWeatherAbbr[8] = "01d";
 
-char abbr1[16];
-char abbr2[16];
-char abbr3[16];
-char abbr4[16];
+RTC_DATA_ATTR char abbr1[16];
+RTC_DATA_ATTR char abbr2[16];
+RTC_DATA_ATTR char abbr3[16];
+RTC_DATA_ATTR char abbr4[16];
 
 // functions defined below
 void drawWeather();
@@ -142,11 +142,12 @@ void loop()
     // Get all relevant data, see Network.cpp for info
     network.getTime(currentTime);
 
+    Serial.print("Retrying fetching data");
     while (!network.getData(city, temps[0], temps[1], temps[2], temps[3], currentTemp, currentWind, currentTime,
                             currentWeather, currentWeatherAbbr, abbr1, abbr2, abbr3, abbr4))
     {
-        Serial.println("Retrying fetching data!");
-        delay(5000);
+        Serial.print('.');
+        delay(500);
     }
     network.getHours(hours[0], hours[1], hours[2], hours[3]);
 

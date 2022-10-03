@@ -84,35 +84,41 @@ const uint8_t *s_logos[18] = {
     icon_s_01n, icon_s_02n, icon_s_03n, icon_s_04n, icon_s_09n, icon_s_10n, icon_s_11n, icon_s_13n, icon_s_50n,
 };
 
+// Variable for counting partial refreshes
+RTC_DATA_ATTR unsigned refreshes = 0;
+
+// Constant to determine when to full update
+const int fullRefresh = 5;
+
 // Variables for storing temperature
-char temps[4][8] = {
-    "0F",
-    "0F",
-    "0F",
-    "0F",
+RTC_DATA_ATTR char temps[4][8] = {
+    "-F",
+    "-F",
+    "-F",
+    "-F",
 };
 
 // Variables for storing hour strings
-uint8_t hours = 0;
+RTC_DATA_ATTR uint8_t hours = 0;
 // Variable for counting partial refreshes
-long refreshes = 0;
+RTC_DATA_ATTR long refreshes = 0;
 
 // Constant to determine when to full update
 const int fullRefresh = 10;
 
 // Variables for storing current time and weather info
-char currentTemp[16] = "0F";
-char currentWind[16] = "0m/s";
+RTC_DATA_ATTR char currentTemp[16] = "-F";
+RTC_DATA_ATTR char currentWind[16] = "-m/s";
 
-char currentTime[16] = "9:41";
+RTC_DATA_ATTR char currentTime[16] = "--:--";
 
-char currentWeather[32] = "-";
-char currentWeatherAbbr[8] = "01d";
+RTC_DATA_ATTR char currentWeather[32] = "-";
+RTC_DATA_ATTR char currentWeatherAbbr[8] = "01d";
 
-char abbr1[16];
-char abbr2[16];
-char abbr3[16];
-char abbr4[16];
+RTC_DATA_ATTR char abbr1[16];
+RTC_DATA_ATTR char abbr2[16];
+RTC_DATA_ATTR char abbr3[16];
+RTC_DATA_ATTR char abbr4[16];
 
 // functions defined below
 void drawWeather();
@@ -127,34 +133,19 @@ void setup()
     Serial.begin(115200);
     display.begin();
 
-    // Initial cleaning of buffer and physical screen
-    display.clearDisplay();
-    display.display();
-
     // Calling our begin from network.h file
     network.begin(city);
-
-    // Welcome screen
-    display.setCursor(50, 290);
-    display.setTextSize(3);
-    display.print(F("Welcome to Inkplate 6 weather example!"));
-    display.display();
-
-    // Wait a bit before proceeding
-    delay(5000);
-
-    // Clear display
-    display.clearDisplay();
 
     // Get all relevant data, see Network.cpp for info
     network.getTime(currentTime);
     if (refreshes % fullRefresh == 0)
     {
+        Serial.print("Retrying fetching data");
         while (!network.getData(city, temps[0], temps[1], temps[2], temps[3], currentTemp, currentWind, currentTime,
                                 currentWeather, currentWeatherAbbr, abbr1, abbr2, abbr3, abbr4, &hours))
         {
-            Serial.println("Retrying fetching data!");
-            delay(5000);
+            Serial.print('.');
+            delay(500);
         }
     }
 

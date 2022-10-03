@@ -45,9 +45,11 @@ void setup()
     display.begin();
 
     // Connect to WiFi
-    while (!display.joinAP("e-radionica.com", "croduino"))
+    Serial.print("Connecting to wifi");
+    while (!display.joinAP("", ""))
     {
-        Serial.println("Connecting to wifi");
+        Serial.print('.');
+        delay(1000);
     }
 
     // Allocate buffer to download Crowdsupply webpage

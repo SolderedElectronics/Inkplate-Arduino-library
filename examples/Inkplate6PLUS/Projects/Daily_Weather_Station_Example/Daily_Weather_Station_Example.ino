@@ -83,32 +83,38 @@ const uint8_t *logos[18] = {
 const uint8_t *s_logos[18] = {
     icon_s_01d, icon_s_02d, icon_s_03d, icon_s_04d, icon_s_09d, icon_s_10d, icon_s_11d, icon_s_13d, icon_s_50d,
     icon_s_01n, icon_s_02n, icon_s_03n, icon_s_04n, icon_s_09n, icon_s_10n, icon_s_11n, icon_s_13n, icon_s_50n,
-};
+};3
+
+// Variable for counting partial refreshes
+RTC_DATA_ATTR unsigned refreshes = 0;
+
+// Constant to determine when to full update
+const int fullRefresh = 5;
 
 // Variables for storing temperature
-char temps[4][8] = {
-    "0F",
-    "0F",
-    "0F",
-    "0F",
+RTC_DATA_ATTR char temps[4][8] = {
+    "-F",
+    "-F",
+    "-F",
+    "-F",
 };
 
 // Variables for storing hour strings
-uint8_t hours = 0;
+RTC_DATA_ATTR uint8_t hours = 0;
 
 // Variables for storing current time and weather info
-char currentTemp[16] = "0F";
-char currentWind[16] = "0m/s";
+RTC_DATA_ATTR char currentTemp[16] = "-F";
+RTC_DATA_ATTR char currentWind[16] = "-m/s";
 
-char currentTime[16] = "9:41";
+RTC_DATA_ATTR char currentTime[16] = "--:--";
 
-char currentWeather[32] = "-";
-char currentWeatherAbbr[8] = "01d";
+RTC_DATA_ATTR char currentWeather[32] = "-";
+RTC_DATA_ATTR char currentWeatherAbbr[8] = "01d";
 
-char abbr1[16];
-char abbr2[16];
-char abbr3[16];
-char abbr4[16];
+RTC_DATA_ATTR char abbr1[16];
+RTC_DATA_ATTR char abbr2[16];
+RTC_DATA_ATTR char abbr3[16];
+RTC_DATA_ATTR char abbr4[16];
 
 void drawWeather();
 void drawTime();
@@ -121,16 +127,6 @@ void setup()
     // Begin serial and display
     Serial.begin(115200);
     display.begin();
-
-    // Welcome screen
-    display.setCursor(50, 290);
-    display.setTextSize(3);
-    display.print(F("Welcome to Inkplate 6PLUS weather example!"));
-    display.display();
-
-    display.clearDisplay();
-    // Wait a bit before proceeding
-    delay(5000);
 
     network.begin(city);
 
@@ -148,6 +144,8 @@ void setup()
     drawCity();
 
     display.display();
+
+    ++refreshes;
 
     // Go to sleep
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);

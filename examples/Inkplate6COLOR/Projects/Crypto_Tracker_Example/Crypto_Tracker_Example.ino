@@ -143,9 +143,10 @@ void setup()
 void loop()
 {
     // Do a new network request every fullRefresh times, defined above
+    Serial.print("Retrying retriving data");
     while (!network.getData(data))
     {
-        Serial.println("Retrying retriving data!");
+        Serial.print('.');
         delay(1000);
     }
 

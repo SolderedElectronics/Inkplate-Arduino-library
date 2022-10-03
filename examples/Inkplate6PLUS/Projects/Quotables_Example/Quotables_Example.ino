@@ -80,8 +80,6 @@ void setup()
 
     while (!network.getData(quote, author))
     {
-        //display.println("Retrying retriving data!");
-        //display.partialUpdate(true);
         delay(1000);
     }
 

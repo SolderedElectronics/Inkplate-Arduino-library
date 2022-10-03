@@ -68,19 +68,6 @@ void setup()
     display.begin();
     display.setTextWrap(false);
 
-    if (refreshes == 0)
-    {
-        // Welcome screen
-        display.setCursor(70, 230);
-        display.setTextSize(1);
-        display.println(F("Welcome to Inkplate 6PLUS News API Example!"));
-        display.setCursor(70, 250);
-        display.println(F("Connecting to WiFi..."));
-        display.display();
-        display.clearDisplay();
-        delay(1000);
-    }
-
     // Our begin function
     network.begin();
 

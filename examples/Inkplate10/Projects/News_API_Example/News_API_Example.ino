@@ -30,9 +30,9 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
-char api_key_news[] = "484db28b2ac34714bf4b7c6255237d06"; //You can obtain one here: https://newsapi.org/
+char ssid[] = "";
+char pass[] = "";
+char api_key_news[] = ""; //You can obtain one here: https://newsapi.org/
 
 //----------------------------------
 
@@ -67,19 +67,6 @@ void setup()
     // Initial display settings
     display.begin();
     display.setTextWrap(false);
-
-    if (refreshes == 0)
-    {
-        // Welcome screen
-        display.setCursor(70, 230);
-        display.setTextSize(1);
-        display.println(F("Welcome to Inkplate 10 News API Example!"));
-        display.setCursor(70, 250);
-        display.println(F("Connecting to WiFi..."));
-        display.display();
-        display.clearDisplay();
-        delay(1000);
-    }
 
     // Our begin function
     network.begin();

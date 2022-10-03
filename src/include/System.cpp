@@ -94,6 +94,8 @@ uint8_t System::readTouchpad(uint8_t _pad)
     return digitalReadInternal(IO_INT_ADDR, ioRegsInt, _pad);
 }
 
+#endif
+
 /**
  * @brief       readBattery reads voltage of the battery
  *
@@ -145,8 +147,6 @@ double System::readBattery()
     // scale (Analog signal is attenuated by 11dB before ESP32 ADC input)
     return (double(adc) / 4095 * 1.1 * 3.548133892 * 2);
 }
-
-#endif
 
 #ifndef ARDUINO_INKPLATE2
 

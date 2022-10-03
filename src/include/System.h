@@ -110,14 +110,11 @@ class System : public Esp,
 #if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATECOLOR)
 
     int8_t readTemperature();
-
     uint8_t readTouchpad(uint8_t _pad);
-    double readBattery();
-
 #endif
 
 #ifndef ARDUINO_INKPLATE2
-
+    double readBattery();
     void setSdCardOk(int16_t s);
     int16_t getSdCardOk();
     int16_t sdCardInit();

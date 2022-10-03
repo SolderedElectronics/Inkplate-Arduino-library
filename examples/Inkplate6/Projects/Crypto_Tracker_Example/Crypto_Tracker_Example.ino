@@ -133,25 +133,13 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    if (refreshes == 0)
-    {
-        // Welcome screen
-        display.setCursor(70, 230);
-        display.setTextSize(2);
-        display.println(F("Welcome to Inkplate 6 cryptocurrency tracker example!"));
-        display.setCursor(70, 250);
-        display.println(F("Connecting to WiFi..."));
-        display.display();
-        display.clearDisplay();
-        delay(1000);
-    }
-
     // Our begin function
     network.begin();
 
+    Serial.print("Retrying retriving data");
     while (!network.getData(data))
     {
-        Serial.println("Retrying retriving data!");
+        Serial.print('.');
         delay(1000);
     }
 

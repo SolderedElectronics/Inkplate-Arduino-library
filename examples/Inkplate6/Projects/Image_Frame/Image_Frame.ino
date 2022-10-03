@@ -21,8 +21,8 @@
 
 Inkplate display(INKPLATE_3BIT);
 
-const char ssid[] = "e-radionica.com"; // Your WiFi SSID
-const char *password = "croduino";     // Your WiFi password
+const char ssid[] = ""; // Your WiFi SSID
+const char *password = "";     // Your WiFi password
 
 void setup()
 {

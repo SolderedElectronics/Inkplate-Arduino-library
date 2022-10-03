@@ -84,15 +84,15 @@ const uint8_t *s_logos[18] = {
 };
 
 // Variables for storing temperature
-char temps[4][8] = {
-    "0F",
-    "0F",
-    "0F",
-    "0F",
+RTC_DATA_ATTR char temps[4][8] = {
+    "-F",
+    "-F",
+    "-F",
+    "-F",
 };
 
 // Variables for storing hour strings
-char hours[4][8] = {
+RTC_DATA_ATTR char hours[4][8] = {
     "",
     "",
     "",
@@ -106,18 +106,18 @@ RTC_DATA_ATTR long refreshes = 0;
 const int fullRefresh = 10;
 
 // Variables for storing current time and weather info
-char currentTemp[16] = "0F";
-char currentWind[16] = "0m/s";
+RTC_DATA_ATTR char currentTemp[16] = "-F";
+RTC_DATA_ATTR char currentWind[16] = "-m/s";
 
-char currentTime[16] = "9:41";
+RTC_DATA_ATTR char currentTime[16] = "--:--";
 
-char currentWeather[32] = "-";
-char currentWeatherAbbr[8] = "01d";
+RTC_DATA_ATTR char currentWeather[32] = "-";
+RTC_DATA_ATTR char currentWeatherAbbr[8] = "01d";
 
-char abbr1[16];
-char abbr2[16];
-char abbr3[16];
-char abbr4[16];
+RTC_DATA_ATTR char abbr1[16];
+RTC_DATA_ATTR char abbr2[16];
+RTC_DATA_ATTR char abbr3[16];
+RTC_DATA_ATTR char abbr4[16];
 
 // functions defined below
 void drawWeather();

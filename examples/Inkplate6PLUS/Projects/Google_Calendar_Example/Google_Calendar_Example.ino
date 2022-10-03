@@ -106,24 +106,14 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    if (refreshes == 0)
-    {
-        // Welcome screen
-        display.setCursor(5, 230);
-        display.setTextSize(2);
-        display.println(F("Welcome to Inkplate 6PLUS Google Calendar example!"));
-        display.setCursor(5, 250);
-        display.println(F("Connecting to WiFi..."));
-        display.display();
-    }
-
     delay(5000);
     network.begin();
 
     // Keep trying to get data if it fails the first time
+    Serial.print("Failed getting data, retrying");
     while (!network.getData(data))
     {
-        Serial.println("Failed getting data, retrying");
+        Serial.print('.');
         delay(1000);
     }
 

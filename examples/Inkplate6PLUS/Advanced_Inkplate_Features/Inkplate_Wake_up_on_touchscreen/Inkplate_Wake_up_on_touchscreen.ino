@@ -44,7 +44,7 @@ void setup()
     display.setIntOutput(1, false, false, HIGH);
     display.setIntPin(PAD1, RISING, IO_INT_ADDR);
     display.setIntPin(PAD2, RISING, IO_INT_ADDR);
-    display.setIntPin(PAD3, RISING, IO_INT_ADDR;
+    display.setIntPin(PAD3, RISING, IO_INT_ADDR);
 #elif defined(ARDUINO_INKPLATE6PLUSV2)
     display.setIntPin(PAD1, IO_INT_ADDR);
     display.setIntPin(PAD2, IO_INT_ADDR);

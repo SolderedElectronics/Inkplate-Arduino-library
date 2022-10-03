@@ -72,9 +72,10 @@ void setup()
     // Our begin function
     network.begin();
 
+    Serial.print("Retrying retriving data");
     while (!network.getData(quote, author))
     {
-        Serial.println("Retrying retriving data!");
+        Serial.print('.');
         delay(1000);
     }
 

@@ -12,9 +12,17 @@ jobs:
             additional-sketch-paths: |
               - examples/Inkplate6
           - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate6
+            additional-sketch-paths: |
+              - examples/Inkplate6V2
+          - board:
               fqbn: Inkplate_Boards:esp32:Inkplate10
             additional-sketch-paths: |
               - examples/Inkplate10
+          - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate10
+            additional-sketch-paths: |
+              - examples/Inkplate10V2
           - board:
               fqbn: Inkplate_Boards:esp32:Inkplate5
             additional-sketch-paths: |
@@ -23,6 +31,10 @@ jobs:
               fqbn: Inkplate_Boards:esp32:Inkplate6plus
             additional-sketch-paths: |
               - examples/Inkplate6PLUS
+          - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate6plus
+            additional-sketch-paths: |
+              - examples/Inkplate6PLUSV2
           - board:
               fqbn: Inkplate_Boards:esp32:Inkplate6COLOR
             additional-sketch-paths: |
