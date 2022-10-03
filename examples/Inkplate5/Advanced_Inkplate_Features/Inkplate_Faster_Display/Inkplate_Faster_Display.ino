@@ -1,5 +1,5 @@
 /*
-   Inkplate_Faster_Display example for e-radionica.com Inkplate 6
+   Inkplate_Faster_Display example for Soldered Inkplate 6
    For this example you will need a micro USB cable and an Inkplate 6
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
@@ -10,7 +10,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   22 September 2021 by e-radionica.com
+   22 September 2021 by Soldered
 */
 
 #include "Inkplate.h"

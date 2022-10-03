@@ -1,5 +1,5 @@
 /*
-   Inkplate_RTC_Basic_Example example for e-radionica Inkplate 6COLOR
+   Inkplate_RTC_Basic_Example example for Soldered Inkplate 6COLOR
    For this example you will need USB cable and Inkplate 6COLOR.
    Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
@@ -10,7 +10,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   19 May 2022 by Soldered.com
+   19 May 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

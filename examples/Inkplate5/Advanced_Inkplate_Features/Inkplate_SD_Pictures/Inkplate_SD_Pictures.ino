@@ -1,5 +1,5 @@
 /*
-   Inkplate_SD_BMP example for e-radionica Inkplate6
+   Inkplate_SD_BMP example for Soldered Inkplate6
    For this example you will need a micro USB cable, Inkplate6 and a SD card loaded with
    image1.bmp and image2.bmp file that can be found inside folder of this example.
    Select "Inkplate 5(ESP32)" from Tools -> Board menu.
@@ -18,7 +18,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   15 July 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

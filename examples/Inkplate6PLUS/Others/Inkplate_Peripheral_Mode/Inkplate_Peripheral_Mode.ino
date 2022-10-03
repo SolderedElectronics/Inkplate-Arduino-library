@@ -1,5 +1,5 @@
 /*
-   Inkplate_Peripheral_Mode sketch for e-radionica.com Inkplate 6PLUS
+   Inkplate_Peripheral_Mode sketch for Soldered Inkplate 6PLUS
    Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -23,12 +23,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   15 July 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE6PLUS
-    #error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
+#if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
+#error "Wrong board selection for this example, please select Inkplate 6PLUS or Inkplate 6PLUS V2 in the boards menu."
 #endif
 
 #include <Inkplate.h>
@@ -37,12 +37,6 @@ Inkplate display(INKPLATE_1BIT);
 #define BUFFER_SIZE 1000
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
-
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
 
 void setup()
 {

@@ -1,5 +1,5 @@
 /*
-   Inkplate_easyC example for e-radionica.com Inkplate 10
+   Inkplate_easyC example for Soldered Inkplate 10
    For this example you will need a micro USB cable, Inkplate 10,
    BME680 sensor with easyC connector on it: https://e-radionica.com/en/bme680-breakout-made-by-e-radionica.html
    and a easyC cable: https://e-radionica.com/en/easyc-cable-20cm.html
@@ -15,13 +15,14 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by e-radionica.com
+   11 February 2021 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
 #error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
 #endif
+
 #include "Adafruit_BME680.h" //Adafruit library for BME680 Sensor
 #include "Inkplate.h"        //Include Inkplate library to the sketch
 #include <Adafruit_Sensor.h> //Adafruit library for sensors
@@ -32,11 +33,6 @@ Adafruit_BME680
          //(with no arguments sent to constructor, that means we are using I2C communication for BME680 sensor)
 
 int n = 0; // Variable that keep track on how many times screen has been partially updated
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
 
 void setup()
 {
@@ -46,7 +42,7 @@ void setup()
     display.setTextSize(2); // Set text scaling to two (text will be two times bigger than normal)
 
     if (!bme.begin(0x76))
-    { // Init. BME680 library. e-radionica.com BME680 sensor board uses 0x76 I2C address for sensor
+    { // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for sensor
         display.println("Sensor init failed!");
         display.println("Check sensor wiring/connection!");
         display.partialUpdate();

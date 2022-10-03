@@ -1,5 +1,5 @@
 /*
-   Inkplate_VariPass_Graphs example for e-radionica Inkplate 6COLOR
+   Inkplate_VariPass_Graphs example for Soldered Inkplate 6COLOR
    For this example you will need a micro USB cable, Inkplate 6COLOR, and an available WiFi connection.
    Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
@@ -21,7 +21,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   23 July 2020 by e-radionica.com
+   23 July 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

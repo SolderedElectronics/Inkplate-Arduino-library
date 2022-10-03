@@ -1,5 +1,5 @@
 /*
-   Inkplate_RTC_Alarm_Deep_Sleep_Example example for e-radionica Inkplate 6
+   Inkplate_RTC_Alarm_Deep_Sleep_Example example for Soldered Inkplate 6
    For this example you will need only USB cable and Inkplate 6
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
@@ -15,11 +15,12 @@
    
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 November 2021 by e-radionica.com
+   15 November 2021 by Soldered
 */
 
-#ifndef ARDUINO_ESP32_DEV
-#error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
+#error "Wrong board selection for this example, please select Inkplate 6 or Inkplate 6 V2 in the boards menu."
 #endif
 
 #include "Inkplate.h"      // Include Inkplate library to the sketch

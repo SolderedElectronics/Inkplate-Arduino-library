@@ -27,10 +27,10 @@ void setup()
     if (EEPROM.read(EEPROMaddress) != 170)
     {
         microSDCardTest();
-        display.digitalWriteInternal(MCP23017_ADDR, ioRegsInt, 3, HIGH);
-        display.digitalWriteInternal(MCP23017_ADDR, ioRegsInt, 4, HIGH);
-        display.digitalWriteInternal(MCP23017_ADDR, ioRegsInt, 5, HIGH);
-        display.pinModeInternal(MCP23017_ADDR, ioRegsInt, 6, INPUT_PULLUP);
+        display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 3, HIGH);
+        display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 4, HIGH);
+        display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 5, HIGH);
+        display.pinModeInternal(IO_INT_ADDR, ioRegsInt, 6, INPUT_PULLUP);
         display.display();
         display.einkOn();
         delay(100);
@@ -439,7 +439,7 @@ double readVCOM()
     writeToScreen();
     writeReg(0x04, (readReg(0x04) | B10000000));
     delay(10);
-    while (display.digitalReadInternal(MCP23017_ADDR, ioRegsInt, 6))
+    while (display.digitalReadInternal(IO_INT_ADDR, ioRegsInt, 6))
     {
         delay(1);
     };
@@ -457,10 +457,10 @@ void writeVCOMToEEPROM(double v)
     int vcomL = vcom & 0xFF;
     // First, we have to power up TPS65186
     // Pull TPS65186 WAKEUP pin to High
-    display.digitalWriteInternal(MCP23017_ADDR, ioRegsInt, 3, HIGH);
+    display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 3, HIGH);
 
     // Pull TPS65186 PWR pin to High
-    display.digitalWriteInternal(MCP23017_ADDR, ioRegsInt, 4, HIGH);
+    display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 4, HIGH);
     delay(10);
 
     // Send to TPS65186 first 8 bits of VCOM
@@ -478,23 +478,23 @@ void writeVCOMToEEPROM(double v)
     do
     {
         delay(1);
-    } while (display.digitalReadInternal(MCP23017_ADDR, ioRegsInt, 6));
+    } while (display.digitalReadInternal(IO_INT_ADDR, ioRegsInt, 6));
 
     // Clear Interrupt flag by reading INT1 register
     readReg(0x07);
 
     // Now, power off whole TPS
     // Pull TPS65186 WAKEUP pin to Low
-    display.digitalWriteInternal(MCP23017_ADDR, ioRegsInt, 3, LOW);
+    display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 3, LOW);
 
     // Pull TPS65186 PWR pin to Low
-    display.digitalWriteInternal(MCP23017_ADDR, ioRegsInt, 4, LOW);
+    display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 4, LOW);
 
     // Wait a little bit...
     delay(1000);
 
     // Power up TPS again
-    display.digitalWriteInternal(MCP23017_ADDR, ioRegsInt, 3, HIGH);
+    display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 3, HIGH);
 
     delay(10);
 

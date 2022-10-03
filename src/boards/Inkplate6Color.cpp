@@ -14,7 +14,7 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     @ e-radionica.com
+ * @authors     @ Soldered
  ***************************************************/
 
 #include "../Inkplate.h"
@@ -110,7 +110,7 @@ bool Inkplate::begin(void)
     sendCommand(0x50);
     sendData(0x37);
 
-    setMCPForLowPower();
+    setIOExpanderForLowPower();
 
     _panelState = true;
     return true;
@@ -340,11 +340,11 @@ bool Inkplate::getPanelDeepSleepState()
 }
 
 /**
- * @brief       setMCPAForLowPower initiates MCP pins for low power, and puts
+ * @brief       setIOExpanderForLowPower initiates I/O Expander pins for low power, and puts
  * them in OUTPUT LOW because they are using least amount of current in deep
  * sleep that way
  */
-void Inkplate::setMCPForLowPower()
+void Inkplate::setIOExpanderForLowPower()
 {
     Wire.begin();
     memset(ioRegsInt, 0, 22);

@@ -13,17 +13,22 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     e-radionica.com
+ * @authors     Soldered
  ***************************************************/
 #ifndef __FRONTLIGHT_H__
 #define __FRONTLIGHT_H__
 
-#ifdef ARDUINO_INKPLATE6PLUS
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
 
 #include "Arduino.h"
-#include "Mcp.h"
 #include "Wire.h"
 #include "defines.h"
+
+#if defined(ARDUINO_INKPLATE6PLUS)
+#include "Mcp.h"
+#elif defined(ARDUINO_INKPLATE6PLUSV2)
+#include "Pcal.h"
+#endif
 
 /**
  * @brief       Frontlight class designed to work with inkplates that support

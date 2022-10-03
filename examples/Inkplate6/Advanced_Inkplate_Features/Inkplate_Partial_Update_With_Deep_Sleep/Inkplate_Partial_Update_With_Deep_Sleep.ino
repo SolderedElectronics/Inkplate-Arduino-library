@@ -1,5 +1,5 @@
 /*
-   Inkplate_Partial_Update_With_Deep_Sleep example for e-radionica Inkplate 6
+   Inkplate_Partial_Update_With_Deep_Sleep example for Soldered Inkplate 6
    For this example you will need only USB cable and Inkplate 6
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
@@ -17,7 +17,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   4 November 2020 by e-radionica.com
+   4 November 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

@@ -1,5 +1,5 @@
 String s =  "<head>"
-            "<title>e-radionica Inkplate e-paper display</title>"
+            "<title>Soldered Inkplate e-paper display</title>"
 
             "<style type='text/css'>"
 

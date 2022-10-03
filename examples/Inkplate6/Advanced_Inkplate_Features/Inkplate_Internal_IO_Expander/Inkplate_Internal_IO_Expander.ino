@@ -1,5 +1,5 @@
 /*
-   Inkplate_Internal_IO_Expander example for e-radionica.com Inkplate 6
+   Inkplate_Internal_IO_Expander example for Soldered Inkplate 6
    For this example you will need only a micro USB cable, Inkplate6, 330 Ohm resistor and LED diode.
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
@@ -21,7 +21,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   19 May 2022 by Soldered.com
+   19 May 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

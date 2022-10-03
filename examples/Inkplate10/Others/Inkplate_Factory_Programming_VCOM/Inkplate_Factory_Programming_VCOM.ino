@@ -1,3 +1,8 @@
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
+#error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
+#endif
+
 #include "EEPROM.h"
 #include "Inkplate.h"
 #include "image.h"
@@ -19,7 +24,7 @@ char strTemp[2001];
 const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
 
-// Internal registers of MCP
+// Internal registers of I/O Expander
 uint8_t ioRegsInt[22];
 
 // All waveforms for Inkplate 10 boards
@@ -41,12 +46,6 @@ uint8_t waveformListSize = (sizeof(waveformList) / sizeof(uint8_t *));
 struct waveformData waveformEEPROM;
 
 int currentWaveform = 0;
-
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
 
 void setup()
 {

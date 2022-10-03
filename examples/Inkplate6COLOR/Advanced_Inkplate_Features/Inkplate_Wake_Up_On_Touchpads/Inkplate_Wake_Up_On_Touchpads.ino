@@ -1,15 +1,15 @@
 /*
-   Inkplate_Wake_up_on_touchpads example for e-radionica.com Inkplate 6COLOR
+   Inkplate_Wake_up_on_touchpads example for Soldered Inkplate 6COLOR
    For this example you will need USB cable and an Inkplate 6COLOR
    Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   Here is shown how to use MCP and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.
+   Here is shown how to use I/O Expander and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   15 July 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -24,7 +24,7 @@
 // Time ESP32 will go to sleep (in seconds)
 #define TIME_TO_SLEEP 30
 
-// bitmask for GPIO_34 which is connected to MCP INTB
+// Bitmask for GPIO_34 which is connected to I/O Expander INT pin
 #define TOUCHPAD_WAKE_MASK (int64_t(1)<<GPIO_NUM_34)
 
 // Initiate Inkplate object
@@ -38,11 +38,10 @@ void setup()
     Serial.begin(115200);
     display.begin();
 
-    // Setup mcp interrupts
-    display.setIntOutput(1, false, false, HIGH);
-    display.setIntPin(PAD1, RISING);
-    display.setIntPin(PAD2, RISING);
-    display.setIntPin(PAD3, RISING);
+    // Set I/O Expander pins.
+    display.setIntPin(PAD1, IO_INT_ADDR);
+    display.setIntPin(PAD2, IO_INT_ADDR);
+    display.setIntPin(PAD3, IO_INT_ADDR);
 
     ++bootCount;
 
@@ -55,7 +54,7 @@ void setup()
     // Enable wakeup from deep sleep on gpio 36 (wake button)
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
 
-    // enable wake from MCP port expander on gpio 34
+    // Enable wake from I/0 Epander port on gpio 34
     esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
 
     // Go to sleep

@@ -1,20 +1,20 @@
 /*
-   Inkplate_Wake_up_on_touchscreen example for e-radionica.com Inkplate 6
+   Inkplate_Wake_up_on_touchscreen example for Soldered Inkplate 6
    For this example you will need USB cable and an Inkplate 6
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   Here is shown how to use MCP and ESP interrupts to wake up the MCU from deepsleep when touchscreen or wake up button
+   Here is shown how to use I/O expander and ESP interrupts to wake up the MCU from deepsleep when touchscreen or wake up button
    is pressed.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   15 July 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE6PLUS
+#if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
 #error "Wrong board selection for this example, please select Inkplate 6 in the boards menu."
 #endif
 
@@ -25,7 +25,7 @@
 // Time ESP32 will go to sleep (in seconds)
 #define TIME_TO_SLEEP 30
 
-// bitmask for GPIO_34 which is connected to MCP INTB
+// bitmask for GPIO_34 which is connected to I/O expander INT pin
 #define TOUCHPAD_WAKE_MASK (int64_t(1) << GPIO_NUM_34)
 
 // Initiate Inkplate object
@@ -34,22 +34,22 @@ Inkplate display(INKPLATE_1BIT);
 // Store int in rtc data, to remain persistent during deep sleep
 RTC_DATA_ATTR int bootCount = 0;
 
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
-
 void setup()
 {
     Serial.begin(115200);
     display.begin();
 
-    // Setup mcp interrupts
+    // Setup I/O expander interrupts
+#ifdef ARDUINO_INKPLATE6PLUS
     display.setIntOutput(1, false, false, HIGH);
-    display.setIntPin(PAD1, RISING);
-    display.setIntPin(PAD2, RISING);
-    display.setIntPin(PAD3, RISING);
+    display.setIntPin(PAD1, RISING, IO_INT_ADDR);
+    display.setIntPin(PAD2, RISING, IO_INT_ADDR);
+    display.setIntPin(PAD3, RISING, IO_INT_ADDR;
+#elif defined(ARDUINO_INKPLATE6PLUSV2)
+    display.setIntPin(PAD1, IO_INT_ADDR);
+    display.setIntPin(PAD2, IO_INT_ADDR);
+    display.setIntPin(PAD3, IO_INT_ADDR);
+#endif
 
     // Init touchscreen and power it on after init (send false as argument to put it in deep sleep right after init)
     if (display.tsInit(true))
@@ -86,7 +86,7 @@ void setup()
     // Enable wakeup from deep sleep on gpio 36 (wake button)
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
 
-    // enable wake from MCP port expander on gpio 34
+    // enable wake from I/O expander port on gpio 34
     esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
 
     // Go to sleep

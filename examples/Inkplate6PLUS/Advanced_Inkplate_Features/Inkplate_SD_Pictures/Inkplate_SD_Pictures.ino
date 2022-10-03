@@ -1,5 +1,5 @@
 /*
-   Inkplate_SD_BMP example for e-radionica Inkplate 6PLUS
+   Inkplate_SD_BMP example for Soldered Inkplate 6PLUS
    For this example you will need a micro USB cable, Inkplate 6PLUS and a SD card loaded with
    image1.bmp and image2.bmp file that can be found inside folder of this example.
    Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
@@ -18,7 +18,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by e-radionica.com
+   11 February 2021 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -30,12 +30,6 @@
 #include "SdFat.h"               //Include library for SD card
 Inkplate display(INKPLATE_3BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 SdFile file;                     // Create SdFile object used for accessing files on SD card
-
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
 
 void setup()
 {

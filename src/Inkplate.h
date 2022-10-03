@@ -14,7 +14,7 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     @ e-radionica.com
+ * @authors     @ Soldered
  ***************************************************/
 
 #ifndef __INKPLATE_H__
@@ -77,7 +77,7 @@ class Inkplate : public System, public Graphics
     void setPanelDeepSleep(bool _state);
     bool getPanelDeepSleepState();
 
-    void setMCPForLowPower();
+    void setIOExpanderForLowPower();
 #elif defined(ARDUINO_INKPLATE2)
     void clean();
 

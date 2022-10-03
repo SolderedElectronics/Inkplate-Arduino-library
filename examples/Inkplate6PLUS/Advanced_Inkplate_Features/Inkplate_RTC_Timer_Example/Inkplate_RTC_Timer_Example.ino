@@ -1,5 +1,5 @@
 /*
-   Inkplate_RTC_Timer_Example example for e-radionica Inkplate 6PLUS
+   Inkplate_RTC_Timer_Example example for Soldered Inkplate 6PLUS
    For this example you will need USB cable and Inkplate 6PLUS.
    Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
@@ -12,7 +12,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   12 November 2021 by e-radionica.com
+   12 November 2021 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -36,12 +36,6 @@ uint8_t year = 21;
 
 // Set up a 15 seconds timer
 int countdown_time = 15;
-
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
 
 void setup()
 {

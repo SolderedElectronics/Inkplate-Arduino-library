@@ -1,7 +1,7 @@
 /*
     Network.cpp
     Inkplate 6 Arduino library
-    David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ e-radionica.com
+    David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ Soldered
     September 24, 2020
     https://github.com/e-radionicacom/Inkplate-6-Arduino-library
 

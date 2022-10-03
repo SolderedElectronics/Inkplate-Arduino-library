@@ -1,5 +1,5 @@
 /*
-   Inkplate_Maze_Color_basic sketch for e-radionica.com Inkplate 6COLOR
+   Inkplate_Maze_Color_basic sketch for Soldered Inkplate 6COLOR
    Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -8,7 +8,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   8 July 2021 by e-radionica.com
+   8 July 2021 by Soldered
 */
 
 #ifndef ARDUINO_INKPLATECOLOR

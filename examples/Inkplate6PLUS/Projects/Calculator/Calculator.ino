@@ -1,10 +1,25 @@
+/*
+   Calculator.ino example for SolderedInkplate 6PLUS
+   For this example you will need USB cable and Inkplate 6PLUS (and a calculator, if you don't trust Inkplate :) ).
+   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
+   Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+
+   This example will show you how simple GUI can be created on Inkplate 6PLUS with this simple calculator example.
+   You can do simple math calculations on this calculator (like addition, subtraction, multiplication, division).
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   28 July 2020 by Soldered
+*/
+
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE6PLUS
-    #error "Wrong board selection for this example, please select Inkplate 6 plus in the boards menu."
+#if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
+#error "Wrong board selection for this example, please select Inkplate 6PLUS or Inkplate 6PLUS V2 in the boards menu."
 #endif
 
-#include "Inkplate.h"
 #include "Calculator.h"
+#include "Inkplate.h"
 
 Inkplate display(INKPLATE_1BIT);
 
@@ -15,12 +30,6 @@ double rightNumber = 0;
 char op = ' ';
 double result = 0;
 int rightNumPos = 0;
-
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
 
 void setup()
 {
@@ -45,14 +54,14 @@ void loop()
 
 void keysEvents()
 {
-    if (display.touchInArea(800, 20, 200, 80))//Refresh
+    if (display.touchInArea(800, 20, 200, 80)) // Refresh
     {
         display.clearDisplay();
         mainDraw();
         display.display();
     }
 
-    if (display.touchInArea(600, 20, 200, 80))//Clear
+    if (display.touchInArea(600, 20, 200, 80)) // Clear
     {
         text18_cursor_x = 800;
         text18_cursor_y = 260;
@@ -64,23 +73,23 @@ void keysEvents()
         display.partialUpdate();
     }
 
-    if (display.touchInArea(50, 50, 100, 50))//Clear history
+    if (display.touchInArea(50, 50, 100, 50)) // Clear history
     {
         text19_content = "";
         text19_cursor_x = 50;
         text19_cursor_y = 700;
-        
+
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
     }
 
-    if (display.touchInArea(800, 650, 100, 100) && (op != ' '))//Calculate
+    if (display.touchInArea(800, 650, 100, 100) && (op != ' ')) // Calculate
     {
         result = calculate();
-        
-        
-        if(text19_content == "")
+
+
+        if (text19_content == "")
         {
             text19_content = text18_content + " = " + result;
         }
@@ -120,8 +129,8 @@ void keysEvents()
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
-        
-        if(op == ' ')
+
+        if (op == ' ')
         {
             ++rightNumPos;
         }
@@ -134,8 +143,8 @@ void keysEvents()
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
-        
-        if(op == ' ')
+
+        if (op == ' ')
         {
             ++rightNumPos;
         }
@@ -158,8 +167,8 @@ void keysEvents()
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
-        
-        if(op == ' ')
+
+        if (op == ' ')
         {
             ++rightNumPos;
         }
@@ -173,7 +182,7 @@ void keysEvents()
         mainDraw();
         display.partialUpdate();
 
-        if(op == ' ')
+        if (op == ' ')
         {
             ++rightNumPos;
         }
@@ -187,7 +196,7 @@ void keysEvents()
         mainDraw();
         display.partialUpdate();
 
-        if(op == ' ')
+        if (op == ' ')
         {
             ++rightNumPos;
         }
@@ -210,8 +219,8 @@ void keysEvents()
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
-        
-        if(op == ' ')
+
+        if (op == ' ')
         {
             ++rightNumPos;
         }
@@ -224,8 +233,8 @@ void keysEvents()
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
-        
-        if(op == ' ')
+
+        if (op == ' ')
         {
             ++rightNumPos;
         }
@@ -238,8 +247,8 @@ void keysEvents()
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
-        
-        if(op == ' ')
+
+        if (op == ' ')
         {
             ++rightNumPos;
         }
@@ -262,8 +271,8 @@ void keysEvents()
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
-        
-        if(op == ' ')
+
+        if (op == ' ')
         {
             ++rightNumPos;
         }
@@ -276,8 +285,8 @@ void keysEvents()
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
-        
-        if(op == ' ')
+
+        if (op == ' ')
         {
             ++rightNumPos;
         }
@@ -290,8 +299,8 @@ void keysEvents()
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
-        
-        if(op == ' ')
+
+        if (op == ' ')
         {
             ++rightNumPos;
         }
@@ -306,9 +315,9 @@ float calculate()
     leftNumber = atof(&text18_content[0]);
     rightNumber = atof(&text18_content[rightNumPos]);
 
-    //Serial.println(leftNumber);
-    //Serial.println(rightNumber);
-    //Serial.println(rightNumPos);
+    // Serial.println(leftNumber);
+    // Serial.println(rightNumber);
+    // Serial.println(rightNumPos);
     rightNumPos = 0;
 
     switch (op)

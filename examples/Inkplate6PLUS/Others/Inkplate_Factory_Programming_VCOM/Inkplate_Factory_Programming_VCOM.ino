@@ -18,12 +18,6 @@ char strTemp[2001];
 const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
 
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
-
 void setup()
 {
     display.begin();
@@ -473,7 +467,7 @@ void writeVCOMToEEPROM(double v)
   int vcomH = (vcom >> 8) & 1;
   int vcomL = vcom & 0xFF;
 
-  // Set MCP23017 pin where TPS65186 INT pin is connectet to input pull up
+  // Set I/O Expander pin where TPS65186 INT pin is connectet to input pull up
   display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);
 
   // First power up TPS65186 so we can communicate with it

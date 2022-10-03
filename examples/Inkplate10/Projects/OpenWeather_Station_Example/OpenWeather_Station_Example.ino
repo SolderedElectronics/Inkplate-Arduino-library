@@ -1,5 +1,5 @@
 /*
-   Weather station example for e-radionica.com Inkplate 10
+   Weather station example for Soldered Inkplate 10
    For this example you will need only USB cable and Inkplate 10.
    Select "Inkplate 10(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
@@ -14,7 +14,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by e-radionica.com
+   11 February 2021 by Soldered
 
    Code for Moonphase and moon fonts taken from here: https://learn.adafruit.com/epaper-weather-station/arduino-setup
 */
@@ -23,6 +23,7 @@
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
 #error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
 #endif
+
 // WiFi Connection required
 #include <WiFi.h>
 
@@ -36,11 +37,11 @@
 // Change to your wifi ssid and password
 
 #include "OpenWeatherOneCall.h"
-#define HOMESSID "Soldered"
-#define HOMEPW   "dasduino"
+#define HOMESSID ""
+#define HOMEPW   ""
 
 // Openweather set up information
-#define ONECALLKEY "74bb81945168707323a7e01686bc0b14"
+#define ONECALLKEY ""
 
 float myLatitude = 45.560001; // I got this from Wikipedia
 float myLongitude = 18.675880;
@@ -228,12 +229,6 @@ void GetCurrentWeather()
         Serial.println(Output);
     }
 }
-
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
 
 void setup()
 {

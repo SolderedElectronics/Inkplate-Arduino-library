@@ -1,13 +1,13 @@
 /*
-   Inkplate_Wake_up_on_touchpads example for e-radionica.com Inkplate 6
+   Inkplate_Wake_up_on_touchpads example for Soldered Inkplate 6
    For this example you will need USB cable and an Inkplate 6
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
-   Here is shown how to use MCP and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.
+   Here is shown how to use I/O Expander and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   15 July 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -35,10 +35,17 @@ void setup()
     Serial.begin(115200);
     display.begin();
 
-    // Setup mcp interrupts
-    display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, touchPadPin, INPUT);
-    display.setIntOutput(1, false, false, HIGH);
-    display.setIntPin(touchPadPin, RISING);
+// Different I/O expander has been used on Soldered Inkplate V2 board and original Soldered Inkplate.
+#ifdef ARDUINO_INKPLATE6PLUS
+    display.setIntOutput(1, false, false, HIGH, IO_INT_ADDR);
+    display.setIntPin(PAD1, RISING, IO_INT_ADDR);
+    display.setIntPin(PAD2, RISING, IO_INT_ADDR);
+    display.setIntPin(PAD3, RISING, IO_INT_ADDR);
+#elif ARDUINO_INKPLATE6V2
+    display.setIntPin(PAD1, IO_INT_ADDR);
+    display.setIntPin(PAD2, IO_INT_ADDR);
+    display.setIntPin(PAD3, IO_INT_ADDR);
+#endif
 
     ++bootCount;
 
@@ -46,7 +53,7 @@ void setup()
     displayInfo();
 
     // Go to sleep for TIME_TO_SLEEP seconds, but also enable wake up from gpio 34
-    // Gpio 34 is where the mcp interrupt is connected, check
+    // Gpio 34 is where the I/O Expander interrupt is connected, check
     // https://github.com/e-radionicacom/Inkplate-6-hardware/blob/master/Schematics%2C%20Gerber%2C%20BOM/Inkplate6%20Schematics.pdf
     // for more detail
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);

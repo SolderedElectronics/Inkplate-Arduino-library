@@ -1,5 +1,5 @@
 /*
-   Campaing tracker example for e-radionica.com Inkplate 6
+   Campaing tracker example for Soldered Inkplate 6
    For this example you will need only USB cable and Inkplate 6.
    Select "Inkplate 6(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
@@ -10,8 +10,13 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   28 July 2020 by e-radionica.com
+   28 July 2020 by Soldered
 */
+
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
+#error "Wrong board selection for this example, please select Inkplate 6 or Inkplate 6 V2 in the boards menu."
+#endif
 
 #include "Inkplate.h"
 #include "generatedUI.h"

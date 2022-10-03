@@ -9,7 +9,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   8 July 2021 by e-radionica.com
+   8 July 2021 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

@@ -1,5 +1,5 @@
 /*
-   Inkplate_Internal_IO_Expander example for e-radionica.com Inkplate 10
+   Inkplate_Internal_IO_Expander example for Soldered Inkplate 10
    For this example you will need only a micro USB cable, Inkplate10, 330 Ohm resistor and LED diode.
    Select "Inkplate 10(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
@@ -28,6 +28,7 @@
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
 #error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
 #endif
+
 #include "Inkplate.h" //Include Inkplate library to the sketch
 
 #define LED_PIN IO_PIN_B7 // We are going to use pin GPB7 (remember! GPA0 = 0, GPA1 = 1, ..., GPA7 = 7, GPB0 = 8, GBP1 = 9, ..., GPB7 =

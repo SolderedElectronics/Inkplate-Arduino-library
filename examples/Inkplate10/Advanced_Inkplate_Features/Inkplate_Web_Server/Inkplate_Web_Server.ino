@@ -1,5 +1,5 @@
 /*
-   Inkplate_Web_Server example for e-radionica.com Inkplate 10
+   Inkplate_Web_Server example for Soldered Inkplate 10
    For this example you will need a micro USB cable, Inkplate 10 and a device with WiFi and Internet brower (PC, Laptop,
    Smartphone, ...). Select "Inkplate 10(ESP32)" from Tools -> Board menu. Don't have "Inkplate 10(ESP32)" option?
    Follow our tutorial and add it: https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
@@ -15,13 +15,14 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by e-radionica.com
+   11 February 2021 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
 #error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
 #endif
+
 #include "Inkplate.h"   //Include Inkplate library to the sketch
 #include "htmlCode.h"   //Include .h file where we stored out html code of our web page
 #include <WebServer.h>  //Include ESP32 library for Web server
@@ -37,12 +38,6 @@ WebServer server(80);            // Create Web server on port 80 (HTTP port numb
 
 IPAddress serverIP;
 String txt;
-
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
 
 void setup()
 {

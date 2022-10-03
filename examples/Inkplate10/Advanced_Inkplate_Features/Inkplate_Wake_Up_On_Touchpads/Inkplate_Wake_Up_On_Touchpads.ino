@@ -1,21 +1,22 @@
 /*
-   Inkplate_Wake_up_on_touchpads example for e-radionica.com Inkplate 10
+   Inkplate_Wake_up_on_touchpads example for Soldered Inkplate 10
    For this example you will need USB cable and an Inkplate 10
    Select "Inkplate 10(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   Here is shown how to use MCP and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.
+   Here is shown how to use I/O Expander and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by e-radionica.com
+   11 February 2021 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
 #error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
 #endif
+
 #include <Inkplate.h>
 
 // Conversion factor for micro seconds to seconds
@@ -23,7 +24,7 @@
 // Time ESP32 will go to sleep (in seconds)
 #define TIME_TO_SLEEP 30
 
-// bitmask for GPIO_34 which is connected to MCP INTB
+// bitmask for GPIO_34 which is connected to I/O Expander INT pin
 #define TOUCHPAD_WAKE_MASK (int64_t(1) << GPIO_NUM_34)
 
 // Initiate Inkplate object
@@ -32,22 +33,22 @@ Inkplate display(INKPLATE_1BIT);
 // Store int in rtc data, to remain persistent during deep sleep
 RTC_DATA_ATTR int bootCount = 0;
 
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
-
 void setup()
 {
     Serial.begin(115200);
     display.begin();
 
-    // Setup mcp interrupts
-    display.setIntOutputInternal(IO_INT_ADDR, display.ioRegsInt, 1, false, false, HIGH);
-    display.setIntPinInternal(IO_INT_ADDR, display.ioRegsInt, PAD1, RISING);
-    display.setIntPinInternal(IO_INT_ADDR, display.ioRegsInt, PAD2, RISING);
-    display.setIntPinInternal(IO_INT_ADDR, display.ioRegsInt, PAD3, RISING);
+// Different I/O expander has been used on Soldered Inkplate V2 board and original Soldered Inkplate.
+#ifdef ARDUINO_INKPLATE10
+    display.setIntOutput(1, false, false, HIGH, IO_INT_ADDR);
+    display.setIntPin(PAD1, RISING, IO_INT_ADDR);
+    display.setIntPin(PAD2, RISING, IO_INT_ADDR);
+    display.setIntPin(PAD3, RISING, IO_INT_ADDR);
+#elif ARDUINO_INKPLATE10V2
+    display.setIntPin(PAD1, IO_INT_ADDR);
+    display.setIntPin(PAD2, IO_INT_ADDR);
+    display.setIntPin(PAD3, IO_INT_ADDR);
+#endif
 
     ++bootCount;
 

@@ -13,7 +13,7 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     e-radionica.com
+ * @authors     Soldered
  ***************************************************/
 
 #ifndef __PCAL_H__
@@ -135,4 +135,5 @@ class Expander
     void updatePCALRegister(uint8_t _addr, uint8_t _regIndex, uint8_t _d);
     void updatePCALRegister(uint8_t _addr, uint8_t _regIndex, uint8_t *k, uint8_t _n);
 };
+
 #endif

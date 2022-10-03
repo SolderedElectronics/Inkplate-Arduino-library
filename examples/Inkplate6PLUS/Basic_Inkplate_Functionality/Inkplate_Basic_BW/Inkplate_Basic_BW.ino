@@ -1,5 +1,5 @@
 /*
-   Basic_monochorme example for e-radionica.com Inkplate 6PLUS
+   Basic_monochorme example for Soldered Inkplate 6PLUS
    For this example you will need only USB cable and Inkplate 6PLUS.
    Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
@@ -11,7 +11,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by e-radionica.com
+   11 February 2021 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -28,7 +28,7 @@ Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set li
          // recommended
 // Want to refresh faster? Use partial update! Find example in "3-Inkplate-basic_partial_update"
 
-// Array that holds data for bitmap image of 576x100 pixels. You can convert your own image using LCD image Converter.
+// Array that holds data for bitmap image of 576x100 pixels. You can convert your own image using Inkplate Image Converter.
 const uint8_t logo[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -410,12 +410,6 @@ const uint8_t logo[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
-
 void setup()
 {
     display.begin();        // Init library (you should call this function ONLY ONCE)
@@ -629,12 +623,12 @@ void loop()
     display.display();
     delay(DELAY_MS);
 
-    // Display some bitmap on screen. We are going to display e-radionica logo on display at location X = 200, Y = 200
+    // Display some bitmap on screen. We are going to display Soldered logo on display at location X = 200, Y = 200
     // Image is 576x100 pixels and we want to every pixel of this bitmap to be black.
     display.clearDisplay();
     display.drawImage(logo, 100, 250, 576, 100,
                       BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
-    displayCurrentAction("Drawing e-radionica.com logo");
+    displayCurrentAction("Drawing Soldered logo");
     display.display();
     delay(DELAY_MS);
 

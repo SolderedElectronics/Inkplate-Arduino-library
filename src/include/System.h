@@ -13,7 +13,7 @@
  *              licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *              warranty is given.
  *
- * @authors     @ e-radionica.com
+ * @authors     @ Soldered
  ***************************************************/
 
 #ifndef __SYSTEM_H__
@@ -41,7 +41,7 @@
 #define RTC_DAY_ADDR    0x07
 #define RTC_WDAY_ADDR   0x08
 #define RTC_MONTH_ADDR  0x09
-// years 0-99; calculate real year = 2000 + RCC reg year
+// years 0-99; calculate real year = 2000 + RTC reg year
 #define RTC_YEAR_ADDR 0x0A
 // registar overview - alarm reg
 #define RTC_SECOND_ALARM 0x0B
@@ -72,7 +72,7 @@
 #define RTC_ALARM_MATCH_DHHMMSS 0b00001111
 #define RTC_ALARM_MATCH_WHHMSS  0b00011111
 
-#ifdef ARDUINO_INKPLATE6PLUS
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
 #include "Frontlight.h"
 #include "Touch.h"
 #endif
@@ -95,7 +95,7 @@
 class System : public Esp,
                virtual public Expander,
 
-#ifdef ARDUINO_INKPLATE6PLUS
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
                public Touch,
                public Frontlight,
 #endif

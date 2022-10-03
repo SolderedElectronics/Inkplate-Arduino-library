@@ -1,5 +1,5 @@
 /*
-   Inkplate_Low_Power example for e-radionica.com Inkplate 6PLUS
+   Inkplate_Low_Power example for Soldered Inkplate 6PLUS
    For this example you will need USB cable and Inkplate 6PLUS.
    Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
@@ -14,7 +14,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by e-radionica.com
+   11 February 2021 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -24,7 +24,7 @@
 
 #include "Inkplate.h"      //Include Inkplate library to the sketch
 #include "driver/rtc_io.h" //ESP32 library used for deep sleep and RTC wake up pins
-#include "picture1.h" //Include .h files of 3 pictures. All three pictures were converted using LCD Image Converter software
+#include "picture1.h" //Include .h files of 3 pictures. All three pictures were converted using Inkplate Image Converter
 #include "picture2.h"
 #include "picture3.h"
 const uint8_t *pictures[] = {picture1, picture2,
@@ -36,12 +36,6 @@ const uint8_t *pictures[] = {picture1, picture2,
 RTC_DATA_ATTR int slide = 0;
 
 Inkplate display(INKPLATE_3BIT); // Create an object on Inkplate library and also set library into 3 Bit mode (gray)
-
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
 
 void setup()
 {

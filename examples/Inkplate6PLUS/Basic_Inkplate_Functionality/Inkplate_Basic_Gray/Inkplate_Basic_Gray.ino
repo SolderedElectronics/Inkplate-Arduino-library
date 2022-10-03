@@ -1,5 +1,5 @@
 /*
-   Basic_gray example for e-radionica.com Inkplate 6PLUS
+   Basic_gray example for Soldered Inkplate 6PLUS
    For this example you will need only USB cable and Inkplate 6PLUS
    Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
@@ -14,7 +14,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by e-radionica.com
+   11 February 2021 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -30,12 +30,6 @@ Inkplate display(INKPLATE_3BIT); // Create object on Inkplate library and set li
 // Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not recommended
 #define DELAY_MS 5000
 // Want to refresh faster? Use partial update! Find example in "Inkplate-basic_partial_update"
-
-// If your Inkplate doesn't have external (or second) MCP I/O expander, you should uncomment next line,
-// otherwise your code could hang out when you send code to your Inkplate.
-// You can easily check if your Inkplate has second MCP by turning it over and 
-// if there is missing chip near place where "MCP23017-2" is written, but if there is
-// chip soldered, you don't have to uncomment line and use external MCP I/O expander
 
 void setup()
 {
@@ -264,7 +258,7 @@ void loop()
     display.display();
     delay(DELAY_MS);
 
-    // Display some grayscale image on screen. We are going to display e-radionica logo on display at location X = 100,
+    // Display some grayscale image on screen. We are going to display Soldered logo on display at location X = 100,
     // Y = 100 Image size is 500x332 pixels.
     display.clearDisplay();
     display.drawImage(picture1, 100, 100, 500,

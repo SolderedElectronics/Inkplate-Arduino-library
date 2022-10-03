@@ -26,6 +26,7 @@
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
 #error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
 #endif
+
 //---------- CHANGE HERE  -------------:
 
 // Put in your ssid and password

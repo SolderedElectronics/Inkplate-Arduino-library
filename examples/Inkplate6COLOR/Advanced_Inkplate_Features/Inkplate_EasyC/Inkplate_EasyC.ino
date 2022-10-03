@@ -1,5 +1,5 @@
 /*
-   Inkplate_easyC example for e-radionica.com Inkplate 6COLOR
+   Inkplate_easyC example for Soldered Inkplate 6COLOR
    For this example you will need a micro USB cable, Inkplate 6COLOR,
    BME680 sensor with easyC connector on it: https://e-radionica.com/en/bme680-breakout-made-by-e-radionica.html
    and a easyC cable: https://e-radionica.com/en/easyc-cable-20cm.html
@@ -15,7 +15,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   15 July 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -43,7 +43,7 @@ void setup()
     display.setCursor(0, 0);
 
     if (!bme.begin(0x76))
-    { // Init. BME680 library. e-radionica.com BME680 sensor board uses 0x76 I2C address for sensor
+    { // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for sensor
         display.println("Sensor init failed!");
         display.println("Check sensor wiring/connection!");
         display.display();
