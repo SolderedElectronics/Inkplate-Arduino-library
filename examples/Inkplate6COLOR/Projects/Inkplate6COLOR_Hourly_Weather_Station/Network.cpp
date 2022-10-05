@@ -209,9 +209,10 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
     }
     else if (httpCode == 401)
     {
+        Serial.println("Network error (HTTP 401), check API key");
         display.setCursor(50, 290);
         display.setTextSize(3);
-        display.print(F("Network error, probably wrong api key"));
+        display.print(F("Network error (HTTP 401), check API key"));
         display.display();
         while (1)
             ;
