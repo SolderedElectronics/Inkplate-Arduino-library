@@ -106,12 +106,24 @@ bool Inkplate::begin()
 
     // For same reason, unused pins of first I/O expander have to be also set as
     // outputs, low.
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, OUTPUT);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 14, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 15, LOW);
+
+#ifdef ARDUINO_INKPLATE10V2
+    // Set SPI pins to input to reduce power consumption in deep sleep
+    pinMode(12, INPUT);
+    pinMode(13, INPUT);
+    pinMode(14, INPUT);
+    pinMode(15, INPUT);
+
+    // And also disable uSD card supply
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, INPUT);
+#else
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, LOW);
+#endif
 
     // CONTROL PINS
     pinMode(0, OUTPUT);
