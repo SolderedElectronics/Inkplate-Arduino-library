@@ -158,7 +158,8 @@ double System::readBattery()
 int16_t System::sdCardInit()
 {
 // New Soldered Inkplate boards use P-MOS to disable supply to the uSD card to reduce power in deep sleep.
-#if defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATECOLOR)
+#if defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
+    defined(ARDUINO_INKPLATECOLOR)
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, LOW);
     delay(50);
