@@ -77,7 +77,7 @@ void Inkplate::display(bool leaveOn)
  */
 void Inkplate::preloadScreen()
 {
-    memcpy(DMemoryNew, _partial, 60000);
+    memcpy(DMemoryNew, _partial, 123750);
 }
 
 /**
