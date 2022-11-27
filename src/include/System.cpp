@@ -121,7 +121,7 @@ double System::readBattery()
 #endif
 */
     delay(1);
-    int adc = analogRead(35);
+    uint32_t batt_mv = analogReadMilliVolts(35);
     if (state)
     {
         pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, INPUT);
@@ -140,10 +140,8 @@ double System::readBattery()
     digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
 #endif
 */
-    // Calculate the voltage using the following formula
-    // 1.1V is internal ADC reference of ESP32, 3.548133892 is 11dB in linear
-    // scale (Analog signal is attenuated by 11dB before ESP32 ADC input)
-    return (double(adc) / 4095 * 1.1 * 3.548133892 * 2);
+    // divide by 1000 for mv to V, * 2 for voltage divider circuit
+    return (double(batt_mv) / 1000 * 2);
 }
 
 /**
