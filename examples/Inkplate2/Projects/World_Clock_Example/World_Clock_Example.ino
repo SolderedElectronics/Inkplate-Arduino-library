@@ -91,7 +91,9 @@ void loop()
 // Function to draw time
 void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city_name)
 {
-    uint16_t w = 80; // Clock width
+    uint16_t w = 80;                                  // Clock width
+    float xStart[12], yStart[12], xEnd[12], yEnd[12]; // Coordinates for lines that represents minutes
+    
     // This part of code draws analog clock
     display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2, INKPLATE2_BLACK); // Draw outer circles
     display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2 + 1, INKPLATE2_BLACK);
@@ -103,23 +105,18 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city_name)
     display.drawThickLine(x_pos, y_pos + w / 2, x_pos + 5, y_pos + w / 2, INKPLATE2_BLACK, 2);
 
     // Draw lines that represents 5, 10, 20, 25, 35, 40, 50, 55 minutes on the clocks face
-    // Lines are calculated from here https://www.desmos.com/calculator/l2mkh2guac
-    display.drawThickLine(x_pos + 0.750 * w, y_pos + 0.070 * w, x_pos + 0.725 * w, y_pos + 0.110 * w, INKPLATE2_BLACK,
-                          1);
-    display.drawThickLine(x_pos + 0.930 * w, y_pos + 0.250 * w, x_pos + 0.895 * w, y_pos + 0.275 * w, INKPLATE2_BLACK,
-                          1);
-    display.drawThickLine(x_pos + 0.930 * w, y_pos + 0.750 * w, x_pos + 0.895 * w, y_pos + 0.725 * w, INKPLATE2_BLACK,
-                          1);
-    display.drawThickLine(x_pos + 0.750 * w, y_pos + 0.930 * w, x_pos + 0.725 * w, y_pos + 0.895 * w, INKPLATE2_BLACK,
-                          1);
-    display.drawThickLine(x_pos + 0.250 * w, y_pos + 0.930 * w, x_pos + 0.275 * w, y_pos + 0.895 * w, INKPLATE2_BLACK,
-                          1);
-    display.drawThickLine(x_pos + 0.070 * w, y_pos + 0.750 * w, x_pos + 0.111 * w, y_pos + 0.725 * w, INKPLATE2_BLACK,
-                          1);
-    display.drawThickLine(x_pos + 0.070 * w, y_pos + 0.250 * w, x_pos + 0.111 * w, y_pos + 0.275 * w, INKPLATE2_BLACK,
-                          1);
-    display.drawThickLine(x_pos + 0.250 * w, y_pos + 0.070 * w, x_pos + 0.275 * w, y_pos + 0.110 * w, INKPLATE2_BLACK,
-                          1);
+    for (int i = 0; i < 12; i++)
+    {
+        float angle_rad = 30 * i * M_PI / 180;
+
+        xStart[i] = x_pos + (cos(angle_rad) * w / 2) + w / 2;
+        yStart[i] = y_pos + (sin(angle_rad) * w / 2) + w / 2;
+
+        xEnd[i] = x_pos + (cos(angle_rad) * (w * 0.85) / 2) + w / 2;
+        yEnd[i] = y_pos + (sin(angle_rad) * (w * 0.85) / 2) + w / 2;
+
+        display.drawThickLine(xStart[i], yStart[i], xEnd[i], yEnd[i], INKPLATE2_BLACK, 1);
+    }
 
     // Draw filled circle in the middle
     display.fillCircle(x_pos + w / 2, y_pos + w / 2, 5, INKPLATE2_BLACK);
