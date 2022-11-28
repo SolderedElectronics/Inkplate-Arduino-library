@@ -27,11 +27,13 @@ extern int timeZone;
 extern char ssid[];
 extern char pass[];
 
+const char * root_ca; // HTTPS certificate for YouTube
+
 struct channelInfo
 {
     char name[64];
-    uint32_t subscribers;
-    uint32_t total_views;
+    unsigned long long subscribers;
+    unsigned long long total_views;
     uint16_t video_count;
 };
 
