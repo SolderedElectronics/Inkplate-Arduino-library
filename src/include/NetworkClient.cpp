@@ -107,7 +107,7 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
 
     uint8_t buff[512] = {0};
 
-    //WiFiClient *stream = http.getStreamPtr();
+    // WiFiClient *stream = http.getStreamPtr();
     while (client.connected() && (len > 0 || len == -1))
     {
         size_t size = client.available();
