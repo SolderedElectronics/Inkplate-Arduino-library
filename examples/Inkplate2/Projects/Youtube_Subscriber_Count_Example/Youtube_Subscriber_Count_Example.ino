@@ -54,8 +54,8 @@ char pass[] = "";
 
 // e-radionica.com channel ID
 char channel_id[] = ""; // To get the channel ID of the public channel, go to the wanted Youtube
-                                                // channel in Google Chrome, right click and 'view page source', then
-                                                // CTRL+F search for "externalId".
+                        // channel in Google Chrome, right click and 'view page source', then
+                        // CTRL+F search for "externalId".
 
 char api_key[] =
     ""; // API key, you can get one on https://console.developers.google.com/

@@ -100,36 +100,29 @@ bool Network::getData(char *data)
         }
     }
 
-    // Http object used to make get request
-    HTTPClient http;
-
-    http.getStream().setTimeout(10);
-    http.getStream().flush();
-
     // Begin http by passing url to it
-    http.begin(calendarURL, root_ca);
+    bool sleep = WiFi.getSleep();
+    WiFi.setSleep(false);
 
-    delay(300);
+    // WiFiClientSecure object used to make GET request
+    WiFiClientSecure client;
 
-    // Actually do request
-    int httpCode = http.GET();
-
-    if (httpCode == 200)
+    int result = getRequest(&client, "calendar.google.com", calendarURL);
+    if (result == 0)
     {
-        long n = 0;
-        while (http.getStream().available())
-            data[n++] = http.getStream().read();
-        data[n++] = 0;
-        delayMicroseconds(2);
-    }
-    else
-    {
-        Serial.println(httpCode);
-        f = 1;
+        Serial.println("HTTP Error!");
+        Serial.println("Restarting...");
+        delay(100);
+        ESP.restart();
     }
 
-    // end http
-    http.end();
+    long n = 0;
+    while (client.available())
+        data[n++] = client.read();
+    data[n++] = 0;
+    delayMicroseconds(2);
+
+    client.stop();
 
     return !f;
 }
@@ -164,13 +157,25 @@ time_t Network::getEpoch()
     return time(nullptr);
 }
 
-int Network:: getRequest(WiFiClientSecure * client, char * _api_root_url, char * _api_call_url)
+/**
+ * @brief               Create a HTTPS GET request with a given root url and api call url
+ *
+ * @param               WiFiClientSecure * client: pointer to client used in base class
+ *
+ * @param               char * _api_root_url: root url of the api (eg. www.api-service.com)
+ *
+ * @param               char * _api_call_url: full url of the api call (eg. www.api-service.com/getdata?key=12345)
+ *
+ * @returns             0 if there was an error, 404 if not found, 1 if successful
+ */
+int Network::getRequest(WiFiClientSecure *client, char *_api_root_url, char *_api_call_url)
 {
     // Don't check SSL certificate but still use HTTPS
     client->setInsecure();
 
-    if(!client->connect(_api_root_url,443))
+    if (!client->connect(_api_root_url, 443))
     {
+        Serial.println("connection refused");
         return 0;
     }
 

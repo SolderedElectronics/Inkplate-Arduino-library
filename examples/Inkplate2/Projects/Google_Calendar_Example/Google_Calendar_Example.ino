@@ -51,10 +51,10 @@ Inkplate display;
 Network network;
 
 // Enter your WiFi SSID and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
 // Google calendar URL
-char calendarURL[] = "";
+char calendarURL[] = "https://calendar.google.com/calendar/ical/robert.soric%40gmail.com/private-a923d0e9435d0d949ac314edfe35de5e/basic.ics";
 
 // Set the timezone (in this case +2 hours)
 int timeZone = 2;
