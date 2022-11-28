@@ -83,6 +83,149 @@ bool NetworkClient::isConnected()
  *
  * @return      pointer to buffer that holds downloaded file
  */
+uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
+{
+    WiFiClientSecure client;
+    client.setInsecure();
+    int result = getRequest(&client, url);
+    if (result == 0)
+    {
+        Serial.println("HTTP Error!");
+        return 0;
+    }
+    else if (result == 404)
+    {
+        Serial.println("404");
+        return 0;
+    }
+
+    uint8_t *buffer = (uint8_t *)ps_malloc(client.available());
+    uint8_t *buffPtr = buffer;
+
+    int32_t total = client.available();
+    int32_t len = total;
+
+    uint8_t buff[512] = {0};
+
+    //WiFiClient *stream = http.getStreamPtr();
+    while (client.connected() && (len > 0 || len == -1))
+    {
+        size_t size = client.available();
+
+        if (size)
+        {
+            int c = client.readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
+            memcpy(buffPtr, buff, c);
+
+            if (len > 0)
+                len -= c;
+            buffPtr += c;
+        }
+        else if (len == -1)
+        {
+            len = 0;
+        }
+    }
+
+    client.stop();
+    WiFi.setSleep(sleep);
+    return buffer;
+}
+
+/**
+ * @brief       downloadFile function downloads file from wificlient url object
+ *
+ * @param       WifiClient *s
+ *              pointer to WifiClient object that holds data about URL
+ * @param       int32_t len
+ *              holds assumed length of file in bytes, will be checked before
+ * download
+ *
+ * @return      pointer to buffer that holds downloaded file
+ */
+uint8_t *NetworkClient::downloadFile(WiFiClient *s, int32_t len)
+{
+    if (!isConnected())
+        return NULL;
+
+    bool sleep = WiFi.getSleep();
+    WiFi.setSleep(false);
+
+    uint8_t *buffer = (uint8_t *)ps_malloc(len);
+    uint8_t *buffPtr = buffer;
+
+    uint8_t buff[128] = {0};
+
+    while (len > 0)
+    {
+        size_t size = s->available();
+        if (size)
+        {
+            int c = s->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
+            memcpy(buffPtr, buff, c);
+
+            if (len > 0)
+                len -= c;
+            buffPtr += c;
+        }
+        yield();
+    }
+
+    WiFi.setSleep(sleep);
+
+    return buffer;
+}
+
+/**
+ * @brief               Create a get request
+ *
+ * @param               WiFiClientSecure * client: pointer to client used in base class
+ *
+ * @param               char * _api_root_url: root url of the api (eg. www.api-service.com)
+ *
+ * @param               char * _api_call_url: full url of the api call (eg. www.api-service.com/getdata?key=12345)
+ *
+ * @returns             0 if there was an error, 404 if not found, 1 if successful
+ */
+int NetworkClient::getRequest(WiFiClientSecure *client, const char *_url)
+{
+    // Don't check SSL certificate but still use HTTPS
+    client->setInsecure();
+
+    if (!client->connect(_url, 443))
+    {
+        return 0;
+    }
+
+    client->setTimeout(10);
+    client->flush();
+    client->print("GET ");
+    client->print(_url);
+    client->println(" HTTP/1.0");
+    client->print("Host: ");
+    client->println(_url);
+    client->println("Connection: close");
+    client->println();
+
+    while (client->available() == 0)
+        ;
+
+    String line = client->readStringUntil('\r');
+    if (line != "HTTP/1.0 200 OK")
+    {
+        return 0;
+    }
+    else if (line == "HTTP/1.0 404 Not Found")
+    {
+        return 404;
+    }
+
+    while (client->available() && client->peek() != '{')
+        (void)client->read();
+
+    return 1;
+}
+
 uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
 {
     if (!isConnected())
@@ -135,50 +278,6 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
         }
     }
     http.end();
-    WiFi.setSleep(sleep);
-
-    return buffer;
-}
-
-/**
- * @brief       downloadFile function downloads file from wificlient url object
- *
- * @param       WifiClient *s
- *              pointer to WifiClient object that holds data about URL
- * @param       int32_t len
- *              holds assumed length of file in bytes, will be checked before
- * download
- *
- * @return      pointer to buffer that holds downloaded file
- */
-uint8_t *NetworkClient::downloadFile(WiFiClient *s, int32_t len)
-{
-    if (!isConnected())
-        return NULL;
-
-    bool sleep = WiFi.getSleep();
-    WiFi.setSleep(false);
-
-    uint8_t *buffer = (uint8_t *)ps_malloc(len);
-    uint8_t *buffPtr = buffer;
-
-    uint8_t buff[128] = {0};
-
-    while (len > 0)
-    {
-        size_t size = s->available();
-        if (size)
-        {
-            int c = s->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
-            memcpy(buffPtr, buff, c);
-
-            if (len > 0)
-                len -= c;
-            buffPtr += c;
-        }
-        yield();
-    }
-
     WiFi.setSleep(sleep);
 
     return buffer;
