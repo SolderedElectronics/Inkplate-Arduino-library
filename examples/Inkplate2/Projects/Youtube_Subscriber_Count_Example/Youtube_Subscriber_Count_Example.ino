@@ -49,16 +49,16 @@ Network network;
 Inkplate display;
 
 // Write your SSID and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // e-radionica.com channel ID
-char channel_id[] = "UCaAzk1FwSGrM9UXpz8wIAyg"; // To get the channel ID of the public channel, go to the wanted Youtube
+char channel_id[] = ""; // To get the channel ID of the public channel, go to the wanted Youtube
                                                 // channel in Google Chrome, right click and 'view page source', then
                                                 // CTRL+F search for "externalId".
 
 char api_key[] =
-    "AIzaSyBWcYzRBMh_SH4z7Q3GjRaY7axDZmelcU0"; // API key, you can get one on https://console.developers.google.com/
+    ""; // API key, you can get one on https://console.developers.google.com/
         // First create a project (name it whatever you like), then click on "Enable APIs and Services" (it's at the top
         // of the screen, it has a plus sign). Next select "YouTube Data API v3" in Enabled APIs and Serivces. Go back
         // at the homepage, click on "Create Credentials" and click "API Key". After the key has been created, edit API

@@ -22,36 +22,6 @@ Distributed as-is; no warranty is given.
 
 extern struct tm timeinfo;
 
-// Google's SSL certificate
-// In case this changes, you can export it from Google calendar's website
-// 1. Go to calendar.google.com
-// 2. Click the lock icon in your browser in the address bar
-// 3. Go to Connection is secure > Detials
-// 4. Export the Root CA to a file and download it
-// 5. Paste it here and make sure to format it correctly (Arduino multi-line string)
-const char* root_ca = \
-"-----BEGIN CERTIFICATE-----\n" \
-"MIIDdTCCAl2gAwIBAgILBAAAAAABFUtaw5QwDQYJKoZIhvcNAQEFBQAwVzELMAkG\n" \
-"A1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNVBAsTB1Jv\n" \
-"b3QgQ0ExGzAZBgNVBAMTEkdsb2JhbFNpZ24gUm9vdCBDQTAeFw05ODA5MDExMjAw\n" \
-"MDBaFw0yODAxMjgxMjAwMDBaMFcxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9i\n" \
-"YWxTaWduIG52LXNhMRAwDgYDVQQLEwdSb290IENBMRswGQYDVQQDExJHbG9iYWxT\n" \
-"aWduIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDaDuaZ\n" \
-"jc6j40+Kfvvxi4Mla+pIH/EqsLmVEQS98GPR4mdmzxzdzxtIK+6NiY6arymAZavp\n" \
-"xy0Sy6scTHAHoT0KMM0VjU/43dSMUBUc71DuxC73/OlS8pF94G3VNTCOXkNz8kHp\n" \
-"1Wrjsok6Vjk4bwY8iGlbKk3Fp1S4bInMm/k8yuX9ifUSPJJ4ltbcdG6TRGHRjcdG\n" \
-"snUOhugZitVtbNV4FpWi6cgKOOvyJBNPc1STE4U6G7weNLWLBYy5d4ux2x8gkasJ\n" \
-"U26Qzns3dLlwR5EiUWMWea6xrkEmCMgZK9FGqkjWZCrXgzT/LCrBbBlDSgeF59N8\n" \
-"9iFo7+ryUp9/k5DPAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8E\n" \
-"BTADAQH/MB0GA1UdDgQWBBRge2YaRQ2XyolQL30EzTSo//z9SzANBgkqhkiG9w0B\n" \
-"AQUFAAOCAQEA1nPnfE920I2/7LqivjTFKDK1fPxsnCwrvQmeU79rXqoRSLblCKOz\n" \
-"yj1hTdNGCbM+w6DjY1Ub8rrvrTnhQ7k4o+YviiY776BQVvnGCv04zcQLcFGUl5gE\n" \
-"38NflNUVyRRBnMRddWQVDf9VMOyGj/8N7yy5Y0b2qvzfvGn9LhJIZJrglfCm7ymP\n" \
-"AbEVtQwdpf5pLGkkeB6zpxxxYu7KyJesF12KwvhHhm4qxFYxldBniYUr+WymXUad\n" \
-"DKqC5JlR3XC321Y9YeRq4VzW9v493kHMB65jUr9TU/Qr6cf9tveCX4XSQRjbgbME\n" \
-"HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==\n " \
-"-----END CERTIFICATE-----\n";
-
 void Network::begin()
 {
     // Initiating wifi, like in BasicHttpClient example
@@ -192,4 +162,43 @@ void Network::setTime()
 time_t Network::getEpoch()
 {
     return time(nullptr);
+}
+
+int Network:: getRequest(WiFiClientSecure * client, char * _api_root_url, char * _api_call_url)
+{
+    // Don't check SSL certificate but still use HTTPS
+    client->setInsecure();
+
+    if(!client->connect(_api_root_url,443))
+    {
+        return 0;
+    }
+
+    client->setTimeout(10);
+    client->flush();
+    client->print("GET ");
+    client->print(_api_call_url);
+    client->println(" HTTP/1.0");
+    client->print("Host: ");
+    client->println(_api_root_url);
+    client->println("Connection: close");
+    client->println();
+
+    while (client->available() == 0)
+        ;
+
+    String line = client->readStringUntil('\r');
+    if (line != "HTTP/1.0 200 OK")
+    {
+        return 0;
+    }
+    else if (line == "HTTP/1.0 404 Not Found")
+    {
+        return 404;
+    }
+
+    while (client->available() && client->peek() != '{')
+        (void)client->read();
+
+    return 1;
 }

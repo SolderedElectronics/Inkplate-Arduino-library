@@ -37,36 +37,6 @@ extern Inkplate display;
 // Static Json from ArduinoJson library
 StaticJsonDocument<30000> doc;
 
-// YouTube's SSL certificate
-// In case this changes, you can export it from YouTube's website
-// 1. Go to YouTube.com
-// 2. Click the lock icon in your browser in the address bar
-// 3. Go to Connection is secure > Detials
-// 4. Export the Root CA to a file and download it
-// 5. Paste it here and make sure to format it correctly (Arduino multi-line string)
-const char* root_ca = \
-"-----BEGIN CERTIFICATE-----\n" \
-"MIIDdTCCAl2gAwIBAgILBAAAAAABFUtaw5QwDQYJKoZIhvcNAQEFBQAwVzELMAkG\n" \
-"A1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNVBAsTB1Jv\n" \
-"b3QgQ0ExGzAZBgNVBAMTEkdsb2JhbFNpZ24gUm9vdCBDQTAeFw05ODA5MDExMjAw\n" \
-"MDBaFw0yODAxMjgxMjAwMDBaMFcxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9i\n" \
-"YWxTaWduIG52LXNhMRAwDgYDVQQLEwdSb290IENBMRswGQYDVQQDExJHbG9iYWxT\n" \
-"aWduIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDaDuaZ\n" \
-"jc6j40+Kfvvxi4Mla+pIH/EqsLmVEQS98GPR4mdmzxzdzxtIK+6NiY6arymAZavp\n" \
-"xy0Sy6scTHAHoT0KMM0VjU/43dSMUBUc71DuxC73/OlS8pF94G3VNTCOXkNz8kHp\n" \
-"1Wrjsok6Vjk4bwY8iGlbKk3Fp1S4bInMm/k8yuX9ifUSPJJ4ltbcdG6TRGHRjcdG\n" \
-"snUOhugZitVtbNV4FpWi6cgKOOvyJBNPc1STE4U6G7weNLWLBYy5d4ux2x8gkasJ\n" \
-"U26Qzns3dLlwR5EiUWMWea6xrkEmCMgZK9FGqkjWZCrXgzT/LCrBbBlDSgeF59N8\n" \
-"9iFo7+ryUp9/k5DPAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8E\n" \
-"BTADAQH/MB0GA1UdDgQWBBRge2YaRQ2XyolQL30EzTSo//z9SzANBgkqhkiG9w0B\n" \
-"AQUFAAOCAQEA1nPnfE920I2/7LqivjTFKDK1fPxsnCwrvQmeU79rXqoRSLblCKOz\n" \
-"yj1hTdNGCbM+w6DjY1Ub8rrvrTnhQ7k4o+YviiY776BQVvnGCv04zcQLcFGUl5gE\n" \
-"38NflNUVyRRBnMRddWQVDf9VMOyGj/8N7yy5Y0b2qvzfvGn9LhJIZJrglfCm7ymP\n" \
-"AbEVtQwdpf5pLGkkeB6zpxxxYu7KyJesF12KwvhHhm4qxFYxldBniYUr+WymXUad\n" \
-"DKqC5JlR3XC321Y9YeRq4VzW9v493kHMB65jUr9TU/Qr6cf9tveCX4XSQRjbgbME\n" \
-"HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==\n " \
-"-----END CERTIFICATE-----\n";
-
 void Network::begin()
 {
     // Initiating wifi, like in BasicHttpClient example
@@ -118,7 +88,7 @@ void Network::getTime(char *timeStr)
     timeStr[8] = hr % 10 + '0';
 }
 
-bool Network::getData(channelInfo* channel)
+bool Network::getData(channelInfo *channel)
 {
     bool f = 0;
 
@@ -151,139 +121,123 @@ bool Network::getData(channelInfo* channel)
     bool sleep = WiFi.getSleep();
     WiFi.setSleep(false);
 
-    // Http object used to make get request
-    HTTPClient http;
+    // WiFiClientSecure object used to make GET request
+    WiFiClientSecure client1;
 
-    http.getStream().setTimeout(10);
-    http.getStream().flush();
-
-    // Initiate http
-    char temp[182];
-    sprintf(temp, "https://www.googleapis.com/youtube/v3/channels?part=statistics&id=%s&key=%s", channel_id, api_key);
-    http.begin(temp, root_ca);
-    
-    // Actually do request
-    int httpCode = http.GET();
-    if (httpCode == 200)
+    char request[182];
+    sprintf(request, "www.googleapis.com/youtube/v3/channels?part=statistics&id=%s&key=%s", channel_id, api_key);
+    int result = getRequest(&client1, "www.googleapis.com",request);
+    if(result == 0)
     {
-        while (http.getStream().available() && http.getStream().peek() != '{')
-            (void)http.getStream().read();
-
-        // Try parsing JSON object
-        DeserializationError error = deserializeJson(doc, http.getStream());
-
-        if (error)
-        {
-            Serial.print(F("deserializeJson() failed: "));
-            Serial.println(error.c_str());
-            f = 1;
-        }
-        else if (doc["items"].size() > 0)
-        {
-            // Set all data got from internet using formatTemp and formatWind defined above
-            // This part relies heavily on ArduinoJson library
-
-            Serial.println("Success");
-
-            channel->total_views = doc["items"][0]["statistics"]["viewCount"].as<unsigned long long>();
-            Serial.print("Total views: ");
-            Serial.println(channel->total_views);
-            
-            channel->subscribers = doc["items"][0]["statistics"]["subscriberCount"].as<unsigned long long>();
-            Serial.print("Subscribers: ");
-            Serial.println(channel->subscribers);
-            
-            channel->video_count = doc["items"][0]["statistics"]["videoCount"].as<int>();
-            Serial.print("Videos: ");
-            Serial.println(channel->video_count);
-            
-
-            // Save our data to data pointer from main file
-            f = 0;
-        }
-    }
-    else if (httpCode == 404)
+        Serial.println("HTTP Error!");
+        Serial.println("Restarting...");
+        delay(100);
+        ESP.restart();
+    } 
+    else if(result == 404)
     {
-        // Coin id not found
+        // Channel was not found via ID 
+
+        Serial.println("Can't find YT channel!");
         display.clearDisplay();
         display.setCursor(50, 230);
         display.setTextSize(2);
-        display.println(F("Info has not been found!"));
+        display.println(F("Channel info has not been found!"));
         display.display();
-        while (1)
-            ;
+        while(1) ;
     }
-    else
+    
+
+    DeserializationError error = deserializeJson(doc, client1);
+
+    if (error)
     {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(error.c_str());
         f = 1;
     }
-
-    // Clear document and end http
-    doc.clear();
-    http.end();
-
-    // Second API call, same as first but different URL 
-
-    http.getStream().setTimeout(10);
-    http.getStream().flush();
-
-    // Initiate http
-    memset(temp, 0 , 182 * sizeof(char));
-    sprintf(temp, "https://www.googleapis.com/youtube/v3/channels?part=snippet&id=%s&key=%s", channel_id, api_key);
-    http.begin(temp,root_ca);
-    
-    // Actually do request
-    httpCode = http.GET();
-    if (httpCode == 200)
+    else if (doc["items"].size() > 0)
     {
-        while (http.getStream().available() && http.getStream().peek() != '{')
-            (void)http.getStream().read();
+        // Set all data got from internet using formatTemp and formatWind defined above
+        // This part relies heavily on ArduinoJson library
 
-        // Try parsing JSON object
-        DeserializationError error = deserializeJson(doc, http.getStream());
+        Serial.println("Success");
 
-        if (error)
-        {
-            Serial.print(F("deserializeJson() failed: "));
-            Serial.println(error.c_str());
-            f = 1;
-        }
-        else if (doc["items"].size() > 0)
-        {
-            // Set all data got from internet using formatTemp and formatWind defined above
-            // This part relies heavily on ArduinoJson library
+        channel->total_views = doc["items"][0]["statistics"]["viewCount"].as<unsigned long long>();
+        Serial.print("Total views: ");
+        Serial.println(channel->total_views);
 
-            Serial.println("Success");
+        channel->subscribers = doc["items"][0]["statistics"]["subscriberCount"].as<unsigned long long>();
+        Serial.print("Subscribers: ");
+        Serial.println(channel->subscribers);
 
-            const char *buff = doc["items"][0]["snippet"]["title"];
-            strcpy(channel->name, buff);
-            
-            Serial.print("Channel name: ");
-            Serial.println(channel->name);
+        channel->video_count = doc["items"][0]["statistics"]["videoCount"].as<int>();
+        Serial.print("Videos: ");
+        Serial.println(channel->video_count);
 
-            // Save our data to data pointer from main file
-            f = 0;
-        }
+        f = 0;
     }
-    else if (httpCode == 404)
+
+    client1.flush();
+    client1.setTimeout(10);
+    doc.clear();
+    client1.stop();
+
+    // WiFiClientSecure object used to make GET request
+    WiFiClientSecure client2;
+    
+    // To get the channel name, access the 'snippet' YouTube API
+    memset(request, 0, 182 * sizeof(char));
+    sprintf(request, "www.googleapis.com/youtube/v3/channels?part=snippet&id=%s&key=%s", channel_id, api_key);
+    result = getRequest(&client2, "www.googleapis.com",request);
+    if(result == 0)
     {
-        // Coin id not found
+        Serial.println("HTTP Error!");
+        Serial.println("Restarting...");
+        delay(100);
+        ESP.restart();
+    } 
+    else if(result == 404)
+    {
+        // Channel was not found via ID 
+
+        Serial.println("Can't find YT channel!");
         display.clearDisplay();
         display.setCursor(50, 230);
         display.setTextSize(2);
-        display.println(F("Info has not been found!"));
+        display.println(F("Channel info has not been found!"));
         display.display();
-        while (1)
-            ;
-    }
-    else
-    {
-        f = 1;
+        while(1) ;
     }
 
-    // Clear document and end http
+    error = deserializeJson(doc, client2);
+
+    if (error)
+    {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(error.c_str());
+        f = 1;
+    }
+    else if (doc["items"].size() > 0)
+    {
+        // Set all data got from internet using formatTemp and formatWind defined above
+        // This part relies heavily on ArduinoJson library
+
+        Serial.println("Success");
+
+        const char *buff = doc["items"][0]["snippet"]["title"];
+        strcpy(channel->name, buff);
+        Serial.print("Channel name: ");
+        Serial.println(channel->name);
+
+        // Save our data to data pointer from main file
+        f = 0;
+    }
+
+    client2.flush();
+    client2.setTimeout(10);
     doc.clear();
-    http.end();
+    client2.stop();
 
     // Return to initial state
     WiFi.setSleep(sleep);
@@ -315,4 +269,54 @@ void Network::setTime()
 
     Serial.print(F("Current time: "));
     Serial.print(asctime(&timeinfo));
+}
+
+/**
+ * @brief               Create a HTTPS GET request with a given root url and api call url
+ * 
+ * @param               WiFiClientSecure * client: pointer to client used in base class
+ * 
+ * @param               char * _api_root_url: root url of the api (eg. www.api-service.com)
+ * 
+ * @param               char * _api_call_url: full url of the api call (eg. www.api-service.com/getdata?key=12345)
+ * 
+ * @returns             0 if there was an error, 404 if not found, 1 if successful
+*/
+int Network:: getRequest(WiFiClientSecure * client, char * _api_root_url, char * _api_call_url)
+{
+    // Don't check SSL certificate but still use HTTPS
+    client->setInsecure();
+
+    if(!client->connect(_api_root_url,443))
+    {
+        return 0;
+    }
+
+    client->setTimeout(10);
+    client->flush();
+    client->print("GET ");
+    client->print(_api_call_url);
+    client->println(" HTTP/1.0");
+    client->print("Host: ");
+    client->println(_api_root_url);
+    client->println("Connection: close");
+    client->println();
+
+    while (client->available() == 0)
+        ;
+
+    String line = client->readStringUntil('\r');
+    if (line != "HTTP/1.0 200 OK")
+    {
+        return 0;
+    }
+    else if (line == "HTTP/1.0 404 Not Found")
+    {
+        return 404;
+    }
+
+    while (client->available() && client->peek() != '{')
+        (void)client->read();
+
+    return 1;
 }

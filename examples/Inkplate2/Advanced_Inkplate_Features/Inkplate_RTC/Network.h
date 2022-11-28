@@ -27,14 +27,6 @@ extern int timeZone;
 extern char ssid[];
 extern char pass[];
 
-struct channelInfo
-{
-    char name[64];
-    unsigned long long subscribers;
-    unsigned long long total_views;
-    uint16_t video_count;
-};
-
 #ifndef NETWORK_H
 #define NETWORK_H
 
@@ -45,13 +37,11 @@ class Network
   public:
     // Functions we can access in main file
     void begin();
-    void getTime(char *timeStr);
-    bool getData(channelInfo* channel);
+    void getTime(tm *t);
 
   private:
     // Functions called from within our class
     void setTime();
-    int getRequest(WiFiClientSecure * client, char * _api_root_url, char * _api_call_url);
 };
 
 #endif
