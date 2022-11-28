@@ -230,7 +230,7 @@ bool Network::getData(channelInfo* channel)
     // Initiate http
     memset(temp, 0 , 182 * sizeof(char));
     sprintf(temp, "https://www.googleapis.com/youtube/v3/channels?part=snippet&id=%s&key=%s", channel_id, api_key);
-    http.begin(temp);
+    http.begin(temp,root_ca);
     
     // Actually do request
     httpCode = http.GET();
