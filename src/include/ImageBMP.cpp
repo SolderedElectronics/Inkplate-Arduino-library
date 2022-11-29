@@ -223,7 +223,7 @@ bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool i
         Serial.print("Downloading using HTTPS...");
         buf = downloadFileHTTPS(url, &defaultLen);
     }
-    
+
 
     ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
     free(buf);

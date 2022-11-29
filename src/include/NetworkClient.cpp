@@ -91,7 +91,7 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
     }
 
     WiFiClientSecure client; // For HTTPS
-    client.setInsecure(); // Use HTTPS but don't compare certificate
+    client.setInsecure();    // Use HTTPS but don't compare certificate
     client.flush();
     client.setTimeout(10);
 
@@ -144,7 +144,7 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
             }
         }
     }
-    
+
     http.end();
     client.stop();
     WiFi.setSleep(sleep);
