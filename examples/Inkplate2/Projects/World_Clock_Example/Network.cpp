@@ -39,187 +39,147 @@ StaticJsonDocument<30000> doc;
 
 void Network::begin()
 {
-  // Initiating wifi, like in BasicHttpClient example
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, pass);
-
-  int cnt = 0;
-  Serial.print(F("Waiting for WiFi to connect..."));
-  while ((WiFi.status() != WL_CONNECTED))
-  {
-    Serial.print(F("."));
-    delay(1000);
-    ++cnt;
-
-    if (cnt == 20)
-    {
-      Serial.println("Can't connect to WIFI, restarting");
-      delay(100);
-      ESP.restart();
-    }
-  }
-  Serial.println(F(" connected"));
-
-  // Find internet time
-  setTime();
-}
-
-// Gets time from ntp server
-void Network::getTime(tm *t)
-{
-  // Get seconds since 1.1.1970.
-  time_t nowSecs = time(nullptr);
-
-  // Used to store time
-  struct tm timeinfo;
-  gmtime_r(&nowSecs, t);
-
-}
-
-bool Network::getData(char* city, tm *t)
-{
-  bool f = 0;
-
-  // If not connected to wifi reconnect wifi
-  if (WiFi.status() != WL_CONNECTED)
-  {
-    WiFi.reconnect();
-
-    delay(5000);
+    // Initiating wifi, like in BasicHttpClient example
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, pass);
 
     int cnt = 0;
-    Serial.println(F("Waiting for WiFi to reconnect..."));
+    Serial.print(F("Waiting for WiFi to connect..."));
     while ((WiFi.status() != WL_CONNECTED))
     {
-      // Prints a dot every second that wifi isn't connected
-      Serial.print(F("."));
-      delay(1000);
-      ++cnt;
+        Serial.print(F("."));
+        delay(1000);
+        ++cnt;
 
-      if (cnt == 7)
-      {
-        Serial.println("Can't connect to WIFI, restart initiated.");
-        delay(100);
-        ESP.restart();
-      }
+        if (cnt == 20)
+        {
+            Serial.println("Can't connect to WIFI, restarting");
+            delay(100);
+            ESP.restart();
+        }
     }
-  }
+    Serial.println(F(" connected"));
+}
 
-  // Wake up if sleeping and save inital state
-  bool sleep = WiFi.getSleep();
-  WiFi.setSleep(false);
+bool Network::getData(char *city, tm *t)
+{
+    bool f = 0;
 
-  // Http object used to make get request
-  HTTPClient http;
-
-  http.getStream().setTimeout(10);
-  http.getStream().flush();
-
-  char temp[120];
-  for (int i = 0; i < sizeof(cities); i++)
-  {
-    if (strstr(cities[i], city))
+    // If not connected to wifi reconnect wifi
+    if (WiFi.status() != WL_CONNECTED)
     {
-      sprintf(temp, "https://www.timeapi.io/api/Time/current/zone?timeZone=%s", cities[i]);
-      Serial.println(cities[i]);
-      if(city1_name == NULL)
-        city1_name = cities[i];
-      else
-        city2_name = cities[i];
-      break;
+        WiFi.reconnect();
+
+        delay(5000);
+
+        int cnt = 0;
+        Serial.println(F("Waiting for WiFi to reconnect..."));
+        while ((WiFi.status() != WL_CONNECTED))
+        {
+            // Prints a dot every second that wifi isn't connected
+            Serial.print(F("."));
+            delay(1000);
+            ++cnt;
+
+            if (cnt == 7)
+            {
+                Serial.println("Can't connect to WIFI, restart initiated.");
+                delay(100);
+                ESP.restart();
+            }
+        }
     }
-  }
-  if (sizeof(temp) < 20)
-  {
-    Serial.println("City not found");
-    return 0;
-  }
 
-  // Initiate http
-  http.begin(temp);
+    // Wake up if sleeping and save inital state
+    bool sleep = WiFi.getSleep();
+    WiFi.setSleep(false);
 
-  // Actually do request
-  int httpCode = http.GET();
-  if (httpCode == 200)
-  {
-    while (http.getStream().available() && http.getStream().peek() != '{')
-      (void)http.getStream().read();
+    WiFiClientSecure client; 
+    client.setInsecure();    // Use HTTPS but don't compare certificate
+    client.flush();
+    client.setTimeout(10);
 
-    // Try parsing JSON object
-    DeserializationError error = deserializeJson(doc, http.getStream());
+    // Http object used to make get request
+    HTTPClient http;
+    http.getStream().setNoDelay(true);
+    http.getStream().setTimeout(1);
 
-    if (error)
+    char temp[120];
+    for (int i = 0; i < sizeof(cities); i++)
     {
-      Serial.print(F("deserializeJson() failed: "));
-      Serial.println(error.c_str());
-      f = 1;
+        if (strstr(cities[i], city))
+        {
+            sprintf(temp, "https://www.timeapi.io/api/Time/current/zone?timeZone=%s", cities[i]);
+            Serial.println(cities[i]);
+            if (city1_name == NULL)
+                city1_name = cities[i];
+            else
+                city2_name = cities[i];
+            break;
+        }
+    }
+    if (sizeof(temp) < 20)
+    {
+        Serial.println("City not found");
+        return 0;
+    }
+
+    // Initiate http
+    http.begin(client, temp);
+
+    // Actually do request
+    int httpCode = http.GET();
+    if (httpCode == 200)
+    {
+        while (http.getStream().available() && http.getStream().peek() != '{')
+            (void)http.getStream().read();
+
+        // Try parsing JSON object
+        DeserializationError error = deserializeJson(doc, http.getStream());
+
+        if (error)
+        {
+            Serial.print(F("deserializeJson() failed: "));
+            Serial.println(error.c_str());
+            f = 1;
+        }
+        else
+        {
+            // Set all data got from internet using formatTemp and formatWind defined above
+            // This part relies heavily on ArduinoJson library
+
+            Serial.println("Success");
+
+            t->tm_hour = doc["hour"];
+            t->tm_min = doc["minute"];
+
+            // Save our data to data pointer from main file
+            f = 0;
+        }
+    }
+    else if (httpCode == 404)
+    {
+        // Coin id not found
+        display.clearDisplay();
+        display.setCursor(10, 10);
+        display.setTextSize(2);
+        display.println(F("Time has not been fetched!"));
+        display.display();
+        while (1)
+            ;
     }
     else
     {
-      // Set all data got from internet using formatTemp and formatWind defined above
-      // This part relies heavily on ArduinoJson library
-
-      Serial.println("Success");
-
-      t->tm_year = doc["year"];
-      t->tm_mon = doc["month"];
-      t->tm_mday = doc["day"];
-      t->tm_hour = doc["hour"];
-      t->tm_min = doc["minute"];
-      t->tm_sec = doc["seconds"];
-
-      // Save our data to data pointer from main file
-      f = 0;
+        f = 1;
     }
-  }
-  else if (httpCode == 404)
-  {
-    // Coin id not found
-    display.clearDisplay();
-    display.setCursor(10, 10);
-    display.setTextSize(2);
-    display.println(F("Time has not been fetched!"));
-    display.display();
-    while (1)
-      ;
-  }
-  else
-  {
-    f = 1;
-  }
 
-  // Clear document and end http
-  doc.clear();
-  http.end();
+    // Clear document and end http
+    doc.clear();
+    http.end();
+    client.stop();
 
-  // Return to initial state
-  WiFi.setSleep(sleep);
+    // Return to initial state
+    WiFi.setSleep(sleep);
 
-  return !f;
-}
-
-// Function for initial time setting ovet the ntp server
-void Network::setTime()
-{
-  // Used for setting correct time
-  configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-
-  Serial.print(F("Waiting for NTP time sync: "));
-  time_t nowSecs = time(nullptr);
-  while (nowSecs < 8 * 3600 * 2)
-  {
-    delay(500);
-    Serial.print(F("."));
-    yield();
-    nowSecs = time(nullptr);
-  }
-
-  Serial.println();
-
-  // Used to store time info
-  struct tm timeinfo;
-  gmtime_r(&nowSecs, &timeinfo);
-
-  Serial.print(F("Current time: "));
-  Serial.print(asctime(&timeinfo));
+    return !f;
 }

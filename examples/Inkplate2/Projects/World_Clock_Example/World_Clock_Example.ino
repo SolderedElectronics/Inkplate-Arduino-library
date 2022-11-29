@@ -42,8 +42,8 @@ Network network;
 Inkplate display;
 
 // Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
 
 // Structure for time and date data
 struct tm t;
@@ -118,9 +118,6 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city_name)
         display.drawThickLine(xStart[i], yStart[i], xEnd[i], yEnd[i], INKPLATE2_BLACK, 1);
     }
 
-    // Draw filled circle in the middle
-    display.fillCircle(x_pos + w / 2, y_pos + w / 2, 5, INKPLATE2_BLACK);
-
     // This part of code draws needles and calculates their angles
     int x_minute, y_minute, x_hour, y_hour;
     x_minute = x_pos + w / 2 + 30 * (float)sin((t.tm_min / (float)60) * 2 * (float)3.14); //
@@ -130,6 +127,9 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city_name)
 
     display.drawThickLine(x_pos + w / 2, y_pos + w / 2, x_minute, y_minute, INKPLATE2_RED, 2); // Needle for minutes
     display.drawThickLine(x_pos + w / 2, y_pos + w / 2, x_hour, y_hour, INKPLATE2_BLACK, 3);   // Needle for hours
+
+    // Draw filled circle in the middle
+    display.fillCircle(x_pos + w / 2, y_pos + w / 2, 5, INKPLATE2_BLACK);
 
     display.setTextSize(1);       // Set text size in comparison to original text 5x7
     display.setFont(&Inter8pt7b); // Set customn font

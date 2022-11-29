@@ -630,12 +630,9 @@ class Network
   public:
     // Functions we can access in main file
     void begin();
-    void getTime(tm *t);
     bool getData(char* city, tm *t);
     
   private:
-    // Functions called from within our class
-    void setTime();
 };
 
 #endif
