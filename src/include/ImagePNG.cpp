@@ -220,16 +220,27 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
     pngle_set_draw_callback(pngle, pngle_on_draw);
 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 100;
-    uint8_t *buff = downloadFile(url, &defaultLen);
+    uint8_t *buf = 0;
 
-    if (!buff)
+    if (strncmp(url, "http://", 7) == 0)
+    {
+        Serial.print("Downloading using HTTP...");
+        buf = downloadFile(url, &defaultLen);
+    }
+    else if (strncmp(url, "https://", 8) == 0)
+    {
+        Serial.println("Downloading using HTTPS...");
+        buf = downloadFileHTTPS(url, &defaultLen);
+    }
+
+    if (!buf)
         return 0;
 
-    if (pngle_feed(pngle, buff, defaultLen) < 0)
+    if (pngle_feed(pngle, buf, defaultLen) < 0)
         ret = 0;
 
     pngle_destroy(pngle);
-    free(buff);
+    free(buf);
     return ret;
 }
 

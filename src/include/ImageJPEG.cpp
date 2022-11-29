@@ -123,10 +123,21 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
     bool ret = 0;
 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4;
-    uint8_t *buff = downloadFileHTTPS(url, &defaultLen);
+    uint8_t *buf = 0;
 
-    ret = drawJpegFromBuffer(buff, defaultLen, x, y, dither, invert);
-    free(buff);
+    if (strncmp(url, "http://", 7) == 0)
+    {
+        Serial.print("Downloading using HTTP...");
+        buf = downloadFile(url, &defaultLen);
+    }
+    else if (strncmp(url, "https://", 8) == 0)
+    {
+        Serial.print("Downloading using HTTPS...");
+        buf = downloadFileHTTPS(url, &defaultLen);
+    }
+
+    ret = drawJpegFromBuffer(buf, defaultLen, x, y, dither, invert);
+    free(buf);
 
     return ret;
 }

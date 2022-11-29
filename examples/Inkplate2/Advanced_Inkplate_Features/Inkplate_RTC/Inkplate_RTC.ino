@@ -50,6 +50,8 @@ void setup()
 
     display.setTextSize(1); // Set text size
 
+    display.print("Test");
+
     // Display to screen
     display.display();
 }

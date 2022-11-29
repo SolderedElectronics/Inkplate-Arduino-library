@@ -73,7 +73,7 @@ bool NetworkClient::isConnected()
 }
 
 /**
- * @brief       downloadFile function downloads file from url
+ * @brief       Download a file via https
  *
  * @param       char *url
  *              pointer to URL link that holds file
@@ -85,50 +85,70 @@ bool NetworkClient::isConnected()
  */
 uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
 {
-    WiFiClientSecure client;
-    client.setInsecure();
-    int result = getRequest(&client, url);
-    if (result == 0)
+    if (!isConnected())
     {
-        Serial.println("HTTP Error!");
-        return 0;
-    }
-    else if (result == 404)
-    {
-        Serial.println("404");
-        return 0;
+        return NULL;
     }
 
-    uint8_t *buffer = (uint8_t *)ps_malloc(client.available());
+    WiFiClientSecure client; // For HTTPS
+    client.setInsecure(); // Use HTTPS but don't compare certificate
+    client.flush();
+    client.setTimeout(10);
+
+    Serial.println("Success????");
+
+    bool sleep = WiFi.getSleep();
+    WiFi.setSleep(false);
+
+    HTTPClient http;
+    http.getStream().setNoDelay(true);
+    http.getStream().setTimeout(1);
+
+    http.begin(client, url); // HTTP client initialization
+
+    int httpCode = http.GET();
+
+    int32_t size = http.getSize();
+    if (size == -1)
+        size = *defaultLen;
+    else
+        *defaultLen = size;
+
+    uint8_t *buffer = (uint8_t *)ps_malloc(size);
     uint8_t *buffPtr = buffer;
 
-    int32_t total = client.available();
-    int32_t len = total;
-
-    uint8_t buff[512] = {0};
-
-    // WiFiClient *stream = http.getStreamPtr();
-    while (client.connected() && (len > 0 || len == -1))
+    if (httpCode == HTTP_CODE_OK)
     {
-        size_t size = client.available();
+        int32_t total = http.getSize();
+        int32_t len = total;
 
-        if (size)
-        {
-            int c = client.readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
-            memcpy(buffPtr, buff, c);
+        uint8_t buff[512] = {0};
 
-            if (len > 0)
-                len -= c;
-            buffPtr += c;
-        }
-        else if (len == -1)
+        WiFiClient *stream = http.getStreamPtr();
+        while (http.connected() && (len > 0 || len == -1))
         {
-            len = 0;
+            size_t size = stream->available();
+
+            if (size)
+            {
+                int c = stream->readBytes(buff, ((size > sizeof(buff)) ? sizeof(buff) : size));
+                memcpy(buffPtr, buff, c);
+
+                if (len > 0)
+                    len -= c;
+                buffPtr += c;
+            }
+            else if (len == -1)
+            {
+                len = 0;
+            }
         }
     }
-
+    
+    http.end();
     client.stop();
     WiFi.setSleep(sleep);
+
     return buffer;
 }
 
@@ -174,56 +194,6 @@ uint8_t *NetworkClient::downloadFile(WiFiClient *s, int32_t len)
     WiFi.setSleep(sleep);
 
     return buffer;
-}
-
-/**
- * @brief               Create a get request
- *
- * @param               WiFiClientSecure * client: pointer to client used in base class
- *
- * @param               char * _api_root_url: root url of the api (eg. www.api-service.com)
- *
- * @param               char * _api_call_url: full url of the api call (eg. www.api-service.com/getdata?key=12345)
- *
- * @returns             0 if there was an error, 404 if not found, 1 if successful
- */
-int NetworkClient::getRequest(WiFiClientSecure *client, const char *_url)
-{
-    // Don't check SSL certificate but still use HTTPS
-    client->setInsecure();
-
-    if (!client->connect(_url, 443))
-    {
-        return 0;
-    }
-
-    client->setTimeout(10);
-    client->flush();
-    client->print("GET ");
-    client->print(_url);
-    client->println(" HTTP/1.0");
-    client->print("Host: ");
-    client->println(_url);
-    client->println("Connection: close");
-    client->println();
-
-    while (client->available() == 0)
-        ;
-
-    String line = client->readStringUntil('\r');
-    if (line != "HTTP/1.0 200 OK")
-    {
-        return 0;
-    }
-    else if (line == "HTTP/1.0 404 Not Found")
-    {
-        return 404;
-    }
-
-    while (client->available() && client->peek() != '{')
-        (void)client->read();
-
-    return 1;
 }
 
 uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)

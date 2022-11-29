@@ -57,8 +57,6 @@ class NetworkClient
     uint8_t *downloadFileHTTPS(const char *url, int32_t *defaultLen);
     uint8_t *downloadFile(WiFiClient *url, int32_t len);
     int getRequest(WiFiClientSecure *client, const char *_url);
-
-  private:
 };
 
 #endif
