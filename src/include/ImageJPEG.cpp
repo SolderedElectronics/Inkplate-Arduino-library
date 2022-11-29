@@ -123,7 +123,7 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
     bool ret = 0;
 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4;
-    uint8_t *buff = downloadFile(url, &defaultLen);
+    uint8_t *buff = downloadFileHTTPS(url, &defaultLen);
 
     ret = drawJpegFromBuffer(buff, defaultLen, x, y, dither, invert);
     free(buff);

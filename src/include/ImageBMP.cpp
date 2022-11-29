@@ -479,7 +479,7 @@ bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, 
 {
     bool ret = 0;
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
-    uint8_t *buf = downloadFile(url, &defaultLen);
+    uint8_t *buf = downloadFileHTTPS(url, &defaultLen);
 
     bitmapHeader bmpHeader;
     readBmpHeader(buf, &bmpHeader);
