@@ -3,7 +3,7 @@
    For this example you will need a micro USB cable, Inkplate 6PLUS,
    BME680 sensor with easyC connector on it: https://e-radionica.com/en/bme680-breakout-made-by-e-radionica.html
    and a easyC cable: https://e-radionica.com/en/easyc-cable-20cm.html
-   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
+   Select "Inkplate 6PLUS(ESP32) or Soldered Inkplate 6Plus" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
@@ -15,22 +15,22 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by Soldered
+   30 November 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select Inkplate 6PLUS or Inkplate 6PLUS V2 in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
-#include "Adafruit_BME680.h" //Adafruit library for BME680 Sensor
+//#include "Adafruit_BME680.h" //Adafruit library for BME680 Sensor
+#include "BME680-SOLDERED.h" //Soldered library for BME680 Sensor
 #include "Inkplate.h"        //Include Inkplate library to the sketch
-#include <Adafruit_Sensor.h> //Adafruit library for sensors
+//#include <Adafruit_Sensor.h> //Adafruit library for sensors
 
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
-Adafruit_BME680
-    bme; // Create an object on Adafruit BME680 library
-         //(with no arguments sent to constructor, that means we are using I2C communication for BME680 sensor)
+BME680 bme680; // Create an object on Adafruit BME680 library (with no arguments sent to constructor, that means we are
+               // using I2C communication for BME680 sensor)
 
 int n = 0; // Variable that keep track on how many times screen has been partially updated
 
@@ -41,63 +41,47 @@ void setup()
     display.display();      // Put clear image on display
     display.setTextSize(2); // Set text scaling to two (text will be two times bigger than normal)
 
-    if (!bme.begin(0x76))
-    { // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for sensor
+    if (!bme680.begin())
+    { // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for sensor 
         display.println("Sensor init failed!");
         display.println("Check sensor wiring/connection!");
         display.partialUpdate();
         while (1)
             ;
     }
-
-    // Set up oversampling and filter initialization for the sensor
-    bme.setTemperatureOversampling(BME680_OS_8X);
-    bme.setHumidityOversampling(BME680_OS_2X);
-    bme.setPressureOversampling(BME680_OS_4X);
-    bme.setIIRFilterSize(BME680_FILTER_SIZE_3);
-    bme.setGasHeater(320, 150); // 320*C for 150 ms
 }
 
 void loop()
 {
-    if (!bme.performReading())
-    { // If sending command to start reading data fails, send error message to display
-        display.clearDisplay();
-        display.setCursor(0, 0);
-        display.print("Failed to read data from sensor");
-        display.partialUpdate();
+    display.clearDisplay(); // Print out new data
+    display.setCursor(0, 0);
+    display.print("Air temperature: ");
+    display.print(bme680.readTemperature());
+    display.println(" *C");
+
+    display.print("Air pressure: ");
+    display.print(bme680.readPressure() / 100.0);
+    display.println(" hPa");
+
+    display.print("Air humidity: ");
+    display.print(bme680.readHumidity());
+    display.println(" %");
+
+    display.print("Gas sensor resistance: ");
+    display.print(bme680.readGasResistance() / 1000.0);
+    display.println(" kOhms");
+
+    if (n > 20)
+    { // If display has been partially updated more than 20 times, do a full refresh, otherwise, perform a partial
+      // update.
+        display.display();
+        n = 0;
     }
     else
-    {                           // Otherwise, clear frame buffer of epaper display
-        display.clearDisplay(); // Print out new data
-        display.setCursor(0, 0);
-        display.print("Air temperature: ");
-        display.print(bme.temperature);
-        display.println(" *C");
-
-        display.print("Air pressure: ");
-        display.print(bme.pressure / 100.0);
-        display.println(" hPa");
-
-        display.print("Air humidity: ");
-        display.print(bme.humidity);
-        display.println(" %");
-
-        display.print("Gas sensor resistance: ");
-        display.print(bme.gas_resistance / 1000.0);
-        display.println(" kOhms");
-
-        if (n > 20)
-        { // If display has been partially updated more than 20 times, do a full refresh, otherwise, perform a partial
-          // update.
-            display.display();
-            n = 0;
-        }
-        else
-        {
-            display.partialUpdate();
-            n++;
-        }
+    {
+        display.partialUpdate();
+        n++;
     }
+
     delay(2000); // Wait a little bit between readings
 }
