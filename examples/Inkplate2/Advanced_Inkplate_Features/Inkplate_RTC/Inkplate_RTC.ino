@@ -22,20 +22,23 @@
 // Adjust your time zone, 2 means UTC+2
 int timeZone = 2;
 
-// Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
-
 #include "Inkplate.h"
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
+
+// For ESP32 time
+#include <sys/time.h>
 
 // Create network object for WiFi and HTTP functions
 Network network;
 
 // Initialize Inkplate object
 Inkplate display;
+
+// Write your SSID and password
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
 
 // Structure that contains time info
 struct tm t;
@@ -45,15 +48,22 @@ void setup()
     // Begin serial communication
     Serial.begin(115200);
 
-    // Initialize Inkplate
-    display.begin();
+    // Initialize network
+    network.begin();
 
-    display.setTextSize(1); // Set text size
+    display.begin();        // Init library (you should call this function ONLY ONCE)
+    display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
+    //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside ESP32).
+    display.display(); // Clear everything that has previously been on a screen
+    display.setCursor(10, 10);
+    display.setTextSize(2);
+    display.drawTextWithShadow(0, 30, "Welcome to", INKPLATE2_RED, INKPLATE2_BLACK);  // Draw text with shadow
+    display.drawTextWithShadow(0, 50, "Inkplate 2!", INKPLATE2_RED, INKPLATE2_BLACK); // Draw text with shadow
+    display.display();                                                                // Write hello message
+    delay(5000);                                                                      // Wait a little bit
 
-    display.print("Test");
+    setTime()
 
-    // Display to screen
-    display.display();
 }
 
 void loop()

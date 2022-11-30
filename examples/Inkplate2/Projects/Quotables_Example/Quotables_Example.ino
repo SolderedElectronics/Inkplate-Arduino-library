@@ -7,7 +7,7 @@
 
     This example shows you how to use simple API call without API key. Response
     from server is in JSON format, so that will be shown too how it is used. What happens
-    here is basically ESP32 connects to WiFi and sends API call and server returns HTML 
+    here is basically ESP32 connects to WiFi and sends API call and server returns HTML
     document containing one quote and some information about it, then using library ArduinoJSON
     we extract only quote from JSON data and show it on Inkplate 2. After displaying quote
     ESP32 goes to sleep and wakes up every 300 seconds to show new quote(you can change time interval).
@@ -46,11 +46,12 @@ Network network;
 Inkplate display;
 
 // Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soric WiFi";
+char pass[] = "pitajrobija11";
 
-char quote[128]; // Buffer to store quote
+char quote[256]; // Buffer to store quote and length
 char author[64];
+int len; // Store quote length (useful for printing)
 
 void setup()
 {
@@ -66,7 +67,7 @@ void setup()
     network.begin();
 
     // Try to get the new random quote from the Internet.
-    while (!network.getData(quote, author))
+    while (!network.getData(quote, author, &len))
     {
         Serial.println("Retrying retriving data!");
         delay(1000);
@@ -95,9 +96,63 @@ void drawAll()
     display.setFont(&LoveLetter_Regular10); // Set custom font
     display.setTextSize(1);
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
-    display.setCursor(0, 15);
-    display.println(quote); // Print quote
-    display.setCursor(30,100);
+    printQuote();
+    display.setCursor(0, 100);
     display.print("-");
     display.println(author); // Print quote
+}
+
+void printQuote()
+{
+    int currentChar = 0;
+    char currentWordBuf[128] = {0};
+    display.setCursor(0, 15);
+    bool lastWord = false;
+    int currentRow = 0; 
+
+    while (1)
+    {
+        // Start from the current char
+        int i = currentChar;
+        while (quote[i] != ' ') // Find the next space
+        {
+            i++; // Finds the index where the current word ends
+            if (i > len) lastWord = true; // If we went further than index, we're in the last word
+        }
+
+        // Clear current word buffer and copy the current word substring in it
+        memset(currentWordBuf, 0, 128);
+
+        if (!lastWord)
+        {
+            // copy currently observed part of the string as the current word
+            memcpy(currentWordBuf, quote + currentChar, i - currentChar);
+        }
+        else
+        {
+            // If it's the last word, copy it until the ending
+            memcpy(currentWordBuf, quote + currentChar, len-currentChar);
+        }
+
+        int16_t x1, y1;
+        uint16_t w, h;
+
+        // Check if the current word will go out of bounds
+        display.getTextBounds(currentWordBuf, display.getCursorX(), display.getCursorY(), &x1, &y1, &w, &h);
+        if ((x1 + w) > 202)
+        {
+            // Print in new row if it will
+            currentRow++;
+            display.setCursor(0, (15 * currentRow) + 15);
+        }
+
+        // Print word and space
+        display.print(currentWordBuf);
+        display.print(" ");
+
+        // If we've reached the last word, end the print
+        if(lastWord) return;
+
+        currentChar = i + 1;
+    }
 }

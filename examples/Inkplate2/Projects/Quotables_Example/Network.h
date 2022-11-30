@@ -46,7 +46,7 @@ class Network
     // Functions we can access in main file
     void begin();
     void getTime(char *timeStr);
-    bool getData(char* text, char* auth);
+    bool getData(char* text, char* auth, int* len);
 
   private:
     // Functions called from within our class

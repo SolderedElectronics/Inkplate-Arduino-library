@@ -86,7 +86,7 @@ void Network::getTime(char *timeStr)
     timeStr[8] = hr % 10 + '0';
 }
 
-bool Network::getData(char* text, char* auth)
+bool Network::getData(char* text, char* auth, int* len)
 {
     bool f = 0;
 
@@ -119,6 +119,10 @@ bool Network::getData(char* text, char* auth)
     bool sleep = WiFi.getSleep();
     WiFi.setSleep(false);
 
+    // For HTTPS
+    WiFiClientSecure client;
+    client.setInsecure();
+
     // Http object used to make get request
     HTTPClient http;
 
@@ -126,8 +130,8 @@ bool Network::getData(char* text, char* auth)
     http.getStream().flush();
 
     // Initiate http
-    char link[] = "https://api.quotable.io/random";
-    http.begin(link);
+    char link[] = "https://api.quotable.io/random?maxLength=135";
+    http.begin(client, link);
 
     // Actually do request
     int httpCode = http.GET();
@@ -159,6 +163,9 @@ bool Network::getData(char* text, char* auth)
             const char *buff2 = doc["author"];
 
             strcpy(auth, buff2);
+
+            //memcpy(len,doc["length"],sizeof(int));
+            * len = doc["length"];
 
             // Save our data to data pointer from main file
             f = 0;
