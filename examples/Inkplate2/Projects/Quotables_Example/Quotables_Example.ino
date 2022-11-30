@@ -46,8 +46,8 @@ Network network;
 Inkplate display;
 
 // Put in your ssid and password
-char ssid[] = "Soric WiFi";
-char pass[] = "pitajrobija11";
+char ssid[] = "";
+char pass[] = "";
 
 char quote[256]; // Buffer to store quote and length
 char author[64];
