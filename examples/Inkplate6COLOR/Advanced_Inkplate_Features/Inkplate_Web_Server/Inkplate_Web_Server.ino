@@ -15,7 +15,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by Soldered
+   2 December 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -30,8 +30,8 @@
 #include <WiFiClient.h> //Include ESP32 WiFi library for AP
 #include <uri/UriBraces.h>
 
-#define ssid "Inkplate"
-#define pass "e-radionica"
+#define ssid "Inkplate 6Color"
+#define pass "Soldered"
 
 Inkplate display;     // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 WebServer server(80); // Create Web server on port 80 (HTTP port number)

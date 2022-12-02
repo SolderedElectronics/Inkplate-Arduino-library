@@ -1,7 +1,7 @@
 /*
    Basic_gray example for Soldered Inkplate 10
    For this example you will need only USB cable and Inkplate 10
-   Select "Inkplate 10(ESP32)" from Tools -> Board menu.
+   Select "Inkplate 10(ESP32)" or "Soldered Inkplate10" from Tools -> Board menu.
    Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
@@ -14,12 +14,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by Soldered
+   2 December 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 #include "Inkplate.h" //Include Inkplate library to the sketch
@@ -358,7 +358,7 @@ void loop()
         display.clearDisplay();
         display.setRotation(
             r); // Set rotation will sent rotation for the entire display, so you can use it sideways or upside-down
-        display.print("INKPLATE6");
+        display.print("INKPLATE10");
         display.display();
         r++;
         delay(DELAY_MS);

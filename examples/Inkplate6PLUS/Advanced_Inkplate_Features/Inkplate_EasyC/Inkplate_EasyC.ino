@@ -3,7 +3,7 @@
    For this example you will need a micro USB cable, Inkplate 6PLUS,
    BME680 sensor with easyC connector on it: https://e-radionica.com/en/bme680-breakout-made-by-e-radionica.html
    and a easyC cable: https://e-radionica.com/en/easyc-cable-20cm.html
-   Select "Inkplate 6PLUS(ESP32) or Soldered Inkplate 6Plus" from Tools -> Board menu.
+   Select "Inkplate 6PLUS(ESP32)" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
@@ -20,13 +20,12 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
-//#include "Adafruit_BME680.h" //Adafruit library for BME680 Sensor
 #include "BME680-SOLDERED.h" //Soldered library for BME680 Sensor
 #include "Inkplate.h"        //Include Inkplate library to the sketch
-//#include <Adafruit_Sensor.h> //Adafruit library for sensors
 
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 BME680 bme680; // Create an object on Adafruit BME680 library (with no arguments sent to constructor, that means we are
@@ -41,8 +40,10 @@ void setup()
     display.display();      // Put clear image on display
     display.setTextSize(2); // Set text scaling to two (text will be two times bigger than normal)
 
+    // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for the sensor but you
+    // don't need to specify that
     if (!bme680.begin())
-    { // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for sensor 
+    {
         display.println("Sensor init failed!");
         display.println("Check sensor wiring/connection!");
         display.partialUpdate();
@@ -60,15 +61,15 @@ void loop()
     display.println(" *C");
 
     display.print("Air pressure: ");
-    display.print(bme680.readPressure() / 100.0);
+    display.print(bme680.readPressure() * 10);
     display.println(" hPa");
 
     display.print("Air humidity: ");
-    display.print(bme680.readHumidity());
+    display.print(bme680.readHumidity() / 10);
     display.println(" %");
 
     display.print("Gas sensor resistance: ");
-    display.print(bme680.readGasResistance() / 1000.0);
+    display.print(bme680.readGasResistance());
     display.println(" kOhms");
 
     if (n > 20)

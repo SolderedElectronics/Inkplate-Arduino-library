@@ -1,8 +1,9 @@
 /*
    Inkplate_Web_Server example for Soldered Inkplate 10
-   For this example you will need a micro USB cable, Inkplate 10 and a device with WiFi and Internet brower (PC, Laptop,
-   Smartphone, ...). Select "Inkplate 10(ESP32)" from Tools -> Board menu. Don't have "Inkplate 10(ESP32)" option?
-   Follow our tutorial and add it: https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+   For this example you will need a micro USB cable, Inkplate 10 and a device with WiFi and Internet browser (PC, Laptop,
+   Smartphone, ...). Select "Inkplate 10(ESP32)"  or "Soldered Inkplate10" from Tools -> Board menu. Don't have
+   "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
+   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can use Inkplate as a small and simple standlone Web Server.
    You need to connect to Inkplate with WiFi and open IP address shown on Inkplate display.
@@ -15,12 +16,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by Soldered
+   2 December 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 #include "Inkplate.h"   //Include Inkplate library to the sketch
@@ -30,8 +31,8 @@
 #include <WiFiClient.h> //Include ESP32 WiFi library for AP
 #include <uri/UriBraces.h>
 
-#define ssid "Inkplate"
-#define pass "e-radionica"
+#define ssid "Inkplate 10"
+#define pass "Soldered"
 
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 WebServer server(80);            // Create Web server on port 80 (HTTP port number)

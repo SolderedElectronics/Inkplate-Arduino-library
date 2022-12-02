@@ -1,6 +1,6 @@
 /*
    Inkplate_Web_Server example for Soldered Inkplate 5
-   For this example you will need a micro USB cable, Inkplate 5 and a device with WiFi and Internet brower (PC, Laptop,
+   For this example you will need a micro USB cable, Inkplate 5 and a device with WiFi and Internet browser (PC, Laptop,
    Smartphone, ...). Select "Inkplate 5(ESP32)" from Tools -> Board menu. Don't have "Inkplate 5(ESP32)" option? Follow
    our tutorial and add it: https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
@@ -30,8 +30,8 @@
 #include <WiFiClient.h> //Include ESP32 WiFi library for AP
 #include <uri/UriBraces.h>
 
-#define ssid ""
-#define pass ""
+#define ssid "Inkplate"
+#define pass "Soldered"
 
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 WebServer server(80);            // Create Web server on port 80 (HTTP port number)

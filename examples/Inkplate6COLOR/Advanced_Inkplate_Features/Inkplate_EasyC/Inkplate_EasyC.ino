@@ -9,13 +9,12 @@
 
    This example will show you how you can read temperature, humidity, air pressure and gas data from BME680.
    In order to compile this example successfuly, you will also need to download and install
-   Adafruit BME680 library: https://github.com/adafruit/Adafruit_BME680
-   and Adafruit Sensor library ( https://github.com/adafruit/Adafruit_Sensor ).
+   Soldered BME680 library: https://github.com/SolderedElectronics/Soldered-BME280-BME680-Gas-Sensor-Arduino-Library
    If you don't know how to install library you can read our tutorial https://e-radionica.com/en/blog/arduino-library/
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by Soldered
+   2 December 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -23,13 +22,12 @@
 #error "Wrong board selection for this example, please select Inkplate 6COLOR in the boards menu."
 #endif
 
-#include "Adafruit_BME680.h" //Adafruit library for BME680 Sensor
+#include "BME680-SOLDERED.h" //Soldered library for BME680 Sensor
 #include "Inkplate.h"        //Include Inkplate library to the sketch
-#include <Adafruit_Sensor.h> //Adafruit library for sensors
 
-Inkplate display;    // Create an object on Inkplate library
-Adafruit_BME680 bme; // Create an object on Adafruit BME680 library
-                     //(with no arguments sent to constructor, that means we are using I2C communication for BME680 sensor)
+Inkplate display; // Create an object on Inkplate library
+BME680 bme680; // Create an object on Soldered BME680 library (with no arguments sent to constructor, that means we are
+               // using I2C or easyC communication for BME680 sensor)
 
 int n = 0; // Variable that keep track on how many times screen has been partially updated
 void setup()
@@ -42,55 +40,43 @@ void setup()
     display.setTextColor(INKPLATE_BLACK);
     display.setCursor(0, 0);
 
-    if (!bme.begin(0x76))
-    { // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for sensor
+    // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for the sensor but doesn't need to
+    // specify it
+    if (!bme680.begin())
+    { 
         display.println("Sensor init failed!");
         display.println("Check sensor wiring/connection!");
         display.display();
         while (1)
             ;
     }
-
-    // Set up oversampling and filter initialization for the sensor
-    bme.setTemperatureOversampling(BME680_OS_8X);
-    bme.setHumidityOversampling(BME680_OS_2X);
-    bme.setPressureOversampling(BME680_OS_4X);
-    bme.setIIRFilterSize(BME680_FILTER_SIZE_3);
-    bme.setGasHeater(320, 150); // 320*C for 150 ms
 }
 
 void loop()
 {
-    if (!bme.performReading())
-    { // If sending command to start reading data fails, send error message to display
-        display.setCursor(0, 0);
-        display.clearDisplay();
-        display.println("Failed to read data from sensor");
-        display.display();
-    }
-    else
-    {
-        Serial.println("Reading started");
-        // Otherwise, clear frame buffer of epaper display
-        display.clearDisplay(); // Print out new data
-        display.setCursor(0, 0);
-        display.print("Air temperature: ");
-        display.print(bme.temperature);
-        display.println(" *C");
 
-        display.print("Air pressure: ");
-        display.print(bme.pressure / 100.0);
-        display.println(" hPa");
+    Serial.println("Reading started");
 
-        display.print("Air humidity: ");
-        display.print(bme.humidity);
-        display.println(" %");
+    display.clearDisplay(); // Print out new data
+    display.setCursor(0, 0);
+    display.print("Air temperature: ");
+    display.print(bme680.readTemperature());
+    display.println(" *C");
 
-        display.print("Gas sensor resistance: ");
-        display.print(bme.gas_resistance / 1000.0);
-        display.println(" kOhms");
+    display.print("Air pressure: ");
+    display.print(bme680.readPressure() * 10);
+    display.println(" hPa");
 
-        display.display();
-    }
-    delay(10000); // Wait a little bit between readings
+    display.print("Air humidity: ");
+    display.print(bme680.readHumidity() / 10);
+    display.println(" %");
+
+    display.print("Gas sensor resistance: ");
+    display.print(bme680.readGasResistance());
+    display.println(" kOhms");
+
+    Serial.println("Displaying ...");
+    display.display();
+
+    delay(15000); // Wait a little bit between readings
 }
