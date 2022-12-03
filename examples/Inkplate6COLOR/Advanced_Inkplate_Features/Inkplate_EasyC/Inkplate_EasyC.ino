@@ -24,6 +24,7 @@
 
 #include "BME680-SOLDERED.h" //Soldered library for BME680 Sensor
 #include "Inkplate.h"        //Include Inkplate library to the sketch
+#include "icons.h"
 
 Inkplate display; // Create an object on Inkplate library
 BME680 bme680; // Create an object on Soldered BME680 library (with no arguments sent to constructor, that means we are
@@ -43,7 +44,7 @@ void setup()
     // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for the sensor but doesn't need to
     // specify it
     if (!bme680.begin())
-    { 
+    {
         display.println("Sensor init failed!");
         display.println("Check sensor wiring/connection!");
         display.display();
@@ -54,29 +55,41 @@ void setup()
 
 void loop()
 {
+    // Clear frame buffer of the display
+    display.clearDisplay();
 
-    Serial.println("Reading started");
+    // Set text size to print big numbers for temperature and humidity
+    display.setTextSize(7);
 
-    display.clearDisplay(); // Print out new data
-    display.setCursor(0, 0);
-    display.print("Air temperature: ");
+    // Display the temperature icon and measured value
+    display.setCursor(250, 45);
     display.print(bme680.readTemperature());
-    display.println(" *C");
+    display.print(" *C");
+    display.drawImage(temperature_icon, 90, 15, 110, 110,
+                      BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
 
-    display.print("Air pressure: ");
-    display.print(bme680.readPressure() * 10);
-    display.println(" hPa");
-
-    display.print("Air humidity: ");
+    // Display humidity icon and measured value
+    display.setCursor(250, 180);
     display.print(bme680.readHumidity() / 10);
-    display.println(" %");
+    display.print(" %");
+    display.drawImage(humidity_icon, 90, 150, 110, 110,
+                      BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
 
-    display.print("Gas sensor resistance: ");
-    display.print(bme680.readGasResistance());
-    display.println(" kOhms");
+    // Display the pressure icon and measured value
+    display.setTextSize(5);
+    display.setCursor(250, 315);
+    display.print(bme680.readPressure() * 10);
+    display.print(" hPa");
+    display.drawImage(pressure_icon, 90, 285, 110, 110,
+                      BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
 
-    Serial.println("Displaying ...");
+    // Display Soldered logo
+    display.drawImage(logo, 425, 401, 160, 32,
+                      BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
+
+    // This line actually drawing on the Inkplate screen, previous lines just drawing into the frame buffer
     display.display();
 
-    delay(15000); // Wait a little bit between readings
+    // Wait a little bit between readings
+    delay(15000);
 }
