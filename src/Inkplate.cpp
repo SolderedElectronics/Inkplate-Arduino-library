@@ -93,16 +93,8 @@ int Inkplate::einkOn()
 {
     if (getPanelState() == 1)
         return 1;
-
     WAKEUP_SET;
-    VCOM_SET;
-    delay(2);
-
-    // Enable all rails
-    Wire.beginTransmission(0x48);
-    Wire.write(0x01);
-    Wire.write(B00101111);
-    Wire.endTransmission();
+    delay(5);
 
     // Modify power up sequence  (VEE and VNEG are swapped)
     Wire.beginTransmission(0x48);
@@ -110,16 +102,15 @@ int Inkplate::einkOn()
     Wire.write(B11100001);
     Wire.endTransmission();
 
-    delay(1);
-
-    // Switch TPS65186 into active mode
+    // Enable all rails
     Wire.beginTransmission(0x48);
     Wire.write(0x01);
-    Wire.write(B10101111);
+    Wire.write(B00111111);
     Wire.endTransmission();
 
-    pinsAsOutputs();
+    PWRUP_SET;
 
+    pinsAsOutputs();
     LE_CLEAR;
     OE_CLEAR;
     CL_CLEAR;
@@ -128,6 +119,7 @@ int Inkplate::einkOn()
     SPV_SET;
     CKV_CLEAR;
     OE_CLEAR;
+    VCOM_SET;
 
     unsigned long timer = millis();
     do
@@ -136,7 +128,6 @@ int Inkplate::einkOn()
     } while ((readPowerGood() != PWR_GOOD_OK) && (millis() - timer) < 250);
     if ((millis() - timer) >= 250)
     {
-        WAKEUP_CLEAR;
         VCOM_CLEAR;
         PWRUP_CLEAR;
         return 0;
@@ -146,6 +137,38 @@ int Inkplate::einkOn()
     setPanelState(1);
 
     return 1;
+}
+
+/**
+ * @brief       einkOff turns off epaper power supply and put all digital IO
+ * pins in high Z state
+ */
+void Inkplate::einkOff()
+{
+    if (getPanelState() == 0)
+        return;
+    OE_CLEAR;
+    GMOD_CLEAR;
+    GPIO.out &= ~(DATA | LE | CL);
+    CKV_CLEAR;
+    SPH_CLEAR;
+    SPV_CLEAR;
+
+    VCOM_CLEAR;
+    PWRUP_CLEAR;
+
+    unsigned long timer = millis();
+    do
+    {
+        delay(1);
+    } while ((readPowerGood() != 0) && (millis() - timer) < 250);
+
+    // Do not disable WAKEUP if older Inkplate6Plus is used.
+#ifndef ARDUINO_INKPLATE6PLUS
+    WAKEUP_CLEAR;
+#endif
+
+    setPanelState(0);
 }
 
 /**
