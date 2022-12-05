@@ -6,13 +6,15 @@
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    In this example we will show how to use basic alarm and clock functions of PCF85063 RTC on Inkplate board.
-   This example will show how to set time and date, how to set alarm, how to read time and how to print time on Inkplate using partial updates.
-   NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it on first refresh after
-   power up. It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture quality.
+   This example will show how to set time and date, how to set alarm, how to read time and how to print time on Inkplate
+   using partial updates. NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it
+   on first refresh after power up. It is recommended to do a full refresh every 5-10 partial refresh to maintain good
+   picture quality.
 
    NOTE: External PCF85603 is only available on newer versions of Inkplate 6 boards.
    If your board doesn't have one, you can't run this example.
-   If there is a battery holder on the back of Inkplate board, you have external RTC on Inkplate board and you can run this example.
+   If there is a battery holder on the back of Inkplate board, you have external RTC on Inkplate board and you can run
+   this example.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
@@ -26,6 +28,9 @@
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
+
+#define REFRESH_DELAY 700 // Delay between refreshes
+unsigned long time1;      // Time for measuring refresh in millis
 
 // Set clock
 uint8_t hour = 12;
@@ -54,8 +59,8 @@ void setup()
 
     pinMode(39, INPUT_PULLUP);
 
-    display.rtcSetTime(hour, minutes, seconds);    // Send time to RTC
-    display.rtcSetDate(weekday, day, month, year); // Send date to RTC
+    display.rtcSetTime(hour, minutes, seconds);                                         // Send time to RTC
+    display.rtcSetDate(weekday, day, month, year);                                      // Send date to RTC
     display.rtcSetAlarm(alarmSeconds, alarmMinutes, alarmHour, alarmDay, alarmWeekday); // Set alarm
 }
 
@@ -63,38 +68,41 @@ void setup()
 int n = 0;
 void loop()
 {
-    display.rtcGetRtcData();             // Get the time and date from RTC
-    seconds = display.rtcGetSecond();  // Store senconds in a variable
-    minutes = display.rtcGetMinute();  // Store minutes in a variable
-    hour = display.rtcGetHour();       // Store hours in a variable
-    day = display.rtcGetDay();         // Store day of month in a variable
-    weekday = display.rtcGetWeekday(); // Store day of week in a variable
-    month = display.rtcGetMonth();     // Store month in a variable
-    year = display.rtcGetYear();       // Store year in a variable
+    if ((unsigned long)(millis() - time1) > REFRESH_DELAY)
+    {      
+        display.rtcGetRtcData();           // Get the time and date from RTC
+        seconds = display.rtcGetSecond();  // Store senconds in a variable
+        minutes = display.rtcGetMinute();  // Store minutes in a variable
+        hour = display.rtcGetHour();       // Store hours in a variable
+        day = display.rtcGetDay();         // Store day of month in a variable
+        weekday = display.rtcGetWeekday(); // Store day of week in a variable
+        month = display.rtcGetMonth();     // Store month in a variable
+        year = display.rtcGetYear();       // Store year in a variable
 
-    display.clearDisplay();                                       // Clear content in frame buffer
-    display.setCursor(100, 300);                                  // Set position of the text
-    printTime(hour, minutes, seconds, day, weekday, month, year); // Print the time on screen
+        display.clearDisplay();                                       // Clear content in frame buffer
+        display.setCursor(100, 300);                                  // Set position of the text
+        printTime(hour, minutes, seconds, day, weekday, month, year); // Print the time on screen
 
-    if (display.rtcCheckAlarmFlag())  // Check if alarm has occurred
-    {
-      display.rtcClearAlarmFlag();    // It's recommended to clear alarm flag after alarm has occurred
-      display.setCursor(400, 400);    // Set new position for cursor
-      display.print("ALARM!");
+        if (display.rtcCheckAlarmFlag()) // Check if alarm has occurred
+        {
+            display.rtcClearAlarmFlag(); // It's recommended to clear alarm flag after alarm has occurred
+            display.setCursor(400, 400); // Set new position for cursor
+            display.print("ALARM!");
+        }
+
+        if (n > 9) // Check if you need to do full refresh or you can do partial update
+        {
+            display.display(true); // Do a full refresh
+            n = 0;
+        }
+        else
+        {
+            display.partialUpdate(false, true); // Do partial update and keep e-papr power supply on
+            n++;                                // Keep track on how many times screen has been partially updated
+        }
+
+        time1 = millis(); // Store current millis
     }
-
-    if (n > 9) // Check if you need to do full refresh or you can do partial update
-    {
-        display.display(true); // Do a full refresh
-        n = 0;
-    }
-    else
-    {
-        display.partialUpdate(false, true); // Do partial update and keep e-papr power supply on
-        n++;                                // Keep track on how many times screen has been partially updated
-    }
-
-    delay(700);                             // Delay between refreshes.
 }
 
 void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, uint8_t _weekday, uint16_t _month,
