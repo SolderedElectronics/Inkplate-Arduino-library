@@ -35,7 +35,7 @@ void setup()
     // Init EEPROM library with 512 of EEPROM size. Do not change this value, it can wipe waveform data!
     EEPROM.begin(512);
 
-    display.setTextSize(4);                  // Set text size
+    display.setTextSize(6);                  // Set text size
     display.println("Clearing EEPROM...\n"); // Print message
     display.partialUpdate();                 // Use partial updates for refreshing the display
     clearEEPROM();                           // Clear user EEPROM data
@@ -48,7 +48,7 @@ void setup()
 
     display.println("Reading data from EEPROM:\n"); // Print message
     display.partialUpdate();                        // Use partial updates for refreshing the display
-    display.setTextSize(1);                         // Use smaller text so everything can fit on display
+    display.setTextSize(3);                         // Use smaller text so everything can fit on display
     printEEPROM();                                  // Read data from EEPROM and display it on screen
     delay(500);                                     // Wait a little bit...
 }
