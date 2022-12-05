@@ -81,7 +81,7 @@ void writeEEPROM()
     EEPROM.commit();
 }
 
-// Function reads back previously written data and displays it on screen.
+// Function reads back previously written data and displays it on serial monitor and screen.
 void printEEPROM()
 {
     for (int i = 0; i < EEPROM_SIZE; i++)
