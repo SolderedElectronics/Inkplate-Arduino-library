@@ -118,6 +118,7 @@ class System : public Esp,
     void setSdCardOk(int16_t s);
     int16_t getSdCardOk();
     int16_t sdCardInit();
+    void sdCardSleep();
 
     SdFat getSdFat();
     SPIClass *getSPIptr();

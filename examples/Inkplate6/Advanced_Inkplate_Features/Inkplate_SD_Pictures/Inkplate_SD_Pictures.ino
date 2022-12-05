@@ -2,7 +2,7 @@
    Inkplate_SD_BMP example for Soldered Inkplate6
    For this example you will need a micro USB cable, Inkplate6 and a SD card loaded with
    image1.bmp and image2.bmp file that can be found inside folder of this example.
-   Select "Inkplate 6(ESP32)" from Tools -> Board menu.
+   Select "Inkplate 6(ESP32)" or "Soldered Inkplate6" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
@@ -23,7 +23,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error "Wrong board selection for this example, please select Inkplate 6 or Inkplate 6 V2 in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6 or Soldered Inkplate6 in the boards menu."
 #endif
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
@@ -62,7 +62,7 @@ void setup()
     }
     else
     {
-        // If SD card init not success, display error on screen and stop the program (using infinite loop)
+        // If SD card init not success, display error on screen, and stop the program (using infinite loop)
         display.println("SD Card error!");
         display.partialUpdate();
         while (true)
@@ -90,6 +90,7 @@ void setup()
         display.display();
     }
     display.display();
+    display.sdCardSleep();
 }
 
 void loop()

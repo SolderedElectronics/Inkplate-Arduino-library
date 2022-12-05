@@ -170,6 +170,28 @@ int16_t System::sdCardInit()
 }
 
 /**
+ * @brief       sdCardSleep turns off the P-MOS which powers the sd card to save energy in deep sleep
+ */
+void System::sdCardSleep()
+{
+#if defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
+    defined(ARDUINO_INKPLATECOLOR)
+    // Set SPI pins to input to reduce power consumption in deep sleep
+    pinMode(12, INPUT);
+    pinMode(13, INPUT);
+    pinMode(14, INPUT);
+    pinMode(15, INPUT);
+
+    // And also disable uSD card supply
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, HIGH);
+#else
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, HIGH);
+#endif
+}
+
+/**
  * @brief       getSdFat gets sd card object
  *
  * @return      sd card class object

@@ -76,6 +76,8 @@ void setup()
     {
         Serial.println("Image error.");
     }
+    
+    display.sdCardSleep(); // Put sd card in sleep mode
 }
 
 void loop()

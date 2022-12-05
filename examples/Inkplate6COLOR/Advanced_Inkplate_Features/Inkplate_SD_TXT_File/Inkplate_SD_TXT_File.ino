@@ -56,16 +56,19 @@ void setup()
             char text[3001];           // Array where data from SD card is stored (max 200 chars here)
             int len = file.fileSize(); // Read how big is file that we are opening
             if (len > 3000)
-                len = 3000;       // If it's more than 200 bytes (200 chars), limit to max 200 bytes
-            file.read(text, len); // Read data from file and save it in text array
-            text[len] = 0;        // Put null terminating char at the and of data
-            display.print(text);  // Print data/text
-            display.display();    // Do a full refresh of display
+                len = 3000;        // If it's more than 200 bytes (200 chars), limit to max 200 bytes
+            file.read(text, len);  // Read data from file and save it in text array
+            text[len] = 0;         // Put null terminating char at the and of data
+            display.print(text);   // Print data/text
+            display.sdCardSleep(); // Put sd card in sleep mode
+            display.display();     // Do a full refresh of display
         }
     }
     else
-    { // If card init was not successful, display error on screen and stop the program (using infinite loop)
+    { // If card init was not successful, display error on screen, put sd card in sleep mode, and stop the program
+      // (using infinite loop)
         display.println("SD Card error!");
+        display.sdCardSleep();
         display.display();
         while (true)
             ;

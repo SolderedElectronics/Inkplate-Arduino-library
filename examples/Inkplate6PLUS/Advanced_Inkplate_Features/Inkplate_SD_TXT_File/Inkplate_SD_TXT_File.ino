@@ -2,7 +2,7 @@
    Inkplate_SD_TXT example for Soldered Inkplate 6PLUS
    For this example you will need only a micro USB cable, Inkplate 6PLUS and a SD card
    loaded with text.txt file that can be found inside folder of this example.
-   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
+   Select "Inkplate 6PLUS(ESP32)" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
@@ -21,7 +21,8 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select Inkplate 6PLUS or Inkplate 6PLUS V2 in the boards menu."
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select Inkplate 6PLUS or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
@@ -46,26 +47,30 @@ void setup()
         if (!file.open("/text.txt", O_RDONLY))
         { // If it fails to open, send error message to display, otherwise read the file.
             display.println("File open error");
+            display.sdCardSleep();
             display.display();
         }
         else
         {
             display.clearDisplay();    // Clear everything that is stored in frame buffer of epaper
             display.setCursor(0, 0);   // Set print position at the begining of the screen
-            char text[3001];            // Array where data from SD card is stored (max 200 chars here)
+            char text[3001];           // Array where data from SD card is stored (max 200 chars here)
             int len = file.fileSize(); // Read how big is file that we are opening
             if (len > 3000)
-                len = 3000;        // If it's more than 200 bytes (200 chars), limit to max 200 bytes
+                len = 3000;       // If it's more than 200 bytes (200 chars), limit to max 200 bytes
             file.read(text, len); // Read data from file and save it in text array
             text[len] = 0;        // Put null terminating char at the and of data
             display.setTextSize(2);
-            display.print(text);  // Print data/text
-            display.display();    // Do a full refresh of display
+            display.print(text);   // Print data/text
+            display.sdCardSleep(); // Put sd card in sleep mode
+            display.display();     // Do a full refresh of display
         }
     }
     else
-    { // If card init was not successful, display error on screen and stop the program (using infinite loop)
+    { // If card init was not successful, display error on screen, put sd card in sleep mode, and stop the program
+      // (using infinite loop)
         display.println("SD Card error!");
+        display.sdCardSleep();
         display.partialUpdate();
         while (true)
             ;
