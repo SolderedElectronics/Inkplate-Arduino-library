@@ -103,10 +103,14 @@ uint8_t System::readTouchpad(uint8_t _pad)
  */
 double System::readBattery()
 {
+    // Read the pin on the battery MOSFET. If is high, that means is older version of the board
+    // that uses PMOS only. If it's low, newer board with both PMOS and NMOS.
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, INPUT);
     int state = digitalReadIO(9, IO_INT_ADDR);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
 
+    // If the input is pulled high, it's PMOS only.
+    // If it's pulled low, it's PMOS and NMOS.
     if (state)
     {
         digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
@@ -115,15 +119,15 @@ double System::readBattery()
     {
         digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
     }
-    /*
-#ifdef ARDUINO_ESP32_DEV
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
-#else
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
-#endif
-*/
-    delay(1);
-    int adc = analogRead(35);
+
+    // Wait a little bit after a MOSFET enable.
+    delay(5);
+
+    // Set to the highest resolution and read the voltage.
+    analogReadResolution(12);
+    int adc = analogReadMilliVolts(35);
+
+    // Turn off the MOSFET (and voltage divider).
     if (state)
     {
         digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
@@ -133,19 +137,8 @@ double System::readBattery()
         digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
     }
 
-
-    /*
-
-#ifdef ARDUINO_ESP32_DEV
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
-#else
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
-#endif
-*/
-    // Calculate the voltage using the following formula
-    // 1.1V is internal ADC reference of ESP32, 3.548133892 is 11dB in linear
-    // scale (Analog signal is attenuated by 11dB before ESP32 ADC input)
-    return (double(adc) / 4095 * 1.1 * 3.548133892 * 2);
+    // Calculate the voltage at the battery terminal (voltage is divided in half by voltage divider).
+    return (double(adc) * 2.0 / 1000);
 }
 
 #ifndef ARDUINO_INKPLATE2
