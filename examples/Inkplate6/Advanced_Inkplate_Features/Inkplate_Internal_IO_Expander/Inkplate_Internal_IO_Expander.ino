@@ -1,8 +1,8 @@
 /*
    Inkplate_Internal_IO_Expander example for Soldered Inkplate 6
    For this example you will need only a micro USB cable, Inkplate6, 330 Ohm resistor and LED diode.
-   Select "Inkplate 6(ESP32)" or "Soldered Inkplate6" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Select "e-radionica Inkplate 6" or "Soldered Inkplate6" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate 6" or "Soldered Inkplate6" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Connect resistor to P1-7 (GPB7 pin on older Inkplates with MCP23017) on IO expander header at the top on the backside
@@ -27,7 +27,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error "Wrong board selection for this example, please select Inkplate 6 or Soldered Inkplate6 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate 6 or Soldered Inkplate6 in the boards menu."
 #endif
 
 #include "Inkplate.h" //Include Inkplate library to the sketch

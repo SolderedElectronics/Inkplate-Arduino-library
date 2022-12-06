@@ -3,8 +3,8 @@
    For this example you will need a micro USB cable, Inkplate 6,
    BME680 sensor with easyC connector on it: https://e-radionica.com/en/bme680-breakout-made-by-e-radionica.html
    and a easyC cable: https://e-radionica.com/en/easyc-cable-20cm.html
-   Select "Inkplate 6(ESP32)" or "Soldered Inkplate6" from Tools -> Board menu.
-   Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
+   Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate6" or "Soldered Inkplate6" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can read temperature, humidity, air pressure and gas data from BME680.
@@ -19,7 +19,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error "Wrong board selection for this example, please select Inkplate 6 or Soldered Inkplate6 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
 #endif
 
 #include "BME680-SOLDERED.h" //Soldered library for BME680 Sensor
