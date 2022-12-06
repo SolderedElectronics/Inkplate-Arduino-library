@@ -1,9 +1,9 @@
 /*
-   Inkplate_SD_BMP example for Soldered Inkplate 6PLUS
-   For this example you will need a micro USB cable, Inkplate 6PLUS and a SD card loaded with
+   Inkplate_SD_BMP example for Soldered Inkplate 6Plus
+   For this example you will need a micro USB cable, Inkplate 6Plus and a SD card loaded with
    image1.bmp and image2.bmp file that can be found inside folder of this example.
-   Select "Inkplate 6PLUS(ESP32)" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
-   Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
+   Select "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    To work with SD card on Inkplate, you will need to add one extra library.
@@ -24,7 +24,7 @@
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
 #error                                                                                                                 \
-    "Wrong board selection for this example, please select Inkplate 6PLUS or Soldered Inkplate 6Plus V2 in the boards menu."
+    "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus V2 in the boards menu."
 #endif
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch

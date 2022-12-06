@@ -1,8 +1,8 @@
 /*
-   Inkplate_RTC_Interrupt_Alarm_Example example for Soldered Inkplate 6PLUS
-   For this example you will need USB cable and Inkplate 6PLUS.
-   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
+   Inkplate_RTC_Interrupt_Alarm_Example example for Soldered Inkplate 6Plus
+   For this example you will need USB cable and Inkplate 6Plus.
+   Select "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    In this example we will show how to use PCF85063A RTC Alarm functionality with interrupt.
@@ -17,7 +17,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select Inkplate 6PLUS or Inkplate 6PLUS V2 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
 #include "Inkplate.h"             // Include Inkplate library to the sketch

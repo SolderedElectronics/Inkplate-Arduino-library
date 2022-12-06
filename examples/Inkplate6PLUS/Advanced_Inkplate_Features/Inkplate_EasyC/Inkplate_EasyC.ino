@@ -1,9 +1,9 @@
 /*
-   Inkplate_easyC example for Soldered Inkplate 6PLUS
-   For this example you will need a micro USB cable, Inkplate 6PLUS,
+   Inkplate_easyC example for Soldered Inkplate 6Plus
+   For this example you will need a micro USB cable, Inkplate 6Plus,
    BME680 sensor with easyC connector on it: https://e-radionica.com/en/bme680-breakout-made-by-e-radionica.html
    and a easyC cable: https://e-radionica.com/en/easyc-cable-20cm.html
-   Select "Inkplate 6PLUS(ESP32)" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
+   Select "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
@@ -21,7 +21,7 @@
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
 #error                                                                                                                 \
-    "Wrong board selection for this example, please select Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
+    "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
 #include "BME680-SOLDERED.h" //Soldered library for BME680 Sensor
