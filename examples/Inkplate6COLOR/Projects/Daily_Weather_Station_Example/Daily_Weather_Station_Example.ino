@@ -1,8 +1,8 @@
 /*
     Weather station example for Soldered Inkplate 6COLOR
     For this example you will need only USB cable and Inkplate 6COLOR.
-    Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 6COLOR" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 6COLOR" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how you can use Inkplate 6 to display API data,
@@ -18,7 +18,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATECOLOR
-#error "Wrong board selection for this example, please select Inkplate 6COLOR in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 6COLOR in the boards menu."
 #endif
 
 // ---------- CHANGE HERE  -------------:

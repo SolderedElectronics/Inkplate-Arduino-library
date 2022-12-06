@@ -2,8 +2,8 @@
    Inkplate_SD_TXT example for Soldered Inkplate 6COLOR
    For this example you will need only a micro USB cable, Inkplate 6COLOR and a SD card
    loaded with text.txt file that can be found inside folder of this example.
-   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
+   Select "Soldered Inkplate 6COLOR" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 6COLOR" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    To work with SD card on Inkplate, you will need to add one extra library.
@@ -21,7 +21,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATECOLOR
-#error "Wrong board selection for this example, please select Inkplate 6COLOR in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 6COLOR in the boards menu."
 #endif
 
 #include "Inkplate.h" //Include Inkplate library to the sketch

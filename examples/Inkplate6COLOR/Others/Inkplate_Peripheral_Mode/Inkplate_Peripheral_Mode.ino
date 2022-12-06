@@ -1,7 +1,7 @@
 /*
    Inkplate_Peripheral_Mode sketch for Soldered Inkplate 6COLOR
-   Select "Inkplate 6COLOR(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 6COLOR(ESP32)" option? Follow our tutorial and add it:
+   Select "Soldered Inkplate 6COLOR" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 6COLOR" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Using this sketch, you don't have to program and control e-paper using Arduino code.
@@ -28,7 +28,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATECOLOR
-#error "Wrong board selection for this example, please select Inkplate 6COLOR in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 6COLOR in the boards menu."
 #endif
 
 #include <Inkplate.h>
