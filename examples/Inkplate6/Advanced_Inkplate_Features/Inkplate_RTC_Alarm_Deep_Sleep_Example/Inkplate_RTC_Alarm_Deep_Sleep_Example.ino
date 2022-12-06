@@ -67,6 +67,8 @@ void printCurrentTime()
   display.setCursor(100, 300);
   display.setTextSize(3);
 
+  display.rtcGetRtcData();
+
   switch (display.rtcGetWeekday())
   {
     case 0:

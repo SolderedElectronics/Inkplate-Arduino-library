@@ -16,7 +16,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 #include "Inkplate.h"      // Include Inkplate library to the sketch
@@ -33,12 +33,12 @@ void setup()
   
   if (!display.rtcIsSet())      // Check if RTC is already is set. If ts not, set time and date
   {
-    //  setTime(hour, minute, sec);
+    //  display.setTime(hour, minute, sec);
     display.rtcSetTime(6, 54, 00); // 24H mode, ex. 6:54:00
-    //  setDate(weekday, day, month, yr);
-    display.rtcSetDate(6, 16, 5, 2020); // 0 for Sunday, ex. Saturday, 16.5.2020.
+    //  display.setDate(weekday, day, month, yr);
+    display.rtcSetDate(6, 16, 5, 2022); // 0 for Sunday, ex. Saturday, 16.5.2020.
 
-    // display.rtcSetEpoch(1589610300); // Or use epoch for setting the time and date
+    //display.rtcSetEpoch(1589610300); // Or use epoch for setting the time and date
   }
 
   printCurrentTime();   // Display current time and date
@@ -62,6 +62,8 @@ void printCurrentTime()
 {
   display.setCursor(100, 300);
   display.setTextSize(3);
+
+  display.rtcGetRtcData();
 
   switch (display.rtcGetWeekday())
   {

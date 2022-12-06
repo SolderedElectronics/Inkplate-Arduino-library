@@ -1,22 +1,24 @@
 /*
    Inkplate_RTC_Basic_Example example for Soldered Inkplate 6
    For this example you will need USB cable and Inkplate 6.
-   Select "Inkplate 6(ESP32)" or "Soldered Inkplate6" from Tools -> Board menu.
+   Select "e-radionica Inkplate 6(ESP32)" or "Soldered Inkplate6" from Tools -> Board menu.
    Don't have "Inkplate 6(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Example shows how to use basic clock functions of PCF85063A RTC on Inkplate board.
-   This example will show how to set time and date, how to read time and how to print time on Inkplate using partial updates.
-   NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it on first refresh after
-   power up. It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture quality.
+   This example will show how to set time and date, how to read time and how to print time on Inkplate using partial
+   updates. NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it on first
+   refresh after power up. It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture
+   quality.
 
    NOTE: External PCF85603 is only available on newer versions of Inkplate 6 boards.
    If your board doesn't have one, you can't run this example.
-   If there is a battery holder on the back of Inkplate board, you have external RTC on Inkplate board and you can run this example.
+   If there is a battery holder on the back of Inkplate board, you have external RTC on Inkplate board and you can run
+   this example.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   12 November 2021 by Soldered
+   5 December 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -26,6 +28,9 @@
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
+
+#define REFRESH_DELAY 1000 // Delay between refreshes
+unsigned long time1;       // Time for measuring refresh in millis
 
 // Set clock
 uint8_t hour = 8;
@@ -51,33 +56,37 @@ void setup()
 
 // Variable that keeps count on how much screen has been partially updated
 int n = 0;
+
 void loop()
-{   
-    display.rtcGetRtcData();             // Get the time and date from RTC
-    seconds = display.rtcGetSecond();  // Store senconds in a variable
-    minutes = display.rtcGetMinute();  // Store minutes in a variable
-    hour = display.rtcGetHour();       // Store hours in a variable
-    day = display.rtcGetDay();         // Store day of month in a variable
-    weekday = display.rtcGetWeekday(); // Store day of week in a variable
-    month = display.rtcGetMonth();     // Store month in a variable
-    year = display.rtcGetYear();       // Store year in a variable
-
-    display.clearDisplay();                                       // Clear content in frame buffer
-    display.setCursor(100, 300);                                  // Set position of the text
-    printTime(hour, minutes, seconds, day, weekday, month, year); // Print the time on screen
-
-    if (n > 9) // Check if you need to do full refresh or you can do partial update
+{
+    if ((unsigned long)(millis() - time1) > REFRESH_DELAY)
     {
-        display.display(true); // Do a full refresh
-        n = 0;
-    }
-    else
-    {
-        display.partialUpdate(false, true); // Do partial update and keep e-papr power supply on
-        n++;                                // Keep track on how many times screen has been partially updated
-    }
+        display.rtcGetRtcData();           // Get the time and date from RTC
+        seconds = display.rtcGetSecond();  // Store senconds in a variable
+        minutes = display.rtcGetMinute();  // Store minutes in a variable
+        hour = display.rtcGetHour();       // Store hours in a variable
+        day = display.rtcGetDay();         // Store day of month in a variable
+        weekday = display.rtcGetWeekday(); // Store day of week in a variable
+        month = display.rtcGetMonth();     // Store month in a variable
+        year = display.rtcGetYear();       // Store year in a variable
 
-    delay(700);                             // Delay between refreshes.
+        display.clearDisplay();                                       // Clear content in frame buffer
+        display.setCursor(100, 300);                                  // Set position of the text
+        printTime(hour, minutes, seconds, day, weekday, month, year); // Print the time on screen
+
+        if (n > 9) // Check if you need to do full refresh or you can do partial update
+        {
+            display.display(true); // Do a full refresh
+            n = 0;
+        }
+        else
+        {
+            display.partialUpdate(false, true); // Do partial update and keep e-papr power supply on
+            n++;                                // Keep track on how many times screen has been partially updated
+        }
+
+        time1 = millis(); // Store current millis
+    }
 }
 
 void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, uint8_t _weekday, uint8_t _month,

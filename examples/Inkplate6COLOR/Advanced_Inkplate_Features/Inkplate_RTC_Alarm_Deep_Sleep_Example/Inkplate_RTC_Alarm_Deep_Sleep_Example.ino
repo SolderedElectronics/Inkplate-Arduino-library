@@ -61,9 +61,11 @@ void loop()
 
 void printCurrentTime()
 {
-  display.setCursor(100, 300);
+  display.setCursor(50, 250);
   display.setTextSize(3);
   display.setTextColor(INKPLATE_BLUE, INKPLATE_WHITE); //Set text color and background
+
+  display.rtcGetRtcData();
 
   switch (display.rtcGetWeekday())
   {

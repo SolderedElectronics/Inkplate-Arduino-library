@@ -1,7 +1,7 @@
 /*
    Inkplate_RTC_Alarm_Deep_Sleep_Example example for Soldered Inkplate 6PLUS
    For this example you will need only USB cable and Inkplate 6PLUS
-   Select "Inkplate 6PLUS(ESP32)" from Tools -> Board menu.
+   Select "e-radionica Inkplate 6PLUS(ESP32)" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
    Don't have "Inkplate 6PLUS(ESP32)" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
    
@@ -11,11 +11,11 @@
    
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 November 2021 by Soldered
+   5 December 2022 by Soldered
 */
 
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select Inkplate 6PLUS or Inkplate 6PLUS V2 in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 6PLUS or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
 #include "Inkplate.h"      // Include Inkplate library to the sketch
@@ -32,10 +32,10 @@ void setup()
   
   if (!display.rtcIsSet())      // Check if RTC is already is set. If ts not, set time and date
   {
-    //  setTime(hour, minute, sec);
-    display.rtcSetTime(6, 54, 00); // 24H mode, ex. 6:54:00
-    //  setDate(weekday, day, month, yr);
-    display.rtcSetDate(6, 16, 5, 2020); // 0 for Sunday, ex. Saturday, 16.5.2020.
+    //  display.setTime(hour, minute, sec);
+    display.rtcSetTime(13, 30, 00); // 24H mode, ex. 13:30:00
+    //  display.setDate(weekday, day, month, yr);
+    display.rtcSetDate(1, 5, 12, 2022); // 0 for Monday, ex. Saturday, 5.12.2022.
 
     // display.rtcSetEpoch(1589610300); // Or use epoch for setting the time and date
   }
@@ -63,6 +63,8 @@ void printCurrentTime()
 {
   display.setCursor(100, 300);
   display.setTextSize(3);
+
+  display.rtcGetRtcData();
 
   switch (display.rtcGetWeekday())
   {

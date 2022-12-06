@@ -29,8 +29,8 @@
 #include "Inkplate.h"            // Include Inkplate library to the sketch
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
-#define REFRESH_DELAY 700 // Delay between refreshes
-unsigned long time1;      // Time for measuring refresh in millis
+#define REFRESH_DELAY 1000 // Delay between refreshes
+unsigned long time1;       // Time for measuring refresh in millis
 
 // Set clock
 uint8_t hour = 12;
@@ -69,7 +69,7 @@ int n = 0;
 void loop()
 {
     if ((unsigned long)(millis() - time1) > REFRESH_DELAY)
-    {      
+    {
         display.rtcGetRtcData();           // Get the time and date from RTC
         seconds = display.rtcGetSecond();  // Store senconds in a variable
         minutes = display.rtcGetMinute();  // Store minutes in a variable

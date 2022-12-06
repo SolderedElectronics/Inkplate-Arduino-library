@@ -24,7 +24,7 @@
 #include "Inkplate.h"            // Include Inkplate library to the sketch
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
-#define REFRESH_DELAY 700 // Delay between refreshes
+#define REFRESH_DELAY 1000 // Delay between refreshes
 unsigned long time1;      // Time for measuring refresh in millis
 
 // Set clock

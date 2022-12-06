@@ -30,6 +30,7 @@
 #define IO_EXT_ADDR 0x21
 #endif
 
+#define SD_PMOS_PIN 12
 
 #define E_INK_WIDTH  800
 #define E_INK_HEIGHT 600

@@ -20,6 +20,8 @@
 #ifndef INKPLATECOLOR_H
 #define INKPLATECOLOR_H
 
+#define SD_PMOS_PIN 12
+
 // Connections between ESP32 and color Epaper
 #define EPAPER_RST_PIN  19
 #define EPAPER_DC_PIN   33
