@@ -1,7 +1,7 @@
 /*
    Inkplate_Peripheral_Mode sketch for Soldered Inkplate 10
-   Select "Inkplate 10(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
+   Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Using this sketch, you don't have to program and control e-paper using Arduino code.
@@ -28,7 +28,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 #include <Inkplate.h>

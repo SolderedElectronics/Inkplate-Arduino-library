@@ -1,8 +1,8 @@
 /*
    Web_BMP_pictures example for Soldered Inkplate6
    For this example you will need a micro USB cable, Inkplate6, and an available WiFi connection.
-   Select "Inkplate 10(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
+   Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
@@ -18,7 +18,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 #include "HTTPClient.h"          //Include library for HTTPClient

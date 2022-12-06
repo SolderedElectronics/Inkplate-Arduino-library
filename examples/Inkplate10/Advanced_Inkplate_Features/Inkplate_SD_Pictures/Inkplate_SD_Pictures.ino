@@ -1,16 +1,16 @@
 /*
-   Inkplate_SD_BMP example for Soldered Inkplate6
+   Inkplate_SD_BMP example for Soldered Inkplate 10
    For this example you will need a micro USB cable, Inkplate6 and a SD card loaded with
    image1.bmp and image2.bmp file that can be found inside folder of this example.
-   Select "Inkplate 10(ESP32)" or "Soldered Inkplate10" from Tools -> Board menu.
-   Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
+   Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    To work with SD card on Inkplate, you will need to add one extra library.
    Download and install it from here: https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
 
    You can open .bmp, .jpeg or .png files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
-   24 bit AND have resoluton smaller than 800x600 or otherwise it won't fit on screen.
+   24 bit AND have resoluton smaller than 1200x825 or otherwise it won't fit on screen.
    Format your SD card in standard FAT fileformat.
 
    This example will show you how you can read .bmp and .jpeg files (pictures) from SD card and
@@ -23,7 +23,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select Inkplate 10 or Soldered Inkplate10 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch

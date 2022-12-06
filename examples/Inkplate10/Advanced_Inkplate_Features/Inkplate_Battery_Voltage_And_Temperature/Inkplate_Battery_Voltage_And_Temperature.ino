@@ -1,8 +1,8 @@
 /*
    Inkplate_Battery_Voltage_And_Temperature example for Soldered Inkplate 10
    For this example you will need USB cable, Inkplate 10 and a Lithium battery (3.6V) with two pin JST connector.
-   Select "Inkplate 10(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 10(ESP32)" option? Follow our tutorial and add it:
+   Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how to read voltage of the battery and read temperature from on-board
@@ -17,7 +17,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select Inkplate 10 or Inkplate 10 V2 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 #include "Inkplate.h" //Include Inkplate library to the sketch
