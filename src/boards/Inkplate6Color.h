@@ -20,7 +20,8 @@
 #ifndef INKPLATECOLOR_H
 #define INKPLATECOLOR_H
 
-#define SD_PMOS_PIN 12
+// Pin on the internal io expander which controls MOSFET for turning on and off the SD card
+#define SD_PMOS_PIN IO_PIN_B2 // 10
 
 // Connections between ESP32 and color Epaper
 #define EPAPER_RST_PIN  19

@@ -6,6 +6,7 @@ Inkplate		KEYWORD3
 # Methods and Functions (KEYWORD2)
 begin				KEYWORD2
 sdCardInit			KEYWORD2
+sdCardSleep			KEYWORD2
 getSdFat			KEYWORD2
 getSPIptr			KEYWORD2
 getPanelState		KEYWORD2

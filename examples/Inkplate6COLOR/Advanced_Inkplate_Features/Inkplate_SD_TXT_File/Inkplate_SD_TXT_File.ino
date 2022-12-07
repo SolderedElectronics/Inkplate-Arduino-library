@@ -67,9 +67,9 @@ void setup()
     else
     { // If card init was not successful, display error on screen, put sd card in sleep mode, and stop the program
       // (using infinite loop)
-        display.println("SD Card error!");
-        display.sdCardSleep();
+        display.println("SD Card error!");        
         display.display();
+        display.sdCardSleep();
         while (true)
             ;
     }

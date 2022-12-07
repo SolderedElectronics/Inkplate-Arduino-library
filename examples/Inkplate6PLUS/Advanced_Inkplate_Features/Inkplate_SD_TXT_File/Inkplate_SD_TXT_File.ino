@@ -47,7 +47,6 @@ void setup()
         if (!file.open("/text.txt", O_RDONLY))
         { // If it fails to open, send error message to display, otherwise read the file.
             display.println("File open error");
-            display.sdCardSleep();
             display.display();
         }
         else
@@ -69,9 +68,9 @@ void setup()
     else
     { // If card init was not successful, display error on screen, put sd card in sleep mode, and stop the program
       // (using infinite loop)
-        display.println("SD Card error!");
-        display.sdCardSleep();
+        display.println("SD Card error!");        
         display.partialUpdate();
+        display.sdCardSleep();
         while (true)
             ;
     }
