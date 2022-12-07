@@ -112,6 +112,15 @@ bool Inkplate::begin(void)
 
     setIOExpanderForLowPower();
 
+    // Set SPI pins to input to reduce power consumption in deep sleep
+    pinMode(12, INPUT);
+    pinMode(13, INPUT);
+    pinMode(14, INPUT);
+    pinMode(15, INPUT);
+
+    // And also disable uSD card supply
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, INPUT);
+
     _panelState = true;
     return true;
 }
@@ -351,39 +360,39 @@ void Inkplate::setIOExpanderForLowPower()
     ioBegin(IO_INT_ADDR, ioRegsInt);
 
     // TOUCHPAD PINS
-    pinModeIO(IO_PIN_B2, INPUT);
-    pinModeIO(IO_PIN_B3, INPUT);
-    pinModeIO(IO_PIN_B4, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, INPUT);
 
     // Battery voltage Switch MOSFET
-    pinModeIO(IO_PIN_B1, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B1, OUTPUT);
 
     // Rest of pins go to OUTPUT LOW state because in deepSleep mode they are
     // using least amount of power
-    pinModeIO(IO_PIN_A0, OUTPUT);
-    pinModeIO(IO_PIN_A1, OUTPUT);
-    pinModeIO(IO_PIN_A2, OUTPUT);
-    pinModeIO(IO_PIN_A3, OUTPUT);
-    pinModeIO(IO_PIN_A4, OUTPUT);
-    pinModeIO(IO_PIN_A5, OUTPUT);
-    pinModeIO(IO_PIN_A6, OUTPUT);
-    pinModeIO(IO_PIN_A7, OUTPUT);
-    pinModeIO(IO_PIN_B0, OUTPUT);
-    pinModeIO(IO_PIN_B5, OUTPUT);
-    pinModeIO(IO_PIN_B6, OUTPUT);
-    pinModeIO(IO_PIN_B7, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A0, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A1, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A2, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A3, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A4, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A5, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A7, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B0, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B5, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B6, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B7, OUTPUT);
 
-    digitalWriteIO(IO_PIN_A0, LOW);
-    digitalWriteIO(IO_PIN_A1, LOW);
-    digitalWriteIO(IO_PIN_A2, LOW);
-    digitalWriteIO(IO_PIN_A3, LOW);
-    digitalWriteIO(IO_PIN_A4, LOW);
-    digitalWriteIO(IO_PIN_A5, LOW);
-    digitalWriteIO(IO_PIN_A6, LOW);
-    digitalWriteIO(IO_PIN_A7, LOW);
-    digitalWriteIO(IO_PIN_B0, LOW);
-    digitalWriteIO(IO_PIN_B5, LOW);
-    digitalWriteIO(IO_PIN_B6, LOW);
-    digitalWriteIO(IO_PIN_B7, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A0, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A1, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A2, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A3, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A4, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A5, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A7, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B0, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B5, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B6, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B7, LOW);
 }
 #endif
