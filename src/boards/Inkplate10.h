@@ -30,7 +30,8 @@
 #define IO_EXT_ADDR 0x21
 #endif
 
-#define SD_PMOS_PIN 12
+// Pin on the internal io expander which controls MOSFET for turning on and off the SD card
+#define SD_PMOS_PIN 12 
 
 #define E_INK_WIDTH  1200
 #define E_INK_HEIGHT 825

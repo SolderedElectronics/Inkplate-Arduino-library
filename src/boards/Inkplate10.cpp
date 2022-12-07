@@ -119,10 +119,10 @@ bool Inkplate::begin()
     pinMode(15, INPUT);
 
     // And also disable uSD card supply
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, INPUT);
 #else
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, OUTPUT);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 12, LOW);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, LOW);
 #endif
 
     // CONTROL PINS
