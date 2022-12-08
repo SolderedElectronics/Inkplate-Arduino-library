@@ -1,16 +1,16 @@
 /*
-   Campaing tracker example for Soldered Inkplate 6
-   For this example you will need only USB cable and Inkplate 6.
+   Campaing tracker example for Soldered Inkplate 10
+   For this example you will need only USB cable and Inkplate 10.
    Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
    Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how you can use Inkplate 6 to display html data.
+   This example will show you how you can use Inkplate 10 to display html data.
    This example gets html data from crowdsource campaing and displays them on Inkplate screen.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   28 July 2020 by Soldered
+   8 December 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
