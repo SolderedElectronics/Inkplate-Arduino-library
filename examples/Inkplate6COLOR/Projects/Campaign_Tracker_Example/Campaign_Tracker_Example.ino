@@ -10,7 +10,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   28 July 2020 by Soldered
+   8 December 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -22,17 +22,13 @@
 #include "generatedUI.h"
 
 // Change here to your wifi ssid and pass and the url to display info for
+#define ssid "" // Name of the WiFi network (SSID) that you want to connect Inkplate to
+#define pass "" // Password of that WiFi network
 
-#define ssid "e-radionica.com" // Name of the WiFi network (SSID) that you want to connect Inkplate to
-#define pass "croduino"        // Password of that WiFi network
-
-#define DELAY_MS 60000 * 60
-//#define URL      "https://www.crowdsupply.com/byte-mix-labs/microbyte"
-#define URL "https://www.crowdsupply.com/e-radionica/inkplate-10"
+#define DELAY_MS 60000 * 60 
+#define URL "https://www.crowdsupply.com/soldered/inkplate-6color"
 
 Inkplate display;
-
-RTC_DATA_ATTR unsigned refreshes = 0;
 
 uint32_t n;
 char *buf;
@@ -46,7 +42,7 @@ void setup()
 
     // Connect to WiFi
     Serial.print("Connecting to wifi");
-    while (!display.joinAP("", ""))
+    while (!display.joinAP(ssid, pass))
     {
         Serial.print('.');
         delay(1000);
@@ -63,14 +59,16 @@ void setup()
         {
             char c = http.getStreamPtr()->read();
             buf[n++] = c;
+            delayMicroseconds(100);
         }
         buf[n] = 0;
     }
     Serial.println("Buffer load complete!");
+    //Serial.print(buf);
+    
 
     // Search for data to display
-    text1_content = textInTag("<h1 class=\"mobile-break project-title\">", "</h1>");
-    text2_content = textInTag("<h4 class=\"mobile-break tiny-text project-organization-name\">", "</h4>");
+    text1_content = textInTag("<h1>", "</h1>");
     text3_content = textInTag("<h3 class=\"project-teaser\">", "</h3>");
     text4_content = textInTag("<p class=\"project-pledged\">", "</p>");
     text7_content = textInTag("<p class=\"project-goal\">", "</p>");
@@ -96,27 +94,14 @@ void setup()
         line0_end_x = line0_start_x;
     }
 
-    // Draw factoids
-    int j = 0;
-    String s = textInTag("<div class=\"factoids\">", "</div>", 3);
-    Serial.println(s);
-    String *arr[] = {&text13_content, &text14_content, &text15_content,
-                     &text17_content, &text17_content, &text17_content};
-    for (int i = 0; i < 6; ++i)
-    {
-        while (isspace(s[j++]))
-            ;
-        --j;
-        while (!isspace(s[j]) && j < s.length())
-            *(arr[i]) += s[j++];
-    }
+    text13_content = textInTag("<a href=\"/soldered/inkplate-6color/updates\">", "</a>");
+    text14_content = textInTag("<a href=\"/soldered/inkplate-6color/crowdfunding\">", "</a>");
+    text17_content = textInTag("<a href=\"/soldered/inkplate-6color/backers\">", "</a>");
 
-    text19_content = textInTag("<div class=\"subscribe-cta\">", "</div>");
+    text19_content += textInTag("<span class=\"badge badge-calendar bg-secondary float-end\">", "</span>");
 
     mainDraw();
     display.display();
-
-    ++refreshes;
 
     free(buf);
     // Go to sleep

@@ -20,13 +20,13 @@ int text1_cursor_x = 42;
 int text1_cursor_y = 42;
 const GFXfont *text1_font = &Open_Sans_SemiBold_32;
 
-String text2_content;
+String text2_content = "Soldered";
 int text2_cursor_x = 42;
 int text2_cursor_y = 60;
 const GFXfont *text2_font = &Open_Sans_SemiBold_16;
 
 String text3_content;
-int text3_cursor_x = 80;
+int text3_cursor_x = 15;
 int text3_cursor_y = 107;
 const GFXfont *text3_font = &Open_Sans_SemiBold_16;
 //
@@ -133,8 +133,8 @@ int text18_cursor_x = 442;
 int text18_cursor_y = 335;
 const GFXfont *text18_font = &Open_Sans_SemiBold_24;
 
-String text19_content = "Last update posted Feb 17, 2021";
-int text19_cursor_x = 196;
+String text19_content = "Last update posted ";
+int text19_cursor_x = 170;
 int text19_cursor_y = 407;
 const GFXfont *text19_font = &Open_Sans_SemiBold_16;
 
@@ -167,18 +167,13 @@ void mainDraw()
     //Serial.print("Text 2: ");
     //Serial.println(text2_content);
 
-    // Manual edit:
-    GFXcanvas1 canvas(300, 150);
-    canvas.setFont(text3_font);
-    canvas.setTextColor(BLACK, WHITE);
-    canvas.setTextSize(1);
-    canvas.setCursor(0, 20);
-    canvas.print(text3_content);
-    // canvas.drawRect(0, 0, 100, 100, BLACK);
+    display.setFont(text3_font);
+    display.setTextColor(BLACK, WHITE);
+    display.setTextSize(1);
+    display.setCursor(text3_cursor_x, text3_cursor_y);
+    display.print(text3_content);
     //Serial.print("Text 3: ");
     //Serial.println(text3_content);
-
-    display.drawBitmap(text3_cursor_x, text3_cursor_y, canvas.getBuffer(), 300, 150, BLACK, WHITE);
 
     display.setFont(text4_font);
     display.setTextColor(BLACK, WHITE);
