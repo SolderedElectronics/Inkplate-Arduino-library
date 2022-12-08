@@ -34,6 +34,9 @@ int timeZone = 2;
 char ssid[] = "";
 char pass[] = "";
 
+// Delay between refreshed calls in miliseconds
+#define DELAY_MS 3 * 60 * 1000
+
 // OPTIONAL:
 // change to a different currency
 char currency[] = "bitcoin";
@@ -63,9 +66,6 @@ Network network;
 
 // create display object
 Inkplate display(INKPLATE_3BIT);
-
-// Delay between refreshed calls in miliseconds
-#define DELAY_MS 3 * 60 * 1000
 
 // Used for storing raw price values
 double data[64];
