@@ -35,6 +35,9 @@ int timeZone = 2;
 char ssid[] = "";
 char pass[] = "";
 
+// Delay between API calls in miliseconds (first 60 represents minutes so you can change to your need)
+#define DELAY_MS 3 * 60 * 1000
+
 // OPTIONAL:
 // change to a different currency
 char currency[] = "bitcoin";
@@ -64,15 +67,6 @@ Network network;
 
 // create display object
 Inkplate display(INKPLATE_3BIT);
-
-// Delay between API calls in miliseconds (first 60 represents minutes so you can change to your need)
-#define DELAY_MS 60 * 60 * 1000
-
-// Variable for counting partial refreshes
-RTC_DATA_ATTR unsigned refreshes = 0;
-
-// Constant to determine when to full update
-const int fullRefresh = 20;
 
 // Used for storing raw price values
 double data[64];
@@ -149,8 +143,6 @@ void setup()
     drawTime();
     // Full refresh
     display.display();
-
-    ++refreshes;
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS);

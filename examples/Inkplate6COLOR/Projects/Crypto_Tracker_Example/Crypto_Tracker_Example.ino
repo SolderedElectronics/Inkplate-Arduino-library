@@ -30,8 +30,11 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "e-radionica.com";
-char pass[] = "croduino";
+char ssid[] = "";
+char pass[] = "";
+
+// Delay between API calls in miliseconds
+#define DELAY_MS 3 * 60 * 1000
 
 // OPTIONAL:
 // change to a different currency
@@ -61,9 +64,6 @@ Network network;
 
 // create display object
 Inkplate display;
-
-// Delay between API calls in miliseconds
-#define DELAY_MS 30 * 60 * 1000
 
 // Used for storing raw price values
 double data[64];
