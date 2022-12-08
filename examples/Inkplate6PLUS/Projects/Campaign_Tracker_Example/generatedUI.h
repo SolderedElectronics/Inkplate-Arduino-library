@@ -20,8 +20,8 @@ int text1_cursor_x = 44;
 int text1_cursor_y = 90;
 const GFXfont *text1_font = &Open_Sans_SemiBold_56;
 
-String text2_content;
-int text2_cursor_x = 323;
+String text2_content = "Soldered";
+int text2_cursor_x = 44;
 int text2_cursor_y = 110;
 const GFXfont *text2_font = &Open_Sans_SemiBold_16;
 
@@ -132,7 +132,7 @@ int text18_cursor_x = 687;
 int text18_cursor_y = 639;
 const GFXfont *text18_font = &Open_Sans_SemiBold_24;
 
-String text19_content = "Last update posted Feb 17, 2021";
+String text19_content = "Last update posted ";
 int text19_cursor_x = 371;
 int text19_cursor_y = 735;
 const GFXfont *text19_font = &Open_Sans_SemiBold_16;
