@@ -63,19 +63,14 @@ void setup()
         }
         buf[n] = 0;
     }
-    Serial.println(n);
     Serial.println("Buffer load complete!");
 
     text1_content = textInTag("<h1>", "</h1>");
-    Serial.println(text1_content);
     text3_content = textInTag("<h3 class=\"project-teaser\">", "</h3>");
-    Serial.println(text3_content);
     text4_content = textInTag("<p class=\"project-pledged\">", "</p>");
-    Serial.println(text4_content);
     text7_content = textInTag("<p class=\"project-goal\">", "</p>");
-    Serial.println(text7_content);
     text11_content = textInTag("<span class=\"status-bar-left\">", "</span>");
-    Serial.println(text11_content);
+    
     int percent;
     text11_content.replace(",", "");
     sscanf(text11_content.c_str(), "%d%%", &percent);
@@ -100,7 +95,7 @@ void setup()
     text14_content = textInTag("<a href=\"/soldered/inkplate-10/crowdfunding\">", "</a>");
     text17_content = textInTag("<a href=\"/soldered/inkplate-10/backers\">", "</a>");
 
-    text19_content = textInTag("<span class=\"badge badge-calendar bg-secondary float-end\">", "</span>");
+    text19_content += textInTag("<span class=\"badge badge-calendar bg-secondary float-end\">", "</span>");
 
     mainDraw();
     display.display();
