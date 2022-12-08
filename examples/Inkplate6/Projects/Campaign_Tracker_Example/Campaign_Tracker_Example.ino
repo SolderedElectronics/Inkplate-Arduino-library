@@ -22,15 +22,12 @@
 #include "generatedUI.h"
 
 #define DELAY_MS 60000 * 60
-//#define URL      "https://www.crowdsupply.com/byte-mix-labs/microbyte"
 #define URL "https://www.crowdsupply.com/soldered/inkplate-6"
 
-char ssid[] = "Karlito";
-char pass[] = "Dabar123";
+char ssid[] = "";
+char pass[] = "";
 
 Inkplate display(INKPLATE_1BIT);
-
-RTC_DATA_ATTR unsigned refreshes = 0;
 
 uint32_t n;
 char *buf;
@@ -97,9 +94,8 @@ void setup()
     mainDraw();
     display.display();
 
-    ++refreshes;
-
     free(buf);
+    
     // Go to sleep
     esp_sleep_enable_timer_wakeup(1000LL * DELAY_MS);
     (void)esp_deep_sleep_start();
