@@ -63,18 +63,6 @@ void setup()
             ;
     }
 
-    // Init touchscreen and power it on after init (send false as argument to put it in deep sleep right after init)
-    if (display.tsInit(true))
-    {
-        Serial.println("Touchscreen init ok");
-    }
-    else
-    {
-        Serial.println("Touchscreen init fail");
-        while (true)
-            ;
-    }
-
     ++bootCount;
 
     // Our function declared below
@@ -87,7 +75,7 @@ void setup()
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
 
     // enable wake from I/O expander port on gpio 34
-    esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
+    esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ALL_LOW);
 
     // Go to sleep
     esp_deep_sleep_start();
