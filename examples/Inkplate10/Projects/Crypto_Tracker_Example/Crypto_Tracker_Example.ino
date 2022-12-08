@@ -16,12 +16,13 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by Soldered
+   8 December 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 //---------- CHANGE HERE  -------------:
@@ -30,8 +31,8 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "e-radionica.com";
-char pass[] = "croduino";
+char ssid[] = "";
+char pass[] = "";
 
 // OPTIONAL:
 // change to a different currency
@@ -65,12 +66,6 @@ Inkplate display(INKPLATE_3BIT);
 
 // Delay between refreshed calls in miliseconds
 #define DELAY_MS 3 * 60 * 1000
-
-// Variable for counting partial refreshes
-RTC_DATA_ATTR unsigned refreshes = 0;
-
-// Constant to determine when to full update and fetch
-const int fullRefresh = 20;
 
 // Used for storing raw price values
 double data[64];
@@ -131,51 +126,22 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    if (refreshes % fullRefresh == 0)
+    // Our begin function
+    network.begin();
+
+    Serial.print("Retrying retriving data");
+    while (!network.getData(data))
     {
-        // Our begin function
-        network.begin();
-
-        Serial.print("Retrying retriving data");
-        while (!network.getData(data))
-        {
-            Serial.print('.');
-            delay(1000);
-        }
-
-        // Our main drawing function
-        drawAll();
-        // Time drawing function
-        drawTime();
-        // Full refresh
-        display.display();
-    }
-    else
-    {
-        display.setDisplayMode(INKPLATE_1BIT);
-        // Reset screen where date is drawn
-        int16_t x1, y1;
-        uint16_t w1, h1;
-        display.setFont(elements[1].font);
-        display.setTextSize(1);
-        network.getTime(date);
-        display.getTextBounds(date, (int)(elements[1].x * 0.96), (int)(elements[1].y), &x1, &y1, &w1, &h1);
-
-        Serial.printf("%d %d %d %d\n", x1, y1, w1, h1);
-        display.fillRect(x1, y1, w1, h1, BLACK);
-        display.partialUpdate();
-        display.fillRect(x1, y1, w1, h1, WHITE);
-        display.partialUpdate();
-
-        // Time drawing function
-        drawTime();
-
-        // Just update time
-        display.partialUpdate();
+        Serial.print('.');
+        delay(1000);
     }
 
-    // Increment refresh count
-    ++refreshes;
+    // Our main drawing function
+    drawAll();
+    // Time drawing function
+    drawTime();
+    // Full refresh
+    display.display();
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS);
@@ -342,6 +308,8 @@ void drawAll()
 {
     // Save current date string, more about it in Network.cpp
     network.getTime(date);
+
+    Serial.println("crtam sve");
 
     // Find current day from string
     int day;
