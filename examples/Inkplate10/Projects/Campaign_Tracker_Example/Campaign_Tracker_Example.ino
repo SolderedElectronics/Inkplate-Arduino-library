@@ -100,6 +100,8 @@ void setup()
     text14_content = textInTag("<a href=\"/soldered/inkplate-10/crowdfunding\">", "</a>");
     text17_content = textInTag("<a href=\"/soldered/inkplate-10/backers\">", "</a>");
 
+    text19_content = textInTag("<span class=\"badge badge-calendar bg-secondary float-end\">", "</span>");
+
     mainDraw();
     display.display();
 

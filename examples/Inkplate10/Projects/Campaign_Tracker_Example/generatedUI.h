@@ -133,7 +133,7 @@ int text18_cursor_x = 600;
 int text18_cursor_y = 470;
 const GFXfont *text18_font = &Open_Sans_SemiBold_24;
 
-String text19_content = "Last update posted Feb 22, 2022";
+String text19_content = "Last update posted ";
 int text19_cursor_x = 275;
 int text19_cursor_y = 570;
 const GFXfont *text19_font = &Open_Sans_SemiBold_16;
