@@ -63,9 +63,7 @@ void setup()
         }
         buf[n] = 0;
     }
-    Serial.println("Buffer load complete!");
-    //Serial.print(buf);
-    
+    Serial.println("Buffer load complete!");  
 
     // Search for data to display
     text1_content = textInTag("<h1>", "</h1>");
@@ -73,6 +71,7 @@ void setup()
     text4_content = textInTag("<p class=\"project-pledged\">", "</p>");
     text7_content = textInTag("<p class=\"project-goal\">", "</p>");
     text11_content = textInTag("<div class=\"status-bar status-bar-primary\">", "</span>");
+    
     int percent;
     text11_content.replace(",", "");
     sscanf(text11_content.c_str(), "%d%%", &percent);
