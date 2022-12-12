@@ -134,7 +134,6 @@ void setup()
 
     // Initial cleaning of buffer and physical screen
     display.clearDisplay();
-    display.display();
 
     // Calling our begin from network.h file
     network.begin(city);

@@ -83,7 +83,7 @@ const uint8_t *logos[18] = {
 const uint8_t *s_logos[18] = {
     icon_s_01d, icon_s_02d, icon_s_03d, icon_s_04d, icon_s_09d, icon_s_10d, icon_s_11d, icon_s_13d, icon_s_50d,
     icon_s_01n, icon_s_02n, icon_s_03n, icon_s_04n, icon_s_09n, icon_s_10n, icon_s_11n, icon_s_13n, icon_s_50n,
-};3
+};
 
 // Variable for counting partial refreshes
 RTC_DATA_ATTR unsigned refreshes = 0;
