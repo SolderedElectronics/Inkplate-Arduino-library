@@ -70,7 +70,7 @@ Inkplate display;
 Network network;
 
 // Contants used for drawing icons
-char abbrs[32][16] = {"sn", "sl", "h", "t", "hr", "lr", "s", "hc", "lc", "c"};
+char abbrs[32][16] = {"01d", "02d", "03d", "04d", "09d", "10d", "11d", "13d", "50d"};
 
 const uint8_t *logos[18] = {
     icon_01d, icon_02d, icon_03d, icon_04d, icon_09d, icon_10d, icon_11d, icon_13d, icon_50d,
