@@ -70,9 +70,6 @@ void setup()
     display.setTextColor(BLACK);
     display.setTextSize(3);
 
-    display.clearDisplay();
-    display.display();
-
     // Our begin function
     network.begin();
 

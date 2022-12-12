@@ -42,26 +42,21 @@ void Network::begin()
     WiFi.begin(ssid, pass);
 
     int cnt = 0;
-    display.print(F("Waiting for WiFi to connect..."));
-    display.partialUpdate(true);
+    Serial.print(F("Waiting for WiFi to connect..."));
     while ((WiFi.status() != WL_CONNECTED))
     {
-        display.print(F("."));
-        display.partialUpdate(true);
+        Serial.print(F("."));
         delay(1000);
         ++cnt;
 
         if (cnt == 20)
         {
-            display.println("Can't connect to WIFI, restarting");
-            display.partialUpdate(true);
+            Serial.println("Can't connect to WIFI, restarting");
             delay(100);
             ESP.restart();
         }
     }
-    display.println(F(" connected"));
-    display.partialUpdate(true);
-
+    Serial.println(F(" connected"));
 }
 
 bool Network::getData(char* text, char* auth)
@@ -76,8 +71,7 @@ bool Network::getData(char* text, char* auth)
         delay(5000);
 
         int cnt = 0;
-        display.println(F("Waiting for WiFi to reconnect..."));
-        display.partialUpdate(true);
+        Serial.println(F("Waiting for WiFi to reconnect..."));
         while ((WiFi.status() != WL_CONNECTED))
         {
             // Prints a dot every second that wifi isn't connected
@@ -149,7 +143,7 @@ bool Network::getData(char* text, char* auth)
         display.clearDisplay();
         display.setCursor(50, 230);
         display.setTextSize(2);
-        display.println(F("Info has not been found!"));
+        display.println(F("Quotes have not been found!"));
         display.display();
         while (1)
             ;

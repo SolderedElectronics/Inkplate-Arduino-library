@@ -1,6 +1,6 @@
 #include "Arduino.h"
-#include "Fonts/FreeSansBold24pt7b.h"
 #include "Inkplate.h"
+#include "Fonts/FreeSansBold24pt7b.h"
 
 extern Inkplate display;
 
@@ -152,6 +152,7 @@ String text2_content = "0";
 int text2_cursor_x = 740;
 int text2_cursor_y = 715;
 const GFXfont *text2_font = &FreeSansBold24pt7b;
+#define text2_font &FreeSansBold24pt7b
 
 String text3_content = "1";
 int text3_cursor_x = 640;

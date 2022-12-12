@@ -123,9 +123,6 @@ bool Network::getData(char* text, char* auth)
         {
             // Set all data got from internet using formatTemp and formatWind defined above
             // This part relies heavily on ArduinoJson library
-
-            Serial.println("Success");
-
             const char *buff1 = doc["content"];
 
             strcpy(text, buff1);
@@ -144,7 +141,7 @@ bool Network::getData(char* text, char* auth)
         display.clearDisplay();
         display.setCursor(50, 230);
         display.setTextSize(2);
-        display.println(F("Info has not been found!"));
+        display.println(F("Quotes have not been found!"));
         display.display();
         while (1)
             ;

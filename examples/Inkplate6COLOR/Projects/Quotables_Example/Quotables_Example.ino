@@ -51,7 +51,7 @@ Network network;
 Inkplate display;
 
 // Delay between API calls in seconds, 300 seconds is 5 minutes
-#define DELAY_S 300
+#define DELAY_S 15
 
 // Our functions declared below setup and loop
 void drawAll();
@@ -68,7 +68,7 @@ void setup()
     display.begin();
     display.setTextWrap(true); // Set text wrapping to true
     display.setTextColor(BLACK);
-
+    
     // Our begin function
     network.begin();
 
@@ -80,7 +80,6 @@ void setup()
     }
 
     // Our main drawing function
-    Serial.println("22");
     drawAll();
     // Full refresh
     display.display();

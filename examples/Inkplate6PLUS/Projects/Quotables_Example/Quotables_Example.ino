@@ -24,7 +24,8 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
 //---------- CHANGE HERE  -------------:
@@ -53,7 +54,7 @@ Network network;
 Inkplate display(INKPLATE_1BIT);
 
 // Delay between API calls in seconds, 300 seconds is 5 minutes
-#define DELAY_S 10
+#define DELAY_S 300
 
 // Our functions declared below setup and loop
 void drawAll();
@@ -72,9 +73,6 @@ void setup()
     display.setTextColor(BLACK);
     display.setTextSize(3);
 
-    display.clearDisplay();
-    display.display();
-
     // Our begin function
     network.begin();
 
@@ -84,7 +82,7 @@ void setup()
     }
 
     display.clearDisplay();
-    drawAll(); //Call funtion to draw screen
+    drawAll(); // Call funtion to draw screen
     display.display();
 
     // Go to sleep before checking again
@@ -105,8 +103,8 @@ void drawAll()
     uint8_t rows = strlen(quote) / 60, row = 0;
     display.setFont(&exmouth_40pt7b); // Set custom font
     display.setTextSize(1);
-    display.setTextColor(BLACK); //Set text color to black
-    display.setCursor(60, display.height() / 2 - 30 * rows); //Place text in the middle
+    display.setTextColor(BLACK);                             // Set text color to black
+    display.setCursor(60, display.height() / 2 - 30 * rows); // Place text in the middle
     uint16_t cnt = 0;
     while (quote[cnt] != '\0')
     {
@@ -121,7 +119,8 @@ void drawAll()
     uint16_t w, h;
     int16_t x, y;
     display.getTextBounds(author, 0, 0, &x, &y, &w, &h);
-    display.setCursor(display.width() - w - 50, display.height() - 30); // Set cursor to fit author name in lower right corner
+    display.setCursor(display.width() - w - 50,
+                      display.height() - 30); // Set cursor to fit author name in lower right corner
     display.print("-");
     display.println(author); // Print author
 }

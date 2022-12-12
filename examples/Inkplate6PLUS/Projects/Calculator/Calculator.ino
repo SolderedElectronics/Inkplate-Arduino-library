@@ -15,7 +15,8 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
 #include "Calculator.h"
@@ -30,6 +31,7 @@ double rightNumber = 0;
 char op = ' ';
 double result = 0;
 int rightNumPos = 0;
+bool decimalPointOnCurrentNumber = false;
 
 void setup()
 {
@@ -84,10 +86,9 @@ void keysEvents()
         display.partialUpdate();
     }
 
-    if (display.touchInArea(800, 650, 100, 100) && (op != ' ')) // Calculate
+    if (display.touchInArea(800, 650, 100, 100) && (op != ' ') && atof(&text18_content[rightNumPos+3]) != 0) // Calculate
     {
         result = calculate();
-
 
         if (text19_content == "")
         {
@@ -110,6 +111,7 @@ void keysEvents()
         text18_cursor_y = 260;
         result = 0;
         op = ' ';
+        decimalPointOnCurrentNumber = false;
     }
 
     if (display.touchInArea(900, 650, 100, 100) && (op == ' ') && (rightNumPos > 0))
@@ -117,6 +119,7 @@ void keysEvents()
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " + ";
         op = '+';
+        decimalPointOnCurrentNumber = false;
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -136,7 +139,7 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(600, 650, 100, 100))
+    if (display.touchInArea(600, 650, 100, 100) && !decimalPointOnCurrentNumber)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + ".";
@@ -148,6 +151,7 @@ void keysEvents()
         {
             ++rightNumPos;
         }
+        decimalPointOnCurrentNumber = true;
     }
 
     if (display.touchInArea(900, 550, 100, 100) && (op == ' ') && (rightNumPos > 0))
@@ -155,6 +159,7 @@ void keysEvents()
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " - ";
         op = '-';
+        decimalPointOnCurrentNumber = false;
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -207,6 +212,7 @@ void keysEvents()
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " x ";
         op = 'x';
+        decimalPointOnCurrentNumber = false;
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -259,6 +265,7 @@ void keysEvents()
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " / ";
         op = '/';
+        decimalPointOnCurrentNumber = false;
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -314,10 +321,6 @@ float calculate()
 
     leftNumber = atof(&text18_content[0]);
     rightNumber = atof(&text18_content[rightNumPos]);
-
-    // Serial.println(leftNumber);
-    // Serial.println(rightNumber);
-    // Serial.println(rightNumPos);
     rightNumPos = 0;
 
     switch (op)
