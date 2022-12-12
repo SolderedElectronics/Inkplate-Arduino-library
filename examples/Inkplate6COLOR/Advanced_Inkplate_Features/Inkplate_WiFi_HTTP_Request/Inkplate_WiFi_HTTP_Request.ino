@@ -24,8 +24,8 @@
 #include <HTTPClient.h> //Include HTTP library to this sketch
 #include <WiFi.h>       //Include ESP32 WiFi library to our sketch
 
-#define ssid "e-radionica.com" // Name of the WiFi network (SSID) that you want to connect Inkplate to
-#define pass "croduino"        // Password of that WiFi network
+#define ssid "" // Name of the WiFi network (SSID) that you want to connect Inkplate to
+#define pass "" // Password of that WiFi network
 
 Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
