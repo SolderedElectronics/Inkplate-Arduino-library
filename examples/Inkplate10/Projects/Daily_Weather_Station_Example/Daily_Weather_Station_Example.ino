@@ -100,11 +100,6 @@ RTC_DATA_ATTR char temps[4][8] = {
 
 // Variables for storing hour strings
 RTC_DATA_ATTR uint8_t hours = 0;
-// Variable for counting partial refreshes
-RTC_DATA_ATTR long refreshes = 0;
-
-// Constant to determine when to full update
-const int fullRefresh = 10;
 
 // Variables for storing current time and weather info
 RTC_DATA_ATTR char currentTemp[16] = "-F";
