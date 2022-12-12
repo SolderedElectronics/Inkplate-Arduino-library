@@ -31,8 +31,8 @@ int timeZone = 2;
 char city[128] = "OSIJEK";
 
 // Coordinates sent to the api
-char lon[] = "45.5510548";
-char lat[] = "18.5947808";
+char lon[] = "18.5947808";
+char lat[] = "45.5510548";
 
 // Change to your wifi ssid and password
 char ssid[] = "";
@@ -138,18 +138,6 @@ void setup()
 
     // Calling our begin from network.h file
     network.begin(city);
-
-    // Welcome screen
-    display.setCursor(215, 400);
-    display.setTextSize(3);
-    display.print(F("Welcome to Inkplate 10 weather example!"));
-    display.display();
-
-    // Wait a bit before proceeding
-    delay(5000);
-
-    // Clear display
-    display.clearDisplay();
 
     // Get all relevant data, see Network.cpp for info
     network.getTime(currentTime);
