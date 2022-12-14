@@ -1,6 +1,6 @@
 /*
    Inkplate_Wake_up_on_touchscreen example for Soldered Inkplate 6Plus
-   For this example you will need USB cable and an Inkplate 6
+   For this example you will need USB cable and an Inkplate 6Plus
    Select "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
    Don't have "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
