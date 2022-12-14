@@ -43,9 +43,10 @@
 
 // CHANGE HERE ---------------
 
-char ssid[] = "e-radionica.com";
-char pass[] = "croduino";
+char ssid[] = "";
+char pass[] = "";
 char calendarURL[] = "";
+
 int timeZone = 2;
 
 // Set to 3 to flip the screen 180 degrees
@@ -65,6 +66,9 @@ Network network;
 // Variables for time and raw event info
 char date[64];
 char *data;
+
+// Set background of first task to color yellow
+int currentColor = 2;
 
 // Struct for storing calender event info
 struct entry
@@ -187,7 +191,7 @@ void drawGrid()
         temp[10] = 0;
 
         // calculate where to put text and print it
-        display.setCursor(40 + (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m) + 15, y1 + header - 6);
+        display.setCursor(17 + (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m) + 15, y1 + header - 9);
         display.println(temp);
     }
 }
@@ -355,10 +359,122 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
         display.print(event->time);
     }
 
+    // Calculating coordinates of text box
     int bx1 = x1 + 2;
     int by1 = y1;
     int bx2 = x1 + 440 / 3 - 7;
     int by2 = display.getCursorY() + 7;
+
+    // Now we know the full height of the text box
+    // From here, we print the background of according height and print the text again
+
+    // Fill with color and cycle to next color
+    display.fillRect(bx1, by1, 440 / 3 - 7, by2 - by1, currentColor);
+
+    // If the color selected is yellow, print the text in black
+    // Otherwise, print it in white
+    if (currentColor == 5)
+        display.setTextColor(0);
+    else
+        display.setTextColor(1);
+
+    // Cycle to the next color
+    currentColor++;
+    if (currentColor == 7)
+        currentColor = 2;
+
+    // Upper left coordintes
+    x1 = 3 + 4 + (440 / 3) * day;
+    y1 = beginY + 3;
+
+    // Setting text font
+    display.setFont(&FreeSans12pt7b);
+
+    // Some temporary variables
+    n = 0;
+    line[128];
+
+    // Insert line brakes into setTextColor
+    lastSpace = -100;
+    display.setCursor(x1 + 5, beginY + 26);
+    for (int i = 0; i < min((size_t)64, strlen(event->name)); ++i)
+    {
+        // Copy name letter by letter and check if it overflows space given
+        line[n] = event->name[i];
+        if (line[n] == ' ')
+            lastSpace = n;
+        line[++n] = 0;
+
+        int16_t xt1, yt1;
+        uint16_t w, h;
+
+        // Gets text bounds
+        display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
+
+        // Char out of bounds, put in next line
+        if (w > 420 / 3 - 30)
+        {
+            // if there was a space 5 chars before, break line there
+            if (n - lastSpace < 5)
+            {
+                i -= n - lastSpace - 1;
+                line[lastSpace] = 0;
+            }
+
+            // Print text line
+            display.setCursor(x1 + 5, display.getCursorY());
+            display.println(line);
+
+            // Clears line (null termination on first charachter)
+            line[0] = 0;
+            n = 0;
+        }
+    }
+
+    // display last line
+    display.setCursor(x1 + 5, display.getCursorY());
+    display.println(line);
+
+    // Set cursor on same y but change x
+    display.setCursor(x1 + 3, display.getCursorY());
+    display.setFont(&FreeSans9pt7b);
+
+    // Print time
+    // also, if theres a location print it
+    if (strlen(event->location) != 1)
+    {
+        display.println(event->time);
+
+        display.setCursor(x1 + 5, display.getCursorY());
+
+        char line[128] = {0};
+
+        for (int i = 0; i < strlen(event->location); ++i)
+        {
+            line[i] = event->location[i];
+            line[i + 1] = 0;
+
+            int16_t xt1, yt1;
+            uint16_t w, h;
+
+            // Gets text bounds
+            display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
+
+            if (w > (442 / 3))
+            {
+                for (int j = i - 1; j > max(-1, i - 4); --j)
+                    line[j] = '.';
+                line[i] = 0;
+            }
+        }
+
+        display.print(line);
+    }
+    else
+    {
+        display.print(event->time);
+    }
+
 
     // Draw event rect bounds
     display.drawThickLine(bx1, by1, bx1, by2, 0, 2.0);
