@@ -51,7 +51,7 @@ Network network;
 Inkplate display;
 
 // Delay between API calls in seconds, 300 seconds is 5 minutes
-#define DELAY_S 15
+#define DELAY_S 300
 
 // Our functions declared below setup and loop
 void drawAll();
@@ -72,7 +72,6 @@ void setup()
     // Our begin function
     network.begin();
 
-    Serial.print("Retrying retriving data");
     while (!network.getData(quote, author))
     {
         Serial.print('.');
@@ -101,26 +100,87 @@ void loop()
 // Our main drawing function
 void drawAll()
 {
-    uint8_t rows = strlen(quote) / 43, row = 0;
     display.setFont(&exmouth_32pt7b); // Set custom font
     display.setTextSize(1);
     display.setTextColor(random(0,7)); //Set text color to random color
-    display.setCursor(48, display.height() / 2 - 24 * rows); //Place text in the middle
-    uint16_t cnt = 0;
-    while (quote[cnt] != '\0')
-    {
-        if (display.getCursorX() > display.width() - 90 && quote[cnt] == ' ')
-        {
-            row++;
-            display.setCursor(48, display.height() / 2 - 24 * rows + row * 48);
-        }
-        display.print(quote[cnt]);
-        cnt++;
-    }
+    printInBoundaries(quote,40,100,520,300,50);
     uint16_t w,h;
     int16_t x,y;
     display.getTextBounds(author, 0, 0, &x, &y, &w, &h);
     display.setCursor(display.width() - w - 50, display.height() - 30); // Set cursor to fit author name in lower right corner
     display.print("-");
     display.println(author); // Print author
+}
+
+// Function to print text within a text box
+void printInBoundaries(char *text, int x0, int y0, int print_width, int print_height, int rowHeight)
+{
+    int currentCharIndex = 0;
+    char currentWordBuf[128] = {0};
+    char currentWordBufWithThreeDots[128] = {0};
+    bool lastWord = false;
+    bool lastRow = false;
+    int currentRow = 0;
+    int textLen = strlen(text);
+
+    display.setCursor(x0, y0);
+
+    while (true)
+    {
+        int i = currentCharIndex;
+        while (text[i] != ' ')
+        {
+            i++;
+            if (i > textLen)
+            {
+                lastWord = true;
+                break;
+            }
+        }
+
+        memset(currentWordBuf, 0, 128);
+        memcpy(currentWordBuf, text + currentCharIndex, i - currentCharIndex);
+
+        int16_t printing_x0, printing_y0, printing_x1, printing_y1;
+        uint16_t printing_w, printing_h;
+
+        printing_x0 = display.getCursorX();
+        printing_y0 = display.getCursorY();
+		
+        lastRow = (printing_y0 + printing_h + rowHeight > y0 + print_height);
+        if (!lastRow)
+        {
+            display.getTextBounds(currentWordBuf, printing_x0, printing_y0, &printing_x1, &printing_y1, &printing_w,
+                                  &printing_h);
+        }
+        else
+        {
+            memset(currentWordBufWithThreeDots, 0, 128);
+            memcpy(currentWordBufWithThreeDots, currentWordBuf, i - currentCharIndex);
+            strcat(currentWordBufWithThreeDots, " ...");
+            display.getTextBounds(currentWordBufWithThreeDots, printing_x0, printing_y0, &printing_x1, &printing_y1,
+                                  &printing_w, &printing_h);
+        }
+        bool wordCrossesWidthBoundary = printing_x1 + printing_w > x0 + print_width;
+
+        if (wordCrossesWidthBoundary)
+        {
+            currentRow++;
+            display.setCursor(x0, y0 + rowHeight * currentRow);
+            if (lastRow)
+            {
+                display.setCursor(printing_x0, printing_y0);
+                display.print(" ...");
+                return;
+            }
+        }
+        display.print(currentWordBuf);
+        display.print(" ");
+
+        if (lastWord)
+        {
+            return;
+        }
+        currentCharIndex = i + 1;
+    }
 }
