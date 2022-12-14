@@ -1,6 +1,6 @@
 /*
-   Web_BMP_pictures example for Soldered Inkplate6
-   For this example you will need a micro USB cable, Inkplate6, and an available WiFi connection.
+   Web_BMP_pictures example for Soldered Inkplate 10
+   For this example you will need a micro USB cable, Inkplate 10, and an available WiFi connection.
    Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
    Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
