@@ -95,8 +95,6 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
     client.flush();
     client.setTimeout(10);
 
-    Serial.println("Success????");
-
     bool sleep = WiFi.getSleep();
     WiFi.setSleep(false);
 
@@ -104,7 +102,6 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1);
 
-    http.begin(client, url); // HTTP client initialization
 
     int httpCode = http.GET();
 
