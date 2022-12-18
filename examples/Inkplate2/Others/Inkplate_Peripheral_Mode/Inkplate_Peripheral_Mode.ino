@@ -1,7 +1,7 @@
 /*
    Inkplate_Peripheral_Mode sketch for e-radionica.com Inkplate 2
-   Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+   Select "Soldered Inkplate 2" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Using this sketch, you don't have to program and control e-paper using Arduino code.
@@ -31,23 +31,22 @@
    14 April 2022 by soldered.com
 */
 
-#include <Inkplate.h>
-Inkplate display;
+#include <Inkplate.h>   // Include Inkplate library
+Inkplate display;   // Init Inkplate object
 
 #define BUFFER_SIZE 1000
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
 void setup()
 {
-    display.begin();
-    Serial.begin(115200);
-    memset(commandBuffer, 0, BUFFER_SIZE);
+    display.begin();    // Init Inkplate library
+    Serial.begin(115200);   // Init serial communication
+    memset(commandBuffer, 0, BUFFER_SIZE);  // Clear the command buffer
 }
 
 void loop()
 {
-    // put your main code here, to run repeatedly:
-    if (Serial.available())
+    if (Serial.available())     // Check for the incoming data
     {
         while (Serial.available())
         {
@@ -67,6 +66,7 @@ void loop()
         if (commandBuffer[i] == '*' && e == NULL)
             e = &commandBuffer[i];
     }
+
     if (s != NULL && e != NULL)
     {
         if ((e - s) > 0)
@@ -81,90 +81,79 @@ void loop()
                 break;
 
             case '0':
+                // Draw pixel
                 sscanf(s + 3, "%d,%d,%d", &x, &y, &c);
-                // sprintf(temp, "display.drawPixel(%d, %d, %d)\n\r", x, y, c);
-                // Serial.print(temp);
                 display.drawPixel(x, y, c);
                 break;
 
             case '1':
+                // Draw line
                 sscanf(s + 3, "%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &c);
-                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
-                // Serial.print(temp);
                 display.drawLine(x1, y1, x2, y2, c);
                 break;
 
             case '2':
+                // Draw fast vertical line
                 sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &l, &c);
-                // sprintf(temp, "display.drawFastVLine(%d, %d, %d, %d)\n\r", x, y, l, c);
-                // Serial.print(temp);
                 display.drawFastVLine(x, y, l, c);
                 break;
 
             case '3':
+                // Draw fast horizontal line
                 sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &l, &c);
-                // sprintf(temp, "display.drawFastHLine(%d, %d, %d, %d)\n\r", x, y, l, c);
-                // Serial.print(temp);
                 display.drawFastHLine(x, y, l, c);
                 break;
 
             case '4':
+                // Draw rect.
                 sscanf(s + 3, "%d,%d,%d,%d,%d", &x, &y, &w, &h, &c);
-                // sprintf(temp, "display.drawRect(%d, %d, %d, %d, %d)\n\r", x, y, w, h, c);
-                // Serial.print(temp);
                 display.drawRect(x, y, w, h, c);
                 break;
 
             case '5':
+                // Draw circle
                 sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &r, &c);
-                // sprintf(temp, "display.drawCircle(%d, %d, %d, %d)\n\r", x, y, r, c);
-                // Serial.print(temp);
                 display.drawCircle(x, y, r, c);
                 break;
 
             case '6':
+                // Draw triangle
                 sscanf(s + 3, "%d,%d,%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &x3, &y3, &c);
-                // sprintf(temp, "display.drawTriangle(%d, %d, %d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, x3, y3, c);
-                // Serial.print(temp);
                 display.drawTriangle(x1, y1, x2, y2, x3, y3, c);
                 break;
 
             case '7':
+                // Draw round rect.
                 sscanf(s + 3, "%d,%d,%d,%d,%d,%d", &x, &y, &w, &h, &r, &c);
-                // sprintf(temp, "display.drawRoundRect(%d, %d, %d, %d, %d, %d)\n\r", x, y, w, h, r, c);
-                // Serial.print(temp);
                 display.drawRoundRect(x, y, w, h, r, c);
                 break;
 
             case '8':
+                // Draw filled rect.
                 sscanf(s + 3, "%d,%d,%d,%d,%d", &x, &y, &w, &h, &c);
-                // sprintf(temp, "display.fillRect(%d, %d, %d, %d, %d)\n\r", x, y, w, h, c);
-                // Serial.print(temp);
                 display.fillRect(x, y, w, h, c);
                 break;
 
             case '9':
+                // Draw filled circle
                 sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &r, &c);
-                // sprintf(temp, "display.fillCircle(%d, %d, %d, %d)\n\r", x, y, r, c);
-                // Serial.print(temp);
                 display.fillCircle(x, y, r, c);
                 break;
 
             case 'A':
+                // Draw filled triangle
                 sscanf(s + 3, "%d,%d,%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &x3, &y3, &c);
-                // sprintf(temp, "display.fillTriangle(%d, %d, %d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, x3, y3, c);
-                // Serial.print(temp);
                 display.fillTriangle(x1, y1, x2, y2, x3, y3, c);
                 break;
 
             case 'B':
+                // Draw filled round triangle
                 sscanf(s + 3, "%d,%d,%d,%d,%d,%d", &x, &y, &w, &h, &r, &c);
-                // sprintf(temp, "display.fillRoundRect(%d, %d, %d, %d, %d, %d)\n\r", x, y, w, h, r, c);
-                // Serial.print(temp);
                 display.fillRoundRect(x, y, w, h, r, c);
                 break;
 
             case 'C':
+                // Draw string
                 sscanf(s + 3, "\"%2000[^\"]\"", strTemp);
                 n = strlen(strTemp);
                 for (int i = 0; i < n; i++)
@@ -176,30 +165,24 @@ void loop()
                     strTemp[i / 2] = (hexToChar(strTemp[i]) << 4) | (hexToChar(strTemp[i + 1]) & 0x0F);
                 }
                 strTemp[n / 2] = 0;
-                // Serial.print("display.print(\"");
-                // Serial.print(strTemp);
-                // Serial.println("\");");
                 display.print(strTemp);
                 break;
 
             case 'D':
+                // Set text size
                 sscanf(s + 3, "%d", &c);
-                // sprintf(temp, "display.setTextSize(%d)\n", c);
-                // Serial.print(temp);
                 display.setTextSize(c);
                 break;
 
             case 'E':
+                // Set print cursor position
                 sscanf(s + 3, "%d,%d", &x, &y);
-                // sprintf(temp, "display.setCursor(%d, %d)\n", x, y);
-                // Serial.print(temp);
                 display.setCursor(x, y);
                 break;
 
             case 'F':
+                // Enable or disable text wrapping.
                 sscanf(s + 3, "%c", &b);
-                // sprintf(temp, "display.setTextWrap(%s)\n", b == 'T' ? "True" : "False");
-                // Serial.print(temp);
                 if (b == 'T')
                     display.setTextWrap(true);
                 if (b == 'F')
@@ -207,49 +190,45 @@ void loop()
                 break;
 
             case 'G':
+                // Set screen rotation
                 sscanf(s + 3, "%d", &c);
                 c &= 3;
-                // sprintf(temp, "display.setRotation(%d)\n", c);
-                // Serial.print(temp);
                 display.setRotation(c);
                 break;
 
 
             case 'K':
+                // Clear the display (frame buffer only)
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')
                 {
-                    // Serial.print("display.clearDisplay();\n");
                     display.clearDisplay();
                 }
                 break;
 
             case 'L':
+                // Display image from the frame buffer
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')
                 {
-                    // Serial.print("display.display();\n");
                     display.display();
                 }
                 break;
 
             case 'T':
+                // Draw thick line.
                 int t;
                 sscanf(s + 3, "%d,%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &c, &t);
-                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
-                // Serial.print(temp);
                 display.drawThickLine(x1, y1, x2, y2, c, t);
                 break;
             case 'U':
+                // Draw elipse.
                 sscanf(s + 3, "%d,%d,%d,%d,%d", &rx, &ry, &xc, &yc, &c);
-                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
-                // Serial.print(temp);
                 display.drawElipse(rx, ry, xc, yc, c);
                 break;
             case 'V':
+                // Draw filled elipse
                 sscanf(s + 3, "%d,%d,%d,%d,%d", &rx, &ry, &xc, &yc, &c);
-                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
-                // Serial.print(temp);
                 display.fillElipse(rx, ry, xc, yc, c);
                 break;
             }

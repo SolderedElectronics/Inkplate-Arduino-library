@@ -1,8 +1,8 @@
 /*
     Cryptocurrency tracker example for e-radionica.com Inkplate 2
     For this example you will need only USB cable, Inkplate 2 and a WiFi with stable Internet connection.
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how you can use Inkplate 6 to display API data.
@@ -21,30 +21,26 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
-// Include Inkplate library to the sketch
-#include "Inkplate.h"
+#include "Inkplate.h" // Include Inkplate library to the sketch
+
+#include "Network.h" // Our networking functions, declared in Network.cpp
 
 // Include fonts used
-#include "Fonts/Inter8pt7b.h"
 #include "Fonts/Inter16pt7b.h"
-#include "ethereum.h"
+#include "Fonts/Inter8pt7b.h"
 #include "bitcoin.h"
+#include "ethereum.h"
 #include "tether.h"
-
-// Our networking functions, declared in Network.cpp
-#include "Network.h"
 
 // Delay between API calls in miliseconds
 #define DELAY_MS 3 * 60 * 1000 // Every 3 minutes, minute has 60 seconds and second has 1000 miliseconds
 
-// Create object with all networking functions
-Network network;
+Network network; // Create object with all networking functions
 
-// Create object for Inkplate library
-Inkplate display;
+Inkplate display; // Create object for Inkplate library
 
 // Adjust your time zone, 2 means UTC+2
 int timeZone = 2;
@@ -96,11 +92,10 @@ char months[][12] = {
 
 // Out UI elements data
 textElement elements[] = {
-    {32, 30, &Inter16pt7b, currencyAbbr, 0 , INKPLATE2_BLACK}, {120, 18, &Inter8pt7b, date, 0, INKPLATE2_BLACK},
-    {10, 180, &Inter8pt7b, fromToDate, 0, INKPLATE2_BLACK}, {25, 60, &Inter16pt7b, current, 0, INKPLATE2_RED},
-    {10, 80, &Inter8pt7b, "Minimum:", 0, INKPLATE2_BLACK}, {10, 100, &Inter8pt7b, minimum, 0, INKPLATE2_RED},
-    {115, 80, &Inter8pt7b, "Maximum:", 0, INKPLATE2_BLACK}, {115, 100, &Inter8pt7b, maximum, 0, INKPLATE2_RED}
-};
+    {32, 30, &Inter16pt7b, currencyAbbr, 0, INKPLATE2_BLACK}, {120, 18, &Inter8pt7b, date, 0, INKPLATE2_BLACK},
+    {10, 180, &Inter8pt7b, fromToDate, 0, INKPLATE2_BLACK},   {25, 60, &Inter16pt7b, current, 0, INKPLATE2_RED},
+    {10, 80, &Inter8pt7b, "Minimum:", 0, INKPLATE2_BLACK},    {10, 100, &Inter8pt7b, minimum, 0, INKPLATE2_RED},
+    {115, 80, &Inter8pt7b, "Maximum:", 0, INKPLATE2_BLACK},   {115, 100, &Inter8pt7b, maximum, 0, INKPLATE2_RED}};
 
 // Our functions declared below setup and loop
 void drawAll();
@@ -113,24 +108,17 @@ void setup()
 
     // Initial display settings
     display.begin();
-    display.setTextWrap(false); //Disable text wrapping
-    display.setTextColor(0, 7);
+    display.setTextWrap(false); // Disable text wrapping
+    display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
-    // Welcome screen
     display.setCursor(10, 10); // Set cursor, custom font uses different method for setting cursor
     // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
-    display.setTextSize(2); //Set size of font in comparison to original 5x7 font
-    display.println(F("Welcome to Inkplate 2 cryptocurrency tracker example!"));
-    display.setCursor(0, 0);
-    display.println(F("Connecting to WiFi..."));
-    display.display();
-    display.clearDisplay();
-    delay(1000);
+    display.setTextSize(2); // Set size of font in comparison to original 5x7 font
 
     // Our begin function
     network.begin();
 
-    while (!network.getData(data)) //Get data and check if data is successfully fetched
+    while (!network.getData(data)) // Get data and check if data is successfully fetched
     {
         Serial.println("Retrying retriving data!");
         delay(1000);
@@ -264,16 +252,16 @@ void drawAll()
         display.print(elements[i].text);
     }
 
-    if(strstr(currencyAbbr, "BTC"))
+    if (strstr(currencyAbbr, "BTC"))
     {
-      display.drawBitmap(5,5, bitcoin, 22, 30, INKPLATE2_BLACK);
+        display.drawBitmap(5, 5, bitcoin, 22, 30, INKPLATE2_BLACK);
     }
-    else if(strstr(currencyAbbr, "ETH"))
+    else if (strstr(currencyAbbr, "ETH"))
     {
-      display.drawBitmap(5,5, ethereum, 18, 28, INKPLATE2_BLACK);
+        display.drawBitmap(5, 5, ethereum, 18, 28, INKPLATE2_BLACK);
     }
-    else if(strstr(currencyAbbr, "TET"))
+    else if (strstr(currencyAbbr, "TET"))
     {
-      display.drawBitmap(5,5, tether, 26, 30, INKPLATE2_BLACK);
+        display.drawBitmap(5, 5, tether, 26, 30, INKPLATE2_BLACK);
     }
 }

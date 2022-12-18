@@ -2,8 +2,8 @@
     Inkplate_RTC example for soldered.com Inkplate 2
     For this example you will need USB cable and the Inkplate 2.
 
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how to set an alarm time and periodically check if it's been reached by getting the
@@ -16,29 +16,23 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
-// Adjust your time zone, 2 means UTC+2
-int timeZone = 1;
+#include "Inkplate.h" // Include Inkplate library
 
-#include "Inkplate.h"
+#include "Network.h" // Our networking functions, declared in Network.cpp
 
-// Our networking functions, declared in Network.cpp
-#include "Network.h"
+Inkplate display; // Initialize Inkplate object
 
-// Create network object for WiFi and HTTP functions
-Network network;
+Network network; // Create network object for WiFi and HTTP functions
 
-// Initialize Inkplate object
-Inkplate display;
-
-// Write your SSID and password
+// Write your SSID and password (needed to get the correct time from the Internet)
 char ssid[] = "";
 char pass[] = "";
 
-// Structure that contains time info
-struct tm currentTime, timerTime;
+// Adjust your time zone, 2 means UTC+2
+int timeZone = 2;
 
 // Set how many minutes should pass between each timer check
 int minutesBetweenWakes = 20;
@@ -52,6 +46,9 @@ struct alarmTime
     int day = 25;
     int mon = 12;
 } alarmTime;
+
+// Structure that contains time info
+struct tm currentTime, timerTime;
 
 void setup()
 {
@@ -86,7 +83,7 @@ void setup()
     if (timeUntilAlarmInSeconds <= 0)
     {
         display.setTextSize(2);
-        display.setCursor(9,30);
+        display.setCursor(9, 30);
         display.printf("Merry Christmas!\n");
         display.setTextSize(1);
         display.printf("\n      It's %2.1d:%02d", currentTime.tm_hour, currentTime.tm_min);
@@ -94,11 +91,10 @@ void setup()
         display.display(); // Show the data on the display
 
         // Do whatever the alarm should do here
-        while(1)
+        while (1)
         {
             delay(100);
         }
-        
     }
 
     else
@@ -129,4 +125,5 @@ void setup()
 
 void loop()
 {
+    // Nothing. Loop must be empty!
 }

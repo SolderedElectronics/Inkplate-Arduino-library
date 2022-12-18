@@ -1,13 +1,13 @@
 /*
    Inkplate_Picture_From_RAM example for soldered.com Inkplate 2
    For this example you will need USB cable and Inkplate 2.
-   Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+   Select "Soldered Inkplate 2" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how you can show picture loaded in RAM.
-   Inkplate will change content on the screen every 10 seconds and go 
-   Into deep sleep mode after showing three images.
+   Inkplate will change content on the screen every 10 seconds and go
+   into deep sleep mode after showing three images.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
@@ -16,7 +16,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 #include "Inkplate.h" // Include Inkplate library to the sketch
@@ -35,31 +35,23 @@ void setup()
 {
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
-
     display.drawImage(picture1, 0, 0, 212,
                       104); // Display picture from RAM  at location X=0, Y=0. It is also needed to specify width and
                             // height of picture (212x104 in this case).
+    display.display();      // Refresh the screen with new picture
+    delay(10000);           // Wait a bit (in this case 10 seconds)
 
-    display.display(); // Refresh the screen with new picture
-
-    delay(10000); // Wait a bit
-
-    display.clearDisplay(); // Clear frame buffer of display
-
+    display.clearDisplay();                      // Clear frame buffer of display
     display.drawImage(picture2, 0, 0, 212, 104); // Display selected picture at location X=0, Y=0.
+    display.display();                           // Refresh the screen with new picture
+    delay(10000);                                // Wait a bit (in this case 10 seconds)
 
-    display.display(); // Refresh the screen with new picture
-
-    delay(10000); // Wait a bit
-
-    display.clearDisplay(); // Clear frame buffer of display
-
+    display.clearDisplay();                      // Clear frame buffer of display
     display.drawImage(picture3, 0, 0, 212, 104); // Display selected picture at location X=0, Y=0.
+    display.display();                           // Refresh the screen with new picture
 
-    display.display(); // Refresh the screen with new picture
-
-    // Go to sleep
-    (void)esp_deep_sleep_start();
+    // Go to deep sleep
+    esp_deep_sleep_start();
 }
 
 

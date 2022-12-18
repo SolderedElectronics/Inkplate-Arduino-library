@@ -3,8 +3,8 @@
     For this example you will need a micro USB cable, Inkplate 2,
     BMP180 sensor with easyC connector on it: https://www.solde.red/333060
     and a easyC cable: https://e-radionica.com/en/easyc-cable-20cm.html
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how you can read temperature, humidity, air pressure and gas data from BMP180.
@@ -19,18 +19,18 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 #include "BMP180-SOLDERED.h" // Soldered library for BMP180 Sensor
 #include "Inkplate.h"        // Include Inkplate library to the sketch
 
+// Bitmaps for the icons
 #include "pressure.h"
 #include "thermometer.h"
 
 Inkplate display; // Create an object on Inkplate library
-Bmp_180 myBmp;    // Create an object BMP180 library
-//(with no arguments sent to constructor, that means we are using I2C communication for BMP180 sensor)
+Bmp_180 bmp;      // Create an object BMP180 library
 
 void setup()
 {
@@ -39,7 +39,7 @@ void setup()
     display.clearDisplay(); // Clear frame buffer of display
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
-    if (!myBmp.begin())
+    if (!bmp.begin())
     { // Init. BMP180 library. Soldered BMP180 sensor board uses I2C address 0x76
         Serial.println("Sensor init failed"); // Print message on serial monitor
 
@@ -53,33 +53,38 @@ void setup()
 
 void loop()
 {
+    // Variables for storing measured data
     double temp, pressure, p0;
-    int status = myBmp.startTemperature();
+
+    // Start temperature conversion
+    int status = bmp.startTemperature();
+
+    // Check if the measurements are ready.
     if (status != 0)
     {
-        delay(status);                       // Delay some time needed for measure
-        status = myBmp.getTemperature(temp); // Get temperature
-        status = myBmp.startPressure(3);     // Start measuring pressure
-        delay(status);                       // Delay some time needed for measure
-        status = myBmp.getPressure(pressure, temp);
+        delay(status);                     // Delay some time needed for measure
+        status = bmp.getTemperature(temp); // Get temperature
+        status = bmp.startPressure(3);     // Start measuring pressure
+        delay(status);                     // Delay some time needed for measure
+        status = bmp.getPressure(pressure, temp);
         // The pressure sensor returns absolute pressure, which varies with altitude.
         // To remove the effects of altitude, use the sealevel function and your current altitude.
         // This number is commonly used in weather reports.
     }
 
-    display.setTextSize(2); // Set text scaling to two (text will be two times bigger than normal)
-    display.setTextColor(INKPLATE2_BLACK);
-    display.clearDisplay();                        // Print out new data
-    display.drawImage(thermometer, 20, 8, 18, 45); // Draw icon
-    display.setCursor(60, 22);
-    display.print(temp, 2); // Print air temperature
+    display.setTextSize(2);                // Set text scaling to two (text will be two times bigger than normal)
+    display.setTextColor(INKPLATE2_BLACK); // Set text color to black
+    display.clearDisplay();                // Print out new data
+    display.drawImage(thermometer, 20, 8, 18, 45); // Draw thermometer icon
+    display.setCursor(60, 22);                     // Set text cursor position at X = 60, Y = 22
+    display.print(temp, 2);                        // Print air temperature
     display.println(" C");
 
-    display.drawImage(pressure_icon, 5, 58, 45, 45); // Draw icon
-    display.setCursor(60, 72);
-    display.print(pressure, 2); // Convert to air pressure hPa and print on display
+    display.drawImage(pressure_icon, 5, 58, 45, 45); // Draw pressure icon
+    display.setCursor(60, 72);                       // Set text cursor position at X = 60, Y = 72
+    display.print(pressure, 2);                      // Convert to air pressure hPa and print on display
     display.println(" hPa");
 
-    display.display();
-    delay(60000); // Wait 60000 miliseconds or 1 minute
+    display.display(); // Refresh the display
+    delay(60000);      // Wait 60000 miliseconds or 1 minute
 }

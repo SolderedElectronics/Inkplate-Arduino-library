@@ -1,11 +1,11 @@
 /*
     3-Google_calendar_example for Soldered Inkplate 2
     For this example you will need only USB cable and Inkplate 2.
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-    This project shows you how Inkplate 2 can be used to display
+    This project shows you how Soldered Inkplate 2 can be used to display
     events in your Google Calendar using their provided API
 
     For this to work you need to change your timezone, wifi credentials and your private calendar url
@@ -26,11 +26,10 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
-// Include Inkplate library to the sketch
-#include "Inkplate.h"
+#include "Inkplate.h" // Include Inkplate library to the sketch
 
 // Including fonts
 #include "Fonts/Inter12pt7b.h"
@@ -44,17 +43,16 @@
 // Delay between API calls
 #define DELAY_MS 4 * 60000 // 4 minutes times 60000 miliseconds in minute
 
-// Initiate out Inkplate object
-Inkplate display;
+Inkplate display; // Initiate out Inkplate object
 
-// Our networking functions, see Network.cpp for info
-Network network;
+Network network; // Our networking functions, see Network.cpp for info
 
 // Enter your WiFi SSID and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
+
 // Google calendar URL
-char calendarURL[] = "https://calendar.google.com/calendar/ical/robert.soric%40gmail.com/private-a923d0e9435d0d949ac314edfe35de5e/basic.ics";
+char calendarURL[] = "";
 
 // Set the timezone (in this case +2 hours)
 int timeZone = 2;

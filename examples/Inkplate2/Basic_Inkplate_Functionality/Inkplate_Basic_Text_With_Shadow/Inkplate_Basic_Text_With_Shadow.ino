@@ -1,8 +1,8 @@
 /*
     Inkplate_Basic_Text_With_Shadow example for Soldered Inkplate 2
     For this example you will need only USB cable and Inkplate 2.
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how you can draw some simple graphics using
@@ -17,7 +17,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 #include "Inkplate.h"
@@ -27,9 +27,6 @@ Inkplate display;
 
 void setup()
 {
-    // Begin serial communication
-    Serial.begin(115200);
-
     // Initialize Inkplate library
     display.begin();
 
@@ -37,15 +34,17 @@ void setup()
     display.setTextColor(INKPLATE2_BLACK); // Set text color
     display.setCursor(0, 0);               // Set cursor position
 
-    display.print("Test"); // Print text
+    // Draw black text
+    display.print("Inkplate 2"); // Print text
 
+    // Draw red text
     display.setTextColor(INKPLATE2_RED);
     display.setCursor(0, 20);
-    display.print("Test");
+    display.print("Inkplate 2");
 
     // Draw text with shadow, specify color for text and background
     // (x coordinate, y coordinate, string to write, text color, shadow color)
-    display.drawTextWithShadow(0, 40, "Test", INKPLATE2_RED, INKPLATE2_BLACK);
+    display.drawTextWithShadow(0, 40, "Inkplate 2", INKPLATE2_RED, INKPLATE2_BLACK);
 
     display.setTextSize(1);
     display.drawTextWithShadow(110, 80, "By soldered.com", INKPLATE2_RED, INKPLATE2_BLACK);

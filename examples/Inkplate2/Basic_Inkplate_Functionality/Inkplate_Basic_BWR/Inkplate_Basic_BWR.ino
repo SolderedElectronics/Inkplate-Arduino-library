@@ -1,8 +1,8 @@
 /*
     Basic_monochorme Black Red and White example for soldered.com Inkplate 2
     For this example you will need only USB cable and Inkplate 2.
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how you can draw some simple graphics using
@@ -16,7 +16,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 #include "Inkplate.h" //Include Inkplate library to the sketch
@@ -49,7 +49,7 @@ void setup()
                       INKPLATE2_BLACK); // Draw one black pixel at X = 100, Y = 50 position in INKPLATE2_BLACK color
 
     display.drawPixel(50, 100,
-                      INKPLATE2_RED); // Draw one black pixel at X = 100, Y = 50 position in INKPLATE2_BLACK color
+                      INKPLATE2_RED); // Draw one black pixel at X = 50, Y = 100 position in INKPLATE2_BLACK color
 
     display.display(); // Send image to display. You need to call this one each time you want to transfer frame buffer
     // to the screen.
@@ -67,11 +67,11 @@ void setup()
 
     // Draw two diagonal lines accros screen
     display.clearDisplay();
-    display.drawLine(0, 0, 211, 80,
-                     INKPLATE2_BLACK); // All of those drawing fuctions originate from Adafruit GFX library, so maybe
-                                       // you are already familiar
-    display.drawLine(211, 0, 0, 80,
-                     INKPLATE2_BLACK); // with those. Arguments are: start X, start Y, ending X, ending Y, color.
+
+    // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already familiar with those.
+    // Arguments are: start X, start Y, ending X, ending Y, color.
+    display.drawLine(0, 0, 211, 80, INKPLATE2_BLACK);
+    display.drawLine(211, 0, 0, 80, INKPLATE2_BLACK);
     displayCurrentAction("Drawing two diagonal lines");
     display.display();
     delay(DELAY_MS);
@@ -99,14 +99,14 @@ void setup()
 
     // Now draw one horizontal...
     display.clearDisplay();
-    display.drawFastHLine(100, 80, 104, random(1, 3)); // Arguments are: starting X, starting Y, length, color
+    display.drawFastHLine(100, 80, 104, INKPLATE2_BLACK); // Arguments are: starting X, starting Y, length, color
     displayCurrentAction("Drawing one horizontal line");
     display.display();
     delay(DELAY_MS);
 
     //... and one vertical line
     display.clearDisplay();
-    display.drawFastVLine(100, 10, 90, random(1, 3)); // Arguments are: starting X, starting Y, length, color
+    display.drawFastVLine(100, 10, 70, INKPLATE2_RED); // Arguments are: starting X, starting Y, length, color
     displayCurrentAction("Drawing one vertical line");
     display.display();
     delay(DELAY_MS);
@@ -127,7 +127,7 @@ void setup()
 
     // Draw rectangle at X = 20, Y = 20 and size of 100x35 pixels
     display.clearDisplay();
-    display.drawRect(20, 20, 100, 35, random(1, 3)); // Arguments are: start X, start Y, size X, size Y, color
+    display.drawRect(20, 20, 100, 35, INKPLATE2_BLACK); // Arguments are: start X, start Y, size X, size Y, color
     displayCurrentAction("Drawing rectangle");
     display.display();
     delay(DELAY_MS);
@@ -144,12 +144,12 @@ void setup()
 
     // Draw filled black rectangle at X = 20, Y = 20, size of 40x30 pixels
     display.clearDisplay();
-    display.fillRect(20, 20, 40, 30, random(1, 3)); // Arguments are: start X, start Y, size X, size Y, color
+    display.fillRect(20, 20, 40, 30, INKPLATE2_BLACK); // Arguments are: start X, start Y, size X, size Y, color
     displayCurrentAction("Drawing black rectangle");
     display.display();
     delay(DELAY_MS);
 
-    // Draw filled black rectangles on random location, size of 30x30 pixels
+    // Draw filled rectangles on random location, size of 30x30 pixels in different colors
     display.clearDisplay();
     for (int i = 0; i < 20; i++)
     {
@@ -161,7 +161,7 @@ void setup()
 
     // Draw circle at center of a screen with radius of 20 pixels
     display.clearDisplay();
-    display.drawCircle(80, 50, 20, random(1, 3)); // Arguments are: start X, start Y, radius, color
+    display.drawCircle(80, 50, 20, INKPLATE2_RED); // Arguments are: start X, start Y, radius, color
     displayCurrentAction("Drawing a circle");
     display.display();
     delay(DELAY_MS);
@@ -178,7 +178,7 @@ void setup()
 
     // Draw black filled circle at center of a screen with radius of 20 pixels
     display.clearDisplay();
-    display.fillCircle(80, 40, 20, random(1, 3)); // Arguments are: start X, start Y, radius, color
+    display.fillCircle(80, 40, 20, INKPLATE2_BLACK); // Arguments are: start X, start Y, radius, color
     displayCurrentAction("Drawing black-filled circle");
     display.display();
     delay(DELAY_MS);
@@ -196,7 +196,7 @@ void setup()
     // Draw rounded rectangle at X = 20, Y = 20 and size of 40x30 pixels and radius of 10 pixels
     display.clearDisplay();
     display.drawRoundRect(20, 20, 40, 30, 10,
-                          random(1, 3)); // Arguments are: start X, start Y, size X, size Y, radius, color
+                          INKPLATE2_RED); // Arguments are: start X, start Y, size X, size Y, radius, color
     displayCurrentAction("Drawing rectangle with rounded edges");
     display.display();
     delay(DELAY_MS);
@@ -214,12 +214,12 @@ void setup()
     // Draw filled black rect at X = 20, Y = 20, size of 40x30 pixels and radius of 6 pixels
     display.clearDisplay();
     display.fillRoundRect(20, 20, 40, 30, 6,
-                          random(1, 3)); // Arguments are: start X, start Y, size X, size Y, radius, color
+                          INKPLATE2_BLACK); // Arguments are: start X, start Y, size X, size Y, radius, color
     displayCurrentAction("This is filled rectangle with rounded edges");
     display.display();
     delay(DELAY_MS);
 
-    // Draw filled black rects on random location, size of 15x15 pixels, radius of 3 pixels
+    // Draw filled rects on random location, size of 15x15 pixels, radius of 3 pixels with random color
     display.clearDisplay();
     for (int i = 0; i < 20; i++)
     {
@@ -231,19 +231,19 @@ void setup()
 
     // Draw simple triangle
     display.clearDisplay();
-    display.drawTriangle(25, 40, 55, 40, 40, 10, random(1, 3)); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
+    display.drawTriangle(25, 40, 55, 40, 40, 10, INKPLATE2_RED); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
     display.display();
     delay(DELAY_MS);
 
     // Draw filled triangle inside simple triangle (so no display.clearDisplay() this time)
-    display.fillTriangle(30, 35, 50, 35, 40, 15, random(1, 3)); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
+    display.fillTriangle(30, 35, 50, 35, 40, 15, INKPLATE2_BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
     displayCurrentAction("Drawing filled triangle inside exsisting one");
     display.display();
     delay(DELAY_MS);
 
     // Draws an elipse with x radius, y radius, center x, center y and color
     display.clearDisplay();
-    display.drawElipse(50, 15, 40, 30, random(1, 3));
+    display.drawElipse(50, 15, 40, 30, INKPLATE2_RED);
     displayCurrentAction("Drawing an elipse");
     display.display();
 
@@ -251,7 +251,7 @@ void setup()
 
     // Fills an elipse with x radius, y radius, center x, center y and color
     display.clearDisplay();
-    display.fillElipse(50, 15, 40, 30, random(1, 3));
+    display.fillElipse(50, 15, 40, 30, INKPLATE2_RED);
     displayCurrentAction("Drawing a filled elipse");
     display.display();
 

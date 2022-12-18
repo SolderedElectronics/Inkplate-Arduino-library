@@ -1,8 +1,8 @@
 /*
     Asana API example for Soldered Inkplate 2
     For this example you will need only USB cable, Inkplate 2 and a WiFi with stable Internet connection.
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example show how to use Asana API to show info about tasks.
@@ -27,7 +27,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 //---------- CHANGE HERE  -------------:
@@ -47,25 +47,20 @@ char user_PAT[] = ""; // This is PAT (Personal Access Token) which
 
 //----------------------------------
 
-// Include Inkplate library to the sketch
-#include "Inkplate.h"
+#include "Inkplate.h" // Include Inkplate library to the sketch
+
+#include "Network.h" // Our networking functions, declared in Network.cpp
 
 // Include fonts used
 #include "Fonts/Inter16pt7b.h"
 #include "Fonts/Inter8pt7b.h"
 
-// Our networking functions, declared in Network.cpp
-#include "Network.h"
+Inkplate display; // Create display object
 
+Network network; // Create object with all networking functions
 
-// create object with all networking functions
-Network network;
-
-// create display object
-Inkplate display;
-
-// Delay between API calls in miliseconds
-#define DELAY_MS (uint32_t)3 * 60 * 1000
+// Delay between API calls in miliseconds (in this case 5 minutes)
+#define DELAY_MS (uint32_t)(5 * 60 * 1000)
 
 char today[12]; // Array to store current date
 
@@ -77,7 +72,7 @@ void drawAll();
 
 void setup()
 {
-    // Begin serial communitcation, sed for debugging
+    // Begin serial communitcation.
     Serial.begin(115200);
 
     // Initial display settings
@@ -85,18 +80,9 @@ void setup()
     display.setTextWrap(true);
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
-    // Welcome screen
-    display.setCursor(20, 90); // Set cursor, custom font uses different method for setting cursor
-
-    // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
-    display.setTextSize(1);
-    display.println(F("Asana API Example!"));
-    display.display();
-    display.clearDisplay();
-    delay(1000);
     Serial.println("Connecting to WiFi");
 
-    // Our begin function
+    // Our network function
     network.begin();
     Serial.println("Getting tasks...");
     do
@@ -118,7 +104,7 @@ void setup()
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000 * DELAY_MS);
-    (void)esp_deep_sleep_start();
+    esp_deep_sleep_start();
 }
 
 void loop()

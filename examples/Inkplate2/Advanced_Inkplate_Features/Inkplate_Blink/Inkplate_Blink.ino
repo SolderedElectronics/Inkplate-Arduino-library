@@ -2,8 +2,8 @@
     Inkplate_Blink example for soldered.com Inkplate 2
     For this example you will need USB cable, Inkplate 2, 330Ohm resistor
     and one LED (and some wires and breadboard to connect it).
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how you can control I/O pins.
@@ -17,11 +17,10 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 #include "Inkplate.h"
-#include "Inter6pt7b.h"
 
 // LED is connected to ESP32 GPIO 14
 #define PIN_LED 14
@@ -31,13 +30,8 @@ Inkplate display;
 
 void setup()
 {
-    // Begin serial communication
-    Serial.begin(115200);
-
     // Initialize Inkplate
     display.begin();
-
-    display.setFont(&Inter6pt7b);
 
     display.setTextSize(1);    // Set text size
     display.setCursor(10, 20); // Set cursor position

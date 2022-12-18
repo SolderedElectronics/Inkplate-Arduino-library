@@ -2,11 +2,11 @@
     Inkplate_RTC_Periodic_Wake example for soldered.com Inkplate 2
     For this example you will need USB cable and the Inkplate 2.
 
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-    This example will get and show the current time and date from the internet one time when Inkplate is turend on.
+    This example will get and show the current time and date from the Internet one time when Inkplate is turend on.
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
@@ -15,32 +15,29 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
-// Adjust your time zone, 2 means UTC+2
-int timeZone = 1;
+#include "Inkplate.h" // Include Inkplate library
 
-#include "Inkplate.h"
+#include "Network.h" // Our networking functions, declared in Network.cpp
 
-// Our networking functions, declared in Network.cpp
-#include "Network.h"
+Inkplate display; // Initialize Inkplate object
 
-// Create network object for WiFi and HTTP functions
-Network network;
-
-// Initialize Inkplate object
-Inkplate display;
+Network network; // Create network object for WiFi and HTTP functions
 
 // Write your SSID and password
 char ssid[] = "";
 char pass[] = "";
 
-// Structure that contains time info
-struct tm currentTime;
+// Adjust your time zone, 2 means UTC+2
+int timeZone = 2;
 
 // Set how many minutes should pass between each wakeup
 int minutesBetweenWakes = 5;
+
+// Structure that contains time info
+struct tm currentTime;
 
 void setup()
 {
@@ -77,13 +74,13 @@ void setup()
 
     // Print how many minutes was set for the internal RTC
     display.setTextSize(1);
-    display.printf("         See you in %d minutes!",minutesBetweenWakes);
+    display.printf("         See you in %d minutes!", minutesBetweenWakes);
 
     // Refresh the display with new data
     display.display();
 
     // Set how much the internal RTC should wait before waking the device up
-    // It's in uS, so to get minutes we need to * 1000000 * 60 
+    // It's in uS, so to get minutes we need to * 1000000 * 60
     // Note: The device still has to be powered during sleep time to wake up
     esp_sleep_enable_timer_wakeup(1000000 * 60 * minutesBetweenWakes);
 
@@ -93,5 +90,5 @@ void setup()
 
 void loop()
 {
-    // Never here
+    // Nothing. Loop must be empty!
 }

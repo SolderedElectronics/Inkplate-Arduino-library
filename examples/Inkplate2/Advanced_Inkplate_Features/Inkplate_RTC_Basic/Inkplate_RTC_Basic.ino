@@ -2,8 +2,8 @@
     Inkplate_RTC_Basic example for soldered.com Inkplate 2
     For this example you will need USB cable and the Inkplate 2.
 
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will get and show the current time and date from the internet one time when Inkplate is turned on.
@@ -15,24 +15,21 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 // Adjust your time zone, 2 means UTC+2
 int timeZone = 2;
 
-#include "Inkplate.h"
+#include "Inkplate.h" // Inlcude Inkplate library
 
-// Our networking functions, declared in Network.cpp
-#include "Network.h"
+#include "Network.h" // Our networking functions, declared in Network.cpp
 
-// Create network object for WiFi and HTTP functions
-Network network;
+Inkplate display; // Initialize Inkplate object
 
-// Initialize Inkplate object
-Inkplate display;
+Network network; // Create network object for WiFi and HTTP functions
 
-// Write your SSID and password
+// Write your SSID and password (needed to get the correct time from the Internet)
 char ssid[] = "";
 char pass[] = "";
 
@@ -57,7 +54,7 @@ void setup()
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
     //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside ESP32).
 
-    display.setTextColor(INKPLATE2_BLACK);
+    display.setTextColor(INKPLATE2_BLACK);  // Set text color to black
 
     // Set the cursor in the correct position
     display.setCursor(0, 10);
@@ -86,4 +83,5 @@ void setup()
 
 void loop()
 {
+    // Nothing. Loop must be empty!
 }

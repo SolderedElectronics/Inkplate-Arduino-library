@@ -1,8 +1,8 @@
 /*
     Quotables example for Soldered Inkplate 2
     For this example you will need only USB cable, Inkplate 2 and a WiFi with stable Internet connection.
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example shows you how to use simple API call without API key. Response
@@ -24,17 +24,14 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
-// Include Inkplate library to the sketch
-#include "Inkplate.h"
+#include "Inkplate.h"   // Include Inkplate library to the sketch
 
-// Include fonts used
-#include "Fonts/LoveLetter_Regular10.h"
+#include "Network.h"    // Our networking functions, declared in Network.cpp
 
-// Our networking functions, declared in Network.cpp
-#include "Network.h"
+#include "Fonts/LoveLetter_Regular10.h" // Include fonts used
 
 // Delay between API calls in seconds, 300 seconds is 5 minutes
 #define DELAY_S 300
@@ -82,7 +79,7 @@ void setup()
     // This is set in microseconds, so it needs to be
     // multiplied by million to get seconds
     esp_sleep_enable_timer_wakeup(1000000 * DELAY_S);
-    (void)esp_deep_sleep_start();
+    esp_deep_sleep_start();
 }
 
 void loop()

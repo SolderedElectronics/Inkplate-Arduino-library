@@ -1,8 +1,8 @@
 /*
     Inkplate_WiFi_HTTP example for Soldered Inkplate 2
     For this example you will need USB cable, Inkplate 2 and stable WiFi Internet connection
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how to connect to WiFi network, get data from Internet and display that data on epaper.
@@ -17,17 +17,17 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 #include "Inkplate.h"   //Include Inkplate library to the sketch
 #include <HTTPClient.h> //Include HTTP library to this sketch
 #include <WiFi.h>       //Include ESP32 WiFi library to our sketch
 
-#define ssid "Soldered" // Name of the WiFi network (SSID) that you want to connect Inkplate to
-#define pass "dasduino" // Password of that WiFi network
+const char ssid[] = ""; // Your WiFi SSID
+const char pass[] = ""; // Your WiFi password
 
-Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+Inkplate display; // Create an object on Inkplate library
 
 void setup()
 {
@@ -90,7 +90,8 @@ void setup()
         int m = 0;
         if (http.begin("http://example.com/index.html"))
         {
-            // Now try to connect to some web page (in this example www.example.com. And yes, this is a valid Web page :))
+            // Now try to connect to some web page (in this example www.example.com. And yes, this is a valid Web page
+            // :))
             if (http.GET() == 200)
             {
                 // If connection was successful, try to read content of the Web page and display it on screen
@@ -106,6 +107,7 @@ void setup()
                 display.display();
             }
         }
+        free(webData); // Free allocated memory
     }
 }
 

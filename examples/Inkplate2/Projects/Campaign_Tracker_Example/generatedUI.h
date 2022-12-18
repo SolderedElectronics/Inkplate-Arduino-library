@@ -87,16 +87,12 @@ void mainDraw()
     display.setTextSize(1);
     display.setCursor(text1_cursor_x, text1_cursor_y);
     display.print(text1_content);
-    //Serial.print("Text 1: ");
-    //Serial.println(text1_content);
 
     display.setFont(text2_font);
     display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
     display.setTextSize(1);
     display.setCursor(text2_cursor_x, text2_cursor_y);
     display.print(text2_content);
-    //Serial.print("Text 2: ");
-    //Serial.println(text2_content);
 
     // Manual edit:
     GFXcanvas1 canvas(750, 150);
@@ -105,74 +101,53 @@ void mainDraw()
     canvas.setTextSize(1);
     canvas.setCursor(0, 20);
     canvas.print(text3_content);
-    // canvas.drawRect(0, 0, 100, 100, INKPLATE2_BLACK);
-    //Serial.print("Text 3: ");
-    //Serial.println(text3_content);
-
-    //display.drawBitmap(text3_cursor_x, text3_cursor_y, canvas.getBuffer(), 750, 150, INKPLATE2_BLACK, INKPLATE2_WHITE);
 
     display.setFont(text4_font);
     display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
     display.setTextSize(1);
     display.setCursor(text4_cursor_x, text4_cursor_y);
     display.print(text4_content);
-    //Serial.print("Text 4: ");//
-    //Serial.println(text4_content)//;
 
     display.setFont(text5_font);
     display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
     display.setTextSize(1);
     display.setCursor(text5_cursor_x, text5_cursor_y);
     display.print(text5_content);
-    //Serial.print("Text 5: ");
-    //Serial.println(text5_content);
 
     display.setFont(text6_font);
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
     display.setTextSize(1);
     display.setCursor(text6_cursor_x, text6_cursor_y);
     display.print(text6_content);
-    //Serial.print("Text 6: ");
-    //Serial.println(text6_content);
 
     display.setFont(text7_font);
     display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
     display.setTextSize(1);
     display.setCursor(text7_cursor_x, text7_cursor_y);
     display.print(text7_content);
-    //Serial.print("Text 7: ");
-    //Serial.println(text7_content);
 
     display.setFont(text8_font);
     display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
     display.setTextSize(1);
     display.setCursor(text8_cursor_x, text8_cursor_y);
     display.print(text8_content);
-    //Serial.print("Text 8: ");
-    //Serial.println(text8_content);
 
     display.setFont(text9_font);
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
     display.setTextSize(1);
     display.setCursor(text9_cursor_x, text9_cursor_y);
     display.print(text9_content);
-    //Serial.print("Text 9: ");
-    //Serial.println(text9_content);
 
     display.setFont(text17_font);
     display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
     display.setTextSize(1);
     display.setCursor(text17_cursor_x, text17_cursor_y);
     display.print(text17_content);
-    //Serial.print("Text 17: ");
-    //Serial.println(text17_content);
 
     display.setFont(text18_font);
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
     display.setTextSize(1);
     display.setCursor(text18_cursor_x, text18_cursor_y);
     display.print(text18_content);
-    //Serial.print("Text 18: ");
-    //Serial.println(text18_content);
 
 }

@@ -1,8 +1,8 @@
 /*
     Web_BMP_pictures example for Soldered Inkplate 2
     For this example you will need a micro USB cable, Inkplate 2, and an available WiFi connection.
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
@@ -18,7 +18,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 #include "HTTPClient.h" //Include library for HTTPClient
@@ -31,7 +31,7 @@ const char password[] = ""; // Your WiFi password
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(115200);   // Init Serial communication.
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
 
@@ -61,9 +61,9 @@ void setup()
         // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
         display.println("Image open error");
     }
-    display.display();
+    display.display(); // Refresh the display
 
-    delay(8000);
+    delay(8000); // Wait a litte bit
 
     // Draw the second image from web, this time using a HTTPClient to fetch the response manually.
     // Full color 24 bit images are large and take a long time to load, will take around 20 secs.
@@ -91,22 +91,24 @@ void setup()
                 // compression!
                 display.println("Image open error");
             }
-            display.display();
+            display.display(); // Refresh the display.
         }
         else
         {
+            // If something goes wrong, print out the error message and refresh the display.
             display.println("Invalid response length");
             display.display();
         }
     }
     else
     {
+        // Print out the error message and refresh the display.
         display.println("HTTP error");
         display.display();
     }
 
-    display.clearDisplay();
-    delay(8000);
+    display.clearDisplay(); // Clear the frame buffer
+    delay(8000);            // Wait a little bit
 
     // Try to load image and display it on e-paper at position X=0, Y=0
     // NOTE: Both drawJpegFromWeb methods allow for an optional fifth "invert" parameter. Setting this parameter to
@@ -121,11 +123,15 @@ void setup()
         display.println("Image open error");
         display.display();
     }
-    display.display();
+    display.display(); // Refresh the display
 
-    http.end();
+    http.end(); // Close HTTP connection.
 
-    WiFi.mode(WIFI_OFF);
+    WiFi.mode(WIFI_OFF); // Turn off the WiFi
+
+    // Go to deep sleep
+    Serial.println("Going to sleep..");
+    esp_deep_sleep_start();
 }
 
 void loop()

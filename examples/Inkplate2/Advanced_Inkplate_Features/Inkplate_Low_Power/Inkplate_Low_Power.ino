@@ -1,8 +1,8 @@
 /*
     Inkplate_Low_Power example for Soldered Inkplate 2
     For this example you will need USB cable and Inkplate 2.
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how you can use low power functionality of Inkplate board.
@@ -18,12 +18,12 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 #include "Inkplate.h"      //Include Inkplate library to the sketch
 #include "driver/rtc_io.h" //ESP32 library used for deep sleep and RTC wake up pins
-#include "picture1.h" //Include .h files of 3 pictures. All three pictures were converted using Inkplate Image Converter
+#include "picture1.h" //Include .h files of 3 pictures. All three pictures were converted using Inkplate Image Converter (https://inkplate.io/home/image-converter/)
 #include "picture2.h"
 #include "picture3.h"
 
@@ -32,26 +32,25 @@
 
 const uint8_t *pictures[] = {pic1, pic2, pic3}; // This array holds address of every picture in the memory, so we can
                                                 // easly select it by selecting index in array
-const uint8_t w[] = {159, 148, 186};            // Widths of each picture
+const uint8_t w[] = {159, 148, 186};            // Widths of each picture. Heights are the same for oll three pictures.
 RTC_DATA_ATTR int slide = 0;
 
-Inkplate display; // Create an object on Inkplate library and also set library into 3 Bit mode (gray)
+Inkplate display; // Create an object on Inkplate library
 
 void setup()
 {
-    Serial.begin(115200);
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
-    display.drawImage(
-        pictures[slide], 106 - w[slide] / 2, 0, w[slide],
-        104);          // Display selected picture at location X=0, Y=0. All three pictures have different resolutions
-    display.display(); // Refresh the screen with new picture
+    display.drawImage(pictures[slide], 106 - w[slide] / 2, 0, w[slide],
+                      104); // Display selected picture at location X=0, Y=0. All three pictures have different widths,
+                            // but the same heights
+    display.display();      // Refresh the screen with new picture
     slide++; // Update counter for pictures. With this variable, we choose what picture is going to be displayed on
     // screen
     if (slide > 2)
         slide = 0; // We do not have more than 3 images, so roll back to zero
 
-    rtc_gpio_isolate(GPIO_NUM_12); // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
+    // rtc_gpio_isolate(GPIO_NUM_12); // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Activate wake-up timer -- wake up after 20s here
     esp_deep_sleep_start();                                        // Put ESP32 into deep sleep. Program stops here.
 }

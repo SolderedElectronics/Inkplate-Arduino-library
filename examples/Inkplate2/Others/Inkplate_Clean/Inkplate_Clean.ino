@@ -1,8 +1,8 @@
 /*
    Inkplate_Clean example for e-radionica.com Inkplate 2
    For this example you will need only USB cable and Inkplate 2.
-   Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+   Select "Soldered Inkplate 2" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will try to remove heavy burn-in visible on the panel.
@@ -15,11 +15,11 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 5 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
-#include "Inkplate.h"            //Include Inkplate library to the sketch
-Inkplate display; // Create object on Inkplate library and set library to work in monochorme mode
+#include "Inkplate.h" //Include Inkplate library to the sketch
+Inkplate display;     // Create object on Inkplate library
 
 // Nubmer of clear cycles.
 #define CLEAR_CYCLES 5
@@ -32,7 +32,7 @@ void setup()
     display.begin();        // Init library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
 
-    int cycles = CLEAR_CYCLES;
+    int cycles = CLEAR_CYCLES;  // Set the number of clear cycles
 
     // Clean it by writing clear sequence to the panel.
     while (cycles)
@@ -45,7 +45,7 @@ void setup()
     // Print text when clearing is done.
     display.setTextSize(4);
     display.setCursor(10, 15);
-    display.setTextColor(INKPLATE2_RED,INKPLATE2_WHITE);
+    display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
     display.print("Clearing done.");
     display.display();
 }

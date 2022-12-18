@@ -3,12 +3,11 @@
     For this example you will need USB cable and an Inkplate 2 and bluetooth supporting device
     like phone or laptop. If you are using phone, you will need to download app which
     allows you to send commands via bluetooth like "Bluetooth serial monitor".
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example shows how to use Inkplate as a peripheral device over Bluetooth.
-    Note: for this to work you need to use ESP32 Wroover Board definition, as ours currently has a bug :(
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
@@ -17,7 +16,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 #include "Inkplate.h"
@@ -40,7 +39,7 @@ void setup() // Initialize everything
 {
     Serial.begin(115200); // Initialize UART communication with PC
 
-    if (!SerialBT.begin("ESP32")) // Check if bluetooth is initialized successfully
+    if (!SerialBT.begin("Inkplate2")) // Check if bluetooth is initialized successfully
     {
         Serial.println("An error occurred initializing Bluetooth"); // If not, print error message
     }

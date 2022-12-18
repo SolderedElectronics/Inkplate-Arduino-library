@@ -1,8 +1,8 @@
 /*
     World clock example for Soldered Inkplate 2
     For this example you will need only USB cable, Inkplate 2 and a WiFi with stable Internet connection.
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example uses API call to get tim for wanted city and it's timezone.
@@ -21,7 +21,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
 // Include Inkplate library to the sketch
@@ -42,8 +42,8 @@ Network network;
 Inkplate display;
 
 // Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Structure for time and date data
 struct tm t;

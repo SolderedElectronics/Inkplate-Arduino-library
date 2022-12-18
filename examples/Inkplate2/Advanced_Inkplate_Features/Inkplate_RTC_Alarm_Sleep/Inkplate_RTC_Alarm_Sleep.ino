@@ -2,8 +2,8 @@
     Inkplate_RTC_Alarm_Sleep example for soldered.com Inkplate 2
     For this example you will need USB cable and the Inkplate 2.
 
-    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
-    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
+    Select "Soldered Inkplate 2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example will show you how to use Inkplate's internal RTC to set an alarm, go to sleep and wake up at a desired
@@ -16,29 +16,24 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Inkplate 2 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
-// Adjust your time zone, 2 means UTC+2
-int timeZone = 2;
-
-#include "Inkplate.h"
+#include "Inkplate.h" // Include Inkplate library
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
 
-// Create network object for WiFi and HTTP functions
-Network network;
+Inkplate display; // Initialize Inkplate object
 
-// Initialize Inkplate object
-Inkplate display;
+Network network; // Create network object for WiFi and HTTP functions
 
-// Write your SSID and password
+// Write your SSID and password (needed to get the correct time from the Internet)
 char ssid[] = "";
 char pass[] = "";
 
-// Structure that contains time info
-struct tm currentTime, timerTime;
+// Adjust your time zone, 2 means UTC+2
+int timeZone = 2;
 
 // Set the time to wake up (24 hour format)
 // Here it's set to 7:30
@@ -52,6 +47,9 @@ struct alarmTime
     // int day = 1;
     // int mon = 1;
 } alarmTime;
+
+// Structure that contains time info
+struct tm currentTime, timerTime;
 
 void setup()
 {
@@ -125,8 +123,8 @@ void setup()
         {
             // Print info about currently set alarm
             display.setTextSize(1);
-            display.print("       ");           // Print spaces for alignment
-            display.print("Alarm is set for "); // Print spaces for alignment
+            display.print("       "); // Print spaces for alignment
+            display.print("Alarm is set for ");
             display.printf("%2.1d:%02d\n", timerTime.tm_hour, timerTime.tm_min);
             display.print("        "); // Print spaces for alignment
             display.print("Going to sleep, bye!");
@@ -161,5 +159,5 @@ void setup()
 
 void loop()
 {
-    // Never here
+    // Nothing. Loop must be empty!
 }
