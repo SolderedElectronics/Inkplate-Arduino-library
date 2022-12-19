@@ -27,9 +27,9 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
 #endif
 
-#include "Inkplate.h"   // Include Inkplate library to the sketch
+#include "Inkplate.h" // Include Inkplate library to the sketch
 
-#include "Network.h"    // Our networking functions, declared in Network.cpp
+#include "Network.h" // Our networking functions, declared in Network.cpp
 
 #include "Fonts/LoveLetter_Regular10.h" // Include fonts used
 
@@ -46,13 +46,14 @@ Inkplate display;
 char ssid[] = "";
 char pass[] = "";
 
-char quote[256]; // Buffer to store quote and length
+// Buffers to store quote, author name and quote length
+char quote[256];
 char author[64];
-int len; // Store quote length (useful for printing)
+int len;
 
 void setup()
 {
-    // Begin serial communitcation, sed for debugging
+    // Begin serial communitcation, used for debugging
     Serial.begin(115200);
 
     // Initial display settings
@@ -105,7 +106,7 @@ void printQuote()
     char currentWordBuf[128] = {0};
     display.setCursor(0, 15);
     bool lastWord = false;
-    int currentRow = 0; 
+    int currentRow = 0;
 
     while (1)
     {
@@ -114,7 +115,8 @@ void printQuote()
         while (quote[i] != ' ') // Find the next space
         {
             i++; // Finds the index where the current word ends
-            if (i > len) lastWord = true; // If we went further than index, we're in the last word
+            if (i > len)
+                lastWord = true; // If we went further than index, we're in the last word
         }
 
         // Clear current word buffer and copy the current word substring in it
@@ -128,7 +130,7 @@ void printQuote()
         else
         {
             // If it's the last word, copy it until the ending
-            memcpy(currentWordBuf, quote + currentChar, len-currentChar);
+            memcpy(currentWordBuf, quote + currentChar, len - currentChar);
         }
 
         int16_t x1, y1;
@@ -148,7 +150,8 @@ void printQuote()
         display.print(" ");
 
         // If we've reached the last word, end the print
-        if(lastWord) return;
+        if (lastWord)
+            return;
 
         currentChar = i + 1;
     }

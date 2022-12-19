@@ -8,10 +8,9 @@
     For support, please reach over forums: forum.e-radionica.com/en
     For more info about the product, please check: www.inkplate.io
 
-    This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
-    Please review the LICENSE file included with this example.
-    If you have any questions about licensing, please contact techsupport@e-radionica.com
-    Distributed as-is; no warranty is given.
+    This code is released under the GNU Lesser General Public License v3.0:
+   https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file included with this example. If you have
+   any questions about licensing, please contact techsupport@e-radionica.com Distributed as-is; no warranty is given.
 */
 
 #include "Network.h"
@@ -32,8 +31,8 @@ extern char pass[];
 // Get our Inkplate object from main file to draw debug info on
 extern Inkplate display;
 
-// Static Json from ArduinoJson library
-StaticJsonDocument<3000> doc;
+// Dynamic Json from ArduinoJson library
+DynamicJsonDocument doc(4096);
 
 void Network::begin()
 {
@@ -57,36 +56,9 @@ void Network::begin()
         }
     }
     Serial.println(F(" connected"));
-
-    // Find internet time
-    setTime();
 }
 
-// Gets time from ntp server
-void Network::getTime(char *timeStr)
-{
-    // Get seconds since 1.1.1970.
-    time_t nowSecs = time(nullptr);
-
-    // Used to store time
-    struct tm timeinfo;
-    gmtime_r(&nowSecs, &timeinfo);
-
-    // Copies time string into timeStr
-    strncpy(timeStr, asctime(&timeinfo) + 4, 12);
-
-    // Setting time string timezone
-    int hr = 10 * timeStr[7] + timeStr[8] + timeZone;
-
-    // Better defined modulo, in case timezone makes hours to go below 0
-    hr = (hr % 24 + 24) % 24;
-
-    // Adding time to '0' char makes it into whatever time char, for both digits
-    timeStr[7] = hr / 10 + '0';
-    timeStr[8] = hr % 10 + '0';
-}
-
-bool Network::getData(char* text, char* auth, int* len)
+bool Network::getData(char *quote, char *author, int *len)
 {
     bool f = 0;
 
@@ -157,15 +129,12 @@ bool Network::getData(char* text, char* auth, int* len)
             Serial.println("Success");
 
             const char *buff1 = doc["content"];
-
-            strcpy(text, buff1);
+            strcpy(quote, buff1);
 
             const char *buff2 = doc["author"];
+            strcpy(author, buff2);
 
-            strcpy(auth, buff2);
-
-            //memcpy(len,doc["length"],sizeof(int));
-            * len = doc["length"];
+            *len = doc["length"];
 
             // Save our data to data pointer from main file
             f = 0;
@@ -195,30 +164,4 @@ bool Network::getData(char* text, char* auth, int* len)
     WiFi.setSleep(sleep);
 
     return !f;
-}
-
-// Function for initial time setting ovet the ntp server
-void Network::setTime()
-{
-    // Used for setting correct time
-    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-
-    Serial.print(F("Waiting for NTP time sync: "));
-    time_t nowSecs = time(nullptr);
-    while (nowSecs < 8 * 3600 * 2)
-    {
-        delay(500);
-        Serial.print(F("."));
-        yield();
-        nowSecs = time(nullptr);
-    }
-
-    Serial.println();
-
-    // Used to store time info
-    struct tm timeinfo;
-    gmtime_r(&nowSecs, &timeinfo);
-
-    Serial.print(F("Current time: "));
-    Serial.print(asctime(&timeinfo));
 }
