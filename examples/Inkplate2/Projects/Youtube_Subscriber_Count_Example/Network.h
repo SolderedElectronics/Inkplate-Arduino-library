@@ -19,13 +19,7 @@ Distributed as-is; no warranty is given.
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-
-// To get timeZone from main file
-extern int timeZone;
-
-// Wifi ssid and password
-extern char ssid[];
-extern char pass[];
+#include "Inkplate.h"
 
 struct channelInfo
 {
@@ -44,14 +38,12 @@ class Network
 {
   public:
     // Functions we can access in main file
-    void begin();
-    void getTime(char *timeStr);
-    bool getData(channelInfo* channel);
+    void begin(char * ssid, char * pass);
+    bool getData(channelInfo *channel, char * channel_id, char * api_key, Inkplate * display);
 
   private:
     // Functions called from within our class
-    void setTime();
-    int getRequest(WiFiClientSecure * client, char * _api_root_url, char * _api_call_url);
+    int getRequest(WiFiClientSecure *client, char *_api_root_url, char *_api_call_url);
 };
 
 #endif

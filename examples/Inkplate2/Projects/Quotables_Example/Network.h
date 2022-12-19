@@ -19,10 +19,7 @@
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-
-// Wifi ssid and password
-extern char ssid[];
-extern char pass[];
+#include "Inkplate.h"
 
 #ifndef NETWORK_H
 #define NETWORK_H
@@ -33,8 +30,8 @@ class Network
 {
   public:
     // Functions we can access in main file
-    void begin();
-    bool getData(char *quote, char *author, int * len);
+    void begin(char * ssid, char * pass);
+    bool getData(char *quote, char *author, int * len, Inkplate * display);
 };
 
 #endif

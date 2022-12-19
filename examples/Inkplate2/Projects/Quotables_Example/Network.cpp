@@ -19,22 +19,13 @@
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 
-#include "Inkplate.h"
-
 // Must be installed for this example to work
 #include <ArduinoJson.h>
-
-// external parameters from our main file
-extern char ssid[];
-extern char pass[];
-
-// Get our Inkplate object from main file to draw debug info on
-extern Inkplate display;
 
 // Dynamic Json from ArduinoJson library
 DynamicJsonDocument doc(4096);
 
-void Network::begin()
+void Network::begin(char * ssid, char * pass)
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
@@ -58,7 +49,7 @@ void Network::begin()
     Serial.println(F(" connected"));
 }
 
-bool Network::getData(char *quote, char *author, int *len)
+bool Network::getData(char *quote, char *author, int *len, Inkplate * display)
 {
     bool f = 0;
 
@@ -143,11 +134,11 @@ bool Network::getData(char *quote, char *author, int *len)
     else if (httpCode == 404)
     {
         // Coin id not found
-        display.clearDisplay();
-        display.setCursor(50, 230);
-        display.setTextSize(2);
-        display.println(F("Info has not been found!"));
-        display.display();
+        display->clearDisplay();
+        display->setCursor(50, 230);
+        display->setTextSize(2);
+        display->println(F("Info has not been found!"));
+        display->display();
         while (1)
             ;
     }

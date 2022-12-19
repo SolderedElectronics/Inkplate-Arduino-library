@@ -19,25 +19,15 @@ Distributed as-is; no warranty is given.
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-
 #include "Inkplate.h"
 
 // Must be installed for this example to work
 #include <ArduinoJson.h>
 
-// external parameters from our main file
-extern char ssid[];
-extern char pass[];
-extern char channel_id[];
-extern char api_key[];
-
-// Get our Inkplate object from main file to draw debug info on
-extern Inkplate display;
-
 // Static Json from ArduinoJson library
-StaticJsonDocument<30000> doc;
+StaticJsonDocument<5000> doc;
 
-void Network::begin()
+void Network::begin(char * ssid, char * pass)
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
@@ -59,36 +49,9 @@ void Network::begin()
         }
     }
     Serial.println(F(" connected"));
-
-    // Find internet time
-    setTime();
 }
 
-// Gets time from ntp server
-void Network::getTime(char *timeStr)
-{
-    // Get seconds since 1.1.1970.
-    time_t nowSecs = time(nullptr);
-
-    // Used to store time
-    struct tm timeinfo;
-    gmtime_r(&nowSecs, &timeinfo);
-
-    // Copies time string into timeStr
-    strncpy(timeStr, asctime(&timeinfo) + 4, 12);
-
-    // Setting time string timezone
-    int hr = 10 * timeStr[7] + timeStr[8] + timeZone;
-
-    // Better defined modulo, in case timezone makes hours to go below 0
-    hr = (hr % 24 + 24) % 24;
-
-    // Adding time to '0' char makes it into whatever time char, for both digits
-    timeStr[7] = hr / 10 + '0';
-    timeStr[8] = hr % 10 + '0';
-}
-
-bool Network::getData(channelInfo *channel)
+bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, Inkplate * display)
 {
     bool f = 0;
 
@@ -139,11 +102,11 @@ bool Network::getData(channelInfo *channel)
         // Channel was not found via ID 
 
         Serial.println("Can't find YT channel!");
-        display.clearDisplay();
-        display.setCursor(50, 230);
-        display.setTextSize(2);
-        display.println(F("Channel info has not been found!"));
-        display.display();
+        display->clearDisplay();
+        display->setCursor(50, 230);
+        display->setTextSize(2);
+        display->println(F("Channel info has not been found!"));
+        display->display();
         while(1) ;
     }
     
@@ -202,11 +165,11 @@ bool Network::getData(channelInfo *channel)
         // Channel was not found via ID 
 
         Serial.println("Can't find YT channel!");
-        display.clearDisplay();
-        display.setCursor(50, 230);
-        display.setTextSize(2);
-        display.println(F("Channel info has not been found!"));
-        display.display();
+        display->clearDisplay();
+        display->setCursor(50, 230);
+        display->setTextSize(2);
+        display->println(F("Channel info has not been found!"));
+        display->display();
         while(1) ;
     }
 
@@ -245,43 +208,6 @@ bool Network::getData(channelInfo *channel)
     return !f;
 }
 
-// Function for initial time setting ovet the ntp server
-void Network::setTime()
-{
-    // Used for setting correct time
-    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-
-    Serial.print(F("Waiting for NTP time sync: "));
-    time_t nowSecs = time(nullptr);
-    while (nowSecs < 8 * 3600 * 2)
-    {
-        delay(500);
-        Serial.print(F("."));
-        yield();
-        nowSecs = time(nullptr);
-    }
-
-    Serial.println();
-
-    // Used to store time info
-    struct tm timeinfo;
-    gmtime_r(&nowSecs, &timeinfo);
-
-    Serial.print(F("Current time: "));
-    Serial.print(asctime(&timeinfo));
-}
-
-/**
- * @brief               Create a HTTPS GET request with a given root url and api call url
- * 
- * @param               WiFiClientSecure * client: pointer to client used in base class
- * 
- * @param               char * _api_root_url: root url of the api (eg. www.api-service.com)
- * 
- * @param               char * _api_call_url: full url of the api call (eg. www.api-service.com/getdata?key=12345)
- * 
- * @returns             0 if there was an error, 404 if not found, 1 if successful
-*/
 int Network:: getRequest(WiFiClientSecure * client, char * _api_root_url, char * _api_call_url)
 {
     // Don't check SSL certificate but still use HTTPS

@@ -39,8 +39,8 @@
 // Include header files
 #include "youtube_icon.h"
 
-// Delay between API calls in miliseconds
-#define DELAY_MS 3 * 60 * 1000
+// Delay between API calls in miliseconds (10 minutes)
+#define DELAY_MS 10 * 60 * 1000
 
 // create object with all networking functions
 Network network;
@@ -57,12 +57,14 @@ char channel_id[] = ""; // To get the channel ID of the public channel, go to th
                         // channel in Google Chrome, right click and 'view page source', then
                         // CTRL+F search for "externalId".
 
-char api_key[] =
-    ""; // API key, you can get one on https://console.developers.google.com/
-        // First create a project (name it whatever you like), then click on "Enable APIs and Services" (it's at the top
-        // of the screen, it has a plus sign). Next select "YouTube Data API v3" in Enabled APIs and Serivces. Go back
-        // at the homepage, click on "Create Credentials" and click "API Key". After the key has been created, edit API
-        // Key to restrict it only on use for Youtube API. YouTube Data API v3 in Credentials submenu.
+char api_key[] = ""; // API key, you can get one on https://console.developers.google.com/
+                     // First create a project (name it whatever you like), then click on
+                     // "Enable APIs and Services" (it's at the top of the screen, it has a
+                     // plus sign). Next select "YouTube Data API v3" in Enabled APIs and
+                     // Serivces. Go back at the homepage, click on "Create Credentials" and
+                     // click "API Key". After the key has been created, edit API Key to
+                     // restrict it only on use for Youtube API. YouTube Data API v3 in
+                     // Credentials submenu.
 
 // Used to simplify UI design
 struct textElement
@@ -75,22 +77,27 @@ struct textElement
     uint8_t text_color;
 };
 
-// Struct for storing channel data sch as channel name, subscriber count etc.
-// It's defined in Network.h
-struct channelInfo channel;
+// Buffers for printing channel data
+char buf_subs[15];
+char buf_views[15];
+char buf_videos[15];
 
-char structData[30];
+// Struct for storing channel data, defined in Network.h
+channelInfo channel;
 
-// Out UI elements data
-textElement elements[] = {{5, 20, &Inter8pt7b, "Channel:", 0, INKPLATE2_BLACK},
-                          {75, 20, &Inter8pt7b, channel.name, 0, INKPLATE2_RED},
-                          {5, 40, &Inter8pt7b, "Videos count:", 0, INKPLATE2_BLACK},
-                          {125, 40, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_RED},
-                          {5, 70, &Inter8pt7b, "Subscribers:", 0, INKPLATE2_BLACK},
-                          {5, 90, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_RED},
-                          {110, 70, &Inter8pt7b, "Total views:", 0, INKPLATE2_BLACK},
-                          {110, 90, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_RED}
+// Varaible for remembering how many times we have woken up (to only show the splash screen once)
+RTC_DATA_ATTR int bootCount = 0;
 
+// Our UI elements
+textElement elements[] = {
+    {9, 22, &Inter8pt7b, channel.name, 0, INKPLATE2_BLACK},
+    {10, 23, &Inter8pt7b, channel.name, 0, INKPLATE2_RED},
+    {115, 50, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_BLACK},
+    {110, 50, &Inter8pt7b, "Subscribers:", 1, INKPLATE2_BLACK},
+    {115, 73, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_BLACK},
+    {110, 73, &Inter8pt7b, "Views:", 1, INKPLATE2_BLACK},
+    {115, 94, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_BLACK},
+    {110, 94, &Inter8pt7b, "Videos:", 1, INKPLATE2_BLACK},
 };
 
 void setup()
@@ -103,35 +110,36 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
-    // Welcome screen
-    display.setCursor(20, 90); // Set cursor, custom font uses different method for setting cursor
-    display.setTextSize(1);
-    display.drawImage(youtube_icon, 0, 0, 204, 84);
-    display.println(F("Youtube subscribers tracker!"));
-    display.display();
-    display.clearDisplay();
-    delay(1000);
+    // Show splash screen if it's the first boot
+    if (bootCount == 0)
+    {
+        // Welcome screen
+        display.setCursor(20, 90); // Set cursor, custom font uses different method for setting cursor
+        display.setTextSize(1);
+        display.drawImage(youtube_icon, 0, 0, 204, 84);
+        display.println(F("Youtube subscribers tracker!"));
+        display.display();
+        display.clearDisplay();
+        bootCount++;
+        delay(1000);
+    }
 
     // Our begin function
-    network.begin();
+    network.begin(ssid, pass);
 
-    while (!network.getData(&channel))
+    while (!network.getData(&channel, channel_id, api_key, &display))
     {
         Serial.println("Retrying retriving data!");
         delay(1000);
     }
 
-    elements[3].text =
-        itoa(channel.video_count, structData, 10); // This data should be copied into elements of UI after you get data
-    elements[5].text = itoa(channel.subscribers, &structData[8],
-                            10); // This data should be copied into elements of UI after you get data
-    elements[7].text = itoa(channel.total_views, &structData[16],
-                            10); // This data should be copied into elements of UI after you get data
-    // This functions takes integer as parameter and converts that int into number but in string format.
+    // These functions convert a long (ultoa) or integer(itoa) into a number in string format.
+    elements[2].text = ultoa(channel.subscribers, buf_subs, 10);
+    elements[4].text = ultoa(channel.total_views, buf_views, 10);
+    elements[6].text = itoa(channel.video_count, buf_videos, 10);
 
     // Our main drawing function
     drawAll();
-
     // Refresh
     display.display();
 

@@ -62,10 +62,10 @@ void setup()
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
     // Our begin function
-    network.begin();
+    network.begin(ssid, pass);
 
     // Try to get the new random quote from the Internet.
-    while (!network.getData(quote, author, &len))
+    while (!network.getData(quote, author, &len, &display))
     {
         Serial.println("Retrying retriving data!");
         delay(1000);
