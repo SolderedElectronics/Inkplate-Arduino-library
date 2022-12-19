@@ -20,10 +20,6 @@ Distributed as-is; no warranty is given.
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 
-// Wifi ssid and password
-extern char ssid[];
-extern char pass[];
-
 const char cities[][33] = {
   "Africa/Abidjan",
   "Africa/Accra",
@@ -629,10 +625,14 @@ class Network
 {
   public:
     // Functions we can access in main file
-    void begin();
+    void begin(char* ssid, char* pass);
     bool getData(char* city, tm *t);
+    char* getFullCityName(char* city);
+    bool getAllCities(char* allCities);
     
   private:
+    char* allCitiesRaw = NULL;
+    char *allCities = NULL;
 };
 
 #endif

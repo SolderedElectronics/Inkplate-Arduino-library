@@ -44,8 +44,8 @@ struct alarmTime
 {
     int hour = 7;
     int mins = 30;
-    // int day = 1;
-    // int mon = 1;
+    // int day = 25;
+    // int mon = 12;
 } alarmTime;
 
 // Structure that contains time info
@@ -57,7 +57,7 @@ void setup()
     Serial.begin(115200);
 
     // Initialize network
-    network.begin();
+    network.begin(ssid, pass);
 
     display.begin();        // Init library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
@@ -75,7 +75,7 @@ void setup()
         display.setTextSize(4);
 
         // Get the current time from the NTP server and store it in the RTC
-        network.getTime(&currentTime);
+        network.getTime(&currentTime, timeZone);
 
         // Now it's possible to access the time data via the tm object
 
@@ -97,12 +97,11 @@ void setup()
         timerTime.tm_hour = alarmTime.hour;
         timerTime.tm_min = alarmTime.mins;
         timerTime.tm_sec = 0; // Start alarm at hour:mins:00
-        // timerTime.tm_mday = timer.day;
-        // Months are zero indexed
-        // timerTime.tm_mon = timer.mon -1 ;
+        // timerTime.tm_mday = alarmTime.day;        
+        // timerTime.tm_mon = alarmTime.mon -1 ; // Months are zero indexed
 
         // Calculate seconds until alarm
-        int timeUntilAlarmInSeconds = difftime(mktime(&timerTime), mktime(&currentTime));
+        long timeUntilAlarmInSeconds = difftime(mktime(&timerTime), mktime(&currentTime));
 
         if (timeUntilAlarmInSeconds <= 0)
         {
@@ -123,10 +122,13 @@ void setup()
         {
             // Print info about currently set alarm
             display.setTextSize(1);
-            display.print("       "); // Print spaces for alignment
+            display.println();
+            display.print("  "); // Print spaces for alignment
             display.print("Alarm is set for ");
-            display.printf("%2.1d:%02d\n", timerTime.tm_hour, timerTime.tm_min);
-            display.print("        "); // Print spaces for alignment
+            display.printf("%2.1d:%02d", timerTime.tm_hour, timerTime.tm_min);
+            display.print(" on ");            
+            display.printf("%2.1d.%02d\n", timerTime.tm_mday, timerTime.tm_mon + 1);
+            display.print("       "); // Print spaces for alignment
             display.print("Going to sleep, bye!");
             display.display(); // Show everything on the display
             delay(100);
@@ -134,7 +136,7 @@ void setup()
             // Go to sleep until it's time for the alarm
             // It's in uS, so * 1000000 to convert from seconds
             // Note: The device still has to be powered during sleep time to wake up
-            esp_sleep_enable_timer_wakeup(timeUntilAlarmInSeconds * 1000000);
+            esp_sleep_enable_timer_wakeup(timeUntilAlarmInSeconds * 1000000LL);
 
             // Start deep sleep (this function does not return)
             esp_deep_sleep_start();

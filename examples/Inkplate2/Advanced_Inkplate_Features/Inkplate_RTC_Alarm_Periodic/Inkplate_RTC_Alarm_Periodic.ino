@@ -35,14 +35,14 @@ char pass[] = "";
 int timeZone = 2;
 
 // Set how many minutes should pass between each timer check
-int minutesBetweenWakes = 20;
+int minutesBetweenWakes = 2;
 
 // Set the time and date to trigger the alarm function
 // Here it's set to 25.12. 8:00 AM, Christmas morning of the current year
 struct alarmTime
 {
-    int hour = 00;
-    int mins = 00;
+    int hour = 8;
+    int mins = 0;
     int day = 25;
     int mon = 12;
 } alarmTime;
@@ -56,11 +56,11 @@ void setup()
     Serial.begin(115200);
 
     // Initialize network
-    network.begin();
+    network.begin(ssid, pass);
 
     // Get the current time from the NTP servers
     // Note: WiFi must be connected
-    network.getTime(&currentTime);
+    network.getTime(&currentTime, timeZone);
 
     display.begin();        // Init library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
