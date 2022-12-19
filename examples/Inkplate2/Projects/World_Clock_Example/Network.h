@@ -628,11 +628,11 @@ class Network
     void begin(char* ssid, char* pass);
     bool getData(char* city, tm *t);
     char* getFullCityName(char* city);
-    bool getAllCities(char* allCities);
+    //bool getAllCities(char* allCities);
     
   private:
-    char* allCitiesRaw = NULL;
-    char *allCities = NULL;
+    //char* allCitiesRaw = NULL;
+    //char *allCities = NULL;
 };
 
 #endif

@@ -186,7 +186,7 @@ char *Network::getFullCityName(char *city)
     // Return 0 if it's not found
     return 0;
 }
-
+/*
 bool Network::getAllCities(char *allCities)
 {
     char *allCitiesRaw = NULL;
@@ -226,3 +226,4 @@ bool Network::getAllCities(char *allCities)
         return 0;
     }
 }
+*/

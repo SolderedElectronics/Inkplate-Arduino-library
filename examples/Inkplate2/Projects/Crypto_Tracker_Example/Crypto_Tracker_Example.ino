@@ -51,8 +51,8 @@ char pass[] = "";
 
 // OPTIONAL:
 // change to a different currency
-char currency[] = "ethereum";
-char currencyAbbr[] = "ETH";
+char currency[] = "bitcoin";
+char currencyAbbr[] = "BTC";
 
 // You can find your currency id here:
 // https://api.coingecko.com/api/v3/coins
@@ -116,9 +116,9 @@ void setup()
     display.setTextSize(2); // Set size of font in comparison to original 5x7 font
 
     // Our begin function
-    network.begin();
+    network.begin(ssid, pass);
 
-    while (!network.getData(data)) // Get data and check if data is successfully fetched
+    while (!network.getData(data, currency)) // Get data and check if data is successfully fetched
     {
         Serial.println("Retrying retriving data!");
         delay(1000);
@@ -192,7 +192,7 @@ void drawTime()
     int i = 1;
 
     // Save current date string, more about it in Network.cpp
-    network.getTime(date);
+    network.getTime(date, timeZone);
 
     // Text settings
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
@@ -211,7 +211,7 @@ void drawTime()
 void drawAll()
 {
     // Save current date string, more about it in Network.cpp
-    network.getTime(date);
+    network.getTime(date, timeZone);
 
     // Find current day from string
     int day;

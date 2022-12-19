@@ -26,10 +26,10 @@
 
 #include <ArduinoJson.h>
 
-// Static Json from ArduinoJson library
-StaticJsonDocument<64000> doc;
+// Dynamic Json from ArduinoJson library
+DynamicJsonDocument doc(64000);
 
-void Network::begin(char *city)
+void Network::begin(char *ssid, char *pass)
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
@@ -55,12 +55,12 @@ void Network::begin(char *city)
     // Find internet time
     setTime();
 
-    // reduce power by making WiFi module sleep
+    // Reduce power by making WiFi module sleep
     WiFi.setSleep(1);
 }
 
 // Gets time from ntp server
-void Network::getTime(char *timeStr)
+void Network::getTime(char *timeStr, int timeZone)
 {
     // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr);
@@ -105,9 +105,9 @@ void formatWind(char *str, float wind)
     dtostrf(wind, 2, 0, str);
 }
 
-bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, uint8_t *hours, char *currentWind,
+bool Network::getData(char *lat, char *lon, char *apiKey, char *city, char *temp1, char *temp2, char *temp3, uint8_t *hours, char *currentWind,
                       char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1, char *abbr2,
-                      char *abbr3, char *abbr4)
+                      char *abbr3)
 {
     bool f = 0;
     // If not connected to wifi reconnect wifi
@@ -156,7 +156,6 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
     int httpCode = http.GET();
     if (httpCode == 200)
     {
-
         // Try parsing JSON object
         DeserializationError error = deserializeJson(doc, http.getStream());
 
@@ -212,10 +211,7 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
     }
     else if (httpCode == 401)
     {
-        display.setCursor(50, 290);
-        display.setTextSize(3);
-        display.print(F("Network error, probably wrong api key"));
-        display.display();
+        Serial.println("Network error, probably wrong api key");
         while (1)
             ;
     }

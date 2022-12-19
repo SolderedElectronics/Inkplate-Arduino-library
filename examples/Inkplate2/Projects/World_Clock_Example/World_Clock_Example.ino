@@ -28,9 +28,7 @@
 #include "Inkplate.h"
 
 // Our networking functions, declared in Network.cpp
-#include "Inter6pt7b.h"
 #include "SourceSansPro_Regular6pt7b.h"
-#include "Inter8pt7b.h"
 #include "SourceSansPro_Regular8pt7b.h"
 #include "Network.h"
 
@@ -44,8 +42,8 @@ Network network;
 Inkplate display;
 
 // Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
 
 // Structure for time and date data
 struct tm t;
@@ -58,7 +56,6 @@ const char city1[] = "Zag";
 const char city2[] = "Lim";
 
 // Pointers to store city names
-// char *city1_name = NULL, *city2_name = NULL;
 
 void setup()
 {
