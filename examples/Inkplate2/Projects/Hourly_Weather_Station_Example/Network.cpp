@@ -28,7 +28,7 @@ Distributed as-is; no warranty is given.
 // Static Json from ArduinoJson library
 StaticJsonDocument<64000> doc;
 
-void Network::begin(char *city)
+void Network::begin(char *ssid, char *pass)
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
@@ -59,7 +59,7 @@ void Network::begin(char *city)
 }
 
 // Gets time from ntp server
-void Network::getTime(char *timeStr)
+void Network::getTime(char *timeStr, int timeZone)
 {
     // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr);
@@ -104,7 +104,7 @@ void formatWind(char *str, float wind)
     dtostrf(wind, 2, 0, str);
 }
 
-bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp,
+bool Network::getData(char *lon, char *lat, char *apiKey, char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp,
                       char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1,
                       char *abbr2, char *abbr3, char *abbr4)
 {
@@ -201,10 +201,11 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
     }
     else if (httpCode == 401)
     {
-        display.setCursor(50, 290);
+        /*display.setCursor(50, 290);
         display.setTextSize(3);
         display.print(F("Network error, probably wrong api key"));
-        display.display();
+        display.display();*/
+        Serial.println("Network error, probably wrong api key");
         while (1)
             ;
     }
@@ -245,7 +246,7 @@ void Network::setTime()
     Serial.print(asctime(&timeinfo));
 }
 
-void Network::getHours(char *hour1, char *hour2, char *hour3, char *hour4)
+void Network::getHours(int timeZone, char *hour1, char *hour2, char *hour3, char *hour4)
 {
     // Format hours info
     sprintf(hour1, "%2ldh", (dataEpoch / 3600L + timeZone + 24) % 24);

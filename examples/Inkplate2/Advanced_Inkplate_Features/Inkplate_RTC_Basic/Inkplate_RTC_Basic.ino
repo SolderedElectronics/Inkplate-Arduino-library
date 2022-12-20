@@ -44,11 +44,11 @@ void setup()
     Serial.begin(115200);
 
     // Initialize network
-    network.begin();
+    network.begin(ssid, pass);
 
     // Get the current time from the NTP servers
     // Note: WiFi must be connected
-    network.getTime(&currentTime);
+    network.getTime(&currentTime, timeZone);
 
     display.begin();        // Init library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.

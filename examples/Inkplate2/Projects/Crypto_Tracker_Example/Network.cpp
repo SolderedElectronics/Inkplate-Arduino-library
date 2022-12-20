@@ -25,18 +25,10 @@ Distributed as-is; no warranty is given.
 // Must be installed for this example to work
 #include <ArduinoJson.h>
 
-// external parameters from our main file
-extern char ssid[];
-extern char pass[];
-extern char currency[];
-
-// Get our Inkplate object from main file to draw debug info on
-extern Inkplate display;
-
 // Static Json from ArduinoJson library
 StaticJsonDocument<30000> doc;
 
-void Network::begin()
+void Network::begin(char *ssid, char *pass)
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
@@ -64,7 +56,7 @@ void Network::begin()
 }
 
 // Gets time from ntp server
-void Network::getTime(char *timeStr)
+void Network::getTime(char *timeStr, int timeZone)
 {
     // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr);
@@ -87,7 +79,7 @@ void Network::getTime(char *timeStr)
     timeStr[8] = hr % 10 + '0';
 }
 
-bool Network::getData(double *data)
+bool Network::getData(double *data, char *currency)
 {
     bool f = 0;
 
@@ -167,11 +159,7 @@ bool Network::getData(double *data)
     else if (httpCode == 404)
     {
         // Coin id not found
-        display.clearDisplay();
-        display.setCursor(50, 230);
-        display.setTextSize(2);
-        display.println(F("Your entered coin does not exist!"));
-        display.display();
+        Serial.println("Your entered coin does not exist!");
         while (1)
             ;
     }

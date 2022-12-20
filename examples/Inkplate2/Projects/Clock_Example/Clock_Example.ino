@@ -76,7 +76,7 @@ void setup()
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
     // Our begin function
-    network.begin();
+    network.begin(ssid, pass);
 
     drawTime(); // Call function drawTime
 
@@ -99,7 +99,7 @@ void drawTime()
     int i = 1;
 
     // Save current date string, more about it in Network.cpp
-    network.getTime(&t);
+    network.getTime(&t, timeZone);
 
     // Clear the frame buffer of the epaper.
     display.clearDisplay();

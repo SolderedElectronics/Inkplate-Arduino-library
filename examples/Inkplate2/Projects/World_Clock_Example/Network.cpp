@@ -25,19 +25,10 @@
 // Must be installed for this example to work
 #include <ArduinoJson.h>
 
-// external parameters from our main file
-extern char ssid[];
-extern char pass[];
-extern const char *city1_name;
-extern const char *city2_name;
+// Dynamic Json from ArduinoJson library
+DynamicJsonDocument doc(30000);
 
-// Get our Inkplate object from main file to draw debug info on
-extern Inkplate display;
-
-// Static Json from ArduinoJson library
-StaticJsonDocument<30000> doc;
-
-void Network::begin()
+void Network::begin(char *ssid, char *pass)
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
@@ -94,8 +85,8 @@ bool Network::getData(char *city, tm *t)
     bool sleep = WiFi.getSleep();
     WiFi.setSleep(false);
 
-    WiFiClientSecure client; 
-    client.setInsecure();    // Use HTTPS but don't compare certificate
+    WiFiClientSecure client;
+    client.setInsecure(); // Use HTTPS but don't compare certificate
     client.flush();
     client.setTimeout(10);
 
@@ -105,16 +96,12 @@ bool Network::getData(char *city, tm *t)
     http.getStream().setTimeout(1);
 
     char temp[120];
-    for (int i = 0; i < sizeof(cities); i++)
+    for (int i = 0; i < numCities; i++)
     {
-        if (strstr(cities[i], city))
+        if (strstr(allFetchedCities[i], city))
         {
-            sprintf(temp, "https://www.timeapi.io/api/Time/current/zone?timeZone=%s", cities[i]);
-            Serial.println(cities[i]);
-            if (city1_name == NULL)
-                city1_name = cities[i];
-            else
-                city2_name = cities[i];
+            sprintf(temp, "https://www.timeapi.io/api/Time/current/zone?timeZone=%s", allFetchedCities[i]);
+            Serial.println(allFetchedCities[i]);
             break;
         }
     }
@@ -159,12 +146,8 @@ bool Network::getData(char *city, tm *t)
     }
     else if (httpCode == 404)
     {
-        // Coin id not found
-        display.clearDisplay();
-        display.setCursor(10, 10);
-        display.setTextSize(2);
-        display.println(F("Time has not been fetched!"));
-        display.display();
+        // City not found
+        Serial.println("Time has not been fetched!");
         while (1)
             ;
     }
@@ -180,6 +163,114 @@ bool Network::getData(char *city, tm *t)
 
     // Return to initial state
     WiFi.setSleep(sleep);
+
+    return !f;
+}
+
+// Function to get the full city name from the abbreviation we pass in the function
+char *Network::getFullCityName(char *city)
+{
+    static char fullName[33];
+    // Check the abbreviation for each city
+    for (int i = 0; i < numCities; i++)
+    {
+        // Try to find it in the city's full name
+        if (strstr(allFetchedCities[i], city))
+        {
+            // If it's found, return the abbreviation
+            strcpy(fullName, allFetchedCities[i]);
+            return fullName;
+        }
+    }
+
+    // Return 0 if it's not found
+    return 0;
+}
+
+bool Network::getAllCities()
+{
+    Serial.println("Fetching cities!");
+    const char *allCities[650];    
+    DynamicJsonDocument cities(15000);    
+    bool f = 0;
+
+    // Memory allocation
+    char *buf = NULL;
+    int n = 0;
+    buf = (char *)ps_malloc(15000);
+    if (buf == NULL)
+    {
+        Serial.println("Memory allocation error");
+        return 0;
+    }
+
+    // WiFiClientSecure object for HTTPS
+    WiFiClientSecure client;
+    client.setInsecure(); // Use HTTPS but don't compare certificate
+    client.flush();
+    client.setTimeout(10);
+
+    // Http object used to make get request
+    HTTPClient http;
+    http.getStream().setNoDelay(true);
+    http.getStream().setTimeout(1);
+
+    // Initiate http
+    http.begin(client, "https://www.timeapi.io/api/TimeZone/AvailableTimeZones");
+
+    // Actually do request
+    int httpCode = http.GET();
+    if (httpCode == 200)
+    {
+        // Store response to buffer
+        while (http.getStream().available())
+        {
+            char c = http.getStreamPtr()->read(); // Read data and save it in buffer
+            buf[n++] = c;
+            delayMicroseconds(10);
+        }
+        buf[n] = 0; // End of string
+
+        // Json must start at [ to deserialize properly
+        char *start = strstr(buf, "[");
+
+        // Try parsing JSON object
+        DeserializationError error = deserializeJson(cities, start);
+        if (error)
+        {
+            Serial.print(F("deserializeJson() failed: "));
+            Serial.println(error.c_str());
+            f = 1;
+        }
+        else
+        {
+            f = 0;            
+            int i = 0;
+            while (cities[i].as<char *>() != 0)
+            {
+                // Store each city
+                allCities[i] = cities[i].as<char *>();
+                strcpy(allFetchedCities[i], allCities[i]);
+                ++i;
+            }
+            numCities = i;
+            Serial.printf("Fetched %d cities\n", numCities);
+        }
+    }
+    else if (httpCode == 404)
+    {
+        Serial.println("Cities has not been fetched!");
+        f = 1;
+    }
+    else
+    {
+        f = 0;
+    }
+
+    // Clear document and end http
+    doc.clear();
+    http.end();
+    client.stop();
 
     return !f;
 }

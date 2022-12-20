@@ -17,25 +17,10 @@
 #include "Arduino.h"
 
 #include "Inkplate.h"
+
 #include <WiFi.h>
-
 #include <HTTPClient.h>
-
 #include <WiFiClientSecure.h>
-
-// To get timeZone from main file
-extern int timeZone;
-
-// wifi ssid and password
-extern char ssid[];
-extern char pass[];
-
-extern char lon[];
-extern char lat[];
-
-extern char apiKey[];
-
-extern Inkplate display;
 
 #ifndef NETWORK_H
 #define NETWORK_H
@@ -46,11 +31,11 @@ class Network
 {
     public:
         // Functions we can access in main file
-        void begin(char *city);
-        void getTime(char *timeStr);
-        bool getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, uint8_t *hours, char *currentWind,
+        void begin(char *ssid, char *pass);
+        void getTime(char *timeStr, int timeZone);
+        bool getData(char *lat, char *lon, char *apiKey, char *city, char *temp1, char *temp2, char *temp3, uint8_t *hours, char *currentWind,
                      char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1, char *abbr2,
-                     char *abbr3, char *abbr4);
+                     char *abbr3);
 
         // Used for storing retrieved data timestamp
         time_t dataEpoch = 0;

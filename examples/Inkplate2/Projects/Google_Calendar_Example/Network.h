@@ -20,15 +20,6 @@ Distributed as-is; no warranty is given.
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 
-// To get timeZone from main file
-extern int timeZone;
-
-// Wifi ssid and password
-extern char ssid[];
-extern char pass[];
-
-extern char calendarURL[];
-
 #ifndef NETWORK_H
 #define NETWORK_H
 
@@ -38,9 +29,9 @@ class Network
 {
   public:
     // Functions we can access in main file
-    void begin();
-    void getTime(char *timeStr, long offset = 0);
-    bool getData(char *data);
+    void begin(char *ssid, char *pass);
+    void getTime(char *timeStr, long offset, struct tm *timeinfo, int timeZone);
+    bool getData(char *data, char *calendarURL);
     time_t getEpoch();
 
   private:

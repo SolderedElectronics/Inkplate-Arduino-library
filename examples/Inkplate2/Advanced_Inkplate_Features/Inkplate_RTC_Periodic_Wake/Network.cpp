@@ -22,20 +22,7 @@ Distributed as-is; no warranty is given.
 
 #include "Inkplate.h"
 
-// Must be installed for this example to work
-#include <ArduinoJson.h>
-
-// external parameters from our main file
-extern char ssid[];
-extern char pass[];
-
-// Get our Inkplate object from main file to draw debug info on
-extern Inkplate display;
-
-// Static Json from ArduinoJson library
-StaticJsonDocument<30000> doc;
-
-void Network::begin()
+void Network::begin(char *ssid, char *pass)
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
@@ -63,7 +50,7 @@ void Network::begin()
 }
 
 // Get time from NTP server
-void Network::getTime(tm *t)
+void Network::getTime(tm *t, int timeZone)
 {
     // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr) + timeZone * 3600ULL;
@@ -71,7 +58,6 @@ void Network::getTime(tm *t)
     // Used to store time
     struct tm timeinfo;
     gmtime_r(&nowSecs, t);
-
 }
 
 // Function for initial time setting ovet the ntp server
@@ -97,7 +83,5 @@ void Network::setTime()
     gmtime_r(&nowSecs, &timeinfo);
 
     Serial.print(F("Current time: "));
-    Serial.print(asctime(&timeinfo));
-
-    
+    Serial.print(asctime(&timeinfo));    
 }

@@ -28,8 +28,8 @@
 #include "Inkplate.h"
 
 // Our networking functions, declared in Network.cpp
-#include "Inter6pt7b.h"
-#include "Inter8pt7b.h"
+#include "SourceSansPro_Regular6pt7b.h"
+#include "SourceSansPro_Regular8pt7b.h"
 #include "Network.h"
 
 #define uS_TO_S_FACTOR 1000000 // Conversion factor for micro seconds to seconds
@@ -56,7 +56,6 @@ const char city1[] = "Zag";
 const char city2[] = "Lim";
 
 // Pointers to store city names
-const char *city1_name = NULL, *city2_name = NULL;
 
 void setup()
 {
@@ -67,14 +66,17 @@ void setup()
     display.begin();
 
     // Our begin function
-    network.begin();
+    network.begin(ssid, pass);
+    
+    network.getAllCities();
 
     network.getData((char *)city1, &t);
-    drawTime(17, 1, t.tm_hour > 12 ? 1 : 0, city1_name); // x coordinate, y coordinate, PM/AM indicator, pointer to city
-                                                         // name Use ternary operator to specify PM or AM is currently.
+    drawTime(17, 1, t.tm_hour > 12 ? 1 : 0,
+             (char *)city1); // x coordinate, y coordinate, PM/AM indicator, pointer to city
+                             // name Use ternary operator to specify PM or AM is currently.
 
     network.getData((char *)city2, &t);
-    drawTime(115, 1, t.tm_hour > 12 ? 1 : 0, city2_name);
+    drawTime(115, 1, t.tm_hour > 12 ? 1 : 0, (char *)city2);
 
     display.display();
 
@@ -89,11 +91,12 @@ void loop()
     // Never here
 }
 // Function to draw time
-void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city_name)
+void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city)
 {
+    char *city_name = network.getFullCityName((char *)city);
     uint16_t w = 80;                                  // Clock width
     float xStart[12], yStart[12], xEnd[12], yEnd[12]; // Coordinates for lines that represents minutes
-    
+
     // This part of code draws analog clock
     display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2, INKPLATE2_BLACK); // Draw outer circles
     display.drawCircle(x_pos + w / 2, y_pos + w / 2, w / 2 + 1, INKPLATE2_BLACK);
@@ -132,7 +135,7 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city_name)
     display.fillCircle(x_pos + w / 2, y_pos + w / 2, 5, INKPLATE2_BLACK);
 
     display.setTextSize(1);       // Set text size in comparison to original text 5x7
-    display.setFont(&Inter8pt7b); // Set customn font
+    display.setFont(&SourceSansPro_Regular8pt7b); // Set customn font
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
     char *temp_city_name = strstr(city_name, "/") + 1;
     display.setCursor(x_pos + 40 - strlen(temp_city_name) * 5, 100); // Center city name
@@ -147,6 +150,6 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city_name)
         cnt++;
     }
     display.setCursor(x_pos + 32, y_pos + 62);
-    display.setFont(&Inter6pt7b); // Set customn font
+    display.setFont(&SourceSansPro_Regular6pt7b); // Set customn font
     am ? display.print("PM") : display.print("AM");
 }
