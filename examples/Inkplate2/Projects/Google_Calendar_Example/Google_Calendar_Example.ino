@@ -103,10 +103,10 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
-    network.begin(); // Connect to wifi and get data
+    network.begin(ssid, pass); // Connect to wifi and get data
 
     // Keep trying to get data if it fails the first time
-    while (!network.getData(data))
+    while (!network.getData(data, calendarURL))
     {
         Serial.println("Failed getting data, retrying");
         delay(1000);
@@ -229,15 +229,15 @@ void getToFrom(char *dst, char *from, char *to, int *day, time_t *timeStampEnd, 
     char day0[64], day1[64], day2[64];
 
     // Find UNIX timestamps for next days to see where to put event
-    network.getTime(day0, 0);
-    network.getTime(day1, 24 * 3600);
-    network.getTime(day2, 48 * 3600);
+    network.getTime(day0, 0, &timeinfo, timeZone);
+    network.getTime(day1, 24 * 3600, &timeinfo, timeZone);
+    network.getTime(day2, 48 * 3600, &timeinfo, timeZone);
 
     *timeStampEnd = epoch2;
     *timeStampStart = epoch;
 
     // Getting the time from our function in Network.cpp
-    network.getTime(temp);
+    network.getTime(temp, 0, &timeinfo, timeZone);
     if (strncmp(day0, asctime(&event), 10) == 0)
         *day = 0;
     else if (strncmp(day1, asctime(&event), 10) == 0)

@@ -20,9 +20,7 @@ Distributed as-is; no warranty is given.
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 
-extern struct tm timeinfo;
-
-void Network::begin()
+void Network::begin(char *ssid, char *pass)
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
@@ -53,21 +51,21 @@ void Network::begin()
 }
 
 // Gets time from ntp server
-void Network::getTime(char *timeStr, long offSet)
+void Network::getTime(char *timeStr, long offSet, struct tm *timeinfo, int timeZone)
 {
     // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr) + (long)timeZone * 3600L + offSet;
 
 
     // Used to store time
-    gmtime_r(&nowSecs, &timeinfo);
+    gmtime_r(&nowSecs, timeinfo);
 
     // Copies time string into timeStr
-    strcpy(timeStr, asctime(&timeinfo));
+    strcpy(timeStr, asctime(timeinfo));
 }
 
 // Function to get all war data from web
-bool Network::getData(char *data)
+bool Network::getData(char *data, char *calendarURL)
 {
     // Variable to store fail
     bool f = 0;
