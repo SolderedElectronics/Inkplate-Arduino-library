@@ -155,17 +155,7 @@ time_t Network::getEpoch()
     return time(nullptr);
 }
 
-/**
- * @brief               Create a HTTPS GET request with a given root url and api call url
- *
- * @param               WiFiClientSecure * client: pointer to client used in base class
- *
- * @param               char * _api_root_url: root url of the api (eg. www.api-service.com)
- *
- * @param               char * _api_call_url: full url of the api call (eg. www.api-service.com/getdata?key=12345)
- *
- * @returns             0 if there was an error, 404 if not found, 1 if successful
- */
+// Function to create a HTTPS GET request
 int Network::getRequest(WiFiClientSecure *client, char *_api_root_url, char *_api_call_url)
 {
     // Don't check SSL certificate but still use HTTPS
