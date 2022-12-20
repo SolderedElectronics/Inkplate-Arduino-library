@@ -142,10 +142,14 @@ void drawEvent()
         next_event++;
     } // Find next event and reject all events that already happened
 
-    // Next part of code draws UI
+    // Next part of code draws the UI
+
+    // Draw the rectangles for the date and the two events which are displayed
     display.drawRect(4, 40, 48, 55, INKPLATE2_BLACK);
     display.drawRect(72, 4, 133, 46, INKPLATE2_BLACK);
     display.drawRect(72, 55, 133, 46, INKPLATE2_BLACK);
+
+    // Print the time
     display.setFont(&Inter8pt7b);
     display.setCursor(10, 22);
     timeinfo.tm_hour < 10 ? display.print("0") : 0;
@@ -153,13 +157,17 @@ void drawEvent()
     display.print(":");
     timeinfo.tm_min < 10 ? display.print("0") : 0;
     display.print(timeinfo.tm_min);
+
+    // Print the date and month
     timeinfo.tm_mday < 10 ? display.setCursor(22, 62) : display.setCursor(18, 62);
     display.print(timeinfo.tm_mday);
     display.setCursor(11, 85);
-
     display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
     display.print(months[timeinfo.tm_mon]);
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
+
+    // Print next two events in the calendar
+
     if (next_event <= entriesNum)
     {
         display.setCursor(78, 18);
