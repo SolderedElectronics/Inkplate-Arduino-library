@@ -6,8 +6,8 @@
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
     This example show how to use Google API to show info about some youtube chhannel.
-    You need to register on https://developers.google.com/ and get API key of any kind so you,
-    can use yxour API key in API call. That key you should copy in variable api_key.
+    You need to register on https://developers.google.com/ and get API key of any kind so, you
+    can use your API key in API call. That key you should copy in variable api_key.
     Second thing you need to get ID of any youtube channel and copy it in channel_id variable.
     You can get ID by going on any youtube channel profile and copy part of URL link after
     https://www.youtube.com/channel/ (so just some random text after last backslash).

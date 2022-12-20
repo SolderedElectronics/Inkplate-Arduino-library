@@ -42,8 +42,8 @@ Network network;
 Inkplate display;
 
 // Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Structure for time and date data
 struct tm t;
@@ -67,6 +67,8 @@ void setup()
 
     // Our begin function
     network.begin(ssid, pass);
+    
+    network.getAllCities();
 
     network.getData((char *)city1, &t);
     drawTime(17, 1, t.tm_hour > 12 ? 1 : 0,
