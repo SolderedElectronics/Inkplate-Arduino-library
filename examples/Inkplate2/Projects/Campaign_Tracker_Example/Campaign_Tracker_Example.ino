@@ -1,97 +1,65 @@
 /*
-    Campaing tracker example for Soldered Inkplate 2
+    Campain tracker example example for Soldered Inkplate 2
     For this example you will need only USB cable, Inkplate 2 and a WiFi with stable Internet connection.
-    Select "Soldered Inkplate 2" from Tools -> Board menu.
-    Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
+    Select "Inkplate 2(ESP32)" from Tools -> Board menu.
+    Don't have "Inkplate 2(ESP32)" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-    This example will show you how you can use Inkplate 6 to display html data.
-    This example gets html data from crowdsource campaing and displays them on Inkplate screen.
+    This example will show you how you can use Inkplate 2 to track a campaign on Kickstarter.
+    We find this API for our Kickstarter campaign using Google Chrome and inspecting network data.
+    The page periodically receives stats.json?v=1 file and inside are the data we display.
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-    30 March 2022 by Soldered
+    21 December 2022 by Soldered
 */
 
-// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE2
-#error "Wrong board selection for this example, please select Soldered Inkplate 2 in the boards menu."
-#endif
+#include "Network.h"
 
-#include "Inkplate.h"
-#include "generatedUI.h"
+Inkplate display;
 
-#define DELAY_MS 60000 * 60
-#define URL      "https://www.crowdsupply.com/soldered/inkplate-6color"
+Network network;
 
-Inkplate display; // Init the Inkplate object
+#define DELAY_MS 300000 // Delay in milliseconds between deep sleep and the next wake up -> 5 minutes
 
-char *buf;  // Buffer in the PSRAM for data received from the Internet.
-uint32_t n; // Counter for the buffer array.
+char *ssid = "Soldered";     // your network SSID (name of wifi network)
+char *password = "dasduino"; // your network password
 
-String textInTag(const char *tag, const char *tagEnd, int dt = 1);
+int goal = 10000; // Set the goal manually to calculate how many are reached
 
-const char ssid[] = "";     // Your WiFi SSID
-const char pass[] = ""; // Your WiFi password
+int timeZone = 1; // Time zone for adding hours
+
+int backers, pledged; // Variables to store fetched data
+
+struct tm timeinfo; // Variable to store human-readable time
 
 void setup()
 {
-    Serial.begin(115200);   // Initialize UART communication with PC
-    display.begin();        // Initialize e-paper
-    WiFi.begin(ssid, pass); // Try to connect to WiFi network
-    Serial.println("Connecting to WiFi");
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        Serial.print(".");
-        delay(1000); // While it is connecting to network, display dot every second, just to know that Inkplate is
-    }
-    Serial.println("Connected!");
+    // Initialize serial and wait for port to open:
+    Serial.begin(115200);
+    delay(100);
 
-    buf = (char *)ps_malloc(100000);
+    // Initialize Inkplate
+    display.begin();
 
-    HTTPClient http;
-    if (http.begin(URL) && http.GET() > 0) // Check if ESP got answer from server and if data is available
-    {
-        while (http.getStreamPtr()->available()) // Check if there is data incoming
-        {
-            char c = http.getStreamPtr()->read(); // Read data and save it in buffer
-            buf[n++] = c;
-            delayMicroseconds(10); // Make small delay before getting next data
-        }
-        buf[n] = 0;
-    }
-    Serial.println("Buffer load complete!");
+    // Connect inkplate to wifi
+    network.begin(ssid, password);
 
-    text1_content = textInTag("<h1>", "</h1>");                         // Find text beetwen tags
-    text2_content = textInTag("<h4>", "</h4>");                         // Find text beetwen tags
-    text3_content = textInTag("<h3>", "</h3>");                         // Find text beetwen tags
-    text4_content = textInTag("<span><sup>$</sup>", "</span>");         // Find text beetwen tags
-    text7_content = textInTag("of&nbsp;<span><sup>$</sup>", "</span>"); // Find text beetwen tags
+    // Set the current time
+    network.setTime(&timeinfo, timeZone);
 
-    int j = 0;
-    String s = textInTag("<div class=\"factoids\">", "</div>", 3); // Find text beetwen tags
-    Serial.println(s);                                             // Print on serial monitor string
-    String dummy;
-    String *arr[] = {&dummy, &dummy, &dummy, &text17_content, &text17_content, &text17_content};
-    for (int i = 0; i < 6; ++i)
-    {
-        while (isspace(s[j++]))
-            ; // Check if symbol in string is whitespace
-        --j;
-        while (!isspace(s[j]) &&
-               j < s.length()) // String s contains 6 substrings, this function saves substrings in arr array
-            *(arr[i]) += s[j++];
-    }
+    // Get data from the API
+    Serial.println("Getting data from API");
+    network.getData(&backers, &pledged);
 
-    mainDraw();        // Call function to draw UI
-    display.display(); // Display content of display buffer on display
+    // Draw data on the display
+    Serial.println("Drawing");
+    drawData(backers, pledged, &timeinfo);
 
-    free(buf); // Free dynamically allocated memory; if memory is not freed, it may overflow (Almost always will, but
-               // compiler
-    // will not show error for overflowing memory)
-    // Go to sleep
-    esp_sleep_enable_timer_wakeup(1000LL * DELAY_MS);
-    (void)esp_deep_sleep_start();
+    // Go to sleep before checking again
+    Serial.print("Going to deep sleep, bye.");
+    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+    esp_deep_sleep_start();
 }
 
 void loop()
@@ -99,59 +67,32 @@ void loop()
     // Never here
 }
 
-String textInTag(const char *tag, const char *tagEnd, int dt)
+void drawData(int backers, int pledged, struct tm *timeinfo)
 {
-    String r;
-    char *start = strstr(buf, tag) + strlen(tag); // Find pointer to opened tag
-    char *end = start - 1;                        // End of opened tag
-    while (dt--)
-        end = strstr(end + 1, tagEnd);
+    // Print data in the frame buffer the Inkplate
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.drawTextWithShadow(0, 0, "Inkplate 2", INKPLATE2_RED, INKPLATE2_BLACK);
 
-    int d = 0;
-    for (char *t = start; t < end; ++t)
-    {
-        if (*t == '<')
-            ++d;
-        if (d == 0 && *t != '\n')
-        {
-            r += *t;
-        }
-        if (*t == '>')
-            --d;
-    }
+    display.setCursor(0, 25);
+    display.print("Pledged: ");
+    display.print(pledged);
+    display.println("$");
 
-    // Hacky solution to remove excess text
+    // Calculate the percentage of the reached value
+    float reached = ((float)pledged / goal) * 100;
 
-    r.replace("&#34;", "\""); // Find text and replace it with nothing
-    r.replace("&nbsp;", " ");
+    display.print("Reached: ");
+    display.print(reached, 2);
+    display.println("%");
 
-    r.replace("raised", "");
-    r.replace("goal", "");
-    r.replace("Funded!", "");
-    r.replace("funded", "");
-    r.replace(" on", "");
+    display.print("Backers: ");
+    display.println(backers);
 
-    r.replace("updates", "");
+    display.setCursor(0, 95);
+    display.setTextSize(1);
+    display.print("Updated: ");
+    display.print(asctime(timeinfo));
 
-    if (r.indexOf("hours left") != -1)
-    {
-        r.replace("hours left", "");
-        text17_content = "hours left";
-    }
-    if (r.indexOf("days left") != -1)
-    {
-        r.replace("days left", "");
-        text17_content = "days left";
-    }
-
-    r.replace("backers", "");
-
-    r.replace("Subscribe to Updates", "");
-
-    r.trim();
-
-    if (r.indexOf("$") != -1)
-        r = r.substring(r.indexOf("$") + 1);
-
-    return r;
+    display.display(); // Display data to the Inkplate
 }
