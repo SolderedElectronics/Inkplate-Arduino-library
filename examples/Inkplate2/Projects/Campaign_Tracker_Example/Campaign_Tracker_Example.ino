@@ -22,8 +22,8 @@ Network network;
 
 #define DELAY_MS 300000 // Delay in milliseconds between deep sleep and the next wake up -> 5 minutes
 
-char *ssid = "Soldered";     // your network SSID (name of wifi network)
-char *password = "dasduino"; // your network password
+char *ssid = "";     // your network SSID (name of wifi network)
+char *password = ""; // your network password
 
 int goal = 10000; // Set the goal manually to calculate how many are reached
 
