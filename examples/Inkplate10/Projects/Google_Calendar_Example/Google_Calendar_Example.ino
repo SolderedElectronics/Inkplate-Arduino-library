@@ -43,9 +43,9 @@
 
 // CHANGE HERE ---------------
 
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
-char calendarURL[] = "https://calendar.google.com/calendar/ical/robert%40soldered.com/private-bc147845014b4905f9fed21bea8d25c3/basic.ics";
+char ssid[] = "";
+char pass[] = "";
+char calendarURL[] = "";
 int timeZone = 2;
 
 // Set to 3 to flip the screen 180 degrees

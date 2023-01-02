@@ -43,8 +43,8 @@
 
 // CHANGE HERE ---------------
 
-char ssid[] = "e-radionica.com";
-char pass[] = "croduino";
+char ssid[] = "";
+char pass[] = "";
 char calendarURL[] = "";
 int timeZone = 2;
 
