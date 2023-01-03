@@ -36,7 +36,7 @@ class Network
     
   private:  
     char allFetchedCities[650][33]; 
-    int numCities = 0; 
+    int numCities = 0;
 };
 
 #endif

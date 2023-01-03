@@ -5,7 +5,7 @@
     Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-    This example uses API call to get tim for wanted city and it's timezone.
+    This example uses API call to get time for wanted city and it's timezone.
     Fetched data is in JSON format, and library is used to extract data. To choose
     city just type any part of city's name and it will be automatically found, but if you type
     to few letters, any city containig that letters will be found.
@@ -28,9 +28,9 @@
 #include "Inkplate.h"
 
 // Our networking functions, declared in Network.cpp
+#include "Network.h"
 #include "SourceSansPro_Regular6pt7b.h"
 #include "SourceSansPro_Regular8pt7b.h"
-#include "Network.h"
 
 #define uS_TO_S_FACTOR 1000000 // Conversion factor for micro seconds to seconds
 #define TIME_TO_SLEEP  300     // How long ESP32 will be in deep sleep (in seconds)
@@ -52,6 +52,7 @@ struct tm t;
 // The more letters you type, the more chance is that your city will be found.
 // Refer to Network.h file for full list of cities. Instead of space use underline
 // and every word starts with CAPITAL letter and the rest of letters are not capitals.
+// List of all available cities and zones can be found here https://www.timeapi.io/api/TimeZone/AvailableTimeZones
 const char city1[] = "Zag";
 const char city2[] = "Lim";
 
@@ -67,7 +68,7 @@ void setup()
 
     // Our begin function
     network.begin(ssid, pass);
-    
+
     network.getAllCities();
 
     network.getData((char *)city1, &t);
@@ -134,7 +135,7 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city)
     // Draw filled circle in the middle
     display.fillCircle(x_pos + w / 2, y_pos + w / 2, 5, INKPLATE2_BLACK);
 
-    display.setTextSize(1);       // Set text size in comparison to original text 5x7
+    display.setTextSize(1);                       // Set text size in comparison to original text 5x7
     display.setFont(&SourceSansPro_Regular8pt7b); // Set customn font
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
     char *temp_city_name = strstr(city_name, "/") + 1;
