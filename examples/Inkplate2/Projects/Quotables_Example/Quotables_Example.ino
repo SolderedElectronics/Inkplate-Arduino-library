@@ -142,7 +142,9 @@ void printQuote()
         {
             // Print in new row if it will
             currentRow++;
-            display.setCursor(0, (15 * currentRow) + 15);
+            // Offset for each row is 15 pixels
+            // +15 for the first row (because currentRow is 0-indexed)
+            display.setCursor(0, (15 * currentRow) + 15); 
         }
 
         // Print word and space
