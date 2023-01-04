@@ -43,8 +43,8 @@ Network network;
 Inkplate display;
 
 // Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Buffers to store quote, author name and quote length
 char quote[256];

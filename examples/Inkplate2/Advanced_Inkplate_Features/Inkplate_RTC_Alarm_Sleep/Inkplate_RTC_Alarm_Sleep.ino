@@ -44,8 +44,8 @@ struct alarmTime
 {
     int hour = 7;
     int mins = 30;
-    // int day = 25;
-    // int mon = 12;
+    int day = 5;
+    int mon = 1;
 } alarmTime;
 
 // Structure that contains time info
@@ -67,7 +67,6 @@ void setup()
     // If it woke up because of the internal RTC's timer, esp_sleep_get_wakeup_cause will be ESP_SLEEP_WAKEUP_TIMER
     if (esp_sleep_get_wakeup_cause() != ESP_SLEEP_WAKEUP_TIMER)
     {
-
         // This code runs initially, to get current time and set the timer
 
         display.setTextColor(INKPLATE2_BLACK);
@@ -81,7 +80,7 @@ void setup()
 
         // Print hours and minutes
         // %2.1d adds a space in front of single digit integers
-        // %02d adds a zeto in front of single digit numbers
+        // %02d adds a zero in front of single digit numbers
         display.printf("%2.1d:%02d\n", currentTime.tm_hour, currentTime.tm_min);
 
         // Print date
@@ -97,8 +96,8 @@ void setup()
         timerTime.tm_hour = alarmTime.hour;
         timerTime.tm_min = alarmTime.mins;
         timerTime.tm_sec = 0; // Start alarm at hour:mins:00
-        // timerTime.tm_mday = alarmTime.day;        
-        // timerTime.tm_mon = alarmTime.mon -1 ; // Months are zero indexed
+        timerTime.tm_mday = alarmTime.day;        
+        timerTime.tm_mon = alarmTime.mon -1 ; // Months are zero indexed
 
         // Calculate seconds until alarm
         long timeUntilAlarmInSeconds = difftime(mktime(&timerTime), mktime(&currentTime));
@@ -144,7 +143,6 @@ void setup()
     }
     else
     {
-
         // This code runs if the device has woken up from sleep and the alarm time has been reached
 
         display.setTextColor(INKPLATE2_BLACK);

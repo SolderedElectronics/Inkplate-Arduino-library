@@ -4,30 +4,30 @@
     Select "Soldered Inkplate 2" from Tools -> Board menu.
     Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
-    
+
     This example will show you how you can use Inkplate 2 to display API data,
     e.g. OpenWeatherMap API, and weatherstack for real time data.
-    
+
     IMPORTANT:
     Make sure to change your desired city, timezone and wifi credentials below
     Also have ArduinoJSON installed in your Arduino libraries.
-    
+
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
     2 January 2023 by Soldered
 */
 
 #include "Inkplate.h"
-#include "icons.h"
 #include "Network.h"
+#include "icons.h"
 
 // Enter your WiFi credentials
 char *ssid = "";
 char *password = "";
 
 // Enter GPS coordinates for your city
-String lat = "";
-String lon = "";
+String lat = "45.5510548";
+String lon = "18.5947808";
 
 // Enter your OpenWeather API key
 String apiKey = "";
@@ -42,7 +42,7 @@ struct tm timeinfo; // Current time info -> human-readable
 int timezone;       // The time zone will be automatically set by OWM
 
 // The array of structures for forecast weather for each hour - we will get 40 hours from API
-struct forecastWeather fw[40]; 
+struct forecastWeather fw[40];
 
 // Declared abbreviations for week days
 char weekDays[8][8] = {"Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"};
@@ -72,7 +72,7 @@ void setup()
     network.getData(fw, lat, lon, apiKey, &timezone);
 
     // Get the current time and store it to the variables declared on the top
-    network.setTime(timezone, &timeinfo); 
+    network.setTime(timezone, &timeinfo);
 
     // Get the first day to display
     day1 = getFirstDay();
@@ -81,7 +81,7 @@ void setup()
     getIconsAndTemp();
 
     // Draw this on screen
-    displayData();   
+    displayData();
 
     // Go to deep sleep
     Serial.println("Going to deep sleep, bye");
@@ -175,13 +175,13 @@ void getIconsAndTemp()
             gmtime_r(&secs, &tinfo); // Convert timestamp to human-readable format
             if (tinfo.tm_wday == ((day1 + j) % 7))
             {
-                if (fw[i].temp < minTemp[j]) // Find min temp
+                if (fw[i].minTemp < minTemp[j]) // Find min temp
                 {
-                    minTemp[j] = fw[i].temp;
+                    minTemp[j] = fw[i].minTemp;
                 }
-                if (fw[i].temp > maxTemp[j]) // Find max temp
+                if (fw[i].maxTemp > maxTemp[j]) // Find max temp
                 {
-                    maxTemp[j] = fw[i].temp;
+                    maxTemp[j] = fw[i].maxTemp;
                 }
 
                 if (tinfo.tm_hour == 15) // Take icon for each day in 15 h

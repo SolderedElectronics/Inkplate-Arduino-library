@@ -71,13 +71,18 @@ void setup()
 
     network.getAllCities();
 
-    network.getData((char *)city1, &t);
-    drawTime(17, 1, t.tm_hour > 12 ? 1 : 0,
-             (char *)city1); // x coordinate, y coordinate, PM/AM indicator, pointer to city
-                             // name Use ternary operator to specify PM or AM is currently.
+    Serial.print("City 1: ");
+    if(network.getData((char *)city1, &t))
+    {
+      // x coordinate, y coordinate, PM/AM indicator, pointer to city name. Use ternary operator to specify PM or AM is currently.
+      drawTime(17, 1, t.tm_hour >= 12 ? 1 : 0, (char *)city1);                                                               
+    }    
 
-    network.getData((char *)city2, &t);
-    drawTime(115, 1, t.tm_hour > 12 ? 1 : 0, (char *)city2);
+    Serial.print("City 2: ");
+    if(network.getData((char *)city2, &t))
+    {
+      drawTime(115, 1, t.tm_hour >= 12 ? 1 : 0, (char *)city2);
+    }    
 
     display.display();
 

@@ -25,7 +25,8 @@
 struct forecastWeather
 {
     time_t timestamp;
-    int temp;
+    int minTemp;
+    int maxTemp;
     char icon[5];
 };
 

@@ -224,12 +224,10 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
 
     if (strncmp(url, "http://", 7) == 0)
     {
-        Serial.print("Downloading using HTTP...");
         buf = downloadFile(url, &defaultLen);
     }
     else if (strncmp(url, "https://", 8) == 0)
     {
-        Serial.println("Downloading using HTTPS...");
         buf = downloadFileHTTPS(url, &defaultLen);
     }
 

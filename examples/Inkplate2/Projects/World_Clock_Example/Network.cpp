@@ -19,14 +19,10 @@
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
+#include <ArduinoJson.h>
 
 #include "Inkplate.h"
 
-// Must be installed for this example to work
-#include <ArduinoJson.h>
-
-// Dynamic Json from ArduinoJson library
-DynamicJsonDocument doc(30000);
 
 void Network::begin(char *ssid, char *pass)
 {
@@ -95,6 +91,8 @@ bool Network::getData(char *city, tm *t)
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1);
 
+    bool cityFound = 0;
+
     char temp[120];
     for (int i = 0; i < numCities; i++)
     {
@@ -102,17 +100,21 @@ bool Network::getData(char *city, tm *t)
         {
             sprintf(temp, "https://www.timeapi.io/api/Time/current/zone?timeZone=%s", allFetchedCities[i]);
             Serial.println(allFetchedCities[i]);
+            cityFound = 1;
             break;
         }
     }
-    if (sizeof(temp) < 20)
+    if (cityFound == 0)
     {
-        Serial.println("City not found");
+        Serial.println("not found");
         return 0;
     }
 
     // Initiate http
     http.begin(client, temp);
+
+    // Dynamic Json from ArduinoJson library
+    DynamicJsonDocument doc(30000);
 
     // Actually do request
     int httpCode = http.GET();
@@ -268,7 +270,7 @@ bool Network::getAllCities()
     }
 
     // Clear document and end http
-    doc.clear();
+    cities.clear();
     http.end();
     client.stop();
 

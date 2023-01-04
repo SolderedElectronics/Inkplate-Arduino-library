@@ -25,9 +25,6 @@ Distributed as-is; no warranty is given.
 // Must be installed for this example to work
 #include <ArduinoJson.h>
 
-// Static Json from ArduinoJson library
-StaticJsonDocument<30000> doc;
-
 void Network::begin(char *ssid, char *pass)
 {
     // Initiating wifi, like in BasicHttpClient example
@@ -121,8 +118,13 @@ bool Network::getData(double *data, char *currency)
     // Initiate http
     char temp[128];
     sprintf(temp, "https://api.coingecko.com/api/v3/coins/%s/market_chart?vs_currency=usd&days=92", currency);
-
     http.begin(temp);
+
+    // Print message
+    Serial.println("Fetching data");    
+
+    // Dynamic Json from ArduinoJson library
+    DynamicJsonDocument doc(30000);
 
     // Actually do request
     int httpCode = http.GET();

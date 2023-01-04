@@ -1,14 +1,14 @@
 /*
     Network.cpp
     Inkplate Arduino library
-    
+
     Karlo Leksic for Soldered.com
     January 2, 2023
     https://github.com/e-radionicacom/Inkplate-6-Arduino-library
-    
+
     For support, please reach over forums: forum.e-radionica.com/en
     For more info about the product, please check: www.inkplate.io
-    
+
     This code is released under the GNU Lesser General Public License v3.0:
     https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file included with this example. If you have
     any questions about licensing, please contact techsupport@e-radionica.com Distributed as-is; no warranty is given.
@@ -87,7 +87,8 @@ void Network::getData(struct forecastWeather *fw, String lat, String lon, String
     {
         fw[i].timestamp = doc["list"][i]["dt"];
         float tempK = doc["list"][i]["main"]["temp"];
-        fw[i].temp = int(tempK) - 273; // Convert to celsius
+        fw[i].minTemp = int(doc["list"][i]["main"]["temp_min"]) - 273; // Convert to celsius
+        fw[i].maxTemp = int(doc["list"][i]["main"]["temp_max"]) - 273; // Convert to celsius
         strlcpy(fw[i].icon, doc["list"][i]["weather"][0]["icon"] | "01d", sizeof(fw[i].icon) - 1);
     }
 

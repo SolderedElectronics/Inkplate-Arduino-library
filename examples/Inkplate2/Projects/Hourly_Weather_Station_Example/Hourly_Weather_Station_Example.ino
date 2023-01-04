@@ -46,15 +46,9 @@ char pass[] = "";
 // https://openweathermap.org/guide , register and copy the key provided
 char apiKey[] = "";
 
-// City name to de displayed on the bottom
-char city[128] = "OSIJEK";
-
-// Coordinates sent to the api
+// Coordinates of your city sent to the api
 char lon[] = "18.5947808";
 char lat[] = "45.5510548";
-
-// Time zone for adding hours
-int timeZone = 2;
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
@@ -69,34 +63,24 @@ const uint8_t *s_logos[18] = {
 };
 
 // Variables for storing temperature
-char temps[4][8] = {
-    "-F",
+char temps[3][8] = {
     "-F",
     "-F",
     "-F",
 };
 
 // Variables for storing hour strings
-char hours[4][8] = {
-    "",
+char hours[3][8] = {
     "",
     "",
     "",
 };
 
-// Variables for storing current time and weather info
-char currentTemp[16] = "-F";
-char currentWind[16] = "-m/s";
-
 char currentTime[16] = "--:--";
-
-char currentWeather[32] = "-";
-char currentWeatherAbbr[8] = "01d";
 
 char abbr1[16];
 char abbr2[16];
 char abbr3[16];
-char abbr4[16];
 
 // function defined below
 void drawTemps();
@@ -117,16 +101,13 @@ void setup()
     display.clearDisplay();
 
     // Get all relevant data, see Network.cpp for info
-    network.getTime(currentTime, timeZone);
-
-    while (!network.getData(lon, lat, apiKey, city, temps[0], temps[1], temps[2], temps[3], currentTemp, currentWind, currentTime,
-                            currentWeather, currentWeatherAbbr, abbr1, abbr2, abbr3, abbr4))
+    while (!network.getData(lon, lat, apiKey, temps[0], temps[1], temps[2], abbr1, abbr2, abbr3))
     {
         Serial.println("Retrying fetching data!");
         delay(5000);
     }
-    network.getHours(timeZone, hours[0], hours[1], hours[2], hours[3]);
-
+    network.getTime(currentTime);
+    network.getHours(hours[0], hours[1], hours[2]);
 
     // Draw data, see functions below for info
     drawTemps();
@@ -153,7 +134,7 @@ void drawTemps()
     display.drawRect(75, 5, 60, 94, INKPLATE2_BLACK);
     display.drawRect(145, 5, 60, 94, INKPLATE2_BLACK);
 
-    display.setFont(&SourceSansPro_Regular8pt7b );        // Set custom font
+    display.setFont(&SourceSansPro_Regular8pt7b);         // Set custom font
     display.setTextSize(1);                               // Set font size
     display.setTextColor(INKPLATE2_RED, INKPLATE2_BLACK); // Set font color and background color
 

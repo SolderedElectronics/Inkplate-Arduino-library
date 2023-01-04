@@ -19,14 +19,11 @@ Distributed as-is; no warranty is given.
 // They have been declared in seperate file to increase readability
 #include "Network.h"
 
+#include <ArduinoJson.h>
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 
-#include <ArduinoJson.h>
-
-// Static Json from ArduinoJson library
-StaticJsonDocument<64000> doc;
 
 void Network::begin(char *ssid, char *pass)
 {
@@ -59,7 +56,7 @@ void Network::begin(char *ssid, char *pass)
 }
 
 // Gets time from ntp server
-void Network::getTime(char *timeStr, int timeZone)
+void Network::getTime(char *timeStr)
 {
     // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr);
@@ -104,9 +101,8 @@ void formatWind(char *str, float wind)
     dtostrf(wind, 2, 0, str);
 }
 
-bool Network::getData(char *lon, char *lat, char *apiKey, char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp,
-                      char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1,
-                      char *abbr2, char *abbr3, char *abbr4)
+bool Network::getData(char *lon, char *lat, char *apiKey, char *temp1, char *temp2, char *temp3, char *abbr1,
+                      char *abbr2, char *abbr3)
 {
     bool f = 0;
     // If not connected to wifi reconnect wifi
@@ -148,6 +144,9 @@ bool Network::getData(char *lon, char *lat, char *apiKey, char *city, char *temp
     char url[256];
     sprintf(url, "http://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s", lat, lon, apiKey);
 
+    // Static Json from ArduinoJson library
+    DynamicJsonDocument doc(64000);
+
     // Initiate http
     http.begin(url);
 
@@ -173,38 +172,21 @@ bool Network::getData(char *lon, char *lat, char *apiKey, char *city, char *temp
             // This part relies heavily on ArduinoJson library
 
             dataEpoch = doc["current"]["dt"].as<time_t>();
-
-            formatTemp(currentTemp, doc["current"]["temp"].as<float>() - 273.15);
-            formatWind(currentWind, doc["current"][F("wind_speed")].as<float>());
-
-            strcpy(currentWeather, doc["current"]["weather"][0]["main"].as<const char *>());
-            ;
-            strcpy(currentWeatherAbbr, doc["current"]["weather"][0]["icon"].as<const char *>());
-            ;
+            timeZone = doc["timezone_offset"].as<int>() / 3600;
 
             formatTemp(temp1, doc["hourly"][0]["temp"].as<float>() - 273.15);
             formatTemp(temp2, doc["hourly"][1]["temp"].as<float>() - 273.15);
             formatTemp(temp3, doc["hourly"][2]["temp"].as<float>() - 273.15);
-            formatTemp(temp4, doc["hourly"][3]["temp"].as<float>() - 273.15);
 
-            strcpy(abbr1, doc["hourly"][0]["weather"][0]["icon"].as<const char *>());
-            ;
-            strcpy(abbr2, doc["hourly"][1]["weather"][0]["icon"].as<const char *>());
-            ;
-            strcpy(abbr3, doc["hourly"][2]["weather"][0]["icon"].as<const char *>());
-            ;
-            strcpy(abbr4, doc["hourly"][3]["weather"][0]["icon"].as<const char *>());
-            ;
+            strlcpy(abbr1, doc["hourly"][0]["weather"][0]["icon"] | "01d", sizeof(abbr1 - 1));
+            strlcpy(abbr2, doc["hourly"][1]["weather"][0]["icon"] | "01d", sizeof(abbr2 - 1));
+            strlcpy(abbr3, doc["hourly"][2]["weather"][0]["icon"] | "01d", sizeof(abbr3 - 1));
 
             f = 0;
         }
     }
     else if (httpCode == 401)
     {
-        /*display.setCursor(50, 290);
-        display.setTextSize(3);
-        display.print(F("Network error, probably wrong api key"));
-        display.display();*/
         Serial.println("Network error, probably wrong api key");
         while (1)
             ;
@@ -246,11 +228,10 @@ void Network::setTime()
     Serial.print(asctime(&timeinfo));
 }
 
-void Network::getHours(int timeZone, char *hour1, char *hour2, char *hour3, char *hour4)
+void Network::getHours(char *hour1, char *hour2, char *hour3)
 {
     // Format hours info
     sprintf(hour1, "%2ldh", (dataEpoch / 3600L + timeZone + 24) % 24);
     sprintf(hour2, "%2ldh", (dataEpoch / 3600L + 1 + timeZone + 24) % 24);
     sprintf(hour3, "%2ldh", (dataEpoch / 3600L + 2 + timeZone + 24) % 24);
-    sprintf(hour4, "%2ldh", (dataEpoch / 3600L + 3 + timeZone + 24) % 24);
 }

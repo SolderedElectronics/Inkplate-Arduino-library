@@ -18,12 +18,8 @@
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-
-// Must be installed for this example to work
 #include <ArduinoJson.h>
 
-// Dynamic Json from ArduinoJson library
-DynamicJsonDocument doc(4096);
 
 void Network::begin(char * ssid, char * pass)
 {
@@ -96,7 +92,12 @@ bool Network::getData(char *quote, char *author, int *len, Inkplate * display)
     char link[] = "https://api.quotable.io/random?maxLength=135";
     http.begin(client, link);
 
-    // Actually do request
+    // Dynamic Json from ArduinoJson library
+    DynamicJsonDocument doc(4096);
+
+    Serial.println("Fetching data");
+
+    // Actually do request  
     int httpCode = http.GET();
     if (httpCode == 200)
     {

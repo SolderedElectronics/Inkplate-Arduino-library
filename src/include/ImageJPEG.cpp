@@ -127,12 +127,10 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
 
     if (strncmp(url, "http://", 7) == 0)
     {
-        Serial.print("Downloading using HTTP...");
         buf = downloadFile(url, &defaultLen);
     }
     else if (strncmp(url, "https://", 8) == 0)
     {
-        Serial.print("Downloading using HTTPS...");
         buf = downloadFileHTTPS(url, &defaultLen);
     }
 

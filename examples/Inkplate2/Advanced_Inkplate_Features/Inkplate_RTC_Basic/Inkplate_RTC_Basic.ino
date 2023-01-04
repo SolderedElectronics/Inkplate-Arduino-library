@@ -6,7 +6,7 @@
     Don't have "Soldered Inkplate 2" option? Follow our tutorial and add it:
     https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-    This example will get and show the current time and date from the internet one time when Inkplate is turned on.
+    This example will get and show the current time and date from the internet.
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
@@ -33,10 +33,13 @@ Network network; // Create network object for WiFi and HTTP functions
 char ssid[] = "";
 char pass[] = "";
 
+// Define a delay time of 40 seconds. It's around a minute if we add the refresh display time
+#define DELAY_TIME 40 * 1000
+
 // Structure that contains time info
 struct tm currentTime;
 
-// This sketch fetches time data from a NTP server via WiFi and then after printing it, goes to sleep
+// This sketch fetches time data from a NTP server via WiFi and printing it.
 
 void setup()
 {
@@ -46,15 +49,21 @@ void setup()
     // Initialize network
     network.begin(ssid, pass);
 
+    // Init library (you should call this function ONLY ONCE)
+    display.begin();
+
+    // Set text color to black
+    display.setTextColor(INKPLATE2_BLACK); 
+}
+
+void loop()
+{
     // Get the current time from the NTP servers
     // Note: WiFi must be connected
     network.getTime(&currentTime, timeZone);
 
-    display.begin();        // Init library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
     //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside ESP32).
-
-    display.setTextColor(INKPLATE2_BLACK);  // Set text color to black
 
     // Set the cursor in the correct position
     display.setCursor(0, 10);
@@ -74,14 +83,6 @@ void setup()
     // Refresh the display with new data
     display.display();
 
-    // Go to sleep to save power
-    esp_deep_sleep_start();
-
-    // Note: If you want to periodically check and update the time on the display, check example
-    // Inkplate_RTC_Periodic_Wake
-}
-
-void loop()
-{
-    // Nothing. Loop must be empty!
+    // Delay before the next printing
+    delay(DELAY_TIME);
 }

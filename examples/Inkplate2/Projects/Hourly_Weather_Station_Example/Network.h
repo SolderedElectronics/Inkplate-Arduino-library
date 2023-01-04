@@ -16,8 +16,8 @@ Distributed as-is; no warranty is given.
 
 #include "Inkplate.h"
 
-#include <WiFi.h>
 #include <HTTPClient.h>
+#include <WiFi.h>
 #include <WiFiClientSecure.h>
 
 #ifndef NETWORK_H
@@ -30,11 +30,10 @@ class Network
   public:
     // Functions we can access in main file
     void begin(char *ssid, char *pass);
-    void getTime(char *timeStr, int timeZone);
-    bool getData(char *lon, char *lat, char *apiKey, char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp, char *currentWind,
-                 char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1, char *abbr2,
-                 char *abbr3, char *abbr4);
-    void getHours(int timeZone, char *hour1, char *hour2, char *hour3, char *hour4);
+    void getTime(char *timeStr);
+    bool getData(char *lon, char *lat, char *apiKey, char *temp1, char *temp2, char *temp3, char *abbr1, char *abbr2,
+                 char *abbr3);
+    void getHours(char *hour1, char *hour2, char *hour3);
 
     // Used for storing retrieved data timestamp
     time_t dataEpoch = 0;
@@ -42,6 +41,7 @@ class Network
   private:
     // Functions called from within our class
     void setTime();
+    int timeZone;
 };
 
 #endif
