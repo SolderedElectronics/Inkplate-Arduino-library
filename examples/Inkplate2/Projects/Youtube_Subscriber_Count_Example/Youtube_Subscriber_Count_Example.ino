@@ -29,9 +29,8 @@
 // Include Inkplate library to the sketch
 #include "Inkplate.h"
 
-// Include fonts used
-#include "Fonts/Inter16pt7b.h"
-#include "Fonts/Inter8pt7b.h"
+// Include font used
+#include "Fonts/SourceSansPro_Regular8pt7b.h"
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
@@ -90,14 +89,14 @@ RTC_DATA_ATTR int bootCount = 0;
 
 // Our UI elements
 textElement elements[] = {
-    {9, 22, &Inter8pt7b, channel.name, 0, INKPLATE2_BLACK},
-    {10, 23, &Inter8pt7b, channel.name, 0, INKPLATE2_RED},
-    {115, 50, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_BLACK},
-    {110, 50, &Inter8pt7b, "Subscribers:", 1, INKPLATE2_BLACK},
-    {115, 73, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_BLACK},
-    {110, 73, &Inter8pt7b, "Views:", 1, INKPLATE2_BLACK},
-    {115, 94, &Inter8pt7b, (char *)NULL, 0, INKPLATE2_BLACK},
-    {110, 94, &Inter8pt7b, "Videos:", 1, INKPLATE2_BLACK},
+    {9, 22, &SourceSansPro_Regular8pt7b, channel.name, 0, INKPLATE2_BLACK},
+    {10, 23, &SourceSansPro_Regular8pt7b, channel.name, 0, INKPLATE2_RED},
+    {115, 50, &SourceSansPro_Regular8pt7b, (char *)NULL, 0, INKPLATE2_BLACK},
+    {110, 50, &SourceSansPro_Regular8pt7b, "Subscribers:", 1, INKPLATE2_BLACK},
+    {115, 73, &SourceSansPro_Regular8pt7b, (char *)NULL, 0, INKPLATE2_BLACK},
+    {110, 73, &SourceSansPro_Regular8pt7b, "Views:", 1, INKPLATE2_BLACK},
+    {115, 94, &SourceSansPro_Regular8pt7b, (char *)NULL, 0, INKPLATE2_BLACK},
+    {110, 94, &SourceSansPro_Regular8pt7b, "Videos:", 1, INKPLATE2_BLACK},
 };
 
 void setup()

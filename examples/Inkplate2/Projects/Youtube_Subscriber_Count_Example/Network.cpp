@@ -16,16 +16,6 @@ Distributed as-is; no warranty is given.
 
 #include "Network.h"
 
-#include <HTTPClient.h>
-#include <WiFi.h>
-#include <WiFiClientSecure.h>
-#include "Inkplate.h"
-
-// Must be installed for this example to work
-#include <ArduinoJson.h>
-
-// Static Json from ArduinoJson library
-StaticJsonDocument<5000> doc;
 
 void Network::begin(char * ssid, char * pass)
 {
@@ -89,6 +79,9 @@ bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, 
 
     char request[182];
     sprintf(request, "www.googleapis.com/youtube/v3/channels?part=statistics&id=%s&key=%s", channel_id, api_key);
+
+    Serial.println("Fetching data!");
+    
     int result = getRequest(&client1, "www.googleapis.com",request);
     if(result == 0)
     {
@@ -109,7 +102,9 @@ bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, 
         display->display();
         while(1) ;
     }
-    
+
+    // Dynamic Json from ArduinoJson library
+    DynamicJsonDocument doc(5000);    
 
     DeserializationError error = deserializeJson(doc, client1);
 

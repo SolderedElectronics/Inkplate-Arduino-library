@@ -19,6 +19,7 @@ Distributed as-is; no warranty is given.
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
+#include <ArduinoJson.h>
 #include "Inkplate.h"
 
 struct channelInfo
