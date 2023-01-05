@@ -90,6 +90,11 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
 int cmp(const void *a, const void *b);
 void drawData();
 
+/**
+ * @brief               Setup function, runs only once
+ * 
+ * @return              None
+*/
 void setup()
 {
     Serial.begin(115200); // Initialize UART communication with PC
@@ -126,20 +131,31 @@ void setup()
     esp_deep_sleep_start();
 }
 
+/**
+ * @brief               Main loop function, doesn't run 
+ * 
+ * @return              None
+*/
 void loop()
 {
     // Never here
 }
 
-
+/**
+ * @brief               Functions for drawing the date and two next events
+ * 
+ * @return              None
+*/
 void drawEvent()
 {
     uint8_t next_event = 0;
     time_t curr_timestamp = network.getEpoch(); // Get current time in epoch format
+
+    // Find next event and reject all events that already happened
     while (entries[next_event].timeStampEnd < curr_timestamp && entriesNum > next_event)
     {
         next_event++;
-    } // Find next event and reject all events that already happened
+    } 
 
     // Next part of code draws the UI
 
@@ -187,7 +203,29 @@ void drawEvent()
     }
 }
 
-// Format event times, example 13:00 to 14:00
+/**
+ * @brief               Functions for formatting the event times
+ * 
+ * @param               char * dst
+ *                      Destination buffer where to write the result
+ * 
+ * @param               char * from
+ *                      Char array that holds the event beginning time
+ * 
+ * @param               char * to
+ *                      Char array that holds the event end time
+ * 
+ * @param               int * day
+ *                      Pointer to the variable that holds the day of the event relative to the current day
+ *                      0 For today, 1 for tomorrow, 2 for the next day, -1 by default
+ * 
+ * @param               time_t * timeStampEnd
+ *                      Pointer to struct time_t where to save the result
+ * 
+ * @param               time_t * timeStampBegin
+ *                      Pointer to struct time_t where to save the result 
+ * @return              None
+*/
 void getToFrom(char *dst, char *from, char *to, int *day, time_t *timeStampEnd, time_t *timeStampStart)
 {
     // ANSI C time struct
@@ -255,7 +293,17 @@ void getToFrom(char *dst, char *from, char *to, int *day, time_t *timeStampEnd, 
         *day = -1;
 }
 
-// Struct event comparison function, by timestamp, used for qsort later on
+/**
+ * @brief               Comparison function for events
+ * 
+ * @param               void * a
+ *                      First member of comparison
+ * 
+ * @param               void * b
+ *                      Second member of comparison
+ *  
+ * @return              Positive integer if A ends after B
+*/
 int cmp(const void *a, const void *b)
 {
     entry *entryA = (entry *)a;
@@ -264,7 +312,11 @@ int cmp(const void *a, const void *b)
     return (entryA->timeStampEnd - entryB->timeStampEnd); // Compare timestamps of two objects
 }
 
-// Main data drawing data
+/**
+ * @brief               Search for data in result of Google Calendar API GET data
+ * 
+ * @return              None
+*/
 void getEvents()
 {
     long i = 0;

@@ -20,6 +20,17 @@ Distributed as-is; no warranty is given.
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 
+/**
+ * @brief               Initialize the network object and connect to WiFi
+ *
+ * @param               char * ssid
+ *                      SSID of the WiFi network
+ * 
+ * @param               char * pass
+ *                      WiFi password
+ *
+ * @return              None
+ */
 void Network::begin(char *ssid, char *pass)
 {
     // Initiating wifi, like in BasicHttpClient example
@@ -50,12 +61,27 @@ void Network::begin(char *ssid, char *pass)
     setTime();
 }
 
-// Gets time from ntp server
+/**
+ * @brief               Get time from NTP server
+ *
+ * @param               char * timeStr
+ *                      Where to save the string of the fetched time
+ * 
+ * @param               long offSet
+ *                      Time adjustment
+ * 
+ * @param               struct tm * timeinfo
+ *                      Where to store the struct tm of the fetched time
+ * 
+ * @param               int timeZone
+ *                      Timezone adjustment
+ * 
+ * @return              None
+ */
 void Network::getTime(char *timeStr, long offSet, struct tm *timeinfo, int timeZone)
 {
     // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr) + (long)timeZone * 3600L + offSet;
-
 
     // Used to store time
     gmtime_r(&nowSecs, timeinfo);
@@ -64,7 +90,17 @@ void Network::getTime(char *timeStr, long offSet, struct tm *timeinfo, int timeZ
     strcpy(timeStr, asctime(timeinfo));
 }
 
-// Function to get all war data from web
+/**
+ * @brief               Get data from Google Calendar
+ *
+ * @param               char * data
+ *                      Where to save the recieved data
+ * 
+ * @param               char * calendarURL
+ *                      Link to the calendar as set by the user in the main file
+ * 
+ * @return              True if succcessful, false if there was an error
+ */
 bool Network::getData(char *data, char *calendarURL)
 {
     // Variable to store fail
@@ -125,6 +161,12 @@ bool Network::getData(char *data, char *calendarURL)
     return !f;
 }
 
+
+/**
+ * @brief               Set the current time from NTP
+ * 
+ * @return              None
+ */
 void Network::setTime()
 {
     // Used for setting correct time
@@ -150,13 +192,32 @@ void Network::setTime()
     Serial.print(asctime(&timeinfo));
 }
 
+/**
+ * @brief               Get the current epoch
+ * 
+ * @return              time_t of the current epoch
+ */
 time_t Network::getEpoch()
 {
     return time(nullptr);
 }
 
-// Function to create a HTTPS GET request
-int Network::getRequest(WiFiClientSecure *client, char *_api_root_url, char *_api_call_url)
+/**
+ * @brief               Create a HTTPS GET request
+ * 
+ * @param               WiFiClientSecure * client
+ *                      Pointer to the WiFiClientSecure used in getData
+ * 
+ * @param               char * _api_root_url
+ *                      Root URL of the GET call (eg. www.example.com)
+ * 
+ * @param               char * _api_call_url
+ *                      Resource URL of the GET call (eg. /api/resource/123&param=example)
+ *                      View your specific API's documentation for more info
+ * 
+ * @return              True if successful, false if not
+ */
+bool Network::getRequest(WiFiClientSecure *client, char *_api_root_url, char *_api_call_url)
 {
     // Don't check SSL certificate but still use HTTPS
     client->setInsecure();
@@ -164,7 +225,7 @@ int Network::getRequest(WiFiClientSecure *client, char *_api_root_url, char *_ap
     if (!client->connect(_api_root_url, 443))
     {
         Serial.println("connection refused");
-        return 0;
+        return false;
     }
 
     client->setTimeout(10);
@@ -183,15 +244,11 @@ int Network::getRequest(WiFiClientSecure *client, char *_api_root_url, char *_ap
     String line = client->readStringUntil('\r');
     if (line != "HTTP/1.0 200 OK")
     {
-        return 0;
-    }
-    else if (line == "HTTP/1.0 404 Not Found")
-    {
-        return 404;
+        return false;
     }
 
     while (client->available() && client->peek() != '{')
         (void)client->read();
 
-    return 1;
+    return true;
 }
