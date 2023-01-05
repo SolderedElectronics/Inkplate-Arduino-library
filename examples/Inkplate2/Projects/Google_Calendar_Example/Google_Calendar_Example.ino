@@ -32,8 +32,7 @@
 #include "Inkplate.h" // Include Inkplate library to the sketch
 
 // Including fonts
-#include "Fonts/Inter12pt7b.h"
-#include "Fonts/Inter8pt7b.h"
+#include "Fonts/SourceSansPro_Regular8pt7b.h"
 
 // Includes
 #include "Network.h"
@@ -150,7 +149,7 @@ void drawEvent()
     display.drawRect(72, 55, 133, 46, INKPLATE2_BLACK);
 
     // Print the time
-    display.setFont(&Inter8pt7b);
+    display.setFont(&SourceSansPro_Regular8pt7b);
     display.setCursor(10, 22);
     timeinfo.tm_hour < 10 ? display.print("0") : 0;
     display.print(timeinfo.tm_hour);

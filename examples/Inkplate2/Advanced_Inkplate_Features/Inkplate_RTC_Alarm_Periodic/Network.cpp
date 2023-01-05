@@ -16,12 +16,6 @@ Distributed as-is; no warranty is given.
 
 #include "Network.h"
 
-#include <HTTPClient.h>
-#include <WiFi.h>
-#include <WiFiClientSecure.h>
-
-#include "Inkplate.h"
-
 void Network::begin(char* ssid, char* pass)
 {
     // Initiating wifi, like in BasicHttpClient example

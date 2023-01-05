@@ -23,32 +23,35 @@
 
 #include "Network.h" // Our networking functions, declared in Network.cpp
 
+#include "RTC.h" // Our RTC functions, declared in RTC.cpp
+
 Inkplate display; // Initialize Inkplate object
 
 Network network; // Create network object for WiFi and HTTP functions
 
+RTC rtc; // Create RTC object for RTC functions
+
 // Write your SSID and password (needed to get the correct time from the Internet)
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
 
-// Adjust your time zone, 2 means UTC+2
-int timeZone = 2;
-
-// Set how many minutes should pass between each timer check
-int minutesBetweenWakes = 2;
+// Adjust your time zone, 1 means UTC+1
+int timeZone = 1;
 
 // Set the time and date to trigger the alarm function
-// Here it's set to 25.12. 8:00 AM, Christmas morning of the current year
-struct alarmTime
-{
-    int hour = 8;
-    int mins = 0;
-    int day = 25;
-    int mon = 12;
-} alarmTime;
+// Here it's set to 25.12. 8:00:00 AM, Christmas morning of the current year
+int alarmHour = 8;
+int alarmMins = 0;
+int alarmSecs = 0;
+int alarmDay = 25;
+int alarmMon = 12;
 
 // Structure that contains time info
-struct tm currentTime, timerTime;
+struct tm currentTime;
+
+// Set the period to wake up - every 1 hour and 30 minutes wake up and check if it is time for the alarm
+int wakeHours = 1;
+int wakeMinutes = 30;
 
 void setup()
 {
@@ -68,27 +71,13 @@ void setup()
 
     display.setTextColor(INKPLATE2_BLACK);
 
-    // Copy currentTime nad set the correct hours, mins and date
-    timerTime = currentTime;
-    timerTime.tm_hour = alarmTime.hour;
-    timerTime.tm_min = alarmTime.mins;
-    timerTime.tm_sec = 0; // Start alarm at hour:mins:00s
-    timerTime.tm_mday = alarmTime.day;
-    timerTime.tm_mon = alarmTime.mon - 1; // Months are zero indexed
-
-    // Calculate the difference between times
-    int timeUntilAlarmInSeconds = difftime(mktime(&timerTime), mktime(&currentTime));
+    int timeUntilAlarmInSeconds = rtc.secondsUntilAlarm(alarmHour, alarmMins, alarmSecs, alarmDay, alarmMon, currentTime);
 
     // The alarm time has been reached!
     if (timeUntilAlarmInSeconds <= 0)
     {
-        display.setTextSize(2);
-        display.setCursor(9, 30);
-        display.printf("Merry Christmas!\n");
-        display.setTextSize(1);
-        display.printf("\n      It's %2.1d:%02d", currentTime.tm_hour, currentTime.tm_min);
-        display.printf(" on %2.1d.%2.1d.%04d", currentTime.tm_mday, currentTime.tm_mon + 1, currentTime.tm_year + 1900);
-        display.display(); // Show the data on the display
+        // Display the screen when the alarm is reached
+        alarmScreen();
 
         // Do whatever the alarm should do here
         while (1)
@@ -96,27 +85,12 @@ void setup()
             delay(100);
         }
     }
-
     else
     {
-        display.setTextSize(1);
-        display.printf("\n           "); // For alignment
-        display.printf("Waiting for: ");
-        display.setTextSize(4);
-        display.setCursor(0, 33);
-        display.printf("  "); // For alignment
-        display.printf("%2.1d:%02d", timerTime.tm_hour, timerTime.tm_min);
-        display.setCursor(0, 65);
-        display.setTextSize(2);
-        display.printf("  "); // For alignment
-        display.printf("on %2.1d.%2.1d.%04d", timerTime.tm_mday, timerTime.tm_mon + 1, timerTime.tm_year + 1900);
+        // Display the screen for waiting for the alarm
+        waitingScreen();
 
-        display.display(); // Show the data on the display
-
-        // Set how much the internal RTC should wait before waking the device up
-        // It's in uS, so to get minutes we need to * 1000000 * 60
-        // Note: The device still has to be powered during sleep time to wake up
-        esp_sleep_enable_timer_wakeup(1000000 * 60 * minutesBetweenWakes);
+        rtc.setWakeUpTimer(wakeHours, wakeMinutes, currentTime);
 
         // Start sleep, this function never returns
         esp_deep_sleep_start();
@@ -126,4 +100,31 @@ void setup()
 void loop()
 {
     // Nothing. Loop must be empty!
+}
+
+void waitingScreen()
+{
+    display.setTextSize(1);
+    display.printf("\n           "); // For alignment
+    display.printf("Waiting for: ");
+    display.setTextSize(4);
+    display.setCursor(0, 33);
+    display.printf("  "); // For alignment
+    display.printf("%2.1d:%02d", alarmHour, alarmMins);
+    display.setCursor(0, 65);
+    display.setTextSize(2);
+    display.printf("    "); // For alignment
+    display.printf("on %2.1d.%2.1d.", alarmDay, alarmMon);
+
+    display.display(); // Show the data on the display
+}
+
+void alarmScreen()
+{
+    display.setTextSize(2);
+    display.setCursor(9, 30);
+    display.printf("ALARM!\n");
+    display.setTextSize(1);
+
+    display.display(); // Show the data on the display
 }
