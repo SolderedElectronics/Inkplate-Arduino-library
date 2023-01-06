@@ -30,7 +30,7 @@ void Network::begin(char *ssid, char *pass)
     Serial.println(WiFi.localIP());
 }
 
-void Network::getData(struct forecastWeather *fw, String lat, String lon, String apiKey, int *timezone)
+int Network::getData(struct forecastWeather *fw, String lat, String lon, String apiKey, int *timezone)
 {
     // Allocate memory for data from API
     uint32_t n = 0;
@@ -82,8 +82,11 @@ void Network::getData(struct forecastWeather *fw, String lat, String lon, String
             ;
     }
 
+    // Get data count
+    int cnt = doc["cnt"];
+
     // Read data and store them in structures
-    for (int i = 0; i < 40; ++i)
+    for (int i = 0; i < cnt; ++i)
     {
         fw[i].timestamp = doc["list"][i]["dt"];
         float tempK = doc["list"][i]["main"]["temp"];
@@ -96,6 +99,7 @@ void Network::getData(struct forecastWeather *fw, String lat, String lon, String
 
     free(buf);
     doc.clear();
+    return cnt;
 }
 
 void Network::setTime(int timezone, struct tm *timeinfo)

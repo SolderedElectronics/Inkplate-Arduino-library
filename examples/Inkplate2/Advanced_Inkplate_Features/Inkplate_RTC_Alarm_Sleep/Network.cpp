@@ -44,16 +44,13 @@ void Network::begin(char *ssid, char *pass)
         }
     }
     Serial.println(F(" connected"));
-
-    // Get Internet time from NTP.
-    setTime();
 }
 
 // Get time from NTP server
-void Network::getTime(tm *t, int timeZone)
+void Network::getTime(tm *t)
 {
     // Get seconds since 1.1.1970.
-    time_t nowSecs = time(nullptr) + timeZone * 3600ULL;
+    time_t nowSecs = time(nullptr) + timezone * 3600ULL;
 
     // Used to store time
     struct tm timeinfo;
@@ -62,7 +59,7 @@ void Network::getTime(tm *t, int timeZone)
 }
 
 // Function for initial time setting ovet the ntp server
-void Network::setTime()
+void Network::setTime(int timeZone)
 {
     // Used for setting correct time
     configTime(0, 0, "pool.ntp.org", "time.nist.gov");
@@ -76,6 +73,12 @@ void Network::setTime()
         yield();
         nowSecs = time(nullptr);
     }
+
+    // Add timeZone
+    nowSecs = time(nullptr) + timeZone * 3600ULL;
+
+    //Store timezone in class variable
+    timezone = timeZone;
 
     Serial.println();
 

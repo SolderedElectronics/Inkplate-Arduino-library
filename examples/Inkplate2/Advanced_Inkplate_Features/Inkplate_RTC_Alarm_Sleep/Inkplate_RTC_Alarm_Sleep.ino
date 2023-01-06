@@ -9,6 +9,13 @@
     This example will show you how to use Inkplate's internal RTC to set an alarm, go to sleep and wake up at a desired
     time.
 
+    NOTE: This is not a real alarm on the RTC, just an emulation. If you choose to match minutes and seconds, 
+    they must be greater than the current time, otherwise the alarm will not be set. If it is necessary, 
+    for example, to set an alarm for tomorrow morning, and now it is noon, it is not possible to set only 
+    hours and minutes and set a match to them, because that time is earlier than the current time if we only 
+    look at hours and minutes. You can set such an alarm by setting the match to days, hours and minutes and 
+    then it will work ok, you just have to set the day as well. Likewise for other cases
+
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
     28 Nov 2022 by Soldered
@@ -21,32 +28,28 @@
 
 #include "Inkplate.h" // Include Inkplate library
 
-// Our networking functions, declared in Network.cpp
-#include "Network.h"
+#include "Network.h" // Our networking functions, declared in Network.cpp
+
+#include "RTC.h" // Our RTC functions, declared in RTC.cpp
 
 Inkplate display; // Initialize Inkplate object
 
 Network network; // Create network object for WiFi and HTTP functions
 
+RTC rtc; // RTC object for RTC functions
+
 // Write your SSID and password (needed to get the correct time from the Internet)
 char ssid[] = "";
 char pass[] = "";
 
-// Adjust your time zone, 2 means UTC+2
-int timeZone = 2;
+// Adjust your time zone, 1 means UTC+1
+int timeZone = 1;
 
 // Set the time to wake up (24 hour format)
-// Here it's set to 7:30
+// Here it's set to 7:30:00, 25.12. of this year
 // Give it at least a few minutes of space before activating for the code to compile and upload to Inkplate
-// If you want to sound the alarm at a different date, uncomment day and month here and in setup()
 // Note: it takes approx 25 seconds to wake up from sleep and display the time
-struct alarmTime
-{
-    int hour = 7;
-    int mins = 30;
-    int day = 5;
-    int mon = 1;
-} alarmTime;
+ALARM_TIME alarmTime = {16, 30, 50, 25, 12}; // hour, minute, second, day, month
 
 // Structure that contains time info
 struct tm currentTime, timerTime;
@@ -58,6 +61,7 @@ void setup()
 
     // Initialize network
     network.begin(ssid, pass);
+    network.setTime(timeZone);
 
     display.begin();        // Init library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
@@ -74,7 +78,7 @@ void setup()
         display.setTextSize(4);
 
         // Get the current time from the NTP server and store it in the RTC
-        network.getTime(&currentTime, timeZone);
+        network.getTime(&currentTime);
 
         // Now it's possible to access the time data via the tm object
 
@@ -90,55 +94,35 @@ void setup()
         display.print("   "); // Print spaces for alignment
         display.printf("%2.1d.%2.1d.%04d\n", currentTime.tm_mday, currentTime.tm_mon + 1, currentTime.tm_year + 1900);
 
-        // Set timer time's hours and minutes for when to wake up
-        // If you need to have the alarm on a different date, set it here
-        timerTime = currentTime;
-        timerTime.tm_hour = alarmTime.hour;
-        timerTime.tm_min = alarmTime.mins;
-        timerTime.tm_sec = 0; // Start alarm at hour:mins:00
-        timerTime.tm_mday = alarmTime.day;        
-        timerTime.tm_mon = alarmTime.mon -1 ; // Months are zero indexed
+        // You can also set alarm like this
+        //alarmTime.hour = 7;
+        //alarmTime.mins = 30;
+        //alarmTime.secs = 0;
+        //alarmTime.day = 5;
+        //alarmTime.mon = 1;
 
-        // Calculate seconds until alarm
-        long timeUntilAlarmInSeconds = difftime(mktime(&timerTime), mktime(&currentTime));
-
-        if (timeUntilAlarmInSeconds <= 0)
-        {
-            // Set alarm time can't be in the past!
-            // Check variable alarmTime
-            display.setTextSize(1);
-            display.printf("\n Error: Set alarm time\n (%2.1d:%02d) is earlier than or same as now!", timerTime.tm_hour,
-                           timerTime.tm_min);
-            display.display();
-
-            // Do whatever the alarm should do here
-            while (1)
-            {
-                delay(100);
-            }
-        }
-        else
+        rtc.setTimezone(timeZone);
+        double secondsUntilAlarm = rtc.setAlarm(alarmTime, RTC_MMSS);
+        if (secondsUntilAlarm > 0)
         {
             // Print info about currently set alarm
             display.setTextSize(1);
             display.println();
-            display.print("  "); // Print spaces for alignment
-            display.print("Alarm is set for ");
-            display.printf("%2.1d:%02d", timerTime.tm_hour, timerTime.tm_min);
-            display.print(" on ");            
-            display.printf("%2.1d.%02d\n", timerTime.tm_mday, timerTime.tm_mon + 1);
-            display.print("       "); // Print spaces for alignment
-            display.print("Going to sleep, bye!");
+            display.printf("The alarm is set %ld seconds from now. Going to sleep, bye!", (long)secondsUntilAlarm);
             display.display(); // Show everything on the display
             delay(100);
 
-            // Go to sleep until it's time for the alarm
-            // It's in uS, so * 1000000 to convert from seconds
-            // Note: The device still has to be powered during sleep time to wake up
-            esp_sleep_enable_timer_wakeup(timeUntilAlarmInSeconds * 1000000LL);
-
             // Start deep sleep (this function does not return)
             esp_deep_sleep_start();
+            
+        }
+        else
+        {
+            // Set alarm time can't be in the past!
+            // Check variable alarmTime
+            display.setTextSize(1);
+            display.printf("\nError: Set alarm time is earlier \nthan or same as now! Change time or RTC match");
+            display.display();
         }
     }
     else
@@ -148,12 +132,10 @@ void setup()
         display.setTextColor(INKPLATE2_BLACK);
         display.setCursor(43, 25); // Set cursor in correct position to print alarm text
         display.setTextSize(4);
-
         display.println("ALARM");
-        display.setTextSize(2);
-        display.printf("   It's %02d:%02d!\n", alarmTime.hour, alarmTime.mins); // Print set alarm time
-
         display.display(); // Show everything on the display
+
+        // Do whatever alarm should do here
     }
 }
 

@@ -30,11 +30,12 @@ class Network
   public:
     // Functions we can access in main file
     void begin(char *ssid, char *pass);
-    void getTime(tm *t, int timeZone);
+    void getTime(tm *t);
+    void setTime(int timeZone);
 
   private:
-    // Functions called from within our class
-    void setTime();
+    int timezone = 0;
+    
 };
 
 #endif
