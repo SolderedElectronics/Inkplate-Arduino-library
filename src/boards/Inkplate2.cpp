@@ -62,20 +62,26 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
         break;
     }
 
+    // Find the specific byte in the frame buffer that needs to be modified.
+    // Also find the bit in the byte that needs modification.
     int _x = x0 / 8;
-    int _x_sub = x0 % 8;
+    int _xSub = x0 % 8;
+
+    int _position = E_INK_WIDTH / 8 * y0 + _x;
+
+    // Clear both black and red frame buffer.
+    *(DMemory4Bit + _position) |= (pixelMaskLUT[7 - _xSub]);
+    *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + _position) |= (pixelMaskLUT[7 - _xSub]);
 
     // To optimize writing pixels into EPD, framebuffer is split in half, where first half is for B&W pixels and other
     // half is for red pixels only
     if (_color < 2)
     {
-        *(DMemory4Bit + E_INK_WIDTH / 8 * y0 + _x) |= (pixelMaskLUT[7 - _x_sub]);
-        *(DMemory4Bit + E_INK_WIDTH / 8 * y0 + _x) &= ~(_color << (7 - _x_sub));
+        *(DMemory4Bit + _position) &= ~(_color << (7 - _xSub));
     }
     else
     {
-        *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + E_INK_WIDTH / 8 * y0 + _x) |= (pixelMaskLUT[7 - _x_sub]);
-        *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + E_INK_WIDTH / 8 * y0 + _x) &= ~(pixelMaskLUT[7 - _x_sub]);
+        *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + _position) &= ~(pixelMaskLUT[7 - _xSub]);
     }
 }
 
