@@ -47,7 +47,7 @@ void setup()
     display.drawTextWithShadow(0, 40, "Inkplate 2", INKPLATE2_RED, INKPLATE2_BLACK);
 
     display.setTextSize(1);
-    display.drawTextWithShadow(110, 80, "By soldered.com", INKPLATE2_RED, INKPLATE2_BLACK);
+    display.drawTextWithShadow(110, 80, "By soldered.com", INKPLATE2_BLACK, INKPLATE2_RED);
 
     // Other basic drawing functions supported
     display.drawLine(10, 80, 100, 100, INKPLATE2_RED);
