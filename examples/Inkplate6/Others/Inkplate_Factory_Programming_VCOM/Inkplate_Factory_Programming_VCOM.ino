@@ -22,13 +22,6 @@ void setup()
     display.begin();
     EEPROM.begin(512);
 
-    delay(5000);
-    //Serial.println("about to reset the VCOM voltage");
-    //EEPROM.write(EEPROMaddress, 0);
-    //EEPROM.commit();
-    Serial.println("It's been reset");
-    delay(5000);
-
     // Check if VCOM programming is not already done
     if (EEPROM.read(EEPROMaddress) != 170)
     {
