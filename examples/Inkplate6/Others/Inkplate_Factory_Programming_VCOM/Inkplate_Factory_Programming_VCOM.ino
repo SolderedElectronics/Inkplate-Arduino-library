@@ -1,62 +1,86 @@
 #include "EEPROM.h"
 #include "Inkplate.h"
 #include "image.h"
+#include "test.h"
 #include <Wire.h>
 
 Inkplate display(INKPLATE_1BIT);
 
 double vcomVoltage;
-int EEPROMaddress = 0;
+const int EEPROMaddress = 0;
 
 // Peripheral mode variables and arrays
 #define BUFFER_SIZE 1000
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
 
-const char sdCardTestStringLength = 100;
-const char *testString = {"This is some test string..."};
-
 uint8_t ioRegsInt[22];
 
 void setup()
 {
-    display.begin();
     Serial.begin(115200);
-    EEPROM.begin(64);
+    display.begin();
+    EEPROM.begin(512);
 
+    delay(5000);
+    //Serial.println("about to reset the VCOM voltage");
+    //EEPROM.write(EEPROMaddress, 0);
+    //EEPROM.commit();
+    Serial.println("It's been reset");
+    delay(5000);
+
+    // Check if VCOM programming is not already done
     if (EEPROM.read(EEPROMaddress) != 170)
     {
-        microSDCardTest();
-        display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 3, HIGH);
-        display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 4, HIGH);
-        display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 5, HIGH);
-        display.pinModeInternal(IO_INT_ADDR, ioRegsInt, 6, INPUT_PULLUP);
-        display.display();
-        display.einkOn();
-        delay(100);
-        vcomVoltage = readVCOM();
-        display.einkOff();
-        delay(1000);
-        Serial.print("\n\nStarting VCOM measurment...");
-        Serial.print("\nVCOM: ");
-        Serial.print(vcomVoltage, 2);
-        Serial.println("V");
-        delay(1000);
-        display.pinModeInternal(IO_INT_ADDR, ioRegsInt, 6,
-                                INPUT_PULLUP); // Declaring this again since it gets reset somewhere.
-        writeVCOMToEEPROM(vcomVoltage);
+        Serial.println("Read not 170, go to tests");
+        // Test all peripherals of the Inkplate (I/O expander, RTC, uSD card holder, etc).
+        // For testing old Inkplate versions with no RTC and second I/O expander use testPeripheral(1);
+        // add i2c
+        testPeripheral();
+
+        // Wait until valid VCOM has been recieved
+        uint8_t flag = getVCOMFromSerial(&vcomVoltage);
+
+        // If the flag is 1, use manual inserted VCOM voltage from UART
+        if (flag == 1)
+        {
+            display.printf("MANUAL VCOM: %.2lf", vcomVoltage);
+            display.partialUpdate();
+            if (!writeVCOMToEEPROM(vcomVoltage))
+            {
+                display.println("VCOM PROG. FAIL");
+                failHandler();
+            }
+        }
+        else if (flag == 2)
+        {
+            // If the flag is set to 2, use automatic VCOM voltage detection.
+            vcomVoltage = readVCOM();
+            display.einkOff();
+            display.println("AUTO VCOM");
+            display.partialUpdate();
+            if (!writeVCOMToEEPROM(vcomVoltage))
+            {
+                display.println("VCOM PROG. FAIL");
+                failHandler();
+            }
+        }
+
         EEPROM.write(EEPROMaddress, 170);
         EEPROM.commit();
-        display.selectDisplayMode(INKPLATE_1BIT);
     }
     else
     {
-        vcomVoltage = (double)EEPROM.read(EEPROMaddress) / 100;
+        Serial.println("VCOM already set!");
+        display.einkOn();
+        vcomVoltage = (double)(readReg(0x03) | ((uint16_t)((readReg(0x04) & 1) << 8))) / (-100);
     }
     memset(commandBuffer, 0, BUFFER_SIZE);
 
     showSplashScreen();
 }
+
+// Above is correct
 
 void loop()
 {
@@ -431,6 +455,7 @@ void writeToScreen()
     // delay(10);
 }
 
+// This function is corrected
 double readVCOM()
 {
     double vcomVolts;
@@ -450,18 +475,21 @@ double readVCOM()
     return -vcomVolts;
 }
 
-void writeVCOMToEEPROM(double v)
+// This function is corrected
+uint8_t writeVCOMToEEPROM(double v)
 {
     int vcom = int(abs(v) * 100);
     int vcomH = (vcom >> 8) & 1;
     int vcomL = vcom & 0xFF;
-    // First, we have to power up TPS65186
-    // Pull TPS65186 WAKEUP pin to High
-    display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 3, HIGH);
 
-    // Pull TPS65186 PWR pin to High
-    display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 4, HIGH);
-    delay(10);
+    // Set PCAL pin where TPS65186 INT pin is connectet to input pull up
+    display.pinModeInternal(IO_INT_ADDR, ioRegsInt, 6, INPUT_PULLUP);
+
+    // First power up TPS65186 so we can communicate with it
+    display.einkOn();
+
+    // Wait a little bit
+    delay(250);
 
     // Send to TPS65186 first 8 bits of VCOM
     writeReg(0x03, vcomL);
@@ -474,7 +502,7 @@ void writeVCOMToEEPROM(double v)
     writeReg(0x04, vcomH | (1 << 6));
 
     // Wait until EEPROM has been programmed
-    delay(1);
+    delay(100);
     do
     {
         delay(1);
@@ -484,94 +512,33 @@ void writeVCOMToEEPROM(double v)
     readReg(0x07);
 
     // Now, power off whole TPS
-    // Pull TPS65186 WAKEUP pin to Low
-    display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 3, LOW);
-
-    // Pull TPS65186 PWR pin to Low
-    display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 4, LOW);
+    display.einkOff();
 
     // Wait a little bit...
     delay(1000);
 
     // Power up TPS again
-    display.digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 3, HIGH);
+    display.einkOn();
 
     delay(10);
 
     // Read VCOM valuse from registers
     vcomL = readReg(0x03);
     vcomH = readReg(0x04);
-
     Serial.print("Vcom: ");
     Serial.println(vcom);
     Serial.print("Vcom register: ");
-    Serial.println((vcomL | (vcomH << 8)));
+    Serial.println(vcomL | (vcomH << 8));
 
     if (vcom != (vcomL | (vcomH << 8)))
     {
         Serial.println("\nVCOM EEPROM PROGRAMMING FAILED!\n");
+        return 0;
     }
     else
     {
         Serial.println("\nVCOM EEPROM PROGRAMMING OK\n");
+        return 1;
     }
-}
-
-int checkMicroSDCard()
-{
-    int sdInitOk = 0;
-    sdInitOk = display.sdCardInit();
-
-    if (sdInitOk)
-    {
-        File file;
-
-        if (file.open("/testFile.txt", O_CREAT | O_RDWR))
-        {
-            file.print(testString);
-            file.close();
-        }
-        else
-        {
-            return 0;
-        }
-
-        delay(250);
-
-        if (file.open("/testFile.txt", O_RDWR))
-        {
-            char sdCardString[sdCardTestStringLength];
-            file.read(sdCardString, sizeof(sdCardString));
-            sdCardString[file.fileSize()] = 0;
-            int stringCompare = strcmp(testString, sdCardString);
-            file.remove();
-            file.close();
-            if (stringCompare != 0)
-                return 0;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-    else
-    {
-        return 0;
-    }
-    return 1;
-}
-
-void microSDCardTest()
-{
-    display.setTextSize(4);
-    display.setCursor(100, 100);
-    display.print("microSD card slot test ");
-
-    if (!checkMicroSDCard())
-    {
-        display.print("FAIL!");
-        display.display();
-        while(1);
-    }
-    display.clearDisplay();
+    return 0;
 }
