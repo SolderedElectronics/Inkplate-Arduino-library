@@ -62,6 +62,7 @@ void setup()
             Serial.print("\n\nAuto VCOM voltage: ");
             Serial.println(vcomVoltage);
 
+            // Code stops here
             while(true)
             delay(100);
 

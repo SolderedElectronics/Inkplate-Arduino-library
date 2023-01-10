@@ -3,16 +3,21 @@
 const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
 
-const char *WSSID = {"Soldered"};
-const char *WPASS = {"dasduino"};
+// Change this to your WiFi
+const char *WSSID = {""};
+const char *WPASS = {""};
 
-void testPeripheral(uint8_t _oldInkplate)
+// Change this to your used slave device
+const uint8_t easyCDeviceAddress = 0x28;
+
+// Test all peripherals
+void testPeripheral()
 {
     // Set display for test report
     display.setTextSize(3);
     display.setTextColor(BLACK);
-    display.setCursor(0, 0);
-    display.println("INKPLATE CHECKLIST");
+    display.setCursor(50, 50);
+    display.println("INKPLATE TEST CHECKLIST");
 
     //  Power up epaper PSU
     display.einkOn();
@@ -30,7 +35,6 @@ void testPeripheral(uint8_t _oldInkplate)
     // Check I/O expander 1
     display.printf("- I/O Expander 1: ");
     display.partialUpdate(0, 1);
-
     // Try to communicate with I/O expander
     Wire.beginTransmission(IO_INT_ADDR); // Send address 0x20
     if (Wire.endTransmission() ==
@@ -48,7 +52,6 @@ void testPeripheral(uint8_t _oldInkplate)
     // Check I/O expander 2
     display.printf("- I/O Expander 2: ");
     display.partialUpdate(0, 1);
-
     // Try to communicate with I/O expander
     Wire.beginTransmission(IO_EXT_ADDR); // Send address 0x21
     if (Wire.endTransmission() ==
@@ -91,8 +94,6 @@ void testPeripheral(uint8_t _oldInkplate)
         failHandler();
     }
 
-    // First version of the Inkplate doesn't have RTC.
-
     // Check the RTC
     display.print("- PCF85063 RTC: ");
     if (rtcCheck())
@@ -106,12 +107,11 @@ void testPeripheral(uint8_t _oldInkplate)
         failHandler();
     }
 
-
     // Check I2C (easyc)
-    // A slave must be connected via easyC address (0x28)
+    // A slave must be connected via easyC address set in this file
     display.print("- I2C (easyC): ");
     display.partialUpdate(0, 1);
-    if (checkI2C(0x28))
+    if (checkI2C(easyCDeviceAddress))
     {
         display.println("OK");
         display.partialUpdate(0, 1);
@@ -123,7 +123,6 @@ void testPeripheral(uint8_t _oldInkplate)
     }
 
     // Check battery
-    // A battery must be connected
     display.print("- Battery and temperature: ");
     display.partialUpdate(0, 1);
     if (checkBatteryAndTemp())
@@ -151,50 +150,6 @@ void testPeripheral(uint8_t _oldInkplate)
         failHandler();
     }
 #endif
-}
-
-double getVCOMFromSerial(double *_vcom)
-{
-    double vcom = 1;
-    char serialBuffer[50];
-    unsigned long serialTimeout;
-
-    // Display a message on Inkplate
-    display.print("\r\n- Write VCOM on UART: ");
-    display.partialUpdate(0, 1);
-
-    while (true)
-    {
-        Serial.println(
-            "Write VCOM voltage from epaper panel.\r\nDon't forget negative (-) sign!\r\nUse dot as the decimal point. "
-            "For example -1.23\nIf it's used automatic VCOM voltage detection, send \"AUTO\"");
-        while (!Serial.available())
-            ;
-
-        serialTimeout = millis();
-        int i = 0;
-        while ((Serial.available()) && ((unsigned long)(millis() - serialTimeout) < 500))
-        {
-            if ((Serial.available()) && (i < 49))
-            {
-                serialBuffer[i++] = Serial.read();
-                serialTimeout = millis();
-            }
-        }
-        serialBuffer[i] = 0;
-        if (sscanf(serialBuffer, "%lf", &vcom) == 1)
-        {
-            *_vcom = vcom;
-            return 1;
-        }
-        else if (strstr(serialBuffer, "AUTO") != NULL)
-        {
-            *_vcom = 0;
-            return 2;
-        }
-    }
-
-    return 0;
 }
 
 int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)
