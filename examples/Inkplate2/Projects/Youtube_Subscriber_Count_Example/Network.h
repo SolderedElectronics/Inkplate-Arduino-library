@@ -16,11 +16,11 @@ Distributed as-is; no warranty is given.
 
 #include "Arduino.h"
 
+#include "Inkplate.h"
+#include <ArduinoJson.h>
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-#include <ArduinoJson.h>
-#include "Inkplate.h"
 
 struct channelInfo
 {
@@ -39,12 +39,15 @@ class Network
 {
   public:
     // Functions we can access in main file
-    void begin(char * ssid, char * pass);
-    bool getData(channelInfo *channel, char * channel_id, char * api_key, Inkplate * display);
+    void begin(char *ssid, char *pass);
+    bool getData(channelInfo *channel, char *channel_id, char *api_key, Inkplate *display);
 
   private:
     // Functions called from within our class
     int getRequest(WiFiClientSecure *client, char *_api_root_url, char *_api_call_url);
+
+    // Dynamic Json from ArduinoJson library
+    DynamicJsonDocument * doc;
 };
 
 #endif

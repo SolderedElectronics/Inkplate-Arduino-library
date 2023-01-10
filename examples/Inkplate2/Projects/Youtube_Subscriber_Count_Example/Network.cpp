@@ -17,7 +17,7 @@ Distributed as-is; no warranty is given.
 #include "Network.h"
 
 
-void Network::begin(char * ssid, char * pass)
+void Network::begin(char *ssid, char *pass)
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
@@ -39,9 +39,12 @@ void Network::begin(char * ssid, char * pass)
         }
     }
     Serial.println(F(" connected"));
+
+    // Create JSON document
+    doc = new DynamicJsonDocument(2000);
 }
 
-bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, Inkplate * display)
+bool Network::getData(channelInfo *channel, char *channel_id, char *api_key, Inkplate *display)
 {
     bool f = 0;
 
@@ -81,18 +84,18 @@ bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, 
     sprintf(request, "www.googleapis.com/youtube/v3/channels?part=statistics&id=%s&key=%s", channel_id, api_key);
 
     Serial.println("Fetching data!");
-    
-    int result = getRequest(&client1, "www.googleapis.com",request);
-    if(result == 0)
+
+    int result = getRequest(&client1, "www.googleapis.com", request);
+    if (result == 0)
     {
         Serial.println("HTTP Error!");
         Serial.println("Restarting...");
         delay(100);
         ESP.restart();
-    } 
-    else if(result == 404)
+    }
+    else if (result == 404)
     {
-        // Channel was not found via ID 
+        // Channel was not found via ID
 
         Serial.println("Can't find YT channel!");
         display->clearDisplay();
@@ -100,13 +103,11 @@ bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, 
         display->setTextSize(2);
         display->println(F("Channel info has not been found!"));
         display->display();
-        while(1) ;
+        while (1)
+            ;
     }
 
-    // Dynamic Json from ArduinoJson library
-    DynamicJsonDocument doc(5000);    
-
-    DeserializationError error = deserializeJson(doc, client1);
+    DeserializationError error = deserializeJson(*doc, client1);
 
     if (error)
     {
@@ -114,22 +115,22 @@ bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, 
         Serial.println(error.c_str());
         f = 1;
     }
-    else if (doc["items"].size() > 0)
+    else if ((*doc)["items"].size() > 0)
     {
         // Set all data got from internet using formatTemp and formatWind defined above
         // This part relies heavily on ArduinoJson library
 
         Serial.println("Success");
 
-        channel->total_views = doc["items"][0]["statistics"]["viewCount"].as<unsigned long long>();
+        channel->total_views = (*doc)["items"][0]["statistics"]["viewCount"].as<unsigned long long>();
         Serial.print("Total views: ");
         Serial.println(channel->total_views);
 
-        channel->subscribers = doc["items"][0]["statistics"]["subscriberCount"].as<unsigned long long>();
+        channel->subscribers = (*doc)["items"][0]["statistics"]["subscriberCount"].as<unsigned long long>();
         Serial.print("Subscribers: ");
         Serial.println(channel->subscribers);
 
-        channel->video_count = doc["items"][0]["statistics"]["videoCount"].as<int>();
+        channel->video_count = (*doc)["items"][0]["statistics"]["videoCount"].as<int>();
         Serial.print("Videos: ");
         Serial.println(channel->video_count);
 
@@ -138,26 +139,26 @@ bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, 
 
     client1.flush();
     client1.setTimeout(10);
-    doc.clear();
+    doc->clear();
     client1.stop();
 
     // WiFiClientSecure object used to make GET request
     WiFiClientSecure client2;
-    
+
     // To get the channel name, access the 'snippet' YouTube API
     memset(request, 0, 182 * sizeof(char));
     sprintf(request, "www.googleapis.com/youtube/v3/channels?part=snippet&id=%s&key=%s", channel_id, api_key);
-    result = getRequest(&client2, "www.googleapis.com",request);
-    if(result == 0)
+    result = getRequest(&client2, "www.googleapis.com", request);
+    if (result == 0)
     {
         Serial.println("HTTP Error!");
         Serial.println("Restarting...");
         delay(100);
         ESP.restart();
-    } 
-    else if(result == 404)
+    }
+    else if (result == 404)
     {
-        // Channel was not found via ID 
+        // Channel was not found via ID
 
         Serial.println("Can't find YT channel!");
         display->clearDisplay();
@@ -165,10 +166,11 @@ bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, 
         display->setTextSize(2);
         display->println(F("Channel info has not been found!"));
         display->display();
-        while(1) ;
+        while (1)
+            ;
     }
 
-    error = deserializeJson(doc, client2);
+    error = deserializeJson(*doc, client2);
 
     if (error)
     {
@@ -176,14 +178,14 @@ bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, 
         Serial.println(error.c_str());
         f = 1;
     }
-    else if (doc["items"].size() > 0)
+    else if ((*doc)["items"].size() > 0)
     {
         // Set all data got from internet using formatTemp and formatWind defined above
         // This part relies heavily on ArduinoJson library
 
         Serial.println("Success");
 
-        const char *buff = doc["items"][0]["snippet"]["title"];
+        const char *buff = (*doc)["items"][0]["snippet"]["title"];
         strcpy(channel->name, buff);
         Serial.print("Channel name: ");
         Serial.println(channel->name);
@@ -194,7 +196,7 @@ bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, 
 
     client2.flush();
     client2.setTimeout(10);
-    doc.clear();
+    doc->clear();
     client2.stop();
 
     // Return to initial state
@@ -203,12 +205,12 @@ bool Network::getData(channelInfo * channel, char * channel_id, char * api_key, 
     return !f;
 }
 
-int Network:: getRequest(WiFiClientSecure * client, char * _api_root_url, char * _api_call_url)
+int Network::getRequest(WiFiClientSecure *client, char *_api_root_url, char *_api_call_url)
 {
     // Don't check SSL certificate but still use HTTPS
     client->setInsecure();
 
-    if(!client->connect(_api_root_url,443))
+    if (!client->connect(_api_root_url, 443))
     {
         return 0;
     }
