@@ -14,13 +14,18 @@ const int EEPROMaddress = 0;
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
 
-uint8_t ioRegsInt[22];
-
 void setup()
 {
     Serial.begin(115200);
     display.begin();
     EEPROM.begin(512);
+
+    Serial.println("resetting vcom voltage..");
+    delay(2000);
+    EEPROM.write(EEPROMaddress, 0);
+    EEPROM.commit();
+    Serial.println("It's been reset!");
+    delay(2000);
 
     // Check if VCOM programming is not already done
     if (EEPROM.read(EEPROMaddress) != 170)
@@ -29,7 +34,9 @@ void setup()
         // Test all peripherals of the Inkplate (I/O expander, RTC, uSD card holder, etc).
         // For testing old Inkplate versions with no RTC and second I/O expander use testPeripheral(1);
         // add i2c
-        testPeripheral();
+        
+        // todo uncomment this:
+        //testPeripheral();
 
         // Wait until valid VCOM has been recieved
         uint8_t flag = getVCOMFromSerial(&vcomVoltage);
@@ -52,6 +59,12 @@ void setup()
             display.einkOff();
             display.println("AUTO VCOM");
             display.partialUpdate();
+            Serial.print("\n\nAuto VCOM voltage: ");
+            Serial.println(vcomVoltage);
+
+            while(true)
+            delay(100);
+
             if (!writeVCOMToEEPROM(vcomVoltage))
             {
                 display.println("VCOM PROG. FAIL");
@@ -442,22 +455,32 @@ void showSplashScreen()
 // Inkplate 6 Null waveform
 void writeToScreen()
 {
+    // Prepare the panel for the VCOM measurement
+    display.clearDisplay();
+    display.display(1);
+
+    // Waveform for VCOM measurement.
     display.clean(1, 8);
+    delay(5000);
     display.clean(0, 2);
+    delay(5000);
     display.clean(2, 10);
-    // delay(10);
+    delay(5000);
+
+    //delay(10);
 }
 
-// This function is corrected
+// todo: fix this
+// Do not use until until null waveform is set correctly
 double readVCOM()
 {
     double vcomVolts;
-    writeReg(0x01, B00111111); // enable all rails
+    writeReg(0x01, B00111111); // Enable all rails
     writeReg(0x04, (readReg(0x04) | B00100000));
     writeToScreen();
     writeReg(0x04, (readReg(0x04) | B10000000));
     delay(10);
-    while (display.digitalReadInternal(IO_INT_ADDR, ioRegsInt, 6))
+    while (display.digitalReadIO(6, IO_INT_ADDR))
     {
         delay(1);
     };
@@ -465,6 +488,8 @@ double readVCOM()
     uint16_t vcom = ((readReg(0x04) & 1) << 8) | readReg(0x03);
     vcomVolts = vcom * 10 / 1000.0;
     display.einkOff();
+    Serial.print("VCOM VOLTS:");
+    Serial.println(vcomVolts);
     return -vcomVolts;
 }
 
@@ -476,7 +501,7 @@ uint8_t writeVCOMToEEPROM(double v)
     int vcomL = vcom & 0xFF;
 
     // Set PCAL pin where TPS65186 INT pin is connectet to input pull up
-    display.pinModeInternal(IO_INT_ADDR, ioRegsInt, 6, INPUT_PULLUP);
+    display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);
 
     // First power up TPS65186 so we can communicate with it
     display.einkOn();
@@ -499,7 +524,7 @@ uint8_t writeVCOMToEEPROM(double v)
     do
     {
         delay(1);
-    } while (display.digitalReadInternal(IO_INT_ADDR, ioRegsInt, 6));
+    } while (display.digitalReadInternal(IO_INT_ADDR, display.ioRegsInt, 6));
 
     // Clear Interrupt flag by reading INT1 register
     readReg(0x07);

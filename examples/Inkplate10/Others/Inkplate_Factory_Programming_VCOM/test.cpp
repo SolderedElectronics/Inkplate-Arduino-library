@@ -27,12 +27,12 @@ void testPeripheral(uint8_t _oldInkplate)
     display.println("- TPS65186: OK");
     display.partialUpdate(0, 1);
 
-    // Check I/O expander internal
-    display.printf("- I/O Expander Internal:");
+    // Check I/O expander 1
+    display.printf("- I/O Expander 1: ");
     display.partialUpdate(0, 1);
 
     // Try to communicate with I/O expander
-    Wire.beginTransmission(IO_INT_ADDR);
+    Wire.beginTransmission(IO_INT_ADDR); // Send address 0x20
     if (Wire.endTransmission() ==
         0) // Check if there was an error in communication and print out the results on display.
     {
@@ -45,12 +45,12 @@ void testPeripheral(uint8_t _oldInkplate)
         failHandler();
     }
 
-    // Check I/O expander 1
-    display.printf("- I/O Expander External:");
+    // Check I/O expander 2
+    display.printf("- I/O Expander 2: ");
     display.partialUpdate(0, 1);
 
     // Try to communicate with I/O expander
-    Wire.beginTransmission(IO_EXT_ADDR);
+    Wire.beginTransmission(IO_EXT_ADDR); // Send address 0x21
     if (Wire.endTransmission() ==
         0) // Check if there was an error in communication and print out the results on display.
     {
@@ -287,19 +287,16 @@ int checkBatteryAndTemp()
 
     temperature = display.readTemperature();
     voltage = display.readBattery();
-
-    Serial.println(temperature);
     Serial.println(temperature);
     Serial.println(voltage);
-    Serial.println(voltage);
 
-    // ToDo print napone na display
+    // ToDo check if these kinds of checks are OK?
 
     if (temperature < -10 || temperature > 85)
     {
         result = 0;
     }
-    if (voltage <= 3 || voltage > 4.3)
+    if (voltage <= 0 || voltage > 100)
     {
         result = 0;
     }
