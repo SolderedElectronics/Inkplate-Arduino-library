@@ -120,7 +120,7 @@ void setup()
     if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
                            "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced_Inkplate_Features/"
                            "Inkplate_Web_Pictures/panzer.png",
-                           0, 0, false, false))
+                           0, 0, true, false))
     {
         // If is something failed (wrong filename or format), write error message on the screen.
         display.println("Image open error");
