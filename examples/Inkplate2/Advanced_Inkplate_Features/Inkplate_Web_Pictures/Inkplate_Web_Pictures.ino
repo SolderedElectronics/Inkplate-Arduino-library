@@ -35,6 +35,11 @@ void setup()
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
 
+    // Set settings for error printing
+    display.setCursor(10,10);
+    display.setTextSize(2);
+    display.setTextColor(BLACK);
+
     // Connect to the WiFi network.
     WiFi.mode(WIFI_MODE_STA);
     WiFi.begin(ssid, password);
@@ -119,15 +124,14 @@ void setup()
     // image.
     if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
                            "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced_Inkplate_Features/"
-                           "Inkplate_Web_Pictures/panzer.png",
+                           "Inkplate_Web_Pictures/mountain.png",
                            0, 0, true, false))
     {
         // If is something failed (wrong filename or format), write error message on the screen.
+        display.clearDisplay();
         display.println("Image open error");
-        display.display();
     }
     display.display(); // Refresh the display
-
     http.end(); // Close HTTP connection.
 
     WiFi.mode(WIFI_OFF); // Turn off the WiFi
