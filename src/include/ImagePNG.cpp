@@ -230,7 +230,7 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
     {
         buf = downloadFileHTTPS(url, &defaultLen);
     }
-
+    
     if (!buf)
         return 0;
 

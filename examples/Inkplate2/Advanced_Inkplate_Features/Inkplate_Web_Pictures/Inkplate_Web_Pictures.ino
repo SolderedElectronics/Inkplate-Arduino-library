@@ -47,23 +47,26 @@ void setup()
     Serial.println("Connected!");
 
     // Draw the first image from web.
-    // Monochromatic bitmap with 1 bit depth. Images like this load quickest.
+    // Make sure the link is complete and correct (contains https:// or http://).
+    // The example image is a monochromatic bitmap with 1 bit depth. Images like this load quickest.
     // NOTE: Both drawImage methods allow for an optional fifth "invert" parameter. Setting this parameter to true
     // will flip all colors on the image, making black white and white black. This may be necessary when exporting
-    // bitmaps from certain softwares. Forth parameter will dither the image, but this image is already dithered
+    // bitmaps from certain softwares.
+    // Fourth parameter will dither the image, but this image is already dithered
     // so it is not needed to dither it again while drawing.
-    if (!display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
+    display.clearDisplay();
+
+    if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
                            "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced_Inkplate_Features/"
                            "Inkplate_Web_Pictures/dithered.jpg",
                            0, 0, false, false))
     {
-        // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
+        // If is something failed (wrong url or unsupported format), write error message on the screen.
         // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
         display.println("Image open error");
     }
     display.display(); // Refresh the display
-
-    delay(8000); // Wait a litte bit
+    delay(8000);       // Wait a little bit
 
     // Draw the second image from web, this time using a HTTPClient to fetch the response manually.
     // Full color 24 bit images are large and take a long time to load, will take around 20 secs.
@@ -72,7 +75,7 @@ void setup()
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1);
 
-    http.begin("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
+    http.begin("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
                "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced_Inkplate_Features/"
                "Inkplate_Web_Pictures/Inkplate2.bmp");
 
@@ -114,7 +117,7 @@ void setup()
     // NOTE: Both drawJpegFromWeb methods allow for an optional fifth "invert" parameter. Setting this parameter to
     // true will flip all colors on the image, making black white and white black. fourth parameter will dither the
     // image.
-    if (!display.drawImage("https://raw.githubusercontent.com/e-radionicacom/Inkplate-Arduino-library/"
+    if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
                            "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced_Inkplate_Features/"
                            "Inkplate_Web_Pictures/panzer.png",
                            0, 0, false, false))

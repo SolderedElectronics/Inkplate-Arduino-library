@@ -209,6 +209,7 @@ bool Image::drawBitmapFromSd(SdFile *p, int x, int y, bool dither, bool invert)
  */
 bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool invert)
 {
+    Serial.println("Draw bitmap from web classeD?");
     bool ret = 0;
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
     uint8_t *buf = 0;
@@ -221,7 +222,6 @@ bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool i
     {
         buf = downloadFileHTTPS(url, &defaultLen);
     }
-
 
     ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
     free(buf);
@@ -276,6 +276,7 @@ bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dit
  */
 bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert)
 {
+    
     bitmapHeader bmpHeader;
 
     readBmpHeader(buf, &bmpHeader);

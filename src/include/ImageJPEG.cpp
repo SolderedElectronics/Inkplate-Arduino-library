@@ -161,7 +161,16 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position,
     bool ret = 0;
 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4;
-    uint8_t *buff = downloadFile(url, &defaultLen);
+
+    uint8_t *buff = 0;
+    if (strncmp(url, "http://", 7) == 0)
+    {
+        buff = downloadFile(url, &defaultLen);
+    }
+    else if (strncmp(url, "https://", 8) == 0)
+    {
+        buff = downloadFileHTTPS(url, &defaultLen);
+    }
 
     uint16_t w = 0;
     uint16_t h = 0;
@@ -319,7 +328,9 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
     int err = TJpgDec.drawJpg(x, y, buff, len, dither, invert);
 
     if (err == 0)
+    {
         ret = 1;
+    }
 
     return ret;
 };

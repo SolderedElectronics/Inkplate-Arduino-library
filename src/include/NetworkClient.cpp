@@ -51,6 +51,7 @@ bool NetworkClient::joinAP(const char *ssid, const char *pass)
     }
 
     Serial.println();
+
     return 1;
 }
 
@@ -73,36 +74,140 @@ bool NetworkClient::isConnected()
 }
 
 /**
+ * @brief       Get the hostname from a given URL. Used in downloadFile functions.
+ *
+ * @note        For "https://www.test.example.com/resource/123" returns "www.test.example.com"
+ *
+ * @param       const char * urlToGetHostFrom
+ *              Char array which contains the full url
+ *
+ * @return      Char * string of host name
+ */
+char *NetworkClient::getHostFromURL(const char *urlToGetHostFrom)
+{
+    // Check if url is HTTP or HTTPS
+    int offsetToGetToBeginningOfHost = 0;
+
+    if (urlToGetHostFrom[4] == 's')
+    {
+        offsetToGetToBeginningOfHost = 8;
+    }
+    else if (urlToGetHostFrom[4] == ':')
+    {
+        offsetToGetToBeginningOfHost = 7;
+    }
+
+    // Get the URL without http/https
+    const char *urlWithoutHTTPS = &urlToGetHostFrom[8];
+
+    // Find where the host name ends
+    char *p;
+    const char *resourceBegin = "/"; // Host name ends at the first '/'
+    p = strstr(urlWithoutHTTPS, resourceBegin);
+    int indexOfCharWhenHostEnds = (int)(p - urlWithoutHTTPS);
+
+    // Make the host substring
+    char *host = new char[indexOfCharWhenHostEnds];
+    memcpy(host, urlWithoutHTTPS, indexOfCharWhenHostEnds);
+    host[indexOfCharWhenHostEnds] = '\0'; // Add null terminator
+
+    return host;
+}
+
+
+/**
+ * @brief       Get the path to resource from a given URL. Used in downloadFile functions.
+ *
+ * @note        For "https://www.test.example.com/resource/123" returns "/resource/123"
+ *
+ * @param       char * urlToGetPathToResourceFrom
+ *              Char array which contains the full url
+ *
+ * @return      Char * string of resource string
+ */
+char *NetworkClient::getPathToResourceFromURL(const char *urlToGetPathToResourceFrom)
+{
+    // Check if url is HTTP or HTTPS
+    int offsetToGetToBeginningOfHost = 0;
+
+    if (urlToGetPathToResourceFrom[4] == 's')
+    {
+        offsetToGetToBeginningOfHost = 8;
+    }
+    else if (urlToGetPathToResourceFrom[4] == ':')
+    {
+        offsetToGetToBeginningOfHost = 7;
+    }
+
+    // Get the URL without http/https
+    const char *urlWithoutHTTPS = &urlToGetPathToResourceFrom[8];
+
+    // Find where the host name ends
+    char *p;
+    const char *resourceBegin = "/";
+    p = strstr(urlWithoutHTTPS, resourceBegin);
+    int indexOfCharWhenHostEnds = (int)(p - urlWithoutHTTPS);
+    int resourceLen = strlen(urlWithoutHTTPS) - indexOfCharWhenHostEnds;
+
+    // Make new pathToResource string
+    char *pathToResource = new char[resourceLen];
+    memcpy(pathToResource, urlWithoutHTTPS + indexOfCharWhenHostEnds, resourceLen);
+    pathToResource[resourceLen] = '\0'; // Add null terminator
+
+    return pathToResource;
+}
+
+
+/**
  * @brief       Download a file via https
  *
  * @param       char *url
  *              pointer to URL link that holds file
+ * 
  * @param       uint32_t *defaultLen
- *              pointer that holds assumed length of file in bytes, will be
- * checked before download
+ *              Pointer that holds assumed length of file in bytes, will be
+ *              checked before download
  *
  * @return      pointer to buffer that holds downloaded file
  */
 uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
 {
     if (!isConnected())
-    {
         return NULL;
+
+    // Get Host name and path to resource from URL
+    char *host = getHostFromURL(url);
+    char *pathToResource = getPathToResourceFromURL(url);
+
+    // Create a new WiFiClientSecure for a new connection
+    client = (WiFiClientSecure *)ps_malloc(sizeof(WiFiClientSecure));
+    client = new WiFiClientSecure();
+    client->setInsecure(); // Use HTTPS but don't check cert
+    client->setHandshakeTimeout(30);
+    client->setTimeout(30);
+
+    // Connect
+    if (!client->connect(host, 443))
+    {
+        Serial.println(F("WiFiClientSecure connect Error!"));
     }
 
-    WiFiClientSecure client; // For HTTPS
-    client.setInsecure();    // Use HTTPS but don't compare certificate
-    client.flush();
-    client.setTimeout(10);
-
+    // Remember sleep state and then wake up
     bool sleep = WiFi.getSleep();
     WiFi.setSleep(false);
 
+    // Create a new HTTP client and connect using HTTPS
     HTTPClient http;
     http.getStream().setNoDelay(true);
-    http.getStream().setTimeout(1);
+    http.getStream().setTimeout(30);
+    http.setTimeout(30);
+    http.setConnectTimeout(30);
+    if (!http.begin(*client, host, 443, pathToResource, true))
+    {
+        Serial.println("HTTPS begin Error!");
+    }
 
-
+    // Make GET
     int httpCode = http.GET();
 
     int32_t size = http.getSize();
@@ -116,9 +221,10 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
 
     if (httpCode == HTTP_CODE_OK)
     {
-        int32_t total = http.getSize();
-        int32_t len = total;
+        // Read data and store in buffer
 
+        int32_t total = size;
+        int32_t len = total;
         uint8_t buff[512] = {0};
 
         WiFiClient *stream = http.getStreamPtr();
@@ -142,8 +248,10 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
         }
     }
 
+    // End connection
     http.end();
-    client.stop();
+    client->stop();
+    client->~WiFiClientSecure();
     WiFi.setSleep(sleep);
 
     return buffer;
