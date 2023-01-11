@@ -163,7 +163,7 @@ char *NetworkClient::getPathToResourceFromURL(const char *urlToGetPathToResource
  *
  * @param       char *url
  *              pointer to URL link that holds file
- * 
+ *
  * @param       uint32_t *defaultLen
  *              Pointer that holds assumed length of file in bytes, will be
  *              checked before download

@@ -276,7 +276,7 @@ bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dit
  */
 bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert)
 {
-    
+
     bitmapHeader bmpHeader;
 
     readBmpHeader(buf, &bmpHeader);
