@@ -32,46 +32,21 @@ void setup()
     if (EEPROM.read(EEPROMaddress) != 170)
     {
         Serial.println("Read not 170, go to tests");
+
         // Test all peripherals of the Inkplate (I/O expander, RTC, uSD card holder, etc).
         // For testing old Inkplate versions with no RTC and second I/O expander use testPeripheral(1);
-        // add i2c
-        
-        // todo uncomment this:
-        //testPeripheral();
+        testPeripheral();
 
         // Wait until valid VCOM has been recieved
         uint8_t flag = getVCOMFromSerial(&vcomVoltage);
 
         // If the flag is 1, use manual inserted VCOM voltage from UART
-        if (flag == 1)
+        display.printf("MANUAL VCOM: %.2lf", vcomVoltage);
+        display.partialUpdate();
+        if (!writeVCOMToEEPROM(vcomVoltage))
         {
-            display.printf("MANUAL VCOM: %.2lf", vcomVoltage);
-            display.partialUpdate();
-            if (!writeVCOMToEEPROM(vcomVoltage))
-            {
-                display.println("VCOM PROG. FAIL");
-                failHandler();
-            }
-        }
-        else if (flag == 2)
-        {
-            // If the flag is set to 2, use automatic VCOM voltage detection.
-            vcomVoltage = readVCOM();
-            display.einkOff();
-            display.println("AUTO VCOM");
-            display.partialUpdate();
-            Serial.print("\n\nAuto VCOM voltage: ");
-            Serial.println(vcomVoltage);
-
-            // Code stops here
-            while(true)
-            delay(100);
-
-            if (!writeVCOMToEEPROM(vcomVoltage))
-            {
-                display.println("VCOM PROG. FAIL");
-                failHandler();
-            }
+            display.println("VCOM PROG. FAIL");
+            failHandler();
         }
 
         EEPROM.write(EEPROMaddress, 170);
@@ -87,8 +62,6 @@ void setup()
 
     showSplashScreen();
 }
-
-// Above is correct
 
 void loop()
 {
@@ -452,38 +425,6 @@ void showSplashScreen()
     display.print(vcomVoltage, 2);
     display.print("V");
     display.display();
-}
-
-// Inkplate 6 Null waveform
-void writeToScreen()
-{
-    // Prepare the panel for the VCOM measurement
-    display.clearDisplay();
-    display.display();
-    // Waveform for VCOM measurement.
-    display.clean(1, 8);
-    display.clean(0, 2);
-    display.clean(2, 10);
-}
-
-// todo: fix this
-// Do not use until until null waveform is set correctly
-double readVCOM()
-{
-    double vcomVolts;
-    writeReg(0x01, B00111111); // Enable all rails
-    writeReg(0x04, (readReg(0x04) | B00100000));
-    writeToScreen();
-    writeReg(0x04, (readReg(0x04) | B10000000));
-    delay(500);
-    uint16_t vcom = ((readReg(0x04) & 1) << 8) | readReg(0x03);
-    Serial.print("vcom: ");
-    Serial.println(vcom);
-    vcomVolts = vcom * 10 / 1000.0;
-    display.einkOff();
-    Serial.print("VCOM VOLTS:");
-    Serial.println(-vcomVolts);
-    return -vcomVolts;
 }
 
 // This function is corrected

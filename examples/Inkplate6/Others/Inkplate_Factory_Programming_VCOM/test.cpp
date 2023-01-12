@@ -167,7 +167,7 @@ double getVCOMFromSerial(double *_vcom)
     {
         Serial.println(
             "Write VCOM voltage from epaper panel.\r\nDon't forget negative (-) sign!\r\nUse dot as the decimal point. "
-            "For example -1.23\nIf it's used automatic VCOM voltage detection, send \"AUTO\"");
+            "For example -1.23\n");
         while (!Serial.available())
             ;
 
@@ -186,11 +186,6 @@ double getVCOMFromSerial(double *_vcom)
         {
             *_vcom = vcom;
             return 1;
-        }
-        else if (strstr(serialBuffer, "AUTO") != NULL)
-        {
-            *_vcom = 0;
-            return 2;
         }
     }
 
