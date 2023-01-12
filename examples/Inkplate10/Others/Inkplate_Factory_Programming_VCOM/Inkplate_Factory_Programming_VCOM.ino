@@ -113,7 +113,7 @@ void setup()
         display.selectDisplayMode(INKPLATE_3BIT);
 
         // Select the waveform via serial
-        // Write "ACCEPT" to confirm input
+        // Write "OK" to confirm input
         int result = 1;
         do
         {
@@ -621,7 +621,7 @@ int getWaveformFromSerial(int *selected)
 
     while (true)
     {
-        Serial.println("Write '1', '2' or '3' to select waveform.\nWrite 'ACCEPT' to confirm.");
+        Serial.println("Write '1', '2' or '3' to select waveform.\nWrite 'OK' to confirm.");
         while (!Serial.available())
             ;
 
@@ -651,7 +651,7 @@ int getWaveformFromSerial(int *selected)
             *selected = 2;
             return 1;
         }
-        else if (strstr(serialBuffer, "ACCEPT") != NULL)
+        else if (strstr(serialBuffer, "OK") != NULL)
         {
             return 0;
         }
