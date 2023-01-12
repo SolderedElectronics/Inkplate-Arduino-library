@@ -267,6 +267,6 @@ int hexToChar(char c)
 void showSplashScreen()
 {
     display.clearDisplay();
-    display.drawImage(demo_image, 0, 0, demo_image_w, demo_image_h);
+    display.drawImage(Inkplate_6_COLOR_, 0, 0, Inkplate_6_COLOR_w, Inkplate_6_COLOR_h);
     display.display();
 }

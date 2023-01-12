@@ -12,15 +12,6 @@ void testPeripheral()
     // Send test reports to the UART (this epaper is slow and does not support partial update)
     Serial.println("INKPLATE CHECKLIST");
 
-    // Check if epaper PSU (TPS65186 EPD PMIC) is ok.
-    Wire.beginTransmission(0x48);       // Send address 0x48 on I2C
-    if (!(Wire.endTransmission() == 0)) // Check if there was an error in communication
-    {
-        Serial.println("- TPS Fail!");
-        failHandler();
-    }
-    Serial.println("- TPS65186: OK");
-
     // Check I/O expander internal
     Serial.println("- I/O Expander Internal:");
     // Try to communicate with I/O expander
