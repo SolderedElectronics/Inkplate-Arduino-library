@@ -448,7 +448,7 @@ void showSplashScreen()
     display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
     display.setTextColor(0, 7);
     display.setTextSize(1);
-    display.setCursor(760, 57);
+    display.setCursor(757, 68);
     display.print(vcomVoltage, 2);
     display.print("V");
     display.display();
@@ -459,13 +459,11 @@ void writeToScreen()
 {
     // Prepare the panel for the VCOM measurement
     display.clearDisplay();
-    display.display(1);
-
+    display.display();
     // Waveform for VCOM measurement.
     display.clean(1, 8);
     display.clean(0, 2);
     display.clean(2, 10);
-    //delay(10);
 }
 
 // todo: fix this
@@ -477,13 +475,10 @@ double readVCOM()
     writeReg(0x04, (readReg(0x04) | B00100000));
     writeToScreen();
     writeReg(0x04, (readReg(0x04) | B10000000));
-    delay(10);
-    while (display.digitalReadIO(6, IO_INT_ADDR))
-    {
-        delay(1);
-    };
-    readReg(0x07);
+    delay(500);
     uint16_t vcom = ((readReg(0x04) & 1) << 8) | readReg(0x03);
+    Serial.print("vcom: ");
+    Serial.println(vcom);
     vcomVolts = vcom * 10 / 1000.0;
     display.einkOff();
     Serial.print("VCOM VOLTS:");
