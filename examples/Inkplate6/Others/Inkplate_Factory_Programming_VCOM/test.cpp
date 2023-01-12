@@ -6,7 +6,7 @@ const char *testString = {"This is some test string..."};
 const char *WSSID = {"Soldered"};
 const char *WPASS = {"dasduino"};
 
-void testPeripheral(uint8_t _oldInkplate)
+void testPeripheral()
 {
     // Set display for test report
     display.setTextSize(3);
@@ -151,45 +151,6 @@ void testPeripheral(uint8_t _oldInkplate)
         failHandler();
     }
 #endif
-}
-
-double getVCOMFromSerial(double *_vcom)
-{
-    double vcom = 1;
-    char serialBuffer[50];
-    unsigned long serialTimeout;
-
-    // Display a message on Inkplate
-    display.print("\r\n- Write VCOM on UART: ");
-    display.partialUpdate(0, 1);
-
-    while (true)
-    {
-        Serial.println(
-            "Write VCOM voltage from epaper panel.\r\nDon't forget negative (-) sign!\r\nUse dot as the decimal point. "
-            "For example -1.23\n");
-        while (!Serial.available())
-            ;
-
-        serialTimeout = millis();
-        int i = 0;
-        while ((Serial.available()) && ((unsigned long)(millis() - serialTimeout) < 500))
-        {
-            if ((Serial.available()) && (i < 49))
-            {
-                serialBuffer[i++] = Serial.read();
-                serialTimeout = millis();
-            }
-        }
-        serialBuffer[i] = 0;
-        if (sscanf(serialBuffer, "%lf", &vcom) == 1)
-        {
-            *_vcom = vcom;
-            return 1;
-        }
-    }
-
-    return 0;
 }
 
 int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)

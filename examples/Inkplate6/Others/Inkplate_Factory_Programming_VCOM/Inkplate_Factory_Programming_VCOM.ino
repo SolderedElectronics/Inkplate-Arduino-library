@@ -21,12 +21,14 @@ void setup()
     display.setTextSize(3);
     EEPROM.begin(512);
 
-    Serial.println("resetting vcom voltage..");
-    delay(2000);
-    EEPROM.write(EEPROMaddress, 0);
-    EEPROM.commit();
-    Serial.println("It's been reset!");
-    delay(2000);
+    // Uncomment if you want to write new VCOM voltage every time you run this sketch
+    // WARNING: It can only be overwritten 100 times! Keep usage to a minimum
+    //Serial.println("Resetting vcom voltage..");
+    //delay(1000);
+    //EEPROM.write(EEPROMaddress, 0);
+    //EEPROM.commit();
+    //Serial.println("It's been reset!");
+    //delay(1000);
 
     // Check if VCOM programming is not already done
     if (EEPROM.read(EEPROMaddress) != 170)
@@ -492,5 +494,45 @@ uint8_t writeVCOMToEEPROM(double v)
         Serial.println("\nVCOM EEPROM PROGRAMMING OK\n");
         return 1;
     }
+    return 0;
+}
+
+// Prompt user to enter VCOM
+double getVCOMFromSerial(double *_vcom)
+{
+    double vcom = 1;
+    char serialBuffer[50];
+    unsigned long serialTimeout;
+
+    // Display a message on Inkplate
+    display.print("\r\n- Write VCOM on UART: ");
+    display.partialUpdate(0, 1);
+
+    while (true)
+    {
+        Serial.println(
+            "Write VCOM voltage from epaper panel.\r\nDon't forget negative (-) sign!\r\nUse dot as the decimal point. "
+            "For example -1.23\n");
+        while (!Serial.available())
+            ;
+
+        serialTimeout = millis();
+        int i = 0;
+        while ((Serial.available()) && ((unsigned long)(millis() - serialTimeout) < 500))
+        {
+            if ((Serial.available()) && (i < 49))
+            {
+                serialBuffer[i++] = Serial.read();
+                serialTimeout = millis();
+            }
+        }
+        serialBuffer[i] = 0;
+        if (sscanf(serialBuffer, "%lf", &vcom) == 1)
+        {
+            *_vcom = vcom;
+            return 1;
+        }
+    }
+
     return 0;
 }
