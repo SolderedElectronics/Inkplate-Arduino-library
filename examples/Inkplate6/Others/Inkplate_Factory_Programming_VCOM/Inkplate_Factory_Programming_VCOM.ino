@@ -18,6 +18,7 @@ void setup()
 {
     Serial.begin(115200);
     display.begin();
+    display.setTextSize(3);
     EEPROM.begin(512);
 
     Serial.println("resetting vcom voltage..");
@@ -444,7 +445,7 @@ void showSplashScreen()
     display.clean(0, 1);
     display.display();
     display.selectDisplayMode(INKPLATE_3BIT);
-    display.drawBitmap3Bit(0, 0, picture1, picture1_w, picture1_h);
+    display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
     display.setTextColor(0, 7);
     display.setTextSize(1);
     display.setCursor(760, 57);
@@ -462,12 +463,8 @@ void writeToScreen()
 
     // Waveform for VCOM measurement.
     display.clean(1, 8);
-    delay(5000);
     display.clean(0, 2);
-    delay(5000);
     display.clean(2, 10);
-    delay(5000);
-
     //delay(10);
 }
 
@@ -490,7 +487,7 @@ double readVCOM()
     vcomVolts = vcom * 10 / 1000.0;
     display.einkOff();
     Serial.print("VCOM VOLTS:");
-    Serial.println(vcomVolts);
+    Serial.println(-vcomVolts);
     return -vcomVolts;
 }
 
