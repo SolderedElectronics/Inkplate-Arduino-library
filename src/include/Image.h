@@ -121,7 +121,12 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     static bool drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap, bool dither, bool invert);
 
+#ifdef ARDUINO_INKPLATE2
+    uint8_t pixelBuffer[E_INK_HEIGHT * 4 + 5];
+#else
     uint8_t pixelBuffer[E_INK_WIDTH * 4 + 5];
+#endif
+
 #ifdef ARDUINO_INKPLATECOLOR
     int8_t ditherBuffer[3][16][E_INK_WIDTH + 20];
 
@@ -136,7 +141,8 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     const int kernelX = _kernelX;
 
     const unsigned char (*kernel)[_kernelWidth] = _kernel;
-
+#elif ARDUINO_INKPLATE2
+    uint8_t ditherBuffer[2][E_INK_HEIGHT + 20];
 #else
     uint8_t ditherBuffer[2][E_INK_WIDTH + 20];
 #endif
