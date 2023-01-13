@@ -98,7 +98,7 @@ char *NetworkClient::getHostFromURL(const char *urlToGetHostFrom)
     }
 
     // Get the URL without http/https
-    const char *urlWithoutHTTPS = &urlToGetHostFrom[8];
+    const char *urlWithoutHTTPS = &urlToGetHostFrom[offsetToGetToBeginningOfHost];
 
     // Find where the host name ends
     char *p;
@@ -107,7 +107,7 @@ char *NetworkClient::getHostFromURL(const char *urlToGetHostFrom)
     int indexOfCharWhenHostEnds = (int)(p - urlWithoutHTTPS);
 
     // Make the host substring
-    char *host = new char[indexOfCharWhenHostEnds];
+    char * host = new char[indexOfCharWhenHostEnds];
     memcpy(host, urlWithoutHTTPS, indexOfCharWhenHostEnds);
     host[indexOfCharWhenHostEnds] = '\0'; // Add null terminator
 
@@ -140,7 +140,7 @@ char *NetworkClient::getPathToResourceFromURL(const char *urlToGetPathToResource
     }
 
     // Get the URL without http/https
-    const char *urlWithoutHTTPS = &urlToGetPathToResourceFrom[8];
+    const char *urlWithoutHTTPS = &urlToGetPathToResourceFrom[offsetToGetToBeginningOfHost];
 
     // Find where the host name ends
     char *p;
@@ -183,8 +183,8 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
     client = (WiFiClientSecure *)ps_malloc(sizeof(WiFiClientSecure));
     client = new WiFiClientSecure();
     client->setInsecure(); // Use HTTPS but don't check cert
-    client->setHandshakeTimeout(30);
-    client->setTimeout(30);
+    client->setHandshakeTimeout(1500);
+    client->setTimeout(1500);
 
     // Connect
     if (!client->connect(host, 443))
@@ -198,10 +198,10 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
 
     // Create a new HTTP client and connect using HTTPS
     HTTPClient http;
+    //http.getStream().setNoDelay(true);
     http.getStream().setNoDelay(true);
-    http.getStream().setTimeout(30);
-    http.setTimeout(30);
-    http.setConnectTimeout(30);
+    http.getStream().setTimeout(1000);
+
     if (!http.begin(*client, host, 443, pathToResource, true))
     {
         Serial.println("HTTPS begin Error!");
@@ -249,6 +249,7 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
     }
 
     // End connection
+    
     http.end();
     client->stop();
     client->~WiFiClientSecure();

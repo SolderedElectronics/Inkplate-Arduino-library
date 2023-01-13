@@ -26,8 +26,8 @@
 #include "WiFi.h"       //Include library for WiFi
 Inkplate display;       // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
-const char ssid[] = "";     // Your WiFi SSID
-const char password[] = ""; // Your WiFi password
+const char ssid[] = "Soldered";     // Your WiFi SSID
+const char password[] = "dasduino"; // Your WiFi password
 
 void setup()
 {
@@ -36,7 +36,7 @@ void setup()
     display.clearDisplay(); // Clear frame buffer of display
 
     // Set settings for error printing
-    display.setCursor(10,10);
+    display.setCursor(10, 10);
     display.setTextSize(2);
     display.setTextColor(BLACK);
 
@@ -63,7 +63,7 @@ void setup()
 
     if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
                            "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced_Inkplate_Features/"
-                           "Inkplate_Web_Pictures/dithered.jpg",
+                           "Inkplate_Web_Pictures/cat_dithered.jpg",
                            0, 0, false, false))
     {
         // If is something failed (wrong url or unsupported format), write error message on the screen.
@@ -82,7 +82,7 @@ void setup()
 
     http.begin("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
                "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced_Inkplate_Features/"
-               "Inkplate_Web_Pictures/Inkplate2.bmp");
+               "Inkplate_Web_Pictures/car.bmp");
 
     // Check response code.
     int httpCode = http.GET();
@@ -92,7 +92,7 @@ void setup()
         int32_t len = http.getSize();
         if (len > 0)
         {
-            if (!display.drawBitmapFromWeb(http.getStreamPtr(), 0, 0, len))
+            if (!display.drawBitmapFromWeb(http.getStreamPtr(), 0, 0, len, true, false))
             {
                 // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
                 // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no
@@ -132,7 +132,7 @@ void setup()
         display.println("Image open error");
     }
     display.display(); // Refresh the display
-    http.end(); // Close HTTP connection.
+    http.end();        // Close HTTP connection.
 
     WiFi.mode(WIFI_OFF); // Turn off the WiFi
 
