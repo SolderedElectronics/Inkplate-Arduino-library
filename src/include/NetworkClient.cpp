@@ -107,7 +107,7 @@ char *NetworkClient::getHostFromURL(const char *urlToGetHostFrom)
     int indexOfCharWhenHostEnds = (int)(p - urlWithoutHTTPS);
 
     // Make the host substring
-    char * host = new char[indexOfCharWhenHostEnds];
+    char *host = new char[indexOfCharWhenHostEnds];
     memcpy(host, urlWithoutHTTPS, indexOfCharWhenHostEnds);
     host[indexOfCharWhenHostEnds] = '\0'; // Add null terminator
 
@@ -198,7 +198,7 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
 
     // Create a new HTTP client and connect using HTTPS
     HTTPClient http;
-    //http.getStream().setNoDelay(true);
+    // http.getStream().setNoDelay(true);
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1000);
 
@@ -249,7 +249,7 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
     }
 
     // End connection
-    
+
     http.end();
     client->stop();
     client->~WiFiClientSecure();
