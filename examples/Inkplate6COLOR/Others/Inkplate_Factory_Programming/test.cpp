@@ -3,8 +3,10 @@
 const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
 
-const char *WSSID = {"Soldered"};
-const char *WPASS = {"dasduino"};
+const char *WSSID = {"Soldered-testingPurposes"};
+const char *WPASS = {"Testing443"};
+
+const uint8_t easyCDeviceAddress = 0x30;
 
 void testPeripheral()
 {
@@ -13,7 +15,7 @@ void testPeripheral()
     Serial.println("INKPLATE CHECKLIST");
 
     // Check I/O expander internal
-    Serial.println("- I/O Expander Internal:");
+    Serial.print("- I/O Expander Internal: ");
     // Try to communicate with I/O expander
     Wire.beginTransmission(IO_INT_ADDR);
     if (Wire.endTransmission() ==
@@ -28,7 +30,7 @@ void testPeripheral()
     }
 
     // Check I/O expander 1
-    Serial.println("- I/O Expander External:");
+    Serial.print("- I/O Expander External: ");
 
     // Try to communicate with I/O expander
     Wire.beginTransmission(IO_EXT_ADDR);
@@ -44,7 +46,7 @@ void testPeripheral()
     }
 
     // Check the micro SD card slot
-    Serial.println("- microSD card slot: ");
+    Serial.print("- microSD card slot: ");
     if (checkMicroSDCard())
     {
         Serial.println("OK");
@@ -56,7 +58,7 @@ void testPeripheral()
     }
 
     // Check the WiFi
-    Serial.println("- WiFi: ");
+    Serial.print("- WiFi: ");
     if (checkWiFi(WSSID, WPASS, WTIMEOUT))
     {
         Serial.println("OK");
@@ -70,7 +72,7 @@ void testPeripheral()
     // First version of the Inkplate doesn't have RTC.
 
     // Check the RTC
-    Serial.println("- PCF85063 RTC: ");
+    Serial.print("- PCF85063 RTC: ");
     if (rtcCheck())
     {
         Serial.println("OK");
@@ -84,8 +86,8 @@ void testPeripheral()
 
     // Check I2C (easyc)
     // A slave must be connected via easyC address (0x28)
-    Serial.println("- I2C (easyC): ");
-    if (checkI2C(0x28))
+    Serial.print("- I2C (easyC): ");
+    if (checkI2C(easyCDeviceAddress))
     {
         Serial.println("OK");
     }
@@ -96,10 +98,12 @@ void testPeripheral()
     }
 
     // Check battery
-    // A battery must be connected
-    Serial.println("- Battery and temperature: ");
-    if (checkBatteryAndTemp())
+    float batteryVoltage = 0.0;
+    Serial.print("- Battery: ");
+    if (checkBattery(&batteryVoltage))
     {
+        Serial.print(batteryVoltage);
+        Serial.print("V ");
         Serial.println("OK");
     }
     else
@@ -107,6 +111,28 @@ void testPeripheral()
         Serial.println("FAIL");
         failHandler();
     }
+
+    // Text wake up button
+    long beginWakeUpTest = millis();
+    int wakeButtonState = digitalRead(GPIO_NUM_36);
+    
+    Serial.println("Press WAKEUP button to finish testing...");
+    while (true)
+    {
+        long now = millis();
+        if (now - beginWakeUpTest > 30000)
+        {
+            Serial.println("WAKEUP not pressed for 30 seconds!");
+            failHandler();
+        }
+
+        if (digitalRead(GPIO_NUM_36) != wakeButtonState)
+        {
+            break;
+        }
+        delay(1);
+    }
+    Serial.println("WAKEUP button pressed!");
 }
 
 int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)
@@ -180,6 +206,7 @@ int checkMicroSDCard()
 
 int checkI2C(int address)
 {
+    Wire.setTimeOut(3000);
     Wire.beginTransmission(address);
     if (Wire.endTransmission() == 0)
     {
@@ -191,26 +218,16 @@ int checkI2C(int address)
     }
 }
 
-int checkBatteryAndTemp()
+int checkBattery(float *batVoltage)
 {
     int temperature;
     float voltage;
     int result = 1;
 
     voltage = display.readBattery();
+    *batVoltage = voltage;
 
-    Serial.println(temperature);
-    Serial.println(temperature);
-    Serial.println(voltage);
-    Serial.println(voltage);
-
-    // ToDo print napone na display
-
-    if (temperature < -10 || temperature > 85)
-    {
-        result = 0;
-    }
-    if (voltage <= 3 || voltage > 4.3)
+    if (voltage <= 0 || voltage > 100)
     {
         result = 0;
     }

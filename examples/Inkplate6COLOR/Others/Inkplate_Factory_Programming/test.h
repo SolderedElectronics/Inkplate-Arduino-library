@@ -20,7 +20,7 @@ int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout);
 int checkMicroSDCard();
 int rtcCheck();
 int checkI2C(int address);
-int checkBatteryAndTemp();
+int checkBattery(float * batVoltage);
 void failHandler();
 
 #endif

@@ -287,8 +287,6 @@ int checkBatteryAndTemp(float *temp, float *batVoltage)
     *temp = temperature;
     *batVoltage = voltage;
 
-    // ToDo check if these kinds of checks are OK?
-
     if (temperature < -10 || temperature > 85)
     {
         result = 0;
