@@ -434,6 +434,10 @@ uint8_t writeVCOMToEEPROM(double v)
     Serial.print("Vcom register: ");
     Serial.println(vcomL | (vcomH << 8));
 
+    // Trun off the TPS65186 and wait a little bit
+    display.einkOff();
+    delay(100);
+
     if (vcom != (vcomL | (vcomH << 8)))
     {
         Serial.println("\nVCOM EEPROM PROGRAMMING FAILED!\n");
