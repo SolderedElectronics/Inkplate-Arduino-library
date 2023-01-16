@@ -4,11 +4,11 @@ const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
 
 // Change this to your WiFi
-const char *WSSID = {""};
-const char *WPASS = {""};
+const char *WSSID = {"Soldered-testingPurposes"};
+const char *WPASS = {"Testing443"};
 
 // Change this to your used slave device
-const uint8_t easyCDeviceAddress = 0x28;
+const uint8_t easyCDeviceAddress = 0x30;
 
 // Test all peripherals
 void testPeripheral()
@@ -66,6 +66,7 @@ void testPeripheral()
         failHandler();
     }
 
+
     // Check the micro SD card slot
     display.print("- microSD card slot: ");
     display.partialUpdate(0, 1);
@@ -122,12 +123,21 @@ void testPeripheral()
         failHandler();
     }
 
+
+    float batteryVoltage = 0;
+    float temperature = 0;
     // Check battery
     display.print("- Battery and temperature: ");
     display.partialUpdate(0, 1);
-    if (checkBatteryAndTemp())
+    if (checkBatteryAndTemp(&batteryVoltage, &temperature))
     {
         display.println("OK");
+        display.print("- Battery voltage: ");
+        display.print(batteryVoltage);
+        display.println("V");
+        display.print("- Temperature: ");
+        display.print(temperature);
+        display.println("c");
         display.partialUpdate(0, 1);
     }
     else
@@ -135,6 +145,37 @@ void testPeripheral()
         display.println("FAIL");
         failHandler();
     }
+
+    // Text wake up button
+    long beginWakeUpTest = millis();
+    int wakeButtonState = digitalRead(GPIO_NUM_36);
+    
+    Serial.println("Press WAKEUP button to finish testing...");
+    display.println("Press WAKEUP button to finish testing...");
+    display.partialUpdate(0, 1);
+
+    while (true)
+    {
+        long now = millis();
+        if (now - beginWakeUpTest > 30000)
+        {
+            display.println("WAKEUP not pressed for 30 seconds!");
+            Serial.println("WAKEUP not pressed for 30 seconds!");
+            display.partialUpdate(0, 1);
+            failHandler();
+        }
+
+        if (digitalRead(GPIO_NUM_36) != wakeButtonState)
+        {
+            break;
+        }
+        delay(1);
+    }
+
+    display.println("WAKEUP button pressed!");
+    Serial.println("WAKEUP button pressed!");
+    display.partialUpdate(0, 1);
+
 
     // This test only must be run on older Inkplates (e-radionica.com Inkplates with touchpads)
 #ifdef ARDUINO_ESP32_DEV
@@ -223,6 +264,7 @@ int checkMicroSDCard()
 
 int checkI2C(int address)
 {
+    Wire.setTimeOut(3000);
     Wire.beginTransmission(address);
     if (Wire.endTransmission() == 0)
     {
@@ -234,7 +276,7 @@ int checkI2C(int address)
     }
 }
 
-int checkBatteryAndTemp()
+int checkBatteryAndTemp(float *temp, float *batVoltage)
 {
     int temperature;
     float voltage;
@@ -242,8 +284,8 @@ int checkBatteryAndTemp()
 
     temperature = display.readTemperature();
     voltage = display.readBattery();
-    Serial.println(temperature);
-    Serial.println(voltage);
+    *temp = temperature;
+    *batVoltage = voltage;
 
     // ToDo check if these kinds of checks are OK?
 

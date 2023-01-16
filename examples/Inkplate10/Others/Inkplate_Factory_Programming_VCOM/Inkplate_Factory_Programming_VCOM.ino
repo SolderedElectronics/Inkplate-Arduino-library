@@ -1,20 +1,20 @@
 /**
  **************************************************
  * @file        Inkplate_Factory_Programming_VCOM.ino
- * 
+ *
  * @brief       File for programming the inkplate's VCOM
- * 
+ *
  * @note        !WARNING! VCOM can only be set 100 times, so keep usage to a minimum.
- * 
+ *
  *              Inkplate 10 does not support auto VCOM, it has to be set manually.
  *              The user will be prompted to enter VCOM via serial (baud 115200).
  *              VCOM ranges from -1.0 to -2.0.
- * 
+ *
  *              Tests will also be done, to pass all tests:
  *              -edit the WiFi information in test.cpp.
  *              -connect a slave device via EasyC on address 0x28 (you may change this in test.cpp also).
  *              -insert a formatted microSD card (doesn't have to be empty)
- * 
+ *
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
@@ -75,8 +75,12 @@ void setup()
     display.begin();
     EEPROM.begin(512);
 
+    // Wakeup button
+    pinMode(GPIO_NUM_36, INPUT);
+
     // Uncomment if you want to write new VCOM voltage every time you run this sketch
     // WARNING: It can only be overwritten 100 times! Keep usage to a minimum
+
     //Serial.println("Resetting vcom voltage..");
     //delay(1000);
     //EEPROM.write(EEPROMaddress, 0);
@@ -93,16 +97,26 @@ void setup()
 
         testPeripheral();
 
-        // Get VCOM voltage from serial from user
-        uint8_t flag = getVCOMFromSerial(&vcomVoltage);
 
-        // Show the user the entered VCOM voltage
-        Serial.print("Entered VCOM: ");
-        Serial.println(vcomVoltage);
-        display.print(vcomVoltage);
-        display.partialUpdate();
+        do
+        {
+            // Get VCOM voltage from serial from user
+            uint8_t flag = getVCOMFromSerial(&vcomVoltage);
 
-        delay(500);
+            // Show the user the entered VCOM voltage
+            Serial.print("Entered VCOM: ");
+            Serial.println(vcomVoltage);
+            display.print(vcomVoltage);
+            display.partialUpdate();
+
+            if (vcomVoltage < -2.0 || vcomVoltage > -1.0)
+            {
+                Serial.println("VCOM out of range!");
+                display.print(" VCOM out of range!");
+                display.partialUpdate();
+            }
+
+        } while (vcomVoltage < -2.0 || vcomVoltage > -1.0);
 
         // Write VCOM to EEPROM
         display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);
@@ -125,7 +139,6 @@ void setup()
         memcpy(&waveformEEPROM.waveform, waveformList[selectedWaveform], sizeof(waveformEEPROM.waveform));
         waveformEEPROM.checksum = display.calculateChecksum(waveformEEPROM);
         display.burnWaveformToEEPROM(waveformEEPROM);
-        
     }
     else
     {
@@ -500,10 +513,10 @@ void showSplashScreen(struct waveformData _w)
     display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
     display.setTextColor(0, 7);
     display.setTextSize(1);
-    display.setCursor(8, 125);
+    display.setCursor(19, 796);
     display.print(vcomVoltage, 2);
     display.print("V");
-    display.setCursor(8, 134);
+    display.setCursor(19, 808);
     display.print("Waveform");
     display.print(_w.waveformId - 20 + 1, DEC);
     display.display();
@@ -651,7 +664,8 @@ int getWaveformFromSerial(int *selected)
             *selected = 2;
             return 1;
         }
-        else if (strstr(serialBuffer, "OK") != NULL)
+        else if (strstr(serialBuffer, "OK") != NULL || strstr(serialBuffer, "ok") != NULL ||
+                 strstr(serialBuffer, "Ok") != NULL || strstr(serialBuffer, "oK") != NULL)
         {
             return 0;
         }
