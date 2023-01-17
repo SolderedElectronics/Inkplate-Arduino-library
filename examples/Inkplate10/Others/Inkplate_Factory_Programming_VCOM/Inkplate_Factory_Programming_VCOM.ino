@@ -39,6 +39,7 @@
 Inkplate display(INKPLATE_1BIT);
 
 double vcomVoltage;
+// If you want to change the place of the config flag
 const int EEPROMOffset = 0;
 int EEPROMaddress = sizeof(waveformData) + EEPROMOffset;
 
@@ -73,31 +74,35 @@ int selectedWaveform = 0;
 void setup()
 {
     Serial.begin(115200);
-    display.begin();
+    pinMode(GPIO_NUM_36, INPUT); // Wakeup button
     EEPROM.begin(512);
-
-    // Wakeup button
-    pinMode(GPIO_NUM_36, INPUT);
+    Wire.begin();
 
     // Uncomment if you want to write new VCOM voltage every time you run this sketch
     // WARNING: It can only be overwritten 100 times! Keep usage to a minimum
 
-    //Serial.println("Resetting vcom voltage..");
-    //delay(1000);
-    //EEPROM.write(EEPROMaddress, 0);
-    //EEPROM.commit();
-    //Serial.println("It's been reset!");
-    //delay(1000);
+    Serial.println("Resetting VCOM...");
+    delay(1000);
+    EEPROM.write(EEPROMaddress, 0);
+    EEPROM.commit();
+    Serial.println("VCOM has been reset!");
+    delay(1000);
 
-    // Setting default value for safety
-    vcomVoltage = -1.3;
-
-    if (EEPROM.read(EEPROMaddress) != 170)
+    bool isFirstStartup = (EEPROM.read(EEPROMaddress) != 170);
+    if (isFirstStartup)
     {
-        Serial.println("VCOM not set, do tests");
+        // First, test I2C as all the peripherals are connected with it
+        // A slave must be connected on the address set in test.cpp (0x30 by default) for the tests to pass
+        // Will print results to serial
+        testI2C();
+    }
 
+    display.begin();
+
+    if (isFirstStartup)
+    {
+        // Test all the peripherals
         testPeripheral();
-
 
         do
         {
@@ -110,14 +115,14 @@ void setup()
             display.print(vcomVoltage);
             display.partialUpdate();
 
-            if (vcomVoltage < -2.0 || vcomVoltage > -1.0)
+            if (vcomVoltage < -5.1 || vcomVoltage > 0)
             {
                 Serial.println("VCOM out of range!");
                 display.print(" VCOM out of range!");
                 display.partialUpdate();
             }
 
-        } while (vcomVoltage < -2.0 || vcomVoltage > -1.0);
+        } while (vcomVoltage < -5.1 || vcomVoltage > 0);
 
         // Write VCOM to EEPROM
         display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);
@@ -143,7 +148,7 @@ void setup()
     }
     else
     {
-        Serial.println("VCOM and waveform already set!");
+        Serial.println("VCOM and Waveform already set!");
         display.einkOn();
         vcomVoltage = (double)(readReg(0x03) | ((uint16_t)(readReg(0x04 & 1) << 8))) / -100;
         display.getWaveformFromEEPROM(&waveformEEPROM) ? waveformEEPROM.waveformId : -1;

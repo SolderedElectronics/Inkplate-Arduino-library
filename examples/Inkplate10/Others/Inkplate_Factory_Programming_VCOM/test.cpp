@@ -13,6 +13,7 @@ const uint8_t easyCDeviceAddress = 0x30;
 // Test all peripherals
 void testPeripheral()
 {
+
     // Set display for test report
     display.setTextSize(3);
     display.setTextColor(BLACK);
@@ -108,36 +109,17 @@ void testPeripheral()
         failHandler();
     }
 
-    // Check I2C (easyc)
-    // A slave must be connected via easyC address set in this file
-    display.print("- I2C (easyC): ");
-    display.partialUpdate(0, 1);
-    if (checkI2C(easyCDeviceAddress))
-    {
-        display.println("OK");
-        display.partialUpdate(0, 1);
-    }
-    else
-    {
-        display.println("FAIL");
-        failHandler();
-    }
-
-
     float batteryVoltage = 0;
     float temperature = 0;
     // Check battery
     display.print("- Battery and temperature: ");
     display.partialUpdate(0, 1);
-    if (checkBatteryAndTemp(&batteryVoltage, &temperature))
+    if (checkBatteryAndTemp(&temperature, &batteryVoltage))
     {
-        display.println("OK");
-        display.print("- Battery voltage: ");
         display.print(batteryVoltage);
-        display.println("V");
-        display.print("- Temperature: ");
+        display.print("V, ");
         display.print(temperature);
-        display.println("c");
+        display.println("C OK");
         display.partialUpdate(0, 1);
     }
     else
@@ -150,8 +132,8 @@ void testPeripheral()
     long beginWakeUpTest = millis();
     int wakeButtonState = digitalRead(GPIO_NUM_36);
     
-    Serial.println("Press WAKEUP button to finish testing...");
-    display.println("Press WAKEUP button to finish testing...");
+    Serial.print("Press WAKEUP button within 30 seconds to finish testing... ");
+    display.print("Press WAKEUP button within 30 seconds to finish testing... ");
     display.partialUpdate(0, 1);
 
     while (true)
@@ -159,8 +141,8 @@ void testPeripheral()
         long now = millis();
         if (now - beginWakeUpTest > 30000)
         {
-            display.println("WAKEUP not pressed for 30 seconds!");
-            Serial.println("WAKEUP not pressed for 30 seconds!");
+            display.println("WAKEUP not pressed within 30 seconds!");
+            Serial.println("WAKEUP not pressed within 30 seconds!");
             display.partialUpdate(0, 1);
             failHandler();
         }
@@ -172,8 +154,8 @@ void testPeripheral()
         delay(1);
     }
 
-    display.println("WAKEUP button pressed!");
-    Serial.println("WAKEUP button pressed!");
+    display.println("OK");
+    Serial.println("OK");
     display.partialUpdate(0, 1);
 
 
@@ -191,6 +173,30 @@ void testPeripheral()
         failHandler();
     }
 #endif
+}
+
+void testI2C()
+{
+        // Check I2C first, as it's the primary interface for all Inkplate's components
+    // A slave must be connected via I2C/easyC address set in this file
+    // Set timeouts for I2C
+    Wire.setTimeOut(1000);
+
+    // Do I2C test
+    Wire.beginTransmission(easyCDeviceAddress);
+    int i2cTestResult = Wire.endTransmission();
+    if(i2cTestResult == 5)
+    {
+        Serial.println("I2C timeout error!");
+        failHandler(true);
+    }
+    else if(i2cTestResult != 0)
+    {
+        Serial.println("I2C error!");
+        failHandler(true);
+    }
+
+    Serial.println("I2C OK");
 }
 
 int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)
@@ -260,20 +266,6 @@ int checkMicroSDCard()
         return 0;
     }
     return 1;
-}
-
-int checkI2C(int address)
-{
-    Wire.setTimeOut(3000);
-    Wire.beginTransmission(address);
-    if (Wire.endTransmission() == 0)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
 }
 
 int checkBatteryAndTemp(float *temp, float *batVoltage)
@@ -373,12 +365,20 @@ int touchPads(uint8_t _timeoutTouchpads)
 }
 
 // Show a message and stop the code from executing.
-void failHandler()
+void failHandler(bool printErrorOnSerial)
 {
-    display.print(" -> Test stopped!");
-    display.partialUpdate(0, 1);
+    if(printErrorOnSerial)
+    {
+        Serial.println(" -> Test stopped!");
+    }
+    else
+    {
+        display.print(" -> Test stopped!");
+        display.partialUpdate(0, 1);
+    }
+    
 
     // Inf. loop... halt the program!
     while (true)
-        ;
+        delay(1000);
 }
