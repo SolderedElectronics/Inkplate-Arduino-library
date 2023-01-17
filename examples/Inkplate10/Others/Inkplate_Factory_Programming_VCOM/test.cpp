@@ -13,7 +13,6 @@ const uint8_t easyCDeviceAddress = 0x30;
 // Test all peripherals
 void testPeripheral()
 {
-
     // Set display for test report
     display.setTextSize(3);
     display.setTextColor(BLACK);
@@ -24,8 +23,7 @@ void testPeripheral()
     display.einkOn();
 
     // Check if epaper PSU (TPS65186 EPD PMIC) is ok.
-    Wire.beginTransmission(0x48);                                     // Send address 0x48 on I2C
-    if (!(Wire.endTransmission() == 0) || !(display.readPowerGood())) // Check if there was an error in communication
+    if (!checkI2C(0x48) || !(display.readPowerGood())) // Check if there was an error in communication
     {
         Serial.println("- TPS Fail!");
         failHandler();
@@ -37,9 +35,8 @@ void testPeripheral()
     display.printf("- I/O Expander 1: ");
     display.partialUpdate(0, 1);
     // Try to communicate with I/O expander
-    Wire.beginTransmission(IO_INT_ADDR); // Send address 0x20
-    if (Wire.endTransmission() ==
-        0) // Check if there was an error in communication and print out the results on display.
+
+    if (checkI2C(IO_INT_ADDR)) // Check if there was an error in communication and print out the results on display.
     {
         display.println("OK");
         display.partialUpdate(0, 1);
@@ -53,10 +50,9 @@ void testPeripheral()
     // Check I/O expander 2
     display.printf("- I/O Expander 2: ");
     display.partialUpdate(0, 1);
+
     // Try to communicate with I/O expander
-    Wire.beginTransmission(IO_EXT_ADDR); // Send address 0x21
-    if (Wire.endTransmission() ==
-        0) // Check if there was an error in communication and print out the results on display.
+    if (checkI2C(IO_EXT_ADDR)) // Check if there was an error in communication and print out the results on display.
     {
         display.println("OK");
         display.partialUpdate(0, 1);
@@ -109,6 +105,21 @@ void testPeripheral()
         failHandler();
     }
 
+    // Check I2C (easyc)
+    // A slave must be connected via easyC address set in this file
+    display.print("- I2C (easyC): ");
+    display.partialUpdate(0, 1);
+    if (checkI2C(easyCDeviceAddress))
+    {
+        display.println("OK");
+        display.partialUpdate(0, 1);
+    }
+    else
+    {
+        display.println("FAIL");
+        failHandler();
+    }
+
     float batteryVoltage = 0;
     float temperature = 0;
     // Check battery
@@ -131,7 +142,7 @@ void testPeripheral()
     // Text wake up button
     long beginWakeUpTest = millis();
     int wakeButtonState = digitalRead(GPIO_NUM_36);
-    
+
     Serial.print("Press WAKEUP button within 30 seconds to finish testing... ");
     display.print("Press WAKEUP button within 30 seconds to finish testing... ");
     display.partialUpdate(0, 1);
@@ -175,28 +186,17 @@ void testPeripheral()
 #endif
 }
 
-void testI2C()
+int checkI2C(int address)
 {
-    // Check I2C first, as it's the primary interface for all Inkplate's components
-    // A slave must be connected via I2C/easyC address set in this file
-    // Set timeouts for I2C
-    Wire.setTimeOut(1000);
-
-    // Do I2C test
-    Wire.beginTransmission(easyCDeviceAddress);
-    int i2cTestResult = Wire.endTransmission();
-    if(i2cTestResult == 5)
+    Wire.beginTransmission(address);
+    if (Wire.endTransmission() == 0)
     {
-        Serial.println("I2C timeout error!");
-        failHandler(true);
+        return 1;
     }
-    else if(i2cTestResult != 0)
+    else
     {
-        Serial.println("I2C error!");
-        failHandler(true);
+        return 0;
     }
-
-    Serial.println("I2C OK");
 }
 
 int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)
@@ -367,7 +367,7 @@ int touchPads(uint8_t _timeoutTouchpads)
 // Show a message and stop the code from executing.
 void failHandler(bool printErrorOnSerial)
 {
-    if(printErrorOnSerial)
+    if (printErrorOnSerial)
     {
         Serial.println(" -> Test stopped!");
     }
@@ -376,7 +376,7 @@ void failHandler(bool printErrorOnSerial)
         display.print(" -> Test stopped!");
         display.partialUpdate(0, 1);
     }
-    
+
 
     // Inf. loop... halt the program!
     while (true)

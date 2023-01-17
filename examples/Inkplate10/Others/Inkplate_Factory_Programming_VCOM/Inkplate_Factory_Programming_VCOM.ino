@@ -81,12 +81,12 @@ void setup()
     // Uncomment if you want to write new VCOM voltage every time you run this sketch
     // WARNING: It can only be overwritten 100 times! Keep usage to a minimum
 
-    Serial.println("Resetting VCOM...");
-    delay(1000);
-    EEPROM.write(EEPROMaddress, 0);
-    EEPROM.commit();
-    Serial.println("VCOM has been reset!");
-    delay(1000);
+    // Serial.println("Resetting VCOM...");
+    // delay(1000);
+    // EEPROM.write(EEPROMaddress, 0);
+    // EEPROM.commit();
+    // Serial.println("VCOM has been reset!");
+    // delay(1000);
 
     bool isFirstStartup = (EEPROM.read(EEPROMaddress) != 170);
     if (isFirstStartup)
@@ -94,7 +94,17 @@ void setup()
         // First, test I2C as all the peripherals are connected with it
         // A slave must be connected on the address set in test.cpp (0x30 by default) for the tests to pass
         // Will print results to serial
-        testI2C();
+
+        // Try to ping first expander.
+        Wire.setTimeOut(1000);
+        Wire.beginTransmission(0x20);
+        int result = Wire.endTransmission();
+
+        if (result == 5)
+        {
+            Serial.println("I2C Bus Error!");
+            failHandler(true);
+        }
     }
 
     display.begin();
@@ -148,7 +158,6 @@ void setup()
     }
     else
     {
-        Serial.println("VCOM and Waveform already set!");
         display.einkOn();
         vcomVoltage = (double)(readReg(0x03) | ((uint16_t)(readReg(0x04 & 1) << 8))) / -100;
         display.getWaveformFromEEPROM(&waveformEEPROM) ? waveformEEPROM.waveformId : -1;
