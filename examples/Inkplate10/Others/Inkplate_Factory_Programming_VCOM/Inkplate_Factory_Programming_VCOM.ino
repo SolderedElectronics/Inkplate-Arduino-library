@@ -2,7 +2,7 @@
  **************************************************
  * @file        Inkplate_Factory_Programming_VCOM.ino
  *
- * @brief       File for programming the inkplate's VCOM
+ * @brief       File for programming the Inkplate's VCOM
  *
  * @note        !WARNING! VCOM can only be set 100 times, so keep usage to a minimum.
  *
@@ -14,6 +14,7 @@
  *              -edit the WiFi information in test.cpp.
  *              -connect a slave device via EasyC on address 0x28 (you may change this in test.cpp also).
  *              -insert a formatted microSD card (doesn't have to be empty)
+ *              -press wake button to finish testing
  *
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about

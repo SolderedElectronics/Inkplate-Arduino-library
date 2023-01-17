@@ -22,6 +22,7 @@ int rtcCheck();
 int checkI2C(int address);
 int checkBatteryAndTemp(float *temp, float *batVoltage);
 int touchPads(uint8_t _timeoutTouchpads);
+int checkTouch(uint8_t _tsTimeout);
 void failHandler();
 
 #endif

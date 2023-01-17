@@ -1,3 +1,29 @@
+/**
+ **************************************************
+ * @file        Inkplate_Factory_Programming_VCOM.ino
+ *
+ * @brief       File for programming the Inkplate's VCOM
+ *
+ * @note        !WARNING! VCOM can only be set 100 times, so keep usage to a minimum.
+ *
+ *              Inkplate 6 does not support auto VCOM, it has to be set manually.
+ *              The user will be prompted to enter VCOM via serial (baud 115200).
+ *              VCOM ranges from -1.0 to -2.0.
+ *
+ *              Tests will also be done, to pass all tests:
+ *              -edit the WiFi information in test.cpp.
+ *              -connect a slave device via EasyC on address 0x30 (you may change this in test.cpp also).
+ *              -insert a formatted microSD card (doesn't have to be empty)
+ *              -press wake button to finish testing
+ *
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *warranty is given.
+ *
+ * @authors     Soldered
+ ***************************************************/
+
 #include "EEPROM.h"
 #include "Inkplate.h"
 #include "image.h"
@@ -6,7 +32,6 @@
 
 Inkplate display(INKPLATE_1BIT);
 
-double vcomVoltage;
 const int EEPROMaddress = 0;
 
 // Peripheral mode variables and arrays
@@ -21,6 +46,9 @@ void setup()
     display.setTextSize(3);
     EEPROM.begin(512);
 
+    // Wakeup button
+    pinMode(GPIO_NUM_36, INPUT);
+
     // Uncomment if you want to write new VCOM voltage every time you run this sketch
     // WARNING: It can only be overwritten 100 times! Keep usage to a minimum
     //Serial.println("Resetting vcom voltage..");
@@ -30,29 +58,46 @@ void setup()
     //Serial.println("It's been reset!");
     //delay(1000);
 
+    // Setting default value for safety
+    double vcomVoltage = -1.3;
+
     // Check if VCOM programming is not already done
     if (EEPROM.read(EEPROMaddress) != 170)
     {
-        Serial.println("Read not 170, go to tests");
+        Serial.println("VCOM not set, do tests");
 
         // Test all peripherals of the Inkplate (I/O expander, RTC, uSD card holder, etc).
         // For testing old Inkplate versions with no RTC and second I/O expander use testPeripheral(1);
         testPeripheral();
 
-        // Wait until valid VCOM has been recieved
-        uint8_t flag = getVCOMFromSerial(&vcomVoltage);
-
-        // If the flag is 1, use manual inserted VCOM voltage from UART
-        display.printf("MANUAL VCOM: %.2lf", vcomVoltage);
-        display.partialUpdate();
-        if (!writeVCOMToEEPROM(vcomVoltage))
+        // Get VCOM
+        do
         {
-            display.println("VCOM PROG. FAIL");
-            failHandler();
-        }
+            // Get VCOM voltage from serial from user
+            uint8_t flag = getVCOMFromSerial(&vcomVoltage);
 
+            // Show the user the entered VCOM voltage
+            Serial.print("Entered VCOM: ");
+            Serial.println(vcomVoltage);
+            display.print(vcomVoltage);
+            display.partialUpdate();
+
+            if (vcomVoltage < -2.0 || vcomVoltage > -1.0)
+            {
+                Serial.println("VCOM out of range!");
+                display.print(" VCOM out of range!");
+                display.partialUpdate();
+            }
+
+        } while (vcomVoltage < -2.0 || vcomVoltage > -1.0);
+
+        // Write VCOM to EEPROM
+        display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);
+        writeVCOMToEEPROM(vcomVoltage);
         EEPROM.write(EEPROMaddress, 170);
         EEPROM.commit();
+
+        display.selectDisplayMode(INKPLATE_3BIT);
     }
     else
     {
@@ -62,7 +107,7 @@ void setup()
     }
     memset(commandBuffer, 0, BUFFER_SIZE);
 
-    showSplashScreen();
+    showSplashScreen(vcomVoltage);
 }
 
 void loop()
@@ -415,7 +460,7 @@ uint8_t readReg(uint8_t _reg)
     return Wire.read();
 }
 
-void showSplashScreen()
+void showSplashScreen(float vComVoltage)
 {
     display.clean(0, 1);
     display.display();
@@ -423,8 +468,8 @@ void showSplashScreen()
     display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
     display.setTextColor(0, 7);
     display.setTextSize(1);
-    display.setCursor(757, 68);
-    display.print(vcomVoltage, 2);
+    display.setCursor(5, 583);
+    display.print(vComVoltage, 2);
     display.print("V");
     display.display();
 }

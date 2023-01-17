@@ -13,6 +13,8 @@ const char *WPASS = {"Testing443"};
 // Change this to your used slave device
 const uint8_t easyCDeviceAddress = 0x30;
 
+const int TOUCHSCREEN_TIMEOUT = 30;
+
 void testPeripheral()
 {
     // Set display for test report
@@ -52,7 +54,7 @@ void testPeripheral()
         failHandler();
     }
 
-    #ifdef OLD_INKPLATE
+    #if defined(OLD_INKPLATE) || defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
     // Check I/O expander external
     display.printf("- I/O Expander External:");
     display.partialUpdate(0, 1);
@@ -70,6 +72,32 @@ void testPeripheral()
         display.println("FAIL");
         failHandler();
     }
+    #endif
+
+    #if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
+    
+    // Check touch screen and frontlight
+    // Check frontlight (just a visual check). Set frontlight to max.
+    display.frontlight(true); // Enable frontlight circuit
+    display.setFrontlight(63); // Set frontlight intensity to the max.
+    display.println("- Frontlight test (visual check)");
+    display.partialUpdate(0, 1);
+    delay(1000);
+
+    // Check the touchscreen (init and touch)
+    display.print("- Touchscreen init: ");
+    display.partialUpdate(0, 1);
+    if (checkTouch(TOUCHSCREEN_TIMEOUT))
+    {
+        display.println("OK");
+        display.partialUpdate(0, 1);
+    }
+    else
+    {
+        display.println("FAIL");
+        failHandler();
+    }
+
     #endif
 
     // Check the micro SD card slot
@@ -136,7 +164,7 @@ void testPeripheral()
     // Check battery
     display.print("- Battery and temperature: ");
     display.partialUpdate(0, 1);
-    if (checkBatteryAndTemp(&temperature, &batteryVoltage))
+    if (checkBatteryAndTemp(&temperature,&batteryVoltage))
     {
         display.println("OK");
         display.print("- Battery voltage: ");
@@ -378,6 +406,39 @@ int touchPads(uint8_t _timeoutTouchpads)
 #endif
     return 1;
 }
+
+int checkTouch(uint8_t _tsTimeout)
+{
+    unsigned long _timeout;
+
+    // First try to init touchscreen controller.
+    if (!display.tsInit(true))
+    {
+        return 0;
+    }
+
+    // Now wait for the touch
+    display.print("OK\r\n- Touch the corner: ");
+    display.drawRect(900, 0, 124, 124, BLACK);
+    display.partialUpdate(0, 1);
+    _timeout = millis();
+    
+    // Wait 10 seconds to detect touch in specified area, otherwise return 0 (error).
+    while(((unsigned long)(millis() - _timeout)) < (_tsTimeout * 1000UL))
+    {
+        if (display.tsAvailable())
+        {
+            uint8_t n;
+            uint16_t x[2], y[2];
+            // See how many fingers are detected (max 2) and copy x and y position of each finger on touchscreen
+            n = display.tsGetData(x, y);
+
+            if ((x[0] > 900) && (x[0] < 1024) && (y[0] > 0) && (y[0] < 124)) return 1;
+        }
+    }
+    return 0;
+}
+
 
 // Show a message and stop the code from executing.
 void failHandler()
