@@ -177,7 +177,7 @@ void testPeripheral()
 
 void testI2C()
 {
-        // Check I2C first, as it's the primary interface for all Inkplate's components
+    // Check I2C first, as it's the primary interface for all Inkplate's components
     // A slave must be connected via I2C/easyC address set in this file
     // Set timeouts for I2C
     Wire.setTimeOut(1000);

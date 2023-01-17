@@ -159,6 +159,7 @@ void setup()
     showSplashScreen(waveformEEPROM);
 }
 
+// Peripheral mode
 void loop()
 {
     if (Serial.available())
@@ -492,7 +493,6 @@ int hexToChar(char c)
 }
 
 // Low level functions for reading and writing to registers
-
 void writeReg(uint8_t _reg, uint8_t _data)
 {
     Wire.beginTransmission(0x48);
@@ -680,7 +680,6 @@ int getWaveformFromSerial(int *selected)
     Serial.println("Input error!");
     return 0;
 }
-
 
 // Prompt user to enter VCOM
 double getVCOMFromSerial(double *_vcom)
