@@ -8,7 +8,7 @@
  *
  *              Inkplate 10 does not support auto VCOM, it has to be set manually.
  *              The user will be prompted to enter VCOM via serial (baud 115200).
- *              VCOM ranges from -1.0 to -2.0.
+ *              VCOM ranges from 0V to -5.1.
  *
  *              Tests will also be done, to pass all tests:
  *              -edit the WiFi information in test.cpp.
@@ -58,7 +58,10 @@ uint8_t waveform2[8][9] = {{0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 2, 1, 2, 1, 1,
 uint8_t waveform3[8][9] = {{0, 3, 3, 3, 3, 3, 3, 3, 0}, {0, 1, 2, 1, 1, 2, 2, 1, 0}, {0, 2, 2, 2, 1, 2, 2, 1, 0},
                            {0, 0, 2, 2, 2, 2, 2, 1, 0}, {0, 3, 3, 2, 1, 1, 1, 2, 0}, {0, 3, 3, 2, 2, 1, 1, 2, 0},
                            {0, 2, 1, 2, 1, 2, 1, 2, 0}, {0, 3, 3, 3, 2, 2, 2, 2, 0}};
-uint8_t *waveformList[] = {&waveform1[0][0], &waveform2[0][0], &waveform3[0][0]};
+uint8_t waveform4[8][9] = {{0, 0, 0, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 2, 2, 2, 1, 1, 0}, {0, 0, 2, 1, 1, 2, 2, 1, 0},
+                           {1, 1, 2, 2, 1, 2, 2, 1, 0}, {0, 0, 2, 1, 2, 2, 2, 1, 0}, {0, 1, 2, 2, 2, 2, 2, 1, 0},
+                           {0, 0, 0, 2, 2, 2, 1, 2, 0}, {0, 0, 0, 2, 2, 2, 2, 2, 0}};
+uint8_t *waveformList[] = {&waveform1[0][0], &waveform2[0][0], &waveform3[0][0], &waveform4[0][0]};
 
 // Calculate number of possible waveforms
 uint8_t waveformListSize = (sizeof(waveformList) / sizeof(uint8_t *));
@@ -69,6 +72,7 @@ struct waveformData waveformEEPROM;
 // Waveform 1 is index 0
 // Waveform 2 is index 1
 // Waveform 3 is index 2
+// Waveform 4 is index 3
 int selectedWaveform = 0;
 
 void setup()
@@ -626,7 +630,7 @@ void showGradient(int _selected)
     display.setTextSize(3);
     display.setTextColor(0);
     display.setCursor(50, 740);
-    display.print("Send '1', '2', or '3' via serial to select waveform.");
+    display.print("Send '1', '2', '3' or '4' via serial to select waveform.");
     display.setCursor(50, 780);
     display.print("Currently selected: ");
     display.print(_selected + 1); // Increment by 1 for printing
@@ -638,7 +642,7 @@ void showGradient(int _selected)
     display.display();
 }
 
-// Prompt the user to enter '1', '2' or '3' via serial to select the waveform
+// Prompt the user to enter '1', '2', '3' od '4' via serial to select the waveform
 // Returns 0 when done
 int getWaveformFromSerial(int *selected)
 {
@@ -649,7 +653,7 @@ int getWaveformFromSerial(int *selected)
 
     while (true)
     {
-        Serial.println("Write '1', '2' or '3' to select waveform.\nWrite 'OK' to confirm.");
+        Serial.println("Write '1', '2', '3' or '4' to select waveform.\nWrite 'OK' to confirm.");
         while (!Serial.available())
             ;
 
@@ -677,6 +681,11 @@ int getWaveformFromSerial(int *selected)
         if (strstr(serialBuffer, "3") != NULL)
         {
             *selected = 2;
+            return 1;
+        }
+        if (strstr(serialBuffer, "4") != NULL)
+        {
+            *selected = 3;
             return 1;
         }
         else if (strstr(serialBuffer, "OK") != NULL || strstr(serialBuffer, "ok") != NULL ||
