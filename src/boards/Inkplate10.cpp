@@ -44,7 +44,7 @@ bool Inkplate::begin()
     EEPROM.begin(512);
 
     if (!getWaveformFromEEPROM(&waveformEEPROM) || waveformEEPROM.waveformId < INKPLATE10_WAVEFORM1 ||
-        waveformEEPROM.waveformId > INKPLATE10_WAVEFORM3)
+        waveformEEPROM.waveformId > INKPLATE10_WAVEFORM5)
     {
         Serial.println("Wavefrom load failed! Upload new waveform in EEPROM. Using default waveform.");
         uint8_t defaultWaveform[8][9] = {{0, 0, 0, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 2, 2, 2, 1, 1, 0},

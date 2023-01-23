@@ -61,7 +61,10 @@ uint8_t waveform3[8][9] = {{0, 3, 3, 3, 3, 3, 3, 3, 0}, {0, 1, 2, 1, 1, 2, 2, 1,
 uint8_t waveform4[8][9] = {{0, 0, 0, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 2, 2, 2, 1, 1, 0}, {0, 0, 2, 1, 1, 2, 2, 1, 0},
                            {1, 1, 2, 2, 1, 2, 2, 1, 0}, {0, 0, 2, 1, 2, 2, 2, 1, 0}, {0, 1, 2, 2, 2, 2, 2, 1, 0},
                            {0, 0, 0, 2, 2, 2, 1, 2, 0}, {0, 0, 0, 2, 2, 2, 2, 2, 0}};
-uint8_t *waveformList[] = {&waveform1[0][0], &waveform2[0][0], &waveform3[0][0], &waveform4[0][0]};
+uint8_t waveform5[8][9] = {{0, 0, 0, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 2, 2, 2, 1, 1, 0}, {2, 2, 2, 1, 0, 2, 1, 0, 0},
+                           {2, 1, 1, 2, 1, 1, 1, 2, 0}, {2, 2, 2, 1, 1, 1, 0, 2, 0}, {2, 2, 2, 1, 1, 2, 1, 2, 0},
+                           {0, 0, 0, 0, 2, 1, 2, 2, 0}, {0, 0, 0, 0, 2, 2, 2, 2, 0}};
+uint8_t *waveformList[] = {&waveform1[0][0], &waveform2[0][0], &waveform3[0][0], &waveform4[0][0], &waveform5[0][0]};
 
 // Calculate number of possible waveforms
 uint8_t waveformListSize = (sizeof(waveformList) / sizeof(uint8_t *));
@@ -73,6 +76,7 @@ struct waveformData waveformEEPROM;
 // Waveform 2 is index 1
 // Waveform 3 is index 2
 // Waveform 4 is index 3
+// Waveform 5 is index 4
 int selectedWaveform = 0;
 
 void setup()
@@ -630,7 +634,7 @@ void showGradient(int _selected)
     display.setTextSize(3);
     display.setTextColor(0);
     display.setCursor(50, 740);
-    display.print("Send '1', '2', '3' or '4' via serial to select waveform.");
+    display.print("Send '1', '2', '3', '4' or '5' via serial to select waveform.");
     display.setCursor(50, 780);
     display.print("Currently selected: ");
     display.print(_selected + 1); // Increment by 1 for printing
@@ -653,7 +657,7 @@ int getWaveformFromSerial(int *selected)
 
     while (true)
     {
-        Serial.println("Write '1', '2', '3' or '4' to select waveform.\nWrite 'OK' to confirm.");
+        Serial.println("Write '1', '2', '3', '4' or '5' to select waveform.\nWrite 'OK' to confirm.");
         while (!Serial.available())
             ;
 
@@ -686,6 +690,11 @@ int getWaveformFromSerial(int *selected)
         if (strstr(serialBuffer, "4") != NULL)
         {
             *selected = 3;
+            return 1;
+        }
+        if (strstr(serialBuffer, "5") != NULL)
+        {
+            *selected = 4;
             return 1;
         }
         else if (strstr(serialBuffer, "OK") != NULL || strstr(serialBuffer, "ok") != NULL ||
