@@ -1,5 +1,5 @@
 /*
-   Inkplate_SD_TXT example for Soldered Inkplate 10
+   Inkplate_SD_TXT_READ example for Soldered Inkplate 10
    For this example you will need only a micro USB cable, Inkplate 10 and a SD card
    loaded with text.txt file that can be found inside folder of this example.
    Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
