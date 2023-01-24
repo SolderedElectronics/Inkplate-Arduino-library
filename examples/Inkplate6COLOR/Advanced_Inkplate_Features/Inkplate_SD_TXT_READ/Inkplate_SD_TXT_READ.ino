@@ -1,5 +1,5 @@
 /*
-   Inkplate_SD_TXT example for Soldered Inkplate 6COLOR
+   Inkplate_SD_TXT_READ example for Soldered Inkplate 6COLOR
    For this example you will need only a micro USB cable, Inkplate 6COLOR and a SD card
    loaded with text.txt file that can be found inside folder of this example.
    Select "Soldered Inkplate 6COLOR" from Tools -> Board menu.
@@ -26,7 +26,7 @@
 
 #include "Inkplate.h" //Include Inkplate library to the sketch
 #include "SdFat.h"    //Include library for SD card
-Inkplate display;     // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+Inkplate display;     // Create an object on Inkplate library
 SdFile file;          // Create SdFile object used for accessing files on SD card
 
 void setup()
@@ -67,7 +67,7 @@ void setup()
     else
     { // If card init was not successful, display error on screen, put sd card in sleep mode, and stop the program
       // (using infinite loop)
-        display.println("SD Card error!");        
+        display.println("SD Card error!");
         display.display();
         display.sdCardSleep();
         while (true)

@@ -33,8 +33,8 @@ char *dataToWrite = "Hello! This is the file writing example for Inkplate 6COLOR
 
 void setup()
 {
-    Serial.begin(115200);   // Init serial communication
-    display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
+    Serial.begin(115200); // Init serial communication
+    display.begin();      // Init Inkplate library (you should call this function ONLY ONCE)
 
     // Init SD card. Display if SD card is init propery or not.
     if (display.sdCardInit())

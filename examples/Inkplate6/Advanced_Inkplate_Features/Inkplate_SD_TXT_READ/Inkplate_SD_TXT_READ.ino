@@ -1,5 +1,5 @@
 /*
-   Inkplate_SD_TXT example for Soldered Inkplate 6
+   Inkplate_SD_TXT_READ example for Soldered Inkplate 6
    For this example you will need only a micro USB cable, Inkplate 6 and a SD card
    loaded with text.txt file that can be found inside folder of this example.
    Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.

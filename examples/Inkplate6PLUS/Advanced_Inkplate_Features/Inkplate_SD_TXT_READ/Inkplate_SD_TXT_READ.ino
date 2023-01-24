@@ -1,5 +1,5 @@
 /*
-   Inkplate_SD_TXT example for Soldered Inkplate 6Plus
+   Inkplate_SD_TXT_READ example for Soldered Inkplate 6Plus
    For this example you will need only a micro USB cable, Inkplate 6Plus and a SD card
    loaded with text.txt file that can be found inside folder of this example.
    Select "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
@@ -68,7 +68,7 @@ void setup()
     else
     { // If card init was not successful, display error on screen, put sd card in sleep mode, and stop the program
       // (using infinite loop)
-        display.println("SD Card error!");        
+        display.println("SD Card error!");
         display.partialUpdate();
         display.sdCardSleep();
         while (true)

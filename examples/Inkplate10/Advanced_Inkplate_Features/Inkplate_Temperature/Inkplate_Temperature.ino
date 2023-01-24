@@ -1,28 +1,29 @@
 /*
-   Inkplate_Battery_Voltage_And_Temperature example for Soldered Inkplate 10
-   For this example you will need USB cable, Inkplate 10 and a Lithium battery (3.6V) with two pin JST connector.
+   Inkplate_Temperature example for Soldered Inkplate 10
+   For this example you will need USB cable and Inkplate 10.
    Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
    Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
-   This example will show you how to read voltage of the battery and read temperature from on-board
+   This example will show you how to read temperature from on-board
    temperature sensor which is part of TPS65186 e-paper PMIC.
    NOTE: In order to read temperature, e-paper has to be refreshed at least one time,
    or you have to power up epaper PMIC with einkOn() function from Inkplate library.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   11 February 2021 by Soldered
+   23 January 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
-#include "Inkplate.h" //Include Inkplate library to the sketch
-#include "symbols.h"  //Include .h file that contains byte array for battery symbol and temperature symbol.
-// It is in same folder as this sketch. You can even open it (read it) by clicking on symbols.h tab in Arduino IDE
+#include "Inkplate.h"   //Include Inkplate library to the sketch
+#include "tempSymbol.h" //Include .h file that contains byte array for temperature symbol.
+// It is in same folder as this sketch. You can even open it (read it) by clicking on tempSymbol.h tab in Arduino IDE
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
 void setup()
@@ -36,20 +37,10 @@ void setup()
 
 void loop()
 {
-    int temperature;
-    float voltage;
-
-    temperature = display.readTemperature(); // Read temperature from on-board temperature sensor
-    voltage =
-        display.readBattery(); // Read battery voltage (NOTE: Doe to ESP32 ADC accuracy, you should calibrate the ADC!)
-    display.clearDisplay();    // Clear everything in frame buffer of e-paper display
-    display.drawImage(battSymbol, 100, 100, 106, 45, BLACK); // Draw battery symbol at position X=100 Y=100
-    display.setCursor(210, 120);
-    display.print(voltage, 2); // Print battery voltage
-    display.print('V');
-
-    display.drawImage(tempSymbol, 100, 200, 38, 79, BLACK); // Draw temperature symbol at position X=100, Y=200
-    display.setCursor(150, 225);
+    int temperature = display.readTemperature();            // Read temperature from on-board temperature sensor
+    display.clearDisplay();                                 // Clear frame buffer of display
+    display.drawImage(tempSymbol, 100, 100, 38, 79, BLACK); // Draw temperature symbol at position X=100, Y=100
+    display.setCursor(150, 125);
     display.print(temperature, DEC); // Print temperature
     display.print('C');
     display.display(); // Send everything to display (refresh the screen)
