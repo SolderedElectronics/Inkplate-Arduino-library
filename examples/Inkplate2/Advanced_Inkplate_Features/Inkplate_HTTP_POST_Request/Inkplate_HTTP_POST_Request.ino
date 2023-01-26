@@ -39,12 +39,12 @@ WiFiClient client;
 #define POSTING_INTERVAL_IN_SESCS 10
 
 // Enter your WiFi credentials
-const char *ssid = "Soldered";
-const char *pass = "dasduino";
+const char *ssid = "";
+const char *pass = "";
 
 // ThingSpeak settings
 char *server = "api.thingspeak.com";
-String writeAPIKey = "W0GDTMYP989HS5WY"; // Enter your Write API Key
+String writeAPIKey = ""; // Enter your Write API Key
 
 // Variable that holds last connection time
 unsigned long lastConnectionTime = 0;
