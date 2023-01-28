@@ -24,8 +24,8 @@
 #include <WiFiClientSecure.h>
 
 // Enter your WiFi credentials
-const char *ssid = "KLISANIN";
-const char *pass = "KlADI2020";
+const char *ssid = "";
+const char *pass = "";
 
 // Specify the API URL to send a POST request
 const char *apiUrl = "https://jsonplaceholder.typicode.com/posts";
