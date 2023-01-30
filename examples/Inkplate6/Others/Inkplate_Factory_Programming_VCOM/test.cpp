@@ -10,6 +10,7 @@ const char *testString = {"This is some test string..."};
 const char *WSSID = {"Soldered-testingPurposes"};
 const char *WPASS = {"Testing443"};
 
+
 // Change this to your used slave device
 const uint8_t easyCDeviceAddress = 0x30;
 
@@ -117,7 +118,7 @@ void testPeripheral()
 
 
     // Check I2C (easyc)
-    // A slave must be connected via easyC address (0x28)
+    // A slave must be connected via easyC address (0x30)
     display.print("- I2C (easyC): ");
     display.partialUpdate(0, 1);
     if (checkI2C(easyCDeviceAddress))
