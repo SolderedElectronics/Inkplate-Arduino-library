@@ -10,7 +10,6 @@ const char *testString = {"This is some test string..."};
 const char *WSSID = {"Soldered-testingPurposes"};
 const char *WPASS = {"Testing443"};
 
-
 // Change this to your used slave device
 const uint8_t easyCDeviceAddress = 0x30;
 
@@ -158,8 +157,7 @@ void testPeripheral()
     long beginWakeUpTest = millis();
     int wakeButtonState = digitalRead(GPIO_NUM_36);
     
-    Serial.println("Press WAKEUP button to finish testing...");
-    display.println("Press WAKEUP button to finish testing...");
+    display.println("Press WAKEUP button to finish (30s timeout)");
     display.partialUpdate(0, 1);
 
     while (true)
@@ -167,8 +165,7 @@ void testPeripheral()
         long now = millis();
         if (now - beginWakeUpTest > 30000)
         {
-            display.println("WAKEUP not pressed for 30 seconds!");
-            Serial.println("WAKEUP not pressed for 30 seconds!");
+            display.println("WAKEUP not pressed within 30 seconds!");
             display.partialUpdate(0, 1);
             failHandler();
         }
@@ -181,7 +178,6 @@ void testPeripheral()
     }
 
     display.println("WAKEUP button pressed!");
-    Serial.println("WAKEUP button pressed!");
     display.partialUpdate(0, 1);
 
 
@@ -381,12 +377,21 @@ int touchPads(uint8_t _timeoutTouchpads)
 }
 
 // Show a message and stop the code from executing.
-void failHandler()
+void failHandler(bool printErrorOnSerial)
 {
-    display.print(" -> Test stopped!");
-    display.partialUpdate(0, 1);
+    if (printErrorOnSerial)
+    {
+        Serial.println(" -> Test stopped!");
+    }
+    else
+    {
+        display.print(" -> Test stopped!");
+        display.partialUpdate(0, 1);
+    }
+
 
     // Inf. loop... halt the program!
     while (true)
-        ;
+        delay(1000);
 }
+

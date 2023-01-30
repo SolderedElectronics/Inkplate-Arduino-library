@@ -22,6 +22,6 @@ int rtcCheck();
 int checkI2C(int address);
 int checkBatteryAndTemp(float *temp, float *batVoltage);
 int touchPads(uint8_t _timeoutTouchpads);
-void failHandler();
+void failHandler(bool printErrorOnSerial = true);
 
 #endif

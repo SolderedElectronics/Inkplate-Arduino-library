@@ -53,13 +53,33 @@ void setup()
     // Setting default value for safety
     double vcomVoltage = -1.3;
 
-    // Check if VCOM programming is not already done
-    if (EEPROM.read(EEPROMaddress) != 170)
+    bool isFirstStartup = (EEPROM.read(EEPROMaddress) != 170);
+
+    if (isFirstStartup)
     {
-        // Test all peripherals of the Inkplate (I/O expander, RTC, uSD card holder, etc).
+        // First, test I2C as all the peripherals are connected with it
+        // A slave must be connected on the address set in test.cpp (0x30 by default) for the tests to pass
+        // Will print results to serial
+
+        // Try to ping first expander.
+        Wire.setTimeOut(1000);
+        Wire.beginTransmission(IO_INT_ADDR);
+        int result = Wire.endTransmission();
+
+        if (result == 5)
+        {
+            Serial.println("I2C Bus Error!");
+            failHandler(true);
+        }
+    }
+
+    display.begin();
+
+    if (isFirstStartup)
+    {
+        // Test all the peripherals
         testPeripheral();
 
-        // Get VCOM
         do
         {
             // Get VCOM voltage from serial from user
@@ -71,14 +91,14 @@ void setup()
             display.print(vcomVoltage);
             display.partialUpdate();
 
-            if (vcomVoltage < -5.1 || vcomVoltage > 0.0)
+            if (vcomVoltage < -5.0 || vcomVoltage > 0)
             {
                 Serial.println("VCOM out of range!");
                 display.print(" VCOM out of range!");
                 display.partialUpdate();
             }
 
-        } while (vcomVoltage < -5.1 || vcomVoltage > 0.0);
+        } while (vcomVoltage < -5.0 || vcomVoltage > -0);
 
         // Write VCOM to EEPROM
         display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);
@@ -94,6 +114,7 @@ void setup()
         display.einkOn();
         vcomVoltage = (double)(readReg(0x03) | ((uint16_t)((readReg(0x04) & 1) << 8))) / (-100);
     }
+
     memset(commandBuffer, 0, BUFFER_SIZE);
 
     showSplashScreen(vcomVoltage);
