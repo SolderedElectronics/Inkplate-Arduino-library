@@ -43,7 +43,6 @@ char strTemp[2001];
 void setup()
 {
     Serial.begin(115200);
-    display.begin();
     display.setTextSize(3);
     EEPROM.begin(512);
 

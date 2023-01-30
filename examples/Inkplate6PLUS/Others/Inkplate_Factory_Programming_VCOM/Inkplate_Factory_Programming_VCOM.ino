@@ -43,7 +43,6 @@ char strTemp[2001];
 void setup()
 {
     Serial.begin(115200);
-    display.begin();
     display.setTextSize(3);
     EEPROM.begin(512);
 
@@ -91,14 +90,14 @@ void setup()
             display.print(vcomVoltage);
             display.partialUpdate();
 
-            if (vcomVoltage < -5.0 || vcomVoltage > 0)
+            if (vcomVoltage < -5.0 || vcomVoltage > 0.0)
             {
                 Serial.println("VCOM out of range!");
                 display.print(" VCOM out of range!");
                 display.partialUpdate();
             }
 
-        } while (vcomVoltage < -5.0 || vcomVoltage > -0);
+        } while (vcomVoltage < -5.0 || vcomVoltage > 0.0);
 
         // Write VCOM to EEPROM
         display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);

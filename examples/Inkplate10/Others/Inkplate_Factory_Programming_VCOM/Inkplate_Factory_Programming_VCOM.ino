@@ -18,7 +18,7 @@
  *
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about
- *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *licensing, please visit https://soldered.com/contact/ Distributed as-is; no
  *warranty is given.
  *
  * @authors     Soldered
@@ -39,9 +39,10 @@
 Inkplate display(INKPLATE_1BIT);
 
 double vcomVoltage;
-// If you want to change the place of the config flag
-const int EEPROMOffset = 0;
-int EEPROMaddress = sizeof(waveformData) + EEPROMOffset;
+
+// If you want to write new VCOM voltage and perform all tests change this number
+const int EEPROMoffset = 0;
+int EEPROMaddress = sizeof(waveformData) + EEPROMoffset;
 
 // Peripheral mode variables and arrays
 #define BUFFER_SIZE 1000
@@ -86,16 +87,6 @@ void setup()
     EEPROM.begin(512);
     Wire.begin();
 
-    // Uncomment if you want to write new VCOM voltage every time you run this sketch
-    // WARNING: It can only be overwritten 100 times! Keep usage to a minimum
-
-    // Serial.println("Resetting VCOM...");
-    // delay(1000);
-    // EEPROM.write(EEPROMaddress, 0);
-    // EEPROM.commit();
-    // Serial.println("VCOM has been reset!");
-    // delay(1000);
-
     bool isFirstStartup = (EEPROM.read(EEPROMaddress) != 170);
     if (isFirstStartup)
     {
@@ -105,7 +96,7 @@ void setup()
 
         // Try to ping first expander.
         Wire.setTimeOut(1000);
-        Wire.beginTransmission(0x20);
+        Wire.beginTransmission(IO_INT_ADDR);
         int result = Wire.endTransmission();
 
         if (result == 5)
@@ -610,6 +601,10 @@ void writeVCOMToEEPROM(double v)
     Serial.println(vcom);
     Serial.print("Vcom register: ");
     Serial.println(vcomL | (vcomH << 8));
+
+    // Trun off the TPS65186 and wait a little bit
+    display.einkOff();
+    delay(100);
 
     if (vcom != (vcomL | (vcomH << 8)))
     {

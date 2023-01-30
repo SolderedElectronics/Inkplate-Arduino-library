@@ -6,6 +6,7 @@ const char *testString = {"This is some test string..."};
 const char *WSSID = {"Soldered-testingPurposes"};
 const char *WPASS = {"Testing443"};
 
+// Change this to your used slave device
 const uint8_t easyCDeviceAddress = 0x30;
 
 void testPeripheral()
@@ -115,8 +116,8 @@ void testPeripheral()
     // Text wake up button
     long beginWakeUpTest = millis();
     int wakeButtonState = digitalRead(GPIO_NUM_36);
-    
-    Serial.println("Press WAKEUP button to finish testing...");
+
+    Serial.println("Press WAKEUP button within 30 seconds to finish testing...");
     while (true)
     {
         long now = millis();
@@ -270,9 +271,10 @@ int rtcCheck()
 // Show a message and stop the code from executing.
 void failHandler()
 {
+
     Serial.println(" -> Test stopped!");
-    
+
     // Inf. loop... halt the program!
     while (true)
-        ;
+        delay(1000);
 }

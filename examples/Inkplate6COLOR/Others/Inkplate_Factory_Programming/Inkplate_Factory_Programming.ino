@@ -2,12 +2,11 @@
  **************************************************
  * @file        Inkplate_Factory_Programming.ino
  *
- * @brief       Sketch for factory testing and initially programming Inkplate 6 COLOR
- *
+ * @brief       File for tesing and initial programming of Inkplate6Color
  *
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about
- *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *licensing, please visit https://soldered.com/contact/ Distributed as-is; no
  *warranty is given.
  *
  * @authors     Soldered
@@ -28,8 +27,8 @@
 
 Inkplate display;
 
-// EEPROMaddress where data if peripherals have been tested is stored
-int EEPROMaddress = 0;
+// If you want to write new VCOM voltage and perform all tests change this number
+const int EEPROMaddress = 0;
 
 // Peripheral mode variables and arrays
 #define BUFFER_SIZE 1000
@@ -39,22 +38,40 @@ char strTemp[2001];
 void setup()
 {
     Serial.begin(115200);
-    pinMode(GPIO_NUM_36, INPUT); // Wakeup button
+    display.setTextSize(3);
+    EEPROM.begin(512);
+
+    // Wakeup button
+    pinMode(GPIO_NUM_36, INPUT);
+
+    bool isFirstStartup = (EEPROM.read(EEPROMaddress) != 170);
+
+    if (isFirstStartup)
+    {
+        // First, test I2C as all the peripherals are connected with it
+        // A slave must be connected on the address set in test.cpp (0x30 by default) for the tests to pass
+        // Will print results to serial
+
+        // Try to ping first expander.
+        Wire.setTimeOut(1000);
+        Wire.beginTransmission(IO_INT_ADDR);
+        int result = Wire.endTransmission();
+
+        if (result == 5)
+        {
+            Serial.println("I2C Bus Error!");
+            failHandler();
+        }
+    }
+
     display.begin();
 
-    // Uncomment this to always reset the tested state of the device on each sketch run
- 
-    // EEPROM.begin(512);
-    // EEPROM.write(EEPROMaddress, 144);
-    // EEPROM.commit();
-
-    // Check if peripherals have been already tested
-    if (EEPROM.read(EEPROMaddress) != 170)
+    if (isFirstStartup)
     {
-        // Test all peripherals of the Inkplate (I/O expander, RTC, uSD card holdler, etc).
+        // Test all the peripherals
         testPeripheral();
+        Serial.println("Testing complete!");
 
-        // Tests have been completed
         EEPROM.write(EEPROMaddress, 170);
         EEPROM.commit();
     }
@@ -62,6 +79,7 @@ void setup()
     {
         Serial.println("Factory already done");
     }
+
     memset(commandBuffer, 0, BUFFER_SIZE);
 
     showSplashScreen();
@@ -285,7 +303,11 @@ int hexToChar(char c)
 
 void showSplashScreen()
 {
+    Serial.println("show splash screen");
     display.clearDisplay();
+    Serial.println("clear display finished");
     display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
+    Serial.println("drawbitmap3bit finished");
     display.display();
+    Serial.println("display.display finished");
 }
