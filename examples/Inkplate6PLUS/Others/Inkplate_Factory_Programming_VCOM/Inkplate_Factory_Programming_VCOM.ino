@@ -26,8 +26,8 @@
 
 #include "EEPROM.h"
 #include "Inkplate.h"
-#include "test.h"
 #include "demo_image.h"
+#include "test.h"
 #include <Wire.h>
 
 Inkplate display(INKPLATE_1BIT);
@@ -53,13 +53,33 @@ void setup()
     // Setting default value for safety
     double vcomVoltage = -1.3;
 
-    // Check if VCOM programming is not already done
-    if (EEPROM.read(EEPROMaddress) != 170)
+    bool isFirstStartup = (EEPROM.read(EEPROMaddress) != 170);
+
+    if (isFirstStartup)
     {
-        // Test all peripherals of the Inkplate (I/O expander, RTC, uSD card holder, etc).
+        // First, test I2C as all the peripherals are connected with it
+        // A slave must be connected on the address set in test.cpp (0x30 by default) for the tests to pass
+        // Will print results to serial
+
+        // Try to ping first expander.
+        Wire.setTimeOut(1000);
+        Wire.beginTransmission(IO_INT_ADDR);
+        int result = Wire.endTransmission();
+
+        if (result == 5)
+        {
+            Serial.println("I2C Bus Error!");
+            failHandler(true);
+        }
+    }
+
+    display.begin();
+
+    if (isFirstStartup)
+    {
+        // Test all the peripherals
         testPeripheral();
 
-        // Get VCOM
         do
         {
             // Get VCOM voltage from serial from user
@@ -94,6 +114,7 @@ void setup()
         display.einkOn();
         vcomVoltage = (double)(readReg(0x03) | ((uint16_t)((readReg(0x04) & 1) << 8))) / (-100);
     }
+
     memset(commandBuffer, 0, BUFFER_SIZE);
 
     showSplashScreen(vcomVoltage);
@@ -513,10 +534,6 @@ uint8_t writeVCOMToEEPROM(double v)
     // Read VCOM valuse from registers
     vcomL = readReg(0x03);
     vcomH = readReg(0x04);
-    Serial.print("Vcom: ");
-    Serial.println(vcom);
-    Serial.print("Vcom register: ");
-    Serial.println(vcomL | (vcomH << 8));
 
     // Trun off the TPS65186 and wait a little bit
     display.einkOff();

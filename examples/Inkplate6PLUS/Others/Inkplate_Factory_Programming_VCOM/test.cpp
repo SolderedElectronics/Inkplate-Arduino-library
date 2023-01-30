@@ -7,8 +7,8 @@
 const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
 
-const char *WSSID = {"Soldered"};
-const char *WPASS = {"dasduino"};
+const char *WSSID = {"Soldered-testingPurposes"};
+const char *WPASS = {"Testing443"};
 
 // Change this to your used slave device
 const uint8_t easyCDeviceAddress = 0x30;
@@ -184,7 +184,7 @@ void testPeripheral()
     long beginWakeUpTest = millis();
     int wakeButtonState = digitalRead(GPIO_NUM_36);
     
-    display.println("Press WAKEUP button to finish testing...");
+    display.println("Press WAKEUP button within 30 seconds to finish testing");
     display.partialUpdate(0, 1);
 
     while (true)
@@ -414,7 +414,7 @@ int checkTouch(uint8_t _tsTimeout)
     }
 
     // Now wait for the touch
-    display.print("OK\r\n- Touch the corner: ");
+    display.print("OK\r\n- Touch the corner within 30 seconds: ");
     display.drawRect(900, 0, 124, 124, BLACK);
     display.partialUpdate(0, 1);
     _timeout = millis();
@@ -437,12 +437,20 @@ int checkTouch(uint8_t _tsTimeout)
 
 
 // Show a message and stop the code from executing.
-void failHandler()
+void failHandler(bool printErrorOnSerial)
 {
-    display.print(" -> Test stopped!");
-    display.partialUpdate(0, 1);
+    if (printErrorOnSerial)
+    {
+        Serial.println(" -> Test stopped!");
+    }
+    else
+    {
+        display.print(" -> Test stopped!");
+        display.partialUpdate(0, 1);
+    }
+
 
     // Inf. loop... halt the program!
     while (true)
-        ;
+        delay(1000);
 }
