@@ -8,7 +8,7 @@
  *
  *              Inkplate 10 does not support auto VCOM, it has to be set manually.
  *              The user will be prompted to enter VCOM via serial (baud 115200).
- *              VCOM ranges from 0V to -5.1.
+ *              VCOM ranges from 0V to -5.0.
  *
  *              Tests will also be done, to pass all tests:
  *              -edit the WiFi information in test.cpp.
@@ -38,16 +38,16 @@
 
 Inkplate display(INKPLATE_1BIT);
 
-double vcomVoltage;
-
 // If you want to write new VCOM voltage and perform all tests change this number
-const int EEPROMoffset = 0;
+const int EEPROMoffset = 16;
 int EEPROMaddress = sizeof(waveformData) + EEPROMoffset;
 
 // Peripheral mode variables and arrays
 #define BUFFER_SIZE 1000
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
+
+double vcomVoltage;
 
 // All waveforms for Inkplate 10 boards
 uint8_t waveform1[8][9] = {{0, 0, 0, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 2, 2, 2, 1, 1, 0}, {0, 0, 2, 1, 1, 2, 2, 1, 0},
@@ -124,14 +124,14 @@ void setup()
             display.print(vcomVoltage);
             display.partialUpdate();
 
-            if (vcomVoltage < -5.1 || vcomVoltage > 0)
+            if (vcomVoltage < -5.0 || vcomVoltage > 0.0)
             {
                 Serial.println("VCOM out of range!");
                 display.print(" VCOM out of range!");
                 display.partialUpdate();
             }
 
-        } while (vcomVoltage < -5.1 || vcomVoltage > 0);
+        } while (vcomVoltage < -5.0 || vcomVoltage > 0.0);
 
         // Write VCOM to EEPROM
         display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);
@@ -633,6 +633,7 @@ void showGradient(int _selected)
     display.setCursor(50, 780);
     display.print("Currently selected: ");
     display.print(_selected + 1); // Increment by 1 for printing
+    display.print(", send 'OK' to confirm.");
 
     for (int i = 0; i < 8; i++)
     {

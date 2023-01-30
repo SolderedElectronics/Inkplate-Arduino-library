@@ -2,7 +2,14 @@
  **************************************************
  * @file        Inkplate_Factory_Programming.ino
  *
- * @brief       File for tesing and initial programming of Inkplate6Color
+ * @brief       File for factory programming Inkplate6 COLOR
+ *
+ * @note        Tests will also be done, to pass all tests:
+ *              -edit the WiFi information in test.cpp.
+ *              -connect a slave device via EasyC on address 0x30 (you may change this in test.cpp also).
+ *              -insert a formatted microSD card (doesn't have to be empty)
+ *              -press wake button to finish testing
+ *              Output of the tests will be done via Serial.
  *
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about
@@ -48,11 +55,7 @@ void setup()
 
     if (isFirstStartup)
     {
-        // First, test I2C as all the peripherals are connected with it
-        // A slave must be connected on the address set in test.cpp (0x30 by default) for the tests to pass
-        // Will print results to serial
-
-        // Try to ping first expander.
+        // Try to ping first IO expander to test I2C
         Wire.setTimeOut(1000);
         Wire.beginTransmission(IO_INT_ADDR);
         int result = Wire.endTransmission();
@@ -70,7 +73,7 @@ void setup()
     {
         // Test all the peripherals
         testPeripheral();
-        Serial.println("Testing complete!");
+        Serial.println("Tests complete!");
 
         EEPROM.write(EEPROMaddress, 170);
         EEPROM.commit();
@@ -303,11 +306,7 @@ int hexToChar(char c)
 
 void showSplashScreen()
 {
-    Serial.println("show splash screen");
     display.clearDisplay();
-    Serial.println("clear display finished");
     display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
-    Serial.println("drawbitmap3bit finished");
     display.display();
-    Serial.println("display.display finished");
 }

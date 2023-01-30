@@ -8,7 +8,7 @@
  *
  *              Inkplate 6 does not support auto VCOM, it has to be set manually.
  *              The user will be prompted to enter VCOM via serial (baud 115200).
- *              VCOM ranges from -0.0 to -5.0.
+ *              VCOM ranges from 0.0 to -5.0.
  *
  *              Tests will also be done, to pass all tests:
  *              -edit the WiFi information in test.cpp.
@@ -45,6 +45,7 @@ void setup()
     Serial.begin(115200);
     display.setTextSize(3);
     EEPROM.begin(512);
+    Wire.begin();
 
     // Wakeup button
     pinMode(GPIO_NUM_36, INPUT);
@@ -56,11 +57,7 @@ void setup()
 
     if (isFirstStartup)
     {
-        // First, test I2C as all the peripherals are connected with it
-        // A slave must be connected on the address set in test.cpp (0x30 by default) for the tests to pass
-        // Will print results to serial
-
-        // Try to ping first expander.
+        // Try to ping first IO expander to test I2C
         Wire.setTimeOut(1000);
         Wire.beginTransmission(IO_INT_ADDR);
         int result = Wire.endTransmission();
@@ -72,6 +69,7 @@ void setup()
         }
     }
 
+    // If I2C is OK, initialise the display
     display.begin();
 
     if (isFirstStartup)
@@ -81,7 +79,7 @@ void setup()
 
         do
         {
-            // Get VCOM voltage from serial from user
+            // Get the VCOM voltage from serial
             uint8_t flag = getVCOMFromSerial(&vcomVoltage);
 
             // Show the user the entered VCOM voltage
@@ -90,14 +88,14 @@ void setup()
             display.print(vcomVoltage);
             display.partialUpdate();
 
-            if (vcomVoltage < -5.0 || vcomVoltage > 0)
+            if (vcomVoltage < -5.0 || vcomVoltage > 0.0)
             {
                 Serial.println("VCOM out of range!");
                 display.print(" VCOM out of range!");
                 display.partialUpdate();
             }
 
-        } while (vcomVoltage < -5.0 || vcomVoltage > -0);
+        } while (vcomVoltage < -5.0 || vcomVoltage > 0.0);
 
         // Write VCOM to EEPROM
         display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);

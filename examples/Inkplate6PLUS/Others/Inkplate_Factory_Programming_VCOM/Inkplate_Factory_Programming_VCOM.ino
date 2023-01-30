@@ -45,6 +45,7 @@ void setup()
     Serial.begin(115200);
     display.setTextSize(3);
     EEPROM.begin(512);
+    Wire.begin();
 
     // Wakeup button
     pinMode(GPIO_NUM_36, INPUT);
@@ -56,10 +57,6 @@ void setup()
 
     if (isFirstStartup)
     {
-        // First, test I2C as all the peripherals are connected with it
-        // A slave must be connected on the address set in test.cpp (0x30 by default) for the tests to pass
-        // Will print results to serial
-
         // Try to ping first expander.
         Wire.setTimeOut(1000);
         Wire.beginTransmission(IO_INT_ADDR);
