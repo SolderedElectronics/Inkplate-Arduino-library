@@ -7,8 +7,8 @@
 const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
 
-const char *WSSID = {"Soldered-testingPurposes"};
-const char *WPASS = {"Testing443"};
+const char *WSSID = {"Soldered"};
+const char *WPASS = {"dasduino"};
 
 // Change this to your used slave device
 const uint8_t easyCDeviceAddress = 0x30;
@@ -128,8 +128,6 @@ void testPeripheral()
         failHandler();
     }
 
-    // First version of the Inkplate doesn't have RTC.
-
     // Check the RTC
     display.print("- PCF85063 RTC: ");
     if (rtcCheck())
@@ -145,7 +143,7 @@ void testPeripheral()
 
 
     // Check I2C (easyc)
-    // A slave must be connected via easyC address (0x28)
+    // A slave must be connected via easyC address (0x30)
     display.print("- I2C (easyC): ");
     display.partialUpdate(0, 1);
     if (checkI2C(easyCDeviceAddress))
@@ -160,6 +158,7 @@ void testPeripheral()
     }
 
     float batteryVoltage = 0;
+
     float temperature = 0;
     // Check battery
     display.print("- Battery and temperature: ");
@@ -185,7 +184,6 @@ void testPeripheral()
     long beginWakeUpTest = millis();
     int wakeButtonState = digitalRead(GPIO_NUM_36);
     
-    Serial.println("Press WAKEUP button to finish testing...");
     display.println("Press WAKEUP button to finish testing...");
     display.partialUpdate(0, 1);
 
@@ -195,7 +193,6 @@ void testPeripheral()
         if (now - beginWakeUpTest > 30000)
         {
             display.println("WAKEUP not pressed for 30 seconds!");
-            Serial.println("WAKEUP not pressed for 30 seconds!");
             display.partialUpdate(0, 1);
             failHandler();
         }
@@ -208,7 +205,6 @@ void testPeripheral()
     }
 
     display.println("WAKEUP button pressed!");
-    Serial.println("WAKEUP button pressed!");
     display.partialUpdate(0, 1);
 
 

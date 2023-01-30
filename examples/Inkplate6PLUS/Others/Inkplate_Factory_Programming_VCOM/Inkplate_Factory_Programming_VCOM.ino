@@ -8,7 +8,7 @@
  *
  *              Inkplate 6 does not support auto VCOM, it has to be set manually.
  *              The user will be prompted to enter VCOM via serial (baud 115200).
- *              VCOM ranges from -1.0 to -2.0.
+ *              VCOM ranges from 0 to -5.0.
  *
  *              Tests will also be done, to pass all tests:
  *              -edit the WiFi information in test.cpp.
@@ -18,7 +18,7 @@
  *
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about
- *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *licensing, please visit https://soldered.com/contact/ Distributed as-is; no
  *warranty is given.
  *
  * @authors     Soldered
@@ -32,6 +32,7 @@
 
 Inkplate display(INKPLATE_1BIT);
 
+// If you want to write new VCOM voltage and perform all tests change this number
 const int EEPROMaddress = 0;
 
 // Peripheral mode variables and arrays
@@ -49,25 +50,13 @@ void setup()
     // Wakeup button
     pinMode(GPIO_NUM_36, INPUT);
 
-    // Uncomment if you want to write new VCOM voltage every time you run this sketch
-    // WARNING: It can only be overwritten 100 times! Keep usage to a minimum
-    //Serial.println("Resetting vcom voltage..");
-    //delay(1000);
-    //EEPROM.write(EEPROMaddress, 0);
-    //EEPROM.commit();
-    //Serial.println("It's been reset!");
-    //delay(1000);
-
     // Setting default value for safety
     double vcomVoltage = -1.3;
 
     // Check if VCOM programming is not already done
     if (EEPROM.read(EEPROMaddress) != 170)
     {
-        Serial.println("VCOM not set, do tests");
-
         // Test all peripherals of the Inkplate (I/O expander, RTC, uSD card holder, etc).
-        // For testing old Inkplate versions with no RTC and second I/O expander use testPeripheral(1);
         testPeripheral();
 
         // Get VCOM
@@ -82,14 +71,14 @@ void setup()
             display.print(vcomVoltage);
             display.partialUpdate();
 
-            if (vcomVoltage < -2.0 || vcomVoltage > -1.0)
+            if (vcomVoltage < -5.0 || vcomVoltage > 0)
             {
                 Serial.println("VCOM out of range!");
                 display.print(" VCOM out of range!");
                 display.partialUpdate();
             }
 
-        } while (vcomVoltage < -2.0 || vcomVoltage > -1.0);
+        } while (vcomVoltage < -5.0 || vcomVoltage > -0);
 
         // Write VCOM to EEPROM
         display.pinModeInternal(IO_INT_ADDR, display.ioRegsInt, 6, INPUT_PULLUP);
@@ -528,6 +517,10 @@ uint8_t writeVCOMToEEPROM(double v)
     Serial.println(vcom);
     Serial.print("Vcom register: ");
     Serial.println(vcomL | (vcomH << 8));
+
+    // Trun off the TPS65186 and wait a little bit
+    display.einkOff();
+    delay(100);
 
     if (vcom != (vcomL | (vcomH << 8)))
     {
