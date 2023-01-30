@@ -1,7 +1,7 @@
 #include "test.h"
 
 // Uncomment if it's an older Inkplate model
-// (and two GPIO expanders need to be tested)
+// (And only one GPIO expander needs to be tested)
 //#define OLD_INKPLATE
 
 const char sdCardTestStringLength = 100;
@@ -53,7 +53,7 @@ void testPeripheral()
         failHandler();
     }
 
-    #ifdef OLD_INKPLATE
+    #ifndef OLD_INKPLATE
     // Check I/O expander external
     display.printf("- I/O Expander External:");
     display.partialUpdate(0, 1);

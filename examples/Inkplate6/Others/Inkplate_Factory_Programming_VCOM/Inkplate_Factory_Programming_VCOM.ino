@@ -18,7 +18,7 @@
  *
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about
- *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *licensing, please visit https://soldered.com/contact/ Distributed as-is; no
  *warranty is given.
  *
  * @authors     Soldered
@@ -513,6 +513,10 @@ uint8_t writeVCOMToEEPROM(double v)
     // Read VCOM valuse from registers
     vcomL = readReg(0x03);
     vcomH = readReg(0x04);
+
+    // Trun off the TPS65186 and wait a little bit
+    display.einkOff();
+    delay(100);
 
     if (vcom != (vcomL | (vcomH << 8)))
     {
