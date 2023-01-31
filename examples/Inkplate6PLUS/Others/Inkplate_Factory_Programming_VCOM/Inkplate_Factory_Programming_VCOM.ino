@@ -53,8 +53,8 @@ void setup()
     // Setting default value for safety
     double vcomVoltage = -1.3;
 
+    // Check for the first run of this code. If it is first run, check the I2C bus.
     bool isFirstStartup = (EEPROM.read(EEPROMaddress) != 170);
-
     if (isFirstStartup)
     {
         // Try to ping first expander.
@@ -69,6 +69,7 @@ void setup()
         }
     }
 
+    // Init the Inkplate library (after the check of the I2C bus).
     display.begin();
 
     if (isFirstStartup)

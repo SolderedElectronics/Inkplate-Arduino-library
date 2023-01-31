@@ -2,7 +2,7 @@
 
 // Uncomment if it's an older Inkplate model
 // (and two GPIO expanders need to be tested)
-//#define OLD_INKPLATE
+// #define OLD_INKPLATE
 
 const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
@@ -27,8 +27,9 @@ void testPeripheral()
     display.einkOn();
 
     // Check if epaper PSU (TPS65186 EPD PMIC) is ok.
-    Wire.beginTransmission(0x48);                                     // Send address 0x48 on I2C
-    if (!(Wire.endTransmission() == 0) || !(display.readPowerGood())) // Check if there was an error in communication
+    Wire.beginTransmission(0x48); // Send address 0x48 on I2C
+    if (!(Wire.endTransmission() == 0) ||
+        (display.readPowerGood() != PWR_GOOD_OK)) // Check if there was an error in communication
     {
         Serial.println("- TPS Fail!");
         failHandler();
@@ -54,7 +55,7 @@ void testPeripheral()
         failHandler();
     }
 
-    #if defined(OLD_INKPLATE) || defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
+#if defined(OLD_INKPLATE) || defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
     // Check I/O expander external
     display.printf("- I/O Expander External:");
     display.partialUpdate(0, 1);
@@ -72,13 +73,13 @@ void testPeripheral()
         display.println("FAIL");
         failHandler();
     }
-    #endif
+#endif
 
-    #if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
-    
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
+
     // Check touch screen and frontlight
     // Check frontlight (just a visual check). Set frontlight to max.
-    display.frontlight(true); // Enable frontlight circuit
+    display.frontlight(true);  // Enable frontlight circuit
     display.setFrontlight(63); // Set frontlight intensity to the max.
     display.println("- Frontlight test (visual check)");
     display.partialUpdate(0, 1);
@@ -98,7 +99,7 @@ void testPeripheral()
         failHandler();
     }
 
-    #endif
+#endif
 
     // Check the micro SD card slot
     display.print("- microSD card slot: ");
@@ -163,7 +164,7 @@ void testPeripheral()
     // Check battery
     display.print("- Battery and temperature: ");
     display.partialUpdate(0, 1);
-    if (checkBatteryAndTemp(&temperature,&batteryVoltage))
+    if (checkBatteryAndTemp(&temperature, &batteryVoltage))
     {
         display.println("OK");
         display.print("- Battery voltage: ");
@@ -183,7 +184,7 @@ void testPeripheral()
     // Text wake up button
     long beginWakeUpTest = millis();
     int wakeButtonState = digitalRead(GPIO_NUM_36);
-    
+
     display.println("Press WAKEUP button within 30 seconds to finish testing");
     display.partialUpdate(0, 1);
 
@@ -318,11 +319,16 @@ int checkBatteryAndTemp(float *temp, float *batVoltage)
     *temp = temperature;
     *batVoltage = voltage;
 
-    if (temperature < -10 || temperature > 85)
+    // Check the temperature sensor of the TPS65186.
+    // If the result is -10 or +85, something is wrong.
+    if (temperature <= -10 || temperature >= 85)
     {
         result = 0;
     }
-    if (voltage <= 0 || voltage > 100)
+
+    // Check the battery voltage.
+    // If the measured voltage is below 2.8V and above 4.6V, charger is dead.
+    if (voltage <= 2.8 || voltage >= 4.6)
     {
         result = 0;
     }
@@ -418,9 +424,9 @@ int checkTouch(uint8_t _tsTimeout)
     display.drawRect(900, 0, 124, 124, BLACK);
     display.partialUpdate(0, 1);
     _timeout = millis();
-    
+
     // Wait 10 seconds to detect touch in specified area, otherwise return 0 (error).
-    while(((unsigned long)(millis() - _timeout)) < (_tsTimeout * 1000UL))
+    while (((unsigned long)(millis() - _timeout)) < (_tsTimeout * 1000UL))
     {
         if (display.tsAvailable())
         {
@@ -429,7 +435,8 @@ int checkTouch(uint8_t _tsTimeout)
             // See how many fingers are detected (max 2) and copy x and y position of each finger on touchscreen
             n = display.tsGetData(x, y);
 
-            if ((x[0] > 900) && (x[0] < 1024) && (y[0] > 0) && (y[0] < 124)) return 1;
+            if ((x[0] > 900) && (x[0] < 1024) && (y[0] > 0) && (y[0] < 124))
+                return 1;
         }
     }
     return 0;

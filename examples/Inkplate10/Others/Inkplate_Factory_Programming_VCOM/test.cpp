@@ -23,7 +23,7 @@ void testPeripheral()
     display.einkOn();
 
     // Check if epaper PSU (TPS65186 EPD PMIC) is ok.
-    if (!checkI2C(0x48) || !(display.readPowerGood())) // Check if there was an error in communication
+    if (!checkI2C(0x48) || (display.readPowerGood() != PWR_GOOD_OK)) // Check if there was an error in communication
     {
         Serial.println("- TPS Fail!");
         failHandler();
@@ -279,11 +279,16 @@ int checkBatteryAndTemp(float *temp, float *batVoltage)
     *temp = temperature;
     *batVoltage = voltage;
 
-    if (temperature < -10 || temperature > 85)
+    // Check the temperature sensor of the TPS65186.
+    // If the result is -10 or +85, something is wrong.
+    if (temperature <= -10 || temperature >= 85)
     {
         result = 0;
     }
-    if (voltage <= 0 || voltage > 100)
+
+    // Check the battery voltage.
+    // If the measured voltage is below 2.8V and above 4.6V, charger is dead.
+    if (voltage <= 2.8 || voltage >= 4.6)
     {
         result = 0;
     }

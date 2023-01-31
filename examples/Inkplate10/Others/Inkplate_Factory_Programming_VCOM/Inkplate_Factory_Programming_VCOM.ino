@@ -87,6 +87,7 @@ void setup()
     EEPROM.begin(512);
     Wire.begin();
 
+    // Check for the first run of this code. If it is first run, check the I2C bus.
     bool isFirstStartup = (EEPROM.read(EEPROMaddress) != 170);
     if (isFirstStartup)
     {
@@ -106,6 +107,7 @@ void setup()
         }
     }
 
+    // Init the Inkplate library (after the check of the I2C bus).
     display.begin();
 
     if (isFirstStartup)
