@@ -17,9 +17,11 @@
 
    This example will show you how you can read a tag ID and print it on the Serial Monitor.
 
+   NOTE: you have to cut JP6 and connect the other 2 contacts in order to work!
+
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   5 December 2022 by Soldered Electronics.
+   2 February 2023 by Soldered Electronics.
 */
 
 
