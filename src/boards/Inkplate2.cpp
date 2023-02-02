@@ -23,6 +23,8 @@
 
 #ifdef ARDUINO_INKPLATE2
 
+SPIClass SPI2(HSPI);
+
 SPISettings epdSpiSettings(1000000UL, MSBFIRST, SPI_MODE0);
 
 /**
@@ -97,7 +99,7 @@ bool Inkplate::begin()
     if (!_beginDone)
     {
         // Set SPI pins
-        SPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
 
         // Set up EPD communication pins
         pinMode(EPAPER_CS_PIN, OUTPUT);
@@ -234,9 +236,9 @@ void Inkplate::sendCommand(uint8_t _command)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, LOW);
     delayMicroseconds(10);
-    SPI.beginTransaction(epdSpiSettings);
-    SPI.transfer(_command);
-    SPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.transfer(_command);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
@@ -254,9 +256,9 @@ void Inkplate::sendData(uint8_t *_data, int _n)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    SPI.beginTransaction(epdSpiSettings);
-    SPI.transfer(_data, _n);
-    SPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.transfer(_data, _n);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
@@ -272,9 +274,9 @@ void Inkplate::sendData(uint8_t _data)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    SPI.beginTransaction(epdSpiSettings);
-    SPI.transfer(_data);
-    SPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.transfer(_data);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
