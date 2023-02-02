@@ -1,8 +1,8 @@
 /*
    Inkplate_SPI example for Soldered Inkplate 6COLOR
-   For this example you will need a USB-C cable, Inkplate 6COLOR, MFRC522 RFID reader, RFID tag and few wires.
+   For this example you will need a USB-C cable, Inkplate 6Plus, MFRC522 RFID reader, RFID tag and few wires.
    Select "Soldered Inkplate 6COLOR" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 6COLOR" option? Follow our tutorial and add it:
+   Don't have "Soldered Inkplate2" option? Follow our tutorial and add it:
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    Connect RFID reader to the following wiring diagram:
@@ -15,13 +15,11 @@
    SCK  - IO14
    SDA  - IO15
 
-   This example will show you how you can read a tag ID and print it on the Inkplate screen.
-
-   NOTE: you have to cut JP6 and connect the other 2 contacts in order to work!
+   This example will show you how you can read a tag ID and print it on the Serial Monitor.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   1 February 2023 by Soldered Electronics
+   5 December 2022 by Soldered Electronics.
 */
 
 
@@ -32,12 +30,12 @@
 
 // Include needed libraries
 #include "Inkplate.h"
-#include "MFRC522.h"
 #include "SPI.h"
+#include "MFRC522.h"
 
 // Pins for the MFRC522
-#define RST_PIN -1 // Not used
-#define SS_PIN  15 // SDA pin
+#define RST_PIN         -1 // Not used
+#define SS_PIN          15 // SDA pin
 
 // Create MFRC522 object
 MFRC522 rfid(SS_PIN, RST_PIN);
@@ -45,60 +43,48 @@ MFRC522 rfid(SS_PIN, RST_PIN);
 // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 Inkplate display;
 
-void setup()
-{
-    // Init Inkplate library (you should call this function ONLY ONCE)
-    display.begin();
+void setup() {
+  // Init Inkplate library (you should call this function ONLY ONCE)
+  display.begin();
+  
+  // Init SPI bus
+  SPI.begin(14, 12, 13, 15);  
 
-    // Init SPI bus
-    SPI.begin(14, 12, 13, 15);
+  // Init serial communication
+  Serial.begin(115200);
 
-    Serial.begin(115200);
+  // Init MFRC522
+  rfid.PCD_Init();
 
-    // Init MFRC522
-    rfid.PCD_Init();
-
-    // Set text setings
-    //display.setTextColor(BLACK);
-    //display.setTextSize(4);
-
-    // Clear the display and print the message
-    //display.clearDisplay();
-    Serial.println("Approximate a card to the reader!");
-    //display.display();
+  // Print a message on serial
+  Serial.println("Approximate a card to the reader!");
 }
 
-void loop()
-{
-    // If the new tag is available
-    if (rfid.PICC_IsNewCardPresent())
+void loop() {
+  // If the new tag is available
+  if (rfid.PICC_IsNewCardPresent())
+  {
+    // If the NUID has been read
+    if (rfid.PICC_ReadCardSerial())
     {
-        // If the NUID has been read
-        if (rfid.PICC_ReadCardSerial())
-        {
-            // Clear the frame buffer of the screen and set the cursor to the beginning
-            //display.clearDisplay();
-            //display.setCursor(0, 0);
+      // Get tag type and print it
+      MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
+      Serial.print("RFID Tag Type: ");
+      Serial.println(rfid.PICC_GetTypeName(piccType));
 
-            // Get tag type and print it
-            MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
-            Serial.print("RFID Tag Type: ");
-            Serial.println(rfid.PICC_GetTypeName(piccType));
+      // Print UID in Serial Monitor in the hex format
+      Serial.print("UID:");
+      for (int i = 0; i < rfid.uid.size; i++) {
+        Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
+        Serial.print(rfid.uid.uidByte[i], HEX);
+      }
+      Serial.println();
 
-            // Print tag ID to the display in the hex format
-            Serial.print("ID:");
-            for (int i = 0; i < rfid.uid.size; i++)
-            {
-                Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
-                Serial.print(rfid.uid.uidByte[i], HEX);
-            }
-            //display.display();
+      // Halt PICC
+      rfid.PICC_HaltA();
 
-            // Halt PICC
-            rfid.PICC_HaltA();
-
-            // Stop encryption on PCD
-            rfid.PCD_StopCrypto1();
-        }
+      // Stop encryption on PCD
+      rfid.PCD_StopCrypto1();
     }
+  }
 }
