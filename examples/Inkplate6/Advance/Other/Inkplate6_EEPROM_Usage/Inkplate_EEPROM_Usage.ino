@@ -6,6 +6,8 @@
    https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
 
    This example will show you how to use EEPROM with Inkplate board.
+   EEPROM is a permanent memory that holds data even if the power supply is disconnected. 
+   You can use EEPROM to store any data you don't want to lose during restarting or powering down the device.
    It shows how to use basic operations with EEPROM like clearing, writing, and reading.
    CAUTION! Changing EEPROM size can wipe waveform data.
    CAUTION! EEPROM addresses from 0 to 75 are used for waveform. DO NOT WRITE OR MODIFY DATA ON THESE ADDRESSES!
@@ -37,7 +39,7 @@ void setup()
 
     display.setTextSize(4);                  // Set text size
     display.println("Clearing EEPROM...\n"); // Print message
-    display.partialUpdate();                 // Use partial updates for refreshing the display
+    display.display();                       // Full refresh the display
     clearEEPROM();                           // Clear user EEPROM data
     delay(500);                              // Wait a little bit...
 

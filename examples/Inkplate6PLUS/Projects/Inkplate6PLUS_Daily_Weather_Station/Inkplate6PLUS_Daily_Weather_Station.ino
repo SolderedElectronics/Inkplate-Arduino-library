@@ -24,9 +24,6 @@
 
 //---------- CHANGE HERE  -------------:
 
-// Time zone for adding hours
-int timeZone = 2;
-
 // City name to de displayed on the bottom
 char city[128] = "OSIJEK";
 
@@ -37,9 +34,6 @@ char lon[] = "18.695463";
 // Change to your wifi ssid and password
 char ssid[] = "";
 char pass[] = "";
-
-// Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
-// #define AMERICAN
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
@@ -93,18 +87,18 @@ const int fullRefresh = 5;
 
 // Variables for storing temperature
 RTC_DATA_ATTR char temps[4][8] = {
-    "-F",
-    "-F",
-    "-F",
-    "-F",
+    "-",
+    "-",
+    "-",
+    "-",
 };
 
 // Variables for storing hour strings
 RTC_DATA_ATTR uint8_t hours = 0;
 
 // Variables for storing current time and weather info
-RTC_DATA_ATTR char currentTemp[16] = "-F";
-RTC_DATA_ATTR char currentWind[16] = "-m/s";
+RTC_DATA_ATTR char currentTemp[16] = "-";
+RTC_DATA_ATTR char currentWind[16] = "-";
 
 RTC_DATA_ATTR char currentTime[16] = "--:--";
 
@@ -128,13 +122,12 @@ void setup()
     Serial.begin(115200);
     display.begin();
 
-    network.begin(city);
+    network.begin(ssid, pass);
 
     // Get all relevant data, see Network.cpp for info
-    network.getTime(currentTime);
-    network.getTime(currentTime);
-    network.getData(city, temps[0], temps[1], temps[2], temps[3], currentTemp, currentWind, currentTime,
+    network.getData(lat, lon, apiKey, city, temps[0], temps[1], temps[2], temps[3], currentTemp, currentWind, currentTime,
                     currentWeather, currentWeatherAbbr, abbr1, abbr2, abbr3, abbr4, &hours);
+    network.getTime(currentTime);
 
     // Draw data, see functions below for info
     drawTime();
@@ -172,7 +165,7 @@ void drawWeather()
     display.setTextColor(BLACK, WHITE);
     display.setFont(&Inter16pt7b);
     display.setTextSize(1);
-    display.setCursor(50, 340);
+    display.setCursor(75, 264);
     display.println(currentWeather);
 }
 

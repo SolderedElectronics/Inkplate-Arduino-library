@@ -8,10 +8,9 @@
     For support, please reach over forums: forum.e-radionica.com/en
     For more info about the product, please check: www.inkplate.io
 
-    This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
-    Please review the LICENSE file included with this example.
-    If you have any questions about licensing, please contact techsupport@e-radionica.com
-    Distributed as-is; no warranty is given.
+    This code is released under the GNU Lesser General Public License v3.0:
+   https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file included with this example. If you have
+   any questions about licensing, please contact techsupport@e-radionica.com Distributed as-is; no warranty is given.
 */
 
 // Network.cpp contains various functions and classes that enable Weather station
@@ -20,13 +19,9 @@
 
 #include <HTTPClient.h>
 #include <WiFi.h>
-
 #include <ArduinoJson.h>
 
-// Static Json from ArduinoJson library
-StaticJsonDocument<30000> doc;
-
-void Network::begin(char *city)
+void Network::begin(char *ssid, char *pass)
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
@@ -51,7 +46,6 @@ void Network::begin(char *city)
 
     // Find internet time
     setTime();
-
 }
 
 // Gets time from ntp server
@@ -90,7 +84,7 @@ void formatWind(char *str, float wind)
     dtostrf(wind, 2, 0, str);
 }
 
-bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp,
+bool Network::getData(char *lat, char *lon, char *apiKey, char *city, char *temp1, char *temp2, char *temp3, char *temp4, char *currentTemp,
                       char *currentWind, char *currentTime, char *currentWeather, char *currentWeatherAbbr, char *abbr1,
                       char *abbr2, char *abbr3, char *abbr4, uint8_t *hours)
 {
@@ -136,6 +130,9 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
     // Initiate http
     http.begin(url);
 
+    // Dynamic Json from ArduinoJson library
+    DynamicJsonDocument doc(30000);
+
     // Actually do request
     int httpCode = http.GET();
     if (httpCode == 200)
@@ -159,19 +156,20 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
                 // Set all data got from internet using formatTemp and formatWind defined above
                 // This part relies heavily on ArduinoJson library
                 uint8_t cnt = 0, i = 0;
-                
+
                 formatTemp(currentTemp, doc["list"][0]["main"]["temp"].as<float>() - 273.15);
                 sprintf(currentWind, "%.1f", (float)(doc["list"][0]["wind"]["speed"]));
                 strcpy(currentWeather, doc["list"][0]["weather"][0]["main"]);
                 strcpy(currentWeatherAbbr, doc["list"][0]["weather"][0]["icon"]);
-                
+                timeZone = doc["city"]["timezone"].as<int>() / 3600;
+
                 while (cnt < 4)
                 {
                     char temp[48];
                     strcpy(temp, doc["list"][i]["dt_txt"]);
                     Serial.println(temp);
 
-                    
+
                     if (strstr(temp, "15:00:00")) // Show time in 15:00 for every day
                     {
                         struct tm t;
@@ -181,27 +179,35 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
                         {
                             *hours = t.tm_wday;
                             (*hours)--;
-                            if(*hours == 255)
+                            if (*hours == 255)
                             {
-                              *hours = 6;
+                                *hours = 6;
                             }
-                            formatTemp(temp1, doc["list"][i]["main"]["temp"].as<float>() - 273.15); // Format temperature to make it readable
-                            strcpy(abbr1, doc["list"][i]["weather"][0]["icon"].as<const char *>()); // Copy name of icon for that day forecast
+                            formatTemp(temp1, doc["list"][i]["main"]["temp"].as<float>() -
+                                                  273.15); // Format temperature to make it readable
+                            strcpy(abbr1, doc["list"][i]["weather"][0]["icon"]
+                                              .as<const char *>()); // Copy name of icon for that day forecast
                         }
                         else if (cnt == 1)
                         {
-                            formatTemp(temp2, doc["list"][i]["main"]["temp"].as<float>() - 273.15); // Format temperature to make it readable
-                            strcpy(abbr2, doc["list"][i]["weather"][0]["icon"].as<const char *>()); // Copy name of icon for that day forecast
+                            formatTemp(temp2, doc["list"][i]["main"]["temp"].as<float>() -
+                                                  273.15); // Format temperature to make it readable
+                            strcpy(abbr2, doc["list"][i]["weather"][0]["icon"]
+                                              .as<const char *>()); // Copy name of icon for that day forecast
                         }
                         else if (cnt == 2)
                         {
-                            formatTemp(temp3, doc["list"][i]["main"]["temp"].as<float>() - 273.15); // Format temperature to make it readable
-                            strcpy(abbr3, doc["list"][i]["weather"][0]["icon"].as<const char *>()); // Copy name of icon for that day forecast
+                            formatTemp(temp3, doc["list"][i]["main"]["temp"].as<float>() -
+                                                  273.15); // Format temperature to make it readable
+                            strcpy(abbr3, doc["list"][i]["weather"][0]["icon"]
+                                              .as<const char *>()); // Copy name of icon for that day forecast
                         }
                         else
                         {
-                            formatTemp(temp4, doc["list"][i]["main"]["temp"].as<float>() - 273.15); // Format temperature to make it readable
-                            strcpy(abbr4, doc["list"][i]["weather"][0]["icon"].as<const char *>()); // Copy name of icon for that day forecast
+                            formatTemp(temp4, doc["list"][i]["main"]["temp"].as<float>() -
+                                                  273.15); // Format temperature to make it readable
+                            strcpy(abbr4, doc["list"][i]["weather"][0]["icon"]
+                                              .as<const char *>()); // Copy name of icon for that day forecast
                         }
                         cnt++;
                     }

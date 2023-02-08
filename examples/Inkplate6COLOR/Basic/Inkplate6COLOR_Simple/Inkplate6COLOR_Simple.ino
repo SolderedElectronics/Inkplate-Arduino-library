@@ -23,6 +23,7 @@ Inkplate display;
 void setup()
 {
     Serial.begin(115200);
+    Serial.println("Bok");
     display.begin();
     display.clearDisplay();
     display.display();

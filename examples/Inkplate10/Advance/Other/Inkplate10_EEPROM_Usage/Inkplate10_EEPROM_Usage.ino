@@ -5,7 +5,9 @@
    Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   This example will show you how to use EEPROM with Inkplate board.
+   This example will show you how to use EEPROM with Inkplate board. 
+   EEPROM is a permanent memory that holds data even if the power supply is disconnected. 
+   You can use EEPROM to store any data you don't want to lose during restarting or powering down the device.
    It shows how to use basic operations with EEPROM like clearing, writing, and reading.
    CAUTION! Changing EEPROM size can wipe waveform data.
    CAUTION! EEPROM addresses from 0 to 75 are used for waveform. DO NOT WRITE OR MODIFY DATA ON THESE ADDRESSES!
@@ -17,7 +19,8 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 #include "EEPROM.h"   // Include ESP32 EEPROM library
@@ -37,7 +40,7 @@ void setup()
 
     display.setTextSize(6);                  // Set text size
     display.println("Clearing EEPROM...\n"); // Print message
-    display.partialUpdate();                 // Use partial updates for refreshing the display
+    display.display();                       // Full refresh the display
     clearEEPROM();                           // Clear user EEPROM data
     delay(500);                              // Wait a little bit...
 
