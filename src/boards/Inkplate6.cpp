@@ -247,8 +247,16 @@ void Inkplate::display1b(bool leaveOn)
     clean(1, 21);
     clean(2, 1);
     clean(0, 12);
+    clean(2, 1);
 
-    for (int k = 0; k < 4; ++k)
+// How many cycles / phases / frames of dark pixels
+#if defined(ARDUINO_ESP32_DEV)
+    int rep = 4;
+#elif defined(ARDUINO_INKPLATE6V2)
+    int rep = 5;
+#endif
+
+    for (int k = 0; k < rep; ++k)
     {
         uint8_t *DMemoryNewPtr = DMemoryNew + (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
         vscan_start();
@@ -275,8 +283,11 @@ void Inkplate::display1b(bool leaveOn)
                 GPIO.out_w1ts = (_send) | CL;
                 GPIO.out_w1tc = DATA | CL;
             }
-            GPIO.out_w1ts = (_send) | CL;
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_ESP32_DEV
+            GPIO.out_w1ts = CL;
             GPIO.out_w1tc = DATA | CL;
+#endif
             vscan_end();
         }
         delayMicroseconds(230);
@@ -308,8 +319,11 @@ void Inkplate::display1b(bool leaveOn)
             GPIO.out_w1tc = DATA | CL;
             _pos--;
         }
-        GPIO.out_w1ts = (_send) | CL;
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_ESP32_DEV
+        GPIO.out_w1ts = CL;
         GPIO.out_w1tc = DATA | CL;
+#endif
         vscan_end();
     }
     delayMicroseconds(230);
@@ -331,8 +345,11 @@ void Inkplate::display1b(bool leaveOn)
             GPIO.out_w1ts = (_send) | CL;
             GPIO.out_w1tc = DATA | CL;
         }
-        GPIO.out_w1ts = (_send) | CL;
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_ESP32_DEV
+        GPIO.out_w1ts = CL;
         GPIO.out_w1tc = DATA | CL;
+#endif
         vscan_end();
     }
     delayMicroseconds(230);
@@ -366,6 +383,7 @@ void Inkplate::display3b(bool leaveOn)
     clean(1, 21);
     clean(2, 1);
     clean(0, 12);
+    clean(2, 1);
     for (int k = 0; k < 8; ++k)
     {
         uint8_t *dp = DMemory4Bit + E_INK_WIDTH * E_INK_HEIGHT / 2;
@@ -392,8 +410,11 @@ void Inkplate::display3b(bool leaveOn)
                 GPIO.out_w1ts = t | CL;
                 GPIO.out_w1tc = DATA | CL;
             }
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_ESP32_DEV
             GPIO.out_w1ts = CL;
             GPIO.out_w1tc = DATA | CL;
+#endif
             vscan_end();
         }
         delayMicroseconds(230);
@@ -466,7 +487,14 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
     if (!einkOn())
         return 0;
 
-    for (int k = 0; k < 5; ++k)
+// How many cycles / phases / frames to write to the panel.
+#if defined(ARDUINO_ESP32_DEV)
+    int rep = 5;
+#elif defined(ARDUINO_INKPLATE6V2)
+    int rep = 6;
+#endif
+
+    for (int k = 0; k < rep; ++k)
     {
         vscan_start();
         n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
@@ -484,8 +512,11 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
                 GPIO.out_w1tc = DATA | CL;
                 n--;
             }
-            GPIO.out_w1ts = _send | CL;
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_ESP32_DEV
+            GPIO.out_w1ts = CL;
             GPIO.out_w1tc = DATA | CL;
+#endif
             vscan_end();
         }
         delayMicroseconds(230);
@@ -546,8 +577,11 @@ void Inkplate::clean(uint8_t c, uint8_t rep)
                 GPIO.out_w1ts = CL;
                 GPIO.out_w1tc = CL;
             }
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_INKPLATE6
             GPIO.out_w1ts = CL;
-            GPIO.out_w1tc = CL;
+            GPIO.out_w1tc = DATA | CL;
+#endif
             vscan_end();
         }
         delayMicroseconds(230);
