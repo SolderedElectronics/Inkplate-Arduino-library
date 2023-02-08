@@ -17,17 +17,7 @@
  */
 
 #include "Arduino.h"
-
-// Struct for setting alarm time
-typedef struct alarmTime
-{
-    int hour;
-    int mins;
-    int secs;
-    int day;
-    int mon;
-
-} ALARM_TIME;
+#include "time.h"
 
 // RTC matching possibility
 enum rtcMatch
@@ -47,7 +37,8 @@ enum rtcMatch
 class RTC
 {
   public:
-    double setAlarm(ALARM_TIME alarmTime, rtcMatch match);
+    double setAlarm(struct tm alarmTime, rtcMatch match);
+    double setAlarmEpoch(time_t alarmTimeEpoch, rtcMatch match);
     void setTimezone(int timeZone);
 
     private:

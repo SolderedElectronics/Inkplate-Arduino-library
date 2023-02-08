@@ -19,17 +19,17 @@
 #include "RTC.h"
 
 /**
- * @brief                         The function that emulates setting alarm like on RTC with real alarm function.
+ * @brief                         The function that emulates setting alarm like on RTC with real alarm function.                              
  * 
- * @param ALARM_TIME alarmTime    The struct where is stored time for the alarm. 
+ * @param struct tm alarmTime     The struct where is stored time for the alarm. 
  * 
  * @param rtcMatch match          RTC matching. Defined in RTC.h
  * 
- * @return                        Time from now until alarm in seconds.
+ * @return                        Time from now until alarm in seconds or -1 if the time is in the past.
  */
-double RTC::setAlarm(ALARM_TIME alarmTime, rtcMatch match)
+double RTC::setAlarm(struct tm alarmTime, rtcMatch match)
 {
-    struct tm timerTime, currentTime; // memset napraviti
+    struct tm timerTime, currentTime;
     memset(&timerTime, 0, sizeof(struct tm));
     double timeUntilAlarmInSeconds;
 
@@ -38,24 +38,75 @@ double RTC::setAlarm(ALARM_TIME alarmTime, rtcMatch match)
     gmtime_r(&now, &currentTime);
 
     timerTime = currentTime;
-    timerTime.tm_hour = (match & (1 << 2)) ? alarmTime.hour : 0;
+    timerTime.tm_hour = (match & (1 << 2)) ? alarmTime.tm_hour : 0;
     currentTime.tm_hour = (match & (1 << 2)) ? currentTime.tm_hour : 0;
 
-    timerTime.tm_min = (match & (1 << 1)) ? alarmTime.mins : 0;
+    timerTime.tm_min = (match & (1 << 1)) ? alarmTime.tm_min : 0;
     currentTime.tm_min = (match & (1 << 1)) ? currentTime.tm_min : 0;
 
-    timerTime.tm_sec = (match & (1 << 0)) ? alarmTime.secs : 0;
+    timerTime.tm_sec = (match & (1 << 0)) ? alarmTime.tm_sec : 0;
     currentTime.tm_sec = (match & (1 << 0)) ? currentTime.tm_sec : 0;
 
-    timerTime.tm_mday = (match & (1 << 3)) ? alarmTime.day : 0;
+    timerTime.tm_mday = (match & (1 << 3)) ? alarmTime.tm_mday : 0;
     currentTime.tm_mday = (match & (1 << 3)) ? currentTime.tm_mday : 0;
 
-    timerTime.tm_mon = (match & (1 << 4)) ? alarmTime.mon - 1 : 0; // Months are zero indexed
+    timerTime.tm_mon = (match & (1 << 4)) ? alarmTime.tm_mon - 1 : 0; // Months are zero indexed
     currentTime.tm_mon = (match & (1 << 4)) ? currentTime.tm_mon - 1 : 0;
 
     timeUntilAlarmInSeconds = difftime(mktime(&timerTime), mktime(&currentTime));
 
-    Serial.println(timeUntilAlarmInSeconds);
+    // Set alarm time can't be in the past!
+    if (timeUntilAlarmInSeconds > 0)
+    {
+        // Enable timer for wakeup
+        // It's in uS, so * 1000000 to convert to seconds
+        // Note: The device still has to be powered during sleep time to wake up
+        esp_sleep_enable_timer_wakeup(timeUntilAlarmInSeconds * 1000000LL);
+        return timeUntilAlarmInSeconds;
+    }
+    return -1;
+}
+
+/**
+ * @brief                         The function that emulates setting alarm in epoch like on RTC with real alarm function.
+ *                                When convert an epoch to a struct tm, it's the same principle as in the function above.
+ * 
+ * @param time_t alarmTimeEpoch   Time for the alarm in epoch.
+ * 
+ * @param rtcMatch match          RTC matching. Defined in RTC.h
+ * 
+ * @return                        Time from now until alarm in seconds or -1 if the time is in the past.
+ */
+double RTC::setAlarmEpoch(time_t alarmTimeEpoch, rtcMatch match)
+{
+    struct tm timerTime, currentTime, alarmTime;
+    memset(&timerTime, 0, sizeof(struct tm));
+    double timeUntilAlarmInSeconds;
+
+    // Convert epoch to the struct tm
+    gmtime_r(&alarmTimeEpoch, &alarmTime);
+
+    // Get current time from esp RTC
+    time_t now = time(nullptr)  + timezone * 3600ULL;
+    gmtime_r(&now, &currentTime);
+
+    timerTime = currentTime;
+    timerTime.tm_hour = (match & (1 << 2)) ? alarmTime.tm_hour : 0;
+    currentTime.tm_hour = (match & (1 << 2)) ? currentTime.tm_hour : 0;
+
+    timerTime.tm_min = (match & (1 << 1)) ? alarmTime.tm_min : 0;
+    currentTime.tm_min = (match & (1 << 1)) ? currentTime.tm_min : 0;
+
+    timerTime.tm_sec = (match & (1 << 0)) ? alarmTime.tm_sec : 0;
+    currentTime.tm_sec = (match & (1 << 0)) ? currentTime.tm_sec : 0;
+
+    timerTime.tm_mday = (match & (1 << 3)) ? alarmTime.tm_mday : 0;
+    currentTime.tm_mday = (match & (1 << 3)) ? currentTime.tm_mday : 0;
+
+    timerTime.tm_mon = (match & (1 << 4)) ? alarmTime.tm_mon - 1 : 0; // Months are zero indexed
+    currentTime.tm_mon = (match & (1 << 4)) ? currentTime.tm_mon - 1 : 0;
+
+    timeUntilAlarmInSeconds = difftime(mktime(&timerTime), mktime(&currentTime));
 
     // Set alarm time can't be in the past!
     if (timeUntilAlarmInSeconds > 0)

@@ -45,14 +45,10 @@ char pass[] = "";
 // Adjust your time zone, 1 means UTC+1
 int timeZone = 1;
 
-// Set the time to wake up (24 hour format)
-// Here it's set to 7:30:00, 25.12. of this year
-// Give it at least a few minutes of space before activating for the code to compile and upload to Inkplate
-// Note: it takes approx 25 seconds to wake up from sleep and display the time
-ALARM_TIME alarmTime = {16, 30, 50, 25, 12}; // hour, minute, second, day, month
+// Setting the alarm starts at line 96
 
 // Structure that contains time info
-struct tm currentTime, timerTime;
+struct tm currentTime, timerTime, alarmTime;
 
 void setup()
 {
@@ -94,15 +90,25 @@ void setup()
         display.print("   "); // Print spaces for alignment
         display.printf("%2.1d.%2.1d.%04d\n", currentTime.tm_mday, currentTime.tm_mon + 1, currentTime.tm_year + 1900);
 
-        // You can also set alarm like this
-        //alarmTime.hour = 7;
-        //alarmTime.mins = 30;
-        //alarmTime.secs = 0;
-        //alarmTime.day = 5;
-        //alarmTime.mon = 1;
-
+        // Set time zone
         rtc.setTimezone(timeZone);
+
+        // Set alarm - here is set to 5.1. at 09:30:00
+        // Give it at least a few minutes of space before activating for the code to compile and upload to Inkplate
+        // Note: it takes approx 25 seconds to wake up from sleep and display the time
+        alarmTime.tm_hour = 10;
+        alarmTime.tm_min = 23;
+        alarmTime.tm_sec = 0;
+        alarmTime.tm_mday = 5;
+        alarmTime.tm_mon = 1;
+
+        // Note: alarm depends on which RTC match you use. In this case, 
+        // it will compare only minutes and seconds. All others alarm parameters will be ignored.
         double secondsUntilAlarm = rtc.setAlarm(alarmTime, RTC_MMSS);
+
+        // Or you can set an alarm with time epoch
+        // double secondsUntilAlarm = rtc.setAlarmEpoch(1675854420, RTC_MMSS);
+        
         if (secondsUntilAlarm > 0)
         {
             // Print info about currently set alarm
