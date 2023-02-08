@@ -139,11 +139,11 @@ void displayData()
         // Print min and max temperature below the day of the week
         display.setTextSize(1);
         display.setCursor(tempCursorsCoordinates[i][0], tempCursorsCoordinates[i][1]);
-        display.print(minTemp[startIndex]);
+        display.print(maxTemp[startIndex]);
         display.print(" C");
         display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
         display.setCursor(tempCursorsCoordinates[i][0], tempCursorsCoordinates[i][1] + 10);
-        display.print(maxTemp[startIndex]);
+        display.print(minTemp[startIndex]);
         display.print(" C");
 
         // Choose the proper icon and draw it
