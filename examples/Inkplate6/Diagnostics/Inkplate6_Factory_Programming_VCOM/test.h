@@ -15,6 +15,7 @@ extern Inkplate display;
 
 // By default, test both I/O expanders.
 void testPeripheral();
+void checkScreenBorder();
 double getVCOMFromSerial(double *_vcom);
 int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout);
 int checkMicroSDCard();

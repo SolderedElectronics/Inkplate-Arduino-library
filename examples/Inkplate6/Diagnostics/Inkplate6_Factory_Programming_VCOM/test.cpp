@@ -1,9 +1,5 @@
 #include "test.h"
 
-// Uncomment if it's an older Inkplate model
-// (And only one GPIO expander needs to be tested)
-//#define OLD_INKPLATE
-
 const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
 
@@ -19,14 +15,13 @@ void testPeripheral()
     display.setTextSize(3);
     display.setTextColor(BLACK);
     display.setCursor(50, 50);
-    display.println("INKPLATE CHECKLIST");
+    display.println("INKPLATE TEST CHECKLIST");
 
     //  Power up epaper PSU
     display.einkOn();
 
     // Check if epaper PSU (TPS65186 EPD PMIC) is ok.
-    Wire.beginTransmission(0x48);                                     // Send address 0x48 on I2C
-    if (!(Wire.endTransmission() == 0) || !(display.readPowerGood())) // Check if there was an error in communication
+    if (!checkI2C(0x48) || (display.readPowerGood() != PWR_GOOD_OK)) // Check if there was an error in communication
     {
         Serial.println("- TPS Fail!");
         failHandler();
@@ -34,15 +29,16 @@ void testPeripheral()
     display.println("- TPS65186: OK");
     display.partialUpdate(0, 1);
 
-    // Check I/O expander internal
-    display.printf("- I/O Expander Internal:");
+    // Check if the screen is showing the image properly. There should be a black rectangle around the display area and 4 small rectangles in every corner of the screen. If not, the display is not compatible with this library.
+    checkScreenBorder();
+
+    // Check I/O expander 1
+    display.printf("- I/O Expander 1: ");
     display.partialUpdate(0, 1);
 
     // Try to communicate with I/O expander
-    Wire.beginTransmission(IO_INT_ADDR);
-    if (Wire.endTransmission() ==
-        0) // Check if there was an error in communication and print out the results on display.
-    {
+    if (checkI2C(IO_INT_ADDR)) // Check if there was an error in communication and print out the results on display.
+    {    
         display.println("OK");
         display.partialUpdate(0, 1);
     }
@@ -52,15 +48,12 @@ void testPeripheral()
         failHandler();
     }
 
-    #ifndef OLD_INKPLATE
-    // Check I/O expander external
-    display.printf("- I/O Expander External:");
+    // Check I/O expander 2
+    display.printf("- I/O Expander 2: ");
     display.partialUpdate(0, 1);
 
     // Try to communicate with I/O expander
-    Wire.beginTransmission(IO_EXT_ADDR);
-    if (Wire.endTransmission() ==
-        0) // Check if there was an error in communication and print out the results on display.
+    if (checkI2C(IO_EXT_ADDR)) // Check if there was an error in communication and print out the results on display.
     {
         display.println("OK");
         display.partialUpdate(0, 1);
@@ -70,7 +63,6 @@ void testPeripheral()
         display.println("FAIL");
         failHandler();
     }
-    #endif
 
     // Check the micro SD card slot
     display.print("- microSD card slot: ");
@@ -117,7 +109,7 @@ void testPeripheral()
 
 
     // Check I2C (easyc)
-    // A slave must be connected via easyC address (0x30)
+    // A slave must be connected via easyC address set in this file
     display.print("- I2C (easyC): ");
     display.partialUpdate(0, 1);
     if (checkI2C(easyCDeviceAddress))
@@ -138,13 +130,10 @@ void testPeripheral()
     display.partialUpdate(0, 1);
     if (checkBatteryAndTemp(&temperature, &batteryVoltage))
     {
-        display.println("OK");
-        display.print("- Battery voltage: ");
         display.print(batteryVoltage);
-        display.println("V");
-        display.print("- Temperature: ");
+        display.print("V, ");
         display.print(temperature);
-        display.println("c");
+        display.println("C OK");
         display.partialUpdate(0, 1);
     }
     else
@@ -157,7 +146,7 @@ void testPeripheral()
     long beginWakeUpTest = millis();
     int wakeButtonState = digitalRead(GPIO_NUM_36);
     
-    display.println("Press WAKEUP button to finish (30s timeout)");
+    display.print("Press WAKEUP button within 30 seconds to finish testing... ");
     display.partialUpdate(0, 1);
 
     while (true)
@@ -177,7 +166,7 @@ void testPeripheral()
         delay(1);
     }
 
-    display.println("WAKEUP button pressed!");
+    display.println("OK");
     display.partialUpdate(0, 1);
 
 
@@ -195,6 +184,32 @@ void testPeripheral()
         failHandler();
     }
 #endif
+}
+
+// Check if the screen is showing the image correctly. The image should not have any shift to the left or right.
+// In the corners of the screen, there should be a small rectangle.
+void checkScreenBorder()
+{
+    // Size of small rectangles in the corners of the screen (minimum is 3, maximum is 7)
+    int _smallRectSize = 6;
+
+    // Display an info message on the screen
+    display.println("Check corners and border (visual check)");
+
+    // Draw a black rectangle from edge to edge of the screen
+    display.drawRect(0, 0, display.width(), display.height(), BLACK);
+
+    // Now draw 4 small rectangles in all four corners of the screen
+    display.drawRect(0, 0, _smallRectSize, _smallRectSize, BLACK);
+    display.drawRect(display.width() - _smallRectSize, 0, _smallRectSize, _smallRectSize, BLACK);
+    display.drawRect(0, display.height() - _smallRectSize, _smallRectSize, _smallRectSize, BLACK);
+    display.drawRect(display.width() - _smallRectSize, display.height() - _smallRectSize, _smallRectSize, _smallRectSize, BLACK);
+
+    // Send image to the screen
+    display.partialUpdate(false, true);
+
+    // Wait a little bit
+    delay(5000);
 }
 
 int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)
@@ -291,11 +306,16 @@ int checkBatteryAndTemp(float *temp, float *batVoltage)
     *temp = temperature;
     *batVoltage = voltage;
 
-    if (temperature < -10 || temperature > 85)
+    // Check the temperature sensor of the TPS65186.
+    // If the result is -10 or +85, something is wrong.
+    if (temperature <= -10 || temperature >= 85)
     {
         result = 0;
     }
-    if (voltage <= 0 || voltage > 100)
+
+    // Check the battery voltage.
+    // If the measured voltage is below 2.8V and above 4.6V, charger is dead.
+    if (voltage <= 2.8 || voltage >= 4.6)
     {
         result = 0;
     }
