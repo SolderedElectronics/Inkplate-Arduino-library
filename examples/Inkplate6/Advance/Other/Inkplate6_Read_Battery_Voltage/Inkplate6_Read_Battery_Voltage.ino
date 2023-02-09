@@ -1,14 +1,14 @@
 /*
-   Inkplate_Battery_Voltage example for Soldered Inkplate 6
+   Inkplate6_Read_Battery_Voltage example for Soldered Inkplate 6
    For this example you will need USB cable, Inkplate 6 and a Lithium battery (3.6V) with two pin JST connector.
    Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.
    Don't have "e-radionica Inkplate6" or "Soldered Inkplate6" option? Follow our tutorial and add it:
-   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+   https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how to read voltage of the battery
 
    Want to learn more about Inkplate? Visit www.inkplate.io
-   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   Looking to get support? Write on our forums: https://forum.soldered.com/
    23 January 2023 by Soldered
 */
 

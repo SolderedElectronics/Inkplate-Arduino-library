@@ -1,15 +1,15 @@
 /*
-   Inkplate_Faster_Display example for Soldered Inkplate 6
+   Inkplate6_Faster_Display_Refreshes example for Soldered Inkplate 6
    For this example you will need a micro USB cable and an Inkplate 6
    Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.
    Don't have "e-radionica Inkplate6" or "Soldered Inkplate6" option? Follow our tutorial and add it:
-   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+   https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    We can display and partial update our screens faster by leaving the panel power on.
    Just be sure to turn it off when going to deep sleep to save power.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
-   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
+   Looking to get support? Write on our forums: https://forum.soldered.com/
    22 September 2021 by Soldered
 */
 

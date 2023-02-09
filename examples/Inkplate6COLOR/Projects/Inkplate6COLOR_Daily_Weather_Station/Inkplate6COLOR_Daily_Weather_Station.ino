@@ -23,9 +23,6 @@
 
 // ---------- CHANGE HERE  -------------:
 
-// Time zone for adding hours
-// int timeZone = 2;
-
 // City search query
 char city[128] = "OSIJEK";
 
@@ -34,12 +31,13 @@ char lat[] = "45.5510548";
 char lon[] = "18.695463";
 
 // Change to your wifi ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "515dec0a2bba409a1646e0869a600cda";
+char apiKey[] = "";
+
 // ----------------------------------
 
 // Include Inkplate library to the sketch
@@ -120,8 +118,6 @@ void setup()
     network.begin(ssid, pass);
 
     // Get all relevant data, see Network.cpp for info
-    network.getTime(currentTime);
-
     Serial.print("Retrying fetching data");
     while (!network.getData(lat, lon, apiKey, city, temps[0], temps[1], temps[2], temps[3], currentTemp, currentWind,
                             currentTime, currentWeather, currentWeatherAbbr, abbr1, abbr2, abbr3, abbr4, &hours))
@@ -129,6 +125,7 @@ void setup()
         Serial.print('.');
         delay(500);
     }
+    network.getTime(currentTime);
 
     // Draw data, see functions below for info
     drawWeather();
@@ -164,7 +161,7 @@ void drawWeather()
     display.setTextColor(INKPLATE_BLUE);
     display.setFont(&Inter16pt7b);
     display.setTextSize(1);
-    display.setCursor(150, 50);
+    display.setCursor(40, 170);
     display.println(currentWeather);
 }
 
@@ -188,7 +185,7 @@ void drawCity()
     display.setFont(&Inter16pt7b);
     display.setTextSize(1);
 
-    display.setCursor(300 - 9 * strlen(city), 430);
+    display.setCursor(300 - 9 * strlen(city), 435);
     display.println(city);
 }
 
@@ -294,7 +291,7 @@ void drawCurrent()
     display.setTextSize(1);
     display.setTextColor(INKPLATE_BLUE);
 
-    display.setCursor(150, 150);
+    display.setCursor(150, 130);
     display.print(currentTemp);
 
     int x = display.getCursorX();
@@ -311,7 +308,7 @@ void drawCurrent()
     display.setTextSize(1);
     display.setTextColor(INKPLATE_BLUE);
 
-    display.setCursor(350, 150);
+    display.setCursor(350, 130);
     display.print(currentWind);
 
     x = display.getCursorX();
@@ -327,9 +324,9 @@ void drawCurrent()
     display.setFont(&Inter12pt7b);
     display.setTextSize(1);
 
-    display.setCursor(165, 190);
+    display.setCursor(165, 170);
     display.println(F("TEMPERATURE"));
 
-    display.setCursor(390, 190);
+    display.setCursor(390, 170);
     display.println(F("WIND SPEED"));
 }
