@@ -45,7 +45,7 @@ bool Inkplate::begin(void)
         Wire.begin();
 
         _beginDone = true;
-        SPI2.begin();
+        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
         pinMode(EPAPER_BUSY_PIN, INPUT);
         pinMode(EPAPER_RST_PIN, OUTPUT);
         pinMode(EPAPER_DC_PIN, OUTPUT);
