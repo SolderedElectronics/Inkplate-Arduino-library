@@ -1,5 +1,5 @@
 /*
-    Inkplate_Blink example for Soldered Inkplate 2
+    Inkplate2_GPIO example for Soldered Inkplate 2
     For this example you will need USB cable, Inkplate 2, 330Ohm resistor
     and one LED (and some wires and breadboard to connect it).
     Select "Soldered Inkplate2" from Tools -> Board menu.
