@@ -149,7 +149,7 @@ void Inkplate::einkOff()
         return;
     OE_CLEAR;
     GMOD_CLEAR;
-    GPIO.out &= ~(DATA | LE | CL);
+    GPIO.out &= ~(DATA | LE);
     CKV_CLEAR;
     SPH_CLEAR;
     SPV_CLEAR;
@@ -215,6 +215,7 @@ void Inkplate::vscan_start()
     CKV_CLEAR;
     delayMicroseconds(0);
     CKV_SET;
+    delayMicroseconds(18);
 }
 
 /**
@@ -225,11 +226,7 @@ void Inkplate::vscan_start()
  */
 void Inkplate::hscan_start(uint32_t _d)
 {
-    SPH_CLEAR;
-    GPIO.out_w1ts = (_d) | CL;
-    GPIO.out_w1tc = DATA | CL;
-    SPH_SET;
-    CKV_SET;
+    // Not used anymore...
 }
 
 /**
@@ -250,7 +247,6 @@ void Inkplate::vscan_end()
  */
 void Inkplate::pinsZstate()
 {
-    pinMode(0, INPUT);
     pinMode(2, INPUT);
     pinMode(32, INPUT);
     pinMode(33, INPUT);
@@ -258,6 +254,8 @@ void Inkplate::pinsZstate()
     pinModeInternal(IO_INT_ADDR, ioRegsInt, GMOD, INPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, SPV, INPUT);
 
+    // Set up the EPD Data and CL pins for I2S.
+    pinMode(0, INPUT);
     pinMode(4, INPUT);
     pinMode(5, INPUT);
     pinMode(18, INPUT);
@@ -266,6 +264,9 @@ void Inkplate::pinsZstate()
     pinMode(25, INPUT);
     pinMode(26, INPUT);
     pinMode(27, INPUT);
+
+    // Disable clock for the EPD.
+    myI2S->conf1.tx_stop_en = 0;
 }
 
 /**
@@ -273,7 +274,6 @@ void Inkplate::pinsZstate()
  */
 void Inkplate::pinsAsOutputs()
 {
-    pinMode(0, OUTPUT);
     pinMode(2, OUTPUT);
     pinMode(32, OUTPUT);
     pinMode(33, OUTPUT);
@@ -281,14 +281,19 @@ void Inkplate::pinsAsOutputs()
     pinModeInternal(IO_INT_ADDR, ioRegsInt, GMOD, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, SPV, OUTPUT);
 
-    pinMode(4, OUTPUT);
-    pinMode(5, OUTPUT);
-    pinMode(18, OUTPUT);
-    pinMode(19, OUTPUT);
-    pinMode(23, OUTPUT);
-    pinMode(25, OUTPUT);
-    pinMode(26, OUTPUT);
-    pinMode(27, OUTPUT);
+    // Set up the EPD Data and CL pins for I2S.
+    setI2S1pin(0, I2S1O_BCK_OUT_IDX, 0);
+    setI2S1pin(4, I2S1O_DATA_OUT0_IDX, 0);
+    setI2S1pin(5, I2S1O_DATA_OUT1_IDX, 0);
+    setI2S1pin(18, I2S1O_DATA_OUT2_IDX, 0);
+    setI2S1pin(19, I2S1O_DATA_OUT3_IDX, 0);
+    setI2S1pin(23, I2S1O_DATA_OUT4_IDX, 0);
+    setI2S1pin(25, I2S1O_DATA_OUT5_IDX, 0);
+    setI2S1pin(26, I2S1O_DATA_OUT6_IDX, 0);
+    setI2S1pin(27, I2S1O_DATA_OUT7_IDX, 0);
+
+    // Start sending clock to the EPD.
+    myI2S->conf1.tx_stop_en = 0;
 }
 
 #endif
