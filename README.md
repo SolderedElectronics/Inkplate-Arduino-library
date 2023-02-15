@@ -1,17 +1,17 @@
 # Inkplate Arduino library
 
-[![Compile Sketches](https://github.com/e-radionicacom/Inkplate-Arduino-library/actions/workflows/compile.yml/badge.svg?branch=dev)](https://github.com/e-radionicacom/Inkplate-Arduino-library/actions/workflows/compile.yml)
+[![Compile Sketches](https://github.com/SolderedElectronics/Inkplate-Arduino-library/actions/workflows/compile.yml/badge.svg?branch=dev)](https://github.com/SolderedElectronics/Inkplate-Arduino-library/actions/workflows/compile.yml)
 
 ![](https://www.crowdsupply.com/img/cf95/compare-peripheral_jpg_project-body.jpg)
 
-Arduino library for all-in-one e-paper display family named Inkplate can be found in this repo. Inkplate is a series of powerful, Wi-Fi enabled ESP32-based e-paper display products. Its main feature is simplicity. Just plug in a USB cable, open Arduino IDE, and change the contents of the screen with few lines of code. Inkplate family currently includes Inkplate 10, Inkplate 6 and Inkplate 6PLUS - learn more about Inkplates on [official website](https://inkplate.io/). 
+Arduino library for all-in-one e-paper display family named Inkplate can be found in this repo. Inkplate is a series of powerful, Wi-Fi enabled ESP32-based e-paper display products. Its main feature is simplicity. Just plug in a USB cable, open Arduino IDE, and change the contents of the screen with few lines of code. Inkplate family currently includes Inkplate 10, Inkplate 6 and Inkplate 6PLUS - learn more about Inkplates on [official website](https://inkplate.io/).
 Inkplate 6 was crowdfunded on [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6), as well as [Inkplate 10]([https://www.crowdsupply.com/e-radionica/inkplate-10). [Inkplate 6PLUS](https://www.crowdsupply.com/e-radionica/inkplate-6plus) is funding now.
 
 ### Setting up Inkplate in Arduino IDE
 
 In order to get a head start with Inkplate (any), follow these steps:
 
-1. [Install Inkplate board definition](https://github.com/e-radionicacom/Croduino-Board-Definitions-for-Arduino-IDE/blob/master/README.md) - add Inkplate 6/10/6PLUS as a board into your Arduino IDE. Follow the instructions on the [link](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/).
+1. [Install Inkplate board definition](https://github.com/SolderedElectronics/Croduino-Board-Definitions-for-Arduino-IDE/blob/master/README.md) - add Inkplate 6/10/6PLUS as a board into your Arduino IDE. Follow the instructions on the [link](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/).
 2. Install CH340 drivers (if you don't have them yet) - instructions [here](https://e-radionica.com/en/blog/ch340-driver-installation-croduino-basic3-nova2/)
 3. Install Inkplate Arduino library - install the library from this repo into your Arduino IDE. If you don't know how, check our [tutorial](https://e-radionica.com/en/blog/arduino-library/#Kako%20instaliraty%20library?).
 4. You are ready to get started! Select Tools -> Board -> Inkplate (pick correct one), as well as correct COM port and upload!
@@ -22,8 +22,7 @@ There are many examples in the library that you demonstrate how to use any of th
 
 ### Documentation
 
-Find Inkplate documentation [here](https://inkplate.readthedocs.io/en/latest/arduino.html). 
-
+Find Inkplate documentation [here](https://inkplate.readthedocs.io/en/latest/arduino.html).
 
 ### Using Inkplate 6 with another microcontroller - Peripheral mode
 
@@ -47,7 +46,7 @@ apt install python-is-python3
 
 ### Micropython
 
-If you are looking for micropython support, please find all details [here](https://github.com/e-radionicacom/Inkplate-micropython).
+If you are looking for micropython support, please find all details [here](https://github.com/SolderedElectronics/Inkplate-micropython).
 
 ### License
 
@@ -57,9 +56,9 @@ This repo uses the source code from another repositories. All their license file
 
 All of Inkplate-related development is open-sourced:
 
-- [Arduino library](https://github.com/e-radionicacom/Inkplate-6-Arduino-library)
-- Hardware design: [Inkplate 6](https://github.com/e-radionicacom/Inkplate-6-hardware), [Inkplate 10](https://github.com/e-radionicacom/Inkplate-10-hardware)
-- [micropython Inkplate](https://github.com/e-radionicacom/Inkplate-6-micropython)
+- [Arduino library](https://github.com/SolderedElectronics/Inkplate-6-Arduino-library)
+- Hardware design: [Inkplate 6](https://github.com/SolderedElectronics/Inkplate-6-hardware), [Inkplate 10](https://github.com/SolderedElectronics/Inkplate-10-hardware)
+- [micropython Inkplate](https://github.com/SolderedElectronics/Inkplate-6-micropython)
 - OSHWA cerfiticate: [Inkplate 6](https://certification.oshwa.org/hr000003.html), [Inkplate 10](https://certification.oshwa.org/hr000006.html)
 
 ### Where to buy & other
