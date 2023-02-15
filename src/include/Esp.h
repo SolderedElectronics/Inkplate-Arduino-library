@@ -40,7 +40,6 @@ void IRAM_ATTR setI2S1pin(uint32_t _pin, uint32_t _function, uint32_t _inv);
 class Esp
 {
   public:
-
   protected:
     volatile uint8_t *_dmaLineBuffer;
     volatile lldesc_s *_dmaI2SDesc;
