@@ -1,5 +1,5 @@
 /*
-   Inkplate6PLUS_Image_frame_From_SD example for Soldered Inkplate 6Plus
+   Inkplate6PLUS_Image_Frame_From_SD example for Soldered Inkplate 6Plus
    For this example you will need a micro USB cable, Inkplate 6Plus and a SD card loaded with images.
    Select "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
    Don't have "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
@@ -13,13 +13,11 @@
    Format your SD card in standard FAT fileformat.
 
    This example will show you how you can make slideshow images from an SD card. Put your images on
-   the SD card in the root directory (just open the SD card on "my computer" and paste the images).
-
-   NOTE: Make sure that on SD are only images, not other files!
+   the SD card in a file and specify the file path in the sketch.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   26 January 2023 by Soldered
+   16 February 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -28,14 +26,20 @@
     "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
+
+/******************CHANGE HERE***********************/
+
 // Set the time between changing 2 images in seconds
-#define SECS_BETWEEN_PICTURES 2
+#define SECS_BETWEEN_PICTURES 60
+
+// Path to the folder with pictures (e.g: there is a folder called test on the SD card)
+char folderPath[] = "/test/"; // NOTE: Must end with /
+
+/****************************************************/
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch
-#include "SdFat.h"               // Include library for SD card
 Inkplate display(INKPLATE_3BIT); // Create an object on Inkplate library and also set library into 3 Bit mode
-SdFile root;                     // Create SdFile object used for opening root directory
-SdFile file;                     // Create SdFile object used for accessing files on SD card
+SdFile folder, file;             // Create SdFile objects used for accessing files on SD card
 
 // Last image index stored in RTC RAM that stores variable even if deep sleep is used
 RTC_DATA_ATTR uint16_t lastImageIndex = 0;
@@ -48,108 +52,183 @@ void setup()
     display.setTextColor(BLACK); // Set text color to black
     display.setTextSize(5);      // Scale text to be five times bigger then original (5x7 px)
 
-    // Init SD card. Display if SD card is init propery or not.
-    if (display.sdCardInit())
+    // If the folder is empty print a message and go to the sleep
+    if (!getFileCount())
     {
-        // Open root directory
-        if (!root.open("/"))
+        display.println("The folder is empty");
+        display.display();
+
+        // Go to deep sleep and do nothing
+        deepSleep();
+    }
+}
+
+void loop()
+{
+    // Open directory with pictures
+    if (folder.open(folderPath))
+    {
+        // Open the last opened file if it's not the beginning of the file
+        openLastFile();
+
+        // If it's the beginning of the file, just open the next file
+        if (!file.openNext(&folder, O_RDONLY))
         {
-            display.println("root.open failed!");
+            // If it can't open the next file, there is an end of the file so set the index of the last file to 0
+            // because it's used later for restart
+            lastImageIndex = 0;
         }
         else
         {
-            // Open last opened file
-            if (lastImageIndex != 0) // If it's the first file, the file open at index 0 won't work so skip this for the
-                                     // index zero (first file because the index is declared as 0)
+            // Save the index of the last opened file
+            lastImageIndex = file.dirIndex();
+
+            // Skip hidden files and subdirectories
+            skipHiden();
+
+            // Get name of the pucture, create path and draw image on the screen
+            if (!displayImage())
             {
-                if (!file.open(&root, lastImageIndex, O_READ))
-                {
-                    // ERROR
-                    display.println("Error opening last opened file");
-                }
-                else
-                {
-                    // Close the file so the code below can open the next one
-                    file.close();
-                }
+                // Reset the loop if there is an error displaying the image
+                return;
             }
 
-            // Go to the next file
-            if (!file.openNext(&root, O_RDONLY))
+            // Close the file
+            file.close();
+        }
+        // Close the folder
+        folder.close();
+    }
+    else
+    {
+        display.printf("Error opening folder! Make sure \nthat you have entered the proper \nname and add / to the end "
+                       "of the \npath");
+        display.display();
+        deepSleep();
+    }
+
+    // If the index is equal to 0, it is the end of the file so repeat the code in loop again
+    // If not, go into a deep sleep and wait for displaying next image
+    if (lastImageIndex != 0)
+    {
+        // Set EPS32 to be woken up in 10 seconds (in this case)
+        esp_sleep_enable_timer_wakeup(SECS_BETWEEN_PICTURES * 1000000LL);
+
+        // Go to the deep sleep
+        deepSleep();
+    }
+}
+
+// Activate the SD card and count the files in the folder. Close the folder and file and return the number of files
+int getFileCount()
+{
+    // Init SD card
+    if (!display.sdCardInit())
+    {
+        // If the SD card init is not successful, display an error on the screen
+        display.println("SD Card error!");
+        display.display();
+
+        // Go to deep sleep and do nothing
+        deepSleep();
+    }
+    else
+    {
+        // If the SD card init successfully, count the files
+        int fileCount = 0;
+
+        // Open the folder
+        if (folder.open(folderPath))
+        {
+            // Opening the next file until it reaches the end
+            while (file.openNext(&folder, O_READ))
             {
-                // If it can't open the next file, there is an end of the file so set the index of the last file to 0
-                // because it's used later for restart
-                lastImageIndex = 0;
-            }
-            else
-            {
-                // Save the index of the last opened file
-                lastImageIndex = file.dirIndex();
-
-                // Skip hidden files and subdirectories
-                while (file.isHidden() || file.isSubDir())
+                // If the file is not hidden, increase the counter
+                if (!file.isHidden())
                 {
-                    file.close();
-
-                    // Opening the next file while the file is hidden or the file is the directory
-                    if (!file.openNext(&root, O_RDONLY))
-                    {
-                        // It is end of file
-                        lastImageIndex = 0;
-                    }
-                    else
-                    {
-                        // Save the index of the last opened file
-                        lastImageIndex = file.dirIndex();
-                    }
+                    fileCount++;
                 }
-
-                // Get the name of the picture
-                int maxCharacters = 50;
-                char pictureName[maxCharacters];
-                file.getName(pictureName, maxCharacters);
-
-                // Draw the imahe on the screen
-                if (!display.drawImage(pictureName, 0, 0, 0, 0))
-                {
-                    display.print("Error printing image ");
-                    display.println(pictureName);
-                }
-
-                // Display the picture on the screen
-                display.display();
 
                 // Close the file
                 file.close();
             }
+            // Close the folder
+            folder.close();
         }
-    }
-    else
-    {
-        // If the SD card init is not successful, display an error on the screen and try again when being the time for
-        // the next image
-        display.println("SD Card error!");
-        display.display();
-    }
+        else
+        {
+            display.println("The folder doesn't exist");
+            display.display();
+            deepSleep();
+        }
 
-    // If the index is equal to 0, it is the end of the file so reset the ESP to go to the beginning of the code for
-    // printing the first image
-    if (lastImageIndex == 0)
-    {
-        ESP.restart();
+        // Return the number of files
+        return fileCount;
     }
+}
 
+// Go to deep sleep
+void deepSleep()
+{
     // Turn off the power supply for the SD card
     display.sdCardSleep();
-
-    // Set EPS32 to be woken up in 10 seconds (in this case)
-    esp_sleep_enable_timer_wakeup(SECS_BETWEEN_PICTURES * 1000000LL);
 
     // Put ESP32 into deep sleep (low power mode)
     esp_deep_sleep_start();
 }
 
-void loop()
+// If it's the first file, the file open at index 0 won't work so skip this for the index zero (first file because the
+// index is declared as 0)
+void openLastFile()
 {
-    // Nothing...
+    if (lastImageIndex != 0)
+    {
+        if (file.open(&folder, lastImageIndex, O_READ))
+        {
+            // Close the file so the code below can open the next one
+            file.close();
+        }
+    }
+}
+
+// Get name of the pucture, create path and draw image on the screen
+bool displayImage()
+{
+    // Get the name of the picture and create picture path
+    int maxCharacters = 100;
+    char pictureName[maxCharacters];
+    file.getName(pictureName, maxCharacters);
+    char *picturePath = strcat(folderPath, pictureName);
+
+    // Draw the image on the screen
+    if (!display.drawImage(picturePath, 0, 0, 1, 0))
+    {
+        // Return 0 to signalize an error
+        return 0;
+    }
+
+    // Display the picture on the screen
+    display.display();
+    return 1;
+}
+
+// Skip hidden files and subdirectories
+void skipHiden()
+{
+    while (file.isHidden() || file.isSubDir())
+    {
+        file.close();
+
+        // Opening the next file while the file is hidden or the file is the directory
+        if (!file.openNext(&folder, O_RDONLY))
+        {
+            // It is end of file
+            lastImageIndex = 0;
+        }
+        else
+        {
+            // Save the index of the last opened file
+            lastImageIndex = file.dirIndex();
+        }
+    }
 }
