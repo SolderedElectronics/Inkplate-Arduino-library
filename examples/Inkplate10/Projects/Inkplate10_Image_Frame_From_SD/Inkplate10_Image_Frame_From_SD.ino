@@ -8,9 +8,9 @@
    To work with SD card on Inkplate, you will need to add one extra library.
    Download and install it from here: https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
 
-   You can open .bmp, .jpeg or .png files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
-   24 bit AND have resoluton smaller than 1200 x 825 or otherwise it won't fit on screen.
-   Format your SD card in standard FAT fileformat.
+   You can open .bmp, .jpeg, or .png files that have a color depth of 1-bit (BW bitmap), 4-bit, 8-bit and
+   24 bit, but there are some limitations of the library. Make sure that the image has a resolution smaller
+   than 1200 x 825 or otherwise it won't fit on the screen. Format your SD card in standard FAT file format.
 
    This example will show you how you can make slideshow images from an SD card. Put your images on
    the SD card in a file and specify the file path in the sketch.
