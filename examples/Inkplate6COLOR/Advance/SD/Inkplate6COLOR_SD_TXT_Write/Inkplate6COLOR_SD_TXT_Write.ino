@@ -5,9 +5,6 @@
    Don't have "Soldered Inkplate 6COLOR" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   To work with SD card on Inkplate, you will need to add one extra library.
-   Download and install it from here: https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
-
    This example will show you how to write in .txt files.
    NOTE: Open the Serial monitor at 115200 baud to see what happens.
 
@@ -22,7 +19,6 @@
 #endif
 
 #include "Inkplate.h" // Include Inkplate library to the sketch
-#include "SdFat.h"    // Include library for SD card
 Inkplate display;     // Create an object on Inkplate library
 SdFile file;          // Create SdFile object used for accessing files on SD card
 

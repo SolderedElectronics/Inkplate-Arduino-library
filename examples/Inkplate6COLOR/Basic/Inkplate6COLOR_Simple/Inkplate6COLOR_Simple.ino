@@ -8,7 +8,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   8 July 2021 by Soldered
+   17 February 2023 by Soldered
 */
 
 #ifndef ARDUINO_INKPLATECOLOR
@@ -23,7 +23,7 @@ Inkplate display;
 void setup()
 {
     Serial.begin(115200);
-    Serial.println("Bok");
+    Serial.println("Hi");
     display.begin();
     display.clearDisplay();
     display.display();
@@ -118,12 +118,11 @@ void setup()
     display.print("Welcome to Inkplate 6COLOR!");
 
     // Draw logo
-    display.drawBitmap(0, 350, logo, logo_w, logo_h, INKPLATE_BLACK);
-    display.drawBitmap(100, 350, logo, logo_w, logo_h, INKPLATE_WHITE);
-    display.drawBitmap(200, 350, logo, logo_w, logo_h, INKPLATE_GREEN);
-    display.drawBitmap(300, 350, logo, logo_w, logo_h, INKPLATE_BLUE);
-    display.drawBitmap(400, 350, logo, logo_w, logo_h, INKPLATE_RED);
-    display.drawBitmap(500, 350, logo, logo_w, logo_h, INKPLATE_YELLOW);
+    display.drawBitmap(80, 0, logo, logo_w, logo_h, INKPLATE_BLACK);
+    display.drawBitmap(80, 89, logo, logo_w, logo_h, INKPLATE_GREEN);
+    display.drawBitmap(80, 178, logo, logo_w, logo_h, INKPLATE_BLUE);
+    display.drawBitmap(80, 267, logo, logo_w, logo_h, INKPLATE_RED);
+    display.drawBitmap(80, 356, logo, logo_w, logo_h, INKPLATE_YELLOW);
 
     display.display();
 }

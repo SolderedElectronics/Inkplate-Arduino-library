@@ -5,9 +5,6 @@
    Don't have "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   To work with SD card on Inkplate, you will need to add one extra library.
-   Download and install it from here: https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
-
    This example will show you how to write in .txt file.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
@@ -22,7 +19,6 @@
 #endif
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch
-#include "SdFat.h"               // Include library for SD card
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 SdFile file;                     // Create SdFile object used for accessing files on SD card
 

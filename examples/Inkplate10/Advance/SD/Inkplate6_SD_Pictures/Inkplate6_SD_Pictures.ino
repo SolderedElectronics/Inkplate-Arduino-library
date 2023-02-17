@@ -1,13 +1,13 @@
 /*
-   Inkplate6_SD_Pictures example for Soldered Inkplate 6
-   For this example you will need a micro USB cable, Inkplate6 and a SD card loaded with
-   image1.bmp and image2.bmp file that can be found inside folder of this example.
-   Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate6" or "Soldered Inkplate6" option? Follow our tutorial and add it:
+   Inkplate10_SD_Pictures example for Soldered Inkplate 10
+   For this example you will need a micro USB cable, Inkplate10 and a SD card loaded with
+   images that can be found inside folder of this example.
+   Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    You can open .bmp, .jpeg or .png files (but there are some limitations by the library) that have 
-   color depth of 1 bit (BW bitmap), 4 bit, 8 bit and 24 bit AND have resoluton smaller than 800x600 
+   color depth of 1 bit (BW bitmap), 4 bit, 8 bit and 24 bit AND have resoluton smaller than 1200x825 
    or otherwise it won't fit on screen. Format your SD card in standard FAT fileformat.
 
    This example will show you how you can read .bmp and .jpeg files (pictures) from SD card and
@@ -19,8 +19,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
+#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
+#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch
@@ -67,17 +67,6 @@ void setup()
         }   
         display.display();
         delay(5000);
-    
-        // Now draw a JPEG
-        display.clearDisplay();
-        if (!display.drawImage("pyramid.jpg", 100, 0, true, false))
-        {
-            // If is something failed (wrong filename or wrong format), write error message on the screen.
-            // You can turn off dithering for somewhat faster image load by changing the fifth parameter to false, or
-            // removing the parameter completely
-            display.println("Image open error");
-        }       
-        display.display();
     }
     else
     {
