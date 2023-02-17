@@ -1,8 +1,8 @@
 /*
    Inkplate2_Bluetooth_Serial example for Soldered Inkplate 2
    For this example you will need USB cable, Inkplate 2 and smartphone.
-   Select "Soldered Inkplate2" from Tools -> Board menu.
-   Don't have "Soldered Inkplate2" option? Follow our tutorial and add it:
+   Select "e-radionica Inkplate2" or "Soldered Inkplate2" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate2" or "Soldered Inkplate2" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example shows how to use Bluetooth on Inkplate devices.
@@ -15,7 +15,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   25 January 2023 by Soldered
+   17 February 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -30,35 +30,42 @@ const char *btDeviceName = "Inkplate2";
 #include "BluetoothSerial.h"
 #include "Inkplate.h"
 
-Inkplate display; // Create an object on Inkplate library and also set library into 1-bit mode (BW)
-BluetoothSerial SerialBT;        // Create SerialBT object for Bluetooth communication
+Inkplate display;         // Create an object on Inkplate library and also set library into 1-bit mode (BW)
+BluetoothSerial SerialBT; // Create SerialBT object for Bluetooth communication
+
 
 void setup()
 {
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
-    display.setTextSize(2); // Scale text to be 3 times bigger then original (5x7 px)
+    display.setTextSize(2); // Scale text to be 2 times bigger then original (5x7 px)
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
     display.println("Bluetooth Serial Example");
+    display.println();
     display.setTextSize(1);
 
     // Init SerialBT
     if (!SerialBT.begin(btDeviceName))
     {
         // Something goes wrong, print an error message
-        display.printf("\nAn error occurred initializing Bluetooth");
+        display.println("An error occurred initializing Bluetooth");
     }
     else
     {
         // Bluetooth started successfully, print the messages on the screen
-        display.printf("\nThe device started, now you can \npair it with Bluetooth!\n");
-        display.printf("\nOpen Serial Monitor at 115200 baud!");
+        display.println("The device started, now you can ");
+        display.println("pair it with Bluetooth and send");
+        display.println("messages");
+        display.println();
+
+        display.println("Open Serial Monitor at 115200");
+        display.println("baud!");
     }
 
     // Init serial communication
     Serial.begin(115200);
 
-    // Display messages on th escreen
+    // Display messages on the screen
     display.display();
 }
 
@@ -67,13 +74,21 @@ void loop()
     // If you type something on the serial port, send that data via Bluetooth to the connected phone
     if (Serial.available())
     {
-        SerialBT.write(Serial.read());
+        // Load the whole message and send it
+        while (Serial.available())
+        {
+            SerialBT.write(Serial.read());
+        }
     }
 
-    // If there are bytes available to read in the Bluetooth port, display those data to the Serial Monitor
+    // If there are bytes available to read in the Bluetooth port, display those data on the screen
     if (SerialBT.available())
     {
-        Serial.write(SerialBT.read());
+        // Load the whole message and print it on the screen
+        while (SerialBT.available())
+        {
+            Serial.write(SerialBT.read());
+        }
     }
 
     // Wait a bit
