@@ -1,8 +1,8 @@
 /*
    Inkplate6COLOR_Second_SPI example for Soldered Inkplate 6COLOR
-   For this example you will need a USB-C cable, Inkplate 6Plus, MFRC522 RFID reader, RFID tag and few wires.
+   For this example you will need a USB-C cable, Inkplate 6COLOR, MFRC522 RFID reader, RFID tag and few wires.
    Select "Soldered Inkplate 6COLOR" from Tools -> Board menu.
-   Don't have "Soldered Inkplate2" option? Follow our tutorial and add it:
+   Don't have "Soldered InkplateCOLOR" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    Connect RFID reader to the following wiring diagram:

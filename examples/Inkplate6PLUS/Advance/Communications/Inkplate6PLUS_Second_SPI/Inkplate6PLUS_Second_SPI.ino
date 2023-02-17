@@ -1,9 +1,12 @@
 /*
-   Inkplate6PLUS_Second_SPI example for Soldered Inkplate 6Plus
-   For this example you will need a USB-C cable, Inkplate 6Plus, MFRC522 RFID reader, RFID tag and few wires.
-   Select "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
+   Inkplate6PLUS_Second_SPI example for Soldered Inkplate 6PLUS
+   For this example you will need a USB-C cable, Inkplate 6PLUS, MFRC522 RFID reader, RFID tag and few wires.
+   Select "e-radionica Inkplate 6PLUS" or "Soldered Inkplate 6PLUS" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate 6PLUS" or "Soldered Inkplate 6PLUS" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
+
+   For this example you have to install Soldered MFRC522 library:
+   https://github.com/SolderedElectronics/Soldered-MFRC522-RFID-Reader-Arduino-Library
 
    Connect RFID reader to the following wiring diagram:
    3.3V - 3V3
@@ -21,7 +24,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   1 February 2023 by Soldered
+   17 February 2023 by Soldered Electronics
 */
 
 
@@ -33,7 +36,7 @@
 
 // Include needed libraries
 #include "Inkplate.h"
-#include "MFRC522.h"
+#include "MFRC522-SOLDERED.h"
 #include "SPI.h"
 
 // Pins for the MFRC522
@@ -45,6 +48,10 @@ MFRC522 rfid(SS_PIN, RST_PIN);
 
 // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 Inkplate display(INKPLATE_1BIT);
+
+// Font scale for the text on the screen. The scale of 1 is 7px height
+#define BIG_TEXT_SCALE   5
+#define SMALL_TEXT_SCALE 4
 
 void setup()
 {
@@ -59,12 +66,16 @@ void setup()
 
     // Set text setings
     display.setTextColor(BLACK);
-    display.setTextSize(6);
+    display.setTextSize(BIG_TEXT_SCALE);
 
     // Clear the display and print the message
     display.clearDisplay();
-    display.printf("Approximate a card to the \nreader!");
+    display.println("Approximate a card to the reader!");
     display.display();
+
+    // Set a smaller font size for displaying the card information
+    display.setTextSize(SMALL_TEXT_SCALE);
+    display.println();
 }
 
 void loop()
@@ -75,9 +86,16 @@ void loop()
         // If the NUID has been read
         if (rfid.PICC_ReadCardSerial())
         {
-            // Clear the frame buffer of the screen and set the cursor to the beginning
-            display.clearDisplay();
-            display.setCursor(0, 0);
+            // Check if the content fits on the screen expecting 2 line of the text
+            if (display.getCursorY() + 2 * SMALL_TEXT_SCALE * 7 > E_INK_HEIGHT)
+            {
+                // Clear the frame buffer of the display and set cursor to the beginning of the screen
+                display.setCursor(0, 0);
+                display.clearDisplay();
+
+                // Do a full refresh
+                display.display();
+            }
 
             // Get tag type and print it
             MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
@@ -91,7 +109,9 @@ void loop()
                 display.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
                 display.print(rfid.uid.uidByte[i], HEX);
             }
-            display.display();
+            display.println();
+            display.println();
+            display.partialUpdate();
 
             // Halt PICC
             rfid.PICC_HaltA();

@@ -30,7 +30,8 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
 #endif
 
 // Include needed libraries
@@ -49,74 +50,74 @@ MFRC522 rfid(SS_PIN, RST_PIN);
 Inkplate display(INKPLATE_1BIT);
 
 // Font scale for the text on the screen. The scale of 1 is 7px height
-#define BIG_TEXT_SCALE 4
+#define BIG_TEXT_SCALE   4
 #define SMALL_TEXT_SCALE 3
 
 void setup()
 {
-  // Init Inkplate library (you should call this function ONLY ONCE)
-  display.begin();
+    // Init Inkplate library (you should call this function ONLY ONCE)
+    display.begin();
 
-  // Init SPI bus
-  SPI.begin(14, 12, 13, 15);
+    // Init SPI bus
+    SPI.begin(14, 12, 13, 15);
 
-  // Init MFRC522
-  rfid.PCD_Init();
+    // Init MFRC522
+    rfid.PCD_Init();
 
-  // Set text setings
-  display.setTextColor(BLACK);
-  display.setTextSize(BIG_TEXT_SCALE);
+    // Set text setings
+    display.setTextColor(BLACK);
+    display.setTextSize(BIG_TEXT_SCALE);
 
-  // Clear the display and print the message
-  display.clearDisplay();
-  display.println("Approximate a card to the reader!");
-  display.display();
+    // Clear the display and print the message
+    display.clearDisplay();
+    display.println("Approximate a card to the reader!");
+    display.display();
 
-  // Set a smaller font size for displaying the card information
-  display.setTextSize(SMALL_TEXT_SCALE);
-  display.println();
+    // Set a smaller font size for displaying the card information
+    display.setTextSize(SMALL_TEXT_SCALE);
+    display.println();
 }
 
 void loop()
 {
-  // If the new tag is available
-  if (rfid.PICC_IsNewCardPresent())
-  {
-    // If the NUID has been read
-    if (rfid.PICC_ReadCardSerial())
+    // If the new tag is available
+    if (rfid.PICC_IsNewCardPresent())
     {
-      // Check if the content fits on the screen expecting 2 line of the text
-      if (display.getCursorY() + 2 * SMALL_TEXT_SCALE * 7 > E_INK_HEIGHT)
-      {
-        // Clear the frame buffer of the display and set cursor to the beginning of the screen
-        display.setCursor(0, 0);
-        display.clearDisplay();
+        // If the NUID has been read
+        if (rfid.PICC_ReadCardSerial())
+        {
+            // Check if the content fits on the screen expecting 2 line of the text
+            if (display.getCursorY() + 2 * SMALL_TEXT_SCALE * 7 > E_INK_HEIGHT)
+            {
+                // Clear the frame buffer of the display and set cursor to the beginning of the screen
+                display.setCursor(0, 0);
+                display.clearDisplay();
 
-        // Do a full refresh
-        display.display();
-      }
+                // Do a full refresh
+                display.display();
+            }
 
-      // Get tag type and print it
-      MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
-      display.print("RFID Tag Type: ");
-      display.println(rfid.PICC_GetTypeName(piccType));
+            // Get tag type and print it
+            MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
+            display.print("RFID Tag Type: ");
+            display.println(rfid.PICC_GetTypeName(piccType));
 
-      // Print tag ID to the display in the hex format
-      display.print("ID:");
-      for (int i = 0; i < rfid.uid.size; i++)
-      {
-        display.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
-        display.print(rfid.uid.uidByte[i], HEX);
-      }
-      display.println();
-      display.println();
-      display.partialUpdate();
+            // Print tag ID to the display in the hex format
+            display.print("ID:");
+            for (int i = 0; i < rfid.uid.size; i++)
+            {
+                display.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
+                display.print(rfid.uid.uidByte[i], HEX);
+            }
+            display.println();
+            display.println();
+            display.partialUpdate();
 
-      // Halt PICC
-      rfid.PICC_HaltA();
+            // Halt PICC
+            rfid.PICC_HaltA();
 
-      // Stop encryption on PCD
-      rfid.PCD_StopCrypto1();
+            // Stop encryption on PCD
+            rfid.PCD_StopCrypto1();
+        }
     }
-  }
 }
