@@ -10,7 +10,7 @@
    First, you have to pair the Inkplate with your phone in Bluetooth settings in your phone, then go to the
    Serial Bluetooth Terminal app and you can find the Inkplate in the device list. You can use another similar app.
    If Bluetooth starts successfully, you can send anything from your phone to an Inkplate or vice versa.
-   On the Serial Monitor, you will see what the phone sends while in the app you will see what the Inkplate
+   On the screen, you will see what the phone sends while in the app you will see what the Inkplate
    sends over the Serial Monitor.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
