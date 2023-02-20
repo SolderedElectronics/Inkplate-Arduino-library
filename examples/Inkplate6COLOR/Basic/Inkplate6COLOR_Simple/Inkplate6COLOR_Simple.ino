@@ -22,8 +22,6 @@ Inkplate display;
 
 void setup()
 {
-    Serial.begin(115200);
-    Serial.println("Hi");
     display.begin();
     display.clearDisplay();
     display.display();
@@ -118,11 +116,11 @@ void setup()
     display.print("Welcome to Inkplate 6COLOR!");
 
     // Draw logo
-    display.drawBitmap(80, 0, logo, logo_w, logo_h, INKPLATE_BLACK);
-    display.drawBitmap(80, 89, logo, logo_w, logo_h, INKPLATE_GREEN);
-    display.drawBitmap(80, 178, logo, logo_w, logo_h, INKPLATE_BLUE);
-    display.drawBitmap(80, 267, logo, logo_w, logo_h, INKPLATE_RED);
-    display.drawBitmap(80, 356, logo, logo_w, logo_h, INKPLATE_YELLOW);
+    display.drawBitmap(0, 350, logo, logo_w, logo_h, INKPLATE_BLACK);
+    display.drawBitmap(100, 350, logo, logo_w, logo_h, INKPLATE_GREEN);
+    display.drawBitmap(200, 350, logo, logo_w, logo_h, INKPLATE_BLUE);
+    display.drawBitmap(300, 350, logo, logo_w, logo_h, INKPLATE_RED);
+    display.drawBitmap(400, 350, logo, logo_w, logo_h, INKPLATE_YELLOW);
 
     display.display();
 }

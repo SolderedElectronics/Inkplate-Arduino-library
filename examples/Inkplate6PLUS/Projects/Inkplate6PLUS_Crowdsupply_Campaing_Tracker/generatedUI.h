@@ -16,12 +16,12 @@ int rect0_radius = -1;
 int rect0_color = BLACK;
 
 String text1_content;
-int text1_cursor_x = 44;
+int text1_cursor_x = 30;
 int text1_cursor_y = 90;
 const GFXfont *text1_font = &Open_Sans_SemiBold_56;
 
 String text2_content = "Soldered";
-int text2_cursor_x = 44;
+int text2_cursor_x = 30;
 int text2_cursor_y = 110;
 const GFXfont *text2_font = &Open_Sans_SemiBold_16;
 
@@ -46,7 +46,7 @@ int text6_cursor_y = 390;
 const GFXfont *text6_font = &Open_Sans_SemiBold_24;
 
 String text7_content;
-int text7_cursor_x = 112;
+int text7_cursor_x = 98;
 int text7_cursor_y = 490;
 const GFXfont *text7_font = &Open_Sans_SemiBold_32;
 
