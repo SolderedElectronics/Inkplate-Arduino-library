@@ -10,7 +10,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   19 May 2022 by Soldered
+   20 February 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -22,7 +22,7 @@
 Inkplate display;     // Create an object on Inkplate library
 
 #define REFRESH_DELAY 60000 // Delay between refreshes one minute
-unsigned long time1;       // Time for measuring refresh in millis
+unsigned long time1;        // Time for measuring refresh in millis
 
 // Set clock
 uint8_t hour = 12;
@@ -30,18 +30,20 @@ uint8_t minutes = 50;
 uint8_t seconds = 0;
 
 // Set date and weekday (NOTE: In weekdays 0 means Sunday, 1 menas Monday, ...)
-uint8_t weekday = 5;
-uint8_t day = 19;
-uint8_t month = 5;
-uint8_t year = 22;
+uint8_t weekday = 1;
+uint8_t day = 20;
+uint8_t month = 2;
+uint8_t year = 23;
+
+// A flag for showing the time for the first time without waiting the REFRESH_DELAY
+bool firstShowTime = true;
 
 void setup()
 {
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
-    display.rtcReset();     //  Reset RTC if there is some data in it
+    display.rtcReset();     // Reset RTC if there is some data in it
     display.clearDisplay(); // Clear frame buffer of display
-    display.display();      // Put clear image on display
-    display.setTextSize(3); // Set text to be 4 times bigger than classic 5x7 px text
+    display.setTextSize(3); // Set text to be 3 times bigger than classic 5x7 px text
     display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE); // Set text color and background
 
     display.rtcSetTime(hour, minutes, seconds);    // Send time to RTC
@@ -51,8 +53,9 @@ void setup()
 void loop()
 {
     //Refresh screen every one minute - the clock will appear after one minute
-    if ((unsigned long)(millis() - time1) > REFRESH_DELAY)
+    if ((unsigned long)(millis() - time1) > REFRESH_DELAY || firstShowTime)
     {
+        firstShowTime = false;             // Set the flag to the 0
         display.rtcGetRtcData();           // Get the time and date from RTC
         seconds = display.rtcGetSecond();  // Store senconds in a variable
         minutes = display.rtcGetMinute();  // Store minutes in a variable
