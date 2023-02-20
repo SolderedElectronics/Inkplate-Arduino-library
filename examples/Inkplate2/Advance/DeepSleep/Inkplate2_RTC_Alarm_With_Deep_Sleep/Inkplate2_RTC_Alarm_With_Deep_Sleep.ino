@@ -146,5 +146,6 @@ void setup()
 
 void loop()
 {
-    // Nothing. Loop must be empty!
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
