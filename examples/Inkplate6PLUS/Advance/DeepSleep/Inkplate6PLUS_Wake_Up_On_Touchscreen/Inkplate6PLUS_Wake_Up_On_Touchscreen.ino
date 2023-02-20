@@ -75,11 +75,11 @@ void setup()
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
 
     // Enable wake from I/O expander port on gpio 34
-    #ifdef ARDUINO_INKPLATE6PLUS
+#ifdef ARDUINO_INKPLATE6PLUS
         esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
-    #elif defined(ARDUINO_INKPLATE6PLUSV2)
+#elif defined(ARDUINO_INKPLATE6PLUSV2)
         esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ALL_LOW);
-    #endif
+#endif
 
     // Go to sleep
     esp_deep_sleep_start();
