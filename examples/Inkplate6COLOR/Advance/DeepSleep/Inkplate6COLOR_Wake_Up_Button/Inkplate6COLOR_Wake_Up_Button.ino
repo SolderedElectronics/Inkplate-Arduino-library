@@ -5,7 +5,7 @@
    Don't have "Soldered Inkplate 6COLOR" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   Here is shown how to use I/O expander and ESP interrupts to wake up the MCU from deepsleep when wake up button
+   Here is shown how to use ESP interrupts to wake up the MCU from deepsleep when wake up button
    is pressed. Also, wake up on timer after 30 seconds of deep sleep if the button is not pressed.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
@@ -53,7 +53,8 @@ void setup()
 
 void loop()
 {
-    // Never here
+    // Never here! If you use deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 
 // Function that will write number of boots and boot reason to screen

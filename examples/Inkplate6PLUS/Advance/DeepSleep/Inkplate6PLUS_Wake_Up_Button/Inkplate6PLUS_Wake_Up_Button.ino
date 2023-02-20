@@ -5,7 +5,7 @@
    Don't have "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   Here is shown how to use I/O expander and ESP interrupts to wake up the MCU from deepsleep when touchscreen or wake up button
+   Here is shown how to use ESP interrupts to wake up the MCU from deepsleep when touchscreen or wake up button
    is pressed. Also, wake up on timer after 30 seconds of deep sleep if the button is not pressed.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
@@ -15,7 +15,8 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
 #include <Inkplate.h>
@@ -53,7 +54,8 @@ void setup()
 
 void loop()
 {
-    // Never here
+    // Never here! If you use deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 
 // Function that will write number of boots and boot reason to screen
