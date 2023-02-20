@@ -365,7 +365,7 @@ void loop()
     }
 
     // Did you know that you can change between BW and greyscale mode anytime?
-    // Just call Inkplate display(INKPLATE_1BIT) or Inkplate display(INKPLATE_3BIT)
+    // Just call display.setDisplayMode(mode)
 }
 
 // Small function that will write on the screen what function is currently in demonstration.
