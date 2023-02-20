@@ -11,7 +11,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   8 December 2022 by Soldered
+   20 February 2023 by Soldered
 */
 
 #ifndef ARDUINO_INKPLATECOLOR
@@ -54,7 +54,8 @@ void setup()
 
 void loop()
 {
-    // Nothing...
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 
 void printCurrentTime()
