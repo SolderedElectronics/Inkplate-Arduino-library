@@ -74,8 +74,12 @@ void setup()
     // Enable wakeup from deep sleep on gpio 36 (wake button)
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
 
-    // enable wake from I/O expander port on gpio 34
-    esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ALL_LOW);
+    // Enable wake from I/O expander port on gpio 34
+    #ifdef ARDUINO_INKPLATE6PLUS
+        esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
+    #elif defined(ARDUINO_INKPLATE6PLUSV2)
+        esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ALL_LOW);
+    #endif
 
     // Go to sleep
     esp_deep_sleep_start();
@@ -94,7 +98,7 @@ void displayInfo()
 
     // Set text cursor and size
     display.setCursor(10, 280);
-    display.setTextSize(2);
+    display.setTextSize(3);
 
     display.print(F("Boot count: "));
     display.println(bootCount, DEC); // Print the number
