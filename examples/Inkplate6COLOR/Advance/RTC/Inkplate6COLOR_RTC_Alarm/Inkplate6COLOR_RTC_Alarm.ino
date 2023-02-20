@@ -10,7 +10,7 @@
    
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   19 May 2022 by Soldered
+   20 February 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -18,8 +18,8 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate 6COLOR in the boards menu."
 #endif
 
-#include "Inkplate.h"            // Include Inkplate library to the sketch
-Inkplate display; // Create an object on Inkplate library
+#include "Inkplate.h" // Include Inkplate library to the sketch
+Inkplate display;     // Create an object on Inkplate library
 
 // Set clock
 uint8_t hour = 12;
@@ -27,27 +27,24 @@ uint8_t minutes = 51;
 uint8_t seconds = 0;
 
 // Set date and weekday (NOTE: In weekdays 0 means Sunday, 1 menas Monday, ...)
-uint8_t weekday = 5;
-uint8_t day = 19;
-uint8_t month = 5;
-uint8_t year = 22;
+uint8_t weekday = 1;
+uint8_t day = 20;
+uint8_t month = 2;
+uint8_t year = 23;
 
 // Set alarm time and date (alarm will be generated 60 seconds after board power up)
 uint8_t alarmHour = 12;
 uint8_t alarmMinutes = 52;
 uint8_t alarmSeconds = 0;
-uint8_t alarmWeekday = 5;
-uint8_t alarmDay = 19;
+uint8_t alarmWeekday = 1;
+uint8_t alarmDay = 20;
 
 void setup()
 {
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
-    display.rtcReset();           //  Reset RTC if there is some data in it
+    display.rtcReset();     // Reset RTC if there is some data in it
     display.clearDisplay(); // Clear frame buffer of display
-    display.display();      // Put clear image on display
-    display.setTextSize(3); // Set text to be 4 times bigger than classic 5x7 px text
-
-    pinMode(39, INPUT_PULLUP);
+    display.setTextSize(3); // Set text to be 3 times bigger than classic 5x7 px text
 
     display.rtcSetTime(hour, minutes, seconds);    // Send time to RTC
     display.rtcSetDate(weekday, day, month, year); // Send date to RTC
@@ -56,7 +53,7 @@ void setup()
 
 void loop()
 {
-    display.rtcGetRtcData();             // Get the time and date from RTC
+    display.rtcGetRtcData();           // Get the time and date from RTC
     seconds = display.rtcGetSecond();  // Store senconds in a variable
     minutes = display.rtcGetMinute();  // Store minutes in a variable
     hour = display.rtcGetHour();       // Store hours in a variable
@@ -67,7 +64,7 @@ void loop()
 
     display.clearDisplay();                                       // Clear content in frame buffer
     display.setCursor(100, 300);                                  // Set position of the text
-    display.setTextColor(INKPLATE_GREEN, INKPLATE_WHITE);         //Set text color and background
+    display.setTextColor(INKPLATE_GREEN, INKPLATE_WHITE);         // Set text color and background
     printTime(hour, minutes, seconds, day, weekday, month, year); // Print the time on screen
 
     if (display.rtcCheckAlarmFlag())  // Check if alarm has occurred
@@ -77,10 +74,9 @@ void loop()
       display.print("ALARM!");
     }
 
-        display.display(true); // Do a full refresh
+    display.display(true); // Do a full refresh
 
-
-    delay(60000);  // Delay between refreshes one minute
+    delay(60000); // Delay between refreshes one minute
 }
 
 void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, uint8_t _weekday, uint16_t _month,

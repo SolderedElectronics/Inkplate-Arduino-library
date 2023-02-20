@@ -13,7 +13,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   12 November 2021 by Soldered
+   20 February 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -25,7 +25,7 @@
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
 #define REFRESH_DELAY 1000 // Delay between refreshes
-unsigned long time1;      // Time for measuring refresh in millis
+unsigned long time1;       // Time for measuring refresh in millis
 
 // Set clock
 uint8_t hour = 12;
@@ -33,17 +33,17 @@ uint8_t minutes = 50;
 uint8_t seconds = 30;
 
 // Set date and weekday (NOTE: In weekdays 0 means Sunday, 1 menas Monday, ...)
-uint8_t weekday = 4;
-uint8_t day = 11;
-uint8_t month = 11;
-uint8_t year = 21;
+uint8_t weekday = 1;
+uint8_t day = 20;
+uint8_t month = 2;
+uint8_t year = 23;
 
 // Set alarm time and date (alarm will be generated 10 seconds after board power up)
 uint8_t alarmHour = 12;
 uint8_t alarmMinutes = 50;
 uint8_t alarmSeconds = 40;
-uint8_t alarmWeekday = 4;
-uint8_t alarmDay = 11;
+uint8_t alarmWeekday = 1;
+uint8_t alarmDay = 20;
 
 void setup()
 {
@@ -51,8 +51,6 @@ void setup()
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
     display.setTextSize(5); // Set text to be 5 times bigger than classic 5x7 px text
-
-    pinMode(39, INPUT_PULLUP);
 
     display.rtcSetTime(hour, minutes, seconds);                                         // Send time to RTC
     display.rtcSetDate(weekday, day, month, year);                                      // Send date to RTC
