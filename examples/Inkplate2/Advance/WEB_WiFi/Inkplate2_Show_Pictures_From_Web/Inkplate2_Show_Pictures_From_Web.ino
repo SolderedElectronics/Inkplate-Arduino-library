@@ -5,11 +5,16 @@
     Don't have "Soldered Inkplate2" option? Follow our tutorial and add it:
     https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-    You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
-    24 bit AND have resoluton smaller than 212x104 or otherwise it won't fit on screen.
+    This example will show you how to simply download pictures from the web and
+    display them on Inkplate 2's e-paper display.
 
-    This example will show you how you can download a .bmp file (picture) from the web and
-    display that image on e-paper display.
+    You can open .jpg, .png and.bmp files smaller than or exactly 212x104 px.
+
+    .jpg files encoded with Baseline DCT, Huffman coding are supported
+    .png and .bmp files are generally well supported
+
+    If an image isn't displaying, open it in an image editor and save it as a different file.
+    This usually resolves issues with decoding.
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: https://forum.soldered.com/
