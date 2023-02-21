@@ -104,9 +104,6 @@ void loop()
             display.print(c);
         }
 
-        // New line for spacing
-        display.println();
-
         // Actually display the message
         display.partialUpdate();
     }

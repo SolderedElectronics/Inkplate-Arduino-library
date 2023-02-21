@@ -11,7 +11,7 @@
    1. Go to the ThingSpeak.com and create a free account
    2. Open the Channels tab
    3. Create a new channel
-   4. Create fields you want to use
+   4. Create fields you want to use (this example uses 1 field called field1 and this name must be used when sending data)
    5. Open the channel, go to the API Keys tab and copy your Write API Key
    6. Enter your API key in the code below
 
@@ -36,8 +36,8 @@
 Inkplate display(INKPLATE_1BIT);
 WiFiClient client;
 
-// Here you can change the interval of sending POST requests
-#define POSTING_INTERVAL_IN_SESCS 10
+// Here you can change the interval of sending POST requests (minimum 15 seconds with a free license)
+#define POSTING_INTERVAL_IN_SESCS 20
 
 // Enter your WiFi credentials
 const char *ssid = "";
@@ -89,7 +89,7 @@ void setup()
 void loop()
 {
     // Every POSTING_INTERVAL_IN_SESCS seconds make the POST request
-    if (millis() - lastConnectionTime > POSTING_INTERVAL_IN_SESCS * 1000LL)
+    if ((unsigned long)(millis() - lastConnectionTime) > POSTING_INTERVAL_IN_SESCS * 1000LL)
     {
         // Clear frame buffer of display
         display.clearDisplay();
@@ -125,7 +125,8 @@ void loop()
                 client.print("\n\n");
                 client.print(data);
 
-                Serial.println("The POST request is done.");
+                Serial.print("The POST request is done: ");
+                Serial.println(data);
                 lastConnectionTime = millis();
                 delay(250);
             }

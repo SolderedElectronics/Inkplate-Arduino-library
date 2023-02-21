@@ -121,6 +121,7 @@ void setup()
     display.drawBitmap(200, 350, logo, logo_w, logo_h, INKPLATE_BLUE);
     display.drawBitmap(300, 350, logo, logo_w, logo_h, INKPLATE_RED);
     display.drawBitmap(400, 350, logo, logo_w, logo_h, INKPLATE_YELLOW);
+    display.drawBitmap(500, 350, logo, logo_w, logo_h, INKPLATE_ORANGE);
 
     display.display();
 }
