@@ -6,15 +6,16 @@
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    You can open .bmp, .jpeg, or .png files that have a color depth of 1-bit (BW bitmap), 4-bit, 8-bit and
-   24 bit, but there are some limitations of the library. Make sure that the image has a resolution smaller
-   than 800x600 or otherwise it won't fit on the screen. Format your SD card in standard FAT file format.
+   24 bit, but there are some limitations of the library. It will skip images that can't be drawn.
+   Make sure that the image has a resolution smaller than 800x600 or otherwise it won't fit on the screen.
+   Format your SD card in standard FAT file format.
 
    This example will show you how you can make slideshow images from an SD card. Put your images on
    the SD card in a file and specify the file path in the sketch.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   16 February 2023 by Soldered
+   21 February 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -27,10 +28,12 @@
 /******************CHANGE HERE***********************/
 
 // Set the time between changing 2 images in seconds
+// Note: It will take a couple of seconds more (or longer if there is a file that must be skipped because it can't be
+// drawn) than the specified time because Inkplate needs time for loading and display the image
 #define SECS_BETWEEN_PICTURES 60
 
-// Path to the folder with pictures (e.g: there is a folder called test on the SD card)
-char folderPath[] = "/test/"; // NOTE: Must end with /
+// Path to the folder with pictures (e.g. there is a folder called images on the SD card)
+const char folderPath[] = "/images/"; // NOTE: Must end with /
 
 /****************************************************/
 
@@ -48,7 +51,10 @@ void setup()
     display.setCursor(0, 0);     // Set the cursor on the beginning of the screen
     display.setTextColor(BLACK); // Set text color to black
     display.setTextSize(5);      // Scale text to be five times bigger then original (5x7 px)
+}
 
+void loop()
+{
     // If the folder is empty print a message and go to the sleep
     if (!getFileCount())
     {
@@ -58,10 +64,7 @@ void setup()
         // Go to deep sleep and do nothing
         deepSleep();
     }
-}
 
-void loop()
-{
     // Open directory with pictures
     if (folder.open(folderPath))
     {
@@ -116,7 +119,10 @@ void loop()
     }
 }
 
-// Activate the SD card and count the files in the folder. Close the folder and file and return the number of files
+/**
+ * @brief     Activate the SD card and count the files in the folder. Close the folder and file and return the number of
+ *            files
+ */
 int getFileCount()
 {
     // Init SD card
@@ -164,7 +170,9 @@ int getFileCount()
     }
 }
 
-// Go to deep sleep
+/**
+ * @brief     Go to deep sleep.
+ */
 void deepSleep()
 {
     // Turn off the power supply for the SD card
@@ -174,8 +182,11 @@ void deepSleep()
     esp_deep_sleep_start();
 }
 
-// If it's the first file, the file open at index 0 won't work so skip this for the index zero (first file because the
-// index is declared as 0)
+//
+/**
+ * @brief     If it's the first file, the file open at index 0 won't work so skip this for the index zero (first file
+ *            because the index is declared as 0).
+ */
 void openLastFile()
 {
     if (lastImageIndex != 0)
@@ -188,18 +199,32 @@ void openLastFile()
     }
 }
 
-// Get name of the pucture, create path and draw image on the screen
+/**
+ * @brief     Get name of the pucture, create path and draw image on the screen.
+ *
+ * @return    0 if there is an error, 1 if the image is drawn.
+ */
 bool displayImage()
 {
-    // Get the name of the picture and create picture path
+    // Get the name of the picture
     int maxCharacters = 100;
     char pictureName[maxCharacters];
     file.getName(pictureName, maxCharacters);
-    char *picturePath = strcat(folderPath, pictureName);
+
+    // Cpoy of the folder path just for creating path for the image
+    char path[maxCharacters];
+    strcpy(path, folderPath);
+
+    // Create picture path (folder path + picture name)
+    char *picturePath = strcat(path, pictureName);
 
     // Draw the image on the screen
     if (!display.drawImage(picturePath, 0, 0, 1, 0))
     {
+        // Close folder and file
+        file.close();
+        folder.close();
+
         // Return 0 to signalize an error
         return 0;
     }
@@ -209,7 +234,9 @@ bool displayImage()
     return 1;
 }
 
-// Skip hidden files and subdirectories
+/**
+ * @brief     Skip hidden files and subdirectories.
+ */
 void skipHiden()
 {
     while (file.isHidden() || file.isSubDir())
