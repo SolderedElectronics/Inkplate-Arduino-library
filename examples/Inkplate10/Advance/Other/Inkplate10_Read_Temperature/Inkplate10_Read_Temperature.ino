@@ -7,8 +7,6 @@
 
    This example will show you how to read temperature from on-board
    temperature sensor which is part of TPS65186 e-paper PMIC.
-   NOTE: In order to read temperature, e-paper has to be refreshed at least one time,
-   or you have to power up epaper PMIC with einkOn() function from Inkplate library.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/

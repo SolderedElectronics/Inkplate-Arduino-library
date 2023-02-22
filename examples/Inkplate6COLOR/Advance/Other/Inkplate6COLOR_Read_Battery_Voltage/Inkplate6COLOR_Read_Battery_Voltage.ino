@@ -29,9 +29,8 @@ void setup()
 
 void loop()
 {
-    float voltage =
-        display.readBattery(); // Read battery voltage (NOTE: Doe to ESP32 ADC accuracy, you should calibrate the ADC!)
-    display.clearDisplay();    // Clear everything in frame buffer of e-paper display
+    float voltage = display.readBattery(); // Read battery voltage
+    display.clearDisplay();                // Clear everything in frame buffer of e-paper display
     display.drawBitmap(100, 100, battSymbol, battSymbol_w, battSymbol_h,
                        INKPLATE_BLUE); // Draw battery symbol at position X=100 Y=100
     display.setCursor(210, 120);

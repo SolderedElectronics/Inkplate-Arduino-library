@@ -7,8 +7,6 @@
 
    This example will show you how to read temperature from on-board
    temperature sensor which is part of TPS65186 e-paper PMIC.
-   NOTE: In order to read temperature, e-paper has to be refreshed at least one time,
-   or you have to power up epaper PMIC with einkOn() function from Inkplate library.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -21,8 +19,8 @@
     "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
 #endif
 
-#include "Inkplate.h"    // Include Inkplate library to the sketch
-#include "tempSymbol.h"  // Include .h file that contains byte array for temperature symbol.
+#include "Inkplate.h"   // Include Inkplate library to the sketch
+#include "tempSymbol.h" // Include .h file that contains byte array for temperature symbol.
 // It is in same folder as this sketch. You can even open it (read it) by clicking on tempSymbol.h tab in Arduino IDE
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
