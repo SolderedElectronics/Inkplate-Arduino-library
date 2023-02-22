@@ -35,9 +35,6 @@ uint8_t day = 20;
 uint8_t month = 2;
 uint8_t year = 23;
 
-// A flag for showing the time for the first time without waiting the REFRESH_DELAY
-bool firstShowTime = true;
-
 void setup()
 {
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
@@ -48,30 +45,38 @@ void setup()
 
     display.rtcSetTime(hour, minutes, seconds);    // Send time to RTC
     display.rtcSetDate(weekday, day, month, year); // Send date to RTC
+    getAndDisplayTime();                           // Display time on the screen
 }
 
 void loop()
 {
-    //Refresh screen every one minute - the clock will appear after one minute
-    if ((unsigned long)(millis() - time1) > REFRESH_DELAY || firstShowTime)
+    // Refresh screen every one minute
+    if ((unsigned long)(millis() - time1) > REFRESH_DELAY)
     {
-        firstShowTime = false;             // Set the flag to the 0
-        display.rtcGetRtcData();           // Get the time and date from RTC
-        seconds = display.rtcGetSecond();  // Store senconds in a variable
-        minutes = display.rtcGetMinute();  // Store minutes in a variable
-        hour = display.rtcGetHour();       // Store hours in a variable
-        day = display.rtcGetDay();         // Store day of month in a variable
-        weekday = display.rtcGetWeekday(); // Store day of week in a variable
-        month = display.rtcGetMonth();     // Store month in a variable
-        year = display.rtcGetYear();       // Store year in a variable
+        // Display time on the screen
+        getAndDisplayTime();
 
-        display.clearDisplay();                                       // Clear content in frame buffer
-        display.setCursor(80, 300);                                   // Set position of the text
-        printTime(hour, minutes, seconds, day, weekday, month, year); // Print the time on screen
-
-        display.display(); // Do a full refresh
-        time1 = millis();  // Store current millis
+        // Store current millis
+        time1 = millis();
     }
+}
+
+void getAndDisplayTime()
+{
+    display.rtcGetRtcData(); // Get the time and date from RTC
+
+    seconds = display.rtcGetSecond();  // Store senconds in a variable
+    minutes = display.rtcGetMinute();  // Store minutes in a variable
+    hour = display.rtcGetHour();       // Store hours in a variable
+    day = display.rtcGetDay();         // Store day of month in a variable
+    weekday = display.rtcGetWeekday(); // Store day of week in a variable
+    month = display.rtcGetMonth();     // Store month in a variable
+    year = display.rtcGetYear();       // Store year in a variable
+
+    display.clearDisplay();                                       // Clear content in frame buffer
+    display.setCursor(80, 300);                                   // Set position of the text
+    printTime(hour, minutes, seconds, day, weekday, month, year); // Print the time on screen
+    display.display();                                            // Refresh the screen
 }
 
 void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, uint8_t _weekday, uint8_t _month,
