@@ -32,6 +32,8 @@ char op = ' ';
 double result = 0;
 int rightNumPos = 0;
 bool decimalPointOnCurrentNumber = false;
+int numOfDecimalDigitsOnCurrentNumber = 0;
+int numOfDigitsEntered = 0;
 
 void setup()
 {
@@ -73,6 +75,9 @@ void keysEvents()
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
+        decimalPointOnCurrentNumber = false;
+        numOfDigitsEntered = 0;
+        numOfDecimalDigitsOnCurrentNumber = 0;
     }
 
     if (display.touchInArea(50, 50, 100, 50)) // Clear history
@@ -99,7 +104,6 @@ void keysEvents()
             text19_cursor_y -= 55;
             text19_content = text19_content + '\n' + "    " + text18_content + " = " + result;
         }
-
         text18_content = result;
 
         display.clearDisplay();
@@ -112,6 +116,8 @@ void keysEvents()
         result = 0;
         op = ' ';
         decimalPointOnCurrentNumber = false;
+        numOfDigitsEntered = 0;
+        numOfDecimalDigitsOnCurrentNumber = 0;
     }
 
     if (display.touchInArea(900, 650, 100, 100) && (op == ' ') && (rightNumPos > 0))
@@ -120,15 +126,21 @@ void keysEvents()
         text18_content = text18_content + " + ";
         op = '+';
         decimalPointOnCurrentNumber = false;
+        numOfDecimalDigitsOnCurrentNumber = 0;
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
     }
 
-    if (display.touchInArea(700, 650, 100, 100))
+    if (display.touchInArea(700, 650, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "0";
+        numOfDigitsEntered++;
+        if(decimalPointOnCurrentNumber)
+        {
+            numOfDecimalDigitsOnCurrentNumber++;
+        }
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -139,7 +151,7 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(600, 650, 100, 100) && !decimalPointOnCurrentNumber)
+    if (display.touchInArea(600, 650, 100, 100) && !decimalPointOnCurrentNumber && numOfDigitsEntered < 6)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + ".";
@@ -160,15 +172,21 @@ void keysEvents()
         text18_content = text18_content + " - ";
         op = '-';
         decimalPointOnCurrentNumber = false;
+        numOfDecimalDigitsOnCurrentNumber = 0;
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
     }
 
-    if (display.touchInArea(800, 550, 100, 100))
+    if (display.touchInArea(800, 550, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "3";
+        numOfDigitsEntered++;
+        if(decimalPointOnCurrentNumber)
+        {
+            numOfDecimalDigitsOnCurrentNumber++;
+        }
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -179,10 +197,15 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(700, 550, 100, 100))
+    if (display.touchInArea(700, 550, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "2";
+        numOfDigitsEntered++;
+        if(decimalPointOnCurrentNumber)
+        {
+            numOfDecimalDigitsOnCurrentNumber++;
+        }
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -193,10 +216,15 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(600, 550, 100, 100))
+    if (display.touchInArea(600, 550, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "1";
+        numOfDigitsEntered++;
+        if(decimalPointOnCurrentNumber)
+        {
+            numOfDecimalDigitsOnCurrentNumber++;
+        }
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -213,15 +241,21 @@ void keysEvents()
         text18_content = text18_content + " x ";
         op = 'x';
         decimalPointOnCurrentNumber = false;
+        numOfDecimalDigitsOnCurrentNumber = 0;
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
     }
 
-    if (display.touchInArea(800, 450, 100, 100))
+    if (display.touchInArea(800, 450, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "6";
+        numOfDigitsEntered++;
+        if(decimalPointOnCurrentNumber)
+        {
+            numOfDecimalDigitsOnCurrentNumber++;
+        }
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -232,10 +266,15 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(700, 450, 100, 100))
+    if (display.touchInArea(700, 450, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "5";
+        numOfDigitsEntered++;
+        if(decimalPointOnCurrentNumber)
+        {
+            numOfDecimalDigitsOnCurrentNumber++;
+        }
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -246,10 +285,15 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(600, 450, 100, 100))
+    if (display.touchInArea(600, 450, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "4";
+        numOfDigitsEntered++;
+        if(decimalPointOnCurrentNumber)
+        {
+            numOfDecimalDigitsOnCurrentNumber++;
+        }
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -266,15 +310,21 @@ void keysEvents()
         text18_content = text18_content + " / ";
         op = '/';
         decimalPointOnCurrentNumber = false;
+        numOfDecimalDigitsOnCurrentNumber = 0;
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
     }
 
-    if (display.touchInArea(800, 350, 100, 100))
+    if (display.touchInArea(800, 350, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "9";
+        numOfDigitsEntered++;
+        if(decimalPointOnCurrentNumber)
+        {
+            numOfDecimalDigitsOnCurrentNumber++;
+        }
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -285,10 +335,15 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(700, 350, 100, 100))
+    if (display.touchInArea(700, 350, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "8";
+        numOfDigitsEntered++;
+        if(decimalPointOnCurrentNumber)
+        {
+            numOfDecimalDigitsOnCurrentNumber++;
+        }
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -299,10 +354,15 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(600, 350, 100, 100))
+    if (display.touchInArea(600, 350, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "7";
+        numOfDigitsEntered++;
+        if(decimalPointOnCurrentNumber)
+        {
+            numOfDecimalDigitsOnCurrentNumber++;
+        }
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
