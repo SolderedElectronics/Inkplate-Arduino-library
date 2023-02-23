@@ -16,7 +16,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   11 February 2021 by Soldered
+   22 February 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -30,8 +30,8 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
 
 // Delay between API calls in miliseconds
 #define DELAY_MS 3 * 60 * 1000
@@ -42,7 +42,7 @@ char currency[] = "bitcoin";
 char currencyAbbr[] = "BTC";
 
 // You can find your currency id here:
-// https://api.coingecko.com/api/v3/coins
+// https://www.coingecko.com/en/all-cryptocurrencies
 
 // If it loads weirdly you can search the JSON using ctrl/command+f for
 // your crypto by name and then find it's id next to it's name and copy those above
@@ -170,12 +170,10 @@ void setup()
     {
         if (display.touchInArea(755, 620, 100, 100))
         {
-            Serial.println("aa");
             t = millis();
         }
         if (display.touchInArea(870, 620, 100, 100))
         {
-            Serial.println("bb");
             t = millis();
         }
         delay(15);
@@ -281,7 +279,7 @@ void drawGraph()
         strcat(dates + 8 * (4 - i), ".");
     }
 
-    // Used for drawing linesa
+    // Used for drawing lines
     int prev_x = -1;
     int prev_y = -1;
 
@@ -385,7 +383,7 @@ void drawAll()
     for (int i = 0; i < 12; ++i)
     {
         if (strncmp(months[i], date, 3) == 0)
-            sprintf(fromToDate, "%d.%d. to %d.%d.", day, ((i + 1) % 12 ? i + 1 : 12), day, ((i + 2) % 12 ? i + 2 : 12));
+            sprintf(fromToDate, "%d.%d. to %d.%d.", day, (i % 12 ? i : 12), day, ((i + 1) % 12 ? i + 1 : 12));
     }
 
     // Draw graph
