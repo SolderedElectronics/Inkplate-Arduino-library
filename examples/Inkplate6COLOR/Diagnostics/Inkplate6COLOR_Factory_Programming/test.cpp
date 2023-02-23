@@ -15,11 +15,11 @@ void testPeripheral()
     // Send test reports to the UART (this epaper is slow and does not support partial update)
     Serial.println("INKPLATE CHECKLIST");
 
-    // Check I/O expander internal
+    // Check I/O expander
+    Serial.print("- I/O Expander: ");
     // Try to communicate with I/O expander
     Wire.beginTransmission(IO_INT_ADDR);
-    if (Wire.endTransmission() ==
-        0) // Check if there was an error in communication and print out the results on display.
+    if (Wire.endTransmission() == 0) // Check if there was an error in communication and print out the results on display.
     {
         Serial.println("OK");
     }
