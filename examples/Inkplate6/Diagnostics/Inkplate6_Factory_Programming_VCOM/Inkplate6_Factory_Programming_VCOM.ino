@@ -59,7 +59,7 @@ void setup()
     if (isFirstStartup)
     {
         // Try to ping first IO expander to test I2C
-        Wire.setTimeOut(1000);
+        Wire.setTimeOut(3000);
         Wire.beginTransmission(IO_INT_ADDR);
         int result = Wire.endTransmission();
 

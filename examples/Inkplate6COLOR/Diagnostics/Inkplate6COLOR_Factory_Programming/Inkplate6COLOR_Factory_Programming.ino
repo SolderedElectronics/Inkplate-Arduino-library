@@ -47,6 +47,7 @@ void setup()
     Serial.begin(115200);
     display.setTextSize(3);
     EEPROM.begin(512);
+    Wire.begin();
 
     // Wakeup button
     pinMode(GPIO_NUM_36, INPUT);
@@ -55,14 +56,12 @@ void setup()
 
     if (isFirstStartup)
     {
-        // Try to ping first IO expander to test I2C
-        Wire.setTimeOut(1000);
+        Wire.setTimeOut(3000);
+        // Try to ping IO expander to test I2C
         Wire.beginTransmission(IO_INT_ADDR);
-        int result = Wire.endTransmission();
-
-        if (result == 5)
+        if (Wire.endTransmission() != 0)
         {
-            Serial.println("I2C Bus Error!");
+            Serial.println("I2C Bus error!");
             failHandler();
         }
     }
@@ -73,14 +72,9 @@ void setup()
     {
         // Test all the peripherals
         testPeripheral();
-        Serial.println("Tests complete!");
 
         EEPROM.write(EEPROMaddress, 170);
         EEPROM.commit();
-    }
-    else
-    {
-        Serial.println("Factory already done");
     }
 
     memset(commandBuffer, 0, BUFFER_SIZE);

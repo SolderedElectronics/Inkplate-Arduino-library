@@ -283,7 +283,6 @@ int checkMicroSDCard()
 
 int checkI2C(int address)
 {
-    Wire.setTimeOut(3000);
     Wire.beginTransmission(address);
     if (Wire.endTransmission() == 0)
     {
