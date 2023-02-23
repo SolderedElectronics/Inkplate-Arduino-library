@@ -30,8 +30,8 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Delay between API calls in miliseconds
 #define DELAY_MS 3 * 60 * 1000
@@ -66,14 +66,8 @@ Network network;
 // create display object
 Inkplate display(INKPLATE_3BIT);
 
-// Refresh counter that's persisant between deepsleeps
-RTC_DATA_ATTR unsigned refreshes = 0;
-
-// Constant to determine when to full update and fetch
-const int fullRefresh = 20;
-
 // Used for storing raw price values
-RTC_DATA_ATTR double data[64];
+double data[64];
 
 // Used to simplify UI design
 struct textElement
@@ -86,15 +80,15 @@ struct textElement
 };
 
 // Variables for storing all displayed data as char arrays
-RTC_DATA_ATTR char date[64];
-RTC_DATA_ATTR char fromToDate[64];
+char date[64];
+char fromToDate[64];
 
-RTC_DATA_ATTR char dates[8 * 8];
-RTC_DATA_ATTR char prices[16 * 16];
+char dates[8 * 8];
+char prices[16 * 16];
 
-RTC_DATA_ATTR char current[16];
-RTC_DATA_ATTR char minimum[16];
-RTC_DATA_ATTR char maximum[16];
+char current[16];
+char minimum[16];
+char maximum[16];
 
 // All months in a year, for finding current date
 char months[][12] = {
@@ -137,51 +131,29 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    // Do a new network request every fullRefresh times, defined above
-    if (refreshes % fullRefresh == 0)
-    {
         // Our begin function
         network.begin();
-        Serial.print("Retrying retriving data");
+        
+        // Do a new network request
+        Serial.print("Retrying retriving data ");
         while (!network.getData(data))
         {
             Serial.print('.');
             delay(1000);
         }
+        
         // Our main drawing function
         drawAll();
+        
         // Time drawing function
         drawTime();
+        
         // Full refresh
         display.display();
-    }
-    else
-    {
-        // Our main drawing function
-        drawAll();
-        // Time drawing function
-        drawTime();
-        // Just update time
-        display.display();
-    }
 
-    uint32_t t = millis();
-    while (millis() - t < 20000)
-    {
-        if (display.touchInArea(755, 620, 100, 100))
-        {
-            t = millis();
-        }
-        if (display.touchInArea(870, 620, 100, 100))
-        {
-            t = millis();
-        }
-        delay(15);
-    }
-
-    // Increment refresh count
-    ++refreshes;
     goToSleep();
+    
+    // To wake up and fetch the data, you can also touch the screen
 }
 
 void loop()
@@ -191,19 +163,6 @@ void loop()
 
 void goToSleep()
 {
-    display.setDisplayMode(INKPLATE_1BIT);
-
-    display.fillRect(755, 620, 250, 100, BLACK);
-    display.partialUpdate();
-    display.fillRect(755, 620, 250, 100, WHITE);
-    display.partialUpdate();
-
-    display.setFont(&Roboto_Light_36);
-    display.setTextColor(BLACK, WHITE);
-    display.setCursor(600, 746);
-    display.print("Press screen to wake up.");
-    display.partialUpdate();
-
     Serial.println("Going to sleep...");
 
     // Go to sleep before checking again
@@ -336,12 +295,6 @@ void drawGraph()
 
     display.drawFastVLine(x2 - textMargin + 2, y2, y1 - y2, 4);
     display.drawThickLine(x1, y1, x2, y1, 0, 3);
-
-    display.fillRoundRect(755, 620, 100, 100, 15, 0);
-    display.fillRoundRect(870, 620, 100, 100, 15, 0);
-
-    display.fillTriangle(815, 680, 815, 660, 795, 670, 7);
-    display.fillTriangle(910, 680, 910, 660, 930, 670, 7);
 }
 
 // Function to draw time
