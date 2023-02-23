@@ -25,6 +25,8 @@
 
 SPIClass SPI2(HSPI);
 
+SPISettings epdSpiSettings(2000000, MSBFIRST, SPI_MODE0);
+
 /**
  * @brief       begin function initialize Inkplate object with predefined
  * settings
@@ -149,7 +151,7 @@ void Inkplate::display(bool leaveOn)
     sendCommand(0x10);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
-    SPI2.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
+    SPI2.beginTransaction(epdSpiSettings);
     SPI2.transfer(DMemory4Bit, E_INK_WIDTH * E_INK_HEIGHT / 2);
     SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
@@ -229,7 +231,7 @@ void Inkplate::clean()
     sendCommand(0x10);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
-    SPI2.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
+    SPI2.beginTransaction(epdSpiSettings);
     for (uint32_t i = 0; i < (E_INK_WIDTH * E_INK_HEIGHT / 2); i++)
     {
         SPI2.transfer(INKPLATE_WHITE | INKPLATE_WHITE << 4);
@@ -270,7 +272,7 @@ void Inkplate::sendCommand(uint8_t _command)
 {
     digitalWrite(EPAPER_DC_PIN, LOW);
     digitalWrite(EPAPER_CS_PIN, LOW);
-    SPI2.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
+    SPI2.beginTransaction(epdSpiSettings);
     SPI2.transfer(_command);
     SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
@@ -288,7 +290,7 @@ void Inkplate::sendData(uint8_t *_data, int _n)
 {
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
-    SPI2.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
+    SPI2.beginTransaction(epdSpiSettings);
     SPI2.transfer(_data, _n);
     SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
@@ -304,7 +306,7 @@ void Inkplate::sendData(uint8_t _data)
 {
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
-    SPI2.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
+    SPI2.beginTransaction(epdSpiSettings);
     SPI2.transfer(_data);
     SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
