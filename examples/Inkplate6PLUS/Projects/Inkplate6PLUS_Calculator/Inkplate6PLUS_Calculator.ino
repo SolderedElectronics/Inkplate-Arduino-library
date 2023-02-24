@@ -22,10 +22,10 @@
 #include "Calculator.h"
 #include "Inkplate.h"
 
+// Create Inkplate object
 Inkplate display(INKPLATE_1BIT);
 
-#define X_REZ_OFFSET 15
-
+// Variables which store the state of the calculator
 double leftNumber = 0;
 double rightNumber = 0;
 char op = ' ';
@@ -37,9 +37,13 @@ int numOfDigitsEntered = 0;
 
 void setup()
 {
+    // Begin serial communication
     Serial.begin(115200);
-    display.begin(); // Initialize Inkplate object
+
+    // Initialize Inkplate object and clear the display buffer
+    display.begin(); 
     display.clearDisplay();
+
     // Initialize touchscreen
     if (!display.tsInit(true))
     {
@@ -52,14 +56,18 @@ void setup()
 
 void loop()
 {
+    // Periodically check touchscreen
     keysEvents();
     delay(20);
 }
 
+// This function contains all the events which occur when interacting with the calculator
+// Eg. writing numbers, selecting the mathematical operations, calculating and clearing the display
 void keysEvents()
 {
     if (display.touchInArea(800, 20, 200, 80)) // Refresh
     {
+        // Clear screen
         display.clearDisplay();
         mainDraw();
         display.display();
@@ -67,17 +75,20 @@ void keysEvents()
 
     if (display.touchInArea(600, 20, 200, 80)) // Clear
     {
+        // Reset the state of the calculator
         text18_cursor_x = 800;
         text18_cursor_y = 260;
         text18_content = "";
         op = ' ';
         rightNumPos = 0;
-        display.clearDisplay();
-        mainDraw();
-        display.partialUpdate();
         decimalPointOnCurrentNumber = false;
         numOfDigitsEntered = 0;
         numOfDecimalDigitsOnCurrentNumber = 0;
+
+        // Clear screen and redraw using partialUpdate
+        display.clearDisplay();
+        mainDraw();
+        display.partialUpdate();
     }
 
     if (display.touchInArea(50, 50, 100, 50)) // Clear history
@@ -86,6 +97,7 @@ void keysEvents()
         text19_cursor_x = 50;
         text19_cursor_y = 700;
 
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -93,8 +105,10 @@ void keysEvents()
 
     if (display.touchInArea(800, 650, 100, 100) && (op != ' ') && atof(&text18_content[rightNumPos+3]) != 0) // Calculate
     {
+        // Do calculation
         result = calculate();
 
+        // Create result string
         if (text19_content == "")
         {
             text19_content = text18_content + " = " + result;
@@ -106,10 +120,12 @@ void keysEvents()
         }
         text18_content = result;
 
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
 
+        // Reset the state of the calculator
         text18_content = "";
         text18_cursor_x = 800;
         text18_cursor_y = 260;
