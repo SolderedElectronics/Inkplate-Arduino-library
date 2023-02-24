@@ -56,7 +56,7 @@ void setup()
 
 void loop()
 {
-    // Periodically check touchscreen
+    // Periodically check touchscreen and perform events based on touches
     keysEvents();
     delay(20);
 }
@@ -136,19 +136,21 @@ void keysEvents()
         numOfDecimalDigitsOnCurrentNumber = 0;
     }
 
-    if (display.touchInArea(900, 650, 100, 100) && (op == ' ') && (rightNumPos > 0))
+    if (display.touchInArea(900, 650, 100, 100) && (op == ' ') && (rightNumPos > 0)) // Sum
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " + ";
         op = '+';
         decimalPointOnCurrentNumber = false;
         numOfDecimalDigitsOnCurrentNumber = 0;
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
     }
 
-    if (display.touchInArea(700, 650, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
+    if (display.touchInArea(700, 650, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2) // 0
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "0";
@@ -157,6 +159,8 @@ void keysEvents()
         {
             numOfDecimalDigitsOnCurrentNumber++;
         }
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -167,10 +171,12 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(600, 650, 100, 100) && !decimalPointOnCurrentNumber && numOfDigitsEntered < 6)
+    if (display.touchInArea(600, 650, 100, 100) && !decimalPointOnCurrentNumber && numOfDigitsEntered < 6) // Decimal point
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + ".";
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -179,22 +185,26 @@ void keysEvents()
         {
             ++rightNumPos;
         }
+
+        // Set flag that decimal point has been used
         decimalPointOnCurrentNumber = true;
     }
 
-    if (display.touchInArea(900, 550, 100, 100) && (op == ' ') && (rightNumPos > 0))
+    if (display.touchInArea(900, 550, 100, 100) && (op == ' ') && (rightNumPos > 0)) // Subtraction
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " - ";
         op = '-';
         decimalPointOnCurrentNumber = false;
         numOfDecimalDigitsOnCurrentNumber = 0;
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
     }
 
-    if (display.touchInArea(800, 550, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
+    if (display.touchInArea(800, 550, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2) // 3
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "3";
@@ -203,6 +213,8 @@ void keysEvents()
         {
             numOfDecimalDigitsOnCurrentNumber++;
         }
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -213,7 +225,7 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(700, 550, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
+    if (display.touchInArea(700, 550, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2) // 2
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "2";
@@ -222,6 +234,8 @@ void keysEvents()
         {
             numOfDecimalDigitsOnCurrentNumber++;
         }
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -232,7 +246,7 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(600, 550, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
+    if (display.touchInArea(600, 550, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2) // 1
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "1";
@@ -241,6 +255,8 @@ void keysEvents()
         {
             numOfDecimalDigitsOnCurrentNumber++;
         }
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -251,19 +267,21 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(900, 450, 100, 100) && (op == ' ') && (rightNumPos > 0))
+    if (display.touchInArea(900, 450, 100, 100) && (op == ' ') && (rightNumPos > 0)) // X
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " x ";
         op = 'x';
         decimalPointOnCurrentNumber = false;
         numOfDecimalDigitsOnCurrentNumber = 0;
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
     }
 
-    if (display.touchInArea(800, 450, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
+    if (display.touchInArea(800, 450, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2) // 6
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "6";
@@ -272,6 +290,8 @@ void keysEvents()
         {
             numOfDecimalDigitsOnCurrentNumber++;
         }
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -282,7 +302,7 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(700, 450, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
+    if (display.touchInArea(700, 450, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2) // 5
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "5";
@@ -291,6 +311,8 @@ void keysEvents()
         {
             numOfDecimalDigitsOnCurrentNumber++;
         }
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -301,7 +323,7 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(600, 450, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
+    if (display.touchInArea(600, 450, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2) // 4
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "4";
@@ -310,6 +332,8 @@ void keysEvents()
         {
             numOfDecimalDigitsOnCurrentNumber++;
         }
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -320,19 +344,21 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(900, 350, 100, 100) && (op == ' ') && (rightNumPos > 0))
+    if (display.touchInArea(900, 350, 100, 100) && (op == ' ') && (rightNumPos > 0)) // Division
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + " / ";
         op = '/';
         decimalPointOnCurrentNumber = false;
         numOfDecimalDigitsOnCurrentNumber = 0;
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
     }
 
-    if (display.touchInArea(800, 350, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
+    if (display.touchInArea(800, 350, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2) // 9
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "9";
@@ -341,6 +367,8 @@ void keysEvents()
         {
             numOfDecimalDigitsOnCurrentNumber++;
         }
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -351,7 +379,7 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(700, 350, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
+    if (display.touchInArea(700, 350, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2) // 8
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "8";
@@ -360,6 +388,8 @@ void keysEvents()
         {
             numOfDecimalDigitsOnCurrentNumber++;
         }
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -370,7 +400,7 @@ void keysEvents()
         }
     }
 
-    if (display.touchInArea(600, 350, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2)
+    if (display.touchInArea(600, 350, 100, 100) && numOfDigitsEntered < 6 && numOfDecimalDigitsOnCurrentNumber < 2) // 7
     {
         text18_cursor_x -= X_REZ_OFFSET;
         text18_content = text18_content + "7";
@@ -379,6 +409,8 @@ void keysEvents()
         {
             numOfDecimalDigitsOnCurrentNumber++;
         }
+
+        // Clear screen and redraw using partialUpdate
         display.clearDisplay();
         mainDraw();
         display.partialUpdate();
@@ -390,6 +422,7 @@ void keysEvents()
     }
 }
 
+// Do calculation based on inputs
 float calculate()
 {
     double res = 0;
