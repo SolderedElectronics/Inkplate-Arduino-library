@@ -67,7 +67,7 @@ Network network;
 char date[64];
 char *data;
 
-// Set background of first task to color yellow
+// Set background of first task to color green
 int currentColor = 2;
 
 // Struct for storing calender event info
