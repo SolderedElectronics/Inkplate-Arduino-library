@@ -367,4 +367,10 @@ void drawAll()
         // Print out text to above set cursor location
         display.print(elements[i].text);
     }
+
+    // A message for refresh
+    display.setCursor(690, 670);
+    display.print("Touch the screen"); 
+    display.setCursor(760, 710);
+    display.print("to refresh");
 }
