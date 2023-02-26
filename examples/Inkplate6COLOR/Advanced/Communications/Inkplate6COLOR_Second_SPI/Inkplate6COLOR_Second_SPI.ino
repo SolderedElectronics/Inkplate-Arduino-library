@@ -33,7 +33,7 @@
 // Include needed libraries
 #include "Inkplate.h"
 #include "SPI.h"
-#include "MFRC522.h"
+#include "MFRC522-SOLDERED.h"
 
 // Pins for the MFRC522
 #define RST_PIN         -1 // Not used
