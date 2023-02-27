@@ -186,13 +186,23 @@ void Inkplate::setPanelDeepSleep(bool _state)
 
     if (_panelState)
     {
+        // Set SPI pins
+        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+
+        // Set up EPD communication pins
+        pinMode(EPAPER_CS_PIN, OUTPUT);
+        pinMode(EPAPER_DC_PIN, OUTPUT);
+        pinMode(EPAPER_RST_PIN, OUTPUT);
+        pinMode(EPAPER_BUSY_PIN, INPUT_PULLUP);
+
+        delay(10);
+
         // Send commands to power up panel. According to the datasheet, it can be
         // powered up from deep sleep only by reseting it and doing reinit.
         begin();
     }
     else
     {
-
         sendCommand(0X50); // VCOM and data interval setting
         sendData(0xf7);
 
@@ -201,6 +211,17 @@ void Inkplate::setPanelDeepSleep(bool _state)
         sendCommand(0X07); // Put EPD in deep sleep
         sendData(0xA5);
         delay(1);
+
+        // Disable SPI
+        SPI2.end();
+
+        // To reduce power consumption, set SPI pins as outputs
+        pinMode(EPAPER_RST_PIN, INPUT);
+        pinMode(EPAPER_DC_PIN, INPUT);
+        pinMode(EPAPER_CS_PIN, INPUT);
+        pinMode(EPAPER_BUSY_PIN, INPUT);
+        pinMode(EPAPER_CLK, INPUT);
+        pinMode(EPAPER_DIN, INPUT);
     }
 }
 

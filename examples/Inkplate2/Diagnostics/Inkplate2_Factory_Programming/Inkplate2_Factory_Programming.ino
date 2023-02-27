@@ -26,9 +26,18 @@
 #include "Inkplate.h"
 #include "Wire.h"
 
-// Include files for images and test functions
-#include "images.h"
+// Include files for test functions
 #include "test.h"
+
+// Include .h files of 4 pictures. All four pictures were converted using Inkplate Image Converter
+#include "splashscreen.h"
+#include "picture1.h"
+#include "picture2.h"
+#include "picture3.h"
+
+// This array of pinters holds address of every picture in the memory, so we can easly select it by selecting index in
+// array
+const uint8_t *pictures[] = {inkplate_2_demo_image, picture1, picture2, picture3};
 
 // An object of the Inkplate library
 Inkplate display;
@@ -75,10 +84,10 @@ void setup()
 
         // Increment the index
         i++;
-        if (i > 2)
-        {
+
+        // We do not have more than 4 images, so roll back to zero
+        if (i > 3)
             i = 0;
-        }
 
         // Write the new image index for displaying
         EEPROM.write(EEPROM_ADDRESS + 1, i);
@@ -93,28 +102,15 @@ void setup()
     display.clearDisplay();
 
     // Draw the image on the screen
-    switch (i)
-    {
-    case 0:
-        display.drawImage(image1, 0, 0, 212, 104);
-        break;
-
-    case 1:
-        display.drawImage(image2, 0, 0, 212, 104);
-        break;
-
-    case 2:
-        display.drawImage(image3, 0, 0, 212, 104);
-        break;
-    }
+    display.drawImage(pictures[i], 0, 0, 212, 104);
     display.display();
 
-
     // Go to the sleep
+    display.setPanelDeepSleep(0);
     esp_deep_sleep_start();
 }
 
 void loop()
-{ 
+{
     // Nothing ...
 }

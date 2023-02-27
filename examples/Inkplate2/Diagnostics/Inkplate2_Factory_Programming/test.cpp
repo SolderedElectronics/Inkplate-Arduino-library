@@ -37,6 +37,8 @@ void testPeripheral()
         Serial.println("FAIL");
         failHandler();
     }
+
+    Serial.println("Test OK");
 }
 
 // Test I2C
