@@ -12,15 +12,23 @@ jobs:
             additional-sketch-paths: |
               - examples/Inkplate6
           - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate6V2
+            additional-sketch-paths: |
+              - examples/Inkplate6
+          - board:
               fqbn: Inkplate_Boards:esp32:Inkplate10
             additional-sketch-paths: |
               - examples/Inkplate10
           - board:
-              fqbn: Inkplate_Boards:esp32:Inkplate5
+              fqbn: Inkplate_Boards:esp32:Inkplate10V2
             additional-sketch-paths: |
-              - examples/Inkplate5
+              - examples/Inkplate10
           - board:
               fqbn: Inkplate_Boards:esp32:Inkplate6plus
+            additional-sketch-paths: |
+              - examples/Inkplate6PLUS
+          - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate6plusV2
             additional-sketch-paths: |
               - examples/Inkplate6PLUS
           - board:
@@ -31,9 +39,10 @@ jobs:
               fqbn: Inkplate_Boards:esp32:Inkplate2
             additional-sketch-paths: |
               - examples/Inkplate2
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install ESP32 platform dependencies
         run: pip3 install pyserial
       - name: Compile examples
@@ -50,5 +59,9 @@ jobs:
             - name: "Adafruit BME680 Library"
             - name: ArduinoJson
             - name: Time
+            - source-url: https://github.com/SolderedElectronics/Soldered-MFRC522-RFID-Reader-Arduino-Library.git
+            - source-url: https://github.com/SolderedElectronics/Soldered-BME280-BME680-Gas-Sensor-Arduino-Library.git
           sketch-paths: |
             ${{ matrix.additional-sketch-paths }}
+          cli-compile-flags: |
+            - --warnings="default"
