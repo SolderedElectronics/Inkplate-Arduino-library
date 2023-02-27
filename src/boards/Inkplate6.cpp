@@ -132,6 +132,15 @@ bool Inkplate::begin(void)
     // Battery voltage Switch MOSFET
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
 
+    // Set unused pins of the first MCP as outputs, low logic state
+    // (to have the lowest current consumption in low power mode)
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 13, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 14, OUTPUT);
+    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 15, OUTPUT);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 13, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 14, LOW);
+    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 15, LOW);
+
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _pBuffer = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);

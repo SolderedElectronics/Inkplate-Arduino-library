@@ -60,6 +60,52 @@ frontlight          KEYWORD2
 setTextColor		KEYWORD2
 setPanelDeepSleep   KEYWORD2
 drawTextWithShadow  KEYWORD2
+readPowerGood KEYWORD2
+digitalWriteMCP KEYWORD2
+digitalReadMCP KEYWORD2
+pinModeMCP KEYWORD2
+mcpBegin KEYWORD2
+setPanelState KEYWORD2
+setSdCardOk KEYWORD2
+getSdCardOk KEYWORD2
+getRotation KEYWORD2
+rtcBegin KEYWORD2
+rtcSetTime KEYWORD2
+rtcSetDate KEYWORD2
+rtcSetEpoch KEYWORD2
+rtcGetEpoch KEYWORD2
+rtcGetRtcData KEYWORD2
+rtcEnableAlarm KEYWORD2
+rtcSetAlarm KEYWORD2
+rtcSetAlarmEpoch KEYWORD2
+rtcReadAlarm KEYWORD2
+rtcChangeTimeFormat KEYWORD2
+rtcTimerSet KEYWORD2
+rtcCheckTimerFlag KEYWORD2
+rtcCheckAlarmFlag KEYWORD2
+rtcClearAlarmFlag KEYWORD2
+rtcClearTimerFlag KEYWORD2
+rtcDisableTimer KEYWORD2
+rtcIsSet KEYWORD2
+rtcReset KEYWORD2
+rtcGetSecond KEYWORD2
+rtcGetMinute KEYWORD2
+rtcGetHour KEYWORD2
+rtcGetDay KEYWORD2
+rtcGetWeekday KEYWORD2
+rtcGetMonth KEYWORD2
+rtcGetYear KEYWORD2
+rtcGetAlarmSecond KEYWORD2
+rtcGetAlarmMinute KEYWORD2
+rtcGetAlarmHour KEYWORD2
+rtcGetAlarmDay KEYWORD2
+rtcGetAlarmWeekday KEYWORD2
+
+
+
+
+
+
 
 # Instances (KEYWORD2)
 

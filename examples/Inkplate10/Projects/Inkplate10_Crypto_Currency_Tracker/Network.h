@@ -26,6 +26,20 @@ extern int timeZone;
 // Wifi ssid and password
 extern char ssid[];
 extern char pass[];
+<<<<<<< HEAD:examples/Inkplate10/Projects/Inkplate10_Crypto_Currency_Tracker/Network.h
+=======
+extern char api_key_news[];
+
+struct news
+{
+    char author[32];
+    char title[128];
+    char description[128];
+    char image[200];
+    char content[1000];
+};
+
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate10/Projects/News_API_Example/Network.h
 
 #ifndef NETWORK_H
 #define NETWORK_H

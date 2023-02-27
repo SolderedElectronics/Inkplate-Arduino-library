@@ -198,12 +198,6 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
             strcpy(abbr4, doc["hourly"][3]["weather"][0]["icon"].as<const char *>());
             ;
 
-            Serial.println(abbr1);
-            Serial.println(abbr2);
-            Serial.println(abbr3);
-            Serial.println(abbr4);
-            Serial.println();
-
             f = 0;
         }
     }

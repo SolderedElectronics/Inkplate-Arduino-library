@@ -99,7 +99,16 @@ RTC_DATA_ATTR char temps[4][8] = {
 };
 
 // Variables for storing hour strings
+<<<<<<< HEAD:examples/Inkplate6/Projects/Inkplate6_Daily_Weather_Station/Inkplate6_Daily_Weather_Station.ino
 RTC_DATA_ATTR uint8_t hours = 0;
+=======
+uint8_t hours = 0;
+// Variable for counting partial refreshes
+long refreshes = 0;
+
+// Constant to determine when to full update
+const int fullRefresh = 10;
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Projects/Daily_Weather_Station_Example/Daily_Weather_Station_Example.ino
 
 // Variables for storing current time and weather info
 RTC_DATA_ATTR char currentTemp[16] = "-";
@@ -181,7 +190,11 @@ void drawWeather()
     display.setTextColor(BLACK, WHITE);
     display.setFont(&Inter16pt7b);
     display.setTextSize(1);
+<<<<<<< HEAD:examples/Inkplate6/Projects/Inkplate6_Daily_Weather_Station/Inkplate6_Daily_Weather_Station.ino
     display.setCursor(50, 210);
+=======
+    display.setCursor(80, 210);
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Projects/Daily_Weather_Station_Example/Daily_Weather_Station_Example.ino
     display.println(currentWeather);
 }
 

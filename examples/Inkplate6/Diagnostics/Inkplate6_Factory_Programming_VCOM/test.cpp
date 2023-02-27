@@ -3,6 +3,7 @@
 const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
 
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
 const char *WSSID = {"Soldered-testingPurposes"};
 const char *WPASS = {"Testing443"};
 
@@ -10,18 +11,34 @@ const char *WPASS = {"Testing443"};
 const uint8_t easyCDeviceAddress = 0x30;
 
 void testPeripheral()
+=======
+const char *WSSID = {""};
+const char *WPASS = {""};
+
+void testPeripheral(uint8_t _oldInkplate)
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp
 {
     // Set display for test report
     display.setTextSize(3);
     display.setTextColor(BLACK);
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
     display.setCursor(50, 50);
     display.println("INKPLATE TEST CHECKLIST");
+=======
+    display.setCursor(0, 0);
+    display.println("INKPLATE CHECKLIST");
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp
 
     //  Power up epaper PSU
     display.einkOn();
 
     // Check if epaper PSU (TPS65186 EPD PMIC) is ok.
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
     if (!checkI2C(0x48) || (display.readPowerGood() != PWR_GOOD_OK)) // Check if there was an error in communication
+=======
+    Wire.beginTransmission(0x48); // Send address 0x48 on I2C
+    if (!(Wire.endTransmission() == 0) || !(display.readPowerGood())) // Check if there was an error in communication
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp
     {
         Serial.println("- TPS Fail!");
         failHandler();
@@ -29,6 +46,7 @@ void testPeripheral()
     display.println("- TPS65186: OK");
     display.partialUpdate(0, 1);
 
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
     // Check if the screen is showing the image properly. There should be a black rectangle around the display area and 4 small rectangles in every corner of the screen. If not, the display is not compatible with this library.
     checkScreenBorder();
 
@@ -62,6 +80,28 @@ void testPeripheral()
     {
         display.println("FAIL");
         failHandler();
+=======
+    // If old Inkplate is used, check only first I/o expander.
+    int _n = _oldInkplate? 1 : 2;
+    for (int i = 0; i < _n; i++)
+    {
+        // Check I/O expander
+        display.printf("- I/O Expander %d: ", i + 1);
+        display.partialUpdate(0, 1);
+    
+        // Try to communicate with I/O expander
+        Wire.beginTransmission(0x20 + (i * 2)); // Send address 0x20 or 0x22
+        if (Wire.endTransmission() == 0)        // Check if there was an error in communication and print out the results on display.
+        {
+            display.println("OK");
+            display.partialUpdate(0, 1);
+        }
+        else
+        {
+            display.println("FAIL");
+            failHandler();
+        }
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp
     }
 
     // Check the micro SD card slot
@@ -93,6 +133,7 @@ void testPeripheral()
     }
 
     // First version of the Inkplate doesn't have RTC.
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
 
     // Check the RTC
     display.print("- PCF85063 RTC: ");
@@ -169,6 +210,23 @@ void testPeripheral()
     display.println("OK");
     display.partialUpdate(0, 1);
 
+=======
+    if (!_oldInkplate)
+    {
+      // Check the RTC
+      display.print("- PCF85063 RTC: ");
+      if (rtcCheck())
+      {
+          display.println("OK");
+          display.partialUpdate(0, 1);
+      }
+      else
+      {
+          display.println("FAIL");
+          failHandler();
+      }
+    }
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp
 
     // This test only must be run on older Inkplates (e-radionica.com Inkplates with touchpads)
 #ifdef ARDUINO_ESP32_DEV
@@ -183,6 +241,7 @@ void testPeripheral()
         display.println(" FAIL");
         failHandler();
     }
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
 #endif
 }
 
@@ -210,6 +269,50 @@ void checkScreenBorder()
 
     // Wait a little bit
     delay(5000);
+=======
+ #endif
+}
+
+double getVCOMFromSerial(double *_vcom)
+{
+    double vcom = 1;
+    char serialBuffer[50];
+    unsigned long serialTimeout;
+
+    // Display a message on Inkplate
+    display.print("\r\n- Write VCOM on UART: ");
+    display.partialUpdate(0, 1);
+
+    while (true)
+    {
+        Serial.println("Write VCOM voltage from epaper panel.\r\nDon't forget negative (-) sign!\r\nUse dot as the decimal point. For example -1.23\nIf it's used automatic VCOM voltage detection, send \"AUTO\"");
+        while (!Serial.available());
+
+        serialTimeout = millis();
+        int i = 0;
+        while ((Serial.available()) && ((unsigned long)(millis() - serialTimeout) < 500))
+        {
+            if ((Serial.available()) && (i < 49))
+            {
+                serialBuffer[i++] = Serial.read();
+                serialTimeout = millis();
+            }
+        }
+        serialBuffer[i] = 0;
+        if (sscanf(serialBuffer, "%lf", &vcom) == 1)
+        {
+            *_vcom = vcom;
+            return 1;
+        }
+        else if (strstr(serialBuffer, "AUTO") != NULL)
+        {
+            *_vcom = 0;
+            return 2;
+        }
+    }
+
+    return 0;
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp
 }
 
 int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)
@@ -220,10 +323,16 @@ int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)
     WiFi.begin(WSSID, WPASS);
 
     // Wait until WiFi connection is established or timeout has occured.
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
     while ((WiFi.status() != WL_CONNECTED) && ((unsigned long)(millis() - _timeout) < (_wifiTimeout * 1000UL)))
         ;
 
     // Check if board is connected to WiFi
+=======
+    while ((WiFi.status() != WL_CONNECTED) && ((unsigned long)(millis() - _timeout) < (_wifiTimeout * 1000UL)));
+
+     // Check if board is connected to WiFi
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp
     if (WiFi.status() == WL_CONNECTED)
     {
         return 1;
@@ -281,6 +390,7 @@ int checkMicroSDCard()
     return 1;
 }
 
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
 int checkI2C(int address)
 {
     Wire.beginTransmission(address);
@@ -321,6 +431,8 @@ int checkBatteryAndTemp(float *temp, float *batVoltage)
     return result;
 }
 
+=======
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp
 int rtcCheck()
 {
     // First "ping" RTC on the I2C protocol and reset the RTC
@@ -328,8 +440,12 @@ int rtcCheck()
     int _res = Wire.endTransmission();
 
     // If result is from I2C is anything else than success (_res = 0), return 0 (error).
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
     if (_res != 0)
         return 0;
+=======
+    if (_res != 0) return 0;
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp
 
     // Reset and re-init RTC.
     display.rtcReset();
@@ -357,7 +473,11 @@ int rtcCheck()
 int touchPads(uint8_t _timeoutTouchpads)
 {
     // This test only must be run on older Inkplates (e-radionica.com Inkplates with touchpads)
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
 #ifdef ARDUINO_ESP32_DEV
+=======
+#ifdef ARDUINO_ESP32_DEV 
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp
     // Variable for storing detected touch
     int _flags = 0;
 
@@ -374,9 +494,15 @@ int touchPads(uint8_t _timeoutTouchpads)
         {
             if (display.readTouchpad(PAD1 + i) && (!(_flags & (1 << i))))
             {
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
                 _flags |= (1 << i);
                 display.print(i + 1, DEC);
                 display.partialUpdate(0, 1);
+=======
+              _flags |= (1 << i);
+              display.print(i + 1, DEC);
+              display.partialUpdate(0, 1);
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp
             }
         }
     }
@@ -396,6 +522,7 @@ int touchPads(uint8_t _timeoutTouchpads)
 }
 
 // Show a message and stop the code from executing.
+<<<<<<< HEAD:examples/Inkplate6/Diagnostics/Inkplate6_Factory_Programming_VCOM/test.cpp
 void failHandler(bool printErrorOnSerial)
 {
     if (printErrorOnSerial)
@@ -414,3 +541,13 @@ void failHandler(bool printErrorOnSerial)
         delay(1000);
 }
 
+=======
+void failHandler()
+{
+    display.print(" -> Test stopped!");
+    display.partialUpdate(0, 1);
+
+    // Inf. loop... halt the program!
+    while (true);
+}
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6/Others/Inkplate_Factory_Programming_VCOM/test.cpp

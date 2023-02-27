@@ -75,8 +75,8 @@ const uint8_t *logos[18] = {
 };
 
 const uint8_t *s_logos[18] = {
-    icon_s_01d, icon_s_02d, icon_s_03d, icon_s_04d, icon_s_09d, icon_s_10d, icon_s_11d, icon_s_13d, icon_s_50d,
-    icon_s_01n, icon_s_02n, icon_s_03n, icon_s_04n, icon_s_09n, icon_s_10n, icon_s_11n, icon_s_13n, icon_s_50n,
+    icon_S_01d, icon_S_02d, icon_S_03d, icon_S_04d, icon_S_09d, icon_S_10d, icon_S_11d, icon_S_13d, icon_S_50d,
+    icon_S_01n, icon_S_02n, icon_S_03n, icon_S_04n, icon_S_09n, icon_S_10n, icon_S_11n, icon_S_13n, icon_S_50n,
 };
 
 // Variable for counting partial refreshes
@@ -165,7 +165,11 @@ void drawWeather()
     display.setTextColor(BLACK, WHITE);
     display.setFont(&Inter16pt7b);
     display.setTextSize(1);
+<<<<<<< HEAD:examples/Inkplate6PLUS/Projects/Inkplate6PLUS_Daily_Weather_Station/Inkplate6PLUS_Daily_Weather_Station.ino
     display.setCursor(75, 264);
+=======
+    display.setCursor(100, 264);
+>>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6PLUS/Projects/Daily_Weather_Station_Example/Daily_Weather_Station_Example.ino
     display.println(currentWeather);
 }
 
@@ -248,7 +252,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr1, abbrs[i]) == 0)
-            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 100, 100,
                                WHITE, BLACK);
     }
 
@@ -256,7 +260,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr2, abbrs[i]) == 0)
-            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 100, 100,
                                WHITE, BLACK);
     }
 
@@ -264,7 +268,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr3, abbrs[i]) == 0)
-            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 100, 100,
                                WHITE, BLACK);
     }
 
@@ -272,7 +276,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr4, abbrs[i]) == 0)
-            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, 380 + textMargin + 150, s_logos[i], 100, 100,
                                WHITE, BLACK);
     }
 }
