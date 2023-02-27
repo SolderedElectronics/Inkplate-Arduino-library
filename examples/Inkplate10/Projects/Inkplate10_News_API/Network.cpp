@@ -29,13 +29,14 @@
 extern char ssid[];
 extern char pass[];
 extern char api_key_news[];
-extern int nentities;
+extern char api_key_kraken[];
+extern char api_secret[];
 
 // Get our Inkplate object from main file to draw debug info on
 extern Inkplate display;
 
 // Static Json from ArduinoJson library
-DynamicJsonDocument doc(50000);
+StaticJsonDocument<35000> doc;
 
 void Network::begin()
 {
@@ -130,7 +131,7 @@ struct news* Network::getData()
 
     // Initiate http
     char temp[128];
-    sprintf(temp, "https://newsdata.io/api/1/news?apikey=%s&category=top&language=en", api_key_news);
+    sprintf(temp, "https://newsapi.org/v2/top-headlines?country=us&apiKey=%s", api_key_news);
 
     http.begin(temp);
 
@@ -152,50 +153,41 @@ struct news* Network::getData()
 
         else if (doc["status"])
         {
-            int n = doc["results"].size();
+            int n = doc["articles"].size();
+            Serial.println(n);
             ent = (struct news*)ps_malloc(n * sizeof(struct news));
-            int i = 0, j = 0;
+            int i = 0;
             while (i < n)
             {
-                const char *temp_author = doc["results"][i]["creator"];
-                const char *temp_title = doc["results"][i]["title"];
-                const char *temp_description = doc["results"][i]["description"];
-                const char *temp_image = doc["results"][i]["link"];
-                const char *temp_content = doc["results"][i]["content"];
-                if (temp_content == NULL)
-                {
-                    i++;
-                    continue;
-                }
-                if (strlen(temp_content) < 10)
-                {
-                    i++;
-                    continue;
-                }
+                Serial.println(i);
+                const char *temp_author = doc["articles"][i]["author"];
+                const char *temp_title = doc["articles"][i]["title"];
+                const char *temp_description = doc["articles"][i]["description"];
+                const char *temp_image = doc["articles"][i]["urlToImage"];
+                const char *temp_content = doc["articles"][i]["content"];
+                Serial.println("Fetched");
                 if (temp_author != NULL)
-                    strncpy(ent[j].author, temp_author, 32);
+                    strcpy(ent[i].author, temp_author);
                 else
-                    strcpy(ent[j].author, "\r\n");
+                    strcpy(ent[i].author, "\r\n");
                 if (temp_title != NULL)
-                    strncpy(ent[j].title, temp_title, 128);
+                    strcpy(ent[i].title, temp_title);
                 else
-                    strcpy(ent[j].title, "\r\n");
+                    strcpy(ent[i].title, "\r\n");
                 if (temp_description != NULL)
-                    strncpy(ent[j].description, temp_description, 128);
+                    strcpy(ent[i].description, temp_description);
                 else
-                    strcpy(ent[j].description, "\r\n");
+                    strcpy(ent[i].description, "\r\n");
                 if (temp_image != NULL)
-                    strncpy(ent[j].image, temp_image, 200);
+                    strcpy(ent[i].image, temp_image);
                 else
-                    strcpy(ent[j].image, "\r\n");
+                    strcpy(ent[i].image, "\r\n");
                 if (temp_content != NULL)
-                    strncpy(ent[j].content, temp_content, 249);
+                    strcpy(ent[i].content, temp_content);
                 else
-                    strcpy(ent[j].content, "\r\n");
+                    strcpy(ent[i].content, "\r\n");
                 i++;
-                j++;
             }
-            nentities = j;
         }
     }
     else if (httpCode == 404)

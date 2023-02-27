@@ -167,12 +167,9 @@ bool Network::getData(char *lat, char *lon, char *apiKey, char *city, char *temp
                 {
                     char temp[48];
                     strcpy(temp, doc["list"][i]["dt_txt"]);
-<<<<<<< HEAD:examples/Inkplate6/Projects/Inkplate6_Daily_Weather_Station/Network.cpp
                     Serial.println(temp);
 
 
-=======
->>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate10/Projects/Daily_Weather_Station_Example/Network.cpp
                     if (strstr(temp, "15:00:00")) // Show time in 15:00 for every day
                     {
                         struct tm t;

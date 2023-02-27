@@ -32,9 +32,9 @@ struct news
 {
     char author[32];
     char title[128];
-    char description[128];
+    char description[1000];
     char image[200];
-    char content[300];
+    char content[1000];
 };
 
 

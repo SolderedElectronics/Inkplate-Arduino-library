@@ -115,23 +115,7 @@ void setup()
     display.begin();
 
     // Calling our begin from network.h file
-<<<<<<< HEAD:examples/Inkplate6COLOR/Projects/Inkplate6COLOR_Daily_Weather_Station/Inkplate6COLOR_Daily_Weather_Station.ino
     network.begin(ssid, pass);
-=======
-    network.begin(city);
-
-    // Welcome screen
-    display.setCursor(50, 290);
-    display.setTextSize(3);
-    display.print(F("Welcome to Inkplate 6 COLOR weather example!"));
-    display.display();
-    display.setTextSize(3);
-    // Wait a bit before proceeding
-    delay(5000);
-
-    // Clear display
-    display.clearDisplay();
->>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6COLOR/Projects/Daily_Weather_Station_Example/Daily_Weather_Station_Example.ino
 
     // Get all relevant data, see Network.cpp for info
     Serial.print("Retrying fetching data");
@@ -177,11 +161,7 @@ void drawWeather()
     display.setTextColor(INKPLATE_BLUE);
     display.setFont(&Inter16pt7b);
     display.setTextSize(1);
-<<<<<<< HEAD:examples/Inkplate6COLOR/Projects/Inkplate6COLOR_Daily_Weather_Station/Inkplate6COLOR_Daily_Weather_Station.ino
     display.setCursor(40, 170);
-=======
-    display.setCursor(50, 190);
->>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6COLOR/Projects/Daily_Weather_Station_Example/Daily_Weather_Station_Example.ino
     display.println(currentWeather);
 }
 
@@ -202,7 +182,7 @@ void drawCity()
 {
     // Drawing city name
     display.setTextColor(INKPLATE_BLUE);
-    display.setFont(&Inter12pt7b);
+    display.setFont(&Inter16pt7b);
     display.setTextSize(1);
 
     display.setCursor(300 - 9 * strlen(city), 435);
@@ -227,7 +207,7 @@ void drawTemps()
 
     display.setFont(&Inter16pt7b);
     display.setTextSize(1);
-    display.setTextColor(INKPLATE_YELLOW);
+    display.setTextColor(INKPLATE_BLUE);
 
     int dayOffset = 40;
 
@@ -243,11 +223,12 @@ void drawTemps()
     display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, yRectangleOffset + textMargin + dayOffset);
     display.println(wDays[hours + 3 > 6 ? hours + 3 - 6 : hours + 3]);
 
-    int tempOffset = 80;
+    int tempOffset = 120;
 
     // Drawing temperature values into black rectangles
     display.setFont(&Inter16pt7b);
     display.setTextSize(1);
+    display.setTextColor(INKPLATE_BLUE);
 
     display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, yRectangleOffset + textMargin + tempOffset);
     display.print(temps[0]);
@@ -272,7 +253,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr1, abbrs[i]) == 0)
             display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_YELLOW, INKPLATE_BLACK);
+                               s_logos[i], 48, 48, INKPLATE_WHITE, INKPLATE_BLACK);
     }
 
     for (int i = 0; i < 18; ++i)
@@ -280,7 +261,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr2, abbrs[i]) == 0)
             display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_YELLOW, INKPLATE_BLACK);
+                               s_logos[i], 48, 48, INKPLATE_WHITE, INKPLATE_BLACK);
     }
 
     for (int i = 0; i < 18; ++i)
@@ -288,7 +269,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr3, abbrs[i]) == 0)
             display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_YELLOW, INKPLATE_BLACK);
+                               s_logos[i], 48, 48, INKPLATE_WHITE, INKPLATE_BLACK);
     }
 
     for (int i = 0; i < 18; ++i)
@@ -296,7 +277,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr4, abbrs[i]) == 0)
             display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_YELLOW, INKPLATE_BLACK);
+                               s_logos[i], 48, 48, INKPLATE_WHITE, INKPLATE_BLACK);
     }
 }
 
@@ -310,11 +291,7 @@ void drawCurrent()
     display.setTextSize(1);
     display.setTextColor(INKPLATE_BLUE);
 
-<<<<<<< HEAD:examples/Inkplate6COLOR/Projects/Inkplate6COLOR_Daily_Weather_Station/Inkplate6COLOR_Daily_Weather_Station.ino
     display.setCursor(150, 130);
-=======
-    display.setCursor(160, 145);
->>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6COLOR/Projects/Daily_Weather_Station_Example/Daily_Weather_Station_Example.ino
     display.print(currentTemp);
 
     int x = display.getCursorX();
@@ -331,11 +308,7 @@ void drawCurrent()
     display.setTextSize(1);
     display.setTextColor(INKPLATE_BLUE);
 
-<<<<<<< HEAD:examples/Inkplate6COLOR/Projects/Inkplate6COLOR_Daily_Weather_Station/Inkplate6COLOR_Daily_Weather_Station.ino
     display.setCursor(350, 130);
-=======
-    display.setCursor(360, 145);
->>>>>>> 93efc99f1d39c8fc1fa726ac84022b59e384def1:examples/Inkplate6COLOR/Projects/Daily_Weather_Station_Example/Daily_Weather_Station_Example.ino
     display.print(currentWind);
 
     x = display.getCursorX();

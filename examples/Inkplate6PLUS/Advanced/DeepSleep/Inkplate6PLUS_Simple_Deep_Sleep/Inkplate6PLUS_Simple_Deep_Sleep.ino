@@ -48,7 +48,7 @@ void setup()
     display.clearDisplay(); // Clear frame buffer of display
     display.drawImage(
         pictures[slide], 0, 43, 1024,
-        682); // Display selected picture at location X=0, Y=0. All three pictures have resolution of 1024x682 pixels
+        682); // Display selected picture at location X=0, Y=0. All three pictures have resolution of 800x600 pixels
     display.display(); // Refresh the screen with new picture
     slide++; // Update counter for pictures. With this variable, we choose what picture is going to be displayed on
              // screen
