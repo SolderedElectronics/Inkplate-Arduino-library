@@ -1,5 +1,5 @@
 /*
-   Basic_gray example for e-radionica.com Inkplate 5
+   Basic_gray example for Soldered Inkplate 5
    For this example you will need only USB cable and Inkplate 5
    Select "Inkplate 5(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 5(ESP32)" option? Follow our tutorial and add it:
@@ -14,7 +14,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   15 July 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -259,7 +259,7 @@ void loop()
     display.display();
     delay(DELAY_MS);
 
-    // Display some grayscale image on screen. We are going to display e-radionica logo on display at location X = 100,
+    // Display some grayscale image on screen. We are going to display Soldered logo on display at location X = 100,
     // Y = 100 Image size is 500x332 pixels.
     display.clearDisplay();
     display.drawImage(picture1, 100, 100, 500,

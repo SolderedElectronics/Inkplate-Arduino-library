@@ -1,5 +1,5 @@
 /*
-   Image frame example for e-radionica.com Inkplate 5
+   Image frame example for Soldered Inkplate 5
    For this example you will need only USB cable and Inkplate 5.
    Select "Inkplate 5(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 5(ESP32)" option? Follow our tutorial and add it:
@@ -7,7 +7,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   28 July 2020 by e-radionica.com
+   28 July 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

@@ -1,7 +1,7 @@
 /**
  **************************************************
  * @file        Mcp.cpp
- * @brief       class for controling mcp expander
+ * @brief       class for controling io exapnder expander
  *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -13,20 +13,21 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     e-radionica.com
+ * @authors     Soldered
  ***************************************************/
 
-#include "Mcp.h"
+#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6PLUS) ||                     \
+    defined(ARDUINO_INKPLATE5)
 
-#ifndef ARDUINO_INKPLATE2
+#include "Mcp.h"
 
 // LOW LEVEL:
 
 /**
- * @brief       mcpBegin function starts mcp expander and sets registers values
+ * @brief       ioBegin function starts io exapnder expander and sets registers values
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_r
  *              pointer to array to be writen in registers
  *
@@ -35,7 +36,7 @@
  * @note        updates register 0 and 1 with 0xFF regardless of what array is
  * passed as _r
  */
-bool Mcp::mcpBegin(uint8_t _addr, uint8_t *_r)
+bool Expander::ioBegin(uint8_t _addr, uint8_t *_r)
 {
     Wire.beginTransmission(_addr);
     int error = Wire.endTransmission();
@@ -45,22 +46,22 @@ bool Mcp::mcpBegin(uint8_t _addr, uint8_t *_r)
     _r[0] = 0xFF;
     _r[1] = 0xFF;
     updateAllRegisters(_addr, _r);
-    if (_addr == MCP23017_EXT_ADDR)
-        second_mcp_inited = 1;
+    if (_addr == IO_EXT_ADDR)
+        second_io_inited = 1;
     return true;
 }
 
 /**
- * @brief       readMCPRegisters function uses i2c to read all mcp registers
+ * @brief       readMCPRegisters function uses i2c to read all io exapnder registers
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_k
- *              pointer to array where mcp registers will be stored
+ *              pointer to array where io exapnder registers will be stored
  */
-void Mcp::readMCPRegisters(uint8_t _addr, uint8_t *k)
+void Expander::readMCPRegisters(uint8_t _addr, uint8_t *k)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(0x00);
@@ -73,21 +74,21 @@ void Mcp::readMCPRegisters(uint8_t _addr, uint8_t *k)
 }
 
 /**
- * @brief       readMCPRegisters function uses i2c to read selected mcp
+ * @brief       readMCPRegisters function uses i2c to read selected io exapnder
  * registers
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t _regName
  *              name of register where read will start
  * @param       uint8_t *_k
- *              pointer to array where mcp registers will be stored
+ *              pointer to array where io exapnder registers will be stored
  * @param       uint8_t _n
  *              number of bites/registers to read
  */
-void Mcp::readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
+void Expander::readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(_regName);
@@ -100,19 +101,19 @@ void Mcp::readMCPRegisters(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t 
 }
 
 /**
- * @brief       readMCPRegisters function uses i2c to read one selected mcp
+ * @brief       readMCPRegisters function uses i2c to read one selected io exapnder
  * register
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t _regName
  *              name of register where read will start
  * @param       uint8_t *_k
- *              pointer to array where mcp registers will be stored
+ *              pointer to array where io exapnder registers will be stored
  */
-void Mcp::readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k)
+void Expander::readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(_regName);
@@ -122,17 +123,17 @@ void Mcp::readMCPRegister(uint8_t _addr, uint8_t _regName, uint8_t *k)
 }
 
 /**
- * @brief       updateAllRegisters function uses i2c to updates all mcp
+ * @brief       updateAllRegisters function uses i2c to updates all io exapnder
  * registers
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_k
  *              pointer to array where data to be uploaded is stored
  */
-void Mcp::updateAllRegisters(uint8_t _addr, uint8_t *k)
+void Expander::updateAllRegisters(uint8_t _addr, uint8_t *k)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(0x00);
@@ -144,18 +145,18 @@ void Mcp::updateAllRegisters(uint8_t _addr, uint8_t *k)
 }
 
 /**
- * @brief       updateRegister function uses i2c to update selected mcp register
+ * @brief       updateRegister function uses i2c to update selected io exapnder register
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t _regName
  *              name of register that will be updated
  * @param       uint8_t _d
  *              data to be uploaded
  */
-void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d)
+void Expander::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(_regName);
@@ -164,11 +165,11 @@ void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d)
 }
 
 /**
- * @brief       updateRegister function uses i2c to update some selected mcp
+ * @brief       updateRegister function uses i2c to update some selected io exapnder
  * registers
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t _regName
  *              name of register where update will start
  * @param       uint8_t *_k
@@ -176,9 +177,9 @@ void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t _d)
  * @param       uint8_t _n
  *              number of bites/registers to write to
  */
-void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
+void Expander::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     Wire.beginTransmission(_addr);
     Wire.write(_regName);
@@ -194,12 +195,12 @@ void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n
  */
 
 /**
- * @brief       pinModeInternal sets mcp internal pin mode
+ * @brief       pinModeInternal sets io exapnder internal pin mode
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_r
- *              pointer to array that holds mcp registers
+ *              pointer to array that holds io exapnder registers
  * @param       uint8_t _pin
  *              pin to set mode
  * @param       uint8_t _mode
@@ -208,9 +209,9 @@ void Mcp::updateRegister(uint8_t _addr, uint8_t _regName, uint8_t *k, uint8_t _n
  *
  * @note        modes are defined in @esp32-hal-gpio.h
  */
-void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
+void Expander::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     uint8_t _port = (_pin / 8) & 1;
     uint8_t _p = _pin % 8;
@@ -244,9 +245,9 @@ void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mod
  * @brief       digitalWriteInternal sets internal output pin state (1 or 0)
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_r
- *              pointer to array that holds mcp registers
+ *              pointer to array that holds io exapnder registers
  * @param       uint8_t _pin
  *              pin to set output (DO NOT USE GPA0-GPA7 and GPB0. In code those
  * are pins from 0-8) only use 9-15
@@ -257,9 +258,9 @@ void Mcp::pinModeInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mod
  * 0-8!!! Using those, you might permanently damage the screen. You should only
  * use pins from 9-15. Function will exit if pin mode isnt OUTPUT.
  */
-void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state)
+void Expander::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _state)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     uint8_t _port = (_pin / 8) & 1;
     uint8_t _p = _pin % 8;
@@ -271,20 +272,20 @@ void Mcp::digitalWriteInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t
 }
 
 /**
- * @brief       digitalReadInternal reads mcp internal pin state
+ * @brief       digitalReadInternal reads io exapnder internal pin state
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_r
- *              pointer to array that holds mcp registers
+ *              pointer to array that holds io exapnder registers
  * @param       uint8_t _pin
  *              pin to set mode
  *
  * @return      HIGH or LOW (1 or 0) value
  */
-uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
+uint8_t Expander::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return 0;
     uint8_t _port = (_pin / 8) & 1;
     uint8_t _p = _pin % 8;
@@ -293,12 +294,12 @@ uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 }
 
 /**
- * @brief       setIntOutputInternal sets mcp interrupt port state
+ * @brief       setIntOutputInternal sets io exapnder interrupt port state
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_r
- *              pointer to array that holds mcp registers
+ *              pointer to array that holds io exapnder registers
  * @param       uint8_t intPort
  *              portA or portB
  * @param       uint8_t mirroring
@@ -310,10 +311,10 @@ uint8_t Mcp::digitalReadInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
  * @param       uint8_t polarity
  *              sets port interrupt polarity, 1 active high, 0 active low
  */
-void Mcp::setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint8_t mirroring, uint8_t openDrain,
-                               uint8_t polarity)
+void Expander::setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint8_t mirroring, uint8_t openDrain,
+                                    uint8_t polarity)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     intPort &= 1;
     mirroring &= 1;
@@ -326,20 +327,20 @@ void Mcp::setIntOutputInternal(uint8_t _addr, uint8_t *_r, uint8_t intPort, uint
 }
 
 /**
- * @brief       setIntPinInternal function sets mcp interupt internal mode
+ * @brief       setIntPinInternal function sets io exapnder interupt internal mode
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_r
- *              pointer to array that holds mcp registers
+ *              pointer to array that holds io exapnder registers
  * @param       uint8_t *_pin
  *              pin to set interrupt mode to
  * @param       uint8_t _mode
  *              interurpt mode (CHANGE, FALLING, RISING)
  */
-void Mcp::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
+void Expander::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _mode)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     uint8_t _port = (_pin / 8) & 1;
     uint8_t _p = _pin % 8;
@@ -365,67 +366,67 @@ void Mcp::setIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin, uint8_t _m
 }
 
 /**
- * @brief       pinModeMCP function sets internal pin mode
+ * @brief       pinModeIO function sets internal pin mode
  *
  * @param       uint8_t _pin
  *              pin to set mode
  * @param       uint8_t _mode
  *              mode for pin to be set (INPUT=0x01, OUTPUT=0x02,
  * INPUT_PULLUP=0x05)
- * @param       uint8_t _mcp_id
- *              internal or external mcp
+ * @param       uint8_t _io_id
+ *              internal or external io exapnder
  */
-void Mcp::pinModeMCP(uint8_t _pin, uint8_t _mode, uint8_t _mcp_id)
+void Expander::pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
 {
-    if ((!second_mcp_inited) && _mcp_id == MCP23017_EXT_ADDR)
+    if ((!second_io_inited) && _io_id == IO_EXT_ADDR)
         return;
-    if ((_mcp_id == MCP23017_INT_ADDR) && (_pin < 9))
+    if ((_io_id == IO_INT_ADDR) && (_pin < 9))
         return;
-    pinModeInternal(_mcp_id, mcpRegsEx, _pin, _mode);
+    pinModeInternal(_io_id, ioRegsEx, _pin, _mode);
 }
 
 /**
- * @brief       digitalWriteMCP sets internal output pin state (1 or 0)
+ * @brief       digitalWriteIO sets internal output pin state (1 or 0)
  *
  * @param       uint8_t _pin
  *              pin to set output (DO NOT USE GPA0-GPA7 and GPB0. In code those
  * are pins from 0-8) only use 9-15
  * @param       uint8_t _state
  *              output pin state (0 or 1)
- * @param       uint8_t _mcp_id
- *              internal or external mcp
+ * @param       uint8_t _io_id
+ *              internal or external io exapnder
  *
  */
-void Mcp::digitalWriteMCP(uint8_t _pin, uint8_t _state, uint8_t _mcp_id)
+void Expander::digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _io_id)
 {
-    if (!second_mcp_inited && _mcp_id == MCP23017_EXT_ADDR)
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return;
-    if ((_mcp_id == MCP23017_INT_ADDR) && (_pin < 9))
+    if ((_io_id == IO_INT_ADDR) && (_pin < 9))
         return;
-    digitalWriteInternal(_mcp_id, mcpRegsEx, _pin, _state);
+    digitalWriteInternal(_io_id, ioRegsEx, _pin, _state);
 }
 
 /**
- * @brief       digitalReadMCP reads mcp internal pin state
+ * @brief       digitalReadIO reads io exapnder internal pin state
  *
  * @param       uint8_t _pin
  *              pin to set mode
- * @param       uint8_t _mcp_id
- *              internal or external mcp
+ * @param       uint8_t _io_id
+ *              internal or external io exapnder
  *
  * @return      HIGH or LOW (1 or 0) value
  */
-uint8_t Mcp::digitalReadMCP(uint8_t _pin, uint8_t _mcp_id)
+uint8_t Expander::digitalReadIO(uint8_t _pin, uint8_t _io_id)
 {
-    if (!second_mcp_inited && _mcp_id == MCP23017_EXT_ADDR)
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return 0;
-    if ((_mcp_id == MCP23017_INT_ADDR) && (_pin < 9))
+    if ((_io_id == IO_INT_ADDR) && (_pin < 9))
         return 0;
-    return digitalReadInternal(_mcp_id, mcpRegsEx, _pin);
+    return digitalReadInternal(_io_id, ioRegsEx, _pin);
 }
 
 /**
- * @brief       setIntOutput sets mcp interrupt port state
+ * @brief       setIntOutput sets io exapnder interrupt port state
  *
  * @param       uint8_t intPort
  *              portA or portB
@@ -437,33 +438,33 @@ uint8_t Mcp::digitalReadMCP(uint8_t _pin, uint8_t _mcp_id)
  * port polarity
  * @param       uint8_t polarity
  *              sets port interrupt polarity, 1 active high, 0 active low
- * @param       uint8_t _mcp_id
- *              internal or external mcp
+ * @param       uint8_t _io_id
+ *              internal or external io exapnder
  */
-void Mcp::setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, uint8_t polarity, uint8_t _mcp_id)
+void Expander::setIntOutput(uint8_t intPort, uint8_t mirroring, uint8_t openDrain, uint8_t polarity, uint8_t _io_id)
 {
-    if (!second_mcp_inited && _mcp_id == MCP23017_EXT_ADDR)
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return;
-    setIntOutputInternal(_mcp_id, mcpRegsEx, intPort, mirroring, openDrain, polarity);
+    setIntOutputInternal(_io_id, ioRegsEx, intPort, mirroring, openDrain, polarity);
 }
 
 /**
- * @brief       setIntPin function sets mcp interupt internal mode
+ * @brief       setIntPin function sets io exapnder interupt internal mode
  *
  * @param       uint8_t _pin
  *              pin to set interrupt mode to
  * @param       uint8_t _mode
  *              interurpt mode (CHANGE, FALLING, RISING)
- * @param       uint8_t _mcp_id
- *              internal or external mcp
+ * @param       uint8_t _io_id
+ *              internal or external io exapnder
  */
-void Mcp::setIntPin(uint8_t _pin, uint8_t _mode, uint8_t _mcp_id)
+void Expander::setIntPin(uint8_t _pin, uint8_t _mode, uint8_t _io_id)
 {
-    if (!second_mcp_inited && _mcp_id == MCP23017_EXT_ADDR)
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return;
-    if ((_mcp_id == MCP23017_INT_ADDR) && (_pin < 9))
+    if ((_io_id == IO_INT_ADDR) && (_pin < 9))
         return;
-    setIntPinInternal(_mcp_id, mcpRegsEx, _pin, _mode);
+    setIntPinInternal(_io_id, ioRegsEx, _pin, _mode);
 }
 
 /**
@@ -471,54 +472,54 @@ void Mcp::setIntPin(uint8_t _pin, uint8_t _mode, uint8_t _mcp_id)
  *
  * @param       uint8_t _pin
  *              pin to remove interrupt from
- * @param       uint8_t _mcp_id
- *              internal or external mcp
+ * @param       uint8_t _io_id
+ *              internal or external io exapnder
  */
-void Mcp::removeIntPin(uint8_t _pin, uint8_t _mcp_id)
+void Expander::removeIntPin(uint8_t _pin, uint8_t _io_id)
 {
-    if (!second_mcp_inited && _mcp_id == MCP23017_EXT_ADDR)
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return;
-    if ((_mcp_id == MCP23017_INT_ADDR) && (_pin < 9))
+    if ((_io_id == IO_INT_ADDR) && (_pin < 9))
         return;
-    removeIntPinInternal(_mcp_id, mcpRegsEx, _pin);
+    removeIntPinInternal(_io_id, ioRegsEx, _pin);
 }
 
 /**
  * @brief       getINTInternal function reads Interrupt from pin
  *
- * @param       uint8_t _mcp_id
- *              internal or external mcp
+ * @param       uint8_t _io_id
+ *              internal or external io exapnder
  *
  * @return      returns interupt registers state
  *
  * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
  * PORTA PIN1
  */
-uint16_t Mcp::getINT(uint8_t _mcp_id)
+uint16_t Expander::getINT(uint8_t _io_id)
 {
-    if (!second_mcp_inited && _mcp_id == MCP23017_EXT_ADDR)
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return 0;
 
-    return getINTInternal(_mcp_id, mcpRegsEx);
+    return getINTInternal(_io_id, ioRegsEx);
 }
 
 /**
  * @brief       getINTstate function reads Interrupt pins state at the time
  * interrupt occured
  *
- * @param       uint8_t _mcp_id
- *              internal or external mcp
+ * @param       uint8_t _io_id
+ *              internal or external io exapnder
  *
  * @return      returns interupt registers state at the time interrupt occured
  *
  * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
  * PORTA PIN1
  */
-uint16_t Mcp::getINTstate(uint8_t _mcp_id)
+uint16_t Expander::getINTstate(uint8_t _io_id)
 {
-    if (!second_mcp_inited && _mcp_id == MCP23017_EXT_ADDR)
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return 0;
-    return getINTstateInternal(_mcp_id, mcpRegsEx);
+    return getINTstateInternal(_io_id, ioRegsEx);
 }
 
 /**
@@ -527,48 +528,48 @@ uint16_t Mcp::getINTstate(uint8_t _mcp_id)
  * @param       uint16_t _d
  *              data to be set to PORTAB registers
  *
- * @param       uint8_t _mcp_id
- *              internal or external mcp
+ * @param       uint8_t _io_id
+ *              internal or external io exapnder
  *
  * @note        MSB byte is for PORTB, LSB byte for PORTA
  */
-void Mcp::setPorts(uint16_t _d, uint8_t _mcp_id)
+void Expander::setPorts(uint16_t _d, uint8_t _io_id)
 {
-    if (!second_mcp_inited && _mcp_id == MCP23017_EXT_ADDR)
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return;
-    setPortsInternal(_mcp_id, mcpRegsEx, _d);
+    setPortsInternal(_io_id, ioRegsEx, _d);
 }
 
 /**
  * @brief       getPortsInternal gets register state of PORTSAB
  *
- * @param       uint8_t _mcp_id
- *              internal or external mcp
+ * @param       uint8_t _io_id
+ *              internal or external io exapnder
  *
  * @return      returns register states of PORTSAB
  *
  * @note        MSB byte is for PORTB, LSB is for PORTA
  */
-uint16_t Mcp::getPorts(uint8_t _mcp_id)
+uint16_t Expander::getPorts(uint8_t _io_id)
 {
-    if (!second_mcp_inited && _mcp_id == MCP23017_EXT_ADDR)
+    if (!second_io_inited && _io_id == IO_EXT_ADDR)
         return 0;
-    return getPortsInternal(_mcp_id, mcpRegsEx);
+    return getPortsInternal(_io_id, ioRegsEx);
 }
 
 /**
  * @brief       removeIntPinInternal function removes Interrupt from pin
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_r
- *              pointer to array that holds mcp registers
+ *              pointer to array that holds io exapnder registers
  * @param       uint8_t _pin
  *              pin to remove interrupt from
  */
-void Mcp::removeIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
+void Expander::removeIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     uint8_t _port = (_pin / 8) & 1;
     uint8_t _p = _pin % 8;
@@ -580,17 +581,17 @@ void Mcp::removeIntPinInternal(uint8_t _addr, uint8_t *_r, uint8_t _pin)
  * @brief       getINTInternal function reads Interrupt pin state for all pins
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_r
- *              pointer to array that holds mcp registers
+ *              pointer to array that holds io exapnder registers
  * @return      returns interrupt state of both ports (INTF)
  *
  * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
  * PORTA PIN1, bit can be set only if interrupt is enabled
  */
-uint16_t Mcp::getINTInternal(uint8_t _addr, uint8_t *_r)
+uint16_t Expander::getINTInternal(uint8_t _addr, uint8_t *_r)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return 0;
     readMCPRegisters(_addr, MCP23017_INTFA, _r, 2);
     return ((_r[MCP23017_INTFB] << 8) | _r[MCP23017_INTFA]);
@@ -601,9 +602,9 @@ uint16_t Mcp::getINTInternal(uint8_t _addr, uint8_t *_r)
  * interrupt occured
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_r
- *              pointer to array that holds mcp registers
+ *              pointer to array that holds io exapnder registers
  *
  * @return      returns interrupt state of both ports, at the time the interrupt
  * occured (INTCAP)
@@ -611,9 +612,9 @@ uint16_t Mcp::getINTInternal(uint8_t _addr, uint8_t *_r)
  * @note        Every bit represents interrupt pin, MSB is  PORTB PIN7, LSB is
  * PORTA PIN1, bit can be set only if interrupt is enabled
  */
-uint16_t Mcp::getINTstateInternal(uint8_t _addr, uint8_t *_r)
+uint16_t Expander::getINTstateInternal(uint8_t _addr, uint8_t *_r)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return 0;
     readMCPRegisters(_addr, MCP23017_INTCAPA, _r, 2);
     return ((_r[MCP23017_INTCAPB] << 8) | _r[MCP23017_INTCAPA]);
@@ -623,17 +624,17 @@ uint16_t Mcp::getINTstateInternal(uint8_t _addr, uint8_t *_r)
  * @brief       setPortsInternal sets internal state of PORTAB registers
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_r
- *              pointer to array that holds mcp registers
+ *              pointer to array that holds io exapnder registers
  * @param       uint16_t _d
  *              data to be set to PORTAB registers
  *
  * @note        MSB byte is for PORTB, LSB byte for PORTA
  */
-void Mcp::setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d)
+void Expander::setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return;
     _r[MCP23017_GPIOA] = _d & 0xff;
     _r[MCP23017_GPIOB] = (_d >> 8) & 0xff;
@@ -644,17 +645,17 @@ void Mcp::setPortsInternal(uint8_t _addr, uint8_t *_r, uint16_t _d)
  * @brief       getPortsInternal gets register state of PORTSAB
  *
  * @param       uint8_t _addr
- *              mcp i2c address
+ *              io exapnder i2c address
  * @param       uint8_t *_r
- *              pointer to array that holds mcp registers
+ *              pointer to array that holds io exapnder registers
  *
  * @return      returns register states of PORTSAB
  *
  * @note        MSB byte is for PORTB, LSB is for PORTA
  */
-uint16_t Mcp::getPortsInternal(uint8_t _addr, uint8_t *_r)
+uint16_t Expander::getPortsInternal(uint8_t _addr, uint8_t *_r)
 {
-    if (_addr == MCP23017_EXT_ADDR && !second_mcp_inited)
+    if (_addr == IO_EXT_ADDR && !second_io_inited)
         return 0;
     readMCPRegisters(_addr, MCP23017_GPIOA, _r, 2);
     return ((_r[MCP23017_GPIOB] << 8) | (_r[MCP23017_GPIOA]));

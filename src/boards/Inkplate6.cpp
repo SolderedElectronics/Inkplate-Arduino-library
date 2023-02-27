@@ -14,7 +14,7 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     @ e-radionica.com
+ * @authors     @ Soldered
  ***************************************************/
 
 /**
@@ -24,7 +24,7 @@
 #include "../include/Graphics.h"
 #include "../include/defines.h"
 
-#ifdef ARDUINO_ESP32_DEV
+#if (defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6V2))
 
 /**
  * @brief       begin function initialize Inkplate object with predefined
@@ -45,22 +45,22 @@ bool Inkplate::begin(void)
                     (((i & B11100000) >> 5) << 25);
 
 #ifdef ARDUINO_ESP32_DEV
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
 #else
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
 #endif
 
-    memset(mcpRegsInt, 0, 22);
-    memset(mcpRegsEx, 0, 22);
+    memset(ioRegsInt, 0, 22);
+    memset(ioRegsEx, 0, 22);
 
-    mcpBegin(MCP23017_INT_ADDR, mcpRegsInt);
-    mcpBegin(MCP23017_EXT_ADDR, mcpRegsEx);
+    ioBegin(IO_INT_ADDR, ioRegsInt);
+    ioBegin(IO_EXT_ADDR, ioRegsEx);
 
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, VCOM, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, GPIO0_ENABLE, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, GPIO0_ENABLE, HIGH);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, VCOM, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, PWRUP, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, WAKEUP, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, GPIO0_ENABLE, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, GPIO0_ENABLE, HIGH);
 
     WAKEUP_SET;
     delay(1);
@@ -80,18 +80,39 @@ bool Inkplate::begin(void)
 
     for (int i = 0; i < 15; i++)
     {
-        pinModeInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, OUTPUT);
-        digitalWriteInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, LOW);
+        pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);
+        digitalWriteInternal(IO_EXT_ADDR, ioRegsEx, i, LOW);
     }
+
+    // For same reason, unused pins of first I/O expander have to be also set as
+    // outputs, low.
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 14, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 15, LOW);
+
+#ifdef ARDUINO_INKPLATE6V2
+    // Set SPI pins to input to reduce power consumption in deep sleep
+    pinMode(12, INPUT);
+    pinMode(13, INPUT);
+    pinMode(14, INPUT);
+    pinMode(15, INPUT);
+
+    // And also disable uSD card supply
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, INPUT);
+#else
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, LOW);
+#endif
 
     // CONTROL PINS
     pinMode(0, OUTPUT);
     pinMode(2, OUTPUT);
     pinMode(32, OUTPUT);
     pinMode(33, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, OE, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, GMOD, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, SPV, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, OE, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, GMOD, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, SPV, OUTPUT);
 
     // DATA PINS
     pinMode(4, OUTPUT); // D0
@@ -104,21 +125,12 @@ bool Inkplate::begin(void)
     pinMode(27, OUTPUT); // D7
 
     // TOUCHPAD PINS
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 10, INPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 11, INPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 12, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 10, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, INPUT);
 
     // Battery voltage Switch MOSFET
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, OUTPUT);
-
-    // Set unused pins of the first MCP as outputs, low logic state
-    // (to have the lowest current consumption in low power mode)
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 13, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 14, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 15, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 13, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 14, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 15, LOW);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
 
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
@@ -235,8 +247,16 @@ void Inkplate::display1b(bool leaveOn)
     clean(1, 21);
     clean(2, 1);
     clean(0, 12);
+    clean(2, 1);
 
-    for (int k = 0; k < 4; ++k)
+// How many cycles / phases / frames of dark pixels
+#if defined(ARDUINO_ESP32_DEV)
+    int rep = 4;
+#elif defined(ARDUINO_INKPLATE6V2)
+    int rep = 5;
+#endif
+
+    for (int k = 0; k < rep; ++k)
     {
         uint8_t *DMemoryNewPtr = DMemoryNew + (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
         vscan_start();
@@ -263,8 +283,11 @@ void Inkplate::display1b(bool leaveOn)
                 GPIO.out_w1ts = (_send) | CL;
                 GPIO.out_w1tc = DATA | CL;
             }
-            GPIO.out_w1ts = (_send) | CL;
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_ESP32_DEV
+            GPIO.out_w1ts = CL;
             GPIO.out_w1tc = DATA | CL;
+#endif
             vscan_end();
         }
         delayMicroseconds(230);
@@ -296,8 +319,11 @@ void Inkplate::display1b(bool leaveOn)
             GPIO.out_w1tc = DATA | CL;
             _pos--;
         }
-        GPIO.out_w1ts = (_send) | CL;
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_ESP32_DEV
+        GPIO.out_w1ts = CL;
         GPIO.out_w1tc = DATA | CL;
+#endif
         vscan_end();
     }
     delayMicroseconds(230);
@@ -319,8 +345,11 @@ void Inkplate::display1b(bool leaveOn)
             GPIO.out_w1ts = (_send) | CL;
             GPIO.out_w1tc = DATA | CL;
         }
-        GPIO.out_w1ts = (_send) | CL;
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_ESP32_DEV
+        GPIO.out_w1ts = CL;
         GPIO.out_w1tc = DATA | CL;
+#endif
         vscan_end();
     }
     delayMicroseconds(230);
@@ -354,6 +383,7 @@ void Inkplate::display3b(bool leaveOn)
     clean(1, 21);
     clean(2, 1);
     clean(0, 12);
+    clean(2, 1);
     for (int k = 0; k < 8; ++k)
     {
         uint8_t *dp = DMemory4Bit + E_INK_WIDTH * E_INK_HEIGHT / 2;
@@ -380,8 +410,11 @@ void Inkplate::display3b(bool leaveOn)
                 GPIO.out_w1ts = t | CL;
                 GPIO.out_w1tc = DATA | CL;
             }
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_ESP32_DEV
             GPIO.out_w1ts = CL;
             GPIO.out_w1tc = DATA | CL;
+#endif
             vscan_end();
         }
         delayMicroseconds(230);
@@ -454,7 +487,14 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
     if (!einkOn())
         return 0;
 
-    for (int k = 0; k < 5; ++k)
+// How many cycles / phases / frames to write to the panel.
+#if defined(ARDUINO_ESP32_DEV)
+    int rep = 5;
+#elif defined(ARDUINO_INKPLATE6V2)
+    int rep = 6;
+#endif
+
+    for (int k = 0; k < rep; ++k)
     {
         vscan_start();
         n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
@@ -472,8 +512,11 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
                 GPIO.out_w1tc = DATA | CL;
                 n--;
             }
-            GPIO.out_w1ts = _send | CL;
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_ESP32_DEV
+            GPIO.out_w1ts = CL;
             GPIO.out_w1tc = DATA | CL;
+#endif
             vscan_end();
         }
         delayMicroseconds(230);
@@ -534,49 +577,15 @@ void Inkplate::clean(uint8_t c, uint8_t rep)
                 GPIO.out_w1ts = CL;
                 GPIO.out_w1tc = CL;
             }
+// New Inkplate6 panel doesn't need last clock
+#ifdef ARDUINO_INKPLATE6
             GPIO.out_w1ts = CL;
-            GPIO.out_w1tc = CL;
+            GPIO.out_w1tc = DATA | CL;
+#endif
             vscan_end();
         }
         delayMicroseconds(230);
     }
-}
-
-/**
- * @brief       einkOff turns off epaper power supply and put all digital IO
- * pins in high Z state
- */
-void Inkplate::einkOff()
-{
-    if (getPanelState() == 0)
-        return;
-    OE_CLEAR;
-    GMOD_CLEAR;
-    GPIO.out &= ~(DATA | LE | CL);
-    CKV_CLEAR;
-    SPH_CLEAR;
-    SPV_CLEAR;
-
-    // Put TPS65186 into standby mode (leaving 3V3 SW active)
-    VCOM_CLEAR;
-    Wire.beginTransmission(0x48);
-    Wire.write(0x01);
-    Wire.write(0x6f);
-    Wire.endTransmission();
-
-    // Wait for all PWR rails to shut down
-    delay(100);
-
-    // Disable 3V3 to the panel
-    Wire.beginTransmission(0x48);
-    Wire.write(0x01);
-    Wire.write(0x4f);
-    Wire.endTransmission();
-
-    WAKEUP_CLEAR;
-
-    pinsZstate();
-    setPanelState(0);
 }
 
 #endif

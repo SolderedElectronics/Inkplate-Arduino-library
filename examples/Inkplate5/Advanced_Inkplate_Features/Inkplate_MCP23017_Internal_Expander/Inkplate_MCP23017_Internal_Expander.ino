@@ -1,5 +1,5 @@
 /*
-   Inkplate_MCP23017 example for e-radionica.com Inkplate 5
+   Inkplate_MCP23017 example for Soldered Inkplate 5
    For this example you will need only a micro USB cable, Inkplate5, 330 Ohm resistor and LED diode.
    Select "Inkplate 5(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 5(ESP32)" option? Follow our tutorial and add it:
@@ -21,7 +21,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   19 May 2022 by Soldered.com
+   19 May 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -31,7 +31,7 @@
 
 #include "Inkplate.h" //Include Inkplate library to the sketch
 
-#define LED_PIN MCP23017_PIN_B7 // We are going to use pin GPB7 (remember! GPA0 = 0, GPA1 = 1, ..., GPA7 = 7, GPB0 = 8, GBP1 = 9, ..., GPB7 =
+#define LED_PIN IO_PIN_B7 // We are going to use pin GPB7 (remember! GPA0 = 0, GPA1 = 1, ..., GPA7 = 7, GPB0 = 8, GBP1 = 9, ..., GPB7 =
        // 15)
 
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
@@ -39,16 +39,16 @@ Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and als
 void setup()
 {
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
-    display.pinModeMCP(
+    display.pinModeIO(
         LED_PIN,
-        OUTPUT, MCP23017_INT_ADDR); // Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
+        OUTPUT, IO_INT_ADDR); // Set pin 15 (or GPB7) to output. On that pin, we sholud connect LED with current limiting resistor
                                     // and specify that we want use internal MCP or MCP with header named MCP23017-1
 }
 
 void loop()
 {
-    display.digitalWriteMCP(LED_PIN, LOW, MCP23017_INT_ADDR);  // Set output to low (LED does not light up)
+    display.digitalWriteIO(LED_PIN, LOW, IO_INT_ADDR);  // Set output to low (LED does not light up)
     delay(1000);                            // Wait for one second
-    display.digitalWriteMCP(LED_PIN, HIGH, MCP23017_INT_ADDR); // Set output to high (LED lights up)
+    display.digitalWriteIO(LED_PIN, HIGH, IO_INT_ADDR); // Set output to high (LED lights up)
     delay(1000);                            // Wait for one second
 }
