@@ -21,12 +21,14 @@
 #if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
 
 extern Image *_imagePtrJpeg;
+
 /*
 static uint32_t pallete[] = {
     0x000000ll, 0xFFFFFFll, 0x008000ll, 0x0000FFll, 0xFF0000ll, 0xFFFF00ll,
 0xFFAA00ll,
 };
 */
+
 #if defined(ARDUINO_INKPLATECOLOR)
 
 static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0x438A1C, 0x555E7E, 0x8A4C5B, 0xFFF338, 0xE87E00, 0xC2A4F4};
