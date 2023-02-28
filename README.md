@@ -1,6 +1,6 @@
 # Inkplate Arduino library
 
-[![Compile Sketches](https://github.com/e-radionicacom/Inkplate-Arduino-library/actions/workflows/compile.yml/badge.svg?branch=dev)](https://github.com/e-radionicacom/Inkplate-Arduino-library/actions/workflows/compile.yml)
+[![Compile Sketches](https://github.com/e-radionicacom/Inkplate-Arduino-library/actions/workflows/compile.yml/badge.svg?branch=master)](https://github.com/e-radionicacom/Inkplate-Arduino-library/actions/workflows/compile.yml)
 
 ![](https://www.crowdsupply.com/img/cf95/compare-peripheral_jpg_project-body.jpg)
 

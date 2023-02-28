@@ -1,7 +1,7 @@
 /*
 SdFat.h
 Inkplate Arduino library
-Zvonimir Haramustek @ e-radionica.com
+Zvonimir Haramustek @ Soldered
 September 24, 2020
 https://github.com/e-radionicacom/Inkplate-Arduino-library
 

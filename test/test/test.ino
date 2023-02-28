@@ -1,5 +1,5 @@
 /*
-   10_Inkplate_Download_And_Show example for e-radionica Inkplate6 original example
+   10_Inkplate_Download_And_Show example for Soldered Inkplate6 original example
    Modified by Martin to make it work with CALE.es web-service for ESP32 displays
    Added deepsleep functionality so it wakes up each N minutes and downloads a new image
 */

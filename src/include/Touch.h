@@ -13,25 +13,30 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     @ e-radionica.com
+ * @authors     @ Soldered
  ***************************************************/
 
 #ifndef __TOUCH_H__
 #define __TOUCH_H__
 
-#ifdef ARDUINO_INKPLATE6PLUS
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
 
 #include "Arduino.h"
 #include "Graphics.h"
-#include "Mcp.h"
 #include "Wire.h"
 #include "defines.h"
+
+#if defined(ARDUINO_INKPLATE6PLUS)
+#include "Mcp.h"
+#elif defined(ARDUINO_INKPLATE6PLUSV2)
+#include "Pcal.h"
+#endif
 
 /**
  * @brief       Touch class holds functionality for interaction with touchscreen
  * displays
  */
-class Touch : virtual public Mcp
+class Touch : virtual public Expander
 {
   public:
     bool touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h);

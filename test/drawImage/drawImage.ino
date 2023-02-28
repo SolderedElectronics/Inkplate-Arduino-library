@@ -1,7 +1,7 @@
 /*
 drawImage.ino
 Inkplate 6 Arduino library
-Zvonimir Haramustek @ e-radionica.com
+Zvonimir Haramustek @ Soldered
 January 4, 2021
 https://github.com/e-radionicacom/Inkplate-6-Arduino-library
 

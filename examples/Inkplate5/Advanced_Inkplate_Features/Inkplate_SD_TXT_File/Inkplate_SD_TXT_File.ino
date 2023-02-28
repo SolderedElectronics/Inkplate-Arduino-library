@@ -1,5 +1,5 @@
 /*
-   Inkplate_SD_TXT example for e-radionica.com Inkplate 5
+   Inkplate_SD_TXT example for Soldered Inkplate 5
    For this example you will need only a micro USB cable, Inkplate 5 and a SD card
    loaded with text.txt file that can be found inside folder of this example.
    Select "Inkplate 5(ESP32)" from Tools -> Board menu.
@@ -16,7 +16,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   15 July 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

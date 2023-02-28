@@ -1,5 +1,5 @@
 /*
-   Inkplate_Wake_up_on_touchpads example for e-radionica.com Inkplate 5
+   Inkplate_Wake_up_on_touchpads example for Soldered Inkplate 5
    For this example you will need USB cable and an Inkplate 5
    Select "Inkplate 5(ESP32)" from Tools -> Board menu.
    Don't have "Inkplate 5(ESP32)" option? Follow our tutorial and add it:
@@ -9,7 +9,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by e-radionica.com
+   15 July 2020 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -39,10 +39,10 @@ void setup()
     display.begin();
 
     // Setup mcp interrupts
-    display.setIntOutputInternal(MCP23017_INT_ADDR, display.mcpRegsInt, 1, false, false, HIGH);
-    display.setIntPinInternal(MCP23017_INT_ADDR, display.mcpRegsInt, PAD1, RISING);
-    display.setIntPinInternal(MCP23017_INT_ADDR, display.mcpRegsInt, PAD2, RISING);
-    display.setIntPinInternal(MCP23017_INT_ADDR, display.mcpRegsInt, PAD3, RISING);
+    display.setIntOutputInternal(IO_INT_ADDR, display.ioRegsInt, 1, false, false, HIGH);
+    display.setIntPinInternal(IO_INT_ADDR, display.ioRegsInt, PAD1, RISING);
+    display.setIntPinInternal(IO_INT_ADDR, display.ioRegsInt, PAD2, RISING);
+    display.setIntPinInternal(IO_INT_ADDR, display.ioRegsInt, PAD3, RISING);
 
     ++bootCount;
 

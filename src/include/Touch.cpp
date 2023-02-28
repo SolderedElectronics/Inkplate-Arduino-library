@@ -13,12 +13,12 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     @ e-radionica.com
+ * @authors     @ Soldered
  ***************************************************/
 
 #include "Touch.h"
 
-#ifdef ARDUINO_INKPLATE6PLUS
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
 
 uint16_t _tsXResolution;
 uint16_t _tsYResolution;
@@ -108,9 +108,9 @@ void Touch::tsReadRegs(uint8_t _addr, uint8_t *_buff, uint8_t _size)
  */
 void Touch::tsHardwareReset()
 {
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, TS_RTS, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, TS_RTS, LOW);
     delay(15);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, TS_RTS, HIGH);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, TS_RTS, HIGH);
     delay(15);
 }
 
@@ -160,10 +160,10 @@ bool Touch::tsSoftwareReset()
 bool Touch::tsInit(uint8_t _pwrState)
 {
     // Enable power to TS
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, TOUCHSCREEN_EN, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, TOUCHSCREEN_EN, LOW);
 
     pinMode(TS_INT, INPUT_PULLUP);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, TS_RTS, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, TS_RTS, OUTPUT);
     attachInterrupt(TS_INT, tsInt, FALLING);
     tsHardwareReset();
     if (!tsSoftwareReset())
@@ -183,7 +183,7 @@ bool Touch::tsInit(uint8_t _pwrState)
  */
 void Touch::tsShutdown()
 {
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, TOUCHSCREEN_EN, HIGH);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, TOUCHSCREEN_EN, HIGH);
 }
 
 /**
