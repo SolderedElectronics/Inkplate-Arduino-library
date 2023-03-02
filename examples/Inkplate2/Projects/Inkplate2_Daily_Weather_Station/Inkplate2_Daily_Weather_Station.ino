@@ -94,13 +94,15 @@ void setup()
     // Go to deep sleep
     Serial.println("Going to deep sleep, bye");
     esp_sleep_enable_timer_wakeup(1000LL * WAKEUP);
+    display.setPanelDeepSleep(0);
     (void)esp_deep_sleep_start();
 }
 
 
 void loop()
 {
-    // Never here
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 
 
@@ -143,10 +145,11 @@ void displayData()
                                    INKPLATE2_RED, INKPLATE2_BLACK);
         // Print min and max temperature below the day of the week
         display.setTextSize(1);
+        display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
         display.setCursor(tempCursorsCoordinates[i][0], tempCursorsCoordinates[i][1]);
         display.print(maxTemp[startIndex]);
         display.print(" C");
-        display.setTextColor(INKPLATE2_RED, INKPLATE2_WHITE);
+        display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
         display.setCursor(tempCursorsCoordinates[i][0], tempCursorsCoordinates[i][1] + 10);
         display.print(minTemp[startIndex]);
         display.print(" C");

@@ -8,11 +8,11 @@
     This example will show you how to use Inkplate's internal RTC to set an alarm, go to sleep and wake up at a desired
     time.
 
-    NOTE: This is not a real alarm on the RTC, just an emulation. If you choose to match minutes and seconds, 
-    they must be greater than the current time, otherwise the alarm will not be set. If it is necessary, 
-    for example, to set an alarm for tomorrow morning, and now it is noon, it is not possible to set only 
-    hours and minutes and set a match to them, because that time is earlier than the current time if we only 
-    look at hours and minutes. You can set such an alarm by setting the match to days, hours and minutes and 
+    NOTE: This is not a real alarm on the RTC, just an emulation. If you choose to match minutes and seconds,
+    they must be greater than the current time, otherwise the alarm will not be set. If it is necessary,
+    for example, to set an alarm for tomorrow morning, and now it is noon, it is not possible to set only
+    hours and minutes and set a match to them, because that time is earlier than the current time if we only
+    look at hours and minutes. You can set such an alarm by setting the match to days, hours and minutes and
     then it will work ok, you just have to set the day as well. Likewise for other cases
 
     Want to learn more about Inkplate? Visit www.inkplate.io
@@ -95,19 +95,19 @@ void setup()
         // Set alarm - here is set to 5.1. at 09:30:00
         // Give it at least a few minutes of space before activating for the code to compile and upload to Inkplate
         // Note: it takes approx 25 seconds to wake up from sleep and display the time
-        alarmTime.tm_hour = 10;
-        alarmTime.tm_min = 23;
+        alarmTime.tm_hour = 9;
+        alarmTime.tm_min = 30;
         alarmTime.tm_sec = 0;
         alarmTime.tm_mday = 5;
         alarmTime.tm_mon = 1;
 
-        // Note: alarm depends on which RTC match you use. In this case, 
+        // Note: alarm depends on which RTC match you use. In this case,
         // it will compare only minutes and seconds. All others alarm parameters will be ignored.
         double secondsUntilAlarm = rtc.setAlarm(alarmTime, RTC_MMSS);
 
         // Or you can set an alarm with time epoch
         // double secondsUntilAlarm = rtc.setAlarmEpoch(1675854420, RTC_MMSS);
-        
+
         if (secondsUntilAlarm > 0)
         {
             // Print info about currently set alarm
@@ -117,17 +117,21 @@ void setup()
             display.display(); // Show everything on the display
             delay(100);
 
-            // Start deep sleep (this function does not return)
-            esp_deep_sleep_start();
-            
+            // Go to deep sleep
+            deepSleep();
         }
         else
         {
             // Set alarm time can't be in the past!
             // Check variable alarmTime
+
+            // The screen will display an error and go to the deep sleep
             display.setTextSize(1);
             display.printf("\nError: Set alarm time is earlier \nthan or same as now! Change time or RTC match");
             display.display();
+
+            // Go to deep sleep
+            deepSleep();
         }
     }
     else
@@ -141,6 +145,9 @@ void setup()
         display.display(); // Show everything on the display
 
         // Do whatever alarm should do here
+
+        // After the alarm, you can put Inkplate in deep sleep (calling deepSleep() function defined below) or set a
+        // timer for another alarm
     }
 }
 
@@ -148,4 +155,13 @@ void loop()
 {
     // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
     // time. loop() must be empty!
+}
+
+void deepSleep()
+{
+    // Put the panel in the deep sleep
+    display.setPanelDeepSleep(0);
+
+    // Start deep sleep (this function does not return)
+    esp_deep_sleep_start();
 }

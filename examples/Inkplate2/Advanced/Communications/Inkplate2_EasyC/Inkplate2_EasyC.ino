@@ -14,7 +14,7 @@
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: https://forum.soldered.com/
-    7 April 2022 by Soldered
+    2 March 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -22,15 +22,15 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate2 in the boards menu."
 #endif
 
-#include "BMP180-SOLDERED.h" // Soldered library for BMP180 Sensor
+#include "BME680-SOLDERED.h" // Soldered library for BME680 Sensor
 #include "Inkplate.h"        // Include Inkplate library to the sketch
 
 // Bitmaps for the icons
-#include "pressure.h"
+#include "humidity.h"
 #include "thermometer.h"
 
 Inkplate display; // Create an object on Inkplate library
-Bmp_180 bmp;      // Create an object BMP180 library
+BME680 bme680;    // Create an object BMP180 library
 
 void setup()
 {
@@ -39,10 +39,11 @@ void setup()
     display.clearDisplay(); // Clear frame buffer of display
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
-    if (!bmp.begin())
-    { // Init. BMP180 library. Soldered BMP180 sensor board uses I2C address 0x76
-        Serial.println("Sensor init failed"); // Print message on serial monitor
-
+    // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for the sensor but you
+    // don't need to specify that
+    if (!bme680.begin())
+    {
+        Serial.println("Sensor init failed");   // Print message on serial monitor
         display.println("Sensor init failed!"); // Print message on display
         display.println("Check sensor wiring/connection!");
         display.display();
@@ -54,23 +55,11 @@ void setup()
 void loop()
 {
     // Variables for storing measured data
-    double temp, pressure, p0;
+    double temp, hum;
 
-    // Start temperature conversion
-    int status = bmp.startTemperature();
-
-    // Check if the measurements are ready.
-    if (status != 0)
-    {
-        delay(status);                     // Delay some time needed for measure
-        status = bmp.getTemperature(temp); // Get temperature
-        status = bmp.startPressure(3);     // Start measuring pressure
-        delay(status);                     // Delay some time needed for measure
-        status = bmp.getPressure(pressure, temp);
-        // The pressure sensor returns absolute pressure, which varies with altitude.
-        // To remove the effects of altitude, use the sealevel function and your current altitude.
-        // This number is commonly used in weather reports.
-    }
+    // Read values from the sensor
+    temp = bme680.readTemperature();
+    hum = bme680.readHumidity() / 10;
 
     display.setTextSize(2);                // Set text scaling to two (text will be two times bigger than normal)
     display.setTextColor(INKPLATE2_BLACK); // Set text color to black
@@ -80,11 +69,14 @@ void loop()
     display.print(temp, 2);                        // Print air temperature
     display.println(" C");
 
-    display.drawImage(pressure_icon, 5, 58, 45, 45); // Draw pressure icon
+    display.drawImage(humidity_icon, 5, 58, 45, 45); // Draw pressure icon
     display.setCursor(60, 72);                       // Set text cursor position at X = 60, Y = 72
-    display.print(pressure, 2);                      // Convert to air pressure hPa and print on display
-    display.println(" hPa");
+    display.print(hum, 2);                           // Convert to air pressure hPa and print on display
+    display.println(" %");
 
     display.display(); // Refresh the display
     delay(60000);      // Wait 60000 miliseconds or 1 minute
+
+    // If you want to save energy, instead of the delay function, you can use deep sleep as we used in DeepSleep
+    // examples
 }
