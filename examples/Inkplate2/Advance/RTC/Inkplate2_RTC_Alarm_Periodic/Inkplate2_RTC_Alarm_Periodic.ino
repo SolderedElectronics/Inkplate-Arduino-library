@@ -1,5 +1,5 @@
 /*
-    Inkplate_RTC example for soldered.com Inkplate 2
+    Inkplate2_RTC_Alarm_Periodic for soldered.com Inkplate 2
     For this example you will need USB cable and the Inkplate 2.
 
     Select "Soldered Inkplate 2" from Tools -> Board menu.
