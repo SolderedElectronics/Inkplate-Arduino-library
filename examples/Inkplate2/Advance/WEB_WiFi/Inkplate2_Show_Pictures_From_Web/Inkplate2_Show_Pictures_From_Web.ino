@@ -12,9 +12,10 @@
 
     .jpg files encoded with Baseline DCT, Huffman coding are supported
     .png and .bmp files are generally well supported
+    The built-in dithering function works best on .png and .jpg
 
     If an image isn't displaying, open it in an image editor and save it as a different file.
-    This usually resolves issues with decoding.
+    This usually resolves encoding issues.
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: https://forum.soldered.com/
