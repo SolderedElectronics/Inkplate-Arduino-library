@@ -144,8 +144,7 @@ void setup()
 
     // Go to sleep before checking again
     // rtc_gpio_isolate(GPIO_NUM_12);   // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
-    //esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS); // Go to sleep
-    esp_sleep_enable_timer_wakeup(500); // Go to sleep
+    esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS); // Go to sleep
     esp_deep_sleep_start();
 }
 
