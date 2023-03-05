@@ -21,7 +21,7 @@
 #include <Inkplate.h>
 
 // Conversion factor for micro seconds to seconds
-#define uS_TO_S_FACTOR 1000000
+#define uS_TO_S_FACTOR 1000000ULL
 // Time ESP32 will go to sleep (in seconds)
 #define TIME_TO_SLEEP 30
 
