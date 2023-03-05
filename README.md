@@ -11,7 +11,7 @@ Inkplate 6 was crowdfunded on [Crowd Supply](https://www.crowdsupply.com/e-radio
 
 In order to get a head start with Inkplate (any), follow these steps:
 
-1. [Install Inkplate board definition](https://github.com/e-radionicacom/Croduino-Board-Definitions-for-Arduino-IDE/blob/master/README.md) - add Inkplate 6/10/6PLUS as a board into your Arduino IDE. Follow the instructions on the [link](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/).
+1. [Install Inkplate board definition](https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/blob/master/README.md) - add Inkplate 6/10/6PLUS as a board into your Arduino IDE. Follow the instructions on the [link](https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/).
 2. Install CH340 drivers (if you don't have them yet) - instructions [here](https://e-radionica.com/en/blog/ch340-driver-installation-croduino-basic3-nova2/)
 3. Install Inkplate Arduino library - install the library from this repo into your Arduino IDE. If you don't know how, check our [tutorial](https://e-radionica.com/en/blog/arduino-library/#Kako%20instaliraty%20library?).
 4. You are ready to get started! Select Tools -> Board -> Inkplate (pick correct one), as well as correct COM port and upload!
