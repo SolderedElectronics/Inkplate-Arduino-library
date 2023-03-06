@@ -185,12 +185,9 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
     client->setInsecure(); // Use HTTPS but don't check cert
     client->setHandshakeTimeout(1500);
     client->setTimeout(1500);
-
+    
     // Connect
-    if (!client->connect(host, 443))
-    {
-        Serial.println(F("WiFiClientSecure connect Error!"));
-    }
+    client->connect(host, 443);
 
     // Remember sleep state and then wake up
     bool sleep = WiFi.getSleep();
@@ -198,16 +195,11 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
 
     // Create a new HTTP client and connect using HTTPS
     HTTPClient http;
-    // http.getStream().setNoDelay(true);
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1000);
+    http.begin(*client, host, 443, pathToResource, true);
 
-    if (!http.begin(*client, host, 443, pathToResource, true))
-    {
-        Serial.println("HTTPS begin Error!");
-    }
-
-    // Make GET
+    // Make GET request
     int httpCode = http.GET();
 
     int32_t size = http.getSize();
