@@ -185,7 +185,7 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
     client->setInsecure(); // Use HTTPS but don't check cert
     client->setHandshakeTimeout(1500);
     client->setTimeout(1500);
-    
+
     // Connect
     client->connect(host, 443);
 
