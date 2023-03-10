@@ -27,9 +27,9 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate2 in the boards menu."
 #endif
 
-#include "HTTPClient.h" //Include library for HTTPClient
-#include "Inkplate.h"   //Include Inkplate library to the sketch
-#include "WiFi.h"       //Include library for WiFi
+#include "HTTPClient.h" // Include library for HTTPClient
+#include "Inkplate.h"   // Include Inkplate library to the sketch
+#include "WiFi.h"       // Include library for WiFi
 Inkplate display;       // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
 const char ssid[] = "";     // Your WiFi SSID
@@ -68,8 +68,8 @@ void setup()
     display.clearDisplay();
 
     if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
-                           "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced_Inkplate_Features/"
-                           "Inkplate_Web_Pictures/cat_dithered.jpg",
+                           "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced/WEB_WiFi/"
+                           "Inkplate2_Show_Pictures_From_Web/cat_dithered.jpg",
                            0, 0, false, false))
     {
         // If is something failed (wrong url or unsupported format), write error message on the screen.
@@ -87,8 +87,8 @@ void setup()
     http.getStream().setTimeout(1);
 
     http.begin("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
-               "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced_Inkplate_Features/"
-               "Inkplate_Web_Pictures/car.bmp");
+               "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced/WEB_WiFi/"
+               "Inkplate2_Show_Pictures_From_Web/car.bmp");
 
     // Check response code.
     int httpCode = http.GET();
@@ -129,8 +129,8 @@ void setup()
     // true will flip all colors on the image, making black white and white black. fourth parameter will dither the
     // image.
     if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
-                           "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced_Inkplate_Features/"
-                           "Inkplate_Web_Pictures/mountain.png",
+                           "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced/WEB_WiFi/"
+                           "Inkplate2_Show_Pictures_From_Web/mountain.png",
                            0, 0, true, false))
     {
         // If is something failed (wrong filename or format), write error message on the screen.
