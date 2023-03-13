@@ -1,15 +1,15 @@
 /*
     Inkplate2_EasyC example for Soldered Inkplate 2
     For this example you will need a micro USB cable, Inkplate 2,
-    BMP180 sensor with easyC connector on it: https://www.solde.red/333060
+    BME680 sensor with easyC connector on it: https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/
     and a easyC cable: https://soldered.com/product/easyc-cable-20cm/
     Select "Soldered Inkplate2" from Tools -> Board menu.
     Don't have "Soldered Inkplate2" option? Follow our tutorial and add it:
     https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-    This example will show you how you can read temperature, humidity, air pressure and gas data from BMP180.
+    This example will show you how you can read temperature and humidity from BME680.
     In order to compile this example successfuly, you will also need to download and install
-    BMP180 library: https://github.com/e-radionicacom/Soldered-BMP180-Temperature-Pressure-Sensor-Arduino-Library.
+    BME680 library: https://github.com/SolderedElectronics/Soldered-BME280-BME680-Gas-Sensor-Arduino-Library.
     If you don't know how to install library you can read our tutorial https://e-radionica.com/en/blog/arduino-library/
 
     Want to learn more about Inkplate? Visit www.inkplate.io
@@ -30,7 +30,7 @@
 #include "thermometer.h"
 
 Inkplate display; // Create an object on Inkplate library
-BME680 bme680;    // Create an object BMP180 library
+BME680 bme680;    // Create an object on BME680 library
 
 void setup()
 {
