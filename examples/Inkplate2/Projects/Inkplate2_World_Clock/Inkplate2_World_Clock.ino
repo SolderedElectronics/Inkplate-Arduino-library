@@ -1,18 +1,18 @@
 /*
     Inkplate2_World_Clock example for Soldered Inkplate 2
-    For this example you will need only USB cable, Inkplate 2 and a WiFi with stable Internet connection.
+    For this example you will need only USB cable, Inkplate 2 and WiFi.
     Select "Soldered Inkplate2" from Tools -> Board menu.
     Don't have "Soldered Inkplate2" option? Follow our tutorial and add it:
     https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
     This example uses API call to get time for wanted city and it's timezone.
     Fetched data is in JSON format, and library is used to extract data. To choose
-    city just type any part of city's name and it will be automatically found, but if you type
-    to few letters, any city containig that letters will be found.
+    the cities just type a part of city's name and it will be automatically found.
+    The more letters you type, the more accurate it is.
 
     IMPORTANT:
-    Make sure to change your wifi credentials below
-    Also have ArduinoJSON installed in your Arduino libraries, download here: https://arduinojson.org/
+    Make sure to change your WiFi credentials below.
+    Also, have ArduinoJSON installed in your Arduino libraries (https://arduinojson.org)
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -45,44 +45,43 @@ Inkplate display;
 char ssid[] = "";
 char pass[] = "";
 
-// Structure for time and date data
-struct tm t;
+// Variables to store the hours and minutes about to be drawn
+int hours;
+int minutes;
 
-// You can type part of city's and it will be found automatically.
-// The more letters you type, the more chance is that your city will be found.
-// Refer to Network.h file for full list of cities. Instead of space use underline
-// and every word starts with CAPITAL letter and the rest of letters are not capitals.
+// You can type part of city's name and it will be automatically found.
+// The more letters you type, the better.
+// Refer to Network.h for a full list of cities.
+// Important: Instead of space use underline.
+// Every word should start with a CAPITAL letter (the rest of letters are lowercase), e.g. "New_York".
 // List of all available cities and zones can be found here https://www.timeapi.io/api/TimeZone/AvailableTimeZones
 const char city1[] = "Zag";
 const char city2[] = "Lim";
-
-// Pointers to store city names
 
 void setup()
 {
     // Begin serial communitcation, set for debugging
     Serial.begin(115200);
 
-    // Initial display settings
+    // Init display
     display.begin();
 
-    // Our begin function
+    // Network begin function
     network.begin(ssid, pass);
 
+    // Get all the available timezones
     network.getAllCities();
 
-    Serial.print("City 1: ");
-    if(network.getData((char *)city1, &t))
+    if (network.getData((char *)city1, &hours, &minutes))
     {
-      // x coordinate, y coordinate, PM/AM indicator, pointer to city name. Use ternary operator to specify PM or AM is currently.
-      drawTime(17, 1, t.tm_hour >= 12 ? 1 : 0, (char *)city1);                                                               
-    }    
+        // x coordinate, y coordinate, PM/AM indicator, pointer to city name. Use ternary operator to specify AM or PM
+        drawTime(17, 1, hours >= 12 ? 1 : 0, (char *)city1);
+    }
 
-    Serial.print("City 2: ");
-    if(network.getData((char *)city2, &t))
+    if (network.getData((char *)city2, &hours, &minutes))
     {
-      drawTime(115, 1, t.tm_hour >= 12 ? 1 : 0, (char *)city2);
-    }    
+        drawTime(115, 1, hours >= 12 ? 1 : 0, (char *)city2);
+    }
 
     display.display();
 
@@ -99,6 +98,7 @@ void loop()
     // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
     // time. loop() must be empty!
 }
+
 // Function to draw time
 void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city)
 {
@@ -132,10 +132,10 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city)
 
     // This part of code draws needles and calculates their angles
     int x_minute, y_minute, x_hour, y_hour;
-    x_minute = x_pos + w / 2 + 30 * (float)sin((t.tm_min / (float)60) * 2 * (float)3.14); //
-    y_minute = y_pos + w / 2 - 30 * (float)cos((t.tm_min / (float)60) * 2 * (float)3.14);
-    x_hour = x_pos + w / 2 + 22 * sin((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
-    y_hour = y_pos + w / 2 - 22 * cos((t.tm_hour / (float)12 + t.tm_min / (float)720) * 2 * (float)3.14);
+    x_minute = x_pos + w / 2 + 30 * (float)sin((minutes / (float)60) * 2 * (float)3.14); //
+    y_minute = y_pos + w / 2 - 30 * (float)cos((minutes / (float)60) * 2 * (float)3.14);
+    x_hour = x_pos + w / 2 + 22 * sin((hours / (float)12 + minutes / (float)720) * 2 * (float)3.14);
+    y_hour = y_pos + w / 2 - 22 * cos((hours / (float)12 + minutes / (float)720) * 2 * (float)3.14);
 
     display.drawThickLine(x_pos + w / 2, y_pos + w / 2, x_minute, y_minute, INKPLATE2_RED, 2); // Needle for minutes
     display.drawThickLine(x_pos + w / 2, y_pos + w / 2, x_hour, y_hour, INKPLATE2_BLACK, 3);   // Needle for hours
@@ -162,3 +162,4 @@ void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city)
     display.setFont(&SourceSansPro_Regular6pt7b); // Set customn font
     am ? display.print("PM") : display.print("AM");
 }
+
