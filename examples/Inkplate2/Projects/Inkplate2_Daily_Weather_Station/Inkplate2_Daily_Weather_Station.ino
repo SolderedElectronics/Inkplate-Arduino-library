@@ -42,7 +42,6 @@ String apiKey = "";
 #define WAKEUP 30 * 60 * 1000 // The time that ESP will be in deep sleep - refresh weather every 30 minutes
 
 Inkplate display;
-
 Network network;
 
 struct tm timeinfo; // Current time info -> human-readable
@@ -93,9 +92,9 @@ void setup()
 
     // Go to deep sleep
     Serial.println("Going to deep sleep, bye");
-    esp_sleep_enable_timer_wakeup(1000LL * WAKEUP);
-    display.setPanelDeepSleep(0);
-    (void)esp_deep_sleep_start();
+    esp_sleep_enable_timer_wakeup(1000LL * WAKEUP); // Activate wake-up timer
+    display.setPanelDeepSleep(0); // Put the panel into deep sleep  
+    (void)esp_deep_sleep_start(); // Put ESP32 into deep sleep. Program stops here.
 }
 
 

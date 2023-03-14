@@ -50,13 +50,15 @@ void setup()
     display.drawImage(picture3, 0, 0, 212, 104); // Display selected picture at location X=0, Y=0.
     display.display();                           // Refresh the screen with new picture
 
-    // Go to deep sleep
+    // Put the panel to deep sleep
+    display.setPanelDeepSleep(0);
+
+    // Put ESP32 into deep sleep. Program stops here
     esp_deep_sleep_start();
 }
 
 
 void loop()
 {
-    // Nothing! If you use deep sleep, whole program should be in setup() because each time the board restarts, not in a
-    // loop()! loop() must be empty!
+    // Nothing! 
 }

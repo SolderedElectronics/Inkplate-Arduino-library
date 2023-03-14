@@ -88,13 +88,16 @@ void setup()
 
     // Go to sleep before checking again
     // rtc_gpio_isolate(GPIO_NUM_12);   // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
-    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Go to sleep
-    esp_deep_sleep_start();
+    Serial.println("Going to sleep, bye!");
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Set wakeup timer
+    display.setPanelDeepSleep(0); // Put the panel into deep sleep
+    esp_deep_sleep_start();       // Put ESP32 into deep sleep. Program stops here
 }
 
 void loop()
 {
-    // Never here
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 // Function to draw time
 void drawTime(uint16_t x_pos, uint16_t y_pos, bool am, const char *city)

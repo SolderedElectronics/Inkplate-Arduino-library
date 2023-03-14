@@ -41,17 +41,16 @@
 // Delay between API calls in miliseconds (10 minutes)
 #define DELAY_MS 10 * 60 * 1000
 
-// create object with all networking functions
+// Create object with all networking functions
 Network network;
 
-// create display object
+// Create display object
 Inkplate display;
 
 // Write your SSID and password
 char ssid[] = "";
 char pass[] = "";
 
-// e-radionica.com channel ID
 char channel_id[] = ""; // To get the channel ID of the public channel, go to the wanted Youtube
                         // channel in Google Chrome, right click and 'view page source', then
                         // CTRL+F search for "externalId".
@@ -144,13 +143,15 @@ void setup()
 
     // Go to sleep before checking again
     // rtc_gpio_isolate(GPIO_NUM_12);   // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
-    esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS); // Go to sleep
-    esp_deep_sleep_start();
+    esp_sleep_enable_timer_wakeup(1000ll * DELAY_MS); // Activate wake-up timer
+    display.setPanelDeepSleep(0); // Put the panel into deep sleep 
+    esp_deep_sleep_start();       // Put ESP32 into deep sleep. Program stops here
 }
 
 void loop()
 {
-    // Never here
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 
 // Our main drawing function

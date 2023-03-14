@@ -128,7 +128,8 @@ void setup()
     // rtc_gpio_isolate(GPIO_NUM_12);   // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS); // Enable wake up while sleep is enabled after 4 minutes
                                                      //  1000L * is here because function accepts microseconds
-    esp_deep_sleep_start();
+    display.setPanelDeepSleep(0); // Put the panel into deep sleep
+    esp_deep_sleep_start();       // Put ESP32 into deep sleep. Program stops here
 }
 
 /**
@@ -138,7 +139,8 @@ void setup()
 */
 void loop()
 {
-    // Never here
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 
 /**

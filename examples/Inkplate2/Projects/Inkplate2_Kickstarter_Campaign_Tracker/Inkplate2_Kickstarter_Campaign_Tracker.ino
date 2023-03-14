@@ -63,13 +63,15 @@ void setup()
 
     // Go to sleep before checking again
     Serial.print("Going to deep sleep, bye.");
-    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    esp_deep_sleep_start();
+    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS); // Activate wake-up timer
+    display.setPanelDeepSleep(0); // Put the panel into deep sleep
+    esp_deep_sleep_start();       // Put ESP32 into deep sleep. Program stops here
 }
 
 void loop()
 {
-    // Never here
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 
 void drawData(int backers, int pledged, struct tm *timeinfo)
@@ -79,6 +81,7 @@ void drawData(int backers, int pledged, struct tm *timeinfo)
     display.setTextSize(2);
     display.drawTextWithShadow(0, 0, "Inkplate 2", INKPLATE2_RED, INKPLATE2_BLACK);
 
+    display.setTextColor(INKPLATE2_BLACK);
     display.setCursor(0, 25);
     display.print("Pledged: ");
     display.print(pledged);

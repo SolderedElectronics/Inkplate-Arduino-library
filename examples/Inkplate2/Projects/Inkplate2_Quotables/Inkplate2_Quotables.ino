@@ -79,13 +79,15 @@ void setup()
     // Go to sleep before checking again
     // This is set in microseconds, so it needs to be
     // multiplied by million to get seconds
-    esp_sleep_enable_timer_wakeup(1000000 * DELAY_S);
-    esp_deep_sleep_start();
+    esp_sleep_enable_timer_wakeup(1000000 * DELAY_S); // Activate wake-up timer
+    display.setPanelDeepSleep(0); // Put the panel into deep sleep
+    esp_deep_sleep_start();       // Put ESP32 into deep sleep. Program stops here
 }
 
 void loop()
 {
-    // Never here
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 
 // Our main drawing function
