@@ -19,24 +19,28 @@ Distributed as-is; no warranty is given.
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
+#include <ArduinoJson.h>
 
 #ifndef NETWORK_H
 #define NETWORK_H
 
-// All functions defined in Network.cpp
-
+/**
+ * @brief           Gelper class for all the network operations
+ * 
+*/
 class Network
 {
   public:
     // Functions we can access in main file
-    void begin(char* ssid, char* pass);
-    bool getData(char* city, tm *t);
-    char* getFullCityName(char* city);
+    void begin(char *ssid, char *pass);
+    char *getFullCityName(char *city);
+    bool getData(char *city, int * hours, int * minutes);
     bool getAllCities();
-    
-  private:  
-    char allFetchedCities[650][33]; 
+
+  private:
+    char allFetchedCities[650][33];
     int numCities = 0;
+    WiFiClientSecure *timeApiClient;
 };
 
 #endif

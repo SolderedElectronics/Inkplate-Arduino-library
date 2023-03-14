@@ -278,7 +278,7 @@ void Inkplate::sendData(uint8_t *_data, int _n)
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
     SPI2.beginTransaction(epdSpiSettings);
-    SPI2.transfer(_data, _n);
+    SPI2.writeBytes(_data,_n);
     SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
