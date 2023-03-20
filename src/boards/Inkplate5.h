@@ -1,8 +1,8 @@
 /**
  **************************************************
  *
- * @file        Inkplate5.h
- * @brief       Basic funtions for controling inkplate 5
+ * @file        Inkplate6.h
+ * @brief       Basic funtions for controling inkplate 6
  *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -17,19 +17,22 @@
  * @authors     @ Soldered
  ***************************************************/
 
-#ifndef INKPLATE5_H
-#define INKPLATE5_H
+#ifndef INKPLATE6_H
+#define INKPLATE6_H
 
 #define IO_INT_ADDR 0x20
-#define IO_EXT_ADDR 0x22
+#define IO_EXT_ADDR 0x21
 
-#define E_INK_WIDTH  800
-#define E_INK_HEIGHT 600
+// Pin on the internal io expander which controls MOSFET for turning on and off the SD card
+#define SD_PMOS_PIN IO_PIN_B2 // 10
 
+#define E_INK_WIDTH  960
+#define E_INK_HEIGHT 540
+
+// Last element (index = 8) in waveform array is not used!
 #define WAVEFORM3BIT                                                                                                   \
-    {                                                                                                                  \
-        {0, 0, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 0, 0, 0, 0, 0}, {0, 2, 2, 2, 2, 1, 1, 0}, {2, 2, 2, 2, 2, 1, 1, 0},        \
-        {0, 0, 2, 2, 1, 1, 2, 0}, {0, 2, 2, 2, 1, 1, 2, 0}, {0, 0, 0, 2, 2, 1, 2, 0}, {2, 2, 2, 2, 2, 2, 2, 0},        \
-    };
+    {{0, 0, 1, 1, 0, 1, 1, 1, 0}, {0, 1, 1, 1, 1, 2, 0, 1, 0}, {1, 2, 2, 0, 2, 1, 1, 1, 0},                            \
+     {1, 1, 1, 2, 0, 1, 1, 2, 0}, {0, 1, 1, 1, 2, 0, 1, 2, 0}, {0, 0, 0, 1, 1, 2, 1, 2, 0},                            \
+     {1, 1, 1, 2, 0, 2, 1, 2, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
 #endif
