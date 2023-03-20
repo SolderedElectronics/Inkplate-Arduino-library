@@ -160,9 +160,14 @@ void loop()
     // Refresh full screen
     display.display();
 
-    // Go to sleep before checking again
+    // Activate wakeup timer
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
+    
+    // Put the panel in the deep sleep
+    display.setPanelDeepSleep(0);
+
+    // Start deep sleep (this function does not return). Program stops here.
+    esp_deep_sleep_start();
 }
 
 // Function for drawing weather info

@@ -80,10 +80,19 @@ void setup()
 
     // Go to sleep for DELAY_MS
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+
+    // Put the panel in the deep sleep
+    display.setPanelDeepSleep(0);
+
+    // Put SD card into deep sleep
+    display.sdCardSleep();
+
+    // Start deep sleep (this function does not return). Program stops here.
     (void)esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Nothing...
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }

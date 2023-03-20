@@ -137,13 +137,20 @@ void setup()
     // Refresh full screen every fullRefresh times, defined above
     display.display();
 
-    // Go to sleep before checking again
+    // Activate wakeup timer
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+    
+    // Put the panel in the deep sleep
+    display.setPanelDeepSleep(0);
+
+    // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }
 
 void loop()
 {
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 
 // Function for drawing weather info

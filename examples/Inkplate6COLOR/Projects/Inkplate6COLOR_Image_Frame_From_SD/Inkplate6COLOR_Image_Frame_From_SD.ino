@@ -113,7 +113,7 @@ void loop()
         // Set EPS32 to be woken up in 10 seconds (in this case)
         esp_sleep_enable_timer_wakeup(SECS_BETWEEN_PICTURES * 1000000LL);
 
-        // Go to the deep sleep
+        // Go into deep sleep
         deepSleep();
     }
 }
@@ -176,6 +176,9 @@ void deepSleep()
 {
     // Turn off the power supply for the SD card
     display.sdCardSleep();
+
+    // Put the panel in the deep sleep
+    display.setPanelDeepSleep(0);
 
     // Put ESP32 into deep sleep (low power mode)
     esp_deep_sleep_start();

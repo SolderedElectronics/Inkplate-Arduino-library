@@ -30,8 +30,8 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
 
 // Delay between API calls in miliseconds
 #define DELAY_MS 3 * 60 * 1000
@@ -155,7 +155,12 @@ void loop()
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
+    
+    // Put the panel in the deep sleep
+    display.setPanelDeepSleep(0);
+
+    // Start deep sleep (this function does not return). Program stops here.
+    esp_deep_sleep_start();
 }
 
 // Function to draw our graph

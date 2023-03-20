@@ -22,8 +22,8 @@
 #include "generatedUI.h" // include generated UI
 
 // Change here to your wifi ssid and pass and the url to display info for
-#define ssid "" // Name of the WiFi network (SSID) that you want to connect Inkplate to
-#define pass "" // Password of that WiFi network
+#define ssid "Soldered" // Name of the WiFi network (SSID) that you want to connect Inkplate to
+#define pass "dasduino" // Password of that WiFi network
 
 #define DELAY_MS 60000 * 60                                             // Delay between fetching data
 #define URL      "https://www.crowdsupply.com/soldered/inkplate-6color" // Link to the Inkplate 6COLOR crowdsupply campaign
@@ -119,12 +119,18 @@ void setup()
 
     // Go to sleep
     esp_sleep_enable_timer_wakeup(1000LL * DELAY_MS);
-    (void)esp_deep_sleep_start();
+    
+    // Put the panel in the deep sleep
+    display.setPanelDeepSleep(0);
+
+    // Start deep sleep (this function does not return). Program stops here.
+    esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Never here
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 
 /**
