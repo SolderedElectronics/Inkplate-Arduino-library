@@ -208,7 +208,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         break;
     }
 
-    // If the 1 bit mode is used, pixels are packed 1 bit = 1 pixel in frame buffer 
+    // If the 1 bit mode is used, pixels are packed 1 bit = 1 pixel in frame buffer
     if (getDisplayMode() == 0)
     {
         // Divide by 8 to find a byte.
