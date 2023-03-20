@@ -35,6 +35,10 @@ jobs:
               fqbn: Inkplate_Boards:esp32:Inkplate6COLOR
             additional-sketch-paths: |
               - examples/Inkplate6COLOR
+          - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate5
+            additional-sketch-paths: |
+              - examples/Inkplate5
     steps:
       - name: Checkout
         uses: actions/checkout@v2
