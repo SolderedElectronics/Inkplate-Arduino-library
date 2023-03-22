@@ -63,7 +63,7 @@ void loop()
     offset -= 20; // Move text into new position
     if (offset < 0)
         offset = E_INK_WIDTH; // Text is scrolled till the end of the screen? Get it back on the start!
-    delay(500); // Delay between refreshes.
+    delay(500);               // Delay between refreshes.
 
     // ADVANCED USAGE
 
@@ -86,5 +86,5 @@ void loop()
     offset -= 20; // Move text into new position
     if (offset < 0)
         offset = E_INK_WIDTH; // Text is scrolled till the end of the screen? Get it back on the start!
-    delay(500); // Delay between refreshes.
+    delay(500);               // Delay between refreshes.
 }

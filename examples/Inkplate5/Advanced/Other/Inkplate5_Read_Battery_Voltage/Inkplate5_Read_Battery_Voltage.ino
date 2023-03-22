@@ -17,8 +17,8 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
 #endif
 
-#include "Inkplate.h"   //Include Inkplate library to the sketch
-#include "battSymbol.h" //Include .h file that contains byte array for battery symbol.
+#include "Inkplate.h"   // Include Inkplate library to the sketch
+#include "battSymbol.h" // Include .h file that contains byte array for battery symbol.
 // It is in same folder as this sketch. You can even open it (read it) by clicking on battSymbol.h tab in Arduino IDE
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 

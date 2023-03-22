@@ -41,7 +41,8 @@ void setup()
 
         // Try to create text.txt file.
         if (!file.open(fileName, FILE_WRITE))
-        { // If it fails to create, send an error message to display, otherwise write to file.
+        {
+            // If it fails to create, send an error message to display, otherwise write to file.
             display.println("Error while creating the file!");
             display.partialUpdate();
             display.sdCardSleep();
@@ -58,8 +59,9 @@ void setup()
         }
     }
     else
-    { // If card init was not successful, display error on screen, put sd card in sleep mode, and stop the program
-      // (using infinite loop)
+    {
+        // If card init was not successful, display error on screen, put sd card in sleep mode, and stop the program
+        // (using infinite loop)
         display.println("SD Card error!");
         display.partialUpdate();
         display.sdCardSleep();

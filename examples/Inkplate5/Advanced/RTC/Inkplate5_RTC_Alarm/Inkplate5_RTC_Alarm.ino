@@ -121,6 +121,8 @@ void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, 
     display.print(_year, DEC);
 }
 
+// A function that prints 2 digits
+// It adds 0 before the number if it's only one digit
 void print2Digits(uint8_t _d)
 {
     if (_d < 10)

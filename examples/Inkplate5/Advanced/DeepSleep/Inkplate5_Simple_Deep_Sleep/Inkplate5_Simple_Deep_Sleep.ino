@@ -22,8 +22,8 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
 #endif
 
-#include "Inkplate.h"      // Include Inkplate library to the sketch
-#include "picture1.h"      // Include .h files of 3 pictures. All three pictures were converted using Inkplate Image Converter
+#include "Inkplate.h" // Include Inkplate library to the sketch
+#include "picture1.h" // Include .h files of 3 pictures. All three pictures were converted using Inkplate Image Converter
 #include "picture2.h"
 #include "picture3.h"
 const uint8_t *pictures[] = {pic1, pic2, pic3}; // This array of pinters holds address of every picture in the memory,
@@ -39,10 +39,10 @@ void setup()
 {
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
-    display.drawImage(
-        pictures[slide], 0, 0, E_INK_WIDTH,
-        E_INK_HEIGHT); // Display selected picture at location X=0, Y=0. All three pictures have resolution of 960x540 pixels
-    display.display(); // Refresh the screen with new picture
+    display.drawImage(pictures[slide], 0, 0, E_INK_WIDTH,
+                      E_INK_HEIGHT); // Display selected picture at location X=0, Y=0. All three pictures have
+                                     // resolution of 960x540 pixels
+    display.display();               // Refresh the screen with new picture
     slide++; // Update counter for pictures. With this variable, we choose what picture is going to be displayed on
              // screen
     if (slide > 2)

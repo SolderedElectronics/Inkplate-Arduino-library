@@ -14,8 +14,8 @@
    panel and TPS65186 PMIC.
    P1-0 is used for ESP32 GPIO0 so you can't use it either.
    P1-1 is used for enabling battery reading (if Batt solder bridge is bridged between second and third pad).
-   P1-2 is used for tunring on and off the MOSFET for SD card (if solder bridge is bridged between second and third pad).
-   If everything is connected ok, after you upload code, LED should blink.
+   P1-2 is used for tunring on and off the MOSFET for SD card (if solder bridge is bridged between second and third
+   pad). If everything is connected ok, after you upload code, LED should blink.
 
    DANGER: DO NOT USE P0-0 -> P0-7 and P1-0. In code those are pins from 0-8!!! Using those, you
    might permanently damage the screen. You should only use pins from 9-15.
@@ -43,7 +43,7 @@ void setup()
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
     display.pinModeIO(LED_PIN, OUTPUT,
                       IO_INT_ADDR); // Set P1-7 to output. On that pin, we sholud connect LED with current
-                                    // limiting resistor and specify that we want use internal IO expander 
+                                    // limiting resistor and specify that we want use internal IO expander
 }
 
 void loop()

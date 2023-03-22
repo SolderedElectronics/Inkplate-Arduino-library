@@ -1,9 +1,9 @@
 /*
    Inkplate5_easyC example for Soldered Inkplate 5
    For this example you will need USB cable, Inkplate 5,
-   BME680 sensor with easyC connector on it: https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/
-   and a easyC cable: https://soldered.com/product/easyc-cable-20cm/
-   Select "Soldered Inkplate5" from Tools -> Board menu.
+   BME680 sensor with easyC connector on it: https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/ 
+   and a easyC cable: https://soldered.com/product/easyc-cable-20cm/ 
+   Select "Soldered Inkplate5" from Tools -> Board menu. 
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
@@ -37,12 +37,12 @@ void setup()
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
-    
+
     // Init BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for the sensor but doesn't need to
     // specify it
     if (!bme680.begin())
     {
-        display.setTextSize(2); // Set text scaling to two (text will be two times bigger than normal)
+        display.setTextSize(2); // Set text scaling to two (text will be two times bigger than normal (5x7 px))
         display.println("Sensor init failed!");
         display.println("Check sensor wiring/connection!");
         display.partialUpdate();
@@ -87,7 +87,7 @@ void loop()
 
     // This part of code actually drawing on the Inkplate screen, previous lines just drawing into the frame buffer
     // Check if you need to do full refresh or you can do partial update
-    if(n > 20)
+    if (n > 20)
     {
         // Do a full refresh
         display.display();
@@ -98,7 +98,7 @@ void loop()
         display.partialUpdate(); // Do partial update
         n++;                     // Keep track on how many times screen has been partially updated
     }
-      
+
     // Wait a little bit between readings
     delay(10000);
 }

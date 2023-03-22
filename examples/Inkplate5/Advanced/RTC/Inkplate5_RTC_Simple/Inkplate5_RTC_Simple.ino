@@ -65,8 +65,8 @@ void loop()
         month = display.rtcGetMonth();     // Store month in a variable
         year = display.rtcGetYear();       // Store year in a variable
 
-        display.clearDisplay();      // Clear content in frame buffer
-        display.setCursor(140, 260); // Set position of the text
+        display.clearDisplay();                                        // Clear content in frame buffer
+        display.setCursor(140, 260);                                   // Set position of the text
         printTime(hours, minutes, seconds, day, weekday, month, year); // Print the time on screen
 
         if (n > 9) // Check if you need to do full refresh or you can do partial update
@@ -107,6 +107,8 @@ void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, 
     display.print(_year, DEC);
 }
 
+// A function that prints 2 digits
+// It adds 0 before the number if it's only one digit
 void print2Digits(uint8_t _d)
 {
     if (_d < 10)

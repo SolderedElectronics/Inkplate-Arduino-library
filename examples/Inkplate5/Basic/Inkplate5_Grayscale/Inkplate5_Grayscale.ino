@@ -66,7 +66,7 @@ void loop()
     // Now, let's draw some random pixels!
     display.clearDisplay(); // Clear everything that is inside frame buffer in ESP32
     for (int i = 0; i < 1000; i++)
-    { 
+    {
         // Write 1000 random colored pixels at random locations
         display.drawPixel(random(0, WIDTH), random(0, HEIGHT),
                           random(0, 7)); // We are setting color of the pixels using numbers from 0 to 7,
@@ -77,9 +77,9 @@ void loop()
 
     // Draw two diagonal lines accros screen
     display.clearDisplay();
-    display.drawLine(
-        0, 0, WIDTH, HEIGHT,
-        0); // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already familiar with those
+    display.drawLine(0, 0, WIDTH, HEIGHT,
+                     0); // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already
+                         // familiar with those
     display.drawLine(WIDTH, 0, 0, HEIGHT, 0); // Arguments are: start X, start Y, ending X, ending Y, color.
     displayCurrentAction("Drawing two diagonal lines");
     display.display();
@@ -276,8 +276,7 @@ void loop()
     for (int i = 0; i < 6; i++)
     {
         display.setTextColor(i);
-        display.setTextSize(i +
-                            1); // textSize parameter starts at 1 and goes up to 6
+        display.setTextSize(i + 1);               // textSize parameter starts at 1 and goes up to 6
         display.setCursor(70, 130 + (i * i * 8)); // setCursor works as same as on LCD displays - sets "the cursor" at
                                                   // the place you want to write someting next
         display.print("INKPLATE5!");              // The actual text you want to show on e-paper as String

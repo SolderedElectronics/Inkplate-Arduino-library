@@ -41,7 +41,7 @@ void setup()
         // Try to load text with max lenght of 200 chars.
         if (!file.open("/text.txt", O_RDONLY))
         { // If it fails to open, send error message to display and put sd card in sleep mode, otherwise read the file.
-            display.println("File open error");            
+            display.println("File open error");
             display.display();
             display.sdCardSleep();
         }
@@ -62,7 +62,7 @@ void setup()
     }
     else
     { // If card init was not successful, display error on screen and stop the program (using infinite loop)
-        display.println("SD Card error!");        
+        display.println("SD Card error!");
         display.partialUpdate();
         display.sdCardSleep();
         while (true)

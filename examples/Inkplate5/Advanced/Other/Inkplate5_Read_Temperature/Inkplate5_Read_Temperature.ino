@@ -36,7 +36,7 @@ void loop()
 {
     int temperature = display.readTemperature();            // Read temperature from on-board temperature sensor
     display.clearDisplay();                                 // Clear everything in frame buffer of e-paper display
-    display.drawImage(tempSymbol, 100, 100, 38, 79, BLACK); // Draw temperature symbol at position X=100, Y=200
+    display.drawImage(tempSymbol, 100, 100, 38, 79, BLACK); // Draw temperature symbol at position X=100, Y=100
     display.setCursor(150, 125);
     display.print(temperature, DEC); // Print temperature
     display.print('C');

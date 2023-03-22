@@ -6,9 +6,10 @@
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    In this example we will show how to use PCF85063A RTC Timer functionality.
-   This example will show how to set time and date, how to set up a timer, how to read time and how to print time on Inkplate using partial updates.
-   NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it on first refresh after
-   power up. It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture quality.
+   This example will show how to set time and date, how to set up a timer, how to read time and how to print time on
+   Inkplate using partial updates. NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended
+   to use it on first refresh after power up. It is recommended to do a full refresh every 5-10 partial refresh to
+   maintain good picture quality.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -46,7 +47,7 @@ void setup()
 
     pinMode(39, INPUT_PULLUP);
 
-    display.rtcSetTime(hours, minutes, seconds);    // Send time to RTC
+    display.rtcSetTime(hours, minutes, seconds);   // Send time to RTC
     display.rtcSetDate(weekday, day, month, year); // Send date to RTC
 
     // Set up a timer
@@ -94,7 +95,7 @@ void loop()
         n++;                                // Keep track on how many times screen has been partially updated
     }
 
-    delay(700);                             // Delay between refreshes.
+    delay(700); // Delay between refreshes.
 }
 
 void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, uint8_t _weekday, uint8_t _month,
@@ -119,15 +120,18 @@ void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, 
     display.print('/');
     display.print(_year, DEC);
 
-    if (display.rtcCheckTimerFlag())  // Check if timer event has occurred
+    if (display.rtcCheckTimerFlag()) // Check if timer event has occurred
     {
-      display.rtcClearTimerFlag();  // It's recommended to clear timer flag after timer has occurred
-      display.rtcDisableTimer();    // Disable timer if you want to make it one time only. Is you want to be repeatable, comment this line
-      display.setCursor(400, 400);  // Set new position for cursor
-      display.print("Timer!");
+        display.rtcClearTimerFlag(); // It's recommended to clear timer flag after timer has occurred
+        display.rtcDisableTimer(); // Disable timer if you want to make it one time only. Is you want to be repeatable,
+                                   // comment this line
+        display.setCursor(400, 400); // Set new position for cursor
+        display.print("Timer!");
     }
 }
 
+// A function that prints 2 digits
+// It adds 0 before the number if it's only one digit
 void print2Digits(uint8_t _d)
 {
     if (_d < 10)

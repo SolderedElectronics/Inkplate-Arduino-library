@@ -33,7 +33,7 @@ const char *btDeviceName = "Inkplate5";
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 BluetoothSerial SerialBT;        // Create SerialBT object for Bluetooth communication
 
-// Font scale for the text on the screen. The scale of 1 is 7px height
+// Font scale for the text on the screen
 #define BIG_TEXT_SCALE   4
 #define SMALL_TEXT_SCALE 3
 

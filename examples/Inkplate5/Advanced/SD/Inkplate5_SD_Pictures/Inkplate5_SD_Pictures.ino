@@ -6,8 +6,8 @@
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   You can open .bmp, .jpeg or .png files (but there are some limitations by the library) that have 
-   color depth of 1 bit (BW bitmap), 4 bit, 8 bit and 24 bit AND have resoluton smaller than 800x600 
+   You can open .bmp, .jpeg or .png files (but there are some limitations by the library) that have
+   color depth of 1 bit (BW bitmap), 4 bit, 8 bit and 24 bit AND have resoluton smaller than 800x600
    or otherwise it won't fit on screen. Format your SD card in standard FAT fileformat.
 
    This example will show you how you can read .bmp and .jpeg files (pictures) from SD card and
@@ -64,10 +64,10 @@ void setup()
         else
         {
             display.println("Image open error");
-        }   
+        }
         display.display();
         delay(5000);
-    
+
         // Now draw a JPEG
         display.clearDisplay();
         if (!display.drawImage("pyramid.jpg", 100, 0, true, false))
@@ -76,13 +76,13 @@ void setup()
             // You can turn off dithering for somewhat faster image load by changing the fifth parameter to false, or
             // removing the parameter completely
             display.println("Image open error");
-        }       
+        }
         display.display();
     }
     else
     {
         // If SD card init not success, display error on screen
-        display.println("SD Card error!");        
+        display.println("SD Card error!");
         display.display();
     }
 

@@ -40,11 +40,11 @@ void setup()
     }
 
     // Display current time and date
-    printCurrentTime(); 
+    printCurrentTime();
     display.display();
 
     // Set RTC alarm 10 seconds from now
-    display.rtcSetAlarmEpoch(display.rtcGetEpoch() + 10, RTC_ALARM_MATCH_DHHMMSS); 
+    display.rtcSetAlarmEpoch(display.rtcGetEpoch() + 10, RTC_ALARM_MATCH_DHHMMSS);
 
     // Enable wakup from deep sleep on gpio 39 where RTC interrupt is connected
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_39, 0);

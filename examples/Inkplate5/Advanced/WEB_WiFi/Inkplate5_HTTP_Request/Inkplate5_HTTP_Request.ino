@@ -42,7 +42,7 @@ void setup()
 
     int n = WiFi.scanNetworks(); // Start searching WiFi networks and put the nubmer of found WiFi networks in variable n
     if (n == 0)
-    { 
+    {
         // If you did not find any network, show the message and stop the program.
         display.print("No WiFi networks found!");
         display.partialUpdate();
@@ -80,10 +80,10 @@ void setup()
 
     HTTPClient http;
     if (http.begin("http://example.com/index.html"))
-    { 
+    {
         // Now try to connect to some web page (in this example www.example.com. And yes, this is a valid Web page :))
         if (http.GET() > 0)
-        { 
+        {
             // If connection was successful, try to read content of the Web page and display it on screen
             String htmlText;
             htmlText = http.getString();

@@ -25,8 +25,8 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
 #endif
 
-#include "Inkplate.h"      // Include Inkplate library to the sketch
-#include <rom/rtc.h>       // Include ESP32 library for RTC (needed for rtc_get_reset_reason() function)
+#include "Inkplate.h" // Include Inkplate library to the sketch
+#include <rom/rtc.h>  // Include ESP32 library for RTC (needed for rtc_get_reset_reason() function)
 
 #define uS_TO_S_FACTOR 1000000 // Conversion factor for micro seconds to seconds
 #define TIME_TO_SLEEP  10      // Time how long ESP32 will be in deep sleep (in seconds). In this case 10 seconds.

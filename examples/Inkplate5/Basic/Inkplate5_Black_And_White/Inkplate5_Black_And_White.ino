@@ -19,8 +19,8 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
 #endif
 
-#include "Inkplate.h" // Include Inkplate library to the sketch
-#include "logo.h"     // Include header file for Soldered logo. You can see it in next tab inside Arduino IDE
+#include "Inkplate.h"            // Include Inkplate library to the sketch
+#include "logo.h"                // Include header file for Soldered logo. You can see it in next tab inside Arduino IDE
 Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set library to work in monochorme mode
 // Other option is gray mode, which is demonstrated in next example "Inkplate5_Grayscale"
 
@@ -264,8 +264,7 @@ void loop()
     display.clearDisplay();
     for (int i = 0; i < 6; i++)
     {
-        display.setTextSize(i +
-                            1); // textSize parameter starts at 1 and goes up to 6
+        display.setTextSize(i + 1);               // textSize parameter starts at 1 and goes up to 6
         display.setCursor(70, 130 + (i * i * 8)); // setCursor works as same as on LCD displays - sets "the cursor" at
                                                   // the place you want to write someting next
         display.print("INKPLATE 5!");             // The actual text you want to show on e-paper as String
@@ -275,10 +274,9 @@ void loop()
     delay(DELAY_MS);
 
     // Write same text on different location, but now invert colors (text is white, text background is black), without
-    // cleaning the previous text 
-    display.setTextColor(
-        WHITE, BLACK); // First argument is text color, while second argument is background color. In BW, there are 
-                       // only two options: BLACK & WHITE
+    // cleaning the previous text
+    display.setTextColor(WHITE, BLACK); // First argument is text color, while second argument is background color. In
+                                        // BW, there are only two options: BLACK & WHITE
     for (int i = 0; i < 6; i++)
     {
         display.setTextSize(i + 1);
