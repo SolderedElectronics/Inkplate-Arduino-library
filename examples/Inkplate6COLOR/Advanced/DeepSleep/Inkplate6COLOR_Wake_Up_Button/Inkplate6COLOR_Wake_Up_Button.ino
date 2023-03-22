@@ -29,26 +29,26 @@
 Inkplate display;
 
 // Store int in rtc data, to remain persistent during deep sleep
-//RTC_DATA_ATTR int bootCount = 0;
+RTC_DATA_ATTR int bootCount = 0;
 
 void setup()
 {
     display.begin();
-    //display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE_BLACK);
 
-    //++bootCount;
+    ++bootCount;
 
     // Our function declared below
-    //displayInfo();
+    displayInfo();
 
     // Go to sleep for TIME_TO_SLEEP seconds
-    //esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 
     // Enable wakeup from deep sleep on gpio 36 (wake button)
-    //esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, 0);
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, 0);
 
     // Put the panel in the deep sleep
-    //display.setPanelDeepSleep(0);
+    display.setPanelDeepSleep(0);
 
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
@@ -59,7 +59,7 @@ void loop()
     // Never here! If you use deep sleep, the whole program should be in setup() because the board restarts each
     // time. loop() must be empty!
 }
-/*
+
 // Function that will write number of boots and boot reason to screen
 void displayInfo()
 {
@@ -93,4 +93,4 @@ void displayInfo()
     }
 
     display.display();
-}*/
+}

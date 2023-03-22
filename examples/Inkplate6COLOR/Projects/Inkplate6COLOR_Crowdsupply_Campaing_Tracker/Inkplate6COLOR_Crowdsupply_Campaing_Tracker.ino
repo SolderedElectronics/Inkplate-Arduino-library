@@ -22,8 +22,8 @@
 #include "generatedUI.h" // include generated UI
 
 // Change here to your wifi ssid and pass and the url to display info for
-#define ssid "Soldered" // Name of the WiFi network (SSID) that you want to connect Inkplate to
-#define pass "dasduino" // Password of that WiFi network
+#define ssid "" // Name of the WiFi network (SSID) that you want to connect Inkplate to
+#define pass "" // Password of that WiFi network
 
 #define DELAY_MS 60000 * 60                                             // Delay between fetching data
 #define URL      "https://www.crowdsupply.com/soldered/inkplate-6color" // Link to the Inkplate 6COLOR crowdsupply campaign

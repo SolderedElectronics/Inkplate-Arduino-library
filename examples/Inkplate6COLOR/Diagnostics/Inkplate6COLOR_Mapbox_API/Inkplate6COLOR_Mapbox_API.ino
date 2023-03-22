@@ -20,8 +20,8 @@
 
 #include "Inkplate.h"
 
-#define ssid "Soldered" // Name of the WiFi network (SSID) that you want to connect Inkplate to
-#define pass "dasduino" // Password of that WiFi network
+#define ssid "" // Name of the WiFi network (SSID) that you want to connect Inkplate to
+#define pass "" // Password of that WiFi network
 
 // Fill in these using api key from https://www.mapbox.com/ and coordinates you want to draw
 // http://bboxfinder.com/ might help you :)

@@ -30,8 +30,8 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Delay between API calls in miliseconds
 #define DELAY_MS 3 * 60 * 1000

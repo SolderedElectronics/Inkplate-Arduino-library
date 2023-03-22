@@ -17,8 +17,7 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate 6COLOR in the boards menu."
 #endif
 
-#include "Inkplate.h" //Include Inkplate library to the sketch
-#include "SdFat.h"    //Include library for SD card
+#include "Inkplate.h" // Include Inkplate library to the sketch
 Inkplate display;     // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 SdFile file;          // Create SdFile object used for accessing files on SD card
 
