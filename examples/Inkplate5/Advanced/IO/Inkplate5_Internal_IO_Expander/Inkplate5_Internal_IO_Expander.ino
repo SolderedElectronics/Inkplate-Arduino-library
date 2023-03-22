@@ -1,6 +1,6 @@
 /*
    Inkplate5_Internal_IO_Expander example for Soldered Inkplate 5
-   For this example you will need only a USB cable, Inkplate5, 330 Ohm resistor and LED diode.
+   For this example you will need only a USB-C cable, Inkplate5, 330 Ohm resistor and LED diode.
    Select "Soldered Inkplate5" from Tools -> Board menu.
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/

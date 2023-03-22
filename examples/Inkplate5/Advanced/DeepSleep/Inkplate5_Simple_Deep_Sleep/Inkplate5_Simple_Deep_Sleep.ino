@@ -1,6 +1,6 @@
 /*
    Inkplate5_Simple_Deep_Sleep example for Soldered Inkplate 5
-   For this example you will need USB cable and Inkplate 5.
+   For this example you will need a USB-C cable and Inkplate 5.
    Select "Soldered Inkplate5" from Tools -> Board menu.
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/

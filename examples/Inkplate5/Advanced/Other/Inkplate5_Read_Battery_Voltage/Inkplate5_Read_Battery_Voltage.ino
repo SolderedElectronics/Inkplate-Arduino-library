@@ -1,6 +1,6 @@
 /*
    Inkplate5_Read_Battery_Voltage example for Soldered Inkplate 5
-   For this example you will need USB cable, Inkplate 5 and a Lithium battery (3.6V) with two pin JST connector.
+   For this example you will need a USB-C cable, Inkplate 5 and a Lithium battery (3.6V) with two pin JST connector.
    Select "Soldered Inkplate5" from Tools -> Board menu.
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/

@@ -1,6 +1,6 @@
 /*
    Inkplate5_Partial_Update example for Soldered Inkplate 5
-   For this example you will need only USB cable and Inkplate 5
+   For this example you will need only a USB-C cable and Inkplate 5
    Select "Soldered Inkplate5" from Tools -> Board menu.
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/

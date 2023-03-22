@@ -1,6 +1,6 @@
 /*
    Inkplate5_SD_Pictures example for Soldered Inkplate 5
-   For this example you will need a micro USB cable, Inkplate5 and a SD card loaded with
+   For this example you will need a USB-C cable, Inkplate5 and a SD card loaded with
    images that can be found inside folder of this example.
    Select "Soldered Inkplate5" from Tools -> Board menu.
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:

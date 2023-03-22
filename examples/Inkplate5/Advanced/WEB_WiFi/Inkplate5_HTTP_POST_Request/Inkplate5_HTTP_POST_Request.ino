@@ -1,6 +1,6 @@
 /*
    Inkplate5_HTTP_POST_Request example for Soldered Inkplate5
-   For this example you will need USB cable, Inkplate5 and stable WiFi Internet connection.
+   For this example you will need a USB-C cable, Inkplate5 and stable WiFi Internet connection.
    Select "Soldered Inkplate5" from Tools -> Board menu.
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
