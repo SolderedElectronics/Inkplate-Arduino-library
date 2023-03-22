@@ -1,10 +1,10 @@
 /*
-   Inkplate6_easyC example for Soldered Inkplate 6
-   For this example you will need USB cable, Inkplate 6,
+   Inkplate5_easyC example for Soldered Inkplate 5
+   For this example you will need USB cable, Inkplate 5,
    BME680 sensor with easyC connector on it: https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/
    and a easyC cable: https://soldered.com/product/easyc-cable-20cm/
-   Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate6" or "Soldered Inkplate6" option? Follow our tutorial and add it:
+   Select "Soldered Inkplate5" from Tools -> Board menu.
+   Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how you can read temperature, humidity, and air pressure data from BME680.
@@ -14,12 +14,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   30 November 2022 by Soldered
+   21 March 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
+#ifndef ARDUINO_INKPLATE5
+#error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
 #endif
 
 #include "BME680-SOLDERED.h" // Soldered library for BME680 Sensor
@@ -38,7 +38,7 @@ void setup()
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
     
-    // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for the sensor but doesn't need to
+    // Init BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for the sensor but doesn't need to
     // specify it
     if (!bme680.begin())
     {
@@ -82,7 +82,7 @@ void loop()
                       BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
 
     // Display Soldered logo
-    display.drawImage(logo, 585, 545, logo_w, logo_h,
+    display.drawImage(logo, 755, 495, logo_w, logo_h,
                       BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
 
     // This part of code actually drawing on the Inkplate screen, previous lines just drawing into the frame buffer

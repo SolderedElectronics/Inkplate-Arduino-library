@@ -1,36 +1,37 @@
 /*
-   Basic_partial_update example for Soldered Inkplate 5
+   Inkplate5_Partial_Update example for Soldered Inkplate 5
    For this example you will need only USB cable and Inkplate 5
-   Select "Inkplate 5(ESP32)" from Tools -> Board menu.
-   Don't have "Inkplate 5(ESP32)" option? Follow our tutorial and add it:
-   https://e-radionica.com/en/blog/add-inkplate-6-to-arduino-ide/
+   Select "Soldered Inkplate5" from Tools -> Board menu.
+   Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
+   https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   In this example we will show  how to use partial update functionality of Inkplate 5 e-paper display.
-   It will scroll text that is saved in char array
-   NOTE: Partial update is only available on 1 Bit mode (BW) and it is not recommended to use it on first refresh after
-   power up. It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture quality.
+   In this example we will show how to use partial update functionality of Inkplate 5 e-paper display.
+   It will scroll text that is saved in char array.
+   NOTE: Partial update is only available on 1 Bit mode (BW).
+   It is recommended to do a full refresh every 5-10 partial refresh to maintain good picture quality.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
-   Looking to get support? Write on our forums: http://forum.e-radionica.com/en/
-   15 July 2020 by Soldered
+   Looking to get support? Write on our forums: https://forum.soldered.com/
+   20 March 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE5
-#error "Wrong board selection for this example, please select Inkplate 5 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
 #endif
 
-#include "Inkplate.h"            //Include Inkplate library to the sketch
+#include "Inkplate.h"            // Include Inkplate library to the sketch
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
 // Char array where you can store your text that will be scrolled.
 const char text[] = "This is partial update on Inkplate 5 e-paper display! :)";
 
 // This variable is used for moving the text (scrolling)
-int offset = 800;
+int offset = E_INK_WIDTH;
 
 // Variable that keeps count on how much screen has been partially updated
 int n = 0;
+
 void setup()
 {
     display.begin();                    // Init Inkplate library (you should call this function ONLY ONCE)
@@ -46,10 +47,11 @@ void loop()
     // BASIC USAGE
 
     display.clearDisplay();         // Clear content in frame buffer
-    display.setCursor(offset, 300); // Set new position for text
+    display.setCursor(offset, 260); // Set new position for text
     display.print(text);            // Write text at new position
     if (n > 9)
-    {                      // Check if you need to do full refresh or you can do partial update
+    {
+        // Check if you need to do full refresh or you can do partial update
         display.display(); // Do a full refresh
         n = 0;
     }
@@ -60,13 +62,13 @@ void loop()
     }
     offset -= 20; // Move text into new position
     if (offset < 0)
-        offset = 800; // Text is scrolled till the end of the screen? Get it back on the start!
-    delay(500);       // Delay between refreshes.
+        offset = E_INK_WIDTH; // Text is scrolled till the end of the screen? Get it back on the start!
+    delay(500); // Delay between refreshes.
 
     // ADVANCED USAGE
 
     display.clearDisplay();         // Clear content in frame buffer
-    display.setCursor(offset, 300); // Set new position for text
+    display.setCursor(offset, 260); // Set new position for text
     display.print(text);            // Write text at new position
 
     display.einkOn(); // Turn on e-ink display
@@ -83,6 +85,6 @@ void loop()
     }
     offset -= 20; // Move text into new position
     if (offset < 0)
-        offset = 800; // Text is scrolled till the end of the screen? Get it back on the start!
-    delay(500);       // Delay between refreshes.
+        offset = E_INK_WIDTH; // Text is scrolled till the end of the screen? Get it back on the start!
+    delay(500); // Delay between refreshes.
 }

@@ -1,8 +1,8 @@
 /*
-   Inkplate6_Bluetooth_Serial example for Soldered Inkplate6
-   For this example you will need USB cable, Inkplate6 and smartphone.
-   Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate6" or "Soldered Inkplate6" option? Follow our tutorial and add it:
+   Inkplate5_Bluetooth_Serial example for Soldered Inkplate 5
+   For this example you will need USB cable, Inkplate 5 and smartphone.
+   Select "Soldered Inkplate5" from Tools -> Board menu.
+   Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example shows how to use Bluetooth on Inkplate devices.
@@ -15,17 +15,16 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   17 February 2023 by Soldered
+   21 March 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
+#ifndef ARDUINO_INKPLATE5
+#error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
 #endif
 
 // You can change the Bluetooth device name if you want
-const char *btDeviceName = "Inkplate6";
+const char *btDeviceName = "Inkplate5";
 
 // Include Inkplate and BluetoothSerial library to the sketch
 #include "BluetoothSerial.h"
