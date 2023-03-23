@@ -2,19 +2,19 @@
  **************************************************
  *
  * @file        Inkplate2.cpp
- * @brief       Basic funtions for controling inkplate 5
+ * @brief       Basic funtions for controling inkplate 2
  *
- *              https://github.com/e-radionicacom/Inkplate-Arduino-library
- *              For support, please reach over forums: forum.e-radionica.com/en
+ *              https://github.com/SolderedElectronics/Inkplate-Arduino-library
+ *              For support, please reach over forums: https://forum.soldered.com/
  *              For more info about the product, please check: www.inkplate.io
  *
  *              This code is released under the GNU Lesser General Public
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about
- *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *licensing, please contact hello@soldered.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     @ e-radionica.com
+ * @authors     @ Soldered
  ***************************************************/
 
 #include "../Inkplate.h"
@@ -236,7 +236,7 @@ bool Inkplate::getPanelDeepSleepState()
 }
 
 /**
- * @brief       resetPanel resets Inkplate 6COLOR
+ * @brief       resetPanel resets Inkplate 2
  */
 void Inkplate::resetPanel()
 {
@@ -247,7 +247,7 @@ void Inkplate::resetPanel()
 }
 
 /**
- * @brief       sendCommand sends SPI command to Inkplate 6COLOR
+ * @brief       sendCommand sends SPI command to Inkplate 2
  *
  * @param       uint8_t _command
  *              predefined command for epaper control
@@ -265,7 +265,7 @@ void Inkplate::sendCommand(uint8_t _command)
 }
 
 /**
- * @brief       sendData sends SPI data to Inkplate 6COLOR
+ * @brief       sendData sends SPI data to Inkplate 2
  *
  * @param       uint8_t *_data
  *              pointer to data buffer to be sent to epaper
@@ -285,7 +285,7 @@ void Inkplate::sendData(uint8_t *_data, int _n)
 }
 
 /**
- * @brief       sendData sends SPI data to Inkplate 6COLOR
+ * @brief       sendData sends SPI data to Inkplate 2
  *
  * @param       uint8_t _data
  *              data to be sent to epaper
