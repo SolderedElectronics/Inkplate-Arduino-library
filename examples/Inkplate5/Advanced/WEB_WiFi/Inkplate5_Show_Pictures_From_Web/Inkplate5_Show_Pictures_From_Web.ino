@@ -33,8 +33,8 @@
 #include "WiFi.h"                //Include library for WiFi
 
 // Enter your WiFi credentials
-const char *ssid = "Soldered";
-const char *pass = "dasduino";
+const char *ssid = "";
+const char *pass = "";
 
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
