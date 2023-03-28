@@ -11,7 +11,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   20 March 2023 by Soldered
+   28 March 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -24,14 +24,9 @@
 Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set library to work in monochorme mode
 // Other option is gray mode, which is demonstrated in next example "Inkplate5_Grayscale"
 
-// Height and width of e-paper
-#define HEIGHT 540
-#define WIDTH  960
-
 // Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not recommended
 #define DELAY_MS 5000
 // Want to refresh faster? Use partial update! Find example in "Inkplate5_Partial_Update"
-
 
 void setup()
 {
@@ -51,13 +46,14 @@ void loop()
     // Example will demostrate funcionality one by one. You always first set everything in the frame buffer and
     // afterwards you show it on the screen using display.display().
 
-    // Let's start by drawing a pixel at x = 100 and y = 50 location
+    // Let's start by drawing a pixel in the middle of the screen
     display.clearDisplay(); // Clear everytning that is inside frame buffer in ESP32
     displayCurrentAction(
         "Drawing a pixel"); // Function which writes small text at bottom left indicating what's currently done
                             // NOTE: you do not need displayCurrentAction function to use Inkplate!
-    display.drawPixel(100, 50, BLACK); // Draw one black pixel at X = 100, Y = 50 position in BLACK color (must be black
-                                       // since Inkplate is in BW mode)
+    display.drawPixel(E_INK_WIDTH / 2, E_INK_HEIGHT / 2,
+                      BLACK); // Draw one black pixel at X = E_INK_WIDTH/2 (480), Y = E_INK_HEIGHT/2 (270) position in
+                              // BLACK color (must be black since Inkplate is in BW mode)
     display.display(); // Send image to display. You need to call this one each time you want to transfer frame buffer
                        // to the screen.
     delay(DELAY_MS);   // Wait a little bit
@@ -67,7 +63,7 @@ void loop()
     for (int i = 0; i < 600; i++)
     {
         // Write 600 black pixels at random locations
-        display.drawPixel(random(0, WIDTH), random(0, HEIGHT), BLACK);
+        display.drawPixel(random(0, E_INK_WIDTH), random(0, E_INK_HEIGHT), BLACK);
     }
     displayCurrentAction("Drawing 600 random pixels");
     display.display(); // Write everything from frame buffer to screen
@@ -76,9 +72,9 @@ void loop()
     // Draw two diagonal lines accros screen
     display.clearDisplay();
     display.drawLine(
-        0, 0, display.width(), display.height(),
+        0, 0, E_INK_WIDTH, E_INK_HEIGHT,
         BLACK); // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already familiar
-    display.drawLine(WIDTH, 0, 0, HEIGHT,
+    display.drawLine(E_INK_WIDTH, 0, 0, E_INK_HEIGHT,
                      BLACK); // with those. Arguments are: start X, start Y, ending X, ending Y, color.
     displayCurrentAction("Drawing two diagonal lines");
     display.display();
@@ -88,54 +84,55 @@ void loop()
     display.clearDisplay();
     for (int i = 0; i < 50; i++)
     {
-        display.drawLine(random(0, WIDTH), random(0, HEIGHT), random(0, WIDTH), random(0, HEIGHT), BLACK);
+        display.drawLine(random(0, E_INK_WIDTH), random(0, E_INK_HEIGHT), random(0, E_INK_WIDTH),
+                         random(0, E_INK_HEIGHT), BLACK);
     }
     displayCurrentAction("Drawing 50 random lines");
     display.display();
     delay(DELAY_MS);
 
-    // Let's draw some random thick lines on screen!
+    // Let's draw some random thick lines on the screen!
     display.clearDisplay();
     for (int i = 0; i < 50; i++)
     {
-        display.drawThickLine(random(0, WIDTH), random(0, HEIGHT), random(0, WIDTH), random(0, HEIGHT), BLACK,
-                              (float)random(1, 20));
+        display.drawThickLine(random(0, E_INK_WIDTH), random(0, E_INK_HEIGHT), random(0, E_INK_WIDTH),
+                              random(0, E_INK_HEIGHT), BLACK, (float)random(1, 20));
     }
     displayCurrentAction("Drawing 50 random thick lines");
     display.display();
     delay(DELAY_MS);
 
-    // Now draw one horizontal...
+    // Now draw a horizontal...
     display.clearDisplay();
-    display.drawFastHLine(100, 100, 600, BLACK); // Arguments are: starting X, starting Y, length, color
+    display.drawFastHLine(180, 270, 600, BLACK); // Arguments are: starting X, starting Y, length, color
     displayCurrentAction("Drawing one horizontal line");
     display.display();
     delay(DELAY_MS);
 
     //... and one vertical line
     display.clearDisplay();
-    display.drawFastVLine(100, 100, 400, BLACK); // Arguments are: starting X, starting Y, length, color
+    display.drawFastVLine(480, 70, 400, BLACK); // Arguments are: starting X, starting Y, length, color
     displayCurrentAction("Drawing one vertical line");
     display.display();
     delay(DELAY_MS);
 
     // Now, let' make a grid using only horizontal and vertical lines
     display.clearDisplay();
-    for (int i = 0; i < WIDTH; i += 8)
+    for (int i = 0; i < E_INK_WIDTH; i += 8)
     {
-        display.drawFastVLine(i, 0, HEIGHT, BLACK);
+        display.drawFastVLine(i, 0, E_INK_HEIGHT, BLACK);
     }
-    for (int i = 0; i < HEIGHT; i += 8)
+    for (int i = 0; i < E_INK_HEIGHT; i += 8)
     {
-        display.drawFastHLine(0, i, WIDTH, BLACK);
+        display.drawFastHLine(0, i, E_INK_WIDTH, BLACK);
     }
     displayCurrentAction("Drawing a grid using horizontal and vertical lines");
     display.display();
     delay(DELAY_MS);
 
-    // Draw rectangle at X = 250, Y = 140 and size of 400x300 pixels
+    // Draw a rectangle in the center of the screen with a size of 400 x 300 pixels
     display.clearDisplay();
-    display.drawRect(250, 140, 400, 300, BLACK); // Arguments are: start X, start Y, size X, size Y, color
+    display.drawRect(280, 120, 400, 300, BLACK); // Arguments are: start X, start Y, size X, size Y, color
     displayCurrentAction("Drawing rectangle");
     display.display();
     delay(DELAY_MS);
@@ -144,15 +141,15 @@ void loop()
     display.clearDisplay();
     for (int i = 0; i < 50; i++)
     {
-        display.drawRect(random(0, WIDTH), random(0, HEIGHT), 100, 150, BLACK);
+        display.drawRect(random(0, E_INK_WIDTH), random(0, E_INK_HEIGHT), 100, 150, BLACK);
     }
     displayCurrentAction("Drawing many rectangles");
     display.display();
     delay(DELAY_MS);
 
-    // Draw filled black rectangle at X = 250, Y = 140, size of 400x300 pixels
+    // Draw filled black rectangle at X = 280, Y = 120, size of 400x300 pixels
     display.clearDisplay();
-    display.fillRect(250, 140, 400, 300, BLACK); // Arguments are: start X, start Y, size X, size Y, color
+    display.fillRect(280, 120, 400, 300, BLACK); // Arguments are: start X, start Y, size X, size Y, color
     displayCurrentAction("Drawing black rectangle");
     display.display();
     delay(DELAY_MS);
@@ -161,7 +158,7 @@ void loop()
     display.clearDisplay();
     for (int i = 0; i < 50; i++)
     {
-        display.fillRect(random(0, WIDTH), random(0, HEIGHT), 30, 30, BLACK);
+        display.fillRect(random(0, E_INK_WIDTH), random(0, E_INK_HEIGHT), 30, 30, BLACK);
     }
     displayCurrentAction("Drawing many filled rectangles randomly");
     display.display();
@@ -169,7 +166,7 @@ void loop()
 
     // Draw circle at center of a screen with radius of 75 pixels
     display.clearDisplay();
-    display.drawCircle(WIDTH / 2, HEIGHT / 2, 75, BLACK); // Arguments are: start X, start Y, radius, color
+    display.drawCircle(E_INK_WIDTH / 2, E_INK_HEIGHT / 2, 75, BLACK); // Arguments are: start X, start Y, radius, color
     displayCurrentAction("Drawing a circle");
     display.display();
     delay(DELAY_MS);
@@ -178,7 +175,7 @@ void loop()
     display.clearDisplay();
     for (int i = 0; i < 40; i++)
     {
-        display.drawCircle(random(0, WIDTH), random(0, HEIGHT), 25, BLACK);
+        display.drawCircle(random(0, E_INK_WIDTH), random(0, E_INK_HEIGHT), 25, BLACK);
     }
     displayCurrentAction("Drawing many circles randomly");
     display.display();
@@ -186,7 +183,7 @@ void loop()
 
     // Draw black filled circle at center of a screen with radius of 75 pixels
     display.clearDisplay();
-    display.fillCircle(WIDTH / 2, HEIGHT / 2, 75, BLACK); // Arguments are: start X, start Y, radius, color
+    display.fillCircle(E_INK_WIDTH / 2, E_INK_HEIGHT / 2, 75, BLACK); // Arguments are: start X, start Y, radius, color
     displayCurrentAction("Drawing black-filled circle");
     display.display();
     delay(DELAY_MS);
@@ -195,15 +192,15 @@ void loop()
     display.clearDisplay();
     for (int i = 0; i < 40; i++)
     {
-        display.fillCircle(random(0, WIDTH), random(0, HEIGHT), 15, BLACK);
+        display.fillCircle(random(0, E_INK_WIDTH), random(0, E_INK_HEIGHT), 15, BLACK);
     }
     displayCurrentAction("Drawing many filled circles randomly");
     display.display(); // To show stuff on screen, you always need to call display.display();
     delay(DELAY_MS);
 
-    // Draw rounded rectangle at X = 250, Y = 140 and size of 400x300 pixels and radius of 10 pixels
+    // Draw rounded rectangle at X = 280, Y = 120 and size of 400x300 pixels and radius of 10 pixels
     display.clearDisplay();
-    display.drawRoundRect(250, 140, 400, 300, 10,
+    display.drawRoundRect(280, 120, 400, 300, 10,
                           BLACK); // Arguments are: start X, start Y, size X, size Y, radius, color
     displayCurrentAction("Drawing rectangle with rounded edges");
     display.display();
@@ -213,15 +210,15 @@ void loop()
     display.clearDisplay();
     for (int i = 0; i < 50; i++)
     {
-        display.drawRoundRect(random(0, WIDTH), random(0, HEIGHT), 100, 150, 5, BLACK);
+        display.drawRoundRect(random(0, E_INK_WIDTH), random(0, E_INK_HEIGHT), 100, 150, 5, BLACK);
     }
     displayCurrentAction("Drawing many rounded edges rectangles");
     display.display();
     delay(DELAY_MS);
 
-    // Draw filled black rect at X = 250, Y = 140, size of 400x300 pixels and radius of 10 pixels
+    // Draw filled black rect at X = 280, Y = 120, size of 400x300 pixels and radius of 10 pixels
     display.clearDisplay();
-    display.fillRoundRect(250, 140, 400, 300, 10,
+    display.fillRoundRect(280, 120, 400, 300, 10,
                           BLACK); // Arguments are: start X, start Y, size X, size Y, radius, color
     displayCurrentAction("This is filled rectangle with rounded edges");
     display.display();
@@ -231,7 +228,7 @@ void loop()
     display.clearDisplay();
     for (int i = 0; i < 50; i++)
     {
-        display.fillRoundRect(random(0, WIDTH), random(0, HEIGHT), 30, 30, 3, BLACK);
+        display.fillRoundRect(random(0, E_INK_WIDTH), random(0, E_INK_HEIGHT), 30, 30, 3, BLACK);
     }
     displayCurrentAction("Random rounded edge filled rectangles");
     display.display();
@@ -239,21 +236,21 @@ void loop()
 
     // Draw simple triangle
     display.clearDisplay();
-    display.drawTriangle(250, 400, 550, 400, 400, 100, BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
+    display.drawTriangle(305, 440, 480, 90, 655, 440, BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
     displayCurrentAction("Drawing triangle");
     display.display();
     delay(DELAY_MS);
 
     // Draw filled triangle inside simple triangle (so no display.clearDisplay() this time)
-    display.fillTriangle(300, 350, 500, 350, 400, 150, BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
+    display.fillTriangle(380, 390, 480, 190, 580, 390, BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
     displayCurrentAction("Drawing triangle inside exsisting one");
     display.display();
     delay(DELAY_MS);
 
-    // Display some bitmap on screen. We are going to display Soldered logo on display at location X = 50, Y = 200
+    // Display some bitmap on screen. We are going to display Soldered logo on display at location X = 75, Y = 200
     // Image is 800x160 pixels and we want to every pixel of this bitmap to be black.
     display.clearDisplay();
-    display.drawImage(logo, 50, 200, logo_w, logo_h,
+    display.drawImage(logo, 75, 200, logo_w, logo_h,
                       BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
     displayCurrentAction("Drawing Soldered logo");
     display.display();
@@ -288,7 +285,7 @@ void loop()
 
     // Draws an elipse with x radius, y radius, center x, center y and color
     display.clearDisplay();
-    display.drawElipse(100, 200, WIDTH / 2, HEIGHT / 2, BLACK);
+    display.drawElipse(100, 200, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, BLACK);
     displayCurrentAction("Drawing an elipse");
     display.display();
 
@@ -296,7 +293,7 @@ void loop()
 
     // Fills an elipse with x radius, y radius, center x, center y and color
     display.clearDisplay();
-    display.fillElipse(100, 200, WIDTH / 2, HEIGHT / 2, BLACK);
+    display.fillElipse(100, 200, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, BLACK);
     displayCurrentAction("Drawing a filled elipse");
     display.display();
 
@@ -309,8 +306,8 @@ void loop()
     int n = 10;
     for (int i = 0; i < n; ++i)
     {
-        xt[i] = random(100, WIDTH);
-        yt[i] = random(100, HEIGHT);
+        xt[i] = random(100, E_INK_WIDTH);
+        yt[i] = random(100, E_INK_HEIGHT);
     }
     int k;
     for (int i = 0; i < n - 1; ++i)

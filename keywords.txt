@@ -89,6 +89,10 @@ rtcTimerSet	KEYWORD2
 rtcCheckTimerFlag	KEYWORD2
 rtcClearTimerFlag	KEYWORD2
 rtcDisableTimer	KEYWORD2
+getTextBounds	KEYWORD2
+esp_sleep_enable_timer_wakeup KEYWORD2
+esp_deep_sleep_start	KEYWORD2
+clean	KEYWORD2
 
 # Instances (KEYWORD2)
 

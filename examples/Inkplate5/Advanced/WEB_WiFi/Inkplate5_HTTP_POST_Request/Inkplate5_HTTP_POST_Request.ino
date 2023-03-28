@@ -19,7 +19,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   22 March 2023 by Soldered
+   28 March 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -85,6 +85,9 @@ void setup()
     Serial.println();
     Serial.print("Connected to WiFi network with IP Address: ");
     Serial.println(WiFi.localIP());
+
+    // Send request for the first time without waiting POSTING_INTERVAL_IN_SESCS
+    sendRequest();
 }
 
 
@@ -96,43 +99,49 @@ void loop()
         // Clear frame buffer of display
         display.clearDisplay();
 
-        // Connect the WiFi client to the server via port 80
-        if (!client.connect(server, 80))
-        {
-            // If it fails, print a message, remember time, stop the client and reset the loop
-            Serial.println("Connection failed");
-            lastConnectionTime = millis();
-            client.stop();
-            return;
-        }
-        else
-        {
-            // If you have any sensor or something else, here you have to put data to send instead of a random number
-            int field1Data = random(40);
+        // A function that does a request
+        sendRequest();
+    }
+}
 
-            // Create data string to send to ThingSpeak
-            String data = "field1=" + String(field1Data); // Shows how to include additional field data in http post
-
-            // POST data to ThingSpeak
-            if (client.connect(server, 80))
-            {
-                client.println("POST /update HTTP/1.1");
-                client.println("Host: api.thingspeak.com");
-                client.println("Connection: close");
-                client.println("User-Agent: ESP32WiFi/1.1");
-                client.println("X-THINGSPEAKAPIKEY: " + writeAPIKey);
-                client.println("Content-Type: application/x-www-form-urlencoded");
-                client.print("Content-Length: ");
-                client.print(data.length());
-                client.print("\n\n");
-                client.print(data);
-
-                Serial.print("The POST request is done: ");
-                Serial.println(data);
-                lastConnectionTime = millis();
-                delay(250);
-            }
-        }
+void sendRequest()
+{
+    // Connect the WiFi client to the server via port 80
+    if (!client.connect(server, 80))
+    {
+        // If it fails, print a message, remember time, stop the client and reset the loop
+        Serial.println("Connection failed");
+        lastConnectionTime = millis();
         client.stop();
+        return;
+    }
+    else
+    {
+        // If you have any sensor or something else, here you have to put data to send instead of a random number
+        int field1Data = random(40);
+
+        // Create data string to send to ThingSpeak
+        String data = "field1=" + String(field1Data); // Shows how to include additional field data in http post
+
+        // POST data to ThingSpeak
+        if (client.connect(server, 80))
+        {
+            client.println("POST /update HTTP/1.1");
+            client.println("Host: api.thingspeak.com");
+            client.println("Connection: close");
+            client.println("User-Agent: ESP32WiFi/1.1");
+            client.println("X-THINGSPEAKAPIKEY: " + writeAPIKey);
+            client.println("Content-Type: application/x-www-form-urlencoded");
+            client.print("Content-Length: ");
+            client.print(data.length());
+            client.print("\n\n");
+            client.print(data);
+            delay(250);
+            client.stop();
+
+            Serial.print("The POST request is done: ");
+            Serial.println(data);
+            lastConnectionTime = millis();
+        }
     }
 }

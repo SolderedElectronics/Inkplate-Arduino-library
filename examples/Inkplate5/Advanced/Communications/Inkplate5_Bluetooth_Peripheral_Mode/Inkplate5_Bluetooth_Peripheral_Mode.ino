@@ -6,6 +6,8 @@
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example shows how to use Inkplate as a peripheral device over Bluetooth.
+   More about peripheral mode: https://inkplate.readthedocs.io/en/latest/peripheral-mode.html
+   
    Upload this example to the Inkplate and connect your phone to it via Bluetooth.
    First, you have to pair the Inkplate with your phone in Bluetooth settings in your phone, then go to the
    Serial Bluetooth Terminal app and you can find the Inkplate in the device list. You can use another similar app.
@@ -13,7 +15,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   21 March 2023 by Soldered
+   28 March 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -25,6 +27,7 @@
 #include "BluetoothSerial.h"
 #include "Inkplate.h"
 
+// Include peripheral functions
 #include "Peripheral.h"
 
 #define BUFFER_SIZE 1000

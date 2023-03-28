@@ -14,7 +14,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   21 March 2023 by Soldered
+   28 March 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -42,7 +42,7 @@ void setup()
     // specify it
     if (!bme680.begin())
     {
-        display.setTextSize(2); // Set text scaling to two (text will be two times bigger than normal (5x7 px))
+        display.setTextSize(4); // Set text scaling to two (text will be two times bigger than normal (5x7 px))
         display.println("Sensor init failed!");
         display.println("Check sensor wiring/connection!");
         display.partialUpdate();
