@@ -6,7 +6,7 @@
 
    Using this sketch, you don't have to program and control e-paper using Arduino code.
    Instead, you can send UART command (explained in documentation that can be found inside folder of this sketch).
-   This give you flexibility that you can use this Inkplate 6 on any platform!
+   This give you flexibility that you can use this Inkplate 5 on any platform!
 
    Because it uses UART, it's little bit slower and it's not recommended to send bunch of
    drawPixel command to draw some image. Instead, load bitmaps and pictures on SD card and load image from SD.
@@ -19,16 +19,12 @@
    UART settings are: 115200 baud, standard parity, ending with "\n\r" (both)
    You can send commands via USB port or by directly connecting to ESP32 TX and RX pins.
    Don't forget you need to send #L(1)* after each command to show it on the display
-   (equal to display.display()).
+   (equal to display->display()).
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
    28 March 2023 by Soldered
 */
-
-#include "Inkplate.h"
-
-extern Inkplate display;
 
 char strTemp[2001];
 
@@ -43,7 +39,7 @@ int hexToChar(char c)
     return -1;
 }
 
-void run(char commandBuffer[], size_t n)
+void run(char commandBuffer[], size_t n, Inkplate *display, BluetoothSerial *SerialBT)
 {
     char *s = NULL;
     char *e = NULL;
@@ -68,91 +64,91 @@ void run(char commandBuffer[], size_t n)
             switch (*(s + 1))
             {
             case '?':
-                Serial.print("OK");
+                SerialBT->print("OK");
                 break;
 
             case '0':
                 sscanf(s + 3, "%d,%d,%d", &x, &y, &c);
-                // sprintf(temp, "display.drawPixel(%d, %d, %d)\n\r", x, y, c);
-                // Serial.print(temp);
-                display.drawPixel(x, y, c);
+                // sprintf(temp, "display->drawPixel(%d, %d, %d)\n\r", x, y, c);
+                // SerialBT->print(temp);
+                display->drawPixel(x, y, c);
                 break;
 
             case '1':
                 sscanf(s + 3, "%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &c);
-                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
-                // Serial.print(temp);
-                display.drawLine(x1, y1, x2, y2, c);
+                // sprintf(temp, "display->drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
+                // SerialBT->print(temp);
+                display->drawLine(x1, y1, x2, y2, c);
                 break;
 
             case '2':
                 sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &l, &c);
-                // sprintf(temp, "display.drawFastVLine(%d, %d, %d, %d)\n\r", x, y, l, c);
-                // Serial.print(temp);
-                display.drawFastVLine(x, y, l, c);
+                // sprintf(temp, "display->drawFastVLine(%d, %d, %d, %d)\n\r", x, y, l, c);
+                // SerialBT->print(temp);
+                display->drawFastVLine(x, y, l, c);
                 break;
 
             case '3':
                 sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &l, &c);
-                // sprintf(temp, "display.drawFastHLine(%d, %d, %d, %d)\n\r", x, y, l, c);
-                // Serial.print(temp);
-                display.drawFastHLine(x, y, l, c);
+                // sprintf(temp, "display->drawFastHLine(%d, %d, %d, %d)\n\r", x, y, l, c);
+                // SerialBT->print(temp);
+                display->drawFastHLine(x, y, l, c);
                 break;
 
             case '4':
                 sscanf(s + 3, "%d,%d,%d,%d,%d", &x, &y, &w, &h, &c);
-                // sprintf(temp, "display.drawRect(%d, %d, %d, %d, %d)\n\r", x, y, w, h, c);
-                // Serial.print(temp);
-                display.drawRect(x, y, w, h, c);
+                // sprintf(temp, "display->drawRect(%d, %d, %d, %d, %d)\n\r", x, y, w, h, c);
+                // SerialBT->print(temp);
+                display->drawRect(x, y, w, h, c);
                 break;
 
             case '5':
                 sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &r, &c);
-                // sprintf(temp, "display.drawCircle(%d, %d, %d, %d)\n\r", x, y, r, c);
-                // Serial.print(temp);
-                display.drawCircle(x, y, r, c);
+                // sprintf(temp, "display->drawCircle(%d, %d, %d, %d)\n\r", x, y, r, c);
+                // SerialBT->print(temp);
+                display->drawCircle(x, y, r, c);
                 break;
 
             case '6':
                 sscanf(s + 3, "%d,%d,%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &x3, &y3, &c);
-                // sprintf(temp, "display.drawTriangle(%d, %d, %d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, x3, y3, c);
-                // Serial.print(temp);
-                display.drawTriangle(x1, y1, x2, y2, x3, y3, c);
+                // sprintf(temp, "display->drawTriangle(%d, %d, %d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, x3, y3, c);
+                // SerialBT->print(temp);
+                display->drawTriangle(x1, y1, x2, y2, x3, y3, c);
                 break;
 
             case '7':
                 sscanf(s + 3, "%d,%d,%d,%d,%d,%d", &x, &y, &w, &h, &r, &c);
-                // sprintf(temp, "display.drawRoundRect(%d, %d, %d, %d, %d, %d)\n\r", x, y, w, h, r, c);
-                // Serial.print(temp);
-                display.drawRoundRect(x, y, w, h, r, c);
+                // sprintf(temp, "display->drawRoundRect(%d, %d, %d, %d, %d, %d)\n\r", x, y, w, h, r, c);
+                // SerialBT->print(temp);
+                display->drawRoundRect(x, y, w, h, r, c);
                 break;
 
             case '8':
                 sscanf(s + 3, "%d,%d,%d,%d,%d", &x, &y, &w, &h, &c);
-                // sprintf(temp, "display.fillRect(%d, %d, %d, %d, %d)\n\r", x, y, w, h, c);
-                // Serial.print(temp);
-                display.fillRect(x, y, w, h, c);
+                // sprintf(temp, "display->fillRect(%d, %d, %d, %d, %d)\n\r", x, y, w, h, c);
+                // SerialBT->print(temp);
+                display->fillRect(x, y, w, h, c);
                 break;
 
             case '9':
                 sscanf(s + 3, "%d,%d,%d,%d", &x, &y, &r, &c);
-                // sprintf(temp, "display.fillCircle(%d, %d, %d, %d)\n\r", x, y, r, c);
-                // Serial.print(temp);
-                display.fillCircle(x, y, r, c);
+                // sprintf(temp, "display->fillCircle(%d, %d, %d, %d)\n\r", x, y, r, c);
+                // SerialBT->print(temp);
+                display->fillCircle(x, y, r, c);
                 break;
 
             case 'A':
                 sscanf(s + 3, "%d,%d,%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &x3, &y3, &c);
-                // sprintf(temp, "display.fillTriangle(%d, %d, %d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, x3, y3, c);
-                // Serial.print(temp);
-                display.fillTriangle(x1, y1, x2, y2, x3, y3, c);
+                // sprintf(temp, "display->fillTriangle(%d, %d, %d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, x3, y3, c);
+                // SerialBT->print(temp);
+                display->fillTriangle(x1, y1, x2, y2, x3, y3, c);
                 break;
 
             case 'B':
                 sscanf(s + 3, "%d,%d,%d,%d,%d,%d", &x, &y, &w, &h, &r, &c);
-                // sprintf(temp, "display.fillRoundRect(%d, %d, %d, %d, %d, %d)\n\r", x, y, w, h, r, c);
-                // Serial.print(temp);
-                display.fillRoundRect(x, y, w, h, r, c);
+                // sprintf(temp, "display->fillRoundRect(%d, %d, %d, %d, %d, %d)\n\r", x, y, w, h, r, c);
+                // SerialBT->print(temp);
+                display->fillRoundRect(x, y, w, h, r, c);
                 break;
 
             case 'C':
@@ -167,42 +163,42 @@ void run(char commandBuffer[], size_t n)
                     strTemp[i / 2] = (hexToChar(strTemp[i]) << 4) | (hexToChar(strTemp[i + 1]) & 0x0F);
                 }
                 strTemp[n / 2] = 0;
-                // Serial.print("display.print(\"");
-                // Serial.print(strTemp);
-                // Serial.println("\");");
-                display.print(strTemp);
+                // SerialBT->print("display->print(\"");
+                // SerialBT->print(strTemp);
+                // SerialBT->println("\");");
+                display->print(strTemp);
                 break;
 
             case 'D':
                 sscanf(s + 3, "%d", &c);
-                // sprintf(temp, "display.setTextSize(%d)\n", c);
-                // Serial.print(temp);
-                display.setTextSize(c);
+                // sprintf(temp, "display->setTextSize(%d)\n", c);
+                // SerialBT->print(temp);
+                display->setTextSize(c);
                 break;
 
             case 'E':
                 sscanf(s + 3, "%d,%d", &x, &y);
-                // sprintf(temp, "display.setCursor(%d, %d)\n", x, y);
-                // Serial.print(temp);
-                display.setCursor(x, y);
+                // sprintf(temp, "display->setCursor(%d, %d)\n", x, y);
+                // SerialBT->print(temp);
+                display->setCursor(x, y);
                 break;
 
             case 'F':
                 sscanf(s + 3, "%c", &b);
-                // sprintf(temp, "display.setTextWrap(%s)\n", b == 'T' ? "True" : "False");
-                // Serial.print(temp);
+                // sprintf(temp, "display->setTextWrap(%s)\n", b == 'T' ? "True" : "False");
+                // SerialBT->print(temp);
                 if (b == 'T')
-                    display.setTextWrap(true);
+                    display->setTextWrap(true);
                 if (b == 'F')
-                    display.setTextWrap(false);
+                    display->setTextWrap(false);
                 break;
 
             case 'G':
                 sscanf(s + 3, "%d", &c);
                 c &= 3;
-                // sprintf(temp, "display.setRotation(%d)\n", c);
-                // Serial.print(temp);
-                display.setRotation(c);
+                // sprintf(temp, "display->setRotation(%d)\n", c);
+                // SerialBT->print(temp);
+                display->setRotation(c);
                 break;
 
             case 'H':
@@ -217,32 +213,32 @@ void run(char commandBuffer[], size_t n)
                     strTemp[i / 2] = (hexToChar(strTemp[i]) << 4) | (hexToChar(strTemp[i + 1]) & 0x0F);
                 }
                 strTemp[n / 2] = 0;
-                r = display.sdCardInit();
+                r = display->sdCardInit();
                 if (r)
                 {
-                    r = display.drawBitmapFromSd(strTemp, x, y);
-                    Serial.print("#H(");
-                    Serial.print(r, DEC);
-                    Serial.println(")*");
-                    Serial.flush();
-                    // sprintf(temp, "display.drawBitmap(%d, %d, %s)\n", x, y, strTemp);
-                    // Serial.print(temp);
+                    r = display->drawBitmapFromSd(strTemp, x, y);
+                    SerialBT->print("#H(");
+                    SerialBT->print(r, DEC);
+                    SerialBT->println(")*");
+                    SerialBT->flush();
+                    // sprintf(temp, "display->drawBitmap(%d, %d, %s)\n", x, y, strTemp);
+                    // SerialBT->print(temp);
                 }
                 else
                 {
-                    Serial.println("#H(-1)*");
-                    Serial.flush();
+                    SerialBT->println("#H(-1)*");
+                    SerialBT->flush();
                 }
                 break;
 
             case 'I':
                 sscanf(s + 3, "%d", &c);
-                // sprintf(temp, "display.setDisplayMode(%s)\n", c == 0 ? "INKPLATE_1BIT" : "INKPLATE_3BIT");
-                // Serial.print(temp);
+                // sprintf(temp, "display->setDisplayMode(%s)\n", c == 0 ? "INKPLATE_1BIT" : "INKPLATE_3BIT");
+                // SerialBT->print(temp);
                 if (c == 1)
-                    display.selectDisplayMode(INKPLATE_1BIT);
+                    display->selectDisplayMode(INKPLATE_1BIT);
                 if (c == 3)
-                    display.selectDisplayMode(INKPLATE_3BIT);
+                    display->selectDisplayMode(INKPLATE_3BIT);
                 break;
 
             case 'J':
@@ -250,19 +246,19 @@ void run(char commandBuffer[], size_t n)
                 if (b == '?')
                 {
                     // if (0 == 0) {
-                    //  Serial.println("#J(0)*");
+                    //  SerialBT->println("#J(0)*");
                     //} else {
-                    //  Serial.println("#J(1)*");
+                    //  SerialBT->println("#J(1)*");
                     //}
-                    if (display.getDisplayMode() == INKPLATE_1BIT)
+                    if (display->getDisplayMode() == INKPLATE_1BIT)
                     {
-                        Serial.println("#J(0)*");
-                        Serial.flush();
+                        SerialBT->println("#J(0)*");
+                        SerialBT->flush();
                     }
-                    if (display.getDisplayMode() == INKPLATE_3BIT)
+                    if (display->getDisplayMode() == INKPLATE_3BIT)
                     {
-                        Serial.println("#J(1)*");
-                        Serial.flush();
+                        SerialBT->println("#J(1)*");
+                        SerialBT->flush();
                     }
                 }
                 break;
@@ -271,8 +267,8 @@ void run(char commandBuffer[], size_t n)
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')
                 {
-                    // Serial.print("display.clearDisplay();\n");
-                    display.clearDisplay();
+                    // SerialBT->print("display->clearDisplay();\n");
+                    display->clearDisplay();
                 }
                 break;
 
@@ -280,27 +276,27 @@ void run(char commandBuffer[], size_t n)
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')
                 {
-                    // Serial.print("display.display();\n");
-                    display.display();
+                    // SerialBT->print("display->display();\n");
+                    display->display();
                 }
                 break;
 
             case 'M':
                 sscanf(s + 3, "%d,%d,%d", &y1, &x2, &y2);
-                // sprintf(temp, "display.partialUpdate(%d, %d, %d);\n", y1, x2, y2);
-                // Serial.print(temp);
-                display.partialUpdate();
+                // sprintf(temp, "display->partialUpdate(%d, %d, %d);\n", y1, x2, y2);
+                // SerialBT->print(temp);
+                display->partialUpdate();
                 break;
 
             case 'N':
                 sscanf(s + 3, "%c", &b);
                 if (b == '?')
                 {
-                    Serial.print("#N(");
-                    Serial.print(display.readTemperature(), DEC);
-                    // Serial.print(23, DEC);
-                    Serial.println(")*");
-                    Serial.flush();
+                    SerialBT->print("#N(");
+                    SerialBT->print(display->readTemperature(), DEC);
+                    // SerialBT->print(23, DEC);
+                    SerialBT->println(")*");
+                    SerialBT->flush();
                 }
                 break;
 
@@ -308,11 +304,11 @@ void run(char commandBuffer[], size_t n)
                 sscanf(s + 3, "%d", &c);
                 if (c >= 0 && c <= 2)
                 {
-                    Serial.print("#O(");
-                    Serial.print(display.readTouchpad(c), DEC);
-                    // Serial.print(0, DEC);
-                    Serial.println(")*");
-                    Serial.flush();
+                    SerialBT->print("#O(");
+                    SerialBT->print(display->readTouchpad(c), DEC);
+                    // SerialBT->print(0, DEC);
+                    SerialBT->println(")*");
+                    SerialBT->flush();
                 }
                 break;
 
@@ -320,34 +316,34 @@ void run(char commandBuffer[], size_t n)
                 sscanf(s + 3, "%c", &b);
                 if (b == '?')
                 {
-                    Serial.print("#P(");
-                    Serial.print(display.readBattery(), 2);
-                    // Serial.print(3.54, 2);
-                    Serial.println(")*");
-                    Serial.flush();
+                    SerialBT->print("#P(");
+                    SerialBT->print(display->readBattery(), 2);
+                    // SerialBT->print(3.54, 2);
+                    SerialBT->println(")*");
+                    SerialBT->flush();
                 }
                 break;
 
             case 'Q':
                 sscanf(s + 3, "%d", &c);
                 c &= 1;
-                // if (c == 0) Serial.print("display.einkOff();\n");
-                // if (c == 1) Serial.print("display.einkOn();\n");
+                // if (c == 0) SerialBT->print("display->einkOff();\n");
+                // if (c == 1) SerialBT->print("display->einkOn();\n");
                 if (c == 0)
-                    display.einkOff();
+                    display->einkOff();
                 if (c == 1)
-                    display.einkOn();
+                    display->einkOn();
                 break;
 
             case 'R':
                 sscanf(s + 3, "%c", &b);
                 if (b == '?')
                 {
-                    Serial.print("#R(");
-                    Serial.print(display.getPanelState(), DEC);
-                    // Serial.print(1, DEC);
-                    Serial.println(")*");
-                    Serial.flush();
+                    SerialBT->print("#R(");
+                    SerialBT->print(display->getPanelState(), DEC);
+                    // SerialBT->print(1, DEC);
+                    SerialBT->println(")*");
+                    SerialBT->flush();
                 }
                 break;
             case 'S':
@@ -362,221 +358,221 @@ void run(char commandBuffer[], size_t n)
                     strTemp[i / 2] = (hexToChar(strTemp[i]) << 4) | (hexToChar(strTemp[i + 1]) & 0x0F);
                 }
                 strTemp[n / 2] = 0;
-                r = display.sdCardInit();
+                r = display->sdCardInit();
                 if (r)
                 {
-                    r = display.drawImage(strTemp, x, y);
-                    Serial.print("#H(");
-                    Serial.print(r, DEC);
-                    Serial.println(")*");
-                    Serial.flush();
-                    // sprintf(temp, "display.drawBitmap(%d, %d, %s)\n", x, y, strTemp);
-                    // Serial.print(temp);
+                    r = display->drawImage(strTemp, x, y);
+                    SerialBT->print("#H(");
+                    SerialBT->print(r, DEC);
+                    SerialBT->println(")*");
+                    SerialBT->flush();
+                    // sprintf(temp, "display->drawBitmap(%d, %d, %s)\n", x, y, strTemp);
+                    // SerialBT->print(temp);
                 }
                 else
                 {
-                    Serial.println("#H(-1)*");
-                    Serial.flush();
+                    SerialBT->println("#H(-1)*");
+                    SerialBT->flush();
                 }
                 break;
             case 'T':
                 int t;
                 sscanf(s + 3, "%d,%d,%d,%d,%d,%d", &x1, &y1, &x2, &y2, &c, &t);
-                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
-                // Serial.print(temp);
-                display.drawThickLine(x1, y1, x2, y2, c, t);
+                // sprintf(temp, "display->drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
+                // SerialBT->print(temp);
+                display->drawThickLine(x1, y1, x2, y2, c, t);
                 break;
             case 'U':
                 sscanf(s + 3, "%d,%d,%d,%d,%d", &rx, &ry, &xc, &yc, &c);
-                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
-                // Serial.print(temp);
-                display.drawElipse(rx, ry, xc, yc, c);
+                // sprintf(temp, "display->drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
+                // SerialBT->print(temp);
+                display->drawElipse(rx, ry, xc, yc, c);
                 break;
             case 'V':
                 sscanf(s + 3, "%d,%d,%d,%d,%d", &rx, &ry, &xc, &yc, &c);
-                // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
-                // Serial.print(temp);
-                display.fillElipse(rx, ry, xc, yc, c);
+                // sprintf(temp, "display->drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
+                // SerialBT->print(temp);
+                display->fillElipse(rx, ry, xc, yc, c);
                 break;
                             case 'W':
                 sscanf(s + 3, "%d,%d,%d", &hr, &min, &sec);
-                // sprintf(temp, "display.rtcSetTime(%d, %d, %d);\n\r", hr, min, sec);
-                // Serial.println(temp);
-                display.rtcSetTime(hr, min, sec);
+                // sprintf(temp, "display->rtcSetTime(%d, %d, %d);\n\r", hr, min, sec);
+                // SerialBT->println(temp);
+                display->rtcSetTime(hr, min, sec);
                 break;
             case 'X':
                 sscanf(s + 3, "%d,%d,%d,%d", &wday, &day, &mon, &yr);
-                // sprintf(temp, "display.rtcSetDate(%d, %d, %d, %d);\n\r", wday, day, mon, yr);
-                // Serial.println(temp);
-                display.rtcSetDate(wday, day, mon, yr);
+                // sprintf(temp, "display->rtcSetDate(%d, %d, %d, %d);\n\r", wday, day, mon, yr);
+                // SerialBT->println(temp);
+                display->rtcSetDate(wday, day, mon, yr);
                 break;
             case 'Y':
                 sscanf(s + 3, "%d", &ep);
-                // sprintf(temp, "display.rtcSetEpoch(%d);\n\r", ep);
-                // Serial.println(temp);
-                display.rtcSetEpoch(ep);
+                // sprintf(temp, "display->rtcSetEpoch(%d);\n\r", ep);
+                // SerialBT->println(temp);
+                display->rtcSetEpoch(ep);
                 break;
             case 'Z':
                 sscanf(s + 3, "%c", &b);
                 if (b == '?')
                 {
-                    Serial.print("#Z(");
-                    Serial.print(display.rtcGetEpoch());
-                    Serial.println(")*");
-                    Serial.flush();
+                    SerialBT->print("#Z(");
+                    SerialBT->print(display->rtcGetEpoch());
+                    SerialBT->println(")*");
+                    SerialBT->flush();
                 }
                 break;
             case 'a':
                 sscanf(s + 3, "%d", &k);
                 if (k > 6)
                 {
-                    Serial.println("INVALID");
+                    SerialBT->println("INVALID");
                     break;
                 }
-                display.rtcGetRtcData();
-                Serial.print("#a(");
+                display->rtcGetRtcData();
+                SerialBT->print("#a(");
                 switch (k)
                 {
                 case 0:
-                    Serial.print(display.rtcGetSecond());
+                    SerialBT->print(display->rtcGetSecond());
                     break;
                 case 1:
-                    Serial.print(display.rtcGetMinute());
+                    SerialBT->print(display->rtcGetMinute());
                     break;
                 case 2:
-                    Serial.print(display.rtcGetHour());
+                    SerialBT->print(display->rtcGetHour());
                     break;
                 case 3:
-                    Serial.print(display.rtcGetDay());
+                    SerialBT->print(display->rtcGetDay());
                     break;
                 case 4:
-                    Serial.print(display.rtcGetWeekday());
+                    SerialBT->print(display->rtcGetWeekday());
                     break;
                 case 5:
-                    Serial.print(display.rtcGetMonth());
+                    SerialBT->print(display->rtcGetMonth());
                     break;
                 case 6:
-                    Serial.print(display.rtcGetYear());
+                    SerialBT->print(display->rtcGetYear());
                     break;
                 }
-                Serial.println(")*");
-                Serial.flush();
+                SerialBT->println(")*");
+                SerialBT->flush();
                 break;
             case 'b':
                 sscanf(s + 3, "%d,%d,%d,%d,%d", &as, &am, &ah, &ad, &aw);
-                // sprintf(temp, "display.rtcSetAlarm(%d, %d, %d, %d, %d);\n\r", as, am, ah, ad, aw);
-                // Serial.println(temp);
-                display.rtcSetAlarm(as, am, ah, ad, aw);
+                // sprintf(temp, "display->rtcSetAlarm(%d, %d, %d, %d, %d);\n\r", as, am, ah, ad, aw);
+                // SerialBT->println(temp);
+                display->rtcSetAlarm(as, am, ah, ad, aw);
                 break;
             case 'c':
                 sscanf(s + 3, "%d,%d", &ae, &amc);
-                // sprintf(temp, "display.rtcSetAlarmEpoch(%d, %d);\n\r", ae, amc);
-                // Serial.println(temp);
-                display.rtcSetAlarmEpoch(ae, amc);
+                // sprintf(temp, "display->rtcSetAlarmEpoch(%d, %d);\n\r", ae, amc);
+                // SerialBT->println(temp);
+                display->rtcSetAlarmEpoch(ae, amc);
                 break;
             case 'd':
                 sscanf(s + 3, "%c", &b);
                 if (b == '?')
                 {
-                    Serial.print("#d(");
-                    Serial.print(display.rtcCheckAlarmFlag());
-                    Serial.println(")*");
-                    Serial.flush();
+                    SerialBT->print("#d(");
+                    SerialBT->print(display->rtcCheckAlarmFlag());
+                    SerialBT->println(")*");
+                    SerialBT->flush();
                 }
                 break;
             case 'e':
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')
                 {
-                    // Serial.println("display.rtcClearAlarmFlag()");
-                    display.rtcClearAlarmFlag();
-                    Serial.flush();
+                    // SerialBT->println("display->rtcClearAlarmFlag()");
+                    display->rtcClearAlarmFlag();
+                    SerialBT->flush();
                 }
                 break;
             case 'f':
                 sscanf(s + 3, "%d", &k);
                 if (k > 4)
                 {
-                    Serial.println("INVALID");
+                    SerialBT->println("INVALID");
                     break;
                 }
-                Serial.print("#f(");
+                SerialBT->print("#f(");
                 switch (k)
                 {
                 case 0:
-                    Serial.print(display.rtcGetAlarmSecond());
+                    SerialBT->print(display->rtcGetAlarmSecond());
                     break;
                 case 1:
-                    Serial.print(display.rtcGetAlarmMinute());
+                    SerialBT->print(display->rtcGetAlarmMinute());
                     break;
                 case 2:
-                    Serial.print(display.rtcGetAlarmHour());
+                    SerialBT->print(display->rtcGetAlarmHour());
                     break;
                 case 3:
-                    Serial.print(display.rtcGetAlarmDay());
+                    SerialBT->print(display->rtcGetAlarmDay());
                     break;
                 case 4:
-                    Serial.print(display.rtcGetAlarmWeekday());
+                    SerialBT->print(display->rtcGetAlarmWeekday());
                     break;
                 }
-                Serial.println(")*");
-                Serial.flush();
+                SerialBT->println(")*");
+                SerialBT->flush();
                 break;
             case 'g':
                 sscanf(s + 3, "%d,%d,%d,%d", &sc, &v, &ie, &ip);
 
                 if (sc > 3)
                 {
-                    Serial.println("ERROR");
+                    SerialBT->println("ERROR");
                     break;
                 }
 
-                // sprintf(temp, "display.rtcTimerSet(%d, %d, %d, %d);\n\r", sc, v, ie, ip);
-                // Serial.println(temp);
-                display.rtcTimerSet(sc, v, ie, ip);
+                // sprintf(temp, "display->rtcTimerSet(%d, %d, %d, %d);\n\r", sc, v, ie, ip);
+                // SerialBT->println(temp);
+                display->rtcTimerSet(sc, v, ie, ip);
                 break;
             case 'h':
                 sscanf(s + 3, "%c", &b);
                 if (b == '?')
                 {
-                    Serial.print("#h(");
-                    Serial.print(display.rtcCheckTimerFlag());
-                    Serial.println(")*");
-                    Serial.flush();
+                    SerialBT->print("#h(");
+                    SerialBT->print(display->rtcCheckTimerFlag());
+                    SerialBT->println(")*");
+                    SerialBT->flush();
                 }
                 break;
             case 'i':
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')
                 {
-                    // Serial.println("display.rtcClearTimerFlag()");
-                    display.rtcClearTimerFlag();
+                    // SerialBT->println("display->rtcClearTimerFlag()");
+                    display->rtcClearTimerFlag();
                 }
                 break;
             case 'j':
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')
                 {
-                    // Serial.println("display.rtcDisableTimer()");
-                    display.rtcDisableTimer();
+                    // SerialBT->println("display->rtcDisableTimer()");
+                    display->rtcDisableTimer();
                 }
                 break;
             case 'k':
                 sscanf(s + 3, "%c", &b);
                 if (b == '?')
                 {
-                    Serial.print("#k(");
-                    Serial.print(display.rtcIsSet());
-                    Serial.println(")*");
-                    Serial.flush();
+                    SerialBT->print("#k(");
+                    SerialBT->print(display->rtcIsSet());
+                    SerialBT->println(")*");
+                    SerialBT->flush();
                 }
                 break;
             case 'l':
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')
                 {
-                    // Serial.println("display.rtcReset()");
-                    display.rtcReset();
+                    // SerialBT->println("display->rtcReset()");
+                    display->rtcReset();
                 }
                 break;
             }

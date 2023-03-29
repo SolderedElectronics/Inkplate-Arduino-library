@@ -19,7 +19,6 @@
 #define HOURLY
 #define DAILY
 #define ALERTS
-//#define DARKSKY
 
 class OpenWeatherOneCall
 {
@@ -56,25 +55,6 @@ class OpenWeatherOneCall
         const char *description; // "moderate rain"
         char icon[6];            // "01d"
         int timezone_offset;
-#ifdef DARKSKY
-        // Not supported by OpenWeatherOneCall or legacy names
-        long dayTime;              // 1582151288
-        long sunriseTime;          // 1582112760
-        long sunsetTime;           // 1582151880
-        float temperature;         // 46.38
-        float apparentTemperature; // 41.49
-        float cloudCover;          // 0.02
-        float uvIndex;             // 0
-        float windSpeed;           // 10.22
-        float windGust;            // 10.22
-        int windBearing;           // 348
-        const char *summary;       // "Clear"
-        int precipIntensity;       // 0
-        int precipProbability;     // 0
-        float ozone;               // 323.4
-        int nearestStormDistance;  // 50
-        int nearestStormBearing;   // 4
-#endif
     } current;
 #endif
 
@@ -146,44 +126,6 @@ class OpenWeatherOneCall
         const char *main;        // "moderate rain"
         const char *description; // "moderate rain"
         char icon[6];            // "01d"
-#ifdef DARKSKY
-        // Not supported by OpenWeatherOneCall or legacy names
-        long dayTime;                     // 1582151288
-        long sunriseTime;                 // 1582112760
-        long sunsetTime;                  // 1582151880
-        float moonPhase;                  // 0.89
-        float temperatureHigh;            // 51.24
-        long temperatureHighTime;         // 1582139280
-        float temperatureLow;             // 26.83
-        float temperatureMin;             // 30.17
-        long temperatureLowTime;          // 1582199760
-        float temperatureMax;             // 51.24
-        float apparentTemperatureHigh;    // 50.76
-        long apparentTemperatureHighTime; // 1582139100
-        float apparentTemperatureLow;     // 19.9
-        long apparentTemperatureLowTime;  // 1582199940
-        float dewPoint;                   // 26.79
-        float windSpeed;                  // 6.49
-        float windGust;                   // 24.15
-        long windGustTime;                // 1582131600
-        int windBearing;                  // 324
-        float cloudCover;                 // 0.53
-        float uvIndex;                    // 3
-        long uvIndexTime;                 // 1.3
-        const char *precipType;           // "rain"
-        float precipProbability;          // 0.3
-        float precipIntensity;            // 0.0009
-        float precipIntensityMax;         // 0.0028
-        long precipIntensityMaxTime;      // 1582105560
-        float ozone;                      // 322.6
-        long temperatureMinTime;          // 1582174800
-        long temperatureMaxTime;          // 1582139280
-        float apparentTemperatureMin;     // 24.39
-        long apparentTemperatureMinTime;  // 1582174800
-        float apparentTemperatureMax;     // 50.76
-        long apparentTemperatureMaxTime;  // 1582139100
-        const char *summary;              // "heavy intensity rain"
-#endif
     } forecast[7];
 #endif
 

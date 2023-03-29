@@ -170,24 +170,7 @@ int OpenWeatherOneCall::parseWeather(char *DKEY, char *GKEY, float SEEK_LATITUDE
     current.id = currently["weather"][0]["id"];                             // 500
     current.main = currently["weather"][0]["main"];                         // "rain"
     current.description = currently["weather"][0]["description"];           // "moderate rain"
-#ifndef DARKSKY
     strlcpy(current.icon, currently["weather"][0]["icon"] | "01d", sizeof(current.icon) - 1);
-#endif
-#ifdef DARKSKY
-    // Legacy DarkSky compatibility
-    current.dayTime = (long)currently["dt"] + current.timezone_offset;          // 1586781931
-    current.sunriseTime = (long)currently["sunrise"] + current.timezone_offset; // 1586773262
-    current.sunsetTime = (long)currently["sunset"] + current.timezone_offset;   // 1586820773
-    current.temperature = currently["temp"];                                    // 287.59
-    current.apparentTemperature = currently["feels_like"];                      // 281.42
-    current.cloudCover = currently["clouds"];                                   // 90
-    current.uvIndex = currently["uvi"];                                         // 6.31
-    current.windSpeed = currently["wind_speed"];                                // 10.3
-    current.windGust = currently["wind_gust"];                                  // 14.4
-    current.windBearing = currently["wind_deg"];                                // 170
-    current.summary = currently["weather"][0]["description"];                   // "moderate rain"
-    strlcpy(current.icon, currently["weather"][0]["main"] | "01d", sizeof(current.icon) - 1); // "10d"
-#endif
 #endif
 
 #ifdef MINUTELY
@@ -284,26 +267,6 @@ int OpenWeatherOneCall::parseWeather(char *DKEY, char *GKEY, float SEEK_LATITUDE
         forecast[x].main = daily[x]["weather"][0]["main"];                     // "rain"
         forecast[x].description = daily[x]["weather"][0]["description"];       // "moderate rain"
         strlcpy(forecast[x].icon, daily[x]["weather"][0]["icon"] | "01d", sizeof(forecast[x].icon) - 1); // "10d"
-#ifdef DARKSKY
-        // Legacy DarkSky compatibility
-        forecast[x].dayTime = (long)daily[x]["dt"] + current.timezone_offset;          // 1586793600
-        forecast[x].sunriseTime = (long)daily[x]["sunrise"] + current.timezone_offset; // 1586773262
-        forecast[x].sunsetTime = (long)daily[x]["sunset"] + current.timezone_offset;   // 1586820773
-        forecast[x].temperatureHigh = daily[x]["temp"]["day"];                         // 288.74
-        forecast[x].temperatureLow = daily[x]["temp"]["night"];                        // 286.56
-        forecast[x].temperatureMin = daily[x]["temp"]["min"];                          // 286.56
-        forecast[x].temperatureMax = daily[x]["temp"]["max"];                          // 293.23
-        forecast[x].apparentTemperatureHigh = daily[x]["feels_like"]["day"];           // 280.11
-        forecast[x].apparentTemperatureLow = daily[x]["feels_like"]["night"];          // 280.29
-        forecast[x].dewPoint = daily[x]["dew_point"];                                  // 287.28
-        forecast[x].windSpeed = daily[x]["wind_speed"];                                // 14.2
-        forecast[x].windBearing = daily[x]["wind_deg"];                                // 180
-        forecast[x].cloudCover = daily[x]["clouds"];                                   // 95
-        forecast[x].uvIndex = daily[x]["uvi"];                                         // 6.31
-        forecast[x].precipType = daily[x]["weather"][0]["main"];                       // "Rain"
-        forecast[x].precipIntensity = daily[x]["rain"];                                // 23.31
-        forecast[x].summary = daily[x]["weather"][0]["description"];                   // "moderate rain"
-#endif
     }
     //*************************END OF FOR LOOP
     //****************************************

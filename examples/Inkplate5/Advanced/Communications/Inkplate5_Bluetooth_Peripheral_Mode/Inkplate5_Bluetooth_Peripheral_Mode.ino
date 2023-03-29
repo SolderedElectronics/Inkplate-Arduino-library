@@ -40,14 +40,12 @@ char commandBuffer[BUFFER_SIZE + 1];
 
 void setup()
 {
-    Serial.begin(115200);   // Init serial communication for debugging
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.setTextSize(4); // Scale text to be 4 times bigger then original (5x7 px)
 
     // Init BT communication
     if (!SerialBT.begin("Inkplate5"))
     {
-        Serial.println("An error occurred initializing Bluetooth");
         display.println("An error occurred initializing Bluetooth");
     }
     else
@@ -69,11 +67,10 @@ void loop()
             commandBuffer[i] = commandBuffer[i + 1];
         }
         commandBuffer[BUFFER_SIZE - 1] = SerialBT.read();
-        Serial.print(commandBuffer[BUFFER_SIZE - 1]);
     }
 
     // Function in peripheral.h
-    run(commandBuffer, BUFFER_SIZE);
+    run(commandBuffer, BUFFER_SIZE, &display, &SerialBT);
 
     // Wait a bit
     delay(50);

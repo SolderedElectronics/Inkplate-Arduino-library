@@ -36,7 +36,7 @@ const char *pass = "";
 const char *apiUrl = "https://jsonplaceholder.typicode.com/posts";
 
 // Specify the delay time between 2 POST requests in milliseconds
-#define DELAY_BETWEEN_REQUESTS 10000
+#define DELAY_BETWEEN_REQUESTS 10000 // Here is 10 seconds
 
 // Create objects from included libraries
 WiFiClientSecure client;
@@ -48,7 +48,7 @@ void setup()
     // Init serial communication
     Serial.begin(115200);
 
-    // Init the display
+    // Init library (you should call this function ONLY ONCE)
     display.begin();
 
     // Clear the display and print message
@@ -87,14 +87,19 @@ void loop()
     http.addHeader("Content-Type", "application/json");
 
     // Create a JSON document for serializing data
-    const size_t CAPACITY = JSON_OBJECT_SIZE(1);
+    const size_t CAPACITY = JSON_OBJECT_SIZE(2);
     StaticJsonDocument<CAPACITY> doc;
 
     // Convert the JSON document to a JSON object in order to add data
     JsonObject object = doc.to<JsonObject>();
 
     // Add data in the JSON object
+    // Add some title
     object["title"] = "Hello Inkplate";
+
+    // Add some random number from 0 to 100
+    // In the same way, you can add some sensor readings or something similar
+    object["sensor_reading"] = random(100);
 
     // Serialize the JSON object with your data to a JSON document for sending
     char jsonOutput[128];

@@ -49,7 +49,6 @@ void setup()
     display.partialUpdate();                        // Use partial updates for refreshing the display
     display.setTextSize(2);                         // Use smaller text so everything can fit on display
     printEEPROM();                                  // Read data from EEPROM and display it on screen
-    delay(500);                                     // Wait a little bit...
 }
 
 void loop()
@@ -60,6 +59,7 @@ void loop()
 // Function for clearing EEPROM data
 void clearEEPROM()
 {
+    // Go through each address and clear it (write 0)
     for (int i = 0; i < EEPROM_SIZE; i++)
     {
         EEPROM.write(i, 0);
@@ -70,6 +70,7 @@ void clearEEPROM()
 // Function writes data to EEPROM
 void writeEEPROM()
 {
+    // Go through each address and write current index
     for (int i = 0; i < EEPROM_SIZE; i++)
     {
         EEPROM.write(i, i);
@@ -77,12 +78,16 @@ void writeEEPROM()
     EEPROM.commit();
 }
 
-// Function reads back previously written data and displays it on screen.
+// Function reads back previously written data and displays it on screen
 void printEEPROM()
 {
+    // Go through each address and read a value from it
     for (int i = 0; i < EEPROM_SIZE; i++)
     {
+        // Print read value in decimal 
         display.print(EEPROM.read(i), DEC);
+
+        // Print a comma after each number except the last one
         if (i != EEPROM_SIZE - 1)
             display.print(", ");
     }

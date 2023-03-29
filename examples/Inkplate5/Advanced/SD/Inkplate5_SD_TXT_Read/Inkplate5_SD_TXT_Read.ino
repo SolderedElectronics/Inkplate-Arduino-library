@@ -6,10 +6,10 @@
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   You can open your own .txt file, but in order to this example works properly it should
-   not have more than 500 chars and you should name it text.txt
-
-   This example will show you how to open .txt files and display the content of that file on Inkplate epaper display.
+   This example will show you how to open .txt files, limit the number of characters
+   to read, and display the content of that file on the Inkplate e-paper display.
+   You can open any other .txt file, just make sure that if there are more than 500 chars,
+   increase the MAX_LENGTH to your needs. You can also change the file name.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -25,6 +25,12 @@
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 SdFile file;                     // Create SdFile object used for accessing files on SD card
 
+// Define how many characters will be read from the .txt file. Change if you want to read larger files
+#define MAX_LENGTH 500
+
+// Here is the specified name of the file
+const char fileName[] = "/text.txt";
+
 void setup()
 {
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
@@ -38,9 +44,11 @@ void setup()
         display.println("SD Card ok! Reading data...");
         display.partialUpdate();
 
-        // Try to load text with max lenght of 200 chars.
-        if (!file.open("/text.txt", O_RDONLY))
-        { // If it fails to open, send error message to display and put sd card in sleep mode, otherwise read the file.
+        // Try to load text with a max length of 500 chars. You can change this by changing MAX_LENGTH define
+        if (!file.open(fileName, O_RDONLY))
+        {
+            // If it fails to open, send error message to display and put sd card in sleep mode, otherwise read the
+            // file.
             display.println("File open error");
             display.display();
             display.sdCardSleep();
@@ -49,24 +57,24 @@ void setup()
         {
             display.clearDisplay();    // Clear everything that is stored in frame buffer of epaper
             display.setCursor(0, 0);   // Set print position at the begining of the screen
-            char text[501];            // Array where data from SD card is stored (max 500 chars here)
+            char text[MAX_LENGTH + 1]; // An array where data from an SD card is stored (max 500 chars here plus one for
+                                       // the null terminating char)
             int len = file.fileSize(); // Read how big is file that we are opening
-            if (len > 500)
-                len = 500;         // If it's more than 500 bytes (500 chars), limit to max 500 bytes
-            file.read(text, len);  // Read data from file and save it in text array
-            text[len] = 0;         // Put null terminating char at the and of data
+            if (len > MAX_LENGTH)
+                len = MAX_LENGTH;  // If it's more than 500 bytes (500 chars), limit to max 500 bytes
+            file.read(text, len);  // Read 500 chars from the file and save it in the text array
+            text[len] = 0;         // Put the null terminating char at the end of data
             display.print(text);   // Print data/text
-            display.sdCardSleep(); // Put sd card in sleep mode
+            display.sdCardSleep(); // Put the SD card in sleep mode
             display.display();     // Do a full refresh of display
         }
     }
     else
-    { // If card init was not successful, display error on screen and stop the program (using infinite loop)
+    {
+        // If card init was not successful, display error on screen and stop the program (using infinite loop)
         display.println("SD Card error!");
         display.partialUpdate();
         display.sdCardSleep();
-        while (true)
-            ;
     }
 }
 

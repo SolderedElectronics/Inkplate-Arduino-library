@@ -1,17 +1,16 @@
 /*
    Inkplate5_SD_Pictures example for Soldered Inkplate 5
-   For this example you will need a USB-C cable, Inkplate5 and a SD card loaded with
-   images that can be found inside folder of this example.
+   For this example you will need a USB-C cable, Inkplate5 and a SD card 
+   loaded with images that can be found inside folder of this example.
    Select "Soldered Inkplate5" from Tools -> Board menu.
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   You can open .bmp, .jpeg or .png files (but there are some limitations by the library) that have
-   color depth of 1 bit (BW bitmap), 4 bit, 8 bit and 24 bit AND have resoluton smaller than 800x600
-   or otherwise it won't fit on screen. Format your SD card in standard FAT fileformat.
-
-   This example will show you how you can read .bmp and .jpeg files (pictures) from SD card and
-   display that image on e-paper display.
+   This example will show you how you can read .bmp and .jpeg files (pictures) from an SD card and
+   display that image on the e-paper display. You can open .bmp, .jpeg or .png files (but there are 
+   some limitations by the library) that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and 
+   24 bit AND have resoluton smaller than 960x540 or otherwise it won't fit on screen. Format your
+   SD card in standard FAT fileformat.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -49,7 +48,7 @@ void setup()
             // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
             // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no
             // compression! You can turn of dithering for somewhat faster image load by changing the last 1 to 0, or
-            // removing the 1 argument completely
+            // removing the parameter completely
             display.println("Image open error");
         }
         display.display();
@@ -70,10 +69,10 @@ void setup()
 
         // Now draw a JPEG
         display.clearDisplay();
-        if (!display.drawImage("pyramid.jpg", 100, 0, true, false))
+        if (!display.drawImage("pyramid.jpg", 100, 0, true))
         {
             // If is something failed (wrong filename or wrong format), write error message on the screen.
-            // You can turn off dithering for somewhat faster image load by changing the fifth parameter to false, or
+            // You can turn off dithering for somewhat faster image load by changing the fourth parameter to false, or
             // removing the parameter completely
             display.println("Image open error");
         }

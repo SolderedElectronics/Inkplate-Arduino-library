@@ -42,8 +42,8 @@
 // ---------- CHANGE HERE  -------------:
 
 // Change to your wifi ssid and password
-#define SSID "Soldered"
-#define PASS   "dasduino"
+#define SSID "88ADB5"
+#define PASS "EVW32C0S00035107"
 
 // Openweather api key
 #define API_KEY "515dec0a2bba409a1646e0869a600cda"
@@ -51,7 +51,7 @@
 float myLatitude = 45.560001; // I got this from Wikipedia
 float myLongitude = 18.675880;
 
-bool metric = true; // <------------------------------ TRUE is METRIC, FALSE is IMPERIAL, BLANK is KELVIN
+//bool metric = false; // <------------------------------ TRUE is METRIC, FALSE is IMPERIAL, BLANK is KELVIN
 
 // Delay between API calls
 #define DELAY_MS 59000
@@ -154,7 +154,7 @@ void GetCurrentWeather()
     connectWifi();
 
     Serial.println("Getting weather");
-    OWOC.parseWeather(API_KEY, NULL, myLatitude, myLongitude, metric, NULL);
+    OWOC.parseWeather(API_KEY, NULL, myLatitude, myLongitude, NULL, NULL); //metric predzadnji
     setTime(OWOC.current.dt);
     t = now();
 

@@ -8,7 +8,12 @@
     This example will show you how you can use Inkplate 5 to display API data,
     e.g. Openweather public weather API. It shows the forecast weather for 4 days 
     at 15 o'clock (3 PM). If it's passed 3 PM, the first rectangle shows the 
-    forecast weather for tomorrow at 3 PM.
+    forecast weather for tomorrow at 3 PM. What happens here is basically ESP32 
+    connects to WiFi and sends an API call and the server returns data in JSON 
+    format containing data about weather, then using the library ArduinoJson we 
+    extract only temperature per day from JSON data and show it on Inkplate 5. 
+    After displaying the weather, ESP32 goes to sleep and wakes up every DELAY_MS 
+    milliseconds to show new weather (you can change the time interval).
 
     IMPORTANT:
     Make sure to change your desired city and wifi credentials below.
