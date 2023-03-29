@@ -4,7 +4,7 @@
     Select "Soldered Inkplate5" from Tools -> Board menu.
     Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
     https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
-    
+
     This example will show you how you can use Inkplate 5 to display API data.
     Here we use News API to get headline news and short description and display
     them on the Inkplate screen. For this you will need an API key which you can obtain
@@ -30,10 +30,11 @@
 // Put in your WiFi name (ssid) and password
 char ssid[] = "";
 char pass[] = "";
-char apiKey[] = ""; //You can obtain one here: https://newsapi.org/
+char apiKey[] = ""; // You can obtain one here: https://newsapi.org/
 
 // Delay between API calls in miliseconds (first 60 represents minutes so you can change to your need)
-// Here is set to 1 call per hour, but if you want to change it, have in mind that in the free plan there are only 100 free API calls
+// Here is set to 1 call per hour, but if you want to change it, have in mind that in the free plan there are only 100
+// free API calls
 #define DELAY_MS 60 * 60 * 1000
 
 //-------------------------------------
@@ -45,8 +46,8 @@ char apiKey[] = ""; //You can obtain one here: https://newsapi.org/
 #include "Network.h"
 
 // Include used fonts
-#include "Fonts/Inter12pt7b.h"
 #include "Fonts/GT_Pressura16pt7b.h"
+#include "Fonts/Inter12pt7b.h"
 
 // Create object with all networking functions
 Network network;
@@ -58,7 +59,7 @@ void setup()
 {
     // Begin serial communitcation, sed for debugging
     Serial.begin(115200);
-    
+
     // Initial display settings
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
     display.setTextWrap(false);
@@ -71,11 +72,11 @@ void setup()
 
     // Fetch news. If something went wrong the function returns NULL
     entities = network.getData(apiKey);
-    if(entities == NULL)
+    if (entities == NULL)
     {
-      Serial.println();
-      Serial.println("Error fetching news");
-      ESP.restart();
+        Serial.println();
+        Serial.println("Error fetching news");
+        ESP.restart();
     }
 
     // Draw the news and display it on the screen
@@ -97,23 +98,24 @@ void loop()
 void drawNews(struct news *entities)
 {
     uint8_t coll = 0; // For keeping track of columns
-    uint16_t y = 32; // Y coordinate for drawing
+    uint16_t y = 32;  // Y coordinate for drawing
     uint8_t rows = 0; // For keeping track of rows
-    int i = 0; // For each piece of news
+    int i = 0;        // For each piece of news
 
     // Printing the news until we fill 3 columns
     // If an entire piece of news doesn't fit on the screen, don't print it
     while (coll < 2)
-    {    
+    {
         display.setCursor(10 + 320 * coll, y); // Set the cursor to the beginning of the current column
-        display.setFont(&GT_Pressura16pt7b); // Set the font for the title
-        uint16_t cnt = 0; // Index of each character in the title or description that is printing 
+        display.setFont(&GT_Pressura16pt7b);   // Set the font for the title
+        uint16_t cnt = 0;                      // Index of each character in the title or description that is printing
 
         // Let's print the title
         while (*(entities[i].title + cnt) != '\0')
         {
             // Go to the new line if needed
-            if (display.getCursorX() > 320 * coll + 280 || (*(entities[i].title + cnt) == ' ' && display.getCursorX() > 320 * coll + 245))
+            if (display.getCursorX() > 320 * coll + 280 ||
+                (*(entities[i].title + cnt) == ' ' && display.getCursorX() > 320 * coll + 245))
             {
                 *(entities[i].title + cnt) == ' ' ? cnt++ : 0;
                 rows++;
@@ -147,7 +149,8 @@ void drawNews(struct news *entities)
         while (*(entities[i].description + cnt) != '\0')
         {
             // Go to the new line (row) if needed
-            if (display.getCursorX() > 320 * coll + 280 || (*(entities[i].description + cnt) == ' ' && display.getCursorX() > 320 * coll + 255))
+            if (display.getCursorX() > 320 * coll + 280 ||
+                (*(entities[i].description + cnt) == ' ' && display.getCursorX() > 320 * coll + 255))
             {
                 *(entities[i].description + cnt) == ' ' ? cnt++ : 0;
                 rows++;

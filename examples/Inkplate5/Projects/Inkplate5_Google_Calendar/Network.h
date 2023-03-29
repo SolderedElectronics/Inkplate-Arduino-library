@@ -14,30 +14,27 @@ If you have any questions about licensing, please contact hello@soldered.com
 Distributed as-is; no warranty is given.
 */
 
-// Include needed libraries
 #include "Arduino.h"
-#include "ArduinoJson.h"
 #include "HTTPClient.h"
 #include "WiFi.h"
 #include "WiFiClientSecure.h"
-
-// Struct for each piece of news
-struct news
-{
-    char title[128];
-    char description[1000];
-};
 
 #ifndef NETWORK_H
 #define NETWORK_H
 
 // All functions defined in Network.cpp
+
 class Network
 {
   public:
     // Functions we can access in main file
     void begin(char *ssid, char *pass);
-    struct news *getData(char *apiKey);
+    void getTime(char *timeStr, long offset = 0, int timeZone = 0);
+    bool getData(char *calendarURL, char *data);
+
+  private:
+    // Functions called from within our class
+    void setTime();
 };
 
 #endif

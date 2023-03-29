@@ -8,10 +8,9 @@
     For support, please reach over forums: https://forum.soldered.com/
     For more info about the product, please check: www.inkplate.io
 
-    This code is released under the GNU Lesser General Public License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
-    Please review the LICENSE file included with this example.
-    If you have any questions about licensing, please contact hello@soldered.com
-    Distributed as-is; no warranty is given.
+    This code is released under the GNU Lesser General Public License v3.0:
+   https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file included with this example. If you have
+   any questions about licensing, please contact hello@soldered.com Distributed as-is; no warranty is given.
 */
 
 #include "Network.h"
@@ -42,7 +41,7 @@ void Network::begin(char *ssid, char *pass)
 }
 
 // Get data from the News API
-struct news* Network::getData(char *apiKey)
+struct news *Network::getData(char *apiKey)
 {
     // Pointer to the struct where will be stored the news data
     struct news *ent = NULL;
@@ -83,7 +82,7 @@ struct news* Network::getData(char *apiKey)
 
     // Making URL for GET request by adding the API key at the end
     char url[128];
-    sprintf(url, "https://newsapi.org/v2/top-headlines?country=us&apiKey=%s", apiKey);    
+    sprintf(url, "https://newsapi.org/v2/top-headlines?country=us&apiKey=%s", apiKey);
 
     // Begin HTTP connection and send get request to the news api
     Serial.println("Loading buffer...");
@@ -114,49 +113,49 @@ struct news* Network::getData(char *apiKey)
     // If there is no error and the status is ok, allocate memory for the news and store it
     if (!error && strcmp(doc["status"], "ok") == 0)
     {
-            // Get the number of articles to fetch
-            int n = doc["articles"].size();
+        // Get the number of articles to fetch
+        int n = doc["articles"].size();
 
-            // Allocate memory for n articles
-            ent = (struct news*)ps_malloc(n * sizeof(struct news));
-            if(ent == NULL)
+        // Allocate memory for n articles
+        ent = (struct news *)ps_malloc(n * sizeof(struct news));
+        if (ent == NULL)
+        {
+            // Return NULL to the main program if the memory isn't allocated successfully
+            return NULL;
+        }
+
+        // Go through each article and store information about it
+        for (int i = 0; i < n; i++)
+        {
+            // Temporary pointers
+            const char *temp_title = doc["articles"][i]["title"].as<const char *>();
+            const char *temp_description = doc["articles"][i]["description"].as<const char *>();
+
+            // Copy values from temporary pointers to the main structure for news
+            // If there is no title or description, store  "\r\n"
+            if (temp_title != NULL)
             {
-              // Return NULL to the main program if the memory isn't allocated successfully
-              return NULL;
+                strcpy(ent[i].title, temp_title);
+            }
+            else
+            {
+                strcpy(ent[i].title, "\r\n");
             }
 
-            // Go through each article and store information about it
-            for(int i = 0; i < n; i++)
+            if (temp_description != NULL)
             {
-                // Temporary pointers
-                const char *temp_title = doc["articles"][i]["title"].as<const char*>();
-                const char *temp_description = doc["articles"][i]["description"].as<const char*>();
-
-                // Copy values from temporary pointers to the main structure for news
-                // If there is no title or description, store  "\r\n"
-                if (temp_title != NULL)
-                {
-                    strcpy(ent[i].title, temp_title);
-                }
-                else
-                {
-                    strcpy(ent[i].title, "\r\n");
-                }
-                    
-                if (temp_description != NULL)
-                {
-                    strcpy(ent[i].description, temp_description);
-                }
-                else
-                {
-                    strcpy(ent[i].description, "\r\n");
-                }
+                strcpy(ent[i].description, temp_description);
             }
+            else
+            {
+                strcpy(ent[i].description, "\r\n");
+            }
+        }
 
-            // Print the message on the Serial Monitor
-            Serial.print("Fetched ");
-            Serial.print(n);
-            Serial.println(" news");
+        // Print the message on the Serial Monitor
+        Serial.print("Fetched ");
+        Serial.print(n);
+        Serial.println(" news");
     }
     else
     {
