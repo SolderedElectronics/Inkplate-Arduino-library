@@ -127,7 +127,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     uint8_t pixelBuffer[E_INK_WIDTH * 4 + 5];
 #endif
 
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE4) 
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE4)
     int8_t ditherBuffer[3][16][E_INK_WIDTH + 20];
 
     int8_t (*ditherBuffer_r)[E_INK_WIDTH + 20] = ditherBuffer[0];

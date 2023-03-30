@@ -311,7 +311,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
         break;
     case 3:
         _swap_int16_t(x0, y0);
-         y0 = width() - y0 - 1;
+        y0 = width() - y0 - 1;
         x0 = height() - x0 - 1;
         break;
     }
