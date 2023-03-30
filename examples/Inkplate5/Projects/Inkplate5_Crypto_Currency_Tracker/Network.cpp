@@ -27,9 +27,6 @@
 // Must be installed for this example to work
 #include <ArduinoJson.h>
 
-// Dynamic Json from ArduinoJson library
-DynamicJsonDocument doc(30000);
-
 /**
  * @brief       Connect to WiFi with given SSID and password
  * 
@@ -111,6 +108,9 @@ void Network::getTime(char *timeStr, int timeZone)
 */
 bool Network::getData(double *data, char * currency)
 {
+    // Dynamic Json from ArduinoJson library
+    DynamicJsonDocument doc(30000);
+
     bool f = 0;
 
     // If not connected to wifi reconnect wifi

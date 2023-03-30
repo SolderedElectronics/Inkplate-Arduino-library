@@ -32,16 +32,16 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
 
 // Delay between API calls in miliseconds (first 60 represents minutes so you can change to your need)
 #define DELAY_MS 3 * 60 * 1000
 
 // OPTIONAL:
 // change to a different currency
-char currency[] = "bitcoin";
-char currencyAbbr[] = "BTC";
+char currency[] = "stellar";
+char currencyAbbr[] = "XLM";
 
 // You can find your currency id here:
 // https://www.coingecko.com/en/all-cryptocurrencies
@@ -177,7 +177,7 @@ void drawGraph()
         maxData = max(maxData, data[i]);
     }
 
-    double span = max(0.3D, (double)abs(maxData - minData));
+    double span = max(0.01D, (double)abs(maxData - minData));
 
     // Copy current, min and max data to char arrays to be displayed
     dtostrf(data[30], 8, 2, current);
