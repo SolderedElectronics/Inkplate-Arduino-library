@@ -229,7 +229,7 @@ void Shapes::drawGradientLine(int x1, int y1, int x2, int y2, int color1, int co
     }
 }
 
-#ifdef ARDUINO_INKPLATE2
+#if defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
 
 // Function writes text with shadow
 void Shapes::drawTextWithShadow(int x, int y, const char *_c, uint8_t _color1, uint8_t color2)

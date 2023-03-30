@@ -49,7 +49,7 @@ struct waveformData
 class Inkplate : public System, public Graphics
 {
   public:
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
     Inkplate();
 #else
     Inkplate(uint8_t _mode);
@@ -78,7 +78,7 @@ class Inkplate : public System, public Graphics
     bool getPanelDeepSleepState();
 
     void setIOExpanderForLowPower();
-#elif defined(ARDUINO_INKPLATE2)
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
     void clean();
 
     // These 4 functions need to refactored because conflicting functionalities
@@ -115,7 +115,7 @@ class Inkplate : public System, public Graphics
     void precalculateGamma(uint8_t *c, float gamma);
 
 
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
     bool _panelState = false;
 
     void resetPanel();
@@ -152,7 +152,7 @@ class Inkplate : public System, public Graphics
     uint8_t waveform3Bit[8][9] = WAVEFORM3BIT;
 #endif
 
-#ifdef ARDUINO_INKPLATE2
+#if defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
     bool waitForEpd(uint16_t _timeout);
 #endif
 };

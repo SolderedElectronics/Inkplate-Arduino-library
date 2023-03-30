@@ -18,7 +18,7 @@
 
 #include "Image.h"
 
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
 
 extern Image *_imagePtrJpeg;
 /*
@@ -28,9 +28,22 @@ static uint32_t pallete[] = {
 };
 */
 
-static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0x438A1C, 0x555E7E, 0x8A4C5B, 0xFFF338, 0xE87E00, 0xC2A4F4};
+#if defined(ARDUINO_INKPLATECOLOR)
 
+static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0x438A1C, 0x555E7E, 0x8A4C5B, 0xFFF338, 0xE87E00, 0xC2A4F4};
 static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
+
+#elif defined(ARDUINO_INKPLATE2)
+
+static uint32_t pallete[] = {0xFFFFFF, 0x000000, 0xFF0000};
+static unsigned int width = E_INK_HEIGHT, height = E_INK_WIDTH;
+
+#elif defined(ARDUINO_INKPLATE4)
+
+static uint32_t pallete[] = {0xFFFFFF, 0x000000, 0xFF0000};
+static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
+
+#endif
 
 /**
  * @brief       findClosestPalette return closes pallete for given pixel

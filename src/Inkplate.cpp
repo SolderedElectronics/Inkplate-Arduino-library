@@ -19,14 +19,14 @@
 
 #include "Inkplate.h"
 
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
 Inkplate::Inkplate() : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
 #else
 
 Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Graphics(E_INK_WIDTH, E_INK_HEIGHT)
 #endif
 {
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE4)
     setDisplayMode(_mode);
 #endif
 }
@@ -34,15 +34,18 @@ Inkplate::Inkplate(uint8_t _mode) : Adafruit_GFX(E_INK_WIDTH, E_INK_HEIGHT), Gra
 /**
  * @brief       clearDisplay function clears memory buffer for display
  *
- * @note        This does not clears display, only buffer, you need to call
- * display() function after this to clear display
+ * @note        This does not clear the actual display, only the memory buffer, you need to call
+ * display() function after this to clear the display
  */
 void Inkplate::clearDisplay()
 {
 #if defined(ARDUINO_INKPLATECOLOR)
     memset(DMemory4Bit, WHITE << 4 | WHITE, E_INK_WIDTH * E_INK_HEIGHT / 2);
 #elif defined(ARDUINO_INKPLATE2)
-    memset(DMemory4Bit, 255, E_INK_WIDTH * E_INK_HEIGHT / 4);
+    memset(DMemory4Bit, 0xFF, E_INK_WIDTH * E_INK_HEIGHT / 4);
+#elif defined(ARDUINO_INKPLATE4)
+    memset(DMemory4Bit, 0xFF, (E_INK_WIDTH * E_INK_HEIGHT / 8));
+    memset(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8), 0x00, (E_INK_WIDTH * E_INK_HEIGHT / 8));
 #else
     // Clear 1 bit per pixel display buffer
     if (getDisplayMode() == 0)
@@ -54,7 +57,7 @@ void Inkplate::clearDisplay()
 #endif
 }
 
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE4)
 
 /**
  * @brief       display function update display with new data from buffer
