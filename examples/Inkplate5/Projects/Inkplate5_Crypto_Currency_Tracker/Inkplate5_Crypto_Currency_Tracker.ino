@@ -32,16 +32,17 @@
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Delay between API calls in miliseconds (first 60 represents minutes so you can change to your need)
 #define DELAY_MS 3 * 60 * 1000
 
 // OPTIONAL:
-// change to a different currency
-char currency[] = "stellar";
-char currencyAbbr[] = "XLM";
+// Change to a different currency
+// Use lowercase letters
+char currency[] = "bitcoin";
+char currencyAbbr[] = "BTC";
 
 // You can find your currency id here:
 // https://www.coingecko.com/en/all-cryptocurrencies
