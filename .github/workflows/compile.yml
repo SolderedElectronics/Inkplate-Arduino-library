@@ -12,7 +12,15 @@ jobs:
             additional-sketch-paths: |
               - examples/Inkplate6
           - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate6V2
+            additional-sketch-paths: |
+              - examples/Inkplate6
+          - board:
               fqbn: Inkplate_Boards:esp32:Inkplate10
+            additional-sketch-paths: |
+              - examples/Inkplate10
+          - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate10V2
             additional-sketch-paths: |
               - examples/Inkplate10
           - board:
@@ -20,14 +28,21 @@ jobs:
             additional-sketch-paths: |
               - examples/Inkplate6PLUS
           - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate6plusV2
+            additional-sketch-paths: |
+              - examples/Inkplate6PLUS
+          - board:
               fqbn: Inkplate_Boards:esp32:Inkplate6COLOR
             additional-sketch-paths: |
               - examples/Inkplate6COLOR
           - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate5
+            additional-sketch-paths: |
+              - examples/Inkplate5
+          - board:
               fqbn: Inkplate_Boards:esp32:Inkplate2
             additional-sketch-paths: |
               - examples/Inkplate2
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -38,7 +53,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           platforms: |
-            - source-url: https://github.com/e-radionicacom/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json
+            - source-url: https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/raw/dev/package_Dasduino_Boards_index.json
               name: Inkplate_Boards:esp32
 
           fqbn: ${{ matrix.board.fqbn }}

@@ -13,7 +13,7 @@
  *              licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *              warranty is given.
  *
- * @authors     @ e-radionica.com
+ * @authors     @ Soldered
  ***************************************************/
 
 #ifndef __SYSTEM_H__
@@ -41,7 +41,7 @@
 #define RTC_DAY_ADDR    0x07
 #define RTC_WDAY_ADDR   0x08
 #define RTC_MONTH_ADDR  0x09
-// years 0-99; calculate real year = 2000 + RCC reg year
+// years 0-99; calculate real year = 2000 + RTC reg year
 #define RTC_YEAR_ADDR 0x0A
 // registar overview - alarm reg
 #define RTC_SECOND_ALARM 0x0B
@@ -72,13 +72,19 @@
 #define RTC_ALARM_MATCH_DHHMMSS 0b00001111
 #define RTC_ALARM_MATCH_WHHMSS  0b00011111
 
-#ifdef ARDUINO_INKPLATE6PLUS
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
 #include "Frontlight.h"
 #include "Touch.h"
 #endif
 
-#ifndef ARDUINO_INKPLATE2
+#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6PLUS)
 #include "Mcp.h"
+#endif
+
+#if defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
+    defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATECOOL) || defined(ARDUINO_INKPLATE5) ||                   \
+    defined(ARDUINO_INKPLATE4)
+#include "Pcal.h"
 #endif
 
 #include "defines.h"
@@ -87,12 +93,9 @@
  * @brief       System class for interaction with panel harware
  */
 class System : public Esp,
+               virtual public Expander,
 
-#ifndef ARDUINO_INKPLATE2
-               virtual public Mcp,
-#endif
-
-#ifdef ARDUINO_INKPLATE6PLUS
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
                public Touch,
                public Frontlight,
 #endif
@@ -104,17 +107,18 @@ class System : public Esp,
     void setPanelState(uint8_t s);
     uint8_t getPanelState();
 
-#ifndef ARDUINO_INKPLATE2
-
-    void setSdCardOk(int16_t s);
-    int16_t getSdCardOk();
+#if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATECOLOR)
 
     int8_t readTemperature();
-
     uint8_t readTouchpad(uint8_t _pad);
-    double readBattery();
+#endif
 
+#ifndef ARDUINO_INKPLATE2
+    double readBattery();
+    void setSdCardOk(int16_t s);
+    int16_t getSdCardOk();
     int16_t sdCardInit();
+    void sdCardSleep();
 
     SdFat getSdFat();
     SPIClass *getSPIptr();

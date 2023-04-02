@@ -13,7 +13,7 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     e-radionica.com
+ * @authors     Soldered
  ***************************************************/
 
 #include "Image.h"
@@ -116,7 +116,7 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
  */
 bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c, uint8_t bg)
 {
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE4)
     drawBitmap3Bit(x, y, buf, w, h);
     return 1;
 #elif defined(ARDUINO_INKPLATE2)
@@ -266,7 +266,7 @@ bool Image::drawImage(const char *path, const Format &format, const Position &po
  */
 void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)
 {
-#if !defined(ARDUINO_INKPLATECOLOR) & !defined(ARDUINO_INKPLATE2)
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE2)
     if (getDisplayMode() != INKPLATE_3BIT)
         return;
 #endif

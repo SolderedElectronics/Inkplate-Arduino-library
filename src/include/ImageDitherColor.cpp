@@ -13,12 +13,12 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     e-radionica.com
+ * @authors     Soldered
  ***************************************************/
 
 #include "Image.h"
 
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
 
 extern Image *_imagePtrJpeg;
 
@@ -38,6 +38,11 @@ static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
 
 static uint32_t pallete[] = {0xFFFFFF, 0x000000, 0xFF0000};
 static unsigned int width = E_INK_HEIGHT, height = E_INK_WIDTH;
+
+#elif defined(ARDUINO_INKPLATE4)
+
+static uint32_t pallete[] = {0xFFFFFF, 0x000000, 0xFF0000};
+static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
 
 #endif
 

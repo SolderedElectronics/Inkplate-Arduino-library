@@ -1,8 +1,8 @@
 /**
  **************************************************
  *
- * @file        Inkplate5.cpp
- * @brief       Basic funtions for controling inkplate 5
+ * @file        Inkplate6.cpp
+ * @brief       Basic funtions for controling inkplate 6
  *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -14,9 +14,12 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     @ e-radionica.com
+ * @authors     @ Soldered
  ***************************************************/
 
+/**
+ * Includes
+ */
 #include "../Inkplate.h"
 #include "../include/Graphics.h"
 #include "../include/defines.h"
@@ -37,27 +40,24 @@ bool Inkplate::begin(void)
 
     Wire.begin();
 
-#ifndef ARDUINO_INKPLATECOLOR
     for (uint32_t i = 0; i < 256; ++i)
         pinLUT[i] = ((i & B00000011) << 4) | (((i & B00001100) >> 2) << 18) | (((i & B00010000) >> 4) << 23) |
                     (((i & B11100000) >> 5) << 25);
-#endif
 
-#ifdef ARDUINO_ESP32_DEV
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, HIGH);
-#else
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, LOW);
-#endif
 
-    memset(mcpRegsInt, 0, 22);
-    memset(mcpRegsEx, 0, 22);
-    mcpBegin(MCP23017_INT_ADDR, mcpRegsInt);
-    mcpBegin(MCP23017_EXT_ADDR, mcpRegsEx);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, VCOM, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, GPIO0_ENABLE, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, GPIO0_ENABLE, HIGH);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
+
+    memset(ioRegsInt, 0, 22);
+    memset(ioRegsEx, 0, 22);
+
+    ioBegin(IO_INT_ADDR, ioRegsInt);
+    ioBegin(IO_EXT_ADDR, ioRegsEx);
+
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, VCOM, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, PWRUP, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, WAKEUP, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, GPIO0_ENABLE, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, GPIO0_ENABLE, HIGH);
 
     WAKEUP_SET;
     delay(1);
@@ -74,29 +74,37 @@ bool Inkplate::begin(void)
     // Set all pins of seconds I/O expander to outputs, low.
     // For some reason, it draw more current in deep sleep when pins are set as
     // inputs...
+
     for (int i = 0; i < 15; i++)
     {
-        pinModeInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, OUTPUT);
-        digitalWriteInternal(MCP23017_EXT_ADDR, mcpRegsEx, i, LOW);
+        pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);
+        digitalWriteInternal(IO_EXT_ADDR, ioRegsEx, i, LOW);
     }
 
     // For same reason, unused pins of first I/O expander have to be also set as
     // outputs, low.
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 13, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 14, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 15, OUTPUT);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 13, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 14, LOW);
-    digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, 15, LOW);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 14, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 15, LOW);
+
+    // Set SPI pins to input to reduce power consumption in deep sleep
+    pinMode(12, INPUT);
+    pinMode(13, INPUT);
+    pinMode(14, INPUT);
+    pinMode(15, INPUT);
+
+    // And also disable uSD card supply
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, INPUT);
 
     // CONTROL PINS
     pinMode(0, OUTPUT);
     pinMode(2, OUTPUT);
     pinMode(32, OUTPUT);
     pinMode(33, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, OE, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, GMOD, OUTPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, SPV, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, OE, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, GMOD, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, SPV, OUTPUT);
 
     // DATA PINS
     pinMode(4, OUTPUT); // D0
@@ -109,43 +117,58 @@ bool Inkplate::begin(void)
     pinMode(27, OUTPUT); // D7
 
     // TOUCHPAD PINS
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 10, INPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 11, INPUT);
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 12, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 10, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, INPUT);
 
     // Battery voltage Switch MOSFET
-    pinModeInternal(MCP23017_INT_ADDR, mcpRegsInt, 9, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
 
+    // Allocate the memory for the 1 bit frame buffer
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
+
+    // Allocate the memory for the partial update buffer
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _pBuffer = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);
+
+    // Allocate the memory for the 3 bit buffer (each pixel is stored with 4 bits).
     DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 2);
-    GLUT = (uint32_t *)malloc(256 * 8 * sizeof(uint32_t));
-    GLUT2 = (uint32_t *)malloc(256 * 8 * sizeof(uint32_t));
+
+    // Allocate the memory for the pixel to GPIO conversion
+    GLUT = (uint32_t *)malloc(256 * 9 * sizeof(uint32_t));
+    GLUT2 = (uint32_t *)malloc(256 * 9 * sizeof(uint32_t));
+
+    // Check if the each and every buffer is really allocated. If not, return error!
     if (DMemoryNew == NULL || _partial == NULL || _pBuffer == NULL || DMemory4Bit == NULL || GLUT == NULL ||
         GLUT2 == NULL)
     {
         return 0;
     }
+
+    // Init all the buffers
     memset(DMemoryNew, 0, E_INK_WIDTH * E_INK_HEIGHT / 8);
     memset(_partial, 0, E_INK_WIDTH * E_INK_HEIGHT / 8);
     memset(_pBuffer, 0, E_INK_WIDTH * E_INK_HEIGHT / 4);
     memset(DMemory4Bit, 255, E_INK_WIDTH * E_INK_HEIGHT / 2);
 
-    for (int j = 0; j < 8; ++j)
+    // Calcualte LUT for pixel to GPIO conversion.
+    for (int i = 0; i < 9; ++i)
     {
-        for (uint32_t i = 0; i < 256; ++i)
+        for (uint32_t j = 0; j < 256; ++j)
         {
-            uint8_t z = (waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j]);
-            GLUT[j * 256 + i] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
+            uint8_t z = (waveform3Bit[j & 0x07][i] << 2) | (waveform3Bit[(j >> 4) & 0x07][i]);
+            GLUT[i * 256 + j] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
                                 (((z & B00010000) >> 4) << 23) | (((z & B11100000) >> 5) << 25);
-            z = ((waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j])) << 4;
-            GLUT2[j * 256 + i] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
+            z = ((waveform3Bit[j & 0x07][i] << 2) | (waveform3Bit[(j >> 4) & 0x07][i])) << 4;
+            GLUT2[i * 256 + j] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
                                  (((z & B00010000) >> 4) << 23) | (((z & B11100000) >> 5) << 25);
         }
     }
 
+    // If everything went ok, set the flag to 1 (preventing memory leak if the begin is called multiple times).
     _beginDone = 1;
+
+    // Return succes!
     return 1;
 }
 
@@ -168,37 +191,55 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
     if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
         return;
 
+    // set x, y depending on selected rotation
     switch (rotation)
     {
-    case 1:
+    case 1: // 90 degree left
         _swap_int16_t(x0, y0);
         x0 = height() - x0 - 1;
         break;
-    case 2:
+    case 2: // 180 degree, or upside down
         x0 = width() - x0 - 1;
         y0 = height() - y0 - 1;
         break;
-    case 3:
+    case 3: // 90 degree right
         _swap_int16_t(x0, y0);
         y0 = width() - y0 - 1;
         break;
     }
 
+    // If the 1 bit mode is used, pixels are packed 1 bit = 1 pixel in frame buffer
     if (getDisplayMode() == 0)
     {
-        int x = x0 / 8;
-        int x_sub = x0 % 8;
-        uint8_t temp = *(_partial + (E_INK_WIDTH / 8 * y0) + x);
-        *(_partial + (E_INK_WIDTH / 8 * y0) + x) = (~pixelMaskLUT[x_sub] & temp) | (color ? pixelMaskLUT[x_sub] : 0);
+        // Divide by 8 to find a byte.
+        int x = x0 >> 3;
+
+        // Get the remainder of the division to find a exact bit in the byte that needs to be modified.
+        int x_sub = x0 & 7;
+
+        // Save the currnet state of the byte in the frame buffer.
+        uint8_t temp = *(_partial + (E_INK_WIDTH / 8) * y0 + x);
+
+        // Modify the pixel. First clear the pixel by writing zero then write the 1 if the pixel is set.
+        *(_partial + (E_INK_WIDTH / 8) * y0 + x) = (~pixelMaskLUT[x_sub] & temp) | (color ? pixelMaskLUT[x_sub] : 0);
     }
     else
     {
+        // If 3 bit mode is used, constrain the color value (only 8 possible colors are available).
         color &= 7;
-        int x = x0 / 2;
-        int x_sub = x0 % 2;
+
+        // Divide by two to find a byte
+        int x = x0 >> 1;
+
+        //  Get the remainder of the division to find if the lower or upper 4 bits are needed.
+        int x_sub = x0 & 1;
+
+        // Store the current value of the byte.
         uint8_t temp;
-        temp = *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + x);
-        *(DMemory4Bit + E_INK_WIDTH / 2 * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
+        temp = *(DMemory4Bit + (E_INK_WIDTH / 2) * y0 + x);
+
+        // Modify the specific pixel by writing all zeros into lower or upper 4 bits and set the needed color.
+        *(DMemory4Bit + (E_INK_WIDTH / 2) * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
     }
 }
 
@@ -210,91 +251,149 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
  *              if set to 1, it will disable turning supply for eink after
  *              display update in order to save some time needed for power supply
  *              to save some time at next display update or increase refreshing speed
- *
  */
 void Inkplate::display1b(bool leaveOn)
 {
-    for (int i = 0; i < (E_INK_HEIGHT * E_INK_WIDTH) / 8; i++)
-    {
-        *(DMemoryNew + i) &= *(_partial + i);
-        *(DMemoryNew + i) |= (*(_partial + i));
-    }
-    uint32_t _pos;
+    // Copy everything from partial buffer to the main buffer.
+    memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
+
+    // Variables for data handling.
+    // Variable for GPIOs.
+    uint32_t _send;
+
+    // Variable for the EPD data LUT.
     uint8_t data;
+
+    // Variable for current pixel data
     uint8_t dram;
 
+    // Check if epaper power supply is successfully turned on.
+    // If not, skip the update (if there is no power to the epaper, sending data to it can damage the epaper!).
     if (!einkOn())
         return;
 
-    clean(0, 17);
-    clean(1, 17);
-    clean(0, 17);
-    clean(1, 17);
-    for (int k = 0; k < 4; k++)
+    // Clear the display by flashing epaper display black, white, black white.
+    clean(0, 1);
+    clean(1, 14);
+    clean(2, 1);
+    clean(0, 14);
+    clean(2, 1);
+    clean(1, 14);
+    clean(2, 1);
+    clean(0, 14);
+    clean(2, 1);
+
+    // First send the only black pixels.
+    for (int k = 0; k < 5; ++k)
     {
-        _pos = (E_INK_HEIGHT * E_INK_WIDTH / 8) - 1;
+        uint8_t *DMemoryNewPtr = DMemoryNew + (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
         vscan_start();
-        for (int i = 0; i < E_INK_HEIGHT; i++)
+        for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            dram = ~(*(DMemoryNew + _pos));
-            data = LUTW[(dram >> 4) & 0x0F];
-            hscan_start(pinLUT[data]);
-            data = LUTW[dram & 0x0F];
-            GPIO.out_w1ts = pinLUT[data] | CL;
+            dram = *(DMemoryNewPtr--);
+            data = LUTB[dram >> 4];
+            _send = pinLUT[data];
+            hscan_start(_send);
+            data = LUTB[dram & 0x0F];
+            _send = pinLUT[data];
+            GPIO.out_w1ts = (_send) | CL;
             GPIO.out_w1tc = DATA | CL;
-            _pos--;
-            for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); j++)
+
+            for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); ++j)
             {
-                dram = ~(*(DMemoryNew + _pos));
-                data = LUTW[(dram >> 4) & 0x0F];
-                GPIO.out_w1ts = pinLUT[data] | CL;
+                dram = *(DMemoryNewPtr--);
+                data = LUTB[dram >> 4];
+                _send = pinLUT[data];
+                GPIO.out_w1ts = (_send) | CL;
                 GPIO.out_w1tc = DATA | CL;
-                data = LUTW[dram & 0x0F];
-                GPIO.out_w1ts = pinLUT[data] | CL;
+                data = LUTB[dram & 0x0F];
+                _send = pinLUT[data];
+                GPIO.out_w1ts = (_send) | CL;
                 GPIO.out_w1tc = DATA | CL;
-                _pos--;
             }
-            GPIO.out_w1ts = CL;
+
+            // Clock the last byte one more time.
+            GPIO.out_w1ts = _send | CL;
             GPIO.out_w1tc = DATA | CL;
             vscan_end();
         }
+
+        // Wait 230 microseconds between the phases / frames (recorded from timing controller).
         delayMicroseconds(230);
     }
 
-    _pos = (E_INK_HEIGHT * E_INK_WIDTH / 8) - 1;
+    // Send only one frame / phase of black and white pixels
+    uint16_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
     vscan_start();
-    for (int i = 0; i < E_INK_HEIGHT; i++)
+    for (int i = 0; i < E_INK_HEIGHT; ++i)
     {
         dram = *(DMemoryNew + _pos);
-        data = LUT2[(dram >> 4) & 0x0F];
-        hscan_start(pinLUT[data]);
+        data = LUT2[dram >> 4];
+        _send = pinLUT[data];
+        hscan_start(_send);
         data = LUT2[dram & 0x0F];
-        GPIO.out_w1ts = (pinLUT[data]) | CL;
+        _send = pinLUT[data];
+        GPIO.out_w1ts = (_send) | CL;
         GPIO.out_w1tc = DATA | CL;
         _pos--;
-        for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); j++)
+        for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); ++j)
         {
             dram = *(DMemoryNew + _pos);
-            data = LUT2[(dram >> 4) & 0x0F];
-            GPIO.out_w1ts = (pinLUT[data]) | CL;
+            data = LUT2[dram >> 4];
+            _send = pinLUT[data];
+            GPIO.out_w1ts = (_send) | CL;
             GPIO.out_w1tc = DATA | CL;
             data = LUT2[dram & 0x0F];
-            GPIO.out_w1ts = (pinLUT[data]) | CL;
+            _send = pinLUT[data];
+            GPIO.out_w1ts = (_send) | CL;
             GPIO.out_w1tc = DATA | CL;
             _pos--;
         }
-        GPIO.out_w1ts = CL;
+
+        // Clock the last byte one more time.
+        GPIO.out_w1ts = _send | CL;
         GPIO.out_w1tc = DATA | CL;
         vscan_end();
     }
+
+    // Wait 230 microseconds between the phases / frames (recorded from timing controller).
     delayMicroseconds(230);
 
-    clean(2, 2);
-    clean(3, 1);
+    // Send discharge to the every pixel of the epaper display (without that pixels would be blurry).
+    vscan_start();
+    for (int i = 0; i < E_INK_HEIGHT; ++i)
+    {
+        dram = *(DMemoryNew + _pos);
+        data = 0;
+        _send = pinLUT[data];
+        hscan_start(_send);
+        data = 0;
+        GPIO.out_w1ts = (_send) | CL;
+        GPIO.out_w1tc = DATA | CL;
+        for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); ++j)
+        {
+            GPIO.out_w1ts = (_send) | CL;
+            GPIO.out_w1tc = DATA | CL;
+            GPIO.out_w1ts = (_send) | CL;
+            GPIO.out_w1tc = DATA | CL;
+        }
+
+        // Clock the last byte one more time.
+        GPIO.out_w1ts = _send | CL;
+        GPIO.out_w1tc = DATA | CL;
+        vscan_end();
+    }
+
+    // Wait 230 microseconds between the phases / frames (recorded from timing controller).
+    delayMicroseconds(230);
+
     vscan_start();
 
+    // If is needed to leave the epaper power supply on, do not turn it of.
     if (!leaveOn)
         einkOff();
+
+    // Remove block on the partial updates (needed if the first thing after power up is partial update).
     _blockPartial = 0;
 }
 
@@ -306,22 +405,32 @@ void Inkplate::display1b(bool leaveOn)
  *              display update in order to save some time needed for power supply
  *              to save some time at next display update or increase refreshing speed
  */
-void IRAM_ATTR Inkplate::display3b(bool leaveOn)
+void Inkplate::display3b(bool leaveOn)
 {
+    // Check if epaper power supply is successfully turned on.
+    // If not, skip the update (if there is no power to the epaper, sending data to it can damage the epaper!).
     if (!einkOn())
         return;
 
-    clean(0, 17);
-    clean(1, 17);
-    clean(0, 17);
-    clean(1, 17);
+    // Clear the display by flashing epaper display black, white, black white.
+    clean(0, 1);
+    clean(1, 14);
+    clean(2, 1);
+    clean(0, 14);
+    clean(2, 1);
+    clean(1, 14);
+    clean(2, 1);
+    clean(0, 14);
+    clean(2, 1);
 
-    for (int k = 0; k < 8; k++)
+    // Send everything to the display. There are 9 waveform phases to get the needed graycale.
+    for (int k = 0; k < 9; ++k)
     {
-        uint8_t *dp = DMemory4Bit + (E_INK_HEIGHT * E_INK_WIDTH / 2);
+        // Set the start of the pointer to the end of the framebuffer
+        uint8_t *dp = DMemory4Bit + E_INK_WIDTH * E_INK_HEIGHT / 2;
 
         vscan_start();
-        for (int i = 0; i < E_INK_HEIGHT; i++)
+        for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
             uint32_t t = GLUT2[k * 256 + (*(--dp))];
             t |= GLUT[k * 256 + (*(--dp))];
@@ -331,7 +440,7 @@ void IRAM_ATTR Inkplate::display3b(bool leaveOn)
             GPIO.out_w1ts = t | CL;
             GPIO.out_w1tc = DATA | CL;
 
-            for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); j++)
+            for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); ++j)
             {
                 t = GLUT2[k * 256 + (*(--dp))];
                 t |= GLUT[k * 256 + (*(--dp))];
@@ -343,15 +452,21 @@ void IRAM_ATTR Inkplate::display3b(bool leaveOn)
                 GPIO.out_w1tc = DATA | CL;
             }
 
-            GPIO.out_w1ts = CL;
+            // Clock the last byte one more time.
+            GPIO.out_w1ts = t | CL;
             GPIO.out_w1tc = DATA | CL;
             vscan_end();
         }
+
+        // Wait 230 microseconds between the phases / frames (recorded from timing controller).
         delayMicroseconds(230);
     }
+    // Set the drivers inside epaper panel into dischare state.
     clean(3, 1);
+
     vscan_start();
 
+    // If is needed to leave the epaper power supply on, do not turn it of.
     if (!leaveOn)
         einkOff();
 }
@@ -383,8 +498,10 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         display1b(leaveOn);
         return 0;
     }
-    uint32_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
-    uint8_t data;
+
+    uint16_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
+    uint32_t _send;
+    uint8_t data = 0;
     uint8_t diffw, diffb;
     uint32_t n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
 
@@ -412,30 +529,35 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         }
     }
 
-
     if (!einkOn())
         return 0;
 
-    for (int k = 0; k < 5; k++)
+    for (int k = 0; k < 6; ++k)
     {
         vscan_start();
         n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
-        for (int i = 0; i < E_INK_HEIGHT; i++)
+        for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
             data = *(_pBuffer + n);
-            hscan_start(pinLUT[data]);
+            _send = pinLUT[data];
+            hscan_start(_send);
             n--;
-            for (int j = 0; j < ((E_INK_WIDTH / 4) - 1); j++)
+            for (int j = 0; j < ((E_INK_WIDTH / 4) - 1); ++j)
             {
                 data = *(_pBuffer + n);
-                GPIO.out_w1ts = (pinLUT[data]) | CL;
+                _send = pinLUT[data];
+                GPIO.out_w1ts = _send | CL;
                 GPIO.out_w1tc = DATA | CL;
                 n--;
             }
-            GPIO.out_w1ts = CL;
+
+            // Clock the last byte one more time.
+            GPIO.out_w1ts = _send | CL;
             GPIO.out_w1tc = DATA | CL;
             vscan_end();
         }
+
+        // Wait 230 microseconds between the phases / frames (recorded from timing controller).
         delayMicroseconds(230);
     }
     clean(2, 2);
@@ -444,11 +566,8 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
 
     if (!leaveOn)
         einkOff();
-    for (int i = 0; i < (E_INK_WIDTH * E_INK_HEIGHT / 8); i++)
-    {
-        *(DMemoryNew + i) &= *(_partial + i);
-        *(DMemoryNew + i) |= (*(_partial + i));
-    }
+
+    memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
 
     return changeCount;
 }
@@ -473,83 +592,40 @@ void Inkplate::clean(uint8_t c, uint8_t rep)
     einkOn();
     uint8_t data = 0;
     if (c == 0)
-    {
-        data = B10101010; // White
-    }
+        data = B10101010;
     else if (c == 1)
-    {
-        data = B01010101; // Black
-    }
+        data = B01010101;
     else if (c == 2)
-    {
-        data = B00000000; // Discharge
-    }
+        data = B00000000;
     else if (c == 3)
-    {
-        data = B11111111; // Skip
-    }
+        data = B11111111;
 
-    uint32_t _send = ((data & B00000011) << 4) | (((data & B00001100) >> 2) << 18) | (((data & B00010000) >> 4) << 23) |
-                     (((data & B11100000) >> 5) << 25);
-    ;
-    for (int k = 0; k < rep; k++)
+    uint32_t _send = pinLUT[data];
+    for (int k = 0; k < rep; ++k)
     {
         vscan_start();
-        for (int i = 0; i < E_INK_HEIGHT; i++)
+        for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
             hscan_start(_send);
             GPIO.out_w1ts = (_send) | CL;
             GPIO.out_w1tc = CL;
-            for (int j = 0; j < (E_INK_WIDTH / 8) - 1; j++)
+            for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); ++j)
             {
                 GPIO.out_w1ts = CL;
                 GPIO.out_w1tc = CL;
                 GPIO.out_w1ts = CL;
                 GPIO.out_w1tc = CL;
             }
-            GPIO.out_w1ts = (_send) | CL;
-            GPIO.out_w1tc = DATA | CL;
+
+            // Clock the last byte one more time.
+            GPIO.out_w1ts = CL;
+            GPIO.out_w1tc = CL;
             vscan_end();
         }
+
+        // Wait 230 microseconds between the phases / frames (recorded from timing controller).
         delayMicroseconds(230);
     }
-}
-
-/**
- * @brief       einkOff turns off epaper power supply and put all digital IO
- * pins in high Z state
- */
-void Inkplate::einkOff()
-{
-    if (getPanelState() == 0)
-        return;
-    OE_CLEAR;
-    GMOD_CLEAR;
-    GPIO.out &= ~(DATA | LE | CL);
-    CKV_CLEAR;
-    SPH_CLEAR;
-    SPV_CLEAR;
-
-    // Put TPS65186 into standby mode (leaving 3V3 SW active)
-    VCOM_CLEAR;
-    Wire.beginTransmission(0x48);
-    Wire.write(0x01);
-    Wire.write(0x6f);
-    Wire.endTransmission();
-
-    // Wait for all PWR rails to shut down
-    delay(100);
-
-    // Disable 3V3 to the panel
-    Wire.beginTransmission(0x48);
-    Wire.write(0x01);
-    Wire.write(0x4f);
-    Wire.endTransmission();
-
-    WAKEUP_CLEAR;
-
-    pinsZstate();
-    setPanelState(0);
 }
 
 #endif

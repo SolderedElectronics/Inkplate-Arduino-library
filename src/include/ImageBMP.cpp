@@ -13,7 +13,7 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     e-radionica.com
+ * @authors     Soldered.com
  ***************************************************/
 
 #include "Image.h"
@@ -347,7 +347,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
                 val = 7 - val;
             if (getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
-#elif defined(ARDUINO_INKPLATE2)
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
             if (invert)
                 val = val ^ 1;
 #endif
@@ -371,7 +371,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
                 val = 7 - val;
             if (getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
-#elif defined(ARDUINO_INKPLATE2)
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
             if (invert)
                 val = val ^ 1;
 #endif
@@ -389,7 +389,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 val = ditherGetPixelBmp(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b), j, y, w, 0);
 #else
                 val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, y, w, 0);
@@ -401,7 +401,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
                     val = 7 - val;
                 if (getDisplayMode() == INKPLATE_1BIT)
                     val = (~val >> 2) & 1;
-#elif defined(ARDUINO_INKPLATE2)
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 if (invert)
                     val = val ^ 1;
 #else
@@ -409,7 +409,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 #endif
             }
 
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
             val = findClosestPalette((r << 16) | (g << 8) | (b));
 #else
             val = RGB3BIT(r, g, b);
@@ -425,14 +425,14 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 val = ditherGetPixelBmp((r << 16) | (g << 8) | (b), j, y, w, 0);
 #else
                 val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, y, w, 0);
 #endif
             else
             {
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 val = findClosestPalette((r << 16) | (g << 8) | (b));
 #else
                 val = RGB3BIT(r, g, b);
@@ -443,7 +443,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
                 val = 7 - val;
             if (getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
-#elif defined(ARDUINO_INKPLATE2)
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
             if (invert)
                 val = val ^ 1;
 #endif
@@ -458,25 +458,26 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 val = ditherGetPixelBmp(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b), j, y, w, 0);
 #else
                 val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, y, w, 0);
 #endif
             else
             {
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 val = findClosestPalette((r << 16) | (g << 8) | (b));
 #else
                 val = RGB3BIT(r, g, b);
 #endif
             }
+
 #ifndef ARDUINO_INKPLATECOLOR
             if (invert)
                 val = 7 - val;
             if (getDisplayMode() == INKPLATE_1BIT)
                 val = (~val >> 2) & 1;
-#elif defined(ARDUINO_INKPLATE2)
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
             if (invert)
                 val = val ^ 1;
 #endif

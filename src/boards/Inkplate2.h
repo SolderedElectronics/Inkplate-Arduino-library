@@ -2,7 +2,7 @@
  **************************************************
  *
  * @file        Inkplate2.h
- * @brief       Basic funtions for controling inkplate 2
+ * @brief       Basic funtions for controling Inkplate 2
  *
  *              https://github.com/SolderedElectronics/Inkplate-Arduino-library
  *              For support, please reach over forums: https://forum.soldered.com/

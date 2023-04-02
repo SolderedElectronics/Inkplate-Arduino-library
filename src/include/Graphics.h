@@ -13,7 +13,7 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     e-radionica.com
+ * @authors     Soldered
  ***************************************************/
 
 #ifndef __GRAPHICS_H__
@@ -56,11 +56,10 @@ class Graphics : public Shapes, public Image
 
     void drawPixel(int16_t x, int16_t y, uint16_t color) override;
 
-    uint8_t getDisplayMode();
-
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE4)
     void selectDisplayMode(uint8_t _mode);
     void setDisplayMode(uint8_t _mode);
+    uint8_t getDisplayMode();
 #endif
 
     int16_t width() override;
