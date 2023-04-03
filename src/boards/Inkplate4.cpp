@@ -22,7 +22,7 @@
 
 #ifdef ARDUINO_INKPLATE4
 
-SPISettings epdSpiSettings(1000000UL, MSBFIRST, SPI_MODE0);
+SPISettings epdSpiSettings(4000000UL, MSBFIRST, SPI_MODE0);
 
 /**
  * @brief       begin function initialize Inkplate object with predefined
@@ -54,11 +54,14 @@ bool Inkplate::begin()
             return false;
         }
 
+        // Init TwoWire and GPIO expander
+        setIOExpanderForLowPower();
+        
+        // Set the default text color
+        setTextColor(INKPLATE_BLACK);
+
         // Clear frame buffer
         clearDisplay();
-
-        // Set default rotation
-        setRotation(0);
 
         _beginDone = 1;
     }
@@ -150,7 +153,7 @@ void Inkplate::display(bool leaveOn) // Leave on does nothing
     sendCommand(0x20); // Activate Display Update Sequence
 
     delayMicroseconds(500); // Wait at least 200 uS
-    waitForEpd(60000);
+    waitForEpd(24000);
 }
 
 /**
@@ -165,15 +168,42 @@ void Inkplate::setPanelDeepSleep(bool _state)
 
     if (_panelState)
     {
+        // Set SPI pins
+        SPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+
+        // Set up EPD communication pins
+        pinMode(EPAPER_CS_PIN, OUTPUT);
+        pinMode(EPAPER_DC_PIN, OUTPUT);
+        pinMode(EPAPER_RST_PIN, OUTPUT);
+        pinMode(EPAPER_BUSY_PIN, INPUT_PULLUP);
+
+        delay(10);
+
         // Send commands to power up panel. According to the datasheet, it can be
         // powered up from deep sleep only by reseting it and doing reinit.
         begin();
     }
     else
     {
-        sendCommand(0x10);
-        sendData(0x01);
-        delay(100);
+        sendCommand(0X50); // VCOM and data interval setting
+        sendData(0xf7);
+
+        sendCommand(0X02); // Power  EPD off
+        waitForEpd(BUSY_TIMEOUT_MS);
+        sendCommand(0X07); // Put EPD in deep sleep
+        sendData(0xA5);
+        delay(1);
+
+        // Disable SPI
+        SPI.end();
+
+        // To reduce power consumption, set SPI pins as outputs
+        pinMode(EPAPER_RST_PIN, INPUT);
+        pinMode(EPAPER_DC_PIN, INPUT);
+        pinMode(EPAPER_CS_PIN, INPUT);
+        pinMode(EPAPER_BUSY_PIN, INPUT);
+        pinMode(EPAPER_CLK, INPUT);
+        pinMode(EPAPER_DIN, INPUT);
     }
 }
 
@@ -293,8 +323,9 @@ bool Inkplate::waitForEpd(uint16_t _timeout)
 
 void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
 {
-    if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
+    if (x0 > width() - 1 || y0 > height() - 1|| x0 < 0 || y0 < 0)
         return;
+
     if (_color > 2)
         return;
 
@@ -302,12 +333,14 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
     {
     case 0:
         x0 = width() - 1 - x0;
+        y0 = y0 + 1;
         break;
     case 1:
         _swap_int16_t(x0, y0);
         break;
     case 2:
         y0 = height() - y0 - 1;
+        x0 = x0 + 1;
         break;
     case 3:
         _swap_int16_t(x0, y0);
@@ -323,14 +356,64 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
     // half is for red pixels only
     if (_color < 2)
     {
+        // Draw the Black/White pixel and clear the red pixel
         *(DMemory4Bit + E_INK_WIDTH / 8 * y0 + _x) |= (pixelMaskLUT[7 - _x_sub]);
         *(DMemory4Bit + E_INK_WIDTH / 8 * y0 + _x) &= ~(_color << (7 - _x_sub));
         *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + E_INK_WIDTH / 8 * y0 + _x) &= ~(pixelMaskLUT[7 - _x_sub]);
     }
     else
     {
+        // Draw a red pixel in the set coordinates
         *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + E_INK_WIDTH / 8 * y0 + _x) |= (pixelMaskLUT[7 - _x_sub]);
     }
+}
+
+/**
+ * @brief       setIOExpanderForLowPower initiates I/O Expander pins for low power, and puts
+ * them in OUTPUT LOW because they are using least amount of current in deep
+ * sleep that way
+ */
+void Inkplate::setIOExpanderForLowPower()
+{
+    Wire.begin();
+    memset(ioRegsInt, 0, 22);
+    ioBegin(IO_INT_ADDR, ioRegsInt);
+
+    // TOUCHPAD PINS
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, INPUT);
+
+    // Battery voltage Switch MOSFET
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B1, OUTPUT);
+
+    // Rest of pins go to OUTPUT LOW state because in deepSleep mode they are
+    // using least amount of power
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A0, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A1, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A2, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A3, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A4, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A5, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A7, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B0, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B5, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B6, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B7, OUTPUT);
+
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A0, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A1, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A2, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A3, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A4, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A5, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A7, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B0, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B5, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B6, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B7, LOW);
 }
 
 #endif

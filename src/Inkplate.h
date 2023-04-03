@@ -68,7 +68,7 @@ class Inkplate : public System, public Graphics
     // void writeRow(uint8_t data);
     uint32_t partialUpdate(bool _forced = false, bool leaveOn = false);
 
-#if defined(ARDUINO_INKPLATECOLOR)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE4)
     void clean();
 
     // These 4 functions need to refactored because conflicting functionalities
@@ -78,7 +78,7 @@ class Inkplate : public System, public Graphics
     bool getPanelDeepSleepState();
 
     void setIOExpanderForLowPower();
-#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+#elif defined(ARDUINO_INKPLATE2)
     void clean();
 
     // These 4 functions need to refactored because conflicting functionalities
