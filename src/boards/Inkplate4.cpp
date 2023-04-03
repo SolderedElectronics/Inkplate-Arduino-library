@@ -56,7 +56,7 @@ bool Inkplate::begin()
 
         // Init TwoWire and GPIO expander
         setIOExpanderForLowPower();
-        
+
         // Set the default text color
         setTextColor(INKPLATE_BLACK);
 
@@ -323,7 +323,7 @@ bool Inkplate::waitForEpd(uint16_t _timeout)
 
 void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
 {
-    if (x0 > width() - 1 || y0 > height() - 1|| x0 < 0 || y0 < 0)
+    if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
         return;
 
     if (_color > 2)

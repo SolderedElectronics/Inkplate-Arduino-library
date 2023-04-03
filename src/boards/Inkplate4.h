@@ -29,11 +29,11 @@
 #define BUSY_TIMEOUT_MS 1000
 
 // ePaper specific defines
-#define E_INK_HEIGHT 300
-#define E_INK_WIDTH  400
-#define INKPLATE_WHITE  0b00000000
-#define INKPLATE_BLACK  0b00000001
-#define INKPLATE_RED    0b00000010
+#define E_INK_HEIGHT   300
+#define E_INK_WIDTH    400
+#define INKPLATE_WHITE 0b00000000
+#define INKPLATE_BLACK 0b00000001
+#define INKPLATE_RED   0b00000010
 
 // Pin on the internal io expander which controls MOSFET for turning on and off the SD card
 #define SD_PMOS_PIN IO_PIN_B2 // 10
