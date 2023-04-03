@@ -90,11 +90,12 @@
 #include "defines.h"
 
 /**
- * @brief       System class for interaction with panel harware
+ * @brief       System class for interaction with panel hardware
  */
 class System : public Esp,
+#ifndef ARDUINO_INKPLATE2
                virtual public Expander,
-
+#endif
 #if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
                public Touch,
                public Frontlight,

@@ -475,8 +475,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 #ifndef ARDUINO_INKPLATECOLOR
             if (invert)
                 val = 7 - val;
-            if (getDisplayMode() == INKPLATE_1BIT)
-                val = (~val >> 2) & 1;
+//            if (getDisplayMode() == INKPLATE_1BIT)
+//                val = (~val >> 2) & 1;
 #elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
             if (invert)
                 val = val ^ 1;
