@@ -74,7 +74,7 @@ void loop()
       display.print("ALARM!");
     }
 
-    display.display(true); // Do a full refresh
+    display.display(); // Do a full refresh
 
     delay(60000); // Delay between refreshes one minute
 }
