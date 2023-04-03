@@ -94,6 +94,10 @@ uint8_t System::readTouchpad(uint8_t _pad)
     return digitalReadInternal(IO_INT_ADDR, ioRegsInt, _pad);
 }
 
+#endif
+
+
+#ifndef ARDUINO_INKPLATE2
 /**
  * @brief       readBattery reads voltage of the battery
  *
