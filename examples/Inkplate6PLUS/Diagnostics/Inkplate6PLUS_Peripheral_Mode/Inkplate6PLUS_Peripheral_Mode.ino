@@ -28,7 +28,8 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
 #include <Inkplate.h>
@@ -596,15 +597,15 @@ void loop()
                 break;
             case 'm':
                 sscanf(s + 3, "%c", &b);
-                if(b == '1')
+                if (b == '1')
                 {
-                  display.frontlight(true);
-                  // Serial.println("display.frontlight(true);");
+                    display.frontlight(true);
+                    // Serial.println("display.frontlight(true);");
                 }
                 else
                 {
-                  display.frontlight(false);
-                  // Serial.println("display.frontlight(false);");
+                    display.frontlight(false);
+                    // Serial.println("display.frontlight(false);");
                 }
                 break;
             case 'n':
@@ -617,24 +618,24 @@ void loop()
                 sscanf(s + 3, "%d", &pwrs);
                 // sprintf(temp, "display.tsInit(%d);\n\r", pwrs);
                 // Serial.println(temp);
-                if(pwrs == 1)
-                display.tsInit(1);
+                if (pwrs == 1)
+                    display.tsInit(1);
 
-                if(pwrs == 0)
-                display.tsInit(0);
+                if (pwrs == 0)
+                    display.tsInit(0);
                 break;
             case 'p':
                 sscanf(s + 3, "%c", &b);
-                if(b == '1')
+                if (b == '1')
                 {
                     // sprintf(temp, "display.tsShutdown();\n\r");
                     // Serial.println(temp);
                     display.tsShutdown();
-                }        
+                }
                 break;
             case 'r':
                 sscanf(s + 3, "%c", &b);
-                if(b == '?')
+                if (b == '?')
                 {
                     Serial.print("#r(");
                     Serial.print(display.tsAvailable());
@@ -644,25 +645,25 @@ void loop()
                 break;
             case 's':
                 sscanf(s + 3, "%c", &b);
-                if(b == '?')
+                if (b == '?')
                 {
-                    if(display.tsGetData(tx1, ty1) != 0)
+                    if (display.tsGetData(tx1, ty1) != 0)
                     {
-                    Serial.print("#s(");
-                    Serial.print(tx1[0]);
-                    Serial.print(", ");
-                    Serial.print(ty1[0]);
-                    Serial.println(")*");
-                    Serial.flush();
+                        Serial.print("#s(");
+                        Serial.print(tx1[0]);
+                        Serial.print(", ");
+                        Serial.print(ty1[0]);
+                        Serial.println(")*");
+                        Serial.flush();
                     }
                 }
                 break;
             case 't':
                 sscanf(s + 3, "%c", &b);
-                if(b == '?')
+                if (b == '?')
                 {
                     display.tsGetRawData(rt);
-                    for(int i = 0; i < 8; ++i)
+                    for (int i = 0; i < 8; ++i)
                     {
                         Serial.print("Reg ");
                         Serial.println(rt[i], BIN);

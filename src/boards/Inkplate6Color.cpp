@@ -152,7 +152,7 @@ void Inkplate::display(bool leaveOn)
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
     SPI2.beginTransaction(epdSpiSettings);
-    SPI2.transfer(DMemory4Bit, E_INK_WIDTH * E_INK_HEIGHT / 2);
+    SPI2.writeBytes(DMemory4Bit, E_INK_WIDTH * E_INK_HEIGHT / 2);
     SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
 
@@ -291,7 +291,7 @@ void Inkplate::sendData(uint8_t *_data, int _n)
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
     SPI2.beginTransaction(epdSpiSettings);
-    SPI2.transfer(_data, _n);
+    SPI2.writeBytes(_data, _n);
     SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
 }

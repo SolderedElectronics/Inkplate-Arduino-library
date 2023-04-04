@@ -1,25 +1,18 @@
 /*
-   Inkplate5_Bluetooth_Peripheral_Mode sketch for Soldered Inkplate 5
+   Inkplate5_Bluetooth_Peripheral_Mode example for Soldered Inkplate 5
+   For this example you will need a USB-C cable, Inkplate 5 and smartphone.
    Select "Soldered Inkplate5" from Tools -> Board menu.
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   Using this sketch, you don't have to program and control e-paper using Arduino code.
-   Instead, you can send UART command (explained in documentation that can be found inside folder of this sketch).
-   This give you flexibility that you can use this Inkplate 5 on any platform!
+   This example shows how to use Inkplate as a peripheral device over Bluetooth.
+   More about peripheral mode: https://inkplate.readthedocs.io/en/latest/peripheral-mode.html
 
-   Because it uses UART, it's little bit slower and it's not recommended to send bunch of
-   drawPixel command to draw some image. Instead, load bitmaps and pictures on SD card and load image from SD.
-   If we missed some function, you can modify this and make yor own.
-   Also, every Inkplate comes with this peripheral mode right from the factory.
-
-   Learn more about Peripheral Mode in this update:
-   https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates
-
-   UART settings are: 115200 baud, standard parity, ending with "\n\r" (both)
-   You can send commands via USB port or by directly connecting to ESP32 TX and RX pins.
-   Don't forget you need to send #L(1)* after each command to show it on the display
-   (equal to display->display()).
+   Upload this example to the Inkplate and connect your phone to it via Bluetooth.
+   First, you have to pair the Inkplate with your phone in Bluetooth settings in your phone, then go to the
+   Serial Bluetooth Terminal app and you can find the Inkplate in the device list. You can use another similar app.
+   If Bluetooth starts successfully, you can send commands from your phone. Don't forget you need to send #L(1)* after
+   each command to show it on the display (equal to display->display()).
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -394,7 +387,7 @@ void run(char commandBuffer[], size_t n, Inkplate *display, BluetoothSerial *Ser
                 // SerialBT->print(temp);
                 display->fillElipse(rx, ry, xc, yc, c);
                 break;
-                            case 'W':
+            case 'W':
                 sscanf(s + 3, "%d,%d,%d", &hr, &min, &sec);
                 // sprintf(temp, "display->rtcSetTime(%d, %d, %d);\n\r", hr, min, sec);
                 // SerialBT->println(temp);

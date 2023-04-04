@@ -7,9 +7,9 @@
 
    This example will show you how you can use Inkplate 5 to display API data,
    e.g. OpenWeather public API. Response from server is in JSON format, so that
-   will be shown too how it is used. What happens here is basically ESP32 connects 
-   to the WiFi and sends API call and server returns data in JSON format containing 
-   information about weather, then using library ArduinoJson we extract weather data 
+   will be shown too how it is used. What happens here is basically ESP32 connects
+   to the WiFi and sends API call and server returns data in JSON format containing
+   information about weather, then using library ArduinoJson we extract weather data
    from JSON data and show it on Inkplate 5.
 
    IMPORTANT:
@@ -31,9 +31,9 @@
 #endif
 
 // Required libraries
-#include "Inkplate.h"
-#include "HTTPClient.h"
 #include "ArduinoJson.h"
+#include "HTTPClient.h"
+#include "Inkplate.h"
 #include "TimeLib.h"
 #include "WiFi.h"
 
@@ -42,21 +42,21 @@
 // ---------- CHANGE HERE  -------------:
 
 // Change to your wifi ssid and password
-#define SSID "88ADB5"
-#define PASS "EVW32C0S00035107"
+#define SSID ""
+#define PASS ""
 
 // Openweather api key
-#define API_KEY "515dec0a2bba409a1646e0869a600cda"
+#define API_KEY ""
 
 float myLatitude = 45.560001; // I got this from Wikipedia
 float myLongitude = 18.675880;
 
-//bool metric = false; // <------------------------------ TRUE is METRIC, FALSE is IMPERIAL, BLANK is KELVIN
+bool metric = true; // <--- true is METRIC, false is IMPERIAL
 
 // Delay between API calls
 #define DELAY_MS 59000
 
-// ----------------------------------
+// ---------------------------------------
 
 // Including fonts used
 #include "Fonts/FreeSans12pt7b.h"
@@ -91,6 +91,8 @@ const char *moonphasenames[29] = {
     "Waning Gibbous",  "Waning Gibbous",  "Waning Gibbous",  "Last Quarter",    "Waning Crescent", "Waning Crescent",
     "Waning Crescent", "Waning Crescent", "Waning Crescent", "Waning Crescent", "Waning Crescent"};
 
+// Variable for storing temperature unit
+char tempUnit;
 
 // Variable for counting partial refreshes
 RTC_DATA_ATTR char refreshes = 0;
@@ -101,15 +103,6 @@ const int fullRefresh = 20;
 // Hich line to start drawing the Dayly forecast
 const int dayOffset = 380;
 
-// Functions defined below
-void alignText(const char align, const char *text, int16_t x, int16_t y);
-void drawForecast();
-void drawCurrent();
-void drawTime();
-void drawHourly();
-void drawMoon();
-float getMoonPhase(time_t tdate);
-
 char Output[200] = {0};
 
 OpenWeatherOneCall OWOC; // Invoke OpenWeather Library
@@ -117,9 +110,9 @@ time_t t = now();
 
 void connectWifi()
 {
-  if(WiFi.status() == WL_CONNECTED)
-  return;
-  
+    if (WiFi.status() == WL_CONNECTED)
+        return;
+
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
     WiFi.begin(SSID, PASS);
@@ -139,10 +132,10 @@ void connectWifi()
             ESP.restart();
         }
     }
-        Serial.print("\nConnected to ");
-        Serial.println(SSID);
-        Serial.print("IP address: ");
-        Serial.println(WiFi.localIP());
+    Serial.print("\nConnected to ");
+    Serial.println(SSID);
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
 } //======================== END WIFI CONNECT =======================
 
 void GetCurrentWeather()
@@ -154,7 +147,7 @@ void GetCurrentWeather()
     connectWifi();
 
     Serial.println("Getting weather");
-    OWOC.parseWeather(API_KEY, NULL, myLatitude, myLongitude, NULL, NULL); //metric predzadnji
+    OWOC.parseWeather(API_KEY, NULL, myLatitude, myLongitude, metric, NULL);
     setTime(OWOC.current.dt);
     t = now();
 
@@ -163,40 +156,21 @@ void GetCurrentWeather()
     //=================================================
     // Today's results
     //=================================================
-    sprintf(Output,
-            "%s: %02d:%02d,%02d:%02d-%02d:%02d,%02.01fC,%02.01fC,%04.0fhPa,%02.01f%% "
-            "Rh,%02.01fC,%03d%%,UV:%02.01f,%02dkm,%02.01f%m/s,%02.01f%m/s,%03ddeg,%02.02fmm,%02.02fmm,id:%03d,%s,%s,%s",
-            dayShortStr(weekday(t)), hour(t), minute(t), hour(OWOC.current.sunrise), minute(OWOC.current.sunrise),
-            hour(OWOC.current.sunset), minute(OWOC.current.sunset), OWOC.current.temp, OWOC.current.feels_like,
-            OWOC.current.pressure, OWOC.current.humidity, OWOC.current.dew_point, OWOC.current.clouds, OWOC.current.uvi,
-            OWOC.current.visibility / 1000, OWOC.current.wind_speed, OWOC.current.wind_gust, OWOC.current.wind_deg,
-            OWOC.current.rain_1h, OWOC.current.snow_1h, OWOC.current.id, OWOC.current.main, OWOC.current.description,
+    Serial.println("");
+    Serial.println("Current: ");
+    sprintf(Output, "%s: %02d:%02d,%02d:%02d-%02d:%02d,%02.01f%c,%04.0fhPa,%02.01f%%Rh,%s", dayShortStr(weekday(t)),
+            hour(t), minute(t), hour(OWOC.current.sunrise), minute(OWOC.current.sunrise), hour(OWOC.current.sunset),
+            minute(OWOC.current.sunset), OWOC.current.temp, tempUnit, OWOC.current.pressure, OWOC.current.humidity,
             OWOC.current.icon);
     Serial.println(Output);
-    Serial.println("");
-    Serial.println("Minutely Forecast:");
-    for (int minutey = 0; minutey < (sizeof(OWOC.minutely) / sizeof(OWOC.minutely[0])); minutey++)
-    {
-        sprintf(Output, "%02d:%02d:%02.02fmm,", hour(OWOC.minutely[minutey].dt), minute(OWOC.minutely[minutey].dt),
-                OWOC.minutely[minutey].precipitation);
-        Serial.print(Output);
-    }
-    Serial.println("");
     Serial.println("");
 
     Serial.println("Hourly Forecast:");
     for (int Houry = 0; Houry < (sizeof(OWOC.hourly) / sizeof(OWOC.hourly[0])); Houry++)
     {
-        sprintf(Output,
-                "%02d:%02d:%02.02fC,%02.02fC,%04.0fhPa,%02.01f%% "
-                "Rh,%02.02fC,%03d%%,%02dkm,%02.01f%m/s,%02.01f%m/s,%03ddeg,%03.00f%%,%02.02fmm,%02.02fmm,%03d,%s,%s,%s",
-                hour(OWOC.hourly[Houry].dt), minute(OWOC.hourly[Houry].dt), OWOC.hourly[Houry].temp,
-                OWOC.hourly[Houry].feels_like, OWOC.hourly[Houry].pressure, OWOC.hourly[Houry].humidity,
-                OWOC.hourly[Houry].dew_point, OWOC.hourly[Houry].clouds, OWOC.hourly[Houry].visibility / 1000,
-                OWOC.hourly[Houry].wind_speed, OWOC.hourly[Houry].wind_gust, OWOC.hourly[Houry].wind_deg,
-                OWOC.hourly[Houry].pop * 100, OWOC.hourly[Houry].rain_1h, OWOC.hourly[Houry].snow_1h,
-                OWOC.hourly[Houry].id, OWOC.hourly[Houry].main, OWOC.hourly[Houry].description,
-                OWOC.hourly[Houry].icon);
+        sprintf(Output, "%02d:%02d:%02.02f%c,%02.02fmm,%02.02fmm,%s", hour(OWOC.hourly[Houry].dt),
+                minute(OWOC.hourly[Houry].dt), OWOC.hourly[Houry].temp, tempUnit, OWOC.hourly[Houry].rain_1h,
+                OWOC.hourly[Houry].snow_1h, OWOC.hourly[Houry].icon);
         Serial.println(Output);
     }
     Serial.println("");
@@ -204,35 +178,15 @@ void GetCurrentWeather()
     Serial.println("7 Day Forecast:");
     for (int y = 0; y < 3; y++)
     {
-        sprintf(Output,
-                "%s:%02d:%02d-%02d:%02d,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02.01fC,%02."
-                "01fC,%02.01fC,%04.0fhPa,%02.01f%% "
-                "Rh,%02.01fC,%02.01f%m/s,%02.01f%m/"
-                "s,%03ddeg,%03d%%,UV:%02.01f,%02dkm,%03.0f%%,%02.02fmm,%02.02fmm,%03d,%s,%s,%s",
-                dayShortStr(weekday(OWOC.forecast[y].dt)), hour(OWOC.forecast[y].sunrise),
-                minute(OWOC.forecast[y].sunrise), hour(OWOC.forecast[y].sunset), minute(OWOC.forecast[y].sunset),
-                OWOC.forecast[y].temp_morn, OWOC.forecast[y].temp_day, OWOC.forecast[y].temp_eve,
-                OWOC.forecast[y].temp_night, OWOC.forecast[y].temp_min, OWOC.forecast[y].temp_max,
-                OWOC.forecast[y].feels_like_morn, OWOC.forecast[y].feels_like_day, OWOC.forecast[y].feels_like_eve,
-                OWOC.forecast[y].feels_like_night, OWOC.forecast[y].pressure, OWOC.forecast[y].humidity,
-                OWOC.forecast[y].dew_point, OWOC.forecast[y].wind_speed, OWOC.forecast[y].wind_gust,
-                OWOC.forecast[y].wind_deg, OWOC.forecast[y].clouds, OWOC.forecast[y].uvi,
-                OWOC.forecast[y].visibility / 1000, OWOC.forecast[y].pop * 100, OWOC.forecast[y].rain,
-                OWOC.forecast[y].snow, OWOC.forecast[y].id, OWOC.forecast[y].main, OWOC.forecast[y].description,
-                OWOC.forecast[y].icon);
+        sprintf(
+            Output, "%s:%02d:%02d-%02d:%02d,%02.01f%c,%02.01f%c,%04.0fhPa,%02.01f%%Rh,%03.0f%%,%02.02fmm,%02.02fmm,%s",
+            dayShortStr(weekday(OWOC.forecast[y].dt)), hour(OWOC.forecast[y].sunrise), minute(OWOC.forecast[y].sunrise),
+            hour(OWOC.forecast[y].sunset), minute(OWOC.forecast[y].sunset), OWOC.forecast[y].temp_min, tempUnit,
+            OWOC.forecast[y].temp_max, tempUnit, OWOC.forecast[y].pressure, OWOC.forecast[y].humidity,
+            OWOC.forecast[y].pop * 100, OWOC.forecast[y].rain, OWOC.forecast[y].snow, OWOC.forecast[y].icon);
         Serial.println(Output);
     }
-
-    if (OWOC.alerts.start > 100000)
-    {
-        //=================================================
-        // Alerts
-        //==================l===============================
-        sprintf(Output, "%s,%s,%02d:%02d - %02d:%02d,%s", OWOC.alerts.sender_name, OWOC.alerts.event,
-                hour(OWOC.alerts.start), minute(OWOC.alerts.start), hour(OWOC.alerts.end), minute(OWOC.alerts.end),
-                OWOC.alerts.description);
-        Serial.println(Output);
-    }
+    Serial.println("");
 }
 
 void setup()
@@ -246,6 +200,8 @@ void setup()
 
     // Init Inkplate library (you should call this function ONLY ONCE)
     display.begin();
+
+    tempUnit = (metric == 1 ? 'C' : 'F');
 }
 
 void loop()
@@ -255,7 +211,7 @@ void loop()
 
     if ((minute(t) % 30) == 0) // Also returns 0 when time isn't set
     {
-        GetCurrentWeather();       
+        GetCurrentWeather();
         Serial.println("got weather data");
         display.clearDisplay();
         drawCurrent();
@@ -275,7 +231,7 @@ void loop()
         drawTime();
 
         // Do a refresh
-        if(refreshes >= fullRefresh)
+        if (refreshes >= fullRefresh)
         {
             // Full refresh
             display.display();
@@ -368,7 +324,7 @@ void drawForecast()
         alignText(CENTRE_BOT, Output, textCentre - 35, dayOffset + 15);
 
         display.setFont(&FreeSans9pt7b);
-        sprintf(Output, "%2.0fC/%.0fC", OWOC.forecast[day].temp_min, OWOC.forecast[day].temp_max);
+        sprintf(Output, "%2.0f%c/%.0f%c", OWOC.forecast[day].temp_min, tempUnit, OWOC.forecast[day].temp_max, tempUnit);
         alignText(CENTRE_BOT, Output, textCentre, dayOffset + 50);
 
         sprintf(Output, "%2.0f%%", OWOC.forecast[day].pop * 100);
@@ -417,6 +373,7 @@ void drawTime()
     Serial.println(Output);
 }
 
+// Draw graph which shows hourly weather
 void drawHourly()
 {
     const int yTop = 180;
@@ -454,9 +411,9 @@ void drawHourly()
     display.drawLine(xLeft, yTop + yHeight, xLeft + xWidth, yTop + yHeight, BLACK);
     display.drawLine(xLeft, yTop, xLeft + xWidth, yTop, BLACK);
 
-    sprintf(Output, "%2.0fC", (minTemp - 0.499));
+    sprintf(Output, "%2.0f%c", (minTemp - 0.499), tempUnit);
     alignText(RIGHT, Output, xLeft - 5, yTop + yHeight);
-    sprintf(Output, "%2.0fC", (maxTemp + .5));
+    sprintf(Output, "%2.0f%c", (maxTemp + .5), tempUnit);
     alignText(RIGHT, Output, xLeft - 5, yTop);
 
     sprintf(Output, "%2.0f mm", minPrec);
@@ -493,11 +450,11 @@ void drawCurrent()
     display.drawImage(Output, 0, 0, true, true);
 
     display.setFont(&Roboto_Light_48);
-    sprintf(Output, "%2.01fC", OWOC.current.temp);
+    sprintf(Output, "%2.01f%c", OWOC.current.temp, tempUnit);
     alignText(CENTRE_BOT, Output, 100, 200);
 
     display.setFont(&Roboto_Light_36);
-    sprintf(Output, "%2.0fC/%.0fC", OWOC.forecast[0].temp_min, OWOC.forecast[0].temp_max);
+    sprintf(Output, "%2.0f%c/%.0f%c", OWOC.forecast[0].temp_min, tempUnit, OWOC.forecast[0].temp_max, tempUnit);
     alignText(CENTRE_BOT, Output, 100, 240);
 
     display.setFont(&FreeSans12pt7b);
@@ -512,19 +469,6 @@ void drawCurrent()
     alignText(CENTRE_BOT, Output, 100, 330);
 }
 
-/*
-  return value is percent of moon cycle ( from 0.0 to 0.999999), i.e.:
-
-  0.0: New Moon
-  0.125: Waxing Crescent Moon
-  0.25: Quarter Moon
-  0.375: Waxing Gibbous Moon
-  0.5: Full Moon
-  0.625: Waning Gibbous Moon
-  0.75: Last Quarter Moon
-  0.875: Waning Crescent Moon
-
-*/
 float getMoonPhase(time_t tdate)
 {
     time_t newmoonref = 1263539460; // known new moon date (2010-01-15 07:11)
@@ -533,6 +477,19 @@ float getMoonPhase(time_t tdate)
     phase -= (int)phase; // leave only the remainder
     if (newmoonref > tdate)
         phase = 1 - phase;
+
+    /*
+    return value is percent of moon cycle ( from 0.0 to 0.999999), i.e.:
+
+    0.0: New Moon
+    0.125: Waxing Crescent Moon
+    0.25: Quarter Moon
+    0.375: Waxing Gibbous Moon
+    0.5: Full Moon
+    0.625: Waning Gibbous Moon
+    0.75: Last Quarter Moon
+    0.875: Waning Crescent Moon
+    */
     return phase;
 }
 
@@ -544,7 +501,6 @@ void drawMoon()
     const int MoonBox = 35;
     float moonphase = getMoonPhase(now());
     int moonage = 29.5305882 * moonphase;
-    // Serial.println("moon age: " + String(moonage));
     // Convert to appropriate icon
     display.setFont(&moon_Phases36pt7b);
     sprintf(Output, "%c", (char)((int)'A' + (int)(moonage * 25. / 30)));

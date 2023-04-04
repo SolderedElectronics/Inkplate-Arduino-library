@@ -7,11 +7,12 @@
 
    This example shows how to use Inkplate as a peripheral device over Bluetooth.
    More about peripheral mode: https://inkplate.readthedocs.io/en/latest/peripheral-mode.html
-   
+
    Upload this example to the Inkplate and connect your phone to it via Bluetooth.
    First, you have to pair the Inkplate with your phone in Bluetooth settings in your phone, then go to the
    Serial Bluetooth Terminal app and you can find the Inkplate in the device list. You can use another similar app.
-   If Bluetooth starts successfully, you can send commands from your phone.
+   If Bluetooth starts successfully, you can send commands from your phone. Don't forget you need to send #L(1)* after
+   each command to show it on the display (equal to display->display()).
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -30,31 +31,35 @@
 // Include peripheral functions
 #include "Peripheral.h"
 
-#define BUFFER_SIZE 1000
+// Create an object on Inkplate library and also set library into 1-bit mode (BW)
+Inkplate display(INKPLATE_1BIT);
 
-Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
-BluetoothSerial SerialBT;        // Create SerialBT object for Bluetooth communication
+// Create SerialBT object for Bluetooth communication
+BluetoothSerial SerialBT;
+
+// Size of buffer for receiving commands
+#define BUFFER_SIZE 1000
 
 // Temporary buffer to send to Peripheral mode code
 char commandBuffer[BUFFER_SIZE + 1];
 
 void setup()
 {
-    display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
-    display.setTextSize(4); // Scale text to be 4 times bigger then original (5x7 px)
+    // Init serial communication
+    Serial.begin(115200);
+
+    // Init Inkplate library (you should call this function ONLY ONCE)
+    display.begin();
 
     // Init BT communication
     if (!SerialBT.begin("Inkplate5"))
     {
-        display.println("An error occurred initializing Bluetooth");
+        Serial.println("An error occurred initializing Bluetooth");
     }
     else
     {
-        display.println("The device started, now you can pair it with Bluetooth and send commands!");
+        Serial.println("The device started, now you can pair it with Bluetooth and send commands!");
     }
-
-    // Show a message on the screen
-    display.display();
 }
 
 void loop()

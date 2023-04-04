@@ -93,6 +93,7 @@ getTextBounds	KEYWORD2
 esp_sleep_enable_timer_wakeup KEYWORD2
 esp_deep_sleep_start	KEYWORD2
 clean	KEYWORD2
+esp_sleep_enable_ext0_wakeup	KEYWORD2
 
 # Instances (KEYWORD2)
 
