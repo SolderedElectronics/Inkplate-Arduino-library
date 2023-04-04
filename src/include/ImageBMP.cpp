@@ -219,7 +219,7 @@ bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool i
     }
     else if (strncmp(url, "https://", 8) == 0)
     {
-        buf = downloadFile(url, &defaultLen);
+        buf = downloadFileHTTPS(url, &defaultLen);
     }
 
     ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
@@ -345,8 +345,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 #if defined(ARDUINO_INKPLATECOLOR)
             if (invert)
                 val = 7 - val;
-            if (getDisplayMode() == INKPLATE_1BIT)
-                val = (~val >> 2) & 1;
+//            if (getDisplayMode() == INKPLATE_1BIT)
+//                val = (~val >> 2) & 1;
 #elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
             if (invert)
                 val = val ^ 1;
@@ -369,8 +369,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 #if defined(ARDUINO_INKPLATECOLOR)
             if (invert)
                 val = 7 - val;
-            if (getDisplayMode() == INKPLATE_1BIT)
-                val = (~val >> 2) & 1;
+//            if (getDisplayMode() == INKPLATE_1BIT)
+//                val = (~val >> 2) & 1;
 #elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
             if (invert)
                 val = val ^ 1;
@@ -399,8 +399,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 #if defined(ARDUINO_INKPLATECOLOR)
                 if (invert)
                     val = 7 - val;
-                if (getDisplayMode() == INKPLATE_1BIT)
-                    val = (~val >> 2) & 1;
+//                if (getDisplayMode() == INKPLATE_1BIT)
+//                    val = (~val >> 2) & 1;
 #elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 if (invert)
                     val = val ^ 1;
@@ -441,8 +441,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 #if defined(ARDUINO_INKPLATECOLOR)
             if (invert)
                 val = 7 - val;
-            if (getDisplayMode() == INKPLATE_1BIT)
-                val = (~val >> 2) & 1;
+//            if (getDisplayMode() == INKPLATE_1BIT)
+//                val = (~val >> 2) & 1;
 #elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
             if (invert)
                 val = val ^ 1;
@@ -475,8 +475,8 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 #ifndef ARDUINO_INKPLATECOLOR
             if (invert)
                 val = 7 - val;
-            if (getDisplayMode() == INKPLATE_1BIT)
-                val = (~val >> 2) & 1;
+//            if (getDisplayMode() == INKPLATE_1BIT)
+//                val = (~val >> 2) & 1;
 #elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
             if (invert)
                 val = val ^ 1;
@@ -511,8 +511,7 @@ bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, 
 {
     bool ret = 0;
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
-
-    uint8_t *buf = downloadFile(url, &defaultLen);
+    uint8_t *buf = downloadFileHTTPS(url, &defaultLen);
 
     bitmapHeader bmpHeader;
     readBmpHeader(buf, &bmpHeader);

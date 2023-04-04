@@ -22,6 +22,7 @@
 #include "Arduino.h"
 #include "HTTPClient.h"
 #include "WiFi.h"
+#include "WiFiClientSecure.h"
 #include "defines.h"
 
 /**
@@ -53,9 +54,13 @@ class NetworkClient
     bool isConnected();
 
     uint8_t *downloadFile(const char *url, int32_t *defaultLen);
+    uint8_t *downloadFileHTTPS(const char *url, int32_t *defaultLen);
     uint8_t *downloadFile(WiFiClient *url, int32_t len);
 
   private:
+    WiFiClientSecure *client;
+    char *getHostFromURL(const char *urlToGetHostFrom);
+    char *getPathToResourceFromURL(const char *urlToGetPathToResourceFrom);
 };
 
 #endif

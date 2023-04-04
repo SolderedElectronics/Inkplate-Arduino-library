@@ -131,7 +131,7 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
     }
     else if (strncmp(url, "https://", 8) == 0)
     {
-        buf = downloadFile(url, &defaultLen);
+        buf = downloadFileHTTPS(url, &defaultLen);
     }
 
     ret = drawJpegFromBuffer(buf, defaultLen, x, y, dither, invert);
@@ -169,7 +169,7 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position,
     }
     else if (strncmp(url, "https://", 8) == 0)
     {
-        buff = downloadFile(url, &defaultLen);
+        buff = downloadFileHTTPS(url, &defaultLen);
     }
 
     uint16_t w = 0;
@@ -405,8 +405,8 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
 
             if (invert)
                 val = 7 - val;
-            if (_imagePtrJpeg->getDisplayMode() == INKPLATE_1BIT)
-                val = (~val >> 2) & 1;
+            //            if (_imagePtrJpeg->getDisplayMode() == INKPLATE_1BIT)
+            //                val = (~val >> 2) & 1;
 
             _imagePtrJpeg->writePixel(x + i, y + j, val);
 #endif

@@ -18,7 +18,7 @@
 
 #include "Image.h"
 
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE4)
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE4)
 
 /**
  * @brief       ditherGetPixelBmp calculates dither for given pixel in bmp

@@ -6,9 +6,8 @@
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    Here is shown how to use I/O Expander and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.
-   
-   NOTE: This is an example for the old Inkplates that have touchpads. 
-         If you select new Inkplate boards, you won't be able to compile the example.
+
+   NOTE: This is an example for the old Inkplates that have touchpads.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -16,8 +15,9 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_INKPLATE10)
-#error "Wrong board selection for this example, please select e-radionica Inkplate10 in the boards menu."
+#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 #include <Inkplate.h>
@@ -44,10 +44,16 @@ void setup()
     display.begin();
 
     // Set interrupt pins
+#if defined(ARDUINO_INKPLATE10)
     display.setIntOutput(1, false, false, HIGH, IO_INT_ADDR);
     display.setIntPin(PAD1, RISING, IO_INT_ADDR);
     display.setIntPin(PAD2, RISING, IO_INT_ADDR);
     display.setIntPin(PAD3, RISING, IO_INT_ADDR);
+#elif defined(ARDUINO_INKPLATE10V2)
+    display.setIntPin(PAD1, IO_INT_ADDR);
+    display.setIntPin(PAD2, IO_INT_ADDR);
+    display.setIntPin(PAD3, IO_INT_ADDR);
+#endif
 
     ++bootCount;
 
@@ -58,8 +64,14 @@ void setup()
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 
     // Enable wakup from deep sleep on gpio 34
+#if defined(ARDUINO_INKPLATE10)
+    // MCP I/O expander sends logic HIGH pulse signal as interrupt.
     esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
-    
+#elif defined(ARDUINO_INKPLATE10V2)
+    // PCAL I/O expander sends logic LOW pulse signal as interrupt.
+    esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ALL_LOW);
+#endif
+
     // Go to sleep
     esp_deep_sleep_start();
 }

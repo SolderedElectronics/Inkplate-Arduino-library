@@ -96,6 +96,8 @@ uint8_t System::readTouchpad(uint8_t _pad)
 
 #endif
 
+
+#ifndef ARDUINO_INKPLATE2
 /**
  * @brief       readBattery reads voltage of the battery
  *
@@ -140,8 +142,6 @@ double System::readBattery()
     // Calculate the voltage at the battery terminal (voltage is divided in half by voltage divider).
     return (double(adc) * 2.0 / 1000);
 }
-
-#ifndef ARDUINO_INKPLATE2
 
 /**
  * @brief       sdCardInit initializes sd card trough SPI

@@ -51,8 +51,10 @@ class Inkplate : public System, public Graphics
   public:
 #if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
     Inkplate();
+    void display(void);
 #else
     Inkplate(uint8_t _mode);
+    void display(bool leaveOn = false);
 #endif
 
 #if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE10V2)
@@ -64,7 +66,6 @@ class Inkplate : public System, public Graphics
     bool begin(void); // In boards
 
     void clearDisplay();
-    void display(bool leaveOn = false);
     // void writeRow(uint8_t data);
     uint32_t partialUpdate(bool _forced = false, bool leaveOn = false);
 

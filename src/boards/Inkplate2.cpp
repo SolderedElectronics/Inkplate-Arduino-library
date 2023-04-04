@@ -2,16 +2,16 @@
  **************************************************
  *
  * @file        Inkplate2.cpp
- * @brief       Basic funtions for controling inkplate 5
+ * @brief       Basic funtions for controling inkplate 2
  *
- *              https://github.com/e-radionicacom/Inkplate-Arduino-library
- *              For support, please reach over forums: forum.e-radionica.com/en
+ *              https://github.com/SolderedElectronics/Inkplate-Arduino-library
+ *              For support, please reach over forums: https://forum.soldered.com/
  *              For more info about the product, please check: www.inkplate.io
  *
  *              This code is released under the GNU Lesser General Public
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about
- *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *licensing, please contact hello@soldered.com Distributed as-is; no
  *warranty is given.
  *
  * @authors     @ Soldered
@@ -22,6 +22,8 @@
 #include "../include/defines.h"
 
 #ifdef ARDUINO_INKPLATE2
+
+SPIClass SPI2(HSPI);
 
 SPISettings epdSpiSettings(1000000UL, MSBFIRST, SPI_MODE0);
 
@@ -62,20 +64,26 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
         break;
     }
 
+    // Find the specific byte in the frame buffer that needs to be modified.
+    // Also find the bit in the byte that needs modification.
     int _x = x0 / 8;
-    int _x_sub = x0 % 8;
+    int _xSub = x0 % 8;
+
+    int _position = E_INK_WIDTH / 8 * y0 + _x;
+
+    // Clear both black and red frame buffer.
+    *(DMemory4Bit + _position) |= (pixelMaskLUT[7 - _xSub]);
+    *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + _position) |= (pixelMaskLUT[7 - _xSub]);
 
     // To optimize writing pixels into EPD, framebuffer is split in half, where first half is for B&W pixels and other
     // half is for red pixels only
     if (_color < 2)
     {
-        *(DMemory4Bit + E_INK_WIDTH / 8 * y0 + _x) |= (pixelMaskLUT[7 - _x_sub]);
-        *(DMemory4Bit + E_INK_WIDTH / 8 * y0 + _x) &= ~(_color << (7 - _x_sub));
+        *(DMemory4Bit + _position) &= ~(_color << (7 - _xSub));
     }
     else
     {
-        *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + E_INK_WIDTH / 8 * y0 + _x) |= (pixelMaskLUT[7 - _x_sub]);
-        *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + E_INK_WIDTH / 8 * y0 + _x) &= ~(pixelMaskLUT[7 - _x_sub]);
+        *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + _position) &= ~(pixelMaskLUT[7 - _xSub]);
     }
 }
 
@@ -91,7 +99,7 @@ bool Inkplate::begin()
     if (!_beginDone)
     {
         // Set SPI pins
-        SPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
 
         // Set up EPD communication pins
         pinMode(EPAPER_CS_PIN, OUTPUT);
@@ -144,7 +152,7 @@ bool Inkplate::begin()
  * @brief       Display function that updates display with new data from buffer
  *
  */
-void Inkplate::display(bool leaveOn) // Leave on does nothing
+void Inkplate::display()
 {
     // First write B&W pixels to epaper
     sendCommand(0x10);
@@ -178,13 +186,23 @@ void Inkplate::setPanelDeepSleep(bool _state)
 
     if (_panelState)
     {
+        // Set SPI pins
+        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+
+        // Set up EPD communication pins
+        pinMode(EPAPER_CS_PIN, OUTPUT);
+        pinMode(EPAPER_DC_PIN, OUTPUT);
+        pinMode(EPAPER_RST_PIN, OUTPUT);
+        pinMode(EPAPER_BUSY_PIN, INPUT_PULLUP);
+
+        delay(10);
+
         // Send commands to power up panel. According to the datasheet, it can be
         // powered up from deep sleep only by reseting it and doing reinit.
         begin();
     }
     else
     {
-
         sendCommand(0X50); // VCOM and data interval setting
         sendData(0xf7);
 
@@ -193,6 +211,17 @@ void Inkplate::setPanelDeepSleep(bool _state)
         sendCommand(0X07); // Put EPD in deep sleep
         sendData(0xA5);
         delay(1);
+
+        // Disable SPI
+        SPI2.end();
+
+        // To reduce power consumption, set SPI pins as outputs
+        pinMode(EPAPER_RST_PIN, INPUT);
+        pinMode(EPAPER_DC_PIN, INPUT);
+        pinMode(EPAPER_CS_PIN, INPUT);
+        pinMode(EPAPER_BUSY_PIN, INPUT);
+        pinMode(EPAPER_CLK, INPUT);
+        pinMode(EPAPER_DIN, INPUT);
     }
 }
 
@@ -207,7 +236,7 @@ bool Inkplate::getPanelDeepSleepState()
 }
 
 /**
- * @brief       resetPanel resets Inkplate 6COLOR
+ * @brief       resetPanel resets Inkplate 2
  */
 void Inkplate::resetPanel()
 {
@@ -218,7 +247,7 @@ void Inkplate::resetPanel()
 }
 
 /**
- * @brief       sendCommand sends SPI command to Inkplate 6COLOR
+ * @brief       sendCommand sends SPI command to Inkplate 2
  *
  * @param       uint8_t _command
  *              predefined command for epaper control
@@ -228,15 +257,15 @@ void Inkplate::sendCommand(uint8_t _command)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, LOW);
     delayMicroseconds(10);
-    SPI.beginTransaction(epdSpiSettings);
-    SPI.transfer(_command);
-    SPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.transfer(_command);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
 
 /**
- * @brief       sendData sends SPI data to Inkplate 6COLOR
+ * @brief       sendData sends SPI data to Inkplate 2
  *
  * @param       uint8_t *_data
  *              pointer to data buffer to be sent to epaper
@@ -248,15 +277,15 @@ void Inkplate::sendData(uint8_t *_data, int _n)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    SPI.beginTransaction(epdSpiSettings);
-    SPI.transfer(_data, _n);
-    SPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.writeBytes(_data, _n);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
 
 /**
- * @brief       sendData sends SPI data to Inkplate 6COLOR
+ * @brief       sendData sends SPI data to Inkplate 2
  *
  * @param       uint8_t _data
  *              data to be sent to epaper
@@ -266,9 +295,9 @@ void Inkplate::sendData(uint8_t _data)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    SPI.beginTransaction(epdSpiSettings);
-    SPI.transfer(_data);
-    SPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.transfer(_data);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
