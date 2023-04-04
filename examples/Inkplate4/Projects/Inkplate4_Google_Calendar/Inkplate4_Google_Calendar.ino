@@ -1,11 +1,11 @@
 /*
-   Inkplate5_Google_Calendar example for Soldered Inkplate 5
-   For this example you will need only a USB-C cable and Inkplate 5.
-   Select "Soldered Inkplate5" from Tools -> Board menu.
-   Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
+   Inkplate4_Google_Calendar example for Soldered Inkplate 4
+   For this example you will need only a USB-C cable and Inkplate 4.
+   Select "Soldered Inkplate4" from Tools -> Board menu.
+   Don't have "Soldered Inkplate4" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   This project shows you how Inkplate 5 can be used to display
+   This project shows you how Inkplate 4 can be used to display
    events in your Google Calendar using their provided API
 
    For this to work you need to change your timezone, wifi credentials and your private calendar url
@@ -27,8 +27,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE5
-#error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
+#ifndef ARDUINO_INKPLATE4
+#error "Wrong board selection for this example, please select Soldered Inkplate4 in the boards menu."
 #endif
 
 // Include Inkplate library to the sketch
@@ -45,7 +45,6 @@
 
 // --------------- CHANGE HERE ----------------:
 
-
 // Enter your WiFi credentials
 char ssid[] = "Soldered";
 char pass[] = "dasduino";
@@ -53,8 +52,7 @@ char pass[] = "dasduino";
 // Secret address in iCal format
 char calendarURL[] = "https://calendar.google.com/calendar/ical/robert%40soldered.com/private-bc147845014b4905f9fed21bea8d25c3/basic.ics";
 
-
-int timeZone = 2; // 2 means UTC+2
+int timeZone = 1; // 2 means UTC+2
 
 // Delay between API calls in seconds
 #define DELAY_SECS 4 * 60 // Every 4 minutes
@@ -62,7 +60,7 @@ int timeZone = 2; // 2 means UTC+2
 //----------------------------------------------
 
 // Create object on Inkplate library and set library to work in gray mode (3-bit)
-Inkplate display(INKPLATE_3BIT);
+Inkplate display;
 
 // Our networking functions, see Network.cpp for info
 Network network;
@@ -103,7 +101,7 @@ void setup()
 
     // Initial display settings
     display.setTextWrap(false);
-    display.setTextColor(BLACK);
+    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
 
     // Connect Inkplate to the WiFi network
     network.begin(ssid, pass);
@@ -128,8 +126,6 @@ void setup()
     // Display the data on the screen
     display.display();
 
-    Serial.println("After display display, just before scleep");
-
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000000LL * DELAY_SECS); // Activate wakeup timer
     (void)esp_deep_sleep_start(); // Start deep sleep (this function does not return). Program stops here.
@@ -145,10 +141,10 @@ void loop()
 void drawInfo()
 {
     // Setting font and color
-    display.setFont(&FreeSans12pt7b);
+    display.setFont();
     display.setTextSize(1);
 
-    display.setCursor(20, 20);
+    display.setCursor(5, 2);
 
     // Find email in raw data
     char temp[64];
@@ -173,10 +169,10 @@ void drawInfo()
 void drawTime()
 {
     // Initial text settings
-    display.setFont(&FreeSans12pt7b);
+    display.setFont();
     display.setTextSize(1);
 
-    display.setCursor(765, 20);
+    display.setCursor(295, 2);
 
     // Our function to get time
     network.getTime(date, timeZone);
@@ -191,27 +187,27 @@ void drawTime()
 void drawGrid()
 {
     // Upper left and low right coordinates
-    int x1 = 3, y1 = 30;
+    int x1 = 3, y1 = 12;
     int x2 = E_INK_WIDTH - 3, y2 = E_INK_HEIGHT - 3;
 
     // Header size, for day info
-    int header = 30;
+    int header = 20;
 
     // Columns and rows
     int n = 1, m = 4;
 
     // Line drawing
-    display.drawThickLine(x1, y1 + header, x2, y1 + header, 0, 2.0);
+    display.drawThickLine(x1, y1 + header, x2, y1 + header, INKPLATE_BLACK, 1.0);
     for (int i = 0; i < n + 1; ++i)
     {
         display.drawThickLine(x1, (int)((float)y1 + (float)i * (float)(y2 - y1) / (float)n), x2,
-                              (int)((float)y1 + (float)i * (float)(y2 - y1) / (float)n), 0, 2.0);
+                              (int)((float)y1 + (float)i * (float)(y2 - y1) / (float)n), INKPLATE_BLACK, 1.0);
     }
     for (int i = 0; i < m + 1; ++i)
     {
         display.drawThickLine((int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m), y1,
-                              (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m), y2, 0, 2.0);
-        display.setFont(&FreeSans9pt7b);
+                              (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m), y2, INKPLATE_BLACK, 1.0);
+        display.setFont();
 
         // Display day info using time offset
         char temp[64];
@@ -219,7 +215,7 @@ void drawGrid()
         temp[10] = 0;
 
         // calculate where to put text and print it
-        display.setCursor(40 + (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m) + 15, y1 + header - 6);
+        display.setCursor(5 + (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m) + 15, y1 + header - 10);
         display.println(temp);
     }
 }
@@ -298,13 +294,12 @@ void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp)
 // Function to draw event
 bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeeded)
 {
-    Serial.println("dRAW EVENT! ");
     // Upper left coordintes
     int x1 = 3 + 4 + (954 / 4) * day;
     int y1 = beginY + 3;
 
     // Setting text font
-    display.setFont(&FreeSans12pt7b);
+    display.setFont();
 
     // Some temporary variables
     int n = 0;
@@ -328,7 +323,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
         display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
 
         // Char out of bounds, put in next line
-        if (w > 950 / 4 - 30)
+        if (w > display.width() / 4 - 30)
         {
             // if there was a space 5 chars before, break line there
             if (n - lastSpace < 5)
@@ -353,7 +348,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
 
     // Set cursor on same y but change x
     display.setCursor(x1 + 3, display.getCursorY());
-    display.setFont(&FreeSans9pt7b);
+    display.setFont();
 
     // Print time
     // also, if theres a location print it
@@ -393,14 +388,14 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
 
     int bx1 = x1 + 2;
     int by1 = y1;
-    int bx2 = x1 + 950 / 4 - 7;
+    int bx2 = x1 + display.width() / 4 - 7;
     int by2 = display.getCursorY() + 7;
 
     // Draw event rect bounds
-    display.drawThickLine(bx1, by1, bx1, by2, 0, 2.0);
-    display.drawThickLine(bx1, by2, bx2, by2, 0, 2.0);
-    display.drawThickLine(bx2, by2, bx2, by1, 0, 2.0);
-    display.drawThickLine(bx2, by1, bx1, by1, 0, 2.0);
+    display.drawThickLine(bx1, by1, bx1, by2, INKPLATE_BLACK, 1.0);
+    display.drawThickLine(bx1, by2, bx2, by2, INKPLATE_BLACK, 1.0);
+    display.drawThickLine(bx2, by2, bx2, by1, INKPLATE_BLACK, 1.0);
+    display.drawThickLine(bx2, by1, bx1, by1, INKPLATE_BLACK, 1.0);
 
     // Set how high is the event
     *heigthNeeded = display.getCursorY() + 12 - y1;
@@ -498,9 +493,9 @@ void drawData()
         if (clogged[i])
         {
             // Draw notification showing that there are more events than drawn ones
-            display.fillRoundRect(5 + i * ((E_INK_WIDTH - 4) / 4), 540 - 24, ((E_INK_WIDTH - 4) / 4) - 5, 20, 10, 5);
+            display.fillRoundRect(5 + i * ((E_INK_WIDTH - 4) / 4), 540 - 24, ((E_INK_WIDTH - 4) / 4) - 5, 20, 10, INKPLATE_BLACK);
             display.setCursor(65 + i * ((E_INK_WIDTH - 4) / 4), 532);
-            display.setFont(&FreeSans9pt7b);
+            display.setFont();
             display.print(cloggedCount[i]);
             display.print(" more events");
         }
