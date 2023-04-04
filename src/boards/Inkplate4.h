@@ -19,8 +19,6 @@
 #ifndef INKPLATE4_H
 #define INKPLATE4_H
 
-// So compiler knows we need Inkplate 2 features
-// If there is a good board def this isn't required
 #define EPAPER_RST_PIN  19
 #define EPAPER_DC_PIN   33
 #define EPAPER_CS_PIN   27
@@ -30,16 +28,18 @@
 
 #define BUSY_TIMEOUT_MS 1000
 
-#define E_INK_HEIGHT 300
-#define E_INK_WIDTH  400
+// ePaper specific defines
+#define E_INK_HEIGHT   300
+#define E_INK_WIDTH    400
+#define INKPLATE_WHITE 0b00000000
+#define INKPLATE_BLACK 0b00000001
+#define INKPLATE_RED   0b00000010
+
+// Pin on the internal io expander which controls MOSFET for turning on and off the SD card
+#define SD_PMOS_PIN IO_PIN_B2 // 10
 
 #define IO_INT_ADDR 0x20
-#define IO_EXT_ADDR 0x21
-
-// in defines.h
-// #define WHITE 0
-// #define BLACK 1
-#define RED 2
+#define IO_EXT_ADDR 0x20
 
 #ifndef _swap_int16_t
 #define _swap_int16_t(a, b)                                                                                            \
