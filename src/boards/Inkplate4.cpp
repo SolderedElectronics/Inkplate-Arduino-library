@@ -328,10 +328,11 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
 
     if (_color > 2)
         return;
-    
+
     // Fix for ePaper buffer
     y0 += 1;
-    if(y0 == 300) y0 = 0;
+    if (y0 == 300)
+        y0 = 0;
 
     switch (rotation)
     {
