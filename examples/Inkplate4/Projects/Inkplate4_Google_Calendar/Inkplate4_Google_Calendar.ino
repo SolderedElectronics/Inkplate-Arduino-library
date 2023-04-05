@@ -496,7 +496,7 @@ void drawData()
             // Draw notification showing that there are more events than drawn ones
             display.fillRoundRect(6 + i * ((E_INK_WIDTH - 4) / 4) - i, 300 - 24, ((E_INK_WIDTH - 4) / 4) - 5, 20, 10, INKPLATE_WHITE);
             display.drawRoundRect(6 + i * ((E_INK_WIDTH - 4) / 4) - i, 300 - 24, ((E_INK_WIDTH - 4) / 4) - 5, 20, 10, INKPLATE_BLACK);
-            display.setCursor(26 + i * ((E_INK_WIDTH - 3) / 4), (i == 0) ? 280 : 287);
+            display.setCursor(26 + i * ((E_INK_WIDTH - 3) / 4), 280);
             Serial.println(display.getCursorY());
             display.setFont(&Picopixel);
             display.print(cloggedCount[i]);
