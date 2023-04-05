@@ -30,26 +30,30 @@ Inkplate display; // Create object on Inkplate library
 void setup()
 {
     // Init library (you should call this function ONLY ONCE)
-    display.begin(); 
+    display.begin();
+
+    // Init serial communication
+    Serial.begin(115200);
 
     // Init EEPROM library with 128 of EEPROM size.
     EEPROM.begin(EEPROM_SIZE);
 
-    display.setTextSize(4);                  // Set text size
+    display.setTextSize(2);                  // Set text size
     display.println("Clearing EEPROM...\n"); // Print message
-    display.display();                       // Full refresh the display
+    Serial.println("Clearing EEPROM...\n");  // Print message
     clearEEPROM();                           // Clear user EEPROM data
     delay(500);                              // Wait a little bit...
 
+    Serial.println("Writing data to EEPROM...\n");  // Print message
     display.println("Writing data to EEPROM...\n"); // Print message
-    display.partialUpdate();                        // Use partial updates for refreshing the display
     writeEEPROM();                                  // Write some data to EEPROM
     delay(500);                                     // Wait a little bit...
 
+    Serial.println("Reading data from EEPROM:\n");  // Print message
     display.println("Reading data from EEPROM:\n"); // Print message
-    display.partialUpdate();                        // Use partial updates for refreshing the display
-    display.setTextSize(2);                         // Use smaller text so everything can fit on display
+    display.setTextSize(1);                         // Use smaller text so everything can fit on display
     printEEPROM();                                  // Read data from EEPROM and display it on screen
+    display.display();
 }
 
 void loop()
@@ -85,12 +89,15 @@ void printEEPROM()
     // Go through each address and read a value from it
     for (int i = 0; i < EEPROM_SIZE; i++)
     {
-        // Print read value in decimal 
+        // Print read value in decimal
         display.print(EEPROM.read(i), DEC);
+        Serial.print(EEPROM.read(i));
 
         // Print a comma after each number except the last one
         if (i != EEPROM_SIZE - 1)
+        {
             display.print(", ");
+            Serial.print(", ");
+        }
     }
-    display.partialUpdate();
 }

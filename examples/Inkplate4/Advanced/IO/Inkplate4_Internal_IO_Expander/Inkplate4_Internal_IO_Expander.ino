@@ -5,20 +5,15 @@
    Don't have "Soldered Inkplate4" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
+   Only pins P1-1 and P1-2 will not work without cutting the jumpers JP2 and JP3 and soldering
+   them on the other side because it's used for charging LED and controlling MOSFET for an SD card.
+
    Connect resistor to P1-7 on IO expander header at the top on the backside
    (component side) of Inkplate. You will have to connect one side of 330 Ohm resistor to P1-7, then other side
    to anode of LED and finally, cathode pin of LED to GND.
 
    This example will show you how you can manipulate with I/Os of internal IO Expander.
-   You can only manipulate with Port B of IO Expander (P1-1->P1-7). Port 0 (or Port A) is used for epaper
-   panel and TPS65186 PMIC.
-   P1-0 is used for ESP32 GPIO0 so you can't use it either.
-   P1-1 is used for enabling battery reading (if Batt solder bridge is bridged between second and third pad).
-   P1-2 is used for tunring on and off the MOSFET for SD card (if solder bridge is bridged between second and third
-   pad). If everything is connected ok, after you upload code, LED should blink.
-
-   DANGER: DO NOT USE P0-0 -> P0-7 and P1-0. In code those are pins from 0-8!!! Using those, you
-   might permanently damage the screen. You should only use pins from 9-15.
+   If everything is connected ok, after you upload code, LED should blink.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -32,8 +27,8 @@
 
 #include "Inkplate.h" // Include Inkplate library to the sketch
 
-// We are going to use pin P1-7.
-// Remember! P0-0 = 0, P0-1 = 1, ..., P0-7 = 7, P1-0 = 8, P1-1 = 9, ..., P1-7 = 15.
+// We are going to use pin P1-7
+// Remember! P0-0 = 0, P0-1 = 1, ..., P0-7 = 7, P1-0 = 8, P1-1 = 9, ..., P1-7 = 15
 #define LED_PIN IO_PIN_B7
 
 Inkplate display; // Create an object on Inkplate library

@@ -16,8 +16,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate10 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate10 in the boards menu."
 #endif
 
 // Include Inkplate library to the sketch

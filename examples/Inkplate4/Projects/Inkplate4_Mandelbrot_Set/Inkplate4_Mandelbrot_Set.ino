@@ -26,7 +26,8 @@
 // Create object on Inkplate library
 Inkplate display;
 
-// Takes a long time to render, cca 3 minutes
+// It takes a long time to render, cca a half minute for the partial set, 45 sec for the whole set
+// You can watch the progress on the serial monitor, when it gets to 299, it's over
 
 // Explore different positions to draw
 // Some interesting ones can be found here http://www.cuug.ab.ca/dewara/mandelbrot/Mandelbrowser.html
@@ -47,8 +48,9 @@ void setup()
     {
         for (int i = 0; i < E_INK_WIDTH; ++i)
         {
-            display.drawPixel(i, j, colorAt(xFrom + (double)i * (xTo - xFrom) / 400.0, yFrom + (double)j * (yTo - yFrom) / 300.0));
-            
+            display.drawPixel(
+                i, j, colorAt(xFrom + (double)i * (xTo - xFrom) / 400.0, yFrom + (double)j * (yTo - yFrom) / 300.0));
+
             // For whole set:
             // display.drawPixel(i, j, colorAt(-2.0 + (3.0 * (double)i / 400.0), -1.0 + 2.0 * (double)j / 300.0));
         }
