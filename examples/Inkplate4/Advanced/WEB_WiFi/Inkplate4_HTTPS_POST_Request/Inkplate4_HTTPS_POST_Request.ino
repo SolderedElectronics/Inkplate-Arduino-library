@@ -1,8 +1,8 @@
 /*
-   Inkplate5_HTTPS_POST_Request example for Soldered Inkplate 5
-   For this example you will need a USB-C cable, Inkplate 5 and stable WiFi Internet connection.
-   Select "Soldered Inkplate5" from Tools -> Board menu.
-   Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
+   Inkplate4_HTTPS_POST_Request example for Soldered Inkplate 4
+   For this example you will need a USB-C cable, Inkplate 4 and stable WiFi Internet connection.
+   Select "Soldered Inkplate4" from Tools -> Board menu.
+   Don't have "Soldered Inkplate4" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how to connect to a WiFi network and send a POST request via HTTPS.
@@ -13,12 +13,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   21 March 2023 by Soldered
+   4 April 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE5
-#error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
+#ifndef ARDUINO_INKPLATE4
+#error "Wrong board selection for this example, please select Soldered Inkplate4 in the boards menu."
 #endif
 
 // Include needed libraries
@@ -41,7 +41,7 @@ const char *apiUrl = "https://jsonplaceholder.typicode.com/posts";
 // Create objects from included libraries
 WiFiClientSecure client;
 HTTPClient http;
-Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set library to work in monochrome mode
+Inkplate display; // Create object on Inkplate library
 
 void setup()
 {
@@ -54,12 +54,12 @@ void setup()
     // Clear the display and print message
     display.clearDisplay();
     display.setTextColor(BLACK);
-    display.setTextSize(6);
+    display.setTextSize(3);
     display.println("HTTPS POST Request example");
     display.println();
 
-    display.setTextSize(4);
-    display.println("Open Serial Monitor at 115200 baud rate to see what's happening");
+    display.setTextSize(2);
+    display.printf("Open Serial Monitor at 115200 baud rate to see what's happening");
     display.display();
 
     // Connect to WiFi
