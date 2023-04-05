@@ -96,6 +96,7 @@ bool Network::getData(char *calendarURL, char *data)
     HTTPClient http;
     http.getStream().setTimeout(10);
     http.getStream().flush();
+    http.getStream().setNoDelay(true);
 
     // Begin http by passing url to it
     http.begin(calendarURL);

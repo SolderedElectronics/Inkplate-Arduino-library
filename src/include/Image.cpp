@@ -116,10 +116,10 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
  */
 bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c, uint8_t bg)
 {
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE4)
+#if defined(ARDUINO_INKPLATECOLOR)
     drawBitmap3Bit(x, y, buf, w, h);
     return 1;
-#elif defined(ARDUINO_INKPLATE2)
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
     uint16_t scaled_w = ceil(w / 4.0);
     for (int i = 0; i < h; i++)
     {

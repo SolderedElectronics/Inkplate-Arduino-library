@@ -1,52 +1,85 @@
-/*
-   Inkplate5_Peripheral_Mode sketch for Soldered Inkplate 5.
-   For this example you will need only a USB-C cable and Inkplate 5.
-   Select "Soldered Inkplate5" from Tools -> Board menu.
-   Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
-   https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
-
-   Using this sketch, you don't have to program and control e-paper using Arduino code.
-   Instead, you can send UART command (explained in documentation that can be found inside folder of this sketch).
-   This give you flexibility that you can use this Inkplate 5 on any platform!
-
-   Because it uses UART, it's little bit slower and it's not recommended to send bunch of
-   drawPixel command to draw some image. Instead, load bitmaps and pictures on SD card and load image from SD.
-   If we missed some function, you can modify this and make yor own.
-   Also, every Inkplate comes with this peripheral mode right from the factory.
-
-   Learn more about Peripheral Mode in this update:
-   https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates
-
-   UART settings are: 115200 baud, standard parity, ending with "\n\r" (Both NL & CR)
-   You can send commands via USB port or by directly connecting to ESP32 TX and RX pins.
-   Don't forget you need to send #L(1)* after each command to show it on the display
-   (equal to display.display()).
-
-   Want to learn more about Inkplate? Visit www.inkplate.io
-   Looking to get support? Write on our forums: https://forum.soldered.com/
-   28 March 2023 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate4_Factory_Programming.ino
+ *
+ * @brief       File for factory programming Inkplate4
+ *
+ * @note        Tests will also be done, to pass all tests:
+ *              -edit the WiFi information in test.cpp.
+ *              -connect a slave device via EasyC on address 0x30 (you may change this in test.cpp also).
+ *              -insert a formatted microSD card (doesn't have to be empty).
+ *              -press wake button to finish testing
+ *              Output of the tests will be done via Serial due to slow screen refresh rate
+ *
+ *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
+ *LICENSE file included with this example. If you have any questions about
+ *licensing, please visit https://soldered.com/contact/ Distributed as-is; no
+ *warranty is given.
+ *
+ * @authors     Robert @ Soldered
+ ***************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE5
-#error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
+#if !defined(ARDUINO_INKPLATE4)
+#error "Wrong board selection for this example, please select Inkplate 6 Color in the boards menu."
 #endif
 
-// Include Inkplate library to the sketch
+// Do not forget to add WiFi SSID and WiFi Password in test.cpp!
+
+#include "EEPROM.h"
 #include "Inkplate.h"
+#include "image.h"
+#include "test.h"
+#include <Wire.h>
 
-// Create object on Inkplate library and set library to work in monochorme mode
-Inkplate display(INKPLATE_1BIT);
+Inkplate display;
 
+// If you to perform all tests change this number
+const int EEPROMaddress = 0;
+
+// Peripheral mode variables and arrays
 #define BUFFER_SIZE 1000
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
 
 void setup()
 {
-    display.begin();
     Serial.begin(115200);
+    display.setTextSize(3);
+    EEPROM.begin(512);
+    Wire.begin();
+
+    // Wakeup button
+    pinMode(GPIO_NUM_36, INPUT);
+
+    bool isFirstStartup = (EEPROM.read(EEPROMaddress) != 170);
+
+    if (isFirstStartup)
+    {
+        Wire.setTimeOut(3000);
+        // Try to ping IO expander to test I2C
+        Wire.beginTransmission(IO_INT_ADDR);
+        if (Wire.endTransmission() != 0)
+        {
+            Serial.println("I2C Bus error!");
+            failHandler();
+        }
+    }
+
+    display.begin();
+
+    if (isFirstStartup)
+    {
+        // Test all the peripherals
+        testPeripheral();
+
+        EEPROM.write(EEPROMaddress, 170);
+        EEPROM.commit();
+    }
+
     memset(commandBuffer, 0, BUFFER_SIZE);
+
+    showSplashScreen();
 }
 
 void loop()
@@ -252,38 +285,6 @@ void loop()
                 }
                 break;
 
-            case 'I':
-                sscanf(s + 3, "%d", &c);
-                // sprintf(temp, "display.setDisplayMode(%s)\n", c == 0 ? "INKPLATE_1BIT" : "INKPLATE_3BIT");
-                // Serial.print(temp);
-                if (c == 1)
-                    display.selectDisplayMode(INKPLATE_1BIT);
-                if (c == 3)
-                    display.selectDisplayMode(INKPLATE_3BIT);
-                break;
-
-            case 'J':
-                sscanf(s + 3, "%c", &b);
-                if (b == '?')
-                {
-                    // if (0 == 0) {
-                    //  Serial.println("#J(0)*");
-                    //} else {
-                    //  Serial.println("#J(1)*");
-                    //}
-                    if (display.getDisplayMode() == INKPLATE_1BIT)
-                    {
-                        Serial.println("#J(0)*");
-                        Serial.flush();
-                    }
-                    if (display.getDisplayMode() == INKPLATE_3BIT)
-                    {
-                        Serial.println("#J(1)*");
-                        Serial.flush();
-                    }
-                }
-                break;
-
             case 'K':
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')
@@ -300,13 +301,6 @@ void loop()
                     // Serial.print("display.display();\n");
                     display.display();
                 }
-                break;
-
-            case 'M':
-                sscanf(s + 3, "%d,%d,%d", &y1, &x2, &y2);
-                // sprintf(temp, "display.partialUpdate(%d, %d, %d);\n", y1, x2, y2);
-                // Serial.print(temp);
-                display.partialUpdate();
                 break;
 
             case 'N':
@@ -345,28 +339,6 @@ void loop()
                 }
                 break;
 
-            case 'Q':
-                sscanf(s + 3, "%d", &c);
-                c &= 1;
-                // if (c == 0) Serial.print("display.einkOff();\n");
-                // if (c == 1) Serial.print("display.einkOn();\n");
-                if (c == 0)
-                    display.einkOff();
-                if (c == 1)
-                    display.einkOn();
-                break;
-
-            case 'R':
-                sscanf(s + 3, "%c", &b);
-                if (b == '?')
-                {
-                    Serial.print("#R(");
-                    Serial.print(display.getPanelState(), DEC);
-                    // Serial.print(1, DEC);
-                    Serial.println(")*");
-                    Serial.flush();
-                }
-                break;
             case 'S':
                 sscanf(s + 3, "%d,%d,\"%149[^\"]\"", &x, &y, strTemp);
                 n = strlen(strTemp);
@@ -612,4 +584,11 @@ int hexToChar(char c)
     if (c >= 'a' && c <= 'f')
         return c - 'a' + 10;
     return -1;
+}
+
+void showSplashScreen()
+{
+    display.clearDisplay();
+    display.drawImage(demo_image, 0, 0, demo_image_w, demo_image_h);
+    display.display();
 }
