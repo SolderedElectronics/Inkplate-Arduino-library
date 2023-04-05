@@ -17,10 +17,11 @@
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
 #error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
+    "Wrong board selection for this example, please select e-radionica Inkplate10 in the boards menu."
 #endif
 
-#include <Inkplate.h>
+// Include Inkplate library to the sketch
+#include "Inkplate.h"
 
 // Conversion factor for micro seconds to seconds
 #define uS_TO_S_FACTOR 1000000
@@ -49,10 +50,6 @@ void setup()
     display.setIntPin(PAD1, RISING, IO_INT_ADDR);
     display.setIntPin(PAD2, RISING, IO_INT_ADDR);
     display.setIntPin(PAD3, RISING, IO_INT_ADDR);
-#elif defined(ARDUINO_INKPLATE10V2)
-    display.setIntPin(PAD1, IO_INT_ADDR);
-    display.setIntPin(PAD2, IO_INT_ADDR);
-    display.setIntPin(PAD3, IO_INT_ADDR);
 #endif
 
     ++bootCount;
@@ -67,9 +64,6 @@ void setup()
 #if defined(ARDUINO_INKPLATE10)
     // MCP I/O expander sends logic HIGH pulse signal as interrupt.
     esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
-#elif defined(ARDUINO_INKPLATE10V2)
-    // PCAL I/O expander sends logic LOW pulse signal as interrupt.
-    esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ALL_LOW);
 #endif
 
     // Go to sleep
