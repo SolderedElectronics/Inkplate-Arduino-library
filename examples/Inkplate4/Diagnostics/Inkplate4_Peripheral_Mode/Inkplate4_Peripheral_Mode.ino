@@ -1,13 +1,13 @@
 /*
-   Inkplate5_Peripheral_Mode sketch for Soldered Inkplate 5.
-   For this example you will need only a USB-C cable and Inkplate 5.
-   Select "Soldered Inkplate5" from Tools -> Board menu.
-   Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
+   Inkplate4_Peripheral_Mode sketch for Soldered Inkplate 4.
+   For this example you will need only a USB-C cable and Inkplate 4.
+   Select "Soldered Inkplate4" from Tools -> Board menu.
+   Don't have "Soldered Inkplate4" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    Using this sketch, you don't have to program and control e-paper using Arduino code.
    Instead, you can send UART command (explained in documentation that can be found inside folder of this sketch).
-   This give you flexibility that you can use this Inkplate 5 on any platform!
+   This give you flexibility that you can use this Inkplate 4 on any platform!
 
    Because it uses UART, it's little bit slower and it's not recommended to send bunch of
    drawPixel command to draw some image. Instead, load bitmaps and pictures on SD card and load image from SD.
@@ -24,29 +24,25 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   28 March 2023 by Soldered
+   5 April 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE5
-#error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
+#if !defined(ARDUINO_INKPLATE4)
+#error "Wrong board selection for this example, please select Inkplate 4 in the boards menu."
 #endif
 
-// Include Inkplate library to the sketch
-#include "Inkplate.h"
-
-// Create object on Inkplate library and set library to work in monochorme mode
-Inkplate display(INKPLATE_1BIT);
+#include <Inkplate.h> // Include Inkplate library
+Inkplate display;     // Init Inkplate object
 
 #define BUFFER_SIZE 1000
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
-
 void setup()
 {
-    display.begin();
-    Serial.begin(115200);
-    memset(commandBuffer, 0, BUFFER_SIZE);
+    display.begin();                       // Init Inkplate library
+    Serial.begin(115200);                  // Init serial communication
+    memset(commandBuffer, 0, BUFFER_SIZE); // Clear the command buffer
 }
 
 void loop()
@@ -252,38 +248,6 @@ void loop()
                 }
                 break;
 
-            case 'I':
-                sscanf(s + 3, "%d", &c);
-                // sprintf(temp, "display.setDisplayMode(%s)\n", c == 0 ? "INKPLATE_1BIT" : "INKPLATE_3BIT");
-                // Serial.print(temp);
-                if (c == 1)
-                    display.selectDisplayMode(INKPLATE_1BIT);
-                if (c == 3)
-                    display.selectDisplayMode(INKPLATE_3BIT);
-                break;
-
-            case 'J':
-                sscanf(s + 3, "%c", &b);
-                if (b == '?')
-                {
-                    // if (0 == 0) {
-                    //  Serial.println("#J(0)*");
-                    //} else {
-                    //  Serial.println("#J(1)*");
-                    //}
-                    if (display.getDisplayMode() == INKPLATE_1BIT)
-                    {
-                        Serial.println("#J(0)*");
-                        Serial.flush();
-                    }
-                    if (display.getDisplayMode() == INKPLATE_3BIT)
-                    {
-                        Serial.println("#J(1)*");
-                        Serial.flush();
-                    }
-                }
-                break;
-
             case 'K':
                 sscanf(s + 3, "%c", &b);
                 if (b == '1')
@@ -300,13 +264,6 @@ void loop()
                     // Serial.print("display.display();\n");
                     display.display();
                 }
-                break;
-
-            case 'M':
-                sscanf(s + 3, "%d,%d,%d", &y1, &x2, &y2);
-                // sprintf(temp, "display.partialUpdate(%d, %d, %d);\n", y1, x2, y2);
-                // Serial.print(temp);
-                display.partialUpdate();
                 break;
 
             case 'N':
@@ -345,28 +302,6 @@ void loop()
                 }
                 break;
 
-            case 'Q':
-                sscanf(s + 3, "%d", &c);
-                c &= 1;
-                // if (c == 0) Serial.print("display.einkOff();\n");
-                // if (c == 1) Serial.print("display.einkOn();\n");
-                if (c == 0)
-                    display.einkOff();
-                if (c == 1)
-                    display.einkOn();
-                break;
-
-            case 'R':
-                sscanf(s + 3, "%c", &b);
-                if (b == '?')
-                {
-                    Serial.print("#R(");
-                    Serial.print(display.getPanelState(), DEC);
-                    // Serial.print(1, DEC);
-                    Serial.println(")*");
-                    Serial.flush();
-                }
-                break;
             case 'S':
                 sscanf(s + 3, "%d,%d,\"%149[^\"]\"", &x, &y, strTemp);
                 n = strlen(strTemp);
