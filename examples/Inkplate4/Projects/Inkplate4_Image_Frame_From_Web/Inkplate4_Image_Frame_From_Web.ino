@@ -7,7 +7,7 @@
 
     This example shows how you can set Inkplate to show random pictures from web.
     What happens here is basically ESP32 connects to the WiFi and sends GET request
-    to the random image on the server and the server returns a link to the image. 
+    to the random image on the server and the server returns a link to the image.
     Then Inkplate draws that image to the screen.
 
     Want to learn more about Inkplate? Visit www.inkplate.io

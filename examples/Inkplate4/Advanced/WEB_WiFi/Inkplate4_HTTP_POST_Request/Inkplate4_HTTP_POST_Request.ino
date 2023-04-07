@@ -63,12 +63,12 @@ void setup()
 
     // Set text color and size
     display.setTextColor(BLACK, WHITE);
-    display.setTextSize(6);
+    display.setTextSize(3);
 
     // Display a message
-    display.println("HTTP POST request example");
+    display.println("HTTP POST request\nexample");
     display.println();
-    display.setTextSize(4);
+    display.setTextSize(2);
     display.println("Open Serial Monitor at 115200");
     display.println("baud rate to see what's happening");
     display.display();

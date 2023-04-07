@@ -55,11 +55,11 @@ void setup()
     display.clearDisplay();
     display.setTextColor(BLACK);
     display.setTextSize(3);
-    display.println("HTTPS POST Request example");
+    display.println("HTTPS POST Request\nexample");
     display.println();
 
     display.setTextSize(2);
-    display.printf("Open Serial Monitor at 115200 baud rate to see what's happening");
+    display.println("Open Serial Monitor at 115200\nbaud rate to see what's\nhappening");
     display.display();
 
     // Connect to WiFi

@@ -46,9 +46,6 @@ void setup()
 {
     display.begin();             // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();      // Clear frame buffer of display
-    display.setCursor(0, 0);     // Set the cursor on the beginning of the screen
-    display.setTextColor(BLACK); // Set text color to black
-    display.setTextSize(5);      // Scale text to be five times bigger then original (5x7 px)
 }
 
 void loop()
@@ -56,8 +53,7 @@ void loop()
     // If the folder is empty print a message and go to the sleep
     if (!getFileCount())
     {
-        display.println("The folder is empty");
-        display.display();
+        Serial.println("The folder is empty");
 
         // Go to deep sleep and do nothing
         deepSleep();
@@ -99,9 +95,8 @@ void loop()
     }
     else
     {
-        display.printf("Error opening folder! Make sure \nthat you have entered the proper \nname and add / to the end "
-                       "of the \npath");
-        display.display();
+        Serial.printf("Error opening folder! Make sure that you have entered the proper name and add / to the end "
+                       "of the path");
         deepSleep();
     }
 
@@ -109,7 +104,7 @@ void loop()
     // If not, go into a deep sleep and wait for displaying next image
     if (lastImageIndex != 0)
     {
-        // Set EPS32 to be woken up in 10 seconds (in this case)
+        // Set EPS32 to be woken up in 60 seconds (in this case)
         esp_sleep_enable_timer_wakeup(SECS_BETWEEN_PICTURES * 1000000LL);
 
         // Go to the deep sleep
@@ -127,8 +122,7 @@ int getFileCount()
     if (!display.sdCardInit())
     {
         // If the SD card init is not successful, display an error on the screen
-        display.println("SD Card error!");
-        display.display();
+        Serial.println("SD Card error!");
 
         // Go to deep sleep and do nothing
         deepSleep();
@@ -158,8 +152,7 @@ int getFileCount()
         }
         else
         {
-            display.println("The folder doesn't exist");
-            display.display();
+            Serial.println("The folder doesn't exist");
             deepSleep();
         }
 

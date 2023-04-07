@@ -109,7 +109,7 @@ void loop()
     // If not, go into a deep sleep and wait for displaying next image
     if (lastImageIndex != 0)
     {
-        // Set EPS32 to be woken up in 10 seconds (in this case)
+        // Set EPS32 to be woken up in 60 seconds (in this case)
         esp_sleep_enable_timer_wakeup(SECS_BETWEEN_PICTURES * 1000000LL);
 
         // Go to the deep sleep

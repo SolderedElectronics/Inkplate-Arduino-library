@@ -1,6 +1,6 @@
 /*
    Inkplate4_SD_Pictures example for Soldered Inkplate 4
-   For this example you will need a USB-C cable, Inkplate4 and a SD card 
+   For this example you will need a USB-C cable, Inkplate4 and micro SD card 
    loaded with images that can be found inside folder of this example.
    Select "Soldered Inkplate4" from Tools -> Board menu.
    Don't have "Soldered Inkplate4" option? Follow our tutorial and add it:
@@ -14,7 +14,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   5 April 2023 by Soldered
+   6 April 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -28,16 +28,14 @@ SdFile file;          // Create SdFile object used for accessing files on SD car
 
 void setup()
 {
+    Serial.begin(115200);        // Init serial communication
     display.begin();             // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();      // Clear frame buffer of display
-    display.setTextColor(BLACK); // Set text color to black
-    display.setTextSize(3);      // Set font size to 3
 
     // Init SD card. Display if SD card is init propery or not.
     if (display.sdCardInit())
     {
-        display.println("SD Card OK! Reading image...");
-        display.display();
+        Serial.println("SD Card OK! Reading image...");
 
         // If card is properly init, try to load image and display it on e-paper at position X=0, Y=0
         // NOTE: Both drawImage methods allow for an optional fifth "invert" parameter. Setting this parameter
@@ -45,11 +43,11 @@ void setup()
         // exporting bitmaps from certain softwares.
         if (!display.drawImage("image1.bmp", 0, 0, 1))
         {
-            // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
+            // If is something failed (wrong filename or wrong bitmap format), write error message on the Serial Monitor
             // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no
             // compression! You can turn of dithering for somewhat faster image load by changing the last 1 to 0, or
             // removing the parameter completely
-            display.println("Image open error");
+            Serial.println("Image open error");
         }
         display.display();
         delay(5000);
@@ -59,30 +57,18 @@ void setup()
         if (file.open("image2.bmp", O_RDONLY))
         {
             display.drawBitmapFromSd(&file, 0, 0, 1);
+            display.display();
+            delay(5000);
         }
         else
         {
-            display.println("Image open error");
+            Serial.println("Image open error");
         }
-        display.display();
-        delay(5000);
-
-        // Now draw a JPEG
-        display.clearDisplay();
-        if (!display.drawImage("pyramid.jpg", 100, 0, true))
-        {
-            // If is something failed (wrong filename or wrong format), write error message on the screen.
-            // You can turn off dithering for somewhat faster image load by changing the fourth parameter to false, or
-            // removing the parameter completely
-            display.println("Image open error");
-        }
-        display.display();
     }
     else
     {
         // If SD card init not success, display error on screen
-        display.println("SD Card error!");
-        display.display();
+        Serial.println("SD Card error!");
     }
 
     // Turn off the MOSFET that powers the SD card
