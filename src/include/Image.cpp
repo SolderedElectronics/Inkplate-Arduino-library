@@ -85,11 +85,11 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
     else
     {
         if (strstr(path, ".bmp") != NULL || strstr(path, ".dib") != NULL)
-            return drawBitmapFromWeb(path, x, y, dither, invert);
+            return drawBitmapFromSd(path, x, y, dither, invert);
         if (strstr(path, ".jpg") != NULL || strstr(path, ".jpeg") != NULL)
-            return drawJpegFromWeb(path, x, y, dither, invert);
+            return drawJpegFromSd(path, x, y, dither, invert);
         if (strstr(path, ".png") != NULL)
-            return drawPngFromWeb(path, x, y, dither, invert);
+            return drawPngFromSd(path, x, y, dither, invert);
     }
     return 0;
 };
@@ -200,11 +200,11 @@ bool Image::drawImage(const char *path, const Format &format, const int x, const
     else
     {
         if (format == BMP)
-            return drawBitmapFromWeb(path, x, y, dither, invert);
+            return drawBitmapFromSd(path, x, y, dither, invert);
         if (format == JPG)
-            return drawJpegFromWeb(path, x, y, dither, invert);
+            return drawJpegFromSd(path, x, y, dither, invert);
         if (format == PNG)
-            return drawPngFromWeb(path, x, y, dither, invert);
+            return drawPngFromSd(path, x, y, dither, invert);
     }
     return 0;
 }
