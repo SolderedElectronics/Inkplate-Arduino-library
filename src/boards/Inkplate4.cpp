@@ -23,6 +23,7 @@
 #ifdef ARDUINO_INKPLATE4
 
 SPISettings epdSpiSettings(4000000UL, MSBFIRST, SPI_MODE0);
+SPIClass SPI2(HSPI);
 
 /**
  * @brief       begin function initialize Inkplate object with predefined
@@ -36,7 +37,7 @@ bool Inkplate::begin()
     if (!_beginDone)
     {
         // Begin SPI
-        SPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
 
         // Set up EPD communication pins
         pinMode(EPAPER_CS_PIN, OUTPUT);
@@ -169,7 +170,7 @@ void Inkplate::setPanelDeepSleep(bool _state)
     if (_panelState)
     {
         // Set SPI pins
-        SPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
 
         // Set up EPD communication pins
         pinMode(EPAPER_CS_PIN, OUTPUT);
@@ -195,7 +196,7 @@ void Inkplate::setPanelDeepSleep(bool _state)
         delay(1);
 
         // Disable SPI
-        SPI.end();
+        SPI2.end();
 
         // To reduce power consumption, set SPI pins as outputs
         pinMode(EPAPER_RST_PIN, INPUT);
@@ -240,9 +241,9 @@ void Inkplate::sendCommand(uint8_t _command)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, LOW);
     delayMicroseconds(10);
-    SPI.beginTransaction(epdSpiSettings);
-    SPI.writeBytes((const uint8_t *)(&_command), 1);
-    SPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.writeBytes((const uint8_t *)(&_command), 1);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
@@ -261,9 +262,9 @@ void Inkplate::sendData(uint8_t *_data, int _n)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    SPI.beginTransaction(epdSpiSettings);
-    SPI.writeBytes((const uint8_t *)_data, _n);
-    SPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.writeBytes((const uint8_t *)_data, _n);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
@@ -279,9 +280,9 @@ void Inkplate::sendData(uint8_t _data)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    SPI.beginTransaction(epdSpiSettings);
-    SPI.writeBytes((const uint8_t *)(&_data), 1);
-    SPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.writeBytes((const uint8_t *)(&_data), 1);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
