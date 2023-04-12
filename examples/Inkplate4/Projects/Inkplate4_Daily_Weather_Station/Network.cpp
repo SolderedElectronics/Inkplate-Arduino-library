@@ -1,16 +1,17 @@
 /*
     Network.cpp
-    Inkplate 5 Arduino library
+    Inkplate 4 Arduino library
     David Zovko, Borna Biro, Denis Vajak, Zvonimir Haramustek @ Soldered
-    23 March 2023
+    April 11, 2023
     https://github.com/SolderedElectronics/Inkplate-Arduino-library
 
     For support, please reach over forums: https://forum.soldered.com/
     For more info about the product, please check: www.inkplate.io
 
     This code is released under the GNU Lesser General Public License v3.0:
-    https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file included with this example. If you have
-    any questions about licensing, please contact hello@soldered.com Distributed as-is; no warranty is given.
+   https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file included with this example. If you have
+   any questions about licensing, please contact hello@soldered.com
+   Distributed as-is; no warranty is given.
 */
 
 // Network.cpp contains various functions and classes that enable Weather station
@@ -19,7 +20,7 @@
 
 void Network::begin(char *ssid, char *pass)
 {
-    // Initiating wifi, like in BasicHttpClient example
+    // Initiating wifi
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pass);
 
@@ -45,7 +46,7 @@ void Network::begin(char *ssid, char *pass)
 }
 
 // Gets time from ntp server
-void Network::getTime(char *timeStr, int timeZone)
+void Network::getTime(char *timeStr)
 {
     // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr);
@@ -82,7 +83,7 @@ void formatWind(char *str, float wind)
 
 bool Network::getData(char *lat, char *lon, char *apiKey, char *city, char *temp1, char *temp2, char *temp3,
                       char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather,
-                      char *currentWeatherAbbr, char *abbr1, char *abbr2, char *abbr3, char *abbr4, uint8_t *hours, int *timeZone)
+                      char *currentWeatherAbbr, char *abbr1, char *abbr2, char *abbr3, char *abbr4, uint8_t *hours)
 {
     // If not connected to wifi reconnect wifi
     if (WiFi.status() != WL_CONNECTED)
@@ -154,15 +155,17 @@ bool Network::getData(char *lat, char *lon, char *apiKey, char *city, char *temp
                 uint8_t cnt = 0, i = 0;
 
                 formatTemp(currentTemp, doc["list"][0]["main"]["temp"].as<float>() - 273.15);
-                sprintf(currentWind, "%.1f", (float)(doc["list"][0]["wind"]["speed"]));
+                sprintf(currentWind, "%.0f", (float)(doc["list"][0]["wind"]["speed"]));
                 strcpy(currentWeather, doc["list"][0]["weather"][0]["main"]);
                 strcpy(currentWeatherAbbr, doc["list"][0]["weather"][0]["icon"]);
-                *timeZone = doc["city"]["timezone"].as<int>() / 3600;
+                timeZone = doc["city"]["timezone"].as<int>() / 3600;
 
                 while (cnt < 4)
                 {
                     char temp[48];
                     strcpy(temp, doc["list"][i]["dt_txt"]);
+                    // Serial.println("AAAAAAAAAAAAA");
+                    // Serial.println(temp);
 
                     if (strstr(temp, "15:00:00")) // Show time in 15:00 for every day
                     {

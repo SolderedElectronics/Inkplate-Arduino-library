@@ -24,13 +24,12 @@
    SCK  - IO14
    SDA  - IO15
 
-   IMPORTANT: you have to cut JP2 and connect the other 2 contacts in order to work!
+   IMPORTANT: you have to cut JP6 and connect the other 2 contacts in order to work!
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   6 April 2023 by Soldered Electronics.
+   12 April 2023 by Soldered Electronics.
 */
-
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE4
@@ -38,7 +37,7 @@
 #endif
 
 // Include needed libraries
-//#include "Inkplate.h"
+#include "Inkplate.h"
 #include "MFRC522-SOLDERED.h"
 #include "SPI.h"
 
@@ -50,12 +49,20 @@
 MFRC522 rfid(SS_PIN, RST_PIN);
 
 // Create an object on Inkplate library and also set library into 1-bit mode (BW)
-//Inkplate display;
+Inkplate display;
 
 void setup()
 {
     // Init Inkplate library (you should call this function ONLY ONCE)
-    //display.begin();
+    display.begin();
+
+    // Set bigger text and print messages on the screen
+    display.setTextSize(3);
+    display.drawTextWithShadow(0, 0, "Second SPI example", INKPLATE_BLACK, INKPLATE_RED);
+    
+    display.setTextSize(2);
+    display.println("\n\n\nOpen the Serial Monitor at 115200\nbaud rate to see what's happening");
+    display.display();
 
     // Init SPI bus
     SPI.begin(14, 12, 13, 15);

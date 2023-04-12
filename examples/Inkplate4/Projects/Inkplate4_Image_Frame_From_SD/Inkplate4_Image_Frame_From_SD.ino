@@ -15,7 +15,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   5 April 2023 by Soldered
+   11 April 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -44,8 +44,9 @@ RTC_DATA_ATTR uint16_t lastImageIndex = 0;
 
 void setup()
 {
-    display.begin();             // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay();      // Clear frame buffer of display
+    Serial.begin(115200);   // Init serial communication
+    display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
+    display.clearDisplay(); // Clear frame buffer of display
 }
 
 void loop()
@@ -96,7 +97,7 @@ void loop()
     else
     {
         Serial.printf("Error opening folder! Make sure that you have entered the proper name and add / to the end "
-                       "of the path");
+                      "of the path");
         deepSleep();
     }
 
@@ -168,6 +169,9 @@ void deepSleep()
 {
     // Turn off the power supply for the SD card
     display.sdCardSleep();
+
+    // Enable wakeup from deep sleep on gpio 36 (wake button)
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
 
     // Put ESP32 into deep sleep (low power mode)
     esp_deep_sleep_start();
