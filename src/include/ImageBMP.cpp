@@ -484,11 +484,10 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             writePixel(x + j, y, val);
             break;
         }
-
-            ditherSwap(w);
-            endWrite();
         }
     }
+    ditherSwap(w);
+    endWrite();
 }
 
 /**

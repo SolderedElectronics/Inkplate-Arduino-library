@@ -31,7 +31,7 @@ static uint32_t pallete[] = {
 
 #if defined(ARDUINO_INKPLATECOLOR)
 
-static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0x438A1C, 0x555E7E, 0x8A4C5B, 0xFFF338, 0xE87E00, 0xC2A4F4};
+static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0x00FF00, 0x0000FF, 0xFF0000, 0xFFFF00, 0xFF8000};
 static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
 
 #elif defined(ARDUINO_INKPLATE2)
