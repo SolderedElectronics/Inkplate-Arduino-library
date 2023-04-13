@@ -3,6 +3,7 @@
 # Datatypes (KEYWORD1)
 Inkplate	KEYWORD1
 SdFile	KEYWORD1
+esp_sleep_wakeup_cause_t	KEYWORD1
 
 # Methods and Functions (KEYWORD2)
 begin				KEYWORD2
@@ -101,6 +102,7 @@ dirIndex	KEYWORD2
 isHidden	KEYWORD2
 getName	KEYWORD2
 isSubDir	KEYWORD2
+esp_sleep_get_wakeup_cause	KEYWORD2
 
 # Instances (KEYWORD2)
 
