@@ -7,7 +7,7 @@
 </p>
 
 Arduino library for all-in-one e-paper display family named Inkplate can be found in this repo. Inkplate is a series of powerful, Wi-Fi and Bluetooth enabled, ESP32 based e-paper display products. Its main feature is simplicity. Just plug in a USB cable, open Arduino IDE, and change the contents of the screen with few lines of code. Inkplate family currently includes Inkplate 10, Inkplate 6 and Inkplate 6PLUS, Inkplate 6COLOR and Inkplate 2. 
-Inkplate 6 was crowdfunded on [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6), as well as [Inkplate 10](https://www.crowdsupply.com/e-radionica/inkplate-10), [Inkplate 6PLUS](https://www.crowdsupply.com/e-radionica/inkplate-6plus) and [Inkplate 6COLOR](https://www.crowdsupply.com/soldered/inkplate-6color). Inkplate 2 was funded on [Kickstarter](https://www.kickstarter.com/projects/solderedelectronics/inkplate-2-a-easy-to-use-arduino-compatible-e-paper).
+Inkplate 6 was crowdfunded on [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6), as well as [Inkplate 10](https://www.crowdsupply.com/e-radionica/inkplate-10), [Inkplate 6PLUS](https://www.crowdsupply.com/e-radionica/inkplate-6plus) and [Inkplate 6COLOR](https://www.crowdsupply.com/soldered/inkplate-6color). Inkplate 2 was funded on [Kickstarter](https://www.kickstarter.com/projects/solderedelectronics/inkplate-2-a-easy-to-use-arduino-compatible-e-paper). All available to purchase from [soldered.com](https://soldered.com/categories/inkplate/). 
 
 ### Setting up Inkplate in Arduino IDE
 
@@ -29,7 +29,7 @@ Find Inkplate documentation [here](https://inkplate.readthedocs.io/en/latest/ard
 
 ### Using Inkplate with another microcontroller - Peripheral mode
 
-As promised in an [early update](https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates), Inkplate screen contents can be updated using 3rd controller (such as Raspberry Pi or another microcontroller). The Peripheral mode enables this. All brand new Inkplates come pre-programmed with slave mode and can be used right away.
+Inkplate screen contents can be updated using 3rd controller (such as Raspberry Pi or another microcontroller). The Peripheral mode enables this. All brand new Inkplates come pre-programmed with slave mode and can be used right away.
 
 It is based on UART (serial) communication - connect the Inkplate to "Controller" ("Master", if using old terminology) board either via USB cable or directly via ESP32 RX and TX pins. Using standard UART at 115200 baud, you can send commands to change screen contents. For example, send \*#H(000,000,"/img.bmp")\*\* to show image img.bmp from SD card on the screen. Find very documentation for using it [here](https://inkplate.readthedocs.io/en/latest/peripheral-mode.html).
 
@@ -38,7 +38,7 @@ It is based on UART (serial) communication - connect the Inkplate to "Controller
 Inkplate boards has two options for powering it. First one is obvious - USB port at side of the board. Just plug any micro USB cable and you are good to go. Second option is battery. Supported batteries are standard Li-Ion/Li-Poly batteries with 3.7V nominal voltage. Connector for the battery is standard 2.00mm pitch JST connector (except on Inkplate 2, it uses SMD solder pads for battery terminals). The onboard charger will charge the battery with 500mA when USB is plugged at the same time. You can use battery of any size or capacity if you don't have a enclosure. If you are using our enclosure, battery size shouldn't exceed 90mm x 40mm (3.5 x 1.57 inch) and 5mm (0.19 inch) in height (excluding Inkplate 2, it uses [this battery](https://soldered.com/product/li-ion-baterija-600mah-3-7v/). [This battery](https://soldered.com/product/li-ion-battery-1200mah-3-7v/) is good fit for the Inkplate. Also, Inkplate's hardware is specially optimized for low power consumption in deep sleep mode, making it extremely suitable for battery applications.
 
 #### ⚠️ WARNING
-Please check the polarity on the battery JST connector! Some batteries that can be purchased from the web have reversed polarity that can damage Inkplate board!
+Please check the polarity on the battery JST connector! Some batteries that can be purchased from the web have reversed polarity that can damage Inkplate board! You are safe if you are using the pouch battery from [soldered.com](https://soldered.com/categories/power-sources-batteries/batteries/lithium-batteries/) or Inkplate with the built-in battery . 
 
 #### ℹ NOTE
 CR2032 battery is only for RTC backup. Inkplate cannot be powered with it.
@@ -77,15 +77,14 @@ All of Inkplate-related development is open-sourced:
   - [e-radionica.com Inkplate 6PLUS](https://github.com/SolderedElectronics/Inkplate-6PLUS-Hardware)
   - e-radionica.com Inkplate 6COLOR (comming soon!)
 - [micropython Inkplate](https://github.com/SolderedElectronics/Inkplate-micropython)
-- OSHWA cerfiticate: [Inkplate 6](https://certification.oshwa.org/hr000003.html), [Inkplate 10](https://certification.oshwa.org/hr000006.html)
+- [OSHWA cerfiticates](https://certification.oshwa.org/list.html?q=inkplate)
 
 ### Where to buy & other
 
 Inkplate boards are available for purchase via:
 
-- [e-radionica.com](https://soldered.com/categories/inkplate/)
-- [Crowd Supply](https://www.crowdsupply.com/e-radionica/inkplate-6)
+- [soldered.com](https://soldered.com/categories/inkplate/)
+- [Crowd Supply](https://www.crowdsupply.com/soldered)
 - [Mouser](https://hr.mouser.com/Search/Refine?Keyword=inkplate)
-- [Pimoroni](https://shop.pimoroni.com/products/inkplate-6)
 
 For all questions and issues please reach us via [e-mail](mailto:hello@soldered.com) or our [contact form](https://soldered.com/contact/).
