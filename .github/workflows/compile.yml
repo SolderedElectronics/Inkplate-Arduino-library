@@ -36,10 +36,6 @@ jobs:
             additional-sketch-paths: |
               - examples/Inkplate6COLOR
           - board:
-              fqbn: Inkplate_Boards:esp32:Inkplate5
-            additional-sketch-paths: |
-              - examples/Inkplate5
-          - board:
               fqbn: Inkplate_Boards:esp32:Inkplate2
             additional-sketch-paths: |
               - examples/Inkplate2
