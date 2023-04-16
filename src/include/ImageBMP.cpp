@@ -13,7 +13,7 @@
  *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     Soldered
+ * @authors     Soldered.com
  ***************************************************/
 
 #include "Image.h"
@@ -110,7 +110,7 @@ void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
         {
             uint32_t c = READ32(paletteRGB + (i << 2));
 
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR)
             c = c >> 8;
             palette[i >> 1] |= findClosestPalette(c) << (i & 1 ? 0 : 4);
             ditherPalette[i] = c;
@@ -211,7 +211,16 @@ bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool i
 {
     bool ret = 0;
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
-    uint8_t *buf = downloadFile(url, &defaultLen);
+    uint8_t *buf = 0;
+
+    if (strncmp(url, "http://", 7) == 0)
+    {
+        buf = downloadFile(url, &defaultLen);
+    }
+    else if (strncmp(url, "https://", 8) == 0)
+    {
+        buf = downloadFileHTTPS(url, &defaultLen);
+    }
 
     ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
     free(buf);
@@ -266,6 +275,7 @@ bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dit
  */
 bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert)
 {
+
     bitmapHeader bmpHeader;
 
     readBmpHeader(buf, &bmpHeader);
@@ -310,16 +320,17 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
     {
         switch (c)
         {
-        case 1:
-#ifdef ARDUINO_INKPLATECOLOR
+
+        case 1: {
+#if defined(ARDUINO_INKPLATECOLOR)
             writePixel(x + j, y,
                        (!invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
 #else
             writePixel(x + j, y, (invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
 #endif
             break;
-        // as for 2 bit, literally cannot find an example online or in PS, so
-        // skipped
+        }
+
         case 4: {
             uint8_t px = pixelBuffer[j >> 1] & (j & 1 ? 0x0F : 0xF0) >> (j & 1 ? 0 : 4);
             uint8_t val;
@@ -331,15 +342,19 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
                 val = palette[px >> 1] & (px & 1 ? 0x0F : 0xF0) >> (px & 1 ? 0 : 4);
             }
 
-#ifndef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR)
             if (invert)
                 val = 7 - val;
-            if (getDisplayMode() == INKPLATE_1BIT)
-                val = (~val >> 2) & 1;
+//            if (getDisplayMode() == INKPLATE_1BIT)
+//                val = (~val >> 2) & 1;
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+            if (invert)
+                val = val ^ 1;
 #endif
             writePixel(x + j, y, val);
             break;
         }
+
         case 8: {
             uint8_t px = pixelBuffer[j];
             uint8_t val;
@@ -351,15 +366,19 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
                 val = palette[px >> 1] & (px & 1 ? 0x0F : 0xF0) >> (px & 1 ? 0 : 4);
             }
 
-#ifndef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR)
             if (invert)
                 val = 7 - val;
-            if (getDisplayMode() == INKPLATE_1BIT)
-                val = (~val >> 2) & 1;
+//            if (getDisplayMode() == INKPLATE_1BIT)
+//                val = (~val >> 2) & 1;
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+            if (invert)
+                val = val ^ 1;
 #endif
             writePixel(x + j, y, val);
             break;
         }
+
         case 16: {
             uint16_t px = ((uint16_t)pixelBuffer[(j << 1) | 1] << 8) | pixelBuffer[(j << 1)];
 
@@ -370,25 +389,30 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 val = ditherGetPixelBmp(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b), j, y, w, 0);
 #else
                 val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, y, w, 0);
 #endif
             else
             {
-#ifdef ARDUINO_INKPLATECOLOR
-                val = findClosestPalette(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b));
+#if defined(ARDUINO_INKPLATECOLOR)
+                if (invert)
+                    val = 7 - val;
+//                if (getDisplayMode() == INKPLATE_1BIT)
+//                    val = (~val >> 2) & 1;
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+                if (invert)
+                    val = val ^ 1;
 #else
-                val = RGB3BIT(r, g, b);
+                    val = RGB3BIT(r, g, b);
 #endif
             }
 
-#ifndef ARDUINO_INKPLATECOLOR
-            if (invert)
-                val = 7 - val;
-            if (getDisplayMode() == INKPLATE_1BIT)
-                val = (~val >> 2) & 1;
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+            val = findClosestPalette((r << 16) | (g << 8) | (b));
+#else
+            val = RGB3BIT(r, g, b);
 #endif
             writePixel(x + j, y, val);
             break;
@@ -401,29 +425,32 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 val = ditherGetPixelBmp((r << 16) | (g << 8) | (b), j, y, w, 0);
 #else
                 val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, y, w, 0);
 #endif
             else
             {
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 val = findClosestPalette((r << 16) | (g << 8) | (b));
 #else
                 val = RGB3BIT(r, g, b);
 #endif
             }
-#ifndef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR)
             if (invert)
                 val = 7 - val;
-            if (getDisplayMode() == INKPLATE_1BIT)
-                val = (~val >> 2) & 1;
+//            if (getDisplayMode() == INKPLATE_1BIT)
+//                val = (~val >> 2) & 1;
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+            if (invert)
+                val = val ^ 1;
 #endif
             writePixel(x + j, y, val);
             break;
         }
-        case 32:
+        case 32: {
             uint8_t b = pixelBuffer[j * 4];
             uint8_t g = pixelBuffer[j * 4 + 1];
             uint8_t r = pixelBuffer[j * 4 + 2];
@@ -431,30 +458,34 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             uint8_t val;
 
             if (dither)
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 val = ditherGetPixelBmp(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b), j, y, w, 0);
 #else
                 val = ditherGetPixelBmp(RGB8BIT(r, g, b), j, y, w, 0);
 #endif
             else
             {
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
                 val = findClosestPalette((r << 16) | (g << 8) | (b));
 #else
                 val = RGB3BIT(r, g, b);
 #endif
             }
+
 #ifndef ARDUINO_INKPLATECOLOR
             if (invert)
                 val = 7 - val;
-            if (getDisplayMode() == INKPLATE_1BIT)
-                val = (~val >> 2) & 1;
+//            if (getDisplayMode() == INKPLATE_1BIT)
+//                val = (~val >> 2) & 1;
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+            if (invert)
+                val = val ^ 1;
 #endif
             writePixel(x + j, y, val);
             break;
         }
+        }
     }
-
     ditherSwap(w);
     endWrite();
 }
@@ -479,7 +510,7 @@ bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, 
 {
     bool ret = 0;
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
-    uint8_t *buf = downloadFile(url, &defaultLen);
+    uint8_t *buf = downloadFileHTTPS(url, &defaultLen);
 
     bitmapHeader bmpHeader;
     readBmpHeader(buf, &bmpHeader);

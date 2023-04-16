@@ -7,7 +7,7 @@
 
    This example will show you how to use RTC alarm interrupt with deep sleep.
    Inkplate features RTC chip with interrupt for alarm connected to GPIO39
-   Inkplate board will wake up every 10 seconds, refresh screen and go back to sleep.
+   Inkplate board will wake up every 60 seconds, refresh screen and go back to sleep.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -43,12 +43,15 @@ void setup()
     printCurrentTime(); // Display current time and date
     display.display();
 
-    display.rtcSetAlarmEpoch(display.rtcGetEpoch() + 60, RTC_ALARM_MATCH_DHHMMSS); // Set RTC alarm 10 seconds from now
+    display.rtcSetAlarmEpoch(display.rtcGetEpoch() + 60, RTC_ALARM_MATCH_DHHMMSS); // Set RTC alarm 60 seconds from now
 
     // Enable wakup from deep sleep on gpio 39 where RTC interrupt is connected
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_39, 0);
 
-    // Go to sleep
+    // Put the panel in the deep sleep
+    display.setPanelDeepSleep(0);
+
+    // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }
 

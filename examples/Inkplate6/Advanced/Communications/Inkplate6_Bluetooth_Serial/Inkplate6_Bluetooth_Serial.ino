@@ -42,7 +42,7 @@ void setup()
 {
     display.begin();                     // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();              // Clear frame buffer of display
-    display.setTextSize(BIG_TEXT_SCALE); // Scale text to be 5 times bigger then original (5x7 px)
+    display.setTextSize(BIG_TEXT_SCALE); // Scale text to be 4 times bigger then original (5x7 px)
     display.println("Bluetooth Serial Example");
     display.println();
     display.display(); // Display on the screen

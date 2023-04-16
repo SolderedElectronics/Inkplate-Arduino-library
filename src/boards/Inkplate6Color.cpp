@@ -57,7 +57,6 @@ bool Inkplate::begin(void)
         DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 2);
         if (DMemory4Bit == NULL)
         {
-            // Serial.println("Memory allocation failed, program stops!");
             return false;
         }
 
@@ -76,25 +75,22 @@ bool Inkplate::begin(void)
         return false;
 
     // Send whole bunch of commands and data
-    uint8_t panel_set_data[] = {0xef, 0x08};
+    uint8_t panel_set_data[] = {0xEF, 0x08};
     sendCommand(PANEL_SET_REGISTER);
     sendData(panel_set_data, 2);
 
-    uint8_t power_set_data[] = {0x37, 0x00, 0x23, 0x23};
+    uint8_t power_set_data[] = {0x37, 0x00, 0x05, 0x05};
     sendCommand(POWER_SET_REGISTER);
     sendData(power_set_data, 4);
 
     sendCommand(POWER_OFF_SEQ_SET_REGISTER);
     sendData(0x00);
 
-    uint8_t booster_softstart_data[] = {0xc7, 0xc7, 0x1d};
+    uint8_t booster_softstart_data[] = {0xC7, 0xC7, 0x1D};
     sendCommand(BOOSTER_SOFTSTART_REGISTER);
     sendData(booster_softstart_data, 3);
 
-    sendCommand(PLL_CONTROL_REGISTER);
-    sendData(0x3c);
-
-    sendCommand(TEMP_SENSOR_REGISTER);
+    sendCommand(TEMP_SENSOR_EN_REGISTER);
     sendData(0x00);
 
     sendCommand(VCOM_DATA_INTERVAL_REGISTER);
@@ -103,16 +99,14 @@ bool Inkplate::begin(void)
     sendCommand(0x60);
     sendData(0x20);
 
-    uint8_t res_set_data[] = {0x02, 0x58, 0x01, 0xc0};
+    uint8_t res_set_data[] = {0x02, 0x58, 0x01, 0xC0};
     sendCommand(RESOLUTION_SET_REGISTER);
     sendData(res_set_data, 4);
 
     sendCommand(0xE3);
-    sendData(0xaa);
+    sendData(0xAA);
 
     delay(100);
-    sendCommand(0x50);
-    sendData(0x37);
 
     setIOExpanderForLowPower();
 
@@ -132,12 +126,8 @@ bool Inkplate::begin(void)
 /**
  * @brief       display function update display with new data from buffer
  *
- * @param       bool leaveOn
- *              if set to 1, it will disable turning supply for eink after
- *              display update in order to save some time needed for power supply
- *              to save some time at next display update or increase refreshing speed
  */
-void Inkplate::display(bool leaveOn)
+void Inkplate::display()
 {
     if (!_panelState)
         return;
@@ -152,7 +142,7 @@ void Inkplate::display(bool leaveOn)
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
     SPI2.beginTransaction(epdSpiSettings);
-    SPI2.transfer(DMemory4Bit, E_INK_WIDTH * E_INK_HEIGHT / 2);
+    SPI2.writeBytes(DMemory4Bit, E_INK_WIDTH * E_INK_HEIGHT / 2);
     SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
 
@@ -291,7 +281,7 @@ void Inkplate::sendData(uint8_t *_data, int _n)
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
     SPI2.beginTransaction(epdSpiSettings);
-    SPI2.transfer(_data, _n);
+    SPI2.writeBytes(_data, _n);
     SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
 }

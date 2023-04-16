@@ -11,11 +11,13 @@
    Format your SD card in standard FAT file format.
 
    This example will show you how you can make slideshow images from an SD card. Put your images on
-   the SD card in a file and specify the file path in the sketch.
+   the SD card in a file and specify the file path in the sketch. If you don't want to wait defined delay time,
+   you can press the wake button and the next image will be loaded on the screen. It will take some time until
+   the image will be loaded.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   21 February 2023 by Soldered
+   12 April 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -113,7 +115,7 @@ void loop()
         // Set EPS32 to be woken up in 10 seconds (in this case)
         esp_sleep_enable_timer_wakeup(SECS_BETWEEN_PICTURES * 1000000LL);
 
-        // Go to the deep sleep
+        // Go into deep sleep
         deepSleep();
     }
 }
@@ -170,12 +172,18 @@ int getFileCount()
 }
 
 /**
- * @brief     Go to deep sleep.
+ * @brief     Turn off all peripherals, go to deep sleep, and enable wakeup on the wake button.
  */
 void deepSleep()
 {
     // Turn off the power supply for the SD card
     display.sdCardSleep();
+
+    // Put the panel in the deep sleep
+    display.setPanelDeepSleep(0);
+
+    // Enable wakeup from deep sleep on GPIO 36 (wake button)
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
 
     // Put ESP32 into deep sleep (low power mode)
     esp_deep_sleep_start();

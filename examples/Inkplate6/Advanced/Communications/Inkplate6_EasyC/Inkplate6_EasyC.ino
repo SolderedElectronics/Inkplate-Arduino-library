@@ -1,6 +1,6 @@
 /*
-   Inkplate_easyC example for Soldered Inkplate 6
-   For this example you will need a micro USB cable, Inkplate 6,
+   Inkplate6_easyC example for Soldered Inkplate 6
+   For this example you will need USB cable, Inkplate 6,
    BME680 sensor with easyC connector on it: https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/
    and a easyC cable: https://soldered.com/product/easyc-cable-20cm/
    Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.

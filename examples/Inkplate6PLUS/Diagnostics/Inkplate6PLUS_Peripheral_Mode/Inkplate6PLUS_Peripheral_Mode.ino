@@ -28,7 +28,8 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
+#error                                                                                                                 \
+    "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
 #include <Inkplate.h>
@@ -72,7 +73,12 @@ void loop()
     {
         if ((e - s) > 0)
         {
-            int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n, rx, ry, xc, yc;
+            int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n, rx, ry, xc, yc, yr;
+            uint8_t hr, min, sec, wday, day, mon, k, as, am, ah, ad, aw, amc, v, br, rt[8];
+            uint16_t tx1[2], ty1[2], th, tw, tx2, ty2;
+            bool ie, ip;
+            System::rtcCountdownSrcClock sc;
+            uint32_t ep, ae, pwrs;
             char b;
             char temp[150];
             switch (*(s + 1))
@@ -407,6 +413,272 @@ void loop()
                 // sprintf(temp, "display.drawLine(%d, %d, %d, %d, %d)\n\r", x1, y1, x2, y2, c);
                 // Serial.print(temp);
                 display.fillElipse(rx, ry, xc, yc, c);
+                break;
+            case 'W':
+                sscanf(s + 3, "%d,%d,%d", &hr, &min, &sec);
+                // sprintf(temp, "display.rtcSetTime(%d, %d, %d);\n\r", hr, min, sec);
+                // Serial.println(temp);
+                display.rtcSetTime(hr, min, sec);
+                break;
+            case 'X':
+                sscanf(s + 3, "%d,%d,%d,%d", &wday, &day, &mon, &yr);
+                // sprintf(temp, "display.rtcSetDate(%d, %d, %d, %d);\n\r", wday, day, mon, yr);
+                // Serial.println(temp);
+                display.rtcSetDate(wday, day, mon, yr);
+                break;
+            case 'Y':
+                sscanf(s + 3, "%d", &ep);
+                // sprintf(temp, "display.rtcSetEpoch(%d);\n\r", ep);
+                // Serial.println(temp);
+                display.rtcSetEpoch(ep);
+                break;
+            case 'Z':
+                sscanf(s + 3, "%c", &b);
+                if (b == '?')
+                {
+                    Serial.print("#Z(");
+                    Serial.print(display.rtcGetEpoch());
+                    Serial.println(")*");
+                    Serial.flush();
+                }
+                break;
+            case 'a':
+                sscanf(s + 3, "%d", &k);
+                if (k > 6)
+                {
+                    Serial.println("INVALID");
+                    break;
+                }
+                display.rtcGetRtcData();
+                Serial.print("#a(");
+                switch (k)
+                {
+                case 0:
+                    Serial.print(display.rtcGetSecond());
+                    break;
+                case 1:
+                    Serial.print(display.rtcGetMinute());
+                    break;
+                case 2:
+                    Serial.print(display.rtcGetHour());
+                    break;
+                case 3:
+                    Serial.print(display.rtcGetDay());
+                    break;
+                case 4:
+                    Serial.print(display.rtcGetWeekday());
+                    break;
+                case 5:
+                    Serial.print(display.rtcGetMonth());
+                    break;
+                case 6:
+                    Serial.print(display.rtcGetYear());
+                    break;
+                }
+                Serial.println(")*");
+                Serial.flush();
+                break;
+            case 'b':
+                sscanf(s + 3, "%d,%d,%d,%d,%d", &as, &am, &ah, &ad, &aw);
+                // sprintf(temp, "display.rtcSetAlarm(%d, %d, %d, %d, %d);\n\r", as, am, ah, ad, aw);
+                // Serial.println(temp);
+                display.rtcSetAlarm(as, am, ah, ad, aw);
+                break;
+            case 'c':
+                sscanf(s + 3, "%d,%d", &ae, &amc);
+                // sprintf(temp, "display.rtcSetAlarmEpoch(%d, %d);\n\r", ae, amc);
+                // Serial.println(temp);
+                display.rtcSetAlarmEpoch(ae, amc);
+                break;
+            case 'd':
+                sscanf(s + 3, "%c", &b);
+                if (b == '?')
+                {
+                    Serial.print("#d(");
+                    Serial.print(display.rtcCheckAlarmFlag());
+                    Serial.println(")*");
+                    Serial.flush();
+                }
+                break;
+            case 'e':
+                sscanf(s + 3, "%c", &b);
+                if (b == '1')
+                {
+                    // Serial.println("display.rtcClearAlarmFlag()");
+                    display.rtcClearAlarmFlag();
+                    Serial.flush();
+                }
+                break;
+            case 'f':
+                sscanf(s + 3, "%d", &k);
+                if (k > 4)
+                {
+                    Serial.println("INVALID");
+                    break;
+                }
+                Serial.print("#f(");
+                switch (k)
+                {
+                case 0:
+                    Serial.print(display.rtcGetAlarmSecond());
+                    break;
+                case 1:
+                    Serial.print(display.rtcGetAlarmMinute());
+                    break;
+                case 2:
+                    Serial.print(display.rtcGetAlarmHour());
+                    break;
+                case 3:
+                    Serial.print(display.rtcGetAlarmDay());
+                    break;
+                case 4:
+                    Serial.print(display.rtcGetAlarmWeekday());
+                    break;
+                }
+                Serial.println(")*");
+                Serial.flush();
+                break;
+            case 'g':
+                sscanf(s + 3, "%d,%d,%d,%d", &sc, &v, &ie, &ip);
+
+                if (sc > 3)
+                {
+                    Serial.println("ERROR");
+                    break;
+                }
+
+                // sprintf(temp, "display.rtcTimerSet(%d, %d, %d, %d);\n\r", sc, v, ie, ip);
+                // Serial.println(temp);
+                display.rtcTimerSet(sc, v, ie, ip);
+                break;
+            case 'h':
+                sscanf(s + 3, "%c", &b);
+                if (b == '?')
+                {
+                    Serial.print("#h(");
+                    Serial.print(display.rtcCheckTimerFlag());
+                    Serial.println(")*");
+                    Serial.flush();
+                }
+                break;
+            case 'i':
+                sscanf(s + 3, "%c", &b);
+                if (b == '1')
+                {
+                    // Serial.println("display.rtcClearTimerFlag()");
+                    display.rtcClearTimerFlag();
+                }
+                break;
+            case 'j':
+                sscanf(s + 3, "%c", &b);
+                if (b == '1')
+                {
+                    // Serial.println("display.rtcDisableTimer()");
+                    display.rtcDisableTimer();
+                }
+                break;
+            case 'k':
+                sscanf(s + 3, "%c", &b);
+                if (b == '?')
+                {
+                    Serial.print("#k(");
+                    Serial.print(display.rtcIsSet());
+                    Serial.println(")*");
+                    Serial.flush();
+                }
+                break;
+            case 'l':
+                sscanf(s + 3, "%c", &b);
+                if (b == '1')
+                {
+                    // Serial.println("display.rtcReset()");
+                    display.rtcReset();
+                }
+                break;
+            case 'm':
+                sscanf(s + 3, "%c", &b);
+                if (b == '1')
+                {
+                    display.frontlight(true);
+                    // Serial.println("display.frontlight(true);");
+                }
+                else
+                {
+                    display.frontlight(false);
+                    // Serial.println("display.frontlight(false);");
+                }
+                break;
+            case 'n':
+                sscanf(s + 3, "%d", &br);
+                // sprintf(temp, "display.setFrontlight(%d);\n\r", br);
+                // Serial.println(temp);
+                display.setFrontlight(br);
+                break;
+            case 'o':
+                sscanf(s + 3, "%d", &pwrs);
+                // sprintf(temp, "display.tsInit(%d);\n\r", pwrs);
+                // Serial.println(temp);
+                if (pwrs == 1)
+                    display.tsInit(1);
+
+                if (pwrs == 0)
+                    display.tsInit(0);
+                break;
+            case 'p':
+                sscanf(s + 3, "%c", &b);
+                if (b == '1')
+                {
+                    // sprintf(temp, "display.tsShutdown();\n\r");
+                    // Serial.println(temp);
+                    display.tsShutdown();
+                }
+                break;
+            case 'r':
+                sscanf(s + 3, "%c", &b);
+                if (b == '?')
+                {
+                    Serial.print("#r(");
+                    Serial.print(display.tsAvailable());
+                    Serial.println(")*");
+                    Serial.flush();
+                }
+                break;
+            case 's':
+                sscanf(s + 3, "%c", &b);
+                if (b == '?')
+                {
+                    if (display.tsGetData(tx1, ty1) != 0)
+                    {
+                        Serial.print("#s(");
+                        Serial.print(tx1[0]);
+                        Serial.print(", ");
+                        Serial.print(ty1[0]);
+                        Serial.println(")*");
+                        Serial.flush();
+                    }
+                }
+                break;
+            case 't':
+                sscanf(s + 3, "%c", &b);
+                if (b == '?')
+                {
+                    display.tsGetRawData(rt);
+                    for (int i = 0; i < 8; ++i)
+                    {
+                        Serial.print("Reg ");
+                        Serial.println(rt[i], BIN);
+                    }
+                    Serial.flush();
+                }
+                break;
+            case 'u':
+                sscanf(s + 3, "%hu,%hu,%hu,%hu", &tx2, &ty2, &tw, &th);
+                // sprintf(temp, "display.touchInArea(%hu, %hu, %hu, %hu);\n\r", tx2, ty2, tw, th);
+                // Serial.println(temp);
+                Serial.print("#u(");
+                Serial.print(display.touchInArea(tx2, ty2, tw, th));
+                Serial.println(")*");
+                Serial.flush();
                 break;
             }
             *s = 0;

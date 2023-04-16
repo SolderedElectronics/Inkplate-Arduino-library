@@ -116,8 +116,21 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
  */
 bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c, uint8_t bg)
 {
-#ifdef ARDUINO_INKPLATECOLOR
+#if defined(ARDUINO_INKPLATECOLOR)
     drawBitmap3Bit(x, y, buf, w, h);
+    return 1;
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+    uint16_t scaled_w = ceil(w / 4.0);
+    for (int i = 0; i < h; i++)
+    {
+        for (int j = 0; j < scaled_w; j++)
+        {
+            writePixel(4 * j + x, i + y, (buf[scaled_w * i + j] & 0xC0) >> 6);
+            writePixel(4 * j + x + 1, i + y, (buf[scaled_w * i + j] & 0x30) >> 4);
+            writePixel(4 * j + x + 2, i + y, (buf[scaled_w * i + j] & 0x0C) >> 2);
+            writePixel(4 * j + x + 3, i + y, (buf[scaled_w * i + j] & 0x03));
+        }
+    }
     return 1;
 #else
     if (getDisplayMode() == INKPLATE_1BIT && bg == 0xFF)
@@ -253,7 +266,7 @@ bool Image::drawImage(const char *path, const Format &format, const Position &po
  */
 void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)
 {
-#ifndef ARDUINO_INKPLATECOLOR
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE2)
     if (getDisplayMode() != INKPLATE_3BIT)
         return;
 #endif

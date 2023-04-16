@@ -77,24 +77,25 @@
 #include "Touch.h"
 #endif
 
-#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6PLUS) ||                     \
-    defined(ARDUINO_INKPLATE5)
+#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6PLUS)
 #include "Mcp.h"
 #endif
 
 #if defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
-    defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATECOOL)
+    defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATECOOL) || defined(ARDUINO_INKPLATE5) ||                   \
+    defined(ARDUINO_INKPLATE4)
 #include "Pcal.h"
 #endif
 
 #include "defines.h"
 
 /**
- * @brief       System class for interaction with panel harware
+ * @brief       System class for interaction with panel hardware
  */
 class System : public Esp,
+#ifndef ARDUINO_INKPLATE2
                virtual public Expander,
-
+#endif
 #if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
                public Touch,
                public Frontlight,

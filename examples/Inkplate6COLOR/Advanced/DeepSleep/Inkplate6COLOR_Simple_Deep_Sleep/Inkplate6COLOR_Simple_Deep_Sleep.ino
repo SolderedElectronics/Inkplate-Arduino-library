@@ -53,9 +53,14 @@ void setup()
     // Uncomment this line if your Inkplate is older than Aug 2021 as older Inkplates have ESP32 wrover-e chips
     // rtc_gpio_isolate(GPIO_NUM_12); // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
 
-    display.setPanelDeepSleep(false);
-    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Activate wake-up timer -- wake up after 20s here
-    esp_deep_sleep_start();                                        // Put ESP32 into deep sleep. Program stops here.
+    // Activate wake-up timer -- wake up after 20s here
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); 
+
+    // Put the panel in the deep sleep
+    display.setPanelDeepSleep(0);
+    
+    // Put ESP32 into deep sleep. Program stops here.
+    esp_deep_sleep_start();                                        
 }
 
 void loop()
