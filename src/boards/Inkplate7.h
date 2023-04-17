@@ -1,8 +1,8 @@
 /**
  **************************************************
  *
- * @file        Inkplate4.h
- * @brief       Basic funtions for controling Inkplate 4
+ * @file        Inkplate7.h
+ * @brief       Basic funtions for controling Inkplate 7
  *
  *              https://github.com/SolderedElectronics/Inkplate-Arduino-library
  *              For more info about the product, please check: www.inkplate.io
@@ -16,8 +16,8 @@
  * @authors     Robert @ Soldered
  ***************************************************/
 
-#ifndef INKPLATE4_H
-#define INKPLATE4_H
+#ifndef INKPLATE7_H
+#define INKPLATE7_H
 
 #define EPAPER_RST_PIN  19
 #define EPAPER_DC_PIN   33
@@ -29,8 +29,8 @@
 #define BUSY_TIMEOUT_MS 1000
 
 // ePaper specific defines
-#define E_INK_HEIGHT   300
-#define E_INK_WIDTH    400
+#define E_INK_HEIGHT   384
+#define E_INK_WIDTH    640
 #define INKPLATE_WHITE 0
 #define INKPLATE_BLACK 1
 #define INKPLATE_RED   2

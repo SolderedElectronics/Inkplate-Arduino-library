@@ -58,8 +58,6 @@ void setup()
     time1 = millis();
 }
 
-// Variable that keeps count on how much screen has been partially updated
-int n = 0;
 void loop()
 {
     // Every 10 secs refresh the screen, show time and check alarm

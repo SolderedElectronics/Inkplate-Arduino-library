@@ -18,7 +18,8 @@
 
 #include "Image.h"
 
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) ||                      \
+    defined(ARDUINO_INKPLATE7)
 
 extern Image *_imagePtrJpeg;
 
@@ -39,9 +40,9 @@ static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
 static uint32_t pallete[] = {0xFFFFFF, 0x000000, 0xFF0000};
 static unsigned int width = E_INK_HEIGHT, height = E_INK_WIDTH;
 
-#elif defined(ARDUINO_INKPLATE4)
+#elif defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
 
-static uint32_t pallete[] = {0xFFFFFF, 0x000000, 0xFF0000};
+static uint32_t pallete[] = {0xFFFFFF, 0x0000000, 0xFF0000};
 static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
 
 #endif

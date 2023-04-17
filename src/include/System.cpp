@@ -152,7 +152,8 @@ int16_t System::sdCardInit()
 {
 // New Soldered Inkplate boards use P-MOS to disable supply to the uSD card to reduce power in deep sleep.
 #if defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
-    defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE5) || defined(ARDUINO_INKPLATE4)
+    defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE5) || defined(ARDUINO_INKPLATE4) ||                      \
+    defined(ARDUINO_INKPLATE7)
     pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, OUTPUT);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, LOW);
     delay(50);
@@ -168,7 +169,7 @@ int16_t System::sdCardInit()
 void System::sdCardSleep()
 {
 #if defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
-    defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE4)
+    defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
     // Set SPI pins to input to reduce power consumption in deep sleep
     pinMode(12, INPUT);
     pinMode(13, INPUT);
