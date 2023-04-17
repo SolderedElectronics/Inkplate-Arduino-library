@@ -330,7 +330,7 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
 {
     if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0)
         return;
-        
+
     switch (rotation)
     {
     case 0:

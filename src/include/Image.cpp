@@ -266,7 +266,8 @@ bool Image::drawImage(const char *path, const Format &format, const Position &po
  */
 void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)
 {
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE7)
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE2) &&                   \
+    !defined(ARDUINO_INKPLATE7)
     if (getDisplayMode() != INKPLATE_3BIT)
         return;
 #endif
