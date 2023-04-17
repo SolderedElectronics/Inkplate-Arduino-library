@@ -68,7 +68,7 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
                 if (ihdr->depth == 1)
                     r = g = b = (b ? 0xFF : 0);
 
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
                 if (_pngInvert)
                 {
                     r = 255 - r;
@@ -83,7 +83,7 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
 
                 if (_pngDither)
                 {
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
                     px = _imagePtrPng->ditherGetPixelBmp((r << 16) | (g << 8) | (b), x + i, y + j,
                                                          _imagePtrPng->width(), 0);
 #else
@@ -188,7 +188,7 @@ bool Image::drawPngFromSd(SdFile *p, int x, int y, bool dither, bool invert)
 }
 
 /**
- * @brief       drawPngFromWeb function draws png image from sd file
+ * @brief       drawPngFromWeb function draws png image from web
  *
  * @param       char *url
  *              pointer to png file
@@ -219,7 +219,7 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
     _pngY = y;
     pngle_set_draw_callback(pngle, pngle_on_draw);
 
-    int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 100;
+    int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 8 + 100;
     uint8_t *buf = 0;
 
     if (strncmp(url, "http://", 7) == 0)
