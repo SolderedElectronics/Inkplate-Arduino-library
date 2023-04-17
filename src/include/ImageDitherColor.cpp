@@ -18,7 +18,8 @@
 
 #include "Image.h"
 
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) ||                      \
+    defined(ARDUINO_INKPLATE7)
 
 extern Image *_imagePtrJpeg;
 

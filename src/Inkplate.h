@@ -49,7 +49,8 @@ struct waveformData
 class Inkplate : public System, public Graphics
 {
   public:
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) ||                      \
+    defined(ARDUINO_INKPLATE7)
     Inkplate();
     void display(void);
 #else
@@ -116,7 +117,8 @@ class Inkplate : public System, public Graphics
     void precalculateGamma(uint8_t *c, float gamma);
 
 
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) ||                      \
+    defined(ARDUINO_INKPLATE7)
     bool _panelState = false;
 
     void resetPanel();
@@ -161,7 +163,6 @@ class Inkplate : public System, public Graphics
     void ePaper_Sleep();
     void ePaper_Wake();
 #endif
-
 };
 
 #endif
