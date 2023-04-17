@@ -1,8 +1,8 @@
 /*
-   Inkplate10_Show_JPG_With_HTTPClient example for Soldered Inkplate 10
-   For this example you will need a USB-C cable, Inkplate 10, and an available WiFi connection.
-   Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
+   Inkplate2_Show_JPG_With_HTTPClient example for Soldered Inkplate 2
+   For this example you will need a USB-C cable, Inkplate 2, and an available WiFi connection.
+   Select "Soldered Inkplate2" from Tools -> Board menu.
+   Don't have "Soldered Inkplate2" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how to show JPG image using HTTPClient.
@@ -14,9 +14,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
+#ifndef ARDUINO_INKPLATE2
+#error "Wrong board selection for this example, please select Soldered Inkplate2 in the boards menu."
 #endif
 
 // Include needed libraries in the sketch
@@ -24,8 +23,8 @@
 #include "Inkplate.h"
 #include "WiFi.h"
 
-// Create an object on Inkplate library and also set library into 1 Bit mode (BW)
-Inkplate display(INKPLATE_1BIT);
+// Create an object on Inkplate library
+Inkplate display;
 
 /**************** CHANGE HERE ******************/
 
@@ -39,16 +38,13 @@ String url = "https://placehold.co/1200x820.jpg";
 
 void setup()
 {
-    display.begin();             // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay();      // Clear frame buffer of display
-    display.setTextSize(2);      // Set text size to be 2 times bigger than original (5x7 px)
-    display.setTextColor(BLACK); // Set text color to black
+    Serial.begin(115200);   // Init serial communication
+    display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
+    display.clearDisplay(); // Clear frame buffer of display
 
     // Let's connect to the WiFi
-    // Show a connection message
-    display.print("Connecting to WiFi");
-    // We can use a partial update because Inkplate is in 1-bit mode
-    display.partialUpdate();
+    // You can see the progress on the Serial Monitor
+    Serial.print("Connecting to WiFi");
 
     // Actually connect to the WiFi network
     WiFi.mode(WIFI_MODE_STA);
@@ -57,15 +53,9 @@ void setup()
     {
         // Print a dot every half second when connecting
         delay(500);
-        display.print(".");
-        display.partialUpdate();
+        Serial.print(".");
     }
-    display.println("\nWiFi OK! Downloading...");
-    display.partialUpdate();
-
-    // Switch to 3-bit mode so the image will be of better quality
-    // NOTE: You can't use partial update when the Inkplate is in the 3-bit mode!
-    display.setDisplayMode(INKPLATE_3BIT);
+    Serial.println("\nWiFi OK! Downloading...");
 
     // Make an object for the HTTP client
     HTTPClient http;

@@ -1,8 +1,8 @@
 /*
-   Inkplate10_Show_JPG_With_HTTPClient example for Soldered Inkplate 10
-   For this example you will need a USB-C cable, Inkplate 10, and an available WiFi connection.
-   Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
+   Inkplate6_Show_JPG_With_HTTPClient example for Soldered Inkplate 6
+   For this example you will need a USB-C cable, Inkplate 6, and an available WiFi connection.
+   Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.
+   Don't have "e-radionica Inkplate6" or "Soldered Inkplate6" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how to show JPG image using HTTPClient.
@@ -14,9 +14,9 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
+#if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
 #error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
+    "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
 #endif
 
 // Include needed libraries in the sketch
