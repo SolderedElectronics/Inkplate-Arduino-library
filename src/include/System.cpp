@@ -832,9 +832,9 @@ void System::rtcReset() // datasheet 8.2.1.3.
 
 /**
  * @brief                   Set internal capacitor value.
- * 
+ *
  * @param bool val          0 or 1 which represents 7pF or 12.5 pF.
-*/
+ */
 void System::rtcSetInternalCapacitor(bool val)
 {
     Wire.beginTransmission(I2C_ADDR);
@@ -844,12 +844,12 @@ void System::rtcSetInternalCapacitor(bool val)
     uint8_t reg;
     Wire.requestFrom(I2C_ADDR, 1);
 
-    if(Wire.available())
+    if (Wire.available())
     {
         reg = Wire.read();
     }
 
-    if(val)
+    if (val)
     {
         reg |= (1 << 0);
     }
