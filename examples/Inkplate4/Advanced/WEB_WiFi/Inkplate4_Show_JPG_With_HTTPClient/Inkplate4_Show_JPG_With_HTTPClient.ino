@@ -28,11 +28,11 @@ Inkplate display;
 
 /**************** CHANGE HERE ******************/
 
-char *ssid = "Soldered"; // Your WiFi SSID
-char *pass = "dasduino"; // Your WiFi password
+char *ssid = ""; // Your WiFi SSID
+char *pass = ""; // Your WiFi password
 
 // Optionally
-String url = "https://placehold.co/1200x820.jpg";
+String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/Inkplate4/Advanced/WEB_WiFi/Inkplate4_Show_JPG_With_HTTPClient/image.jpg";
 
 /***********************************************/
 
