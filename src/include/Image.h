@@ -53,7 +53,8 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     virtual void drawPixel(int16_t x, int16_t y, uint16_t color) = 0;
 
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE7)
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE4) &&                   \
+    !defined(ARDUINO_INKPLATE7)
     virtual void selectDisplayMode(uint8_t _mode) = 0;
     virtual uint8_t getDisplayMode() = 0;
 #endif
