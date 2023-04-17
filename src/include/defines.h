@@ -35,6 +35,8 @@
 #include "../boards/Inkplate2.h"
 #elif ARDUINO_INKPLATE4
 #include "../boards/Inkplate4.h"
+#elif ARDUINO_INKPLATE7
+#include "../boards/Inkplate7.h"
 #endif
 
 #define INKPLATE6_WAVEFORM1     0
