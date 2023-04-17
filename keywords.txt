@@ -103,6 +103,7 @@ isHidden	KEYWORD2
 getName	KEYWORD2
 isSubDir	KEYWORD2
 esp_sleep_get_wakeup_cause	KEYWORD2
+setDisplayMode	KEYWORD2
 
 # Instances (KEYWORD2)
 
