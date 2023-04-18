@@ -5,15 +5,16 @@
  * @brief       Basic funtions for controling Inkplate 7
  *
  *              https://github.com/SolderedElectronics/Inkplate-Arduino-library
+ *              For support, please reach over forums: https://forum.soldered.com/
  *              For more info about the product, please check: www.inkplate.io
  *
  *              This code is released under the GNU Lesser General Public
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about
- *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *licensing, please contact hello@soldered.com Distributed as-is; no
  *warranty is given.
  *
- * @authors     Robert @ Soldered
+ * @authors     @ Soldered
  ***************************************************/
 
 #include "../Inkplate.h"
@@ -26,7 +27,7 @@ SPISettings epdSpiSettings(4000000UL, MSBFIRST, SPI_MODE0);
 SPIClass SPI2(HSPI);
 
 /**
- * @brief       begin function initialize Inkplate object with predefined
+ * @brief       begin function to initialize Inkplate object with predefined
  * settings
  *
  * @return      True if initialization is successful, false if failed or already
@@ -73,8 +74,10 @@ bool Inkplate::begin()
     // Reset EPD IC
     resetPanel();
 
+    // Turn on the ePaper display
     ePaperWake();
 
+    // If ePaper hasn't initialized fully for some reason, return false (error)
     if (!waitForEpd(BUSY_TIMEOUT_MS))
         return false;
 
@@ -122,10 +125,13 @@ void Inkplate::ePaperSleep()
     sendCommand(0X65); // FLASH CONTROL
     sendData(0x00);
     sendCommand(0x02); // POWER OFF
-    waitForEpd(BUSY_TIMEOUT_MS);
+
+    // Wait until the EPD is ready  (power off is complete)
+    waitForEpd(BUSY_TIMEOUT_MS); 
 
     // Disable SPI
     SPI2.end();
+
     // To reduce power consumption, set SPI pins as inputs
     pinMode(EPAPER_RST_PIN, INPUT);
     pinMode(EPAPER_DC_PIN, INPUT);
@@ -142,7 +148,6 @@ void Inkplate::ePaperSleep()
 void Inkplate::ePaperWake()
 {
     // Start SPI
-
     // Set SPI pins
     SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
     // Set up EPD communication pins
@@ -187,10 +192,13 @@ void Inkplate::ePaperWake()
     sendCommand(0xe5); // FLASH MODE
     sendData(0x03);
     sendCommand(0x04); // POWER ON
+
+    // Wait until ePaper is ready (power on is complete)
+    waitForEpd(BUSY_TIMEOUT_MS);
 }
 
 /**
- * @brief       setPanelDeepSleep is an old function, it has to be rewritten
+ * @brief       setPanelDeepSleep is a legacy function, not used for Inkplate 7
  *
  * @param       bool _state
  *              HIGH or LOW (1 or 0) 1 will start panel, 0 will put it into deep sleep
@@ -223,7 +231,7 @@ void Inkplate::resetPanel()
 }
 
 /**
- * @brief       sendCommand sends SPI command to Inkplate 4
+ * @brief       sendCommand sends SPI command to Inkplate 7
  *
  * @param       uint8_t _command
  *              predefined command for ePaper control
@@ -246,6 +254,7 @@ void Inkplate::sendCommand(uint8_t _command)
  *
  * @param       uint8_t *_data
  *              pointer to data buffer to be sent to ePaper
+ * 
  * @param       int _n
  *              number of data bytes
  */
@@ -262,7 +271,7 @@ void Inkplate::sendData(uint8_t *_data, int _n)
 }
 
 /**
- * @brief       sendData sends SPI data to Inkplate 4
+ * @brief       sendData sends SPI data to Inkplate 7
  *
  * @param       uint8_t _data
  *              data to be sent to ePaper
