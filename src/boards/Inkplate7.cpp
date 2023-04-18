@@ -127,7 +127,7 @@ void Inkplate::ePaperSleep()
     sendCommand(0x02); // POWER OFF
 
     // Wait until the EPD is ready  (power off is complete)
-    waitForEpd(BUSY_TIMEOUT_MS); 
+    waitForEpd(BUSY_TIMEOUT_MS);
 
     // Disable SPI
     SPI2.end();
@@ -253,7 +253,7 @@ void Inkplate::sendCommand(uint8_t _command)
  *
  * @param       uint8_t *_data
  *              pointer to data buffer to be sent to ePaper
- * 
+ *
  * @param       int _n
  *              number of data bytes
  */
