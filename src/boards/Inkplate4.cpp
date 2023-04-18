@@ -155,7 +155,6 @@ void Inkplate::display() // Leave on does nothing
 
     delayMicroseconds(500); // Wait at least 200 uS
     waitForEpd(24000);
-    
 }
 
 /**

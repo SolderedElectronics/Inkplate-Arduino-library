@@ -197,7 +197,6 @@ void Inkplate::ePaperWake()
  */
 void Inkplate::setPanelDeepSleep(bool _state)
 {
-
 }
 
 /**
