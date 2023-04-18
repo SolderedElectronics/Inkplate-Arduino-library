@@ -23,7 +23,7 @@
 #ifdef ARDUINO_INKPLATE7
 
 SPISettings epdSpiSettings(4000000UL, MSBFIRST, SPI_MODE0);
-SPIClass ePaperSPI(HSPI);
+SPIClass SPI2(HSPI);
 
 /**
  * @brief       begin function initialize Inkplate object with predefined
@@ -37,7 +37,7 @@ bool Inkplate::begin()
     if (!_beginDone)
     {
         // Begin SPI
-        ePaperSPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
 
         // Set up EPD communication pins
         pinMode(EPAPER_CS_PIN, OUTPUT);
@@ -73,13 +73,13 @@ bool Inkplate::begin()
     // Reset EPD IC
     resetPanel();
 
-    ePaper_Wake();
+    ePaperWake();
 
     if (!waitForEpd(BUSY_TIMEOUT_MS))
         return false;
 
     // This model of ePaper is in sleep if it's not being used, so go to sleep
-    ePaper_Sleep();
+    ePaperSleep();
 
     return true;
 }
@@ -92,7 +92,7 @@ bool Inkplate::begin()
 void Inkplate::display()
 {
     // Wake ePaper from deep sleep
-    ePaper_Wake();
+    ePaperWake();
 
     // Write RAM for Black/White pixels
     sendCommand(0x10);
@@ -107,14 +107,14 @@ void Inkplate::display()
     waitForEpd(24000);
 
     // Go back to sleep
-    ePaper_Sleep();
+    ePaperSleep();
 }
 
 /**
  * @brief       Put Inkplate7 ePaper display to sleep
  *
  */
-void Inkplate::ePaper_Sleep()
+void Inkplate::ePaperSleep()
 {
     sendCommand(0X65); // FLASH CONTROL
     sendData(0x01);
@@ -123,14 +123,36 @@ void Inkplate::ePaper_Sleep()
     sendData(0x00);
     sendCommand(0x02); // POWER OFF
     waitForEpd(BUSY_TIMEOUT_MS);
+
+    // Disable SPI
+    SPI2.end();
+    // To reduce power consumption, set SPI pins as inputs
+    pinMode(EPAPER_RST_PIN, INPUT);
+    pinMode(EPAPER_DC_PIN, INPUT);
+    pinMode(EPAPER_CS_PIN, INPUT);
+    pinMode(EPAPER_BUSY_PIN, INPUT);
+    pinMode(EPAPER_CLK, INPUT);
+    pinMode(EPAPER_DIN, INPUT);
 }
 
 /**
  * @brief       Wake Inkplate 7 ePaper display, has to be called before sending pixel data
  *
  */
-void Inkplate::ePaper_Wake()
+void Inkplate::ePaperWake()
 {
+    // Start SPI
+
+    // Set SPI pins
+    SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+    // Set up EPD communication pins
+    pinMode(EPAPER_CS_PIN, OUTPUT);
+    pinMode(EPAPER_DC_PIN, OUTPUT);
+    pinMode(EPAPER_RST_PIN, OUTPUT);
+    pinMode(EPAPER_BUSY_PIN, INPUT_PULLUP);
+
+    delay(10);
+
     // Power on sequence
     sendCommand(0X65); // FLASH CONTROL
     sendData(0x01);
@@ -168,48 +190,14 @@ void Inkplate::ePaper_Wake()
 }
 
 /**
- * @brief       setPanelDeepSleep puts the ePaper display in deep sleep, or restarts it, depending on given arguments.
+ * @brief       setPanelDeepSleep is an old function, it has to be rewritten
  *
  * @param       bool _state
  *              HIGH or LOW (1 or 0) 1 will start panel, 0 will put it into deep sleep
  */
 void Inkplate::setPanelDeepSleep(bool _state)
 {
-    _panelState = _state == 0 ? false : true;
 
-    if (_panelState)
-    {
-        // Set SPI pins
-        ePaperSPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
-
-        // Set up EPD communication pins
-        pinMode(EPAPER_CS_PIN, OUTPUT);
-        pinMode(EPAPER_DC_PIN, OUTPUT);
-        pinMode(EPAPER_RST_PIN, OUTPUT);
-        pinMode(EPAPER_BUSY_PIN, INPUT_PULLUP);
-
-        delay(10);
-
-        // Send commands to power up panel. According to the datasheet, it can be
-        // powered up from deep sleep only by reseting it and doing reinit.
-        ePaper_Wake();
-    }
-    else
-    {
-        ePaper_Sleep();
-        delay(1);
-
-        // Disable SPI
-        ePaperSPI.end();
-
-        // To reduce power consumption, set SPI pins as outputs
-        pinMode(EPAPER_RST_PIN, INPUT);
-        pinMode(EPAPER_DC_PIN, INPUT);
-        pinMode(EPAPER_CS_PIN, INPUT);
-        pinMode(EPAPER_BUSY_PIN, INPUT);
-        pinMode(EPAPER_CLK, INPUT);
-        pinMode(EPAPER_DIN, INPUT);
-    }
 }
 
 /**
@@ -245,9 +233,9 @@ void Inkplate::sendCommand(uint8_t _command)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, LOW);
     delayMicroseconds(10);
-    ePaperSPI.beginTransaction(epdSpiSettings);
-    ePaperSPI.writeBytes((const uint8_t *)(&_command), 1);
-    ePaperSPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.writeBytes((const uint8_t *)(&_command), 1);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
@@ -266,9 +254,9 @@ void Inkplate::sendData(uint8_t *_data, int _n)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    ePaperSPI.beginTransaction(epdSpiSettings);
-    ePaperSPI.writeBytes((const uint8_t *)_data, _n);
-    ePaperSPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.writeBytes((const uint8_t *)_data, _n);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
@@ -284,9 +272,9 @@ void Inkplate::sendData(uint8_t _data)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    ePaperSPI.beginTransaction(epdSpiSettings);
-    ePaperSPI.writeBytes((const uint8_t *)(&_data), 1);
-    ePaperSPI.endTransaction();
+    SPI2.beginTransaction(epdSpiSettings);
+    SPI2.writeBytes((const uint8_t *)(&_data), 1);
+    SPI2.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }

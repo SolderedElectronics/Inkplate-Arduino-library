@@ -160,8 +160,8 @@ class Inkplate : public System, public Graphics
 #endif
 
 #if defined(ARDUINO_INKPLATE7)
-    void ePaper_Sleep();
-    void ePaper_Wake();
+    void ePaperSleep();
+    void ePaperWake();
 #endif
 };
 
