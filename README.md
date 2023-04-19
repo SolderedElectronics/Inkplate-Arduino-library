@@ -67,7 +67,7 @@ All of Inkplate-related development is open-sourced:
 
 - [Arduino library](https://github.com/SolderedElectronics/Inkplate-Arduino-library)
 - Hardware design:
-  - Soldered Inkplate 2 (comming soon!)
+  - [Soldered Inkplate 2](https://github.com/SolderedElectronics/Soldered-Inkplate-2-hardware-design)
   - Soldered Inkplate 6 (comming soon!)
   - Soldered Inkplate 6PLUS (comming soon!)
   - [Soldered Inkplate 10](https://github.com/SolderedElectronics/Soldered-Inkplate-10-hardware-design)
