@@ -865,7 +865,7 @@ void System::rtcSetInternalCapacitor(bool val)
 }
 
 /**
- * @brief                   Offset used to correct the frequency of the crystal used for RTC. 
+ * @brief                   Offset used to correct the frequency of the crystal used for RTC.
  *                          8.2.3 in the datasheet.
  *
  * @param bool mode         0 - normal mode -> offset is made once every two hours.
