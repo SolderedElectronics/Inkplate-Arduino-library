@@ -107,7 +107,7 @@ void Inkplate::display()
     sendCommand(0x12); // Display Update Control
 
     delayMicroseconds(500); // Wait at least 200 uS
-    waitForEpd(24000);
+    waitForEpd(35000);
 
     // Go back to sleep
     ePaperSleep();
