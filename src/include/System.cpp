@@ -865,6 +865,55 @@ void System::rtcSetInternalCapacitor(bool val)
 }
 
 /**
+ * @brief                   Offset used to correct the frequency of the crystal used for RTC. 
+ *                          8.2.3 in the datasheet.
+ *
+ * @param bool mode         0 - normal mode -> offset is made once every two hours.
+ *                          Each LSB introduces an offset of 4.34 ppm.
+ *                          1 - course mode -> offset is made every 4 minutes.
+ *                          Each LSB introduces an offset of 4.069 ppm.
+ *
+ * @param byte offsetValue  The offset value is coded in two’s complement giving a
+ *                          range of +63 LSB to -64 LSB.
+ */
+void System::rtcSetClockOffset(bool mode, int offsetValue)
+{
+    // Byte for writting in the register
+    uint8_t regValue;
+
+    // Check offset value
+    if (offsetValue > 63 || offsetValue < -64)
+    {
+        return;
+    }
+
+    // Use two's complement
+    if (offsetValue < 0)
+    {
+        offsetValue += 128;
+    }
+
+    // Save it in the byte for register
+    regValue = (byte)offsetValue;
+
+    // Write mode in the MSB
+    if (mode)
+    {
+        regValue |= (1 << 7); // Set MSB to 1
+    }
+    else
+    {
+        regValue &= ~(1 << 7); // Set MSB to 0
+    }
+
+    // Send to the register
+    Wire.beginTransmission(I2C_ADDR);
+    Wire.write(RTC_OFFSET);
+    Wire.write(regValue);
+    Wire.endTransmission();
+}
+
+/**
  * @brief                   Converts decimal to BCD
  *
  * @param                   uint8_t val

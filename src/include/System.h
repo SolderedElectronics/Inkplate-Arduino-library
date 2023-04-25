@@ -164,6 +164,7 @@ class System : public Esp,
     bool rtcIsSet();
     void rtcReset();
     void rtcSetInternalCapacitor(bool);
+    void rtcSetClockOffset(bool mode, int offsetValue);
     /* read RTC times */
     uint8_t rtcGetSecond();
     uint8_t rtcGetMinute();

@@ -105,6 +105,8 @@ isSubDir	KEYWORD2
 esp_sleep_get_wakeup_cause	KEYWORD2
 setDisplayMode	KEYWORD2
 drawJpegFromBuffer	KEYWORD2
+rtcSetInternalCapacitor	KEYWORD2
+rtcSetClockOffset	KEYWORD2
 
 # Instances (KEYWORD2)
 

@@ -45,14 +45,12 @@
 
 // --------------- CHANGE HERE ----------------:
 
-
 // Enter your WiFi credentials
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Secret address in iCal format
-char calendarURL[] = "https://calendar.google.com/calendar/ical/robert%40soldered.com/private-bc147845014b4905f9fed21bea8d25c3/basic.ics";
-
+char calendarURL[] = "";
 
 int timeZone = 2; // 2 means UTC+2
 

@@ -182,7 +182,6 @@ void deepSleep()
     esp_deep_sleep_start();
 }
 
-//
 /**
  * @brief     If it's the first file, the file open at index 0 won't work so skip this for the index zero (first file
  *            because the index is declared as 0).
