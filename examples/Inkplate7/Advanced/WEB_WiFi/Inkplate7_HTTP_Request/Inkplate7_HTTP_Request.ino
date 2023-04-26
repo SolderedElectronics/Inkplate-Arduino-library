@@ -1,8 +1,8 @@
 /*
-   Inkplate4_HTTP_Request example for Soldered Inkplate 4
-   For this example you will need a USB-C cable, Inkplate 4 and stable WiFi Internet connection.
-   Select "Soldered Inkplate4" from Tools -> Board menu.
-   Don't have "Soldered Inkplate4" option? Follow our tutorial and add it:
+   Inkplate7_HTTP_Request example for Soldered Inkplate 7
+   For this example you will need a USB-C cable, Inkplate 7 and stable WiFi Internet connection.
+   Select "Soldered Inkplate7" from Tools -> Board menu.
+   Don't have "Soldered Inkplate7" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how to connect to WiFi network, get data from Internet and display that data on epaper.
@@ -13,12 +13,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   5 April 2023 by Soldered
+   26 April 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE4
-#error "Wrong board selection for this example, please select Soldered Inkplate4 in the boards menu."
+#ifndef ARDUINO_INKPLATE7
+#error "Wrong board selection for this example, please select Soldered Inkplate7 in the boards menu."
 #endif
 
 #include "HTTPClient.h" // Include HTTP library to this sketch
@@ -32,13 +32,14 @@ Inkplate display; // Create an object on Inkplate library
 
 void setup()
 {
-    Serial.begin(115200);                            // Init serial communication
-    display.begin();                                 // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay();                          // Clear frame buffer of display
-    display.setTextColor(BLACK, WHITE);              // Set text color to black and background color to white
-    Serial.println("Scanning for WiFi networks..."); // Write text
+    Serial.begin(115200);                                 // Init serial communication
+    display.begin();                                      // Init Inkplate library (you should call this function ONLY ONCE)
+    display.clearDisplay();                               // Clear frame buffer of display
+    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE); // Set text color to black and background color to white
+    Serial.println("Scanning for WiFi networks...");      // Write text
 
-    int n = WiFi.scanNetworks(); // Start searching WiFi networks and put the nubmer of found WiFi networks in variable n
+    // Start searching WiFi networks and put the nubmer of found WiFi networks in variable n
+    int n = WiFi.scanNetworks(); 
     if (n == 0)
     {
         // If you did not find any network, show the message and stop the program.
@@ -88,5 +89,5 @@ void setup()
 
 void loop()
 {
-    // Nothing
+    // Nothing because we want to run the code only once
 }

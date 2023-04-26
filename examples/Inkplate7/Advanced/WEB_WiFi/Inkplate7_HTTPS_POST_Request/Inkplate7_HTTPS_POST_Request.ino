@@ -1,8 +1,8 @@
 /*
-   Inkplate4_HTTPS_POST_Request example for Soldered Inkplate 4
-   For this example you will need a USB-C cable, Inkplate 4 and stable WiFi Internet connection.
-   Select "Soldered Inkplate4" from Tools -> Board menu.
-   Don't have "Soldered Inkplate4" option? Follow our tutorial and add it:
+   Inkplate7_HTTPS_POST_Request example for Soldered Inkplate 7
+   For this example you will need a USB-C cable, Inkplate 7 and stable WiFi Internet connection.
+   Select "Soldered Inkplate7" from Tools -> Board menu.
+   Don't have "Soldered Inkplate7" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how to connect to a WiFi network and send a POST request via HTTPS.
@@ -13,12 +13,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   4 April 2023 by Soldered
+   26 April 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE4
-#error "Wrong board selection for this example, please select Soldered Inkplate4 in the boards menu."
+#ifndef ARDUINO_INKPLATE7
+#error "Wrong board selection for this example, please select Soldered Inkplate7 in the boards menu."
 #endif
 
 // Include needed libraries
@@ -45,21 +45,22 @@ Inkplate display;
 
 void setup()
 {
-    // Init serial communication
+    // Init serial communication at 115200 baud rate
     Serial.begin(115200);
 
-    // Init library (you should call this function ONLY ONCE)
+    // Init Inkplate library (you should call this function ONLY ONCE)
     display.begin();
 
     // Clear the display and print message
     display.clearDisplay();
-    display.setTextColor(BLACK);
+    display.setTextColor(INKPLATE_BLACK);
     display.setTextSize(3);
-    display.println("HTTPS POST Request\nexample");
+    display.println("HTTPS POST Request example");
     display.println();
 
     display.setTextSize(2);
-    display.println("Open Serial Monitor at 115200\nbaud rate to see what's\nhappening");
+    display.setTextColor(INKPLATE_RED);
+    display.println("Open Serial Monitor at 115200 baud rate to see what'shappening");
     display.display();
 
     // Connect to WiFi
