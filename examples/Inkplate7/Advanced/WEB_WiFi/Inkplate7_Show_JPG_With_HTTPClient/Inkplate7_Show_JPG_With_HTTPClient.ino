@@ -28,11 +28,11 @@ Inkplate display;
 
 /**************** CHANGE HERE ******************/
 
-char *ssid = "Soldered"; // Your WiFi SSID
-char *pass = "dasduino"; // Your WiFi password
+char *ssid = ""; // Your WiFi SSID
+char *pass = ""; // Your WiFi password
 
 // Optionally
-String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/Inkplate4/Advanced/WEB_WiFi/Inkplate4_Show_JPG_With_HTTPClient/image.jpg";
+String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/Inkplate7/Advanced/WEB_WiFi/Inkplate7_Show_JPG_With_HTTPClient/image.jpg";
 
 /***********************************************/
 
@@ -110,6 +110,9 @@ void setup()
                 }
             }
 
+            // Print a message
+            Serial.println("Drawing on the screen");
+
             // Draw image into the frame buffer of Inkplate
             display.drawJpegFromBuffer(buffer, size, 0, 0, true, false);
 
@@ -136,5 +139,5 @@ void setup()
 
 void loop()
 {
-    // Nothing
+    // Nothing, we want to run this sketch only once
 }
