@@ -27,8 +27,8 @@ Distributed as-is; no warranty is given.
 // All functions defined in Network.cpp
 
 // Declared week days
-static char wDays[8][8] = {
-    "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun",
+static char wDays[7][4] = {
+    "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun"
 };
 
 class Network

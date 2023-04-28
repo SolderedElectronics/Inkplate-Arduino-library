@@ -84,35 +84,6 @@ bool Network::getData(char *lat, char *lon, char *apiKey, char *city, char *temp
                       char *temp4, char *currentTemp, char *currentWind, char *currentTime, char *currentWeather,
                       char *currentWeatherAbbr, char *abbr1, char *abbr2, char *abbr3, char *abbr4, uint8_t *hours, int *timeZone)
 {
-    // If not connected to wifi reconnect wifi
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        WiFi.reconnect();
-
-        delay(5000);
-
-        int cnt = 0;
-        Serial.println(F("Waiting for WiFi to reconnect..."));
-        while ((WiFi.status() != WL_CONNECTED))
-        {
-            // Prints a dot every second that wifi isn't connected
-            Serial.print(F("."));
-            delay(1000);
-            ++cnt;
-
-            if (cnt == 7)
-            {
-                Serial.println("Can't connect to WIFI, restart initiated.");
-                delay(100);
-                ESP.restart();
-            }
-        }
-    }
-
-    // Wake up if sleeping and save inital state
-    bool sleep = WiFi.getSleep();
-    WiFi.setSleep(false);
-
     // Http object used to make get request
     HTTPClient http;
 
@@ -214,9 +185,6 @@ bool Network::getData(char *lat, char *lon, char *apiKey, char *city, char *temp
     // Clear document and end http
     doc.clear();
     http.end();
-
-    // Return to initial state
-    WiFi.setSleep(sleep);
 
     return 1;
 }

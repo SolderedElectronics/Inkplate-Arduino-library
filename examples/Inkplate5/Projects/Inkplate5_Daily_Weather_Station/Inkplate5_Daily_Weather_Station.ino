@@ -76,7 +76,7 @@ Inkplate display(INKPLATE_1BIT);
 Network network;
 
 // Contants used for drawing icons
-char abbrs[32][32] = {"01d", "02d", "03d", "04d", "09d", "10d", "11d", "13d", "50d",
+char abbrs[18][4] = {"01d", "02d", "03d", "04d", "09d", "10d", "11d", "13d", "50d",
                       "01n", "02n", "03n", "04n", "09n", "10n", "11n", "13n", "50n"};
                       
 const uint8_t *logos[18] = {
@@ -115,12 +115,12 @@ RTC_DATA_ATTR char currentTime[16] = "--:--";
 RTC_DATA_ATTR int timeZone;
 
 RTC_DATA_ATTR char currentWeather[32] = "-";
-RTC_DATA_ATTR char currentWeatherAbbr[8] = "01d";
+RTC_DATA_ATTR char currentWeatherAbbr[4] = "01d";
 
-RTC_DATA_ATTR char abbr1[16];
-RTC_DATA_ATTR char abbr2[16];
-RTC_DATA_ATTR char abbr3[16];
-RTC_DATA_ATTR char abbr4[16];
+RTC_DATA_ATTR char abbr1[4];
+RTC_DATA_ATTR char abbr2[4];
+RTC_DATA_ATTR char abbr3[4];
+RTC_DATA_ATTR char abbr4[4];
 
 // functions defined below
 void drawWeather();
