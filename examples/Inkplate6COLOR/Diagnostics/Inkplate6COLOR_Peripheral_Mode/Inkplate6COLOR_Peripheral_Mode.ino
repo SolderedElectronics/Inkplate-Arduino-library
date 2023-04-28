@@ -5,16 +5,15 @@
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    Using this sketch, you don't have to program and control e-paper using Arduino code.
-   Instead, you can send UART command (explained in documentation that can be found inside folder of this sketch).
-   This give you flexibility that you can use this Inkplate 6COLOR on any platform!
+   Instead, you can send UART command. This give you flexibility that you can use this Inkplate 6COLOR on any platform!
 
    Because it uses UART, it's little bit slower and it's not recommended to send bunch of
    drawPixel command to draw some image. Instead, load bitmaps and pictures on SD card and load image from SD.
    If we missed some function, you can modify this and make yor own.
    Also, every Inkplate comes with this peripheral mode right from the factory.
 
-   Learn more about Peripheral Mode in this update:
-   https://www.crowdsupply.com/e-radionica/inkplate-6/updates/successfully-funded-also-third-party-master-controllers-and-partial-updates
+   Learn more about Peripheral Mode:
+   https://inkplate.readthedocs.io/en/latest/peripheral-mode.html
 
    UART settings are: 115200 baud, standard parity, ending with "\n\r" (both)
    You can send commands via USB port or by directly connecting to ESP32 TX and RX pins.
@@ -37,6 +36,7 @@ Inkplate display;
 #define BUFFER_SIZE 1000
 char commandBuffer[BUFFER_SIZE + 1];
 char strTemp[2001];
+
 void setup()
 {
     display.begin();
