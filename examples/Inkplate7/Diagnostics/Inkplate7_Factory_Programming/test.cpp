@@ -6,9 +6,6 @@ const char *testString = {"This is some test string..."};
 const char *WSSID = {"Soldered"};
 const char *WPASS = {"dasduino"};
 
-//const char *WSSID = {"Soldered-testingPurposes"};
-//const char *WPASS = {"Testing443"};
-
 // Change this to your used slave device
 const uint8_t easyCDeviceAddress = 0x30;
 
@@ -56,8 +53,6 @@ void testPeripheral()
         failHandler();
     }
 
-    // First version of the Inkplate doesn't have RTC.
-
     // Check the RTC
     Serial.print("- PCF85063 RTC: ");
     if (rtcCheck())
@@ -69,7 +64,6 @@ void testPeripheral()
         Serial.println("FAIL");
         failHandler();
     }
-
 
     // Check I2C (easyc)
     // A slave must be connected via easyC address set in the beginning of this file

@@ -5,7 +5,7 @@
 #include "Inkplate.h"
 
 // WiFi timeout in seconds.
-#define WTIMEOUT  10
+#define WTIMEOUT 10
 
 // Timeoit for detecting touchpads in seconds (only on old Inkplates)
 #define TOUCHPADS_TIMEOUT 10
