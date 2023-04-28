@@ -35,6 +35,10 @@ const char *pass = ""; // Your WiFi password
 // Define delay between 2 images in seconds
 #define SECS_BETWEEN_IMAGES 30
 
+// Here, enter the topic or topics of the kind of images you want to be displayed
+// If you want to enter 2 topics, separate them with a comma without whitespace
+char *topic = "animals,city";
+
 // ---------------------------------------------------
 
 void setup()
@@ -73,8 +77,12 @@ void imageUrl(char *a)
     String url;
     HTTPClient http;
 
+    // Make an url
+    char temp[100];
+    sprintf(temp, "https://source.unsplash.com/random/960x540/?%s", topic);
+
     // Do GET request
-    if (http.begin("https://source.unsplash.com/random/960x540") && http.GET() > 0)
+    if (http.begin(temp) && http.GET() > 0)
     {
         url = http.getString();
 
