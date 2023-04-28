@@ -46,8 +46,6 @@ char pass[] = "";
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
-#include "driver/rtc_io.h" // Include ESP32 library for RTC pin I/O (needed for rtc_gpio_isolate() function)
-#include <rom/rtc.h>       // Include ESP32 library for RTC (needed for rtc_get_reset_reason() function)
 
 // Create object with all networking functions
 Network network;
@@ -56,7 +54,7 @@ Network network;
 Inkplate display(INKPLATE_1BIT);
 
 // Define the size of the buffer for storing quotes
-#define BUFFER_SIZE 128
+#define BUFFER_SIZE 256
 
 // Our functions declared below setup and loop
 void drawAll();
@@ -66,7 +64,7 @@ char author[64];
 
 void setup()
 {
-    // Begin serial communitcation, sed for debugging
+    // Begin serial communication at 115200 baud rate for debugging
     Serial.begin(115200);
 
     // Initial display settings
