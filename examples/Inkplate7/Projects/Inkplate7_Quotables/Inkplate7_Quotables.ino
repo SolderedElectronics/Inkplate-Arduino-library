@@ -145,7 +145,7 @@ void printQuote()
 
         // Check if the current word will go out of bounds
         display.getTextBounds(currentWordBuf, display.getCursorX(), display.getCursorY(), &x1, &y1, &w, &h);
-        if ((x1 + w) > 610)
+        if ((x1 + w) >= 610)
         {
             // Print in new row if it will
             currentRow++;
