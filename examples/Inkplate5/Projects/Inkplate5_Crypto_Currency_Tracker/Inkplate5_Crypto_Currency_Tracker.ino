@@ -120,7 +120,7 @@ void drawAll();
 
 void setup()
 {
-    // Begin serial communitcation, sed for debugging
+    // Begin serial communication, used for debugging
     Serial.begin(115200);
 
     // Initial display settings

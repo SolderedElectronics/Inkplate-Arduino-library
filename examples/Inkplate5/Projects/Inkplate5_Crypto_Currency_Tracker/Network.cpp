@@ -113,31 +113,6 @@ bool Network::getData(double *data, char * currency)
 
     bool f = 0;
 
-    // If not connected to wifi reconnect wifi
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        WiFi.reconnect();
-
-        delay(5000);
-
-        int cnt = 0;
-        Serial.println(F("Waiting for WiFi to reconnect..."));
-        while ((WiFi.status() != WL_CONNECTED))
-        {
-            // Prints a dot every second that wifi isn't connected
-            Serial.print(F("."));
-            delay(1000);
-            ++cnt;
-
-            if (cnt == 7)
-            {
-                Serial.println("Can't connect to WIFI, restart initiated.");
-                delay(100);
-                ESP.restart();
-            }
-        }
-    }
-
     // Wake up if sleeping and save inital state
     bool sleep = WiFi.getSleep();
     WiFi.setSleep(false);
