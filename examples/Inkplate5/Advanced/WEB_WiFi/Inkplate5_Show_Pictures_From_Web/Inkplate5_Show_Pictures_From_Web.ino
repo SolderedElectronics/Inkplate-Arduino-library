@@ -121,7 +121,7 @@ void setup()
     // NOTE: Both drawJpegFromWeb methods allow for an optional fifth "invert" parameter. Setting this parameter to
     // true will flip all colors on the image, making black white and white black. Fourth parameter will dither the
     // image.
-    if (!display.drawImage("https://varipass.org/destination.jpg", 0, 100, true, false))
+    if (!display.drawImage("https://varipass.org/destination.jpg", 80, 70, true, false))
     {
         // If is something failed (wrong filename or format), write error message on the screen.
         display.println("Image open error");
