@@ -24,7 +24,7 @@
 #include "../include/Graphics.h"
 #include "../include/defines.h"
 
-#if (defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6V2))
+#if (defined(ARDUINO_INKPLATE6) || defined(ARDUINO_INKPLATE6V2))
 
 /**
  * @brief       begin function initialize Inkplate object with predefined
@@ -44,7 +44,7 @@ bool Inkplate::begin(void)
         pinLUT[i] = ((i & B00000011) << 4) | (((i & B00001100) >> 2) << 18) | (((i & B00010000) >> 4) << 23) |
                     (((i & B11100000) >> 5) << 25);
 
-#ifdef ARDUINO_ESP32_DEV
+#ifdef ARDUINO_INKPLATE6
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
 #else
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
@@ -250,7 +250,7 @@ void Inkplate::display1b(bool leaveOn)
     clean(2, 1);
 
 // How many cycles / phases / frames of dark pixels
-#if defined(ARDUINO_ESP32_DEV)
+#if defined(ARDUINO_INKPLATE6)
     int rep = 4;
 #elif defined(ARDUINO_INKPLATE6V2)
     int rep = 5;
@@ -284,7 +284,7 @@ void Inkplate::display1b(bool leaveOn)
                 GPIO.out_w1tc = DATA | CL;
             }
 // New Inkplate6 panel doesn't need last clock
-#ifdef ARDUINO_ESP32_DEV
+#ifdef ARDUINO_INKPLATE6
             GPIO.out_w1ts = CL;
             GPIO.out_w1tc = DATA | CL;
 #endif
@@ -320,7 +320,7 @@ void Inkplate::display1b(bool leaveOn)
             _pos--;
         }
 // New Inkplate6 panel doesn't need last clock
-#ifdef ARDUINO_ESP32_DEV
+#ifdef ARDUINO_INKPLATE6
         GPIO.out_w1ts = CL;
         GPIO.out_w1tc = DATA | CL;
 #endif
@@ -346,7 +346,7 @@ void Inkplate::display1b(bool leaveOn)
             GPIO.out_w1tc = DATA | CL;
         }
 // New Inkplate6 panel doesn't need last clock
-#ifdef ARDUINO_ESP32_DEV
+#ifdef ARDUINO_INKPLATE6
         GPIO.out_w1ts = CL;
         GPIO.out_w1tc = DATA | CL;
 #endif
@@ -411,7 +411,7 @@ void Inkplate::display3b(bool leaveOn)
                 GPIO.out_w1tc = DATA | CL;
             }
 // New Inkplate6 panel doesn't need last clock
-#ifdef ARDUINO_ESP32_DEV
+#ifdef ARDUINO_INKPLATE6
             GPIO.out_w1ts = CL;
             GPIO.out_w1tc = DATA | CL;
 #endif
@@ -488,7 +488,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         return 0;
 
 // How many cycles / phases / frames to write to the panel.
-#if defined(ARDUINO_ESP32_DEV)
+#if defined(ARDUINO_INKPLATE6)
     int rep = 5;
 #elif defined(ARDUINO_INKPLATE6V2)
     int rep = 6;
@@ -513,7 +513,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
                 n--;
             }
 // New Inkplate6 panel doesn't need last clock
-#ifdef ARDUINO_ESP32_DEV
+#ifdef ARDUINO_INKPLATE6
             GPIO.out_w1ts = CL;
             GPIO.out_w1tc = DATA | CL;
 #endif
