@@ -79,7 +79,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     void drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h);
 
-    bool drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert);
+    bool drawBitmapFromBuffer(const uint8_t *buf, int x, int y, bool dither = 0, bool invert = 0);
 
     bool drawBitmapFromSd(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
     bool drawBitmapFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
@@ -87,7 +87,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     bool drawBitmapFromWeb(const char *url, int x, int y, bool dither = 0, bool invert = 0);
     bool drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither = 0, bool invert = 0);
 
-    bool drawJpegFromBuffer(uint8_t *buf, int32_t len, int x, int y, bool dither, bool invert);
+    bool drawJpegFromBuffer(uint8_t *buf, int32_t len, int x, int y, bool dither = 0, bool invert = 0);
 
     bool drawJpegFromSd(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
     bool drawJpegFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
