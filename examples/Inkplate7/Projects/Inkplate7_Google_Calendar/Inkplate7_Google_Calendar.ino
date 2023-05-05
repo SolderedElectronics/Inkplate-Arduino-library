@@ -102,7 +102,7 @@ void setup()
 
     // Initial display settings
     display.setTextWrap(false);
-    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
+    display.setTextColor(INKPLATE7_BLACK, INKPLATE7_WHITE);
 
     // Connect Inkplate to the WiFi network
     network.begin(ssid, pass);
@@ -202,16 +202,16 @@ void drawGrid()
     int n = 1, m = 4;
 
     // Line drawing
-    display.drawThickLine(x1, y1 + header, x2, y1 + header, INKPLATE_BLACK, 0.5);
+    display.drawThickLine(x1, y1 + header, x2, y1 + header, INKPLATE7_BLACK, 0.5);
     for (int i = 0; i < n + 1; ++i)
     {
         display.drawThickLine(x1, (int)((float)y1 + (float)i * (float)(y2 - y1) / (float)n), x2,
-                              (int)((float)y1 + (float)i * (float)(y2 - y1) / (float)n), INKPLATE_BLACK, 0.5);
+                              (int)((float)y1 + (float)i * (float)(y2 - y1) / (float)n), INKPLATE7_BLACK, 0.5);
     }
     for (int i = 0; i < m + 1; ++i)
     {
         display.drawThickLine((int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m), y1,
-                              (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m), y2, INKPLATE_BLACK, 0.5);
+                              (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m), y2, INKPLATE7_BLACK, 0.5);
         display.setFont();
 
         // Display day info using time offset
@@ -397,10 +397,10 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
     int by2 = display.getCursorY() + 10;
 
     // Draw event rect bounds
-    display.drawThickLine(bx1, by1, bx1, by2, INKPLATE_RED, 0.5);
-    display.drawThickLine(bx1, by2, bx2, by2, INKPLATE_RED, 0.5);
-    display.drawThickLine(bx2, by2, bx2, by1, INKPLATE_RED, 0.5);
-    display.drawThickLine(bx2, by1, bx1, by1, INKPLATE_RED, 0.5);
+    display.drawThickLine(bx1, by1, bx1, by2, INKPLATE7_RED, 0.5);
+    display.drawThickLine(bx1, by2, bx2, by2, INKPLATE7_RED, 0.5);
+    display.drawThickLine(bx2, by2, bx2, by1, INKPLATE7_RED, 0.5);
+    display.drawThickLine(bx2, by1, bx1, by1, INKPLATE7_RED, 0.5);
 
     // Set how high is the event
     *heigthNeeded = display.getCursorY() + 14 - y1;
@@ -499,9 +499,9 @@ void drawData()
         {
             // Draw notification showing that there are more events than drawn ones
             display.fillRoundRect(6 + i * ((E_INK_WIDTH - 4) / 4) - i, E_INK_HEIGHT - 24, ((E_INK_WIDTH - 4) / 4) - 5,
-                                  20, 10, INKPLATE_WHITE);
+                                  20, 10, INKPLATE7_WHITE);
             display.drawRoundRect(6 + i * ((E_INK_WIDTH - 4) / 4) - i, E_INK_HEIGHT - 24, ((E_INK_WIDTH - 4) / 4) - 5,
-                                  20, 10, INKPLATE_BLACK);
+                                  20, 10, INKPLATE7_BLACK);
             display.setCursor(31 + i * ((E_INK_WIDTH - 3) / 4), E_INK_HEIGHT - 18);
             Serial.println(display.getCursorY());
             display.setFont();

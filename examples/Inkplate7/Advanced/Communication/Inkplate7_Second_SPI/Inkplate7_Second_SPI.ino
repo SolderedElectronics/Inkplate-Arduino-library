@@ -58,7 +58,7 @@ void setup()
 
     // Set bigger text and print messages on the screen
     display.setTextSize(3);
-    display.drawTextWithShadow(0, 0, "Second SPI example", INKPLATE_BLACK, INKPLATE_RED);
+    display.drawTextWithShadow(0, 0, "Second SPI example", INKPLATE7_BLACK, INKPLATE7_RED);
     
     display.setTextSize(2);
     display.println("\n\n\nOpen the Serial Monitor at 115200\nbaud rate to see what's happening");

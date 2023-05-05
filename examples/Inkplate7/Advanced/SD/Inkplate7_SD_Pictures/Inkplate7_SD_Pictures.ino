@@ -49,7 +49,9 @@ void setup()
             // removing the parameter completely
             Serial.println("Image open error");
         }
+        Serial.print("Display before");
         display.display();
+        Serial.print("Display done");
         delay(5000);
 
         // Now try to load image using SdFat library class (for more advanced users) and display image on epaper.

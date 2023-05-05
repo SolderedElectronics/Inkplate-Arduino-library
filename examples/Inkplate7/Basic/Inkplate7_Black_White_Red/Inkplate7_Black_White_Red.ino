@@ -31,8 +31,8 @@ void setup()
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
     //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside ESP32).
     display.setTextSize(4); // Set text size to be 4 times bigger than original (5x7 pix)
-    display.drawTextWithShadow(50, 175, "Welcome to Inkplate 7!", INKPLATE_BLACK, INKPLATE_RED); // Draw a text with shadow
-    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE); // Set text color to black and background to white
+    display.drawTextWithShadow(50, 175, "Welcome to Inkplate 7!", INKPLATE7_BLACK, INKPLATE7_RED); // Draw a text with shadow
+    display.setTextColor(INKPLATE7_BLACK, INKPLATE7_WHITE); // Set text color to black and background to white
     display.display(); // This line actually drawing on the Inkplate screen, previous lines just drawing into the frame
                        // buffer
     delay(DELAY_MS);   // Wait a little bit
@@ -45,9 +45,9 @@ void setup()
     displayCurrentAction("Drawing two pixels in different colors"); // Function which writes small text at bottom left
                                                                     // indicating what's currently done
     // NOTE: you do not need displayCurrentAction function to use Inkplate!
-    display.drawPixel(300, 192, INKPLATE_BLACK); // Draw one black pixel at X = 300, Y = 192 position in black color
+    display.drawPixel(300, 192, INKPLATE7_BLACK); // Draw one black pixel at X = 300, Y = 192 position in black color
 
-    display.drawPixel(340, 192, INKPLATE_RED); // Draw one black pixel at X = 340, Y = 192 position in red color
+    display.drawPixel(340, 192, INKPLATE7_RED); // Draw one black pixel at X = 340, Y = 192 position in red color
 
     display.display(); // Send image to display. You need to call this one each time you want to transfer frame buffer
     // to the screen.
@@ -69,8 +69,8 @@ void setup()
 
     // All of those drawing fuctions originate from Adafruit GFX library, so maybe you are already familiar with those.
     // Arguments are: start X, start Y, ending X, ending Y, color.
-    display.drawLine(0, 0, E_INK_WIDTH, E_INK_HEIGHT, INKPLATE_BLACK);
-    display.drawLine(E_INK_WIDTH, 0, 0, E_INK_HEIGHT, INKPLATE_RED);
+    display.drawLine(0, 0, E_INK_WIDTH, E_INK_HEIGHT, INKPLATE7_BLACK);
+    display.drawLine(E_INK_WIDTH, 0, 0, E_INK_HEIGHT, INKPLATE7_RED);
     displayCurrentAction("Drawing two diagonal lines");
     display.display();
     delay(DELAY_MS);
@@ -99,14 +99,14 @@ void setup()
 
     // Now draw one horizontal...
     display.clearDisplay();
-    display.drawFastHLine(50, 192, 540, INKPLATE_BLACK); // Arguments are: starting X, starting Y, length, color
+    display.drawFastHLine(50, 192, 540, INKPLATE7_BLACK); // Arguments are: starting X, starting Y, length, color
     displayCurrentAction("Drawing one horizontal line");
     display.display();
     delay(DELAY_MS);
 
     //... and one vertical line
     display.clearDisplay();
-    display.drawFastVLine(320, 42, 300, INKPLATE_RED); // Arguments are: starting X, starting Y, length, color
+    display.drawFastVLine(320, 42, 300, INKPLATE7_RED); // Arguments are: starting X, starting Y, length, color
     displayCurrentAction("Drawing one vertical line");
     display.display();
     delay(DELAY_MS);
@@ -115,11 +115,11 @@ void setup()
     display.clearDisplay();
     for (int i = 0; i < E_INK_WIDTH; i += 8)
     {
-        display.drawFastVLine(i, 0, E_INK_HEIGHT, INKPLATE_BLACK);
+        display.drawFastVLine(i, 0, E_INK_HEIGHT, INKPLATE7_BLACK);
     }
     for (int i = 0; i < E_INK_HEIGHT; i += 8)
     {
-        display.drawFastHLine(0, i, E_INK_WIDTH, INKPLATE_RED);
+        display.drawFastHLine(0, i, E_INK_WIDTH, INKPLATE7_RED);
     }
     displayCurrentAction("Drawing a grid using horizontal and vertical lines");
     display.display();
@@ -127,7 +127,7 @@ void setup()
 
     // Draw rectangle at X = 150, Y = 100 and size of 340x184 pixels
     display.clearDisplay();
-    display.drawRect(150, 100, 340, 184, INKPLATE_BLACK); // Arguments are: start X, start Y, size X, size Y, color
+    display.drawRect(150, 100, 340, 184, INKPLATE7_BLACK); // Arguments are: start X, start Y, size X, size Y, color
     displayCurrentAction("Drawing a rectangle");
     display.display();
     delay(DELAY_MS);
@@ -144,7 +144,7 @@ void setup()
 
     // Draw filled black rectangle at X = 150, Y = 100, size of 340x184 pixels
     display.clearDisplay();
-    display.fillRect(150, 100, 340, 184, INKPLATE_BLACK); // Arguments are: start X, start Y, size X, size Y, color
+    display.fillRect(150, 100, 340, 184, INKPLATE7_BLACK); // Arguments are: start X, start Y, size X, size Y, color
     displayCurrentAction("Drawing a black rectangle");
     display.display();
     delay(DELAY_MS);
@@ -162,7 +162,7 @@ void setup()
     // Draw a red circle at the center of the screen with radius of 75 pixels
     display.clearDisplay();
     display.drawCircle(E_INK_WIDTH / 2, E_INK_HEIGHT / 2, 75,
-                       INKPLATE_RED); // Arguments are: start X, start Y, radius, color
+                       INKPLATE7_RED); // Arguments are: start X, start Y, radius, color
     displayCurrentAction("Drawing a circle");
     display.display();
     delay(DELAY_MS);
@@ -180,7 +180,7 @@ void setup()
     // Draw a black filled circle at the center of the screen with radius of 75 pixels
     display.clearDisplay();
     display.fillCircle(E_INK_WIDTH / 2, E_INK_HEIGHT / 2, 75,
-                       INKPLATE_BLACK); // Arguments are: start X, start Y, radius, color
+                       INKPLATE7_BLACK); // Arguments are: start X, start Y, radius, color
     displayCurrentAction("Drawing black-filled circle");
     display.display();
     delay(DELAY_MS);
@@ -198,7 +198,7 @@ void setup()
     // Draw rounded rectangle at X = 150, Y = 100 and size of 340x184 pixels and radius of 10 pixels
     display.clearDisplay();
     display.drawRoundRect(150, 100, 340, 184, 10,
-                          INKPLATE_RED); // Arguments are: start X, start Y, size X, size Y, radius, color
+                          INKPLATE7_RED); // Arguments are: start X, start Y, size X, size Y, radius, color
     displayCurrentAction("Drawing a rectangle with rounded edges");
     display.display();
     delay(DELAY_MS);
@@ -216,7 +216,7 @@ void setup()
     // Draw filled black rect at X = 150, Y = 100, size of 340x184 pixels and radius of 10 pixels
     display.clearDisplay();
     display.fillRoundRect(150, 100, 340, 184, 10,
-                          INKPLATE_BLACK); // Arguments are: start X, start Y, size X, size Y, radius, color
+                          INKPLATE7_BLACK); // Arguments are: start X, start Y, size X, size Y, radius, color
     displayCurrentAction("This is filled rectangle with rounded edges");
     display.display();
     delay(DELAY_MS);
@@ -233,13 +233,13 @@ void setup()
 
     // Draw simple triangle
     display.clearDisplay();
-    display.drawTriangle(215, 290, 320, 80, 425, 290, INKPLATE_RED); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
+    display.drawTriangle(215, 290, 320, 80, 425, 290, INKPLATE7_RED); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
     displayCurrentAction("Drawing a triangle");
     display.display();
     delay(DELAY_MS);
 
     // Draw filled triangle inside simple triangle (so no display.clearDisplay() this time)
-    display.fillTriangle(260, 260, 320, 140, 380, 260, INKPLATE_BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
+    display.fillTriangle(260, 260, 320, 140, 380, 260, INKPLATE7_BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
     displayCurrentAction("Drawing a triangle inside exsisting one"); // This will be written over the existing text so
                                                                      // that the previous text will not be seen
     display.display();
@@ -247,14 +247,14 @@ void setup()
 
     // Draws an elipse with x radius, y radius, center x, center y and color
     display.clearDisplay();
-    display.drawElipse(125, 75, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, INKPLATE_RED);
+    display.drawElipse(125, 75, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, INKPLATE7_RED);
     displayCurrentAction("Drawing an elipse");
     display.display();
     delay(DELAY_MS);
 
     // Fills an elipse with x radius, y radius, center x, center y and color
     display.clearDisplay();
-    display.fillElipse(125, 75, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, INKPLATE_RED);
+    display.fillElipse(125, 75, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, INKPLATE7_RED);
     displayCurrentAction("Drawing a filled elipse");
     display.display();
     delay(DELAY_MS);
@@ -281,7 +281,7 @@ void setup()
 
     // Draws a polygon, from x and y coordinate arrays of n points in color c
     display.clearDisplay();
-    display.drawPolygon(xt, yt, n, INKPLATE_BLACK);
+    display.drawPolygon(xt, yt, n, INKPLATE7_BLACK);
     displayCurrentAction("Drawing a polygon");
     display.display();
     delay(DELAY_MS);
@@ -290,7 +290,7 @@ void setup()
     // Points need to be counter clockwise sorted
     // Method can be quite slow for now, probably will improve
     display.clearDisplay();
-    display.fillPolygon(xt, yt, n, INKPLATE_RED);
+    display.fillPolygon(xt, yt, n, INKPLATE7_RED);
     displayCurrentAction("Drawing a filled polygon");
     display.display();
     delay(DELAY_MS);
@@ -298,7 +298,7 @@ void setup()
     // Write text and rotate it by 90 deg. forever
     int r = 0;
     display.setTextSize(5);
-    display.setTextColor(INKPLATE_WHITE, INKPLATE_BLACK);
+    display.setTextColor(INKPLATE7_WHITE, INKPLATE7_BLACK);
     while (true)
     {
         display.setRotation(r % 4);

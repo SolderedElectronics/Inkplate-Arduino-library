@@ -32,28 +32,28 @@ void setup()
     display.begin(); 
 
     display.setTextSize(5);                               // Set text size to be 5 times bigger than original (5x7 px)
-    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE); // Set the text color to black, and the background to white
+    display.setTextColor(INKPLATE7_BLACK, INKPLATE7_WHITE); // Set the text color to black, and the background to white
     display.setCursor(70, 80);                            // Set cursor position
 
     // Draw black text
     display.print("Inkplate 7"); // Print text in the frame buffer
 
     // Draw red text
-    display.setTextColor(INKPLATE_RED);
+    display.setTextColor(INKPLATE7_RED);
     display.setCursor(70, 130);
     display.println("Inkplate 7");
 
     // Draw text with shadow, specify color for text and background
     // (x coordinate, y coordinate, string to write, text color, shadow color)
-    display.drawTextWithShadow(70, 180, "Inkplate 7", INKPLATE_RED, INKPLATE_BLACK);
+    display.drawTextWithShadow(70, 180, "Inkplate 7", INKPLATE7_RED, INKPLATE7_BLACK);
 
     // Draw a text with shadow with swapped colors
     display.setTextSize(3);
-    display.drawTextWithShadow(300, 280, "By soldered.com", INKPLATE_BLACK, INKPLATE_RED);
+    display.drawTextWithShadow(300, 280, "By soldered.com", INKPLATE7_BLACK, INKPLATE7_RED);
 
     // Other basic drawing functions supported
-    display.drawLine(70, 250, 300, 350, INKPLATE_RED);
-    display.drawCircle(500, 150, 75, INKPLATE_BLACK);
+    display.drawLine(70, 250, 300, 350, INKPLATE7_RED);
+    display.drawCircle(500, 150, 75, INKPLATE7_BLACK);
 
     // Display to screen
     display.display();

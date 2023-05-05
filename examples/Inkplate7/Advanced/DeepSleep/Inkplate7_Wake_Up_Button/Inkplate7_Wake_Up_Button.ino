@@ -74,7 +74,7 @@ void displayInfo()
 
     // Set text cursor and size
     display.setCursor(10, 180);
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE7_BLACK);
     display.setTextSize(2);
 
     display.print(F("Boot count: "));
@@ -82,7 +82,7 @@ void displayInfo()
 
     // Set next line cursor position
     display.setCursor(10, 220);
-    display.setTextColor(INKPLATE_RED);
+    display.setTextColor(INKPLATE7_RED);
 
     // Display wake up reason
     esp_sleep_wakeup_cause_t wakeup_reason;

@@ -35,7 +35,7 @@ void setup()
     Serial.begin(115200);                 // Init serial communication
     display.begin();                      // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();               // Clear frame buffer of display
-    display.setTextColor(INKPLATE_BLACK); // Set text color to black
+    display.setTextColor(INKPLATE7_BLACK); // Set text color to black
     display.setTextSize(4);               // Set text to be 4 times bigger than classic 5x7 px text
 
     pinMode(GPIO_NUM_36, INPUT); // Set wake-up button as input
@@ -94,7 +94,7 @@ void setup()
     
     // Print a message
     display.println("RTC calibration");
-    display.setTextColor(INKPLATE_RED);
+    display.setTextColor(INKPLATE7_RED);
     display.setTextSize(3);
     display.println("\nOpen Serial Monitor at 115200 baud\nrate to see what's happening");
     display.display();

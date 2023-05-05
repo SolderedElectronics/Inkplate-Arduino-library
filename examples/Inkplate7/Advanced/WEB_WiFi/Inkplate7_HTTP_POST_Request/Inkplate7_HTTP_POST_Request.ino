@@ -62,13 +62,13 @@ void setup()
     display.clearDisplay();
 
     // Set text color and size
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE7_BLACK);
     display.setTextSize(3);
 
     // Display a message
     display.println("HTTP POST request example");
     display.println();
-    display.setTextColor(INKPLATE_RED);
+    display.setTextColor(INKPLATE7_RED);
     display.setTextSize(2);
     display.println("Open Serial Monitor at 115200 baud rate to see what'shappening");
     display.display();

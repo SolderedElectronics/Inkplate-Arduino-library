@@ -45,7 +45,7 @@ void setup()
     // Print text when clearing is done.
     display.setTextSize(4);
     display.setCursor(172, 169);
-    display.setTextColor(INKPLATE_RED, INKPLATE_WHITE);
+    display.setTextColor(INKPLATE7_RED, INKPLATE7_WHITE);
     display.print("Clearing done.");
     display.display();
 }

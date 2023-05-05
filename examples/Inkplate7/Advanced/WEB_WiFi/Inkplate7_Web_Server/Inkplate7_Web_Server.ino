@@ -49,7 +49,7 @@ void setup()
     display.begin();                      // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();               // Clear frame buffer of display
     display.setTextSize(2);               // Scale text to be two times bigger then original (5x7 px)
-    display.setTextColor(INKPLATE_BLACK); // Set text color to black and background color to white
+    display.setTextColor(INKPLATE7_BLACK); // Set text color to black and background color to white
     display.setTextWrap(true);            // If text does not fit on screen, send it to new line
 
     WiFi.begin();            // Init. WiFi library
@@ -108,7 +108,7 @@ void updatePaper()
     display.setCursor(270, 95);
     display.println(pass);
     display.setCursor(140, 150);
-    display.setTextColor(INKPLATE_RED);
+    display.setTextColor(INKPLATE7_RED);
     display.print("Open Your web browser and open");
     display.setCursor(210, 210);
     display.print("http://");
@@ -117,7 +117,7 @@ void updatePaper()
     display.println();
     display.fillRect(10, 240, 620, 4, BLACK);
     display.setCursor(0, 250);
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE7_BLACK);
     display.println("User text:"); // Print out what user typed in web page
     display.print(txt);
     display.display(); // Send everything to screen (refresh the screen)

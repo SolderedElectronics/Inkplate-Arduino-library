@@ -61,7 +61,7 @@ bool Inkplate::begin()
         setIOExpanderForLowPower();
 
         // Set the default text color
-        setTextColor(INKPLATE_BLACK);
+        setTextColor(INKPLATE7_BLACK);
 
         // Clear frame buffer
         clearDisplay();

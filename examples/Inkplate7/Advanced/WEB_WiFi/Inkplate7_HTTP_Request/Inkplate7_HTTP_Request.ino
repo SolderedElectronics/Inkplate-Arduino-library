@@ -35,7 +35,7 @@ void setup()
     Serial.begin(115200);                                 // Init serial communication
     display.begin();                                      // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();                               // Clear frame buffer of display
-    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE); // Set text color to black and background color to white
+    display.setTextColor(INKPLATE7_BLACK, INKPLATE7_WHITE); // Set text color to black and background color to white
     Serial.println("Scanning for WiFi networks...");      // Write text
 
     // Start searching WiFi networks and put the nubmer of found WiFi networks in variable n

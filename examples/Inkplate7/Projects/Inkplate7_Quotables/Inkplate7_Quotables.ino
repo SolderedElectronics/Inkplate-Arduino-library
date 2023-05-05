@@ -59,7 +59,7 @@ void setup()
     // Initial display settings
     display.begin();
     display.setTextWrap(true); // Set text wrapping to true
-    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
+    display.setTextColor(INKPLATE7_BLACK, INKPLATE7_WHITE);
 
     // Our begin function
     network.begin(ssid, pass);
@@ -96,13 +96,13 @@ void drawAll()
     // Print quote
     display.setFont(&LoveLetter_Regular10); // Set custom font
     display.setTextSize(3);
-    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
+    display.setTextColor(INKPLATE7_BLACK, INKPLATE7_WHITE);
     printQuote();
 
     // Print author in red
     display.setTextSize(2);
     display.setCursor(20, 360);
-    display.setTextColor(INKPLATE_RED, INKPLATE_WHITE);
+    display.setTextColor(INKPLATE7_RED, INKPLATE7_WHITE);
     display.print("-");
     display.println(author);
 }
