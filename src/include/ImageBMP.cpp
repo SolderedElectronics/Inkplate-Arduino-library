@@ -83,7 +83,7 @@ void Image::readBmpHeaderSd(SdFile *_f, bitmapHeader *_h)
  * @param       bitmspHeader *_h
  *              Bitmap image header to save data to
  */
-void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
+void Image::readBmpHeader(const uint8_t *buf, bitmapHeader *_h)
 {
     _h->signature = READ16(buf + 0);
     _h->fileSize = READ32(buf + 2);
@@ -273,7 +273,7 @@ bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dit
  *
  * @return      1 if drawn successfully, 0 if not
  */
-bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert)
+bool Image::drawBitmapFromBuffer(const uint8_t *buf, int x, int y, bool dither, bool invert)
 {
 
     bitmapHeader bmpHeader;
@@ -286,7 +286,7 @@ bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool i
     if (dither)
         memset(ditherBuffer, 0, sizeof ditherBuffer);
 
-    uint8_t *bufferPtr = buf + bmpHeader.startRAW;
+    const uint8_t *bufferPtr = buf + bmpHeader.startRAW;
     for (int i = 0; i < bmpHeader.height; ++i)
     {
         memcpy(pixelBuffer, bufferPtr, ROWSIZE(bmpHeader.width, bmpHeader.color));
