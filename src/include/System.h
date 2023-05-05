@@ -77,7 +77,7 @@
 #include "Touch.h"
 #endif
 
-#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6PLUS)
+#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE6) || defined(ARDUINO_INKPLATE6PLUS)
 #include "Mcp.h"
 #endif
 
