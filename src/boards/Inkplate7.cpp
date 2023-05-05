@@ -50,7 +50,7 @@ bool Inkplate::begin()
 
         // Allocate memory for frame buffer
         // IP7 is 2 pixels per byte
-        DMemory4Bit = (uint8_t *)malloc(E_INK_WIDTH * E_INK_HEIGHT / 2);
+        DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 2);
 
         if (DMemory4Bit == NULL)
         {

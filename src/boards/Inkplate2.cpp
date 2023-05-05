@@ -110,7 +110,7 @@ bool Inkplate::begin()
         delay(10);
 
         // Allocate memory for frame buffer
-        DMemory4Bit = (uint8_t *)malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);
+        DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);
 
         if (DMemory4Bit == NULL)
         {
