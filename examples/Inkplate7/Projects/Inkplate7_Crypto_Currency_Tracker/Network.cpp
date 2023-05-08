@@ -1,7 +1,7 @@
 /**
  * @file            Network.cpp
  *
- * @brief           Functions for utilizing an internet connection via WiFi to run the Inkplate 5 Crypto tracker project
+ * @brief           Functions for utilizing an internet connection via WiFi to run the Inkplate 7 Crypto tracker project
  *                  Want to learn more about Inkplate? Visit www.inkplate.io
  *                  Looking to get support? Write on our forums: https://forum.soldered.com/
  *                  22 March 2023 by Soldered

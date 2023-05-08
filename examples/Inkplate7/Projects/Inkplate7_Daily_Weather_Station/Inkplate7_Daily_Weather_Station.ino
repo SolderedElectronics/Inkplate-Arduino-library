@@ -1,16 +1,16 @@
 /*
-    Inkplate4_Daily_Weather_Station example for Soldered Inkplate4
-    For this example you will need only USB cable and Inkplate4.
-    Select "Soldered Inkplate4" from Tools -> Board menu.
-    Don't have "Soldered Inkplate4" option? Follow our tutorial and add it:
+    Inkplate7_Daily_Weather_Station example for Soldered Inkplate7
+    For this example you will need only USB cable and Inkplate7.
+    Select "Soldered Inkplate7" from Tools -> Board menu.
+    Don't have "Soldered Inkplate7" option? Follow our tutorial and add it:
     https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-    This example will show you how you can use Inkplate 4 to display API data,
+    This example will show you how you can use Inkplate 7 to display API data,
     e.g. OpenWeather public weather API for real time data. It shows the forecast
     weather for 4 days. What happens here is basically ESP32 connects to WiFi and
     sends an API call and the server returns data in JSON format containing data
     about weather, then using the library ArduinoJson we extract icons and temperatures
-    from JSON data and show it on Inkplate 4. After displaying the weather,
+    from JSON data and show it on Inkplate 7. After displaying the weather,
     ESP32 goes to sleep and wakes up every DELAY_MS milliseconds to show new weather
     (you can change the time interval).
 
@@ -23,8 +23,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE4
-#error "Wrong board selection for this example, please select Soldered Inkplate4 in the boards menu."
+#ifndef ARDUINO_INKPLATE7
+#error "Wrong board selection for this example, please select Soldered Inkplate7 in the boards menu."
 #endif
 
 // ---------- CHANGE HERE  -------------:
@@ -165,14 +165,16 @@ void drawWeather()
     {
         // If found draw specified icon
         if (strcmp(abbrs[i], currentWeatherAbbr) == 0)
-            display.drawBitmap(10, 10, logos[i], 96, 96, INKPLATE_BLACK);
+        {
+            display.drawBitmap(116, 8, logos[i], 96, 96, INKPLATE7_BLACK);
+        }
     }
 
     // Draw weather state
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE7_BLACK);
     display.setFont(&Inter12pt7b);
     display.setTextSize(1);
-    display.setCursor(30, 110);
+    display.setCursor(130, 118);
     display.println(currentWeather);
 }
 
@@ -180,7 +182,7 @@ void drawWeather()
 void drawTime()
 {
     // Drawing current time
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE7_BLACK);
     display.setFont(&Inter12pt7b);
     display.setTextSize(1);
 
@@ -192,11 +194,11 @@ void drawTime()
 void drawCity()
 {
     // Drawing city name
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE7_BLACK);
     display.setFont(&Inter12pt7b);
     display.setTextSize(1);
 
-    display.setCursor(200 - 7 * strlen(city), 290);
+    display.setCursor(E_INK_WIDTH / 2 - 7 * strlen(city), E_INK_HEIGHT - 18);
     display.println(city);
 }
 
@@ -204,10 +206,10 @@ void drawCity()
 void drawTemps()
 {
     // Drawing 4 rectangles in which temperatures will be written
-    int rectWidth = 70;
+    int rectWidth = 135;
     int rectSpacing = (E_INK_WIDTH - rectWidth * 4) / 5;
-    int yRectangleOffset = 140;
-    int rectHeight = 120;
+    int yRectangleOffset = 135;
+    int rectHeight = 195;
 
     for (int i = 0; i < 4; i++)
     {
@@ -217,32 +219,34 @@ void drawTemps()
     // Drawing days into rectangles
     int textMargin = 10;
 
-    display.setFont(&Inter8pt7b);
+    display.setFont(&Inter12pt7b);
     display.setTextSize(1);
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE7_BLACK);
 
-    int dayOffset = 10;
+    int dayOffset = 15;
 
     for (int i = 0; i < 4; i++)
     {
-        display.setCursor((i + 1) * rectSpacing + i * rectWidth + textMargin,
-                          yRectangleOffset + textMargin + dayOffset);
         if (i == 0)
         {
+            display.setCursor((i + 1) * rectSpacing + i * rectWidth + textMargin + 25,
+                          yRectangleOffset + textMargin + dayOffset);
             display.println("Today");
         }
         else
         {
+            display.setCursor((i + 1) * rectSpacing + i * rectWidth + textMargin + 35,
+                          yRectangleOffset + textMargin + dayOffset);
             display.println(wDays[hours + i > 6 ? hours + i - 6 : hours + i]);
         }
     }
 
-    int tempOffset = 55;
+    int tempOffset = 97;
 
     // Drawing temperature values into rectangles
-    display.setFont(&Inter12pt7b);
+    display.setFont(&Inter30pt7b);
     display.setTextSize(1);
-    display.setTextColor(INKPLATE_RED);
+    display.setTextColor(INKPLATE7_RED);
 
     for (int i = 0; i < 4; i++)
     {
@@ -253,38 +257,38 @@ void drawTemps()
     }
 
     // Drawing icons into rectangles
-    int iconOffset = 60;
+    int iconOffset = 130;
 
     for (int i = 0; i < 9; ++i)
-    {   
+    {
         // If found draw specified icon
         if (strcmp(abbr1, abbrs[i]) == 0)
-            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_BLACK, INKPLATE_WHITE);
+            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin + 35, yRectangleOffset + textMargin + iconOffset,
+                               s_logos[i], 48, 48, INKPLATE7_BLACK, INKPLATE7_WHITE);
     }
 
     for (int i = 0; i < 9; ++i)
     {
         // If found draw specified icon
         if (strcmp(abbr2, abbrs[i]) == 0)
-            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_BLACK, INKPLATE_WHITE);
+            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin + 35, yRectangleOffset + textMargin + iconOffset,
+                               s_logos[i], 48, 48, INKPLATE7_BLACK, INKPLATE7_WHITE);
     }
 
     for (int i = 0; i < 9; ++i)
     {
         // If found draw specified icon
         if (strcmp(abbr3, abbrs[i]) == 0)
-            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_BLACK, INKPLATE_WHITE);
+            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin + 35, yRectangleOffset + textMargin + iconOffset,
+                               s_logos[i], 48, 48, INKPLATE7_BLACK, INKPLATE7_WHITE);
     }
 
     for (int i = 0; i < 9; ++i)
     {
         // If found draw specified icon
         if (strcmp(abbr4, abbrs[i]) == 0)
-            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_BLACK, INKPLATE_WHITE);
+            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin + 35, yRectangleOffset + textMargin + iconOffset,
+                               s_logos[i], 48, 48, INKPLATE7_BLACK, INKPLATE7_WHITE);
     }
 }
 
@@ -297,7 +301,7 @@ void drawCurrent()
     display.setFont(&Inter30pt7b);
     display.setTextSize(1);
 
-    display.drawTextWithShadow(140, 85, currentTemp, INKPLATE_BLACK, INKPLATE_RED);
+    display.drawTextWithShadow(275, 78, currentTemp, INKPLATE7_BLACK, INKPLATE7_RED);
 
     int x = display.getCursorX();
     int y = display.getCursorY();
@@ -312,7 +316,7 @@ void drawCurrent()
     display.setFont(&Inter30pt7b);
     display.setTextSize(1);
 
-    display.drawTextWithShadow(270, 85, currentWind, INKPLATE_BLACK, INKPLATE_RED);
+    display.drawTextWithShadow(440, 78, currentWind, INKPLATE7_BLACK, INKPLATE7_RED);
 
     x = display.getCursorX();
     y = display.getCursorY();
@@ -327,9 +331,9 @@ void drawCurrent()
     display.setFont(&Inter8pt7b);
     display.setTextSize(1);
 
-    display.setCursor(130, 110);
+    display.setCursor(257, 118);
     display.println(F("TEMPERATURE"));
 
-    display.setCursor(270, 110);
+    display.setCursor(428, 118);
     display.println(F("WIND SPEED"));
 }
