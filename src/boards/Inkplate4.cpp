@@ -166,7 +166,7 @@ void Inkplate::display() // Leave on does nothing
  * @param       bool _state
  *              -'True' sets the panel to sleep
  *              -'False' wakes the panel
- * 
+ *
  */
 void Inkplate::setPanelDeepSleep(bool _state)
 {
