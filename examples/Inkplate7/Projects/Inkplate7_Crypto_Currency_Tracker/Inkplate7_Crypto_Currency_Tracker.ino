@@ -56,8 +56,8 @@ char currencyAbbr[] = "BTC";
 #include "Inkplate.h"
 
 // Include fonts used
-#include "Fonts/FreeSans24pt7b.h"
 #include "Fonts/FreeSans12pt7b.h"
+#include "Fonts/FreeSans24pt7b.h"
 #include "Fonts/FreeSans9pt7b.h"
 
 // Our networking functions, declared in Network.cpp
@@ -104,15 +104,15 @@ textElement elements[] = {
     {10, 40, &FreeSans24pt7b, currencyAbbr, 0, 1}, {194, 34, &FreeSans12pt7b, date, 0, 1},
     {385, 34, &FreeSans9pt7b, fromToDate, 0, 1},   {525, 54, &FreeSans9pt7b, "Current price:", 0, 1},
     {635, 82, &FreeSans9pt7b, current, 1, 1},      {549, 180, &FreeSans9pt7b, "Minimum:", 0, 1},
-    {635, 208, &FreeSans9pt7b, minimum, 1, 1},      {549, 305, &FreeSans9pt7b, "Maximum:", 0, 1},
+    {635, 208, &FreeSans9pt7b, minimum, 1, 1},     {549, 305, &FreeSans9pt7b, "Maximum:", 0, 1},
     {635, 333, &FreeSans9pt7b, maximum, 1, 1},
 
-    {10, 375, &FreeSans9pt7b, dates, 0, 1},         {85, 375, &FreeSans9pt7b, dates + 8, 0, 1},
-    {179, 375, &FreeSans9pt7b, dates + 16, 0, 1},   {280, 375, &FreeSans9pt7b, dates + 24, 0, 1},
+    {10, 375, &FreeSans9pt7b, dates, 0, 1},        {85, 375, &FreeSans9pt7b, dates + 8, 0, 1},
+    {179, 375, &FreeSans9pt7b, dates + 16, 0, 1},  {280, 375, &FreeSans9pt7b, dates + 24, 0, 1},
     {375, 375, &FreeSans9pt7b, dates + 32, 0, 1},
 
-    {422, 121, &FreeSans9pt7b, prices, 0, 1},       {422, 194, &FreeSans9pt7b, prices + 16, 0, 1},
-    {422, 272, &FreeSans9pt7b, prices + 32, 0, 1},  {422, 344, &FreeSans9pt7b, prices + 48, 0, 1},
+    {422, 121, &FreeSans9pt7b, prices, 0, 1},      {422, 194, &FreeSans9pt7b, prices + 16, 0, 1},
+    {422, 272, &FreeSans9pt7b, prices + 32, 0, 1}, {422, 344, &FreeSans9pt7b, prices + 48, 0, 1},
 };
 
 // Our functions declared below setup and loop
