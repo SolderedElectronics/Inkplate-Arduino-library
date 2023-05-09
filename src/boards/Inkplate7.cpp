@@ -175,7 +175,7 @@ void Inkplate::setPanelDeepSleep(bool _state)
 
         // Wait until ePaper is ready (power on is complete)
         waitForEpd(BUSY_TIMEOUT_MS);
-        
+
         _panelState = true;
     }
     else
