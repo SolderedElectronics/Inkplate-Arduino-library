@@ -57,8 +57,11 @@ class NetworkClient
     uint8_t *downloadFileHTTPS(const char *url, int32_t *defaultLen);
     uint8_t *downloadFile(WiFiClient *url, int32_t len);
 
+    void setFollowRedirects(followRedirects_t f);
+
   private:
     WiFiClientSecure *client;
+    followRedirects_t followRedirects;
     char *getHostFromURL(const char *urlToGetHostFrom);
     char *getPathToResourceFromURL(const char *urlToGetPathToResourceFrom);
 };

@@ -193,10 +193,16 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
     bool sleep = WiFi.getSleep();
     WiFi.setSleep(false);
 
-    // Create a new HTTP client and connect using HTTPS
+    // Create a new HTTP client
     HTTPClient http;
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1000);
+
+    // Set the 'follow redirects' option
+    // Default is HTTPC_DISABLE_FOLLOW_REDIRECTS
+    http.setFollowRedirects(followRedirects);
+
+    // Connect with HTTPS
     http.begin(*client, host, 443, pathToResource, true);
 
     // Make GET request
@@ -305,6 +311,12 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
     HTTPClient http;
     http.getStream().setNoDelay(true);
     http.getStream().setTimeout(1);
+
+    // Set the 'follow redirects' option
+    // Default is HTTPC_DISABLE_FOLLOW_REDIRECTS
+    http.setFollowRedirects(followRedirects);
+
+    // Connect with HTTP
     http.begin(url);
 
     int httpCode = http.GET();
@@ -349,4 +361,21 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
     WiFi.setSleep(sleep);
 
     return buffer;
+}
+
+/**
+ * @brief       Set if Inkplate should follow redirects when making HTTP requests
+ *
+ * @param       followRedirects_t f, the various settings are:
+ *              -'HTTPC_DISABLE_FOLLOW_REDIRECTS' - no redirection will be followed (default)
+ *              -'HTTPC_STRICT_FOLLOW_REDIRECTS' - strict RFC2616, only requests using
+ *              GET or HEAD methods will be redirected
+ *              -'HTTPC_FORCE_FOLLOW_REDIRECTS' - all redirections will be followed
+ *
+ * @returns     None
+ * 
+ */
+void NetworkClient::setFollowRedirects(followRedirects_t f)
+{
+    this->followRedirects = f;
 }

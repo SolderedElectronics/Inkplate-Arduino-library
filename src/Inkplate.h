@@ -99,7 +99,11 @@ class Inkplate : public System, public Graphics
     bool joinAP(const char *ssid, const char *pass)
     {
         return NetworkClient::joinAP(ssid, pass);
-    }
+    };
+    void setFollowRedirects(followRedirects_t follow)
+    {
+        NetworkClient::setFollowRedirects(follow);
+    };
     void disconnect()
     {
         NetworkClient::disconnect();
