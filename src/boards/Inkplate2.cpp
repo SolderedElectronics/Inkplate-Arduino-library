@@ -145,6 +145,7 @@ bool Inkplate::begin()
     sendCommand(0x50); // VCOM and data interval setting
     sendData(0x77);    // WBmode:VBDF 17|D7 VBDW 97 VBDB 57   WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
 
+    _panelState = true;
     return true;
 }
 
@@ -224,6 +225,8 @@ void Inkplate::setPanelDeepSleep(bool _state)
         pinMode(EPAPER_BUSY_PIN, INPUT);
         pinMode(EPAPER_CLK, INPUT);
         pinMode(EPAPER_DIN, INPUT);
+
+        _panelState = false;
     }
 }
 

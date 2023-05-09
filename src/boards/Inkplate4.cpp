@@ -131,6 +131,7 @@ bool Inkplate::begin()
     if (!waitForEpd(BUSY_TIMEOUT_MS))
         return 0; // Waiting for the electronic paper IC to release the idle signal
 
+    _panelState = true;
     return true;
 }
 
@@ -211,6 +212,8 @@ void Inkplate::setPanelDeepSleep(bool _state)
         pinMode(EPAPER_BUSY_PIN, INPUT);
         pinMode(EPAPER_CLK, INPUT);
         pinMode(EPAPER_DIN, INPUT);
+
+        _panelState = false;
     }
 }
 

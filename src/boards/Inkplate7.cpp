@@ -175,6 +175,8 @@ void Inkplate::setPanelDeepSleep(bool _state)
 
         // Wait until ePaper is ready (power on is complete)
         waitForEpd(BUSY_TIMEOUT_MS);
+        
+        _panelState = true;
     }
     else
     {
@@ -200,6 +202,8 @@ void Inkplate::setPanelDeepSleep(bool _state)
         pinMode(EPAPER_BUSY_PIN, INPUT);
         pinMode(EPAPER_CLK, INPUT);
         pinMode(EPAPER_DIN, INPUT);
+
+        _panelState = false;
     }
 }
 
