@@ -323,7 +323,7 @@ void Inkplate::setPanelDeepSleep(bool _state)
     else
     {
         // _state is true? Put the panel to sleep.
-        
+
         delay(10);
         sendCommand(DEEP_SLEEP_REGISTER);
         sendData(0xA5);
