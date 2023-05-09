@@ -144,7 +144,7 @@ void setup()
 
     // Go to deep sleep
     Serial.println("Going to sleep..");
-    display.setPanelDeepSleep(0); // Put the panel to deep sleep
+    display.setPanelDeepSleep(true); // Put the panel to deep sleep
     esp_deep_sleep_start();       // Put ESP32 into deep sleep. Program stops here
 }
 

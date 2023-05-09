@@ -159,17 +159,20 @@ void Inkplate::display() // Leave on does nothing
 }
 
 /**
- * @brief       setPanelDeepSleep puts the ePaper display in deep sleep, or restarts it, depending on given arguments.
+ * @brief       setPanelDeepSleep puts color epaper in deep sleep, or starts
+ * epaper, depending on given arguments.
  *
  * @param       bool _state
- *              HIGH or LOW (1 or 0) 1 will start panel, 0 will put it into deep sleep
+ *              -'True' sets the panel to sleep
+ *              -'False' wakes the panel
+ * 
  */
 void Inkplate::setPanelDeepSleep(bool _state)
 {
-    _panelState = _state == 0 ? false : true;
-
-    if (_panelState)
+    if (!_state)
     {
+        // _state is false? Wake the panel!
+
         // Set SPI pins
         SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
 
@@ -187,6 +190,8 @@ void Inkplate::setPanelDeepSleep(bool _state)
     }
     else
     {
+        // _state is true? Put the panel to sleep.
+
         sendCommand(0X50); // VCOM and data interval setting
         sendData(0xf7);
 

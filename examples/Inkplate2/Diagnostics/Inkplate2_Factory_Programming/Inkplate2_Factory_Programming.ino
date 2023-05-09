@@ -109,8 +109,8 @@ void setup()
     display.drawImage(pictures[i], 0, 0, 212, 104);
     display.display();
 
-    // Go to the sleep
-    display.setPanelDeepSleep(0);
+    // Go to sleep
+    display.setPanelDeepSleep(true);
     esp_deep_sleep_start();
 }
 

@@ -29,11 +29,11 @@ Inkplate display;
 void setup()
 {
     // Init library (you should call this function ONLY ONCE)
-    display.begin(); 
+    display.begin();
 
-    display.setTextSize(5);                               // Set text size to be 5 times bigger than original (5x7 px)
+    display.setTextSize(5);                                 // Set text size to be 5 times bigger than original (5x7 px)
     display.setTextColor(INKPLATE7_BLACK, INKPLATE7_WHITE); // Set the text color to black, and the background to white
-    display.setCursor(70, 80);                            // Set cursor position
+    display.setCursor(70, 80);                              // Set cursor position
 
     // Draw black text
     display.print("Inkplate 7"); // Print text in the frame buffer
@@ -59,8 +59,8 @@ void setup()
     display.display();
 
     // Go to deep sleep
-    display.setPanelDeepSleep(0); // Zero will put panel into sleep mode, one will wake it up
-    esp_deep_sleep_start();       // This will put ESP32 into deep sleep mode. The program stops here.
+    display.setPanelDeepSleep(true); // 'true' will put panel into sleep mode, 'false' will wake it up
+    esp_deep_sleep_start();          // This will put ESP32 into deep sleep mode. The program stops here.
 }
 
 void loop()

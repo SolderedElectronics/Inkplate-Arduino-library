@@ -43,8 +43,8 @@ void setup()
     // Activate wakeup timer
     esp_sleep_enable_timer_wakeup(15ll * 60 * 1000 * 1000);
     
-    // Put the panel in the deep sleep
-    display.setPanelDeepSleep(0);
+    // Put the panel into deep sleep
+    display.setPanelDeepSleep(true);
 
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();

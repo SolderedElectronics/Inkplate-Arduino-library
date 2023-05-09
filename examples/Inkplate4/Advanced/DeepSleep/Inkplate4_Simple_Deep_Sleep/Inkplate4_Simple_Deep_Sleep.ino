@@ -56,7 +56,7 @@ void setup()
         slide = 0; // We don't have more than 3 images, so roll back to zero
 
     // Put panel into deep sleep
-    display.setPanelDeepSleep(false); 
+    display.setPanelDeepSleep(true); 
 
     // Activate wake-up timer -- wake up after 20s here
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); 

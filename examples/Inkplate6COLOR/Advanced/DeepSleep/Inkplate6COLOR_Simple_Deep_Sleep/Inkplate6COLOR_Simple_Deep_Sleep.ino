@@ -56,8 +56,8 @@ void setup()
     // Activate wake-up timer -- wake up after 20s here
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); 
 
-    // Put the panel in the deep sleep
-    display.setPanelDeepSleep(0);
+    // Put the panel into deep sleep
+    display.setPanelDeepSleep(true);
     
     // Put ESP32 into deep sleep. Program stops here.
     esp_deep_sleep_start();                                        

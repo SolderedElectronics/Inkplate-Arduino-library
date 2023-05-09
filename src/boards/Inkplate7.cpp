@@ -75,14 +75,14 @@ bool Inkplate::begin()
     resetPanel();
 
     // Turn on the ePaper display
-    ePaperWake();
+    setPanelDeepSleep(false);
 
     // If ePaper hasn't initialized fully for some reason, return false (error)
     if (!waitForEpd(BUSY_TIMEOUT_MS))
         return false;
 
     // This model of ePaper is in sleep if it's not being used, so go to sleep
-    ePaperSleep();
+    setPanelDeepSleep(true);
 
     return true;
 }
@@ -95,7 +95,7 @@ bool Inkplate::begin()
 void Inkplate::display()
 {
     // Wake ePaper from deep sleep
-    ePaperWake();
+    setPanelDeepSleep(false);
 
     // Write RAM for Black/White pixels
     sendCommand(0x10);
@@ -110,101 +110,97 @@ void Inkplate::display()
     waitForEpd(35000);
 
     // Go back to sleep
-    ePaperSleep();
+    setPanelDeepSleep(true);
 }
 
 /**
- * @brief       Put Inkplate7 ePaper display to sleep
- *
- */
-void Inkplate::ePaperSleep()
-{
-    sendCommand(0X65); // FLASH CONTROL
-    sendData(0x01);
-    sendCommand(0xB9);
-    sendCommand(0X65); // FLASH CONTROL
-    sendData(0x00);
-    sendCommand(0x02); // POWER OFF
-
-    // Wait until the EPD is ready  (power off is complete)
-    waitForEpd(BUSY_TIMEOUT_MS);
-
-    // Disable SPI
-    SPI2.end();
-
-    // To reduce power consumption, set SPI pins as inputs
-    pinMode(EPAPER_RST_PIN, INPUT);
-    pinMode(EPAPER_DC_PIN, INPUT);
-    pinMode(EPAPER_CS_PIN, INPUT);
-    pinMode(EPAPER_BUSY_PIN, INPUT);
-    pinMode(EPAPER_CLK, INPUT);
-    pinMode(EPAPER_DIN, INPUT);
-}
-
-/**
- * @brief       Wake Inkplate 7 ePaper display, has to be called before sending pixel data
- *
- */
-void Inkplate::ePaperWake()
-{
-    // Start SPI
-    // Set SPI pins
-    SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
-    // Set up EPD communication pins
-    pinMode(EPAPER_CS_PIN, OUTPUT);
-    pinMode(EPAPER_DC_PIN, OUTPUT);
-    pinMode(EPAPER_RST_PIN, OUTPUT);
-    pinMode(EPAPER_BUSY_PIN, INPUT_PULLUP);
-
-    delay(10);
-
-    // Power on sequence
-    sendCommand(0X65); // FLASH CONTROL
-    sendData(0x01);
-    sendCommand(0xAB);
-    sendCommand(0X65); // FLASH CONTROL
-    sendData(0x00);
-    sendCommand(0x01);
-    sendData(0x37); // POWER SETTING
-    sendData(0x00);
-    sendCommand(0X00); // PANNEL SETTING
-    sendData(0xCF);
-    sendData(0x08);
-    sendCommand(0x06); // boost
-    sendData(0xc7);
-    sendData(0xcc);
-    sendData(0x28);
-    sendCommand(0x30); // PLL setting
-    sendData(0x3c);
-    sendCommand(0X41); // TEMPERATURE SETTING
-    sendData(0x00);
-    sendCommand(0X50); // VCOM AND DATA INTERVAL SETTING
-    sendData(0x77);
-    sendCommand(0X60); // TCON SETTING
-    sendData(0x22);
-    sendCommand(0x61); // tres 640*384
-    sendData(0x02);    // source 640
-    sendData(0x80);
-    sendData(0x01); // gate 384
-    sendData(0x80);
-    sendCommand(0X82); // VDCS SETTING
-    sendData(0x1E);    // decide by LUT file
-    sendCommand(0xe5); // FLASH MODE
-    sendData(0x03);
-    sendCommand(0x04); // POWER ON
-
-    // Wait until ePaper is ready (power on is complete)
-    waitForEpd(BUSY_TIMEOUT_MS);
-}
-
-/**
- * @brief       setPanelDeepSleep is a legacy function, not used for Inkplate 7
+ * @brief       setPanelDeepSleep puts color epaper in deep sleep, or starts
+ * epaper, depending on given arguments.
  *
  * @param       bool _state
- *              HIGH or LOW (1 or 0) 1 will start panel, 0 will put it into deep sleep
+ *              -'True' sets the panel to sleep
+ *              -'False' wakes the panel
  */
 void Inkplate::setPanelDeepSleep(bool _state)
 {
+    if (!_state)
+    {
+        // _state is false? Wake the panel!
+
+        // Start SPI
+        // Set SPI pins
+        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+        // Set up EPD communication pins
+        pinMode(EPAPER_CS_PIN, OUTPUT);
+        pinMode(EPAPER_DC_PIN, OUTPUT);
+        pinMode(EPAPER_RST_PIN, OUTPUT);
+        pinMode(EPAPER_BUSY_PIN, INPUT_PULLUP);
+
+        delay(10);
+
+        // Power on sequence
+        sendCommand(0X65); // Flash control
+        sendData(0x01);
+        sendCommand(0xAB);
+        sendCommand(0X65); // Flash control
+        sendData(0x00);
+        sendCommand(0x01);
+        sendData(0x37); // Power setting
+        sendData(0x00);
+        sendCommand(0X00); // Panel setting
+        sendData(0xCF);
+        sendData(0x08);
+        sendCommand(0x06); // Boost
+        sendData(0xc7);
+        sendData(0xcc);
+        sendData(0x28);
+        sendCommand(0x30); // PLL setting
+        sendData(0x3c);
+        sendCommand(0X41); // Temperature setting
+        sendData(0x00);
+        sendCommand(0X50); // VCOM and data interval setting
+        sendData(0x77);
+        sendCommand(0X60); // TCON setting
+        sendData(0x22);
+        sendCommand(0x61); // Resolution 640*384
+        sendData(0x02);
+        sendData(0x80);
+        sendData(0x01); // Gate 384
+        sendData(0x80);
+        sendCommand(0X82); // VDCS setting
+        sendData(0x1E);    // Decide by LUT file
+        sendCommand(0xe5); // Flash mode
+        sendData(0x03);
+        sendCommand(0x04); // Power on
+
+        // Wait until ePaper is ready (power on is complete)
+        waitForEpd(BUSY_TIMEOUT_MS);
+    }
+    else
+    {
+        // _state is true? Put the panel to sleep.
+
+        sendCommand(0X65); // Flash control
+        sendData(0x01);
+        sendCommand(0xB9);
+        sendCommand(0X65); // Flash control
+        sendData(0x00);
+        sendCommand(0x02); // Power off
+
+        // Wait until the EPD is ready  (power off is complete)
+        waitForEpd(BUSY_TIMEOUT_MS);
+
+        // Disable SPI
+        SPI2.end();
+
+        // To reduce power consumption, set SPI pins as inputs
+        pinMode(EPAPER_RST_PIN, INPUT);
+        pinMode(EPAPER_DC_PIN, INPUT);
+        pinMode(EPAPER_CS_PIN, INPUT);
+        pinMode(EPAPER_BUSY_PIN, INPUT);
+        pinMode(EPAPER_CLK, INPUT);
+        pinMode(EPAPER_DIN, INPUT);
+    }
 }
 
 /**

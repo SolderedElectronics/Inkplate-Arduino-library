@@ -161,7 +161,7 @@ void setup()
 
     // Go to sleep before checking again
     Serial.println("Going to sleep, bye!");
-    display.setPanelDeepSleep(0);                    // Put the panel in the deep sleep
+    display.setPanelDeepSleep(true);                    // Put the panel into deep sleep
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS); // Activate wake-up timer
     (void)esp_deep_sleep_start(); // Start deep sleep (this function does not return). Program stops here.
 }

@@ -107,6 +107,7 @@ setDisplayMode	KEYWORD2
 drawJpegFromBuffer	KEYWORD2
 rtcSetInternalCapacitor	KEYWORD2
 rtcSetClockOffset	KEYWORD2
+setFollowRedirects	KEYWORD2
 
 # Instances (KEYWORD2)
 

@@ -23,7 +23,7 @@
 
 #include "Inkplate.h"      //Include Inkplate library to the sketch
 #include "driver/rtc_io.h" //ESP32 library used for deep sleep and RTC wake up pins
-#include "picture1.h"      //Include .h files of 3 pictures. All three pictures were converted using Inkplate Image Converter (https://inkplate.io/home/image-converter/)
+#include "picture1.h" //Include .h files of 3 pictures. All three pictures were converted using Inkplate Image Converter (https://inkplate.io/home/image-converter/)
 #include "picture2.h"
 #include "picture3.h"
 
@@ -53,8 +53,8 @@ void setup()
     // rtc_gpio_isolate(GPIO_NUM_12); // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Activate wake-up timer -- wake up after 20s here
 
-    display.setPanelDeepSleep(0); // Put the panel into deep sleep                           
-    esp_deep_sleep_start();       // Put ESP32 into deep sleep. Program stops here.
+    display.setPanelDeepSleep(true); // Put the panel into deep sleep
+    esp_deep_sleep_start();          // Put ESP32 into deep sleep. Program stops here.
 }
 
 void loop()

@@ -51,7 +51,7 @@ void setup()
     display.display();                           // Refresh the screen with new picture
 
     // Put the panel to deep sleep
-    display.setPanelDeepSleep(0);
+    display.setPanelDeepSleep(true);
 
     // Put ESP32 into deep sleep. Program stops here
     esp_deep_sleep_start();

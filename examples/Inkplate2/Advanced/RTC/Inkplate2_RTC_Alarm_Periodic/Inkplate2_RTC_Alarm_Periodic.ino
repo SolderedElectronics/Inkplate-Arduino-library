@@ -93,7 +93,7 @@ void setup()
         rtc.setWakeUpTimer(wakeHours, wakeMinutes, currentTime);
 
         // Put the panel in deep sleep
-        display.setPanelDeepSleep(0);
+        display.setPanelDeepSleep(true);
 
         // Start sleep, this function never returns, program stops here
         esp_deep_sleep_start();
