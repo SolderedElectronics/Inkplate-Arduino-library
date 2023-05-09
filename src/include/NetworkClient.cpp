@@ -373,7 +373,7 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
  *              -'HTTPC_FORCE_FOLLOW_REDIRECTS' - all redirections will be followed
  *
  * @returns     None
- * 
+ *
  */
 void NetworkClient::setFollowRedirects(followRedirects_t f)
 {
