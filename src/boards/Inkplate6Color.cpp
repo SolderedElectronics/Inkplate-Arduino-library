@@ -59,7 +59,7 @@ bool Inkplate::begin(void)
         _beginDone = true;
     }
 
-     // Wake the ePaper and initialize everything
+    // Wake the ePaper and initialize everything
     // If it fails, return false
     if (!setPanelDeepSleep(false))
         return false;
@@ -276,7 +276,7 @@ bool Inkplate::setPanelDeepSleep(bool _state)
         pinMode(EPAPER_RST_PIN, OUTPUT);
         pinMode(EPAPER_DC_PIN, OUTPUT);
         pinMode(EPAPER_CS_PIN, OUTPUT);
-        
+
         // Reset epaper
         resetPanel();
 

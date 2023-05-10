@@ -67,7 +67,8 @@ class Inkplate : public System, public Graphics
     bool begin(void);
     void clearDisplay();
 
-#if !defined(ARDUINO_INKPLATECOLOR) || !defined(ARDUINO_INKPLATE4) || !defined(ARDUINO_INKPLATE7) || !defined(ARDUINO_INKPLATE2)
+#if !defined(ARDUINO_INKPLATECOLOR) || !defined(ARDUINO_INKPLATE4) || !defined(ARDUINO_INKPLATE7) ||                   \
+    !defined(ARDUINO_INKPLATE2)
     uint32_t partialUpdate(bool _forced = false, bool leaveOn = false);
     int einkOn();
     void einkOff();
