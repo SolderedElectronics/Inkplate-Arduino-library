@@ -93,7 +93,7 @@ void setup()
     // Go to deep sleep
     Serial.println("Going to deep sleep, bye");
     esp_sleep_enable_timer_wakeup(1000LL * WAKEUP); // Activate wake-up timer
-    display.setPanelDeepSleep(true); // Put the panel into deep sleep  
+       
     (void)esp_deep_sleep_start(); // Put ESP32 into deep sleep. Program stops here.
 }
 

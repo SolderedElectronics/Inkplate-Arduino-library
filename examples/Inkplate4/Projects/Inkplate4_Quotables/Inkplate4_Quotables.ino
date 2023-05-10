@@ -80,7 +80,7 @@ void setup()
     // This is set in microseconds, so it needs to be
     // multiplied by million to get seconds
     esp_sleep_enable_timer_wakeup(1000000 * DELAY_S); // Activate wake-up timer
-    display.setPanelDeepSleep(true); // Put the panel into deep sleep
+     
     esp_deep_sleep_start();       // Put ESP32 into deep sleep. Program stops here
 }
 

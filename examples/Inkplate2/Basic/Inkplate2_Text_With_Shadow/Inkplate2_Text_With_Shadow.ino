@@ -56,8 +56,7 @@ void setup()
     display.display();
 
     // Go to deep sleep
-    display.setPanelDeepSleep(true); // 'true' will put panel into sleep mode, 'false' will wake it up
-    esp_deep_sleep_start();       // This will put ESP32 into deep sleep mode
+    esp_deep_sleep_start();
 }
 
 void loop()

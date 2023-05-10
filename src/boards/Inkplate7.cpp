@@ -37,17 +37,6 @@ bool Inkplate::begin()
 {
     if (!_beginDone)
     {
-        // Begin SPI
-        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
-
-        // Set up EPD communication pins
-        pinMode(EPAPER_CS_PIN, OUTPUT);
-        pinMode(EPAPER_DC_PIN, OUTPUT);
-        pinMode(EPAPER_RST_PIN, OUTPUT);
-        pinMode(EPAPER_BUSY_PIN, INPUT);
-
-        delay(10);
-
         // Allocate memory for frame buffer
         // IP7 is 2 pixels per byte
         DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 2);
@@ -69,21 +58,15 @@ bool Inkplate::begin()
         _beginDone = 1;
     }
 
-    setIOExpanderForLowPower();
 
-    // Reset EPD IC
-    resetPanel();
-
-    // Turn on the ePaper display
-    setPanelDeepSleep(false);
-
-    // If ePaper hasn't initialized fully for some reason, return false (error)
-    if (!waitForEpd(BUSY_TIMEOUT_MS))
+    // Wake the ePaper and initialize everything
+    // If it fails, return false
+    if (!setPanelDeepSleep(false))
         return false;
 
-    // This model of ePaper is in sleep if it's not being used, so go to sleep
+    // Put the panel to deep sleep
+    // The panel is always in sleep unless it's being written display data to
     setPanelDeepSleep(true);
-
     return true;
 }
 
@@ -96,6 +79,7 @@ void Inkplate::display()
 {
     // Wake ePaper from deep sleep
     setPanelDeepSleep(false);
+    delay(5);
 
     // Write RAM for Black/White pixels
     sendCommand(0x10);
@@ -114,14 +98,16 @@ void Inkplate::display()
 }
 
 /**
- * @brief       setPanelDeepSleep puts color epaper in deep sleep, or starts
- * epaper, depending on given arguments.
+ * @brief       setPanelDeepSleep puts the color ePaper into deep sleep, or wakes it and reinitializes it
  *
  * @param       bool _state
  *              -'True' sets the panel to sleep
  *              -'False' wakes the panel
+ *
+ * @returns     True if successful, False if unsuccessful
+ *
  */
-void Inkplate::setPanelDeepSleep(bool _state)
+bool Inkplate::setPanelDeepSleep(bool _state)
 {
     if (!_state)
     {
@@ -137,6 +123,9 @@ void Inkplate::setPanelDeepSleep(bool _state)
         pinMode(EPAPER_BUSY_PIN, INPUT_PULLUP);
 
         delay(10);
+
+        // Reset EPD IC
+        resetPanel();
 
         // Power on sequence
         sendCommand(0X65); // Flash control
@@ -174,9 +163,10 @@ void Inkplate::setPanelDeepSleep(bool _state)
         sendCommand(0x04); // Power on
 
         // Wait until ePaper is ready (power on is complete)
-        waitForEpd(BUSY_TIMEOUT_MS);
+        if (!waitForEpd(BUSY_TIMEOUT_MS))
+            return false;
 
-        _panelState = true;
+        return true;
     }
     else
     {
@@ -203,20 +193,9 @@ void Inkplate::setPanelDeepSleep(bool _state)
         pinMode(EPAPER_CLK, INPUT);
         pinMode(EPAPER_DIN, INPUT);
 
-        _panelState = false;
+        return true;
     }
 }
-
-/**
- * @brief       getPanelDeepSleepState returns current state of the panel
- *
- * @return      bool _panelState
- */
-bool Inkplate::getPanelDeepSleepState()
-{
-    return _panelState;
-}
-
 
 /**
  * @brief       resetPanel resets Inkplate 4

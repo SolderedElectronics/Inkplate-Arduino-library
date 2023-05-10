@@ -110,7 +110,6 @@ void setup()
     display.display();
 
     // Go to sleep
-    display.setPanelDeepSleep(true);
     esp_deep_sleep_start();
 }
 

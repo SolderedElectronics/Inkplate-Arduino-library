@@ -33,6 +33,10 @@ Inkplate display; // Create display object
 
 void setup()
 {
+    Serial.begin(115200);
+    Serial.print("Sketch begun!");
+
+    
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.drawImage(picture1, 0, 0, 212,
@@ -49,9 +53,6 @@ void setup()
     display.clearDisplay();                      // Clear frame buffer of display
     display.drawImage(picture3, 0, 0, 212, 104); // Display selected picture at location X=0, Y=0.
     display.display();                           // Refresh the screen with new picture
-
-    // Put the panel to deep sleep
-    display.setPanelDeepSleep(true);
 
     // Put ESP32 into deep sleep. Program stops here
     esp_deep_sleep_start();

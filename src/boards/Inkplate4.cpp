@@ -37,17 +37,6 @@ bool Inkplate::begin()
 {
     if (!_beginDone)
     {
-        // Begin SPI
-        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
-
-        // Set up EPD communication pins
-        pinMode(EPAPER_CS_PIN, OUTPUT);
-        pinMode(EPAPER_DC_PIN, OUTPUT);
-        pinMode(EPAPER_RST_PIN, OUTPUT);
-        pinMode(EPAPER_BUSY_PIN, INPUT);
-
-        delay(10);
-
         // Allocate memory for frame buffer
         DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);
 
@@ -68,70 +57,14 @@ bool Inkplate::begin()
         _beginDone = 1;
     }
 
-    // Reset EPD IC
-    resetPanel();
+    // Wake the ePaper and initialize everything
+    // If it fails, return false
+    if (!setPanelDeepSleep(false))
+        return false;
 
-    // SW Reset
-    sendCommand(0x12);
-    if (!waitForEpd(BUSY_TIMEOUT_MS))
-        return 0;
-
-    sendCommand(0x74);
-    sendData(0x54);
-    sendCommand(0x7E);
-    sendData(0x3B);
-
-    // Reduce glitch under AVCOM
-    sendCommand(0x2B);
-    sendData(0x04);
-    sendData(0x63);
-
-    // Soft start setting
-    sendCommand(0x0C);
-    sendData(0x8B);
-    sendData(0x9C);
-    sendData(0x96);
-    sendData(0x0F);
-
-    // Set MUX as 300
-    sendCommand(0x01);
-    sendData(0x2B);
-    sendData(0x01);
-    sendData(0x00);
-
-    // Data entry mode
-    sendCommand(0x11);
-    sendData(0x01);
-
-    // RAM x address start at 0
-    // RAM x address end at 31h(49+1)*8->400
-    sendCommand(0x44);
-    sendData(0x00);
-    sendData(0x31);
-
-    // RAM y address start at 12Bh
-    // RAM y address end at 00h
-    sendCommand(0x45);
-    sendData(0x2B);
-    sendData(0x01);
-    sendData(0x00);
-    sendData(0x00);
-
-    sendCommand(0x3C);
-    sendData(0x01);
-
-    sendCommand(0x18);
-    sendData(0X80);
-    sendCommand(0x22);
-    sendData(0XB1);
-
-    // Load Temperature and waveform setting
-    sendCommand(0x20);
-
-    if (!waitForEpd(BUSY_TIMEOUT_MS))
-        return 0; // Waiting for the electronic paper IC to release the idle signal
-
-    _panelState = true;
+    // Put the panel to deep sleep
+    // The panel is always in sleep unless it's being written display data to
+    setPanelDeepSleep(true);
     return true;
 }
 
@@ -142,6 +75,9 @@ bool Inkplate::begin()
  */
 void Inkplate::display() // Leave on does nothing
 {
+    // Wake the ePaper
+    setPanelDeepSleep(false);
+
     // Write RAM for Black/White pixels
     sendCommand(0x24);
     sendData(DMemory4Bit, (E_INK_WIDTH * E_INK_HEIGHT / 8));
@@ -157,22 +93,29 @@ void Inkplate::display() // Leave on does nothing
 
     delayMicroseconds(500); // Wait at least 200 uS
     waitForEpd(24000);
+
+    // Put the ePaper back to sleep
+    setPanelDeepSleep(true);
 }
 
 /**
- * @brief       setPanelDeepSleep puts color epaper in deep sleep, or starts
- * epaper, depending on given arguments.
+ * @brief       setPanelDeepSleep puts the color ePaper into deep sleep, or wakes it and reinitializes it
  *
  * @param       bool _state
  *              -'True' sets the panel to sleep
  *              -'False' wakes the panel
  *
+ * @returns     True if successful, False if unsuccessful
+ *
  */
-void Inkplate::setPanelDeepSleep(bool _state)
+bool Inkplate::setPanelDeepSleep(bool _state)
 {
     if (!_state)
     {
         // _state is false? Wake the panel!
+
+        // Send commands to power up panel. According to the datasheet, it can be
+        // powered up from deep sleep only by reseting it and doing reinit.
 
         // Set SPI pins
         SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
@@ -185,9 +128,70 @@ void Inkplate::setPanelDeepSleep(bool _state)
 
         delay(10);
 
-        // Send commands to power up panel. According to the datasheet, it can be
-        // powered up from deep sleep only by reseting it and doing reinit.
-        begin();
+        // Reset EPD IC
+        resetPanel();
+
+        // SW Reset
+        sendCommand(0x12);
+        if (!waitForEpd(BUSY_TIMEOUT_MS))
+            return false;
+
+        sendCommand(0x74);
+        sendData(0x54);
+        sendCommand(0x7E);
+        sendData(0x3B);
+
+        // Reduce glitch under AVCOM
+        sendCommand(0x2B);
+        sendData(0x04);
+        sendData(0x63);
+
+        // Soft start setting
+        sendCommand(0x0C);
+        sendData(0x8B);
+        sendData(0x9C);
+        sendData(0x96);
+        sendData(0x0F);
+
+        // Set MUX as 300
+        sendCommand(0x01);
+        sendData(0x2B);
+        sendData(0x01);
+        sendData(0x00);
+
+        // Data entry mode
+        sendCommand(0x11);
+        sendData(0x01);
+
+        // RAM x address start at 0
+        // RAM x address end at 31h(49+1)*8->400
+        sendCommand(0x44);
+        sendData(0x00);
+        sendData(0x31);
+
+        // RAM y address start at 12Bh
+        // RAM y address end at 00h
+        sendCommand(0x45);
+        sendData(0x2B);
+        sendData(0x01);
+        sendData(0x00);
+        sendData(0x00);
+
+        sendCommand(0x3C);
+        sendData(0x01);
+
+        sendCommand(0x18);
+        sendData(0X80);
+        sendCommand(0x22);
+        sendData(0XB1);
+
+        // Load Temperature and waveform setting
+        sendCommand(0x20);
+
+        if (!waitForEpd(BUSY_TIMEOUT_MS))
+            return false; // Waiting for the electronic paper IC to release the idle signal
+
+        return true;
     }
     else
     {
@@ -213,20 +217,9 @@ void Inkplate::setPanelDeepSleep(bool _state)
         pinMode(EPAPER_CLK, INPUT);
         pinMode(EPAPER_DIN, INPUT);
 
-        _panelState = false;
+        return true;
     }
 }
-
-/**
- * @brief       getPanelDeepSleepState returns current state of the panel
- *
- * @return      bool _panelState
- */
-bool Inkplate::getPanelDeepSleepState()
-{
-    return _panelState;
-}
-
 
 /**
  * @brief       resetPanel resets Inkplate 4

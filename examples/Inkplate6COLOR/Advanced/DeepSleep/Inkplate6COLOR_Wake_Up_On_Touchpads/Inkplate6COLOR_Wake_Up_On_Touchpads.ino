@@ -53,8 +53,7 @@ void setup()
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_34, LOW);
 
     // Go to sleep
-    // Put the panel into deep sleep
-    display.setPanelDeepSleep(true);
+     
 
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();

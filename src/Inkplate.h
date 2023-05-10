@@ -64,36 +64,19 @@ class Inkplate : public System, public Graphics
     bool getWaveformFromEEPROM(struct waveformData *_w);
     void burnWaveformToEEPROM(struct waveformData _w);
 #endif
-    bool begin(void); // In boards
-
+    bool begin(void);
     void clearDisplay();
-    // void writeRow(uint8_t data);
+
+#if !defined(ARDUINO_INKPLATECOLOR) || !defined(ARDUINO_INKPLATE4) || !defined(ARDUINO_INKPLATE7) || !defined(ARDUINO_INKPLATE2)
     uint32_t partialUpdate(bool _forced = false, bool leaveOn = false);
-
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
-    void clean();
-
-    // These 4 functions need to refactored because conflicting functionalities
-    void setPanelState(bool _state);
-    bool getPanelState();
-    void setPanelDeepSleep(bool _state);
-    bool getPanelDeepSleepState();
-
-    void setIOExpanderForLowPower();
-#elif defined(ARDUINO_INKPLATE2)
-    void clean();
-
-    // These 4 functions need to refactored because conflicting functionalities
-    void setPanelState(bool _state);
-    bool getPanelState();
-    void setPanelDeepSleep(bool _state);
-    bool getPanelDeepSleepState();
-#else
     int einkOn();
     void einkOff();
     void preloadScreen();
     uint8_t readPowerGood();
     void clean(uint8_t c, uint8_t rep);
+#endif
+#if defined(ARDUINO_INKPLATECOLOR)
+    void clean();
 #endif
 
     bool joinAP(const char *ssid, const char *pass)
@@ -123,14 +106,12 @@ class Inkplate : public System, public Graphics
 
 #if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) ||                      \
     defined(ARDUINO_INKPLATE7)
-    bool _panelState = false;
-
     void resetPanel();
     void sendCommand(uint8_t _command);
     void sendData(uint8_t *_data, int _n);
     void sendData(uint8_t _data);
-#else
-
+    bool setPanelDeepSleep(bool _state);
+    void setIOExpanderForLowPower();
 
 #if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE10V2)
     void calculateLUTs();

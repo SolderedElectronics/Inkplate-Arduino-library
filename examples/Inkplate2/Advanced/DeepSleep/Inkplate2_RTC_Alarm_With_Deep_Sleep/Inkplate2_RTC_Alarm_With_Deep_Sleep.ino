@@ -159,9 +159,6 @@ void loop()
 
 void deepSleep()
 {
-    // Put the panel into deep sleep
-    display.setPanelDeepSleep(true);
-
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }

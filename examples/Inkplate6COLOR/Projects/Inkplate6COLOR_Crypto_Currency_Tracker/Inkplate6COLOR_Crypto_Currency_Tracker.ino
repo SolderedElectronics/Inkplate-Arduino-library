@@ -156,8 +156,7 @@ void loop()
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
     
-    // Put the panel into deep sleep
-    display.setPanelDeepSleep(true);
+     
 
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();

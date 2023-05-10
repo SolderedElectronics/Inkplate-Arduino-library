@@ -88,9 +88,6 @@ void setup()
     // multiplied by million to get seconds
     esp_sleep_enable_timer_wakeup(1000000 * DELAY_S);
 
-    // Put the panel into deep sleep
-    display.setPanelDeepSleep(true);
-
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }

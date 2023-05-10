@@ -46,13 +46,6 @@ bool Inkplate::begin(void)
     {
         Wire.begin();
 
-        _beginDone = true;
-        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
-        pinMode(EPAPER_BUSY_PIN, INPUT);
-        pinMode(EPAPER_RST_PIN, OUTPUT);
-        pinMode(EPAPER_DC_PIN, OUTPUT);
-        pinMode(EPAPER_CS_PIN, OUTPUT);
-
         // Allocate memory for internal frame buffer
         DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 2);
         if (DMemory4Bit == NULL)
@@ -62,64 +55,18 @@ bool Inkplate::begin(void)
 
         // Color whole frame buffer in white color
         memset(DMemory4Bit, INKPLATE_WHITE | (INKPLATE_WHITE << 4), E_INK_WIDTH * E_INK_HEIGHT / 2);
+
+        _beginDone = true;
     }
 
-    // Reset epaper
-    resetPanel();
-
-    // Wait for epapper to be ready by reading busy high signal
-    _timeout = millis();
-    while ((!digitalRead(EPAPER_BUSY_PIN)) && ((millis() - _timeout) < INIT_TIMEOUT))
-        ;
-    if (!digitalRead(EPAPER_BUSY_PIN))
+     // Wake the ePaper and initialize everything
+    // If it fails, return false
+    if (!setPanelDeepSleep(false))
         return false;
 
-    // Send whole bunch of commands and data
-    uint8_t panel_set_data[] = {0xEF, 0x08};
-    sendCommand(PANEL_SET_REGISTER);
-    sendData(panel_set_data, 2);
-
-    uint8_t power_set_data[] = {0x37, 0x00, 0x05, 0x05};
-    sendCommand(POWER_SET_REGISTER);
-    sendData(power_set_data, 4);
-
-    sendCommand(POWER_OFF_SEQ_SET_REGISTER);
-    sendData(0x00);
-
-    uint8_t booster_softstart_data[] = {0xC7, 0xC7, 0x1D};
-    sendCommand(BOOSTER_SOFTSTART_REGISTER);
-    sendData(booster_softstart_data, 3);
-
-    sendCommand(TEMP_SENSOR_EN_REGISTER);
-    sendData(0x00);
-
-    sendCommand(VCOM_DATA_INTERVAL_REGISTER);
-    sendData(0x37);
-
-    sendCommand(0x60);
-    sendData(0x20);
-
-    uint8_t res_set_data[] = {0x02, 0x58, 0x01, 0xC0};
-    sendCommand(RESOLUTION_SET_REGISTER);
-    sendData(res_set_data, 4);
-
-    sendCommand(0xE3);
-    sendData(0xAA);
-
-    delay(100);
-
-    setIOExpanderForLowPower();
-
-    // Set SPI pins to input to reduce power consumption in deep sleep
-    pinMode(12, INPUT);
-    pinMode(13, INPUT);
-    pinMode(14, INPUT);
-    pinMode(15, INPUT);
-
-    // And also disable uSD card supply
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, INPUT);
-
-    _panelState = true;
+    // Put the panel to deep sleep
+    // The panel is always in sleep unless it's being written display data to
+    setPanelDeepSleep(true);
     return true;
 }
 
@@ -129,8 +76,8 @@ bool Inkplate::begin(void)
  */
 void Inkplate::display()
 {
-    if (!_panelState)
-        return;
+    // Wake the panel back up
+    setPanelDeepSleep(false);
 
     // Set resolution setting
     uint8_t res_set_data[] = {0x02, 0x58, 0x01, 0xc0};
@@ -156,6 +103,9 @@ void Inkplate::display()
     while (digitalRead(EPAPER_BUSY_PIN))
         ; // Wait for busy low signal
     delay(200);
+
+    // Put the panel to sleep again
+    setPanelDeepSleep(true);
 }
 
 /**
@@ -206,11 +156,10 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
  * @brief       clean function cleans screen of any potential burn in
  *
  * @note        Should not be used in intervals smaller than 5 seconds
+
  */
 void Inkplate::clean()
 {
-    if (!_panelState)
-        return;
 
     // Set resolution setting
     uint8_t res_set_data[] = {0x02, 0x58, 0x01, 0xc0};
@@ -303,14 +252,16 @@ void Inkplate::sendData(uint8_t _data)
 }
 
 /**
- * @brief       setPanelDeepSleep puts color epaper in deep sleep, or starts
- * epaper, depending on given arguments.
+ * @brief       setPanelDeepSleep puts the color ePaper into deep sleep, or wakes it and reinitializes it
  *
  * @param       bool _state
  *              -'True' sets the panel to sleep
  *              -'False' wakes the panel
+ *
+ * @returns     True if successful, False if unsuccessful
+ *
  */
-void Inkplate::setPanelDeepSleep(bool _state)
+bool Inkplate::setPanelDeepSleep(bool _state)
 {
     if (!_state)
     {
@@ -318,7 +269,58 @@ void Inkplate::setPanelDeepSleep(bool _state)
 
         // Send commands to power up panel. According to the datasheet, it can be
         // powered up from deep sleep only by reseting it and doing reinit.
-        begin();
+
+        // Init SPI
+        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+        pinMode(EPAPER_BUSY_PIN, INPUT);
+        pinMode(EPAPER_RST_PIN, OUTPUT);
+        pinMode(EPAPER_DC_PIN, OUTPUT);
+        pinMode(EPAPER_CS_PIN, OUTPUT);
+        
+        // Reset epaper
+        resetPanel();
+
+        // Wait for ePaper to be ready by reading busy high signal
+        float _timeout = millis();
+        while ((!digitalRead(EPAPER_BUSY_PIN)) && ((millis() - _timeout) < INIT_TIMEOUT))
+            ;
+
+        if (!digitalRead(EPAPER_BUSY_PIN))
+            return false;
+
+        // Send whole bunch of commands and data
+        uint8_t panel_set_data[] = {0xEF, 0x08};
+        sendCommand(PANEL_SET_REGISTER);
+        sendData(panel_set_data, 2);
+
+        uint8_t power_set_data[] = {0x37, 0x00, 0x05, 0x05};
+        sendCommand(POWER_SET_REGISTER);
+        sendData(power_set_data, 4);
+
+        sendCommand(POWER_OFF_SEQ_SET_REGISTER);
+        sendData(0x00);
+
+        uint8_t booster_softstart_data[] = {0xC7, 0xC7, 0x1D};
+        sendCommand(BOOSTER_SOFTSTART_REGISTER);
+        sendData(booster_softstart_data, 3);
+
+        sendCommand(TEMP_SENSOR_EN_REGISTER);
+        sendData(0x00);
+
+        sendCommand(VCOM_DATA_INTERVAL_REGISTER);
+        sendData(0x37);
+
+        sendCommand(0x60);
+        sendData(0x20);
+
+        uint8_t res_set_data[] = {0x02, 0x58, 0x01, 0xC0};
+        sendCommand(RESOLUTION_SET_REGISTER);
+        sendData(res_set_data, 4);
+
+        sendCommand(0xE3);
+        sendData(0xAA);
+
+        return true;
     }
     else
     {
@@ -331,18 +333,17 @@ void Inkplate::setPanelDeepSleep(bool _state)
         digitalWrite(EPAPER_RST_PIN, LOW);
         digitalWrite(EPAPER_DC_PIN, LOW);
         digitalWrite(EPAPER_CS_PIN, LOW);
+
+        SPI2.end();
+
+        pinMode(12, INPUT);
+        pinMode(13, INPUT);
+        pinMode(14, INPUT);
+        pinMode(15, INPUT);
+        return true;
     }
 }
 
-/**
- * @brief       getPanelDeepSleepState returns current state of the panel
- *
- * @return      bool _panelState
- */
-bool Inkplate::getPanelDeepSleepState()
-{
-    return _panelState;
-}
 
 /**
  * @brief       setIOExpanderForLowPower initiates I/O Expander pins for low power, and puts
