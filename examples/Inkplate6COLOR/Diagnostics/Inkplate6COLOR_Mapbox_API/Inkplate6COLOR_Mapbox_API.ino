@@ -42,7 +42,7 @@ void setup()
     display.begin();      // Initialize display
 
     // Connect to WiFi
-    while (!display.joinAP(ssid, pass))
+    while (!display.connectWiFi(ssid, pass))
     {
         Serial.println("Connecting to wifi");
     }

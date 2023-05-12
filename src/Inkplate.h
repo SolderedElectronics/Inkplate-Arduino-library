@@ -80,9 +80,13 @@ class Inkplate : public System, public Graphics
     void clean();
 #endif
 
-    bool joinAP(const char *ssid, const char *pass)
+    bool connectWiFi(const char *ssid, const char *pass, int timeout = WIFI_TIMEOUT, bool printToSerial = false)
     {
-        return NetworkClient::joinAP(ssid, pass);
+        return NetworkClient::connectWiFi(ssid, pass, timeout, printToSerial);
+    };
+    bool connectWiFiMulti(int numNetworks, const char **ssids, const char **passwords, int timeout = WIFI_TIMEOUT, bool printToSerial = false)
+    {
+        return NetworkClient::connectWiFiMulti(numNetworks, ssids, passwords, timeout, printToSerial);
     };
     void setFollowRedirects(followRedirects_t follow)
     {
@@ -96,6 +100,14 @@ class Inkplate : public System, public Graphics
     {
         return NetworkClient::isConnected();
     };
+    bool getNTPEpoch(time_t * timeEpoch, int timeZone = 0, char * ntpServer = "pool.ntp.org", int daylightSavingsOffsetHours = 0)
+    {
+        return NetworkClient::getNTPEpoch(timeEpoch, timeZone, ntpServer, daylightSavingsOffsetHours);
+    }
+    bool getNTPDateTime(tm * dateTime, int timeZone = 0, char * ntpServer = "pool.ntp.org", int daylightSavingsOffsetHours = 0)
+    {
+        return NetworkClient::getNTPDateTime(dateTime, timeZone, ntpServer, daylightSavingsOffsetHours);
+    }
     int _getRotation()
     {
         return Graphics::getRotation();
@@ -113,10 +125,15 @@ class Inkplate : public System, public Graphics
     void sendData(uint8_t _data);
     bool setPanelDeepSleep(bool _state);
     void setIOExpanderForLowPower();
+#endif
 
 #if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE10V2)
     void calculateLUTs();
 #endif
+
+#if !defined(ARDUINO_INKPLATECOLOR) || !defined(ARDUINO_INKPLATE4) || !defined(ARDUINO_INKPLATE7) ||                   \
+    !defined(ARDUINO_INKPLATE2)
+    
     void display1b(bool leaveOn = false);
     void display3b(bool leaveOn = false);
 

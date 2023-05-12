@@ -50,7 +50,7 @@ void setup()
     display.begin();
 
     // Join wifi
-    display.joinAP(ssid, pass);
+    display.connectWiFi(ssid, pass);
     Serial.println("Connected");
     char url[256];
     imageUrl(url);

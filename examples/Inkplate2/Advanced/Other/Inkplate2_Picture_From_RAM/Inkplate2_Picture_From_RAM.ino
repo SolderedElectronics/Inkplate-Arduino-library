@@ -25,7 +25,7 @@
 #include "picture2.h"
 #include "picture3.h" // This are headers in which are saved pictures that needs to be stored in RAM for showing.
                       // Any picture (in any format) can be converted in this type of header on this link:
-                      // https://inkplate.io/home/image-converter/ just choose settings for your Inkplate
+                      // https://solderedelectronics.github.io/Inkplate-image-converter/ just choose settings for your Inkplate
                       // and additional settings like dither and bit mode.
 
 
