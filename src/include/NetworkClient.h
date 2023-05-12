@@ -22,8 +22,8 @@
 #include "Arduino.h"
 #include "HTTPClient.h"
 #include "WiFi.h"
-#include "WiFiMulti.h"
 #include "WiFiClientSecure.h"
+#include "WiFiMulti.h"
 #include "defines.h"
 #include "time.h"
 
@@ -54,7 +54,8 @@ class NetworkClient
 {
   public:
     bool connectWiFi(const char *ssid, const char *pass, int timeout = WIFI_TIMEOUT, bool printToSerial = false);
-    bool connectWiFiMulti(int numNetworks, const char **ssids, const char **passwords, int timeout = WIFI_TIMEOUT, bool printToSerial = false);
+    bool connectWiFiMulti(int numNetworks, const char **ssids, const char **passwords, int timeout = WIFI_TIMEOUT,
+                          bool printToSerial = false);
     void disconnect();
     bool isConnected();
 
@@ -62,8 +63,10 @@ class NetworkClient
     uint8_t *downloadFileHTTPS(const char *url, int32_t *defaultLen);
     uint8_t *downloadFile(WiFiClient *url, int32_t len);
 
-    bool getNTPEpoch(time_t * timeEpoch, int timeZone = 0, char * ntpServer = "pool.ntp.org", int daylightSavingsOffsetHours = 0);
-    bool getNTPDateTime(tm * timeEpoch, int timeZone = 0, char * ntpServer = "pool.ntp.org", int daylightSavingsOffsetHours = 0);
+    bool getNTPEpoch(time_t *timeEpoch, int timeZone = 0, char *ntpServer = "pool.ntp.org",
+                     int daylightSavingsOffsetHours = 0);
+    bool getNTPDateTime(tm *timeEpoch, int timeZone = 0, char *ntpServer = "pool.ntp.org",
+                        int daylightSavingsOffsetHours = 0);
 
     void setFollowRedirects(followRedirects_t f);
 

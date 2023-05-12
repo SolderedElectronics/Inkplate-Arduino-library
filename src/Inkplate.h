@@ -84,7 +84,8 @@ class Inkplate : public System, public Graphics
     {
         return NetworkClient::connectWiFi(ssid, pass, timeout, printToSerial);
     };
-    bool connectWiFiMulti(int numNetworks, const char **ssids, const char **passwords, int timeout = WIFI_TIMEOUT, bool printToSerial = false)
+    bool connectWiFiMulti(int numNetworks, const char **ssids, const char **passwords, int timeout = WIFI_TIMEOUT,
+                          bool printToSerial = false)
     {
         return NetworkClient::connectWiFiMulti(numNetworks, ssids, passwords, timeout, printToSerial);
     };
@@ -100,11 +101,13 @@ class Inkplate : public System, public Graphics
     {
         return NetworkClient::isConnected();
     };
-    bool getNTPEpoch(time_t * timeEpoch, int timeZone = 0, char * ntpServer = "pool.ntp.org", int daylightSavingsOffsetHours = 0)
+    bool getNTPEpoch(time_t *timeEpoch, int timeZone = 0, char *ntpServer = "pool.ntp.org",
+                     int daylightSavingsOffsetHours = 0)
     {
         return NetworkClient::getNTPEpoch(timeEpoch, timeZone, ntpServer, daylightSavingsOffsetHours);
     }
-    bool getNTPDateTime(tm * dateTime, int timeZone = 0, char * ntpServer = "pool.ntp.org", int daylightSavingsOffsetHours = 0)
+    bool getNTPDateTime(tm *dateTime, int timeZone = 0, char *ntpServer = "pool.ntp.org",
+                        int daylightSavingsOffsetHours = 0)
     {
         return NetworkClient::getNTPDateTime(dateTime, timeZone, ntpServer, daylightSavingsOffsetHours);
     }
@@ -133,7 +136,7 @@ class Inkplate : public System, public Graphics
 
 #if !defined(ARDUINO_INKPLATECOLOR) || !defined(ARDUINO_INKPLATE4) || !defined(ARDUINO_INKPLATE7) ||                   \
     !defined(ARDUINO_INKPLATE2)
-    
+
     void display1b(bool leaveOn = false);
     void display3b(bool leaveOn = false);
 
