@@ -1,8 +1,8 @@
 /**
  **************************************************
  *
- * @file        Inkplate6.h
- * @brief       Basic funtions for controling inkplate 6
+ * @file        Inkplate5.cpp
+ * @brief       Basic funtions for controling Inkplate 5
  *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en

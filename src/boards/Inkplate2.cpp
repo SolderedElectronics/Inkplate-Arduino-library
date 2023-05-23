@@ -135,7 +135,7 @@ void Inkplate::display()
     // Wake the panel and wait a bit
     // The refresh time is long anyway so this delay doesn't make much impact
     setPanelDeepSleep(false);
-    delay(10);
+    delay(20);
 
     // First write B&W pixels to epaper
     sendCommand(0x10);
