@@ -29,6 +29,9 @@
  * @authors     Borna Biro for Soldered
  ***************************************************/
 
+// Block usage of this code on Inkplate2 board.
+#ifndef ARDUINO_INKPLATE2
+
 // Include a Wire library (for I2C communication)
 #include "Wire.h"
 
@@ -109,3 +112,5 @@ void loop()
         pixels.show();
     }
 }
+
+#endif
