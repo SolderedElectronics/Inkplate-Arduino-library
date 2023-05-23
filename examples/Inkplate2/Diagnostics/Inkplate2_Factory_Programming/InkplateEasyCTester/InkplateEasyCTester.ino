@@ -113,4 +113,15 @@ void loop()
     }
 }
 
+#else
+// Just to pass compile test
+void setup()
+{
+
+}
+
+void loop()
+{
+
+}
 #endif
