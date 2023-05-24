@@ -144,8 +144,6 @@ void setup()
     // Activate wakeup timer
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
 
-     
-
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }
@@ -229,13 +227,13 @@ void drawTemps()
         if (i == 0)
         {
             display.setCursor((i + 1) * rectSpacing + i * rectWidth + textMargin + 25,
-                          yRectangleOffset + textMargin + dayOffset);
+                              yRectangleOffset + textMargin + dayOffset);
             display.println("Today");
         }
         else
         {
             display.setCursor((i + 1) * rectSpacing + i * rectWidth + textMargin + 35,
-                          yRectangleOffset + textMargin + dayOffset);
+                              yRectangleOffset + textMargin + dayOffset);
             display.println(wDays[hours + i > 6 ? hours + i - 6 : hours + i]);
         }
     }
@@ -262,32 +260,36 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr1, abbrs[i]) == 0)
-            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin + 35, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE7_BLACK, INKPLATE7_WHITE);
+            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin + 35,
+                               yRectangleOffset + textMargin + iconOffset, s_logos[i], 48, 48, INKPLATE7_BLACK,
+                               INKPLATE7_WHITE);
     }
 
     for (int i = 0; i < 9; ++i)
     {
         // If found draw specified icon
         if (strcmp(abbr2, abbrs[i]) == 0)
-            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin + 35, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE7_BLACK, INKPLATE7_WHITE);
+            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin + 35,
+                               yRectangleOffset + textMargin + iconOffset, s_logos[i], 48, 48, INKPLATE7_BLACK,
+                               INKPLATE7_WHITE);
     }
 
     for (int i = 0; i < 9; ++i)
     {
         // If found draw specified icon
         if (strcmp(abbr3, abbrs[i]) == 0)
-            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin + 35, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE7_BLACK, INKPLATE7_WHITE);
+            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin + 35,
+                               yRectangleOffset + textMargin + iconOffset, s_logos[i], 48, 48, INKPLATE7_BLACK,
+                               INKPLATE7_WHITE);
     }
 
     for (int i = 0; i < 9; ++i)
     {
         // If found draw specified icon
         if (strcmp(abbr4, abbrs[i]) == 0)
-            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin + 35, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE7_BLACK, INKPLATE7_WHITE);
+            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin + 35,
+                               yRectangleOffset + textMargin + iconOffset, s_logos[i], 48, 48, INKPLATE7_BLACK,
+                               INKPLATE7_WHITE);
     }
 }
 

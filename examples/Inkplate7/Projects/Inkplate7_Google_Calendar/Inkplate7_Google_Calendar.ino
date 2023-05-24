@@ -177,7 +177,7 @@ void drawTime()
     display.setFont(&FreeSans9pt7b);
     display.setTextSize(1);
 
-    display.setCursor(500, 18);
+    display.setCursor(473, 18);
 
     // Our function to get time
     network.getTime(date, timeZone);

@@ -1,6 +1,6 @@
 /*
    Inkplate7_Burn_In_Clean example for Soldered Inkplate 7
-   For this example you will need only USB cable and Inkplate 4.
+   For this example you will need only USB cable and Inkplate 7.
    Select "Soldered Inkplate7" from Tools -> Board menu.
    Don't have "Soldered Inkplate7" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
