@@ -63,9 +63,10 @@ class NetworkClient
     uint8_t *downloadFileHTTPS(const char *url, int32_t *defaultLen);
     uint8_t *downloadFile(WiFiClient *url, int32_t len);
 
-    bool getNTPEpoch(time_t *timeEpoch, int timeZone = 0, char *ntpServer = "pool.ntp.org",
+    // The default parameters for nptServer here are cast to (char*) to keep the compiler happy
+    bool getNTPEpoch(time_t *timeEpoch, int timeZone = 0, char *ntpServer = (char*)"pool.ntp.org",
                      int daylightSavingsOffsetHours = 0);
-    bool getNTPDateTime(tm *timeEpoch, int timeZone = 0, char *ntpServer = "pool.ntp.org",
+    bool getNTPDateTime(tm *timeEpoch, int timeZone = 0, char *ntpServer = (char*)"pool.ntp.org",
                         int daylightSavingsOffsetHours = 0);
 
     void setFollowRedirects(followRedirects_t f);
