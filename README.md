@@ -14,7 +14,7 @@ Inkplate 6 was crowdfunded on [Crowd Supply](https://www.crowdsupply.com/e-radio
 In order to get a head start with Inkplate (any), follow these steps:
 
 1. [Install Inkplate board definition](https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/blob/master/README.md) - add Inkplate 6/10/6PLUS/6COLOR/2 as a board into your Arduino IDE. Follow the instructions on the [link](https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/).
-2. Install CH340 drivers (if you don't have them yet) - instructions [here](https://soldered.com/learn/ch340-driver-installation-croduino-basic3-nova2/)
+2. If you aren't using macOS install CH340 drivers (in case you don't have them yet) - instructions [here](https://soldered.com/learn/ch340-driver-installation-croduino-basic3-nova2/)
 3. Install Inkplate Arduino library - Install the library from the Arduino Library Manager (just type "Inkplate" and click "Install") or install it with this repo. If you don't know how, check our [tutorial](https://soldered.com/learn/arduino-library/#Kako%20instaliraty%20library?).
 4. You are ready to get started! Select Tools -> Board -> Inkplate Boards and then pick correct one, as well as correct COM port and upload!
 

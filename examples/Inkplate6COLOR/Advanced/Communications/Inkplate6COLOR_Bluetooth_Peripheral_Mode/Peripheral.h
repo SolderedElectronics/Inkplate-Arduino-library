@@ -218,17 +218,7 @@ void run(char commandBuffer[], size_t n, Inkplate *display, BluetoothSerial *Ser
                     SerialBT->flush();
                 }
                 break;
-
-            case 'R':
-                sscanf(s + 3, "%c", &b);
-                if (b == '?')
-                {
-                    SerialBT->print("#R(");
-                    SerialBT->print(display->getPanelDeepSleepState(), DEC);
-                    SerialBT->println(")*");
-                    SerialBT->flush();
-                }
-                break;
+                
             case 'S':
                 sscanf(s + 3, "%d,%d,\"%149[^\"]\"", &x, &y, strTemp);
                 n = strlen(strTemp);

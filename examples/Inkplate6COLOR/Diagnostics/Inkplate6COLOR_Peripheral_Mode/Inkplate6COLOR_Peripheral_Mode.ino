@@ -239,16 +239,6 @@ void loop()
                 }
                 break;
 
-            case 'R':
-                sscanf(s + 3, "%c", &b);
-                if (b == '?')
-                {
-                    Serial.print("#R(");
-                    Serial.print(display.getPanelDeepSleepState(), DEC);
-                    Serial.println(")*");
-                    Serial.flush();
-                }
-                break;
             case 'S':
                 sscanf(s + 3, "%d,%d,\"%149[^\"]\"", &x, &y, strTemp);
                 n = strlen(strTemp);
