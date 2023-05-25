@@ -30,7 +30,7 @@
  ***************************************************/
 
 // Block usage of this code on Inkplate boards.
-#if !defined(ARDUINO_INKPLATE6PLUS) || !defined(ARDUINO_INKPLATE6PLUSV2)
+#if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
 
 // Include a Wire library (for I2C communication)
 #include "Wire.h"
