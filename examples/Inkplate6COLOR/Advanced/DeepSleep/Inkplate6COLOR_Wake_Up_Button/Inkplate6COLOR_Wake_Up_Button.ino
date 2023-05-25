@@ -47,8 +47,7 @@ void setup()
     // Enable wakeup from deep sleep on gpio 36 (wake button)
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, 0);
 
-    // Put the panel in the deep sleep
-    display.setPanelDeepSleep(0);
+     
 
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();

@@ -144,8 +144,7 @@ void setup()
     // Activate wakeup timer
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
 
-    // Put the panel in the deep sleep
-    display.setPanelDeepSleep(0);
+     
 
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
@@ -256,7 +255,7 @@ void drawTemps()
     int iconOffset = 60;
 
     for (int i = 0; i < 9; ++i)
-    {
+    {   
         // If found draw specified icon
         if (strcmp(abbr1, abbrs[i]) == 0)
             display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,

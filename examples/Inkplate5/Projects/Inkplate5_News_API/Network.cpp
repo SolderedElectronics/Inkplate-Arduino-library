@@ -30,7 +30,7 @@ void Network::begin(char *ssid, char *pass)
         delay(1000);
         ++cnt;
 
-        if (cnt == 20)
+        if (cnt == 10)
         {
             Serial.println("Can't connect to WIFI, restarting");
             delay(100);
@@ -45,31 +45,6 @@ struct news *Network::getData(char *apiKey)
 {
     // Pointer to the struct where will be stored the news data
     struct news *ent = NULL;
-
-    // If not connected to wifi, reconnect wifi
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        WiFi.reconnect();
-        delay(5000);
-
-        int cnt = 0;
-        Serial.println(F("Waiting for WiFi to reconnect..."));
-        while ((WiFi.status() != WL_CONNECTED))
-        {
-            // Prints a dot every second that wifi isn't connected
-            Serial.print(F("."));
-            delay(1000);
-            ++cnt;
-
-            // Restart after 7 times trying to reconnect
-            if (cnt == 7)
-            {
-                Serial.println("Can't connect to WIFI, restart initiated.");
-                delay(100);
-                ESP.restart();
-            }
-        }
-    }
 
     // Allocate memory for data from API
     uint32_t n = 0;
@@ -93,6 +68,7 @@ struct news *Network::getData(char *apiKey)
         {
             char c = http.getStreamPtr()->read();
             buf[n++] = c;
+            delayMicroseconds(10);
         }
         buf[n] = '\0';
     }

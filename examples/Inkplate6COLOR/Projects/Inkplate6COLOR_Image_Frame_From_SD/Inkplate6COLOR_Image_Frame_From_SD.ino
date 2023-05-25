@@ -179,8 +179,7 @@ void deepSleep()
     // Turn off the power supply for the SD card
     display.sdCardSleep();
 
-    // Put the panel in the deep sleep
-    display.setPanelDeepSleep(0);
+     
 
     // Enable wakeup from deep sleep on GPIO 36 (wake button)
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
@@ -189,7 +188,6 @@ void deepSleep()
     esp_deep_sleep_start();
 }
 
-//
 /**
  * @brief     If it's the first file, the file open at index 0 won't work so skip this for the index zero (first file
  *            because the index is declared as 0).

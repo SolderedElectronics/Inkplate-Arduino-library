@@ -251,7 +251,6 @@ void setup()
     display.drawElipse(125, 75, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, INKPLATE_RED);
     displayCurrentAction("Drawing an elipse");
     display.display();
-
     delay(DELAY_MS);
 
     // Fills an elipse with x radius, y radius, center x, center y and color
@@ -259,7 +258,6 @@ void setup()
     display.fillElipse(125, 75, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, INKPLATE_RED);
     displayCurrentAction("Drawing a filled elipse");
     display.display();
-
     delay(DELAY_MS);
 
     // Code block for generating random points and sorting them in a counter
@@ -270,7 +268,7 @@ void setup()
     for (int i = 0; i < n; ++i)
     {
         xt[i] = random(0, E_INK_WIDTH);
-        yt[i] = random(0, E_INK_HEIGHT - 10);
+        yt[i] = random(0, E_INK_HEIGHT);
     }
     int k;
     for (int i = 0; i < n - 1; ++i)
@@ -287,7 +285,6 @@ void setup()
     display.drawPolygon(xt, yt, n, INKPLATE_BLACK);
     displayCurrentAction("Drawing a polygon");
     display.display();
-
     delay(DELAY_MS);
 
     // Fills a polygon, from x and y coordinate arrays of n points in color c,
@@ -297,7 +294,6 @@ void setup()
     display.fillPolygon(xt, yt, n, INKPLATE_RED);
     displayCurrentAction("Drawing a filled polygon");
     display.display();
-
     delay(DELAY_MS);
 
     // Write text and rotate it by 90 deg. forever

@@ -44,7 +44,7 @@ void setup()
     display.begin();      // Init Inkplate library (you should call this function ONLY ONCE)
 
     // Connect to WiFi
-    while (!display.joinAP(ssid, password))
+    while (!display.connectWiFi(ssid, password))
     {
         Serial.print('.');
         delay(1000);

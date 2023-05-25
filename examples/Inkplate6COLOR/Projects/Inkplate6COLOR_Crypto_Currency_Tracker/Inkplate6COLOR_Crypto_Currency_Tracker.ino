@@ -91,18 +91,7 @@ char maximum[16];
 
 // All months in a year, for finding current date
 char months[][12] = {
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 };
 
 // Out UI elements data
@@ -155,9 +144,7 @@ void loop()
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    
-    // Put the panel in the deep sleep
-    display.setPanelDeepSleep(0);
+
 
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();

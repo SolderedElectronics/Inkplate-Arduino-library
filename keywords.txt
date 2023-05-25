@@ -103,6 +103,13 @@ isHidden	KEYWORD2
 getName	KEYWORD2
 isSubDir	KEYWORD2
 esp_sleep_get_wakeup_cause	KEYWORD2
+setDisplayMode	KEYWORD2
+drawJpegFromBuffer	KEYWORD2
+rtcSetInternalCapacitor	KEYWORD2
+rtcSetClockOffset	KEYWORD2
+setFollowRedirects	KEYWORD2
+connectWiFi	KEYWORD2
+connectWiFiMulti	KEYWORD2
 
 # Instances (KEYWORD2)
 
@@ -159,3 +166,4 @@ PAD2	LITERAL1
 PAD3	LITERAL1
 GPIO_NUM_36	LITERAL1
 GPIO_NUM_34	LITERAL1
+WIFI_TIMEOUT	LITERAL1

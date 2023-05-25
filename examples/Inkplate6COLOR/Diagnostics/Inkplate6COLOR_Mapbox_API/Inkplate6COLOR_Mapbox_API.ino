@@ -42,7 +42,7 @@ void setup()
     display.begin();      // Initialize display
 
     // Connect to WiFi
-    while (!display.joinAP(ssid, pass))
+    while (!display.connectWiFi(ssid, pass))
     {
         Serial.println("Connecting to wifi");
     }
@@ -61,8 +61,7 @@ void setup()
     // Go to sleep for DELAY_MS
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
 
-    // Put the panel in the deep sleep
-    display.setPanelDeepSleep(0);
+     
 
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();

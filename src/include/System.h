@@ -72,6 +72,10 @@
 #define RTC_ALARM_MATCH_DHHMMSS 0b00001111
 #define RTC_ALARM_MATCH_WHHMSS  0b00011111
 
+// Rtc internal capacitors
+#define RTC_7PF    0
+#define RTC_12_5PF 1
+
 #if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
 #include "Frontlight.h"
 #include "Touch.h"
@@ -83,7 +87,7 @@
 
 #if defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
     defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATECOOL) || defined(ARDUINO_INKPLATE5) ||                   \
-    defined(ARDUINO_INKPLATE4)
+    defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
 #include "Pcal.h"
 #endif
 
@@ -159,6 +163,8 @@ class System : public Esp,
     void rtcDisableTimer();
     bool rtcIsSet();
     void rtcReset();
+    void rtcSetInternalCapacitor(bool);
+    void rtcSetClockOffset(bool mode, int offsetValue);
     /* read RTC times */
     uint8_t rtcGetSecond();
     uint8_t rtcGetMinute();

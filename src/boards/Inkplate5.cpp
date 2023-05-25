@@ -1,8 +1,8 @@
 /**
  **************************************************
  *
- * @file        Inkplate6.cpp
- * @brief       Basic funtions for controling inkplate 6
+ * @file        Inkplate5.cpp
+ * @brief       Basic funtions for controling inkplate 5
  *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -71,22 +71,14 @@ bool Inkplate::begin(void)
     delay(1);
     WAKEUP_CLEAR;
 
-    // Set all pins of seconds I/O expander to outputs, low.
-    // For some reason, it draw more current in deep sleep when pins are set as
-    // inputs...
-
-    for (int i = 0; i < 15; i++)
-    {
-        pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);
-        digitalWriteInternal(IO_EXT_ADDR, ioRegsEx, i, LOW);
-    }
-
-    // For same reason, unused pins of first I/O expander have to be also set as
-    // outputs, low.
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, OUTPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, OUTPUT);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 14, LOW);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 15, LOW);
+    // To reduce power consumption in deep sleep, unused pins of
+    // first I/O expander have to be also set as inputs with pull down
+    // resistors.
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, INPUT_PULLDOWN);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, INPUT_PULLDOWN);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, INPUT_PULLDOWN);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, INPUT_PULLDOWN);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, INPUT_PULLDOWN);
 
     // Set SPI pins to input to reduce power consumption in deep sleep
     pinMode(12, INPUT);

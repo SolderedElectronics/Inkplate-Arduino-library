@@ -119,7 +119,7 @@ bool Image::drawImage(const uint8_t *buf, int x, int y, int16_t w, int16_t h, ui
 #if defined(ARDUINO_INKPLATECOLOR)
     drawBitmap3Bit(x, y, buf, w, h);
     return 1;
-#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+#elif defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
     uint16_t scaled_w = ceil(w / 4.0);
     for (int i = 0; i < h; i++)
     {
@@ -266,7 +266,8 @@ bool Image::drawImage(const char *path, const Format &format, const Position &po
  */
 void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h)
 {
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE2)
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE2) &&                   \
+    !defined(ARDUINO_INKPLATE7)
     if (getDisplayMode() != INKPLATE_3BIT)
         return;
 #endif

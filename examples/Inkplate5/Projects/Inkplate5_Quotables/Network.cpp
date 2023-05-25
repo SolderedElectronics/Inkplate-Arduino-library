@@ -45,38 +45,8 @@ bool Network::getData(char* text, char* auth, int maxLen)
 {
     bool f = 0;
 
-    // If not connected to wifi reconnect wifi
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        WiFi.reconnect();
-
-        delay(5000);
-
-        int cnt = 0;
-        Serial.println(F("Waiting for WiFi to reconnect..."));
-        while ((WiFi.status() != WL_CONNECTED))
-        {
-            // Prints a dot every second that wifi isn't connected
-            Serial.print(F("."));
-            delay(1000);
-            ++cnt;
-
-            if (cnt == 7)
-            {
-                Serial.println("Can't connect to WIFI, restart initiated.");
-                delay(100);
-                ESP.restart();
-            }
-        }
-    }
-
-    // Wake up if sleeping and save inital state
-    bool sleep = WiFi.getSleep();
-    WiFi.setSleep(false);
-
     // Http object used to make get request
     HTTPClient http;
-
     http.getStream().setTimeout(10);
     http.getStream().flush();
 
@@ -123,7 +93,6 @@ bool Network::getData(char* text, char* auth, int maxLen)
             }
    
             strcpy(text, buff1);
-            Serial.println();
 
             const char *buff2 = doc["author"];
 
@@ -147,9 +116,6 @@ bool Network::getData(char* text, char* auth, int maxLen)
     // Clear document and end http
     doc.clear();
     http.end();
-
-    // Return to initial state
-    WiFi.setSleep(sleep);
 
     return !f;
 }

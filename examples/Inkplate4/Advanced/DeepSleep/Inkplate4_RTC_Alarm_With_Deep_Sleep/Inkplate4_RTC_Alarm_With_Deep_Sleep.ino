@@ -54,8 +54,7 @@ void setup()
     // Enable wakup from deep sleep on gpio 39 where RTC interrupt is connected
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_39, 0);
 
-    // Put the panel into deep sleep
-    display.setPanelDeepSleep(false);
+     
 
     // Put ESP32 into deep sleep. Program stops here.
     esp_deep_sleep_start();

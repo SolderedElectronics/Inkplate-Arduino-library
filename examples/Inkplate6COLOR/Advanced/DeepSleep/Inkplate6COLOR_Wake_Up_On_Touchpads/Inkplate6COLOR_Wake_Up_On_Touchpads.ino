@@ -6,6 +6,9 @@
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    Here is shown how to use I/O Expander and ESP interrupts to wake up the MCU from deepsleep when touchpad is pressed.
+
+   IMPORTANT: Some old Inkplate boards require an additional 10k PULL-UP resistor for this to work
+   For more info, see https://github.com/SolderedElectronics/Inkplate-Arduino-library/issues/179#issuecomment-1562360919
    
    Want to learn more about Inkplate? Visit www.inkplate.io   
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -53,8 +56,7 @@ void setup()
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_34, LOW);
 
     // Go to sleep
-    // Put the panel in the deep sleep
-    display.setPanelDeepSleep(0);
+     
 
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();

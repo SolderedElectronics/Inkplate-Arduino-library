@@ -12,10 +12,13 @@
  *              VCOM ranges from 0.0 to -5.0.
  *
  *              Tests will also be done, to pass all tests:
- *              -edit the WiFi information in test.cpp.
- *              -connect a slave device via EasyC on address 0x30 (you may change this in test.cpp also).
- *              -insert a formatted microSD card (doesn't have to be empty)
- *              -press wake button to finish testing
+ *              - Edit the WiFi information in test.cpp.
+ *              - Connect a slave device via EasyC on address 0x30 (you may change this in test.cpp also).
+ *                In the InkplateEasyCTester folder, you can find the code for uploading to Dasduino Core 
+ *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave device for testing an easyC connector
+ *                if you don't have a device with address 0x30.
+ *              - Insert a formatted microSD card (doesn't have to be empty)
+ *              - Press wake button to finish testing
  *
  * License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  * LICENSE file included with this example. If you have any questions about
@@ -28,6 +31,11 @@
  *
  * @authors     Soldered
  ***************************************************/
+
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATE5
+#error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
+#endif
 
 // Include needed libraries in the sketch
 #include "EEPROM.h"
@@ -145,7 +153,7 @@ void loop()
         }
     }
 
-    // Function in peripheral.h
+    // Function in Peripheral.h
     run(commandBuffer, BUFFER_SIZE, &display);
 }
 

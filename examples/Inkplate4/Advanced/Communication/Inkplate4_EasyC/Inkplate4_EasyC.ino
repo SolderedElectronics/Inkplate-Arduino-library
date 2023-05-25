@@ -1,10 +1,10 @@
 /*
    Inkplate4_EasyC example for Soldered Inkplate 4
-   For this example you will need a micro USB cable, Inkplate 6COLOR,
-   BME680 sensor with easyC connector on it:
-   https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/ and a easyC cable:
-   https://soldered.com/product/easyc-cable-20cm/ Select "Soldered Inkplate4" from Tools -> Board menu. Don't have
-   "Soldered Inkplate4" option? Follow our tutorial and add it:
+   For this example you will need a USB-C cable, Inkplate 4,
+   BME680 sensor with easyC connector on it: https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/ 
+   and a easyC cable: https://soldered.com/product/easyc-cable-20cm/ 
+   Select "Soldered Inkplate4" from Tools -> Board menu. 
+   Don't have "Soldered Inkplate4" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how you can read temperature, humidity, and air pressure data from BME680.
@@ -37,7 +37,7 @@ void setup()
 {
     display.begin();             // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();      // Clear frame buffer of display
-    display.setTextSize(3);      // Set text scaling to two (text will be two times bigger than normal)
+    display.setTextSize(3);      // Set text scaling to 3 (text will be 3 times bigger than normal)
     display.setTextColor(BLACK); // Set text color to black
 
     // Init. BME680 library. Soldered BME680 sensor board uses 0x76 I2C address for the sensor but doesn't need to
@@ -65,7 +65,6 @@ void loop()
     // Arguments are: array variable name, start X, start Y, size X, size Y
     display.drawImage(temperature_icon, 80, 10, 70, 70);
 
-
     // Display humidity icon and measured value
     display.setCursor(155, 120); // Arguments are: X coordinate, Y coordinate
     display.print(bme680.readHumidity() / 10);
@@ -73,7 +72,6 @@ void loop()
     // Draw humidity icon
     // Arguments are: array variable name, start X, start Y, size X, size Y
     display.drawImage(humidity_icon, 75, 95, 70, 70);
-
 
     // Display the pressure icon and measured value
     display.setTextSize(3);

@@ -1,12 +1,16 @@
 /**
  **************************************************
- * @file        Inkplate10_Factory_Programming_VCOM.ino
+ * @file        Inkplate2_Factory_Programming.ino
  *
- * @brief       File for programming the Inkplate's VCOM
+ * @brief       File for factory programming Inkplate2
  *
  * @note        Tests will also be done, to pass all tests:
- *              - edit the WiFi information in test.cpp.
- *              - connect a slave device via EasyC on address 0x30 (you may change this in test.cpp also).
+ *              - Edit the WiFi information in test.cpp.
+ *              - Connect a slave device via EasyC on address 0x30 (you may change this in test.cpp also).
+ *                In the InkplateEasyCTester folder, you can find the code for uploading to Dasduino Core 
+ *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave device for testing an easyC connector
+ *                if you don't have a device with address 0x30.
+ *              Output of the tests will be done via Serial due to slow screen refresh rate
  *
  * License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  * LICENSE file included with this example. If you have any questions about
@@ -35,7 +39,7 @@
 #include "picture2.h"
 #include "picture3.h"
 
-// This array of pinters holds address of every picture in the memory, so we can easly select it by selecting index in
+// This array of pointers holds address of every picture in the memory, so we can easly select it by selecting index in
 // array
 const uint8_t *pictures[] = {inkplate_2_demo_image, picture1, picture2, picture3};
 
@@ -105,8 +109,7 @@ void setup()
     display.drawImage(pictures[i], 0, 0, 212, 104);
     display.display();
 
-    // Go to the sleep
-    display.setPanelDeepSleep(0);
+    // Go to sleep
     esp_deep_sleep_start();
 }
 

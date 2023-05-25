@@ -25,7 +25,7 @@
 #include "picture2.h"
 #include "picture3.h" // This are headers in which are saved pictures that needs to be stored in RAM for showing.
                       // Any picture (in any format) can be converted in this type of header on this link:
-                      // https://inkplate.io/home/image-converter/ just choose settings for your Inkplate
+                      // https://solderedelectronics.github.io/Inkplate-image-converter/ just choose settings for your Inkplate
                       // and additional settings like dither and bit mode.
 
 
@@ -33,6 +33,10 @@ Inkplate display; // Create display object
 
 void setup()
 {
+    Serial.begin(115200);
+    Serial.print("Sketch begun!");
+
+    
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.drawImage(picture1, 0, 0, 212,
@@ -49,9 +53,6 @@ void setup()
     display.clearDisplay();                      // Clear frame buffer of display
     display.drawImage(picture3, 0, 0, 212, 104); // Display selected picture at location X=0, Y=0.
     display.display();                           // Refresh the screen with new picture
-
-    // Put the panel to deep sleep
-    display.setPanelDeepSleep(0);
 
     // Put ESP32 into deep sleep. Program stops here
     esp_deep_sleep_start();

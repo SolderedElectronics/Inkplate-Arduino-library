@@ -9,6 +9,9 @@
 
    NOTE: This is an example for the old Inkplates that have touchpads.
 
+   IMPORTANT: Some old Inkplate boards require an additional 10k PULL-UP resistor for this to work
+   For more info, see https://github.com/SolderedElectronics/Inkplate-Arduino-library/issues/179#issuecomment-1562360919
+
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
    15 March 2023 by Soldered

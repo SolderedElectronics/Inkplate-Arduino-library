@@ -91,10 +91,11 @@ void setup()
 
     // Allocate memory for the data
     data = (char *)ps_malloc(2000000LL);
-    if(data == NULL)
+    if (data == NULL)
     {
-      Serial.println("Memory allocation error");
-      while(1);
+        Serial.println("Memory allocation error");
+        while (1)
+            ;
     }
 
     // Init library (you should call this function ONLY ONCE)
@@ -308,7 +309,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
 
     // Insert line brakes into setTextColor
     int lastSpace = -100;
-    display.setCursor(x1 + 9 - day, beginY+5);
+    display.setCursor(x1 + 9 - day, beginY + 5);
     for (int i = 0; i < min((size_t)64, strlen(event->name)); ++i)
     {
         // Copy name letter by letter and check if it overflows space given
@@ -357,7 +358,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
     {
         display.println(event->time);
 
-        display.setCursor(x1 + 6, display.getCursorY()+10);
+        display.setCursor(x1 + 6, display.getCursorY() + 10);
 
         char line[128] = {0};
 
@@ -494,8 +495,10 @@ void drawData()
         if (clogged[i])
         {
             // Draw notification showing that there are more events than drawn ones
-            display.fillRoundRect(6 + i * ((E_INK_WIDTH - 4) / 4) - i, 300 - 24, ((E_INK_WIDTH - 4) / 4) - 5, 20, 10, INKPLATE_WHITE);
-            display.drawRoundRect(6 + i * ((E_INK_WIDTH - 4) / 4) - i, 300 - 24, ((E_INK_WIDTH - 4) / 4) - 5, 20, 10, INKPLATE_BLACK);
+            display.fillRoundRect(6 + i * ((E_INK_WIDTH - 4) / 4) - i, 300 - 24, ((E_INK_WIDTH - 4) / 4) - 5, 20, 10,
+                                  INKPLATE_WHITE);
+            display.drawRoundRect(6 + i * ((E_INK_WIDTH - 4) / 4) - i, 300 - 24, ((E_INK_WIDTH - 4) / 4) - 5, 20, 10,
+                                  INKPLATE_BLACK);
             display.setCursor(26 + i * ((E_INK_WIDTH - 3) / 4), 280);
             Serial.println(display.getCursorY());
             display.setFont(&Picopixel);

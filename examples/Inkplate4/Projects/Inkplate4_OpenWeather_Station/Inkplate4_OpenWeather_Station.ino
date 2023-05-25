@@ -94,12 +94,6 @@ const char *moonphasenames[29] = {
 // Variable for storing temperature unit
 char tempUnit;
 
-// Variable for counting partial refreshes
-RTC_DATA_ATTR char refreshes = 0;
-
-// Constant to determine when to full update
-const int fullRefresh = 20;
-
 // Where to start drawing the daily forecast
 const int dayOffset = 110;
 
@@ -225,11 +219,6 @@ void loop()
         drawMoon();
         Serial.println("draw moon");
         display.display();
-    }
-
-    // wait for the turn of the minute before sleeping
-    while (second(now()) != 0)
-    {
     }
 
     // Go to sleep before checking again

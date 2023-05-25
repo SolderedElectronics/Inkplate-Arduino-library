@@ -3,14 +3,11 @@
 const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
 
-const char *WSSID = {"Soldered"};
-const char *WPASS = {"dasduino"};
-
-//const char *WSSID = {"Soldered-testingPurposes"};
-//const char *WPASS = {"Testing443"};
+const char *WSSID = {"Soldered-testingPurposes"};
+const char *WPASS = {"Testing443"};
 
 // Change this to your used slave device
-const uint8_t easyCDeviceAddress = 0x76;
+const uint8_t easyCDeviceAddress = 0x30;
 
 void testPeripheral()
 {    
@@ -202,6 +199,9 @@ int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)
     {
         return 0;
     }
+
+    // Sonething is wrong if you got there.
+    return 0;
 }
 
 int checkMicroSDCard()

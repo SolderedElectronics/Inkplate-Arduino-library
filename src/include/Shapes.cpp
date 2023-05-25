@@ -229,7 +229,7 @@ void Shapes::drawGradientLine(int x1, int y1, int x2, int y2, int color1, int co
     }
 }
 
-#if defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+#if defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
 
 /**
  * @brief       Draws text with prev. defined size with shadow

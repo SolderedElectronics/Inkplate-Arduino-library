@@ -41,7 +41,7 @@ const char *apiUrl = "https://jsonplaceholder.typicode.com/posts";
 // Create objects from included libraries
 WiFiClientSecure client;
 HTTPClient http;
-Inkplate display; // Create object on Inkplate library
+Inkplate display;
 
 void setup()
 {

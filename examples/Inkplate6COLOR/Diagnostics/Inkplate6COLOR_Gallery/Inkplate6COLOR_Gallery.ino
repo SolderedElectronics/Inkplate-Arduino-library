@@ -80,8 +80,7 @@ void setup()
     // Go to sleep for DELAY_MS
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
 
-    // Put the panel in the deep sleep
-    display.setPanelDeepSleep(0);
+     
 
     // Put SD card into deep sleep
     display.sdCardSleep();

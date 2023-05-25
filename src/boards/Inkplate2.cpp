@@ -98,19 +98,8 @@ bool Inkplate::begin()
 {
     if (!_beginDone)
     {
-        // Set SPI pins
-        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
-
-        // Set up EPD communication pins
-        pinMode(EPAPER_CS_PIN, OUTPUT);
-        pinMode(EPAPER_DC_PIN, OUTPUT);
-        pinMode(EPAPER_RST_PIN, OUTPUT);
-        pinMode(EPAPER_BUSY_PIN, INPUT_PULLUP);
-
-        delay(10);
-
         // Allocate memory for frame buffer
-        DMemory4Bit = (uint8_t *)malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);
+        DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);
 
         if (DMemory4Bit == NULL)
         {
@@ -126,25 +115,14 @@ bool Inkplate::begin()
         _beginDone = 1;
     }
 
-    // Reset EPD IC
-    resetPanel();
+    // Wake the ePaper and initialize everything
+    // If it fails, return false
+    if (!setPanelDeepSleep(false))
+        return false;
 
-    sendCommand(0x04);
-    if (!waitForEpd(BUSY_TIMEOUT_MS))
-        return 0; // Waiting for the electronic paper IC to release the idle signal
-
-    sendCommand(0x00); // Enter panel setting
-    sendData(0x0f);    // LUT from OTP 128x296
-    sendData(0x89);    // Temperature sensor, boost and other related timing settings
-
-    sendCommand(0x61); // Enter panel resolution setting
-    sendData(E_INK_WIDTH);
-    sendData(E_INK_HEIGHT >> 8);
-    sendData(E_INK_HEIGHT & 0xff);
-
-    sendCommand(0x50); // VCOM and data interval setting
-    sendData(0x77);    // WBmode:VBDF 17|D7 VBDW 97 VBDB 57   WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
-
+    // Put the panel to deep sleep
+    // The panel is always in sleep unless it's being written display data to
+    setPanelDeepSleep(true);
     return true;
 }
 
@@ -154,6 +132,11 @@ bool Inkplate::begin()
  */
 void Inkplate::display()
 {
+    // Wake the panel and wait a bit
+    // The refresh time is long anyway so this delay doesn't make much impact
+    setPanelDeepSleep(false);
+    delay(20);
+
     // First write B&W pixels to epaper
     sendCommand(0x10);
     sendData(DMemory4Bit, (E_INK_WIDTH * E_INK_HEIGHT / 8));
@@ -170,22 +153,27 @@ void Inkplate::display()
     sendCommand(0x12);
     delayMicroseconds(500); // Wait at least 200 uS
     waitForEpd(60000);
+
+    // Go back to sleep
+    setPanelDeepSleep(true);
 }
 
 /**
- * @brief       setPanelDeepSleep puts color epaper in deep sleep, or starts
- * epaper, depending on given arguments.
+ * @brief       setPanelDeepSleep puts the color ePaper into deep sleep, or wakes it and reinitializes it
  *
  * @param       bool _state
- *              HIGH or LOW (1 or 0) 1 will start panel, 0 will put it into deep
- * sleep
+ *              -'True' sets the panel to sleep
+ *              -'False' wakes the panel
+ *
+ * @returns     True if successful, False if unsuccessful
+ *
  */
-void Inkplate::setPanelDeepSleep(bool _state)
+bool Inkplate::setPanelDeepSleep(bool _state)
 {
-    _panelState = _state == 0 ? false : true;
-
-    if (_panelState)
+    if (!_state)
     {
+        // _state is false? Wake the panel!
+
         // Set SPI pins
         SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
 
@@ -197,15 +185,34 @@ void Inkplate::setPanelDeepSleep(bool _state)
 
         delay(10);
 
-        // Send commands to power up panel. According to the datasheet, it can be
-        // powered up from deep sleep only by reseting it and doing reinit.
-        begin();
+        // Reinit the panel
+        // Reset EPD IC
+        resetPanel();
+
+        sendCommand(0x04);
+        if (!waitForEpd(BUSY_TIMEOUT_MS))
+            return false; // Waiting for the electronic paper IC to release the idle signal
+
+        sendCommand(0x00); // Enter panel setting
+        sendData(0x0f);    // LUT from OTP 128x296
+        sendData(0x89);    // Temperature sensor, boost and other related timing settings
+
+        sendCommand(0x61); // Enter panel resolution setting
+        sendData(E_INK_WIDTH);
+        sendData(E_INK_HEIGHT >> 8);
+        sendData(E_INK_HEIGHT & 0xff);
+
+        sendCommand(0x50); // VCOM and data interval setting
+        sendData(0x77);    // WBmode:VBDF 17|D7 VBDW 97 VBDB 57   WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
+
+        return true;
     }
     else
     {
+        // _state is true? Put the panel to sleep.
+
         sendCommand(0X50); // VCOM and data interval setting
         sendData(0xf7);
-
         sendCommand(0X02); // Power  EPD off
         waitForEpd(BUSY_TIMEOUT_MS);
         sendCommand(0X07); // Put EPD in deep sleep
@@ -222,17 +229,9 @@ void Inkplate::setPanelDeepSleep(bool _state)
         pinMode(EPAPER_BUSY_PIN, INPUT);
         pinMode(EPAPER_CLK, INPUT);
         pinMode(EPAPER_DIN, INPUT);
-    }
-}
 
-/**
- * @brief       getPanelDeepSleepState returns current state of the panel
- *
- * @return      bool _panelState
- */
-bool Inkplate::getPanelDeepSleepState()
-{
-    return _panelState;
+        return true;
+    }
 }
 
 /**

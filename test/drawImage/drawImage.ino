@@ -58,7 +58,7 @@ void setup()
     Serial.begin(115200);
 
     display.begin();
-    display.joinAP("", "");
+    display.connectWiFi("", "");
     display.sdCardInit();
 }
 

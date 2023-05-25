@@ -28,7 +28,7 @@ void setup()
     display.begin();
 
     // Join wifi
-    display.joinAP(ssid, password);
+    display.connectWiFi(ssid, password);
 
     char url[256];
     imageUrl(url);

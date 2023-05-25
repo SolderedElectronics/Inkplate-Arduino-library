@@ -25,8 +25,8 @@
 #include "Inkplate.h"   // Include Inkplate library to the sketch
 #include "WiFi.h"       // Include ESP32 WiFi library to our sketch
 
-#define ssid "88ADB5"           // Name of the WiFi network (SSID) that you want to connect Inkplate to
-#define pass "EVW32C0S00035107" // Password of that WiFi network
+#define ssid "" // Name of the WiFi network (SSID) that you want to connect Inkplate to
+#define pass "" // Password of that WiFi network
 
 Inkplate display; // Create an object on Inkplate library
 

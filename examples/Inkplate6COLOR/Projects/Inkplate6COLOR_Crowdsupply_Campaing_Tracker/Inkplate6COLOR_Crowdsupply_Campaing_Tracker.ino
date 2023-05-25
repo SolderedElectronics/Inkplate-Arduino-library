@@ -43,7 +43,7 @@ void setup()
     display.begin();      // Init Inkplate library (you should call this function ONLY ONCE)
 
     // Connect to WiFi
-    while (!display.joinAP(ssid, pass))
+    while (!display.connectWiFi(ssid, pass))
     {
         Serial.print('.');
         delay(1000);
@@ -120,8 +120,7 @@ void setup()
     // Go to sleep
     esp_sleep_enable_timer_wakeup(1000LL * DELAY_MS);
     
-    // Put the panel in the deep sleep
-    display.setPanelDeepSleep(0);
+     
 
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();

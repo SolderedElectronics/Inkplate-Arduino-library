@@ -57,7 +57,7 @@ Inkplate display(INKPLATE_1BIT);
 
 void setup()
 {
-    // Begin serial communitcation, sed for debugging
+    // Init serial communication at 115200 baud rate for debugging
     Serial.begin(115200);
 
     // Initial display settings

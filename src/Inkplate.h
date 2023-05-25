@@ -49,7 +49,8 @@ struct waveformData
 class Inkplate : public System, public Graphics
 {
   public:
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) ||                      \
+    defined(ARDUINO_INKPLATE7)
     Inkplate();
     void display(void);
 #else
@@ -63,42 +64,35 @@ class Inkplate : public System, public Graphics
     bool getWaveformFromEEPROM(struct waveformData *_w);
     void burnWaveformToEEPROM(struct waveformData _w);
 #endif
-    bool begin(void); // In boards
-
+    bool begin(void);
     void clearDisplay();
-    // void writeRow(uint8_t data);
+
+#if !defined(ARDUINO_INKPLATECOLOR) || !defined(ARDUINO_INKPLATE4) || !defined(ARDUINO_INKPLATE7) ||                   \
+    !defined(ARDUINO_INKPLATE2)
     uint32_t partialUpdate(bool _forced = false, bool leaveOn = false);
-
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE4)
-    void clean();
-
-    // These 4 functions need to refactored because conflicting functionalities
-    void setPanelState(bool _state);
-    bool getPanelState();
-    void setPanelDeepSleep(bool _state);
-    bool getPanelDeepSleepState();
-
-    void setIOExpanderForLowPower();
-#elif defined(ARDUINO_INKPLATE2)
-    void clean();
-
-    // These 4 functions need to refactored because conflicting functionalities
-    void setPanelState(bool _state);
-    bool getPanelState();
-    void setPanelDeepSleep(bool _state);
-    bool getPanelDeepSleepState();
-#else
     int einkOn();
     void einkOff();
     void preloadScreen();
     uint8_t readPowerGood();
     void clean(uint8_t c, uint8_t rep);
 #endif
+#if defined(ARDUINO_INKPLATECOLOR)
+    void clean();
+#endif
 
-    bool joinAP(const char *ssid, const char *pass)
+    bool connectWiFi(const char *ssid, const char *pass, int timeout = WIFI_TIMEOUT, bool printToSerial = false)
     {
-        return NetworkClient::joinAP(ssid, pass);
-    }
+        return NetworkClient::connectWiFi(ssid, pass, timeout, printToSerial);
+    };
+    bool connectWiFiMulti(int numNetworks, const char **ssids, const char **passwords, int timeout = WIFI_TIMEOUT,
+                          bool printToSerial = false)
+    {
+        return NetworkClient::connectWiFiMulti(numNetworks, ssids, passwords, timeout, printToSerial);
+    };
+    void setFollowRedirects(followRedirects_t follow)
+    {
+        NetworkClient::setFollowRedirects(follow);
+    };
     void disconnect()
     {
         NetworkClient::disconnect();
@@ -107,6 +101,17 @@ class Inkplate : public System, public Graphics
     {
         return NetworkClient::isConnected();
     };
+    // The default parameters for nptServer here are cast to (char*) to keep the compiler happy
+    bool getNTPEpoch(time_t *timeEpoch, int timeZone = 0, char *ntpServer = (char *)"pool.ntp.org",
+                     int daylightSavingsOffsetHours = 0)
+    {
+        return NetworkClient::getNTPEpoch(timeEpoch, timeZone, ntpServer, daylightSavingsOffsetHours);
+    }
+    bool getNTPDateTime(tm *dateTime, int timeZone = 0, char *ntpServer = (char *)"pool.ntp.org",
+                        int daylightSavingsOffsetHours = 0)
+    {
+        return NetworkClient::getNTPDateTime(dateTime, timeZone, ntpServer, daylightSavingsOffsetHours);
+    }
     int _getRotation()
     {
         return Graphics::getRotation();
@@ -116,19 +121,23 @@ class Inkplate : public System, public Graphics
     void precalculateGamma(uint8_t *c, float gamma);
 
 
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
-    bool _panelState = false;
-
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) ||                      \
+    defined(ARDUINO_INKPLATE7)
     void resetPanel();
     void sendCommand(uint8_t _command);
     void sendData(uint8_t *_data, int _n);
     void sendData(uint8_t _data);
-#else
-
+    bool setPanelDeepSleep(bool _state);
+    void setIOExpanderForLowPower();
+#endif
 
 #if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE10V2)
     void calculateLUTs();
 #endif
+
+#if !defined(ARDUINO_INKPLATECOLOR) || !defined(ARDUINO_INKPLATE4) || !defined(ARDUINO_INKPLATE7) ||                   \
+    !defined(ARDUINO_INKPLATE2)
+
     void display1b(bool leaveOn = false);
     void display3b(bool leaveOn = false);
 
@@ -153,8 +162,13 @@ class Inkplate : public System, public Graphics
     uint8_t waveform3Bit[8][9] = WAVEFORM3BIT;
 #endif
 
-#if defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4)
+#if defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
     bool waitForEpd(uint16_t _timeout);
+#endif
+
+#if defined(ARDUINO_INKPLATE7)
+    void ePaperSleep();
+    void ePaperWake();
 #endif
 };
 
