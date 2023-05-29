@@ -36,10 +36,6 @@ jobs:
             additional-sketch-paths: |
               - examples/Inkplate6COLOR
           - board:
-              fqbn: Inkplate_Boards:esp32:Inkplate5
-            additional-sketch-paths: |
-              - examples/Inkplate5
-          - board:
               fqbn: Inkplate_Boards:esp32:Inkplate2
             additional-sketch-paths: |
               - examples/Inkplate2
@@ -53,7 +49,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           platforms: |
-            - source-url: https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/raw/dev/package_Dasduino_Boards_index.json
+            - source-url: https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json
               name: Inkplate_Boards:esp32
 
           fqbn: ${{ matrix.board.fqbn }}
