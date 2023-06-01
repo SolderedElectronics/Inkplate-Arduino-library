@@ -96,7 +96,7 @@ bool Inkplate::begin(void)
                     (((i & B11100000) >> 5) << 25);
 #endif
 
-#ifdef ARDUINO_ESP32_DEV
+#ifdef ARDUINO_INKPLATE6
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
 #else
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);

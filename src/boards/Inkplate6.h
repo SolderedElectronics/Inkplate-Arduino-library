@@ -20,7 +20,7 @@
 #ifndef INKPLATE6_H
 #define INKPLATE6_H
 
-#ifdef ARDUINO_ESP32_DEV
+#ifdef ARDUINO_INKPLATE6
 #define IO_INT_ADDR 0x20
 #define IO_EXT_ADDR 0x22
 #endif
@@ -37,7 +37,7 @@
 #define E_INK_HEIGHT 600
 
 // Last element (index = 8) in waveform array is not used!
-#ifdef ARDUINO_ESP32_DEV
+#ifdef ARDUINO_INKPLATE6
 #define WAVEFORM3BIT                                                                                                   \
     {{0, 1, 1, 0, 0, 1, 1, 0, 0}, {0, 1, 2, 1, 1, 2, 1, 0, 0}, {1, 1, 1, 2, 2, 1, 0, 0, 0},                            \
      {0, 0, 0, 1, 1, 1, 2, 0, 0}, {2, 1, 1, 1, 2, 1, 2, 0, 0}, {2, 2, 1, 1, 2, 1, 2, 0, 0},                            \

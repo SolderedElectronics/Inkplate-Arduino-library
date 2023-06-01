@@ -21,7 +21,7 @@
 
 #include "Arduino.h"
 
-#if (defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6V2))
+#if (defined(ARDUINO_INKPLATE6) || defined(ARDUINO_INKPLATE6V2))
 #include "../boards/Inkplate6.h"
 #elif ARDUINO_INKPLATE5
 #include "../boards/Inkplate5.h"
