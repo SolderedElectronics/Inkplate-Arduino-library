@@ -60,13 +60,13 @@
 #endif
 
 #ifndef INKPLATE_6COLOR
-#define PAD1                   10
-#define PAD2                   11
-#define PAD3                   12
+#define PAD1 10
+#define PAD2 11
+#define PAD3 12
 #else
-#define PAD1                   10
-#define PAD2                   11
-#define PAD3                   12
+#define PAD1 10
+#define PAD2 11
+#define PAD3 12
 #endif
 
 #define INKPLATE_1BIT          0
