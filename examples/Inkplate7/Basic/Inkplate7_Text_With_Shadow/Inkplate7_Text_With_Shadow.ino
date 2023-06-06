@@ -49,7 +49,7 @@ void setup()
 
     // Draw a text with shadow with swapped colors
     display.setTextSize(3);
-    display.drawTextWithShadow(300, 280, "By soldered.com", INKPLATE7_BLACK, INKPLATE7_RED);
+    display.drawTextWithShadow(330, 280, "By Soldered", INKPLATE7_BLACK, INKPLATE7_RED);
 
     // Other basic drawing functions supported
     display.drawLine(70, 250, 300, 350, INKPLATE7_RED);

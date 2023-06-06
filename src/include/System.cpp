@@ -43,7 +43,7 @@ uint8_t System::getPanelState()
     return _panelOn;
 }
 
-#if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATECOLOR)
+#if !defined(ARDUINO_INKPLATE2)
 
 /**
  * @brief       readTemperature reads panel temperature
