@@ -63,7 +63,7 @@ void loop()
     display.setCursor(350, 40);
     display.print(bme680.readTemperature());
     display.print(" *C");
-    display.drawImage(temperature_icon, 150, 0, temperature_icon_w, temperature_icon_h,
+    display.drawImage(temperature_icon, 158, 8, temperature_icon_w, temperature_icon_h,
                       BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
 
     // Display humidity icon and measured value

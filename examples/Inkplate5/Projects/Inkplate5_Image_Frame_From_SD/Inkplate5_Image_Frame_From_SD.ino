@@ -5,8 +5,10 @@
    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   You can open .bmp, .jpeg, or .png files that have a color depth of 1-bit (BW bitmap), 4-bit, 8-bit and
+   You can view most .bmp, .jpeg, or .png files that have a color depth of 1-bit (BW bitmap), 4-bit, 8-bit and
    24 bit, but there are some limitations of the library. It will skip images that can't be drawn.
+   If your image can't be drawn, open it in an image editing program and save as new format.
+
    Make sure that the image has a resolution smaller than 960x540 or otherwise it won't fit on the screen.
    Format your SD card in standard FAT file format.
 
@@ -83,8 +85,8 @@ void loop()
             // Save the index of the last opened file
             lastImageIndex = file.dirIndex();
 
-            // Skip hidden files and subdirectories
-            skipHiden();
+            // Skip hidden files and subdirectories.
+            skipHidden();
 
             // Get name of the pucture, create path and draw image on the screen
             if (!displayImage())
@@ -202,7 +204,7 @@ void openLastFile()
 }
 
 /**
- * @brief     Get name of the pucture, create path and draw image on the screen.
+ * @brief     Get name of the picture, create path and draw image on the screen.
  *
  * @return    0 if there is an error, 1 if the image is drawn.
  */
@@ -213,7 +215,7 @@ bool displayImage()
     char pictureName[maxCharacters];
     file.getName(pictureName, maxCharacters);
 
-    // Cpoy of the folder path just for creating path for the image
+    // Copy of the folder path just for creating path for the image
     char path[maxCharacters];
     strcpy(path, folderPath);
 
@@ -239,7 +241,7 @@ bool displayImage()
 /**
  * @brief     Skip hidden files and subdirectories.
  */
-void skipHiden()
+void skipHidden()
 {
     while (file.isHidden() || file.isSubDir())
     {
