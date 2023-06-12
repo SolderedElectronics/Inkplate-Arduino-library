@@ -5,7 +5,7 @@
    Don't have "Soldered Inkplate7" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   This example will show you how to connect to WiFi network, get data from Internet and display that data on epaper.
+   This example will show you how to connect to WiFi network, get data from Internet and display that data on ePaper.
    This example is NOT on to how to parse HTML data from Internet - it will just print HTML on the screen.
    You can see what's happening on the Serial monitor at the 115200 baud rate.
 

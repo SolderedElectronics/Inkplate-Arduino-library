@@ -115,7 +115,7 @@ void updatePaper()
     display.print(serverIP);
     display.println('/');
     display.println();
-    display.fillRect(10, 240, 620, 4, BLACK);
+    display.fillRect(10, 240, 620, 4, INKPLATE7_BLACK);
     display.setCursor(0, 250);
     display.setTextColor(INKPLATE7_BLACK);
     display.println("User text:"); // Print out what user typed in web page

@@ -1,6 +1,6 @@
 /*
    Inkplate7_EasyC example for Soldered Inkplate 7
-   For this example you will need a USB-C cable, Inkplate 6COLOR,
+   For this example you will need a USB-C cable, Inkplate 7,
    BME680 sensor with easyC connector on it: https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/ 
    and an easyC cable: https://soldered.com/product/easyc-cable-20cm/ 
    Select "Soldered Inkplate7" from Tools -> Board menu. 

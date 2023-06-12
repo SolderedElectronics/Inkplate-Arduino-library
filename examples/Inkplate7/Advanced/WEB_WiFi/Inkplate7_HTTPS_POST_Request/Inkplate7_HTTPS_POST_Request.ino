@@ -60,7 +60,7 @@ void setup()
 
     display.setTextSize(2);
     display.setTextColor(INKPLATE7_RED);
-    display.println("Open Serial Monitor at 115200 baud rate to see what'shappening");
+    display.println("Open Serial Monitor at 115200 baud rate to see what's happening");
     display.display();
 
     // Connect to WiFi
