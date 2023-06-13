@@ -55,9 +55,6 @@ void setup()
         // Bluetooth started successfully, print the messages on the screen
         Serial.println("The device started, now you can pair it with Bluetooth and send messages");
     }
-
-    // Init serial communication
-    Serial.begin(115200);
 }
 
 void loop()

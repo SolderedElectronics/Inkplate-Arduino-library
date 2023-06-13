@@ -32,7 +32,7 @@ uint8_t hours = 12;
 uint8_t minutes = 50;
 uint8_t seconds = 30;
 
-// Set date and weekday (NOTE: In weekdays 0 means Sunday, 1 menas Monday, ...)
+// Set date and weekday (NOTE: In weekdays 0 means Sunday, 1 means Monday, ...)
 uint8_t weekday = 2;
 uint8_t day = 21;
 uint8_t month = 3;

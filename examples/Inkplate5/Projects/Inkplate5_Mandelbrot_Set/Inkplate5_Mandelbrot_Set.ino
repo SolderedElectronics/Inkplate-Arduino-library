@@ -26,7 +26,7 @@
 // Create object on Inkplate library and set library to work in Black and White mode (1-bit)
 Inkplate display(INKPLATE_1BIT);
 
-// Takes a long time to render, cca 3 minutes
+// Takes a long time to render, approx. 3 minutes
 
 // Explore different positions to draw
 // Some interesting ones can be found here http://www.cuug.ab.ca/dewara/mandelbrot/Mandelbrowser.html

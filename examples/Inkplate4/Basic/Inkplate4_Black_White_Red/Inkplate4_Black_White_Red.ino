@@ -58,7 +58,7 @@ void setup()
     display.clearDisplay(); // Clear everything that is inside frame buffer in ESP32
     for (int i = 0; i < 500; i++)
     {
-        // Write 500 black pixels at random locations
+        // Write 500 random pixels at random locations
         display.drawPixel(random(0, E_INK_WIDTH), random(0, E_INK_HEIGHT), random(1, 3));
     }
     displayCurrentAction("Drawing 500 random pixels");

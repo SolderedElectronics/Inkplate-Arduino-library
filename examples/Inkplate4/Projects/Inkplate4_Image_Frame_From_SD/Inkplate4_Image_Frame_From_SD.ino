@@ -81,7 +81,7 @@ void loop()
             lastImageIndex = file.dirIndex();
 
             // Skip hidden files and subdirectories
-            skipHiden();
+            skipHidden();
 
             // Get name of the pucture, create path and draw image on the screen
             if (!displayImage())
@@ -172,8 +172,6 @@ void deepSleep()
     // Turn off the power supply for the SD card
     display.sdCardSleep();
 
-     
-
     // Enable wakeup from deep sleep on gpio 36 (wake button)
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
 
@@ -235,7 +233,7 @@ bool displayImage()
 /**
  * @brief     Skip hidden files and subdirectories.
  */
-void skipHiden()
+void skipHidden()
 {
     while (file.isHidden() || file.isSubDir())
     {
@@ -244,7 +242,7 @@ void skipHiden()
         // Opening the next file while the file is hidden or the file is the directory
         if (!file.openNext(&folder, O_RDONLY))
         {
-            // It is end of file
+            // It is the end of file
             lastImageIndex = 0;
         }
         else

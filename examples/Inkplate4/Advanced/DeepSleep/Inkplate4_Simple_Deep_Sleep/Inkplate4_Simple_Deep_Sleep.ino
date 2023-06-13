@@ -10,7 +10,7 @@
    Inkplate will wake every 20 seconds change content on screen.
 
    NOTE: Because we are using deep sleep, everytime the board wakes up, it starts program from begining.
-   Also, the whole content from RAM gets erased. You can store data that don't wanna lose in the RTC 
+   Also, the whole content from RAM gets erased. You can store data that don't wanna lose in the RTC
    memory by adding RTC_DATA_ATTR before the variable name like the variable "slide" below.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
@@ -24,15 +24,16 @@
 #endif
 
 // Include Inkplate library to the sketch
-#include "Inkplate.h" 
+#include "Inkplate.h"
 
 // Include .h files of 3 pictures. All three pictures were converted using Inkplate Image Converter
-#include "picture1.h" 
+#include "picture1.h"
 #include "picture2.h"
 #include "picture3.h"
 
-// This array of pinters holds address of every picture in the memory, so we can easly select it by selecting index in array
-const uint8_t *pictures[] = {pic1, pic2, pic3}; 
+// This array of pinters holds address of every picture in the memory, so we can easly select it by selecting index in
+// array
+const uint8_t *pictures[] = {pic1, pic2, pic3};
 
 #define uS_TO_S_FACTOR 1000000 // Conversion factor for micro seconds to seconds
 #define TIME_TO_SLEEP  20      // How long ESP32 will be in deep sleep (in seconds)
@@ -56,10 +57,10 @@ void setup()
         slide = 0; // We don't have more than 3 images, so roll back to zero
 
     // Activate wake-up timer -- wake up after 20s here
-    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); 
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 
     // Put ESP32 into deep sleep. Program stops here.
-    esp_deep_sleep_start();                                        
+    esp_deep_sleep_start();
 }
 
 void loop()
