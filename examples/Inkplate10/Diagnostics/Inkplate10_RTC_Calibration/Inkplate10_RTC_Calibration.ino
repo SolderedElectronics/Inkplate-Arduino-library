@@ -26,6 +26,8 @@ Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and als
 #define REFRESH_DELAY 1000 // Delay between refreshes
 unsigned long time1;       // Time for measuring refresh in millis
 
+#define MAX_PARTIAL_UPDATES 9 // How many partial updates to do before a full refresh
+
 // Variable that keeps count on how much screen has been partially updated
 int n = 0;
 
@@ -60,7 +62,6 @@ void setup()
     // The real offset depends on the mode and it is equal to the: offset in ppm for specific mode * offset value in
     // decimal. For example: mode 0 (4.34 ppm), offset value 15 = + 65.1 ppm every 2 hours
     // See 8.2.3 in the datasheet for more details
-    
     display.rtcSetClockOffset(1, -63); 
 
     // How to calculate this offset?
@@ -126,7 +127,7 @@ void loop()
         display.setCursor(480, 380);        // Set position of the text
         printTime(hours, minutes, seconds); // Print the time on screen
 
-        if (n > 9) // Check if you need to do full refresh or you can do partial update
+        if (n > MAX_PARTIAL_UPDATES) // Check if you need to do full refresh or you can do partial update
         {
             display.display(true); // Do a full refresh
             n = 0;

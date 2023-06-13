@@ -13,7 +13,7 @@
  *
  *              Tests will also be done, to pass all tests:
  *              - Edit the WiFi information in test.cpp.
- *              - Connect a slave device via EasyC on address 0x28 (you may change this in test.cpp also).
+ *              - Connect a slave device via EasyC on address 0x30 (you may change this in test.cpp also).
  *                In the InkplateEasyCTester folder, you can find the code for uploading to Dasduino Core 
  *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave device for testing an easyC connector
  *                if you don't have a device with address 0x30.
