@@ -103,21 +103,37 @@ bool Network::getData(char *calendarURL, char *data)
 
     delay(300);
 
+    int attempts = 1;
+
+    // Download data until it's a verified complete download
     // Actually do request
     int httpCode = http.GET();
 
     if (httpCode == 200)
     {
         long n = 0;
-        while (http.getStream().available())
+
+        long now = millis();
+
+        while (millis() - now < DOWNLOAD_TIMEOUT)
         {
-            data[n++] = http.getStream().read();
+            while (http.getStream().available())
+            {
+                data[n++] = http.getStream().read();
+                now = millis();
+            }
         }
+
         data[n++] = 0;
+
+        // If the calendar doesn't contain this string - it's invalid
+        if(strstr(data, "END:VCALENDAR") == NULL) f = 1;
     }
     else
     {
-        Serial.println(httpCode);
+        // In case there was another HTTP code, break from the function
+        Serial.print("HTTP Code: ");
+        Serial.print(httpCode);
         f = 1;
     }
 

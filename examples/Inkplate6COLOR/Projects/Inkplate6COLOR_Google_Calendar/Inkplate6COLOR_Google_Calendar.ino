@@ -86,7 +86,6 @@ entry entries[100];
 
 // All our functions declared below setup and loop
 void drawInfo();
-void drawTime();
 void drawGrid();
 void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp);
 bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeeded);
@@ -107,18 +106,27 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    network.begin();
+    // Connect Inkplate to the WiFi network
+    network.begin(ssid, pass);
 
-    if (network.getData(data)) // Try getting data
+    // Get the data from Google Calendar
+    // Repeat attempts until data is fully downloaded
+    Serial.println("Getting data... ");
+    while (!network.getData(calendarURL, data))
     {
-        // Drawing all data, functions for that are above
-        drawInfo();
-        drawGrid();
-        drawData();
-
-        // Actually display all data
-        display.display();
+        delay(1000);
     }
+
+    // Initial screen clearing
+    display.clearDisplay();
+
+    // Drawing all data, functions for that are below
+    drawInfo();
+    drawGrid();
+    drawData();
+
+    // Display the data on the screen
+    display.display();
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
@@ -525,12 +533,12 @@ void drawData()
         char *timeStart = strstr(data + i, "DTSTART:") + 8;
         char *timeEnd = strstr(data + i, "DTEND:") + 6;
 
-        if (summary && summary < end)
+        if (summary && summary < end && (summary - data) > 0)
         {
             strncpy(entries[entriesNum].name, summary, strchr(summary, '\n') - summary);
             entries[entriesNum].name[strchr(summary, '\n') - summary] = 0;
         }
-        if (location && location < end)
+        if (location && location < end && (location - data) > 0)
         {
             strncpy(entries[entriesNum].location, location, strchr(location, '\n') - location);
             entries[entriesNum].location[strchr(location, '\n') - location] = 0;
@@ -581,8 +589,8 @@ void drawData()
         {
             // Draw notification showing that there are more events than drawn ones
             display.fillRoundRect(6 + i * (442 / 3), 600 - 24, (442 / 3) - 5, 20, 10, 0);
-            display.setCursor(10, 600 - 6);
-            display.setTextColor(7, 0);
+            display.setCursor(15 + i * (442 / 3), 600 - 10);
+            display.setTextColor(INKPLATE_WHITE);
             display.setFont(&FreeSans9pt7b);
             display.print(cloggedCount[i]);
             display.print(" more events");

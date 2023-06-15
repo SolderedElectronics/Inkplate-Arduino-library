@@ -101,18 +101,17 @@ void Network::getTime(char *timeStr, long offSet, struct tm *timeinfo, int timeZ
  * 
  * @return              True if succcessful, false if there was an error
  */
-bool Network::getData(char *data, char *calendarURL)
+bool Network::getData(char *calendarURL, char *data)
 {
     // Variable to store fail
     bool f = 0;
 
-    // If not connected to wifi reconnect wifi
+    // If not connected to WiFi, reconnect wifi
     if (WiFi.status() != WL_CONNECTED)
     {
         WiFi.reconnect();
 
-        delay(5000);
-
+        // Waiting to WiFi connect again
         int cnt = 0;
         Serial.println(F("Waiting for WiFi to reconnect..."));
         while ((WiFi.status() != WL_CONNECTED))
@@ -122,9 +121,7 @@ bool Network::getData(char *data, char *calendarURL)
             delay(1000);
             ++cnt;
 
-            WiFi.reconnect();
-            delay(5000);
-
+            // If it doesn't connect to wifi in 10 seconds, reset the ESP
             if (cnt == 10)
             {
                 Serial.println("Can't connect to WIFI, restart initiated.");
@@ -134,29 +131,53 @@ bool Network::getData(char *data, char *calendarURL)
         }
     }
 
+    // Http object used to make get request
+    HTTPClient http;
+    http.getStream().setTimeout(10);
+    http.getStream().flush();
+    http.getStream().setNoDelay(true);
+
     // Begin http by passing url to it
-    bool sleep = WiFi.getSleep();
-    WiFi.setSleep(false);
+    http.begin(calendarURL);
 
-    // WiFiClientSecure object used to make GET request
-    WiFiClientSecure client;
+    delay(300);
 
-    int result = getRequest(&client, "calendar.google.com", calendarURL);
-    if (result == 0)
+    int attempts = 1;
+
+    // Download data until it's a verified complete download
+    // Actually do request
+    int httpCode = http.GET();
+
+    if (httpCode == 200)
     {
-        Serial.println("HTTP Error!");
-        Serial.println("Restarting...");
-        delay(100);
-        ESP.restart();
+        long n = 0;
+
+        long now = millis();
+
+        while (millis() - now < DOWNLOAD_TIMEOUT)
+        {
+            while (http.getStream().available())
+            {
+                data[n++] = http.getStream().read();
+                now = millis();
+            }
+        }
+
+        data[n++] = 0;
+
+        // If the calendar doesn't contain this string - it's invalid
+        if(strstr(data, "END:VCALENDAR") == NULL) f = 1;
+    }
+    else
+    {
+        // In case there was another HTTP code, break from the function
+        Serial.print("HTTP Code: ");
+        Serial.print(httpCode);
+        f = 1;
     }
 
-    long n = 0;
-    while (client.available())
-        data[n++] = client.read();
-    data[n++] = 0;
-    delayMicroseconds(2);
-
-    client.stop();
+    // end http
+    http.end();
 
     return !f;
 }

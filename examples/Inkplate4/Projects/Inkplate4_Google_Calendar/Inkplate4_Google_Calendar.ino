@@ -108,11 +108,11 @@ void setup()
     // Connect Inkplate to the WiFi network
     network.begin(ssid, pass);
 
-    // Keep trying to get data if it fails the first time
-    Serial.print("Getting data ");
+    // Get the data from Google Calendar
+    // Repeat attempts until data is fully downloaded
+    Serial.println("Getting data... ");
     while (!network.getData(calendarURL, data))
     {
-        Serial.print('.');
         delay(1000);
     }
 
@@ -373,7 +373,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
             // Gets text bounds
             display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
 
-            if (w > (954 / 4))
+            if (w > (315 / 4))
             {
                 for (int j = i - 1; j > max(-1, i - 4); --j)
                     line[j] = '.';
@@ -440,12 +440,12 @@ void drawData()
         char *timeStart = strstr(data + i, "DTSTART:") + 8;
         char *timeEnd = strstr(data + i, "DTEND:") + 6;
 
-        if (summary && summary < end)
+        if (summary && summary < end && (summary - data) > 0)
         {
             strncpy(entries[entriesNum].name, summary, strchr(summary, '\n') - summary);
             entries[entriesNum].name[strchr(summary, '\n') - summary] = 0;
         }
-        if (location && location < end)
+        if (location && location < end  && (location - data) > 0)
         {
             strncpy(entries[entriesNum].location, location, strchr(location, '\n') - location);
             entries[entriesNum].location[strchr(location, '\n') - location] = 0;
