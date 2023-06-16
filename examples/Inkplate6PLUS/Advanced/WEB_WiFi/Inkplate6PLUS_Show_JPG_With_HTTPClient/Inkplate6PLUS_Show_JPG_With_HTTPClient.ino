@@ -28,10 +28,10 @@ Inkplate display(INKPLATE_1BIT);
 
 /**************** CHANGE HERE ******************/
 
-char *ssid = ""; // Your WiFi SSID
-char *pass = ""; // Your WiFi password
+char *ssid = "Soldered"; // Your WiFi SSID
+char *pass = "dasduino"; // Your WiFi password
 
-// Optionally
+// Add the URL of the image you want to show on Inkplate
 String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/Inkplate6PLUS/Advanced/WEB_WiFi/Inkplate6PLUS_Show_JPG_With_HTTPClient/image.jpg";
 
 /***********************************************/
