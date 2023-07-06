@@ -198,7 +198,7 @@ bool Inkplate::setPanelDeepSleep(bool _state)
 }
 
 /**
- * @brief       resetPanel resets Inkplate 4
+ * @brief       resetPanel resets Inkplate 7
  */
 void Inkplate::resetPanel()
 {
