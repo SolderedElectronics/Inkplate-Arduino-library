@@ -41,8 +41,8 @@
 // ---------- CHANGE HERE  -------------:
 
 // Change to your wifi ssid and password
-#define SSID "Soldered"
-#define PASS "dasduino"
+#define SSID ""
+#define PASS ""
 
 // Openweather API key
 /**
@@ -54,10 +54,10 @@
  * If your key is invalid, you will be notified by the sketch
  * 
 */
-char * APIKEY = "b1d3e9077193732d4b5e3e2c4c036657";
+char * APIKEY = "";
 // Also, declare the function to check if the API key is valid
 bool checkIfAPIKeyIsValid(char * APIKEY);
-
+ 
 float myLatitude = 45.560001; // I got this from Wikipedia
 float myLongitude = 18.675880;
 
@@ -360,7 +360,7 @@ void drawTime()
     display.print(Output);
 
     sprintf(Output, "%02d:%02d", hour(t), minute(t));
-    display.setCursor(355, 18);
+    display.setCursor(580, 18);
     display.print(Output);
 }
 
@@ -368,17 +368,17 @@ void drawTime()
 void drawHourly()
 {
     const int yTop = 185;
-    const int yHeight = 105;
-    const int xLeft = 18;
-    const int xWidth = 360;
-    const int hoursDisplay = 8;
+    const int yHeight = 179;
+    const int xLeft = 25;
+    const int xWidth = 581;
+    const int hoursDisplay = 12;
     const int hourPitch = xWidth / hoursDisplay;
     const float minPrec = 0;
     float maxPrec = 1;
     float maxTemp = -100;
     float minTemp = 100;
 
-    display.setFont(&Picopixel);
+    display.setFont(&FreeSansBold9pt7b);
 
     for (int Houry = 0; Houry < hoursDisplay; Houry++)
     {
@@ -405,15 +405,19 @@ void drawHourly()
     display.drawLine(xLeft, yTop + yHeight, xLeft + xWidth, yTop + yHeight, INKPLATE7_BLACK);
     display.drawLine(xLeft, yTop, xLeft + xWidth, yTop, INKPLATE7_BLACK);
 
+    display.setFont(); // Set default font
+
     sprintf(Output, "%2.0f%c", (minTemp - 0.499), tempUnit);
     alignText(RIGHT, Output, xLeft - 5, yTop + yHeight);
     sprintf(Output, "%2.0f%c", (maxTemp + .5), tempUnit);
     alignText(RIGHT, Output, xLeft - 5, yTop);
 
-    sprintf(Output, "%2.0f mm", minPrec);
+    sprintf(Output, "%2.0fmm", minPrec);
     alignText(LEFT, Output, xLeft + xWidth + 2, yTop + yHeight);
-    sprintf(Output, "%2.0f mm", (maxPrec + .499));
+    sprintf(Output, "%2.0fmm", (maxPrec + .499));
     alignText(LEFT, Output, xLeft + xWidth + 2, yTop);
+
+    display.setFont(&FreeSansBold9pt7b);
 
     float yTempScale = (yHeight / (round(maxTemp + 0.499) - round(minTemp - 0.5)));
 
@@ -444,35 +448,35 @@ void drawCurrent()
     sprintf(Output, "http://openweathermap.org/img/wn/%s.png", OWOC.current.icon);
     Serial.println("CURRENT ");
     Serial.println(Output);
-    display.drawImage(Output, -5, 18, true, true);
+    display.drawImage(Output, 38, 20, true, true);
 
     display.setFont(&FreeSans12pt7b);
     sprintf(Output, "%2.01f%c", OWOC.current.temp, tempUnit);
-    display.setCursor(42, 50);
+    display.setCursor(85, 52);
     display.print(Output);
 
     display.setFont(&FreeSans9pt7b);
     sprintf(Output, "%2.0f%c/%.0f%c", OWOC.forecast[0].temp_min, tempUnit, OWOC.forecast[0].temp_max, tempUnit);
-    display.setCursor(110, 45);
+    display.setCursor(194, 45);
     display.print(Output);
 
     sprintf(Output, "%4.0fhPa", OWOC.current.pressure);
-    display.setCursor(185, 45);
+    display.setCursor(305, 45);
     display.print(Output);
 
     sprintf(Output, "%3.0f%%", OWOC.current.humidity);
-    display.setCursor(272, 45);
+    display.setCursor(422, 45);
     display.print(Output);
 
     // Set font to default and print labels
     display.setFont();
-    display.setCursor(108, 55);
+    display.setCursor(192, 55);
     display.print("Temps. Today");
 
-    display.setCursor(195, 55);
+    display.setCursor(315, 55);
     display.print("Pressure");
 
-    display.setCursor(272, 55);
+    display.setCursor(422, 55);
     display.print("Humidity");
 }
 
@@ -511,12 +515,12 @@ void drawMoon()
     // Convert to appropriate icon
     display.setFont(&moon_phases12pt7b);
     sprintf(Output, "%c", (char)((int)'A' + (int)(moonage * 25. / 30)));
-    display.setCursor(353, 52);
+    display.setCursor(353 + 180, 52);
     display.print(Output);
 
     // Set default font and print Moon Phase label
     display.setFont();
-    display.setCursor(339, 55);
+    display.setCursor(339 + 180, 55);
     display.print("Moon Phase");
 }
 
