@@ -61,7 +61,7 @@ void setup()
     display.display();
     delay(3000);
 
-    if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/Inkplate4/Advanced/WEB_WiFi/Inkplate4_Show_Pictures_From_Web/roses.bmp", 0, 0, true, false))
+    if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/Inkplate4/Advanced/WEB_WiFi/Inkplate4_Show_Pictures_From_Web/coffee.bmp", 0, 0, true, false))
     {
         // If something failed (wrong filename or wrong bitmap format), write error message on the screen.
         // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
