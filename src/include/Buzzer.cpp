@@ -22,7 +22,7 @@
 
 /**
  * @brief       Initiate the digipot which the buzzer uses to change pitch
- * 
+ *
  * @returns     None
  */
 void Buzzer::begin()
@@ -32,11 +32,11 @@ void Buzzer::begin()
 
 /**
  * @brief       Beep for a length of time
- * 
+ *
  * @param       uint32_t length - the length of the beep in ms
- * 
+ *
  * @note        This is a blocking function, it will exit only when beeping is done
- * 
+ *
  * @returns     none
  */
 void Buzzer::beep(uint32_t length)

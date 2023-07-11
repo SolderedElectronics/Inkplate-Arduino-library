@@ -576,24 +576,24 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
  */
 void Inkplate::wakePeripheral(uint8_t _peripheral)
 {
-    if(_peripheral & INKPLATE_BUZZER)
+    if (_peripheral & INKPLATE_BUZZER)
     {
         // Buzzer is always in deep sleep unless beeping
     }
 
-    if(_peripheral & INKPLATE_ACCELEROMETER)
+    if (_peripheral & INKPLATE_ACCELEROMETER)
     {
         // Accelerometer does not have a deep sleep function
     }
 
-    if(_peripheral & INKPLATE_BME680)
+    if (_peripheral & INKPLATE_BME680)
     {
         // Wake BME
         uint8_t bmeControlReg = bme680.readByte(BME_CONTROL_ADDR);
         bme680.putData(BME_CONTROL_ADDR, bmeControlReg || 0x01);
     }
 
-    if(_peripheral & INKPLATE_APDS9960)
+    if (_peripheral & INKPLATE_APDS9960)
     {
         // Wake APDS
         apds9960.enablePower();
@@ -612,24 +612,24 @@ void Inkplate::wakePeripheral(uint8_t _peripheral)
  */
 void Inkplate::sleepPeripheral(uint8_t _peripheral)
 {
-    if(_peripheral & INKPLATE_BUZZER)
+    if (_peripheral & INKPLATE_BUZZER)
     {
         // Buzzer is always in deep sleep unless beeping
     }
 
-    if(_peripheral & INKPLATE_ACCELEROMETER)
+    if (_peripheral & INKPLATE_ACCELEROMETER)
     {
         // Accelerometer does not have a deep sleep function
     }
 
-    if(_peripheral & INKPLATE_BME680)
+    if (_peripheral & INKPLATE_BME680)
     {
         // Put BME in sleep mode
         uint8_t bmeControlReg = bme680.readByte(BME_CONTROL_ADDR);
         bme680.putData(BME_CONTROL_ADDR, bmeControlReg && 0xFC);
     }
 
-    if(_peripheral & INKPLATE_APDS9960)
+    if (_peripheral & INKPLATE_APDS9960)
     {
         // Put APDS in sleep mode
         apds9960.disablePower();

@@ -27,17 +27,18 @@
 #include "Wire.h"
 #include "defines.h"
 
-//Include digipot library
+// Include digipot library
 #include "libs/MCP4018/src/MCP4018-SOLDERED.h"
 
 class Buzzer : virtual public Expander
 {
-    public:
-        Buzzer(){};
-        void begin();
-        void beep(uint32_t length);
-    private:
-        MCP4018_SOLDERED digipot;
+  public:
+    Buzzer(){};
+    void begin();
+    void beep(uint32_t length);
+
+  private:
+    MCP4018_SOLDERED digipot;
 };
 
 #endif

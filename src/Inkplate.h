@@ -31,8 +31,8 @@
 #include "include/Buzzer.h"
 #include "libs/APDS9960/src/APDS9960-SOLDERED.h"
 #include "libs/BME680/src/BME680-SOLDERED.h"
-#include "libs/LSM6DS3/src/LSM6DS3-SOLDERED.h"
 #include "libs/BQ27441/src/BQ27441-G1-SOLDERED.h"
+#include "libs/LSM6DS3/src/LSM6DS3-SOLDERED.h"
 #endif
 
 #include "include/defines.h"
@@ -125,7 +125,7 @@ class Inkplate : public System, public Graphics
         return Graphics::getRotation();
     };
 
-    #ifdef ARDUINO_INKPLATEPLUS2
+#ifdef ARDUINO_INKPLATEPLUS2
     Buzzer buzzer;
     APDS_9960 apds9960;
     BME680 bme680;
@@ -133,7 +133,7 @@ class Inkplate : public System, public Graphics
     BQ_27441 battery;
     void wakePeripheral(uint8_t _peripheral);
     void sleepPeripheral(uint8_t _peripheral);
-    #endif
+#endif
 
   private:
     void precalculateGamma(uint8_t *c, float gamma);
