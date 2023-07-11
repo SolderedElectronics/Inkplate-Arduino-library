@@ -1,0 +1,36 @@
+###########################################
+# Syntax Coloring Map For Arduino_APDS9960
+###########################################
+# Class
+###########################################
+
+Arduino_APDS9960	KEYWORD1
+APDS9960	KEYWORD1
+APDS	KEYWORD1
+
+###########################################
+# Methods and Functions 
+###########################################
+
+begin	KEYWORD2
+end	KEYWORD2
+
+gestureAvailable	KEYWORD2
+readGesture	KEYWORD2
+colorAvailable	KEYWORD2
+readColor	KEYWORD2
+proximityAvailable	KEYWORD2
+readProximity	KEYWORD2
+setGestureSensitivity	KEYWORD2
+setInterruptPin	KEYWORD2
+setLEDBoost	KEYWORD2
+
+###########################################
+# Constants
+###########################################
+
+GESTURE_NONE	LITERAL1
+GESTURE_UP	LITERAL1
+GESTURE_DOWN	LITERAL1
+GESTURE_LEFT	LITERAL1
+GESTURE_RIGHT	LITERAL1

@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate6PLUS_Factory_Programming_VCOM .ino
+ * @file        Inkplate6PLUS_Factory_Programming_VCOM.ino
  *
  * @brief       File for programming the Inkplate's VCOM
  *

@@ -378,6 +378,7 @@ void loop()
 
     // Draw simple triangle
     display.clearDisplay();
+    displayCurrentAction("Drawing triangle");
     display.drawTriangle(250, 400, 550, 400, 400, 100, BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
     display.display();
     delay(DELAY_MS);
