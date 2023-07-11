@@ -81,7 +81,7 @@ void Inkplate::display()
     setPanelDeepSleep(false);
     delay(5);
 
-    // Write RAM for Black/White pixels
+    // Send pixel data
     sendCommand(0x10);
 
     // Send the pixel data

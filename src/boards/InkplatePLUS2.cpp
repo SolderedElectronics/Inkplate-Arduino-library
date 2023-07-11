@@ -214,7 +214,6 @@ bool Inkplate::begin(void)
     delay(5);
 
     // Put them back to sleep
-    // The user has to wake them if he wants to use the peripheral
     sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME680 | INKPLATE_ACCELEROMETER);
 
     _beginDone = 1;
