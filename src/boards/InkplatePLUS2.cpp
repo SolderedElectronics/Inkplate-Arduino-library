@@ -130,6 +130,7 @@ bool Inkplate::begin(void)
     // Set all pins of seconds I/O expander to outputs, low.
     // For some reason, it draws more current in deep sleep when pins are set as
     // inputs...
+    // The buzzer pin should be set to HIGH as to not beep the buzzer
     for (int i = 0; i < 15; i++)
     {
         pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);
@@ -142,7 +143,7 @@ bool Inkplate::begin(void)
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, OUTPUT);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, LOW);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 14, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 14, HIGH); // Buzzer pin
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 15, LOW);
 
     // CONTROL PINS
@@ -204,17 +205,8 @@ bool Inkplate::begin(void)
         }
     }
 
-    // Init peripherals
-    buzzer.begin();
-    apds9960.begin();
-    bme680.begin();
-    accelerometer.begin();
-    battery.begin();
-
-    delay(5);
-
     // Put them back to sleep
-    sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME680 | INKPLATE_ACCELEROMETER);
+    sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME680 | INKPLATE_ACCELEROMETER | INKPLATE_FUEL_GAUGE);
 
     _beginDone = 1;
     return 1;
@@ -569,34 +561,45 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
  *
  * @param       uint8_t _peripheral
  *              The flag which peripheral to wake from deep sleep, you may use:
- *              INKPLATE_BUZZER, INKPLATE_ACCELEROMETER, INKPLATE_BME680
- *              and INKPLATE_APDS9960
+ *              INKPLATE_ACCELEROMETER, INKPLATE_BME680, INKPLATE_APDS9960 and
+ *              INKPLATE_FUEL_GAUGE
  *
  * @return      None
  */
 void Inkplate::wakePeripheral(uint8_t _peripheral)
 {
-    if (_peripheral & INKPLATE_BUZZER)
-    {
-        // Buzzer is always in deep sleep unless beeping
-    }
-
     if (_peripheral & INKPLATE_ACCELEROMETER)
     {
-        // Accelerometer does not have a deep sleep function
+        // Wake accelerometer
+        uint8_t accControlReg;
+        accelerometer.readRegister(&accControlReg, 0x13);
+        accelerometer.writeRegister(0x13, accControlReg & 0xBF);
+        delay(2);
+        accelerometer.beginCore();
     }
 
     if (_peripheral & INKPLATE_BME680)
     {
         // Wake BME
         uint8_t bmeControlReg = bme680.readByte(BME_CONTROL_ADDR);
-        bme680.putData(BME_CONTROL_ADDR, bmeControlReg || 0x01);
+        bme680.putData(BME_CONTROL_ADDR, bmeControlReg | 0x01);
+        bme680.begin();
     }
 
     if (_peripheral & INKPLATE_APDS9960)
     {
         // Wake APDS
         apds9960.enablePower();
+        apds9960.begin();
+    }
+
+    if (_peripheral & INKPLATE_FUEL_GAUGE)
+    {
+        uint8_t fuelGaugeControlReg1 = battery.readBlockData(0x3A);
+        uint8_t fuelGaugeControlReg2 = battery.readBlockData(0x3B);
+        fuelGaugeControlReg2 &= 0xCF;
+        uint16_t fuelGaugeControlRegToWrite = (fuelGaugeControlReg1 << 8) | fuelGaugeControlReg2;
+        battery.writeOpConfig(fuelGaugeControlRegToWrite);
     }
 }
 
@@ -605,34 +608,41 @@ void Inkplate::wakePeripheral(uint8_t _peripheral)
  *
  * @param       uint8_t _peripheral
  *              The flag which peripheral to put to deep sleep, you may use:
- *              INKPLATE_BUZZER, INKPLATE_ACCELEROMETER, INKPLATE_BME680
- *              and INKPLATE_APDS9960
+ *              INKPLATE_ACCELEROMETER, INKPLATE_BME680, INKPLATE_APDS9960 and
+ *              INKPLATE_FUEL_GAUGE
  *
  * @return      None
  */
 void Inkplate::sleepPeripheral(uint8_t _peripheral)
 {
-    if (_peripheral & INKPLATE_BUZZER)
-    {
-        // Buzzer is always in deep sleep unless beeping
-    }
-
     if (_peripheral & INKPLATE_ACCELEROMETER)
     {
-        // Accelerometer does not have a deep sleep function
+        // Put accelerometer in sleep mode
+        uint8_t accControlReg;
+        accelerometer.readRegister(&accControlReg, 0x13);
+        accelerometer.writeRegister(0x13, accControlReg | 0x04);
     }
 
     if (_peripheral & INKPLATE_BME680)
     {
         // Put BME in sleep mode
         uint8_t bmeControlReg = bme680.readByte(BME_CONTROL_ADDR);
-        bme680.putData(BME_CONTROL_ADDR, bmeControlReg && 0xFC);
+        bme680.putData(BME_CONTROL_ADDR, bmeControlReg & 0xFC);
     }
 
     if (_peripheral & INKPLATE_APDS9960)
     {
         // Put APDS in sleep mode
         apds9960.disablePower();
+    }
+
+    if (_peripheral & INKPLATE_FUEL_GAUGE)
+    {
+        uint8_t fuelGaugeControlReg1 = battery.readBlockData(0x3A);
+        uint8_t fuelGaugeControlReg2 = battery.readBlockData(0x3B);
+        fuelGaugeControlReg2 |= 0x20;
+        uint16_t fuelGaugeControlRegToWrite = (fuelGaugeControlReg1 << 8) | fuelGaugeControlReg2;
+        battery.writeOpConfig(fuelGaugeControlRegToWrite);
     }
 }
 

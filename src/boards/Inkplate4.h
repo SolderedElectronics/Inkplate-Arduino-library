@@ -26,7 +26,7 @@
 #define EPAPER_CLK      18
 #define EPAPER_DIN      23
 
-#define BUSY_TIMEOUT_MS 1000
+#define BUSY_TIMEOUT_MS 32000
 
 // ePaper specific defines
 #define E_INK_HEIGHT   300

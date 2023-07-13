@@ -20,26 +20,40 @@
 #ifndef __INKPLATEPLUS2_H__
 #define __INKPLATEPLUS2_H__
 
+// Panel resolution
 #define E_INK_WIDTH  600
 #define E_INK_HEIGHT 600
 
+// IO Expander addresses
 #define IO_INT_ADDR 0x20
 #define IO_EXT_ADDR 0x21
 
+// Some constants used in the library
 #define GPIO0_ENABLE  8
 #define INKPLATE_1BIT 0
 #define INKPLATE_3BIT 1
 #define FRONTLIGHT_EN 11
 #define PWR_GOOD_OK   0b11111010
 
+// Buzzer enable pin (pin P1_4 on internal IO expander)
 #define BUZZ_EN      14
+
+// Addresss to control the digipot (and affect beep frequency)
 #define DIGIPOT_ADDR 0x2F
 
+// Pin on the internal io expander which controls MOSFET for turning on and off the SD card
+#define SD_PMOS_PIN IO_PIN_B2 // 10
+
+// Sensor constants
 #define INKPLATE_BUZZER        0x01
 #define INKPLATE_ACCELEROMETER 0x02
 #define INKPLATE_BME680        0x04
 #define BME_CONTROL_ADDR       0x74
 #define INKPLATE_APDS9960      0x08
+#define INKPLATE_FUEL_GAUGE    0x1
+
+// Pin interrupt sensor
+// TODO
 
 #define DATA 0x0E8C0030 // D0-D7 = GPIO4 GPIO5 GPIO18 GPIO19 GPIO23 GPIO25 GPIO26 GPIO27
 

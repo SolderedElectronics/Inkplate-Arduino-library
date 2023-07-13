@@ -20,7 +20,7 @@
 #ifndef __BUZZER_H__
 #define __BUZZER_H__
 
-#if defined(ARDUINO_INKPLATEPLUS2)
+#ifdef ARDUINO_INKPLATEPLUS2
 
 #include "Arduino.h"
 #include "Pcal.h"

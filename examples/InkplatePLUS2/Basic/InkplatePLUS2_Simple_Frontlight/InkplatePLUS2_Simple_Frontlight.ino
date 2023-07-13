@@ -1,15 +1,18 @@
 /*
-   InkplatePLUS2_Simple_Frontlight example for Soldered Inkplate PLUS2
-   For this example you will need a micro USB cable, Inkplate PLUS2 and a device with WiFi and Internet brower (PC,
-   Laptop, Smartphone, ...). Select "e-radionica Inkplate PLUS2" or "Soldered Inkplate PLUS2" from Tools -> Board menu. 
-   Don't have "e-radionica Inkplate PLUS2" or "Soldered Inkplate PLUS2" option? 
-   Follow our tutorial and add it: https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
+   InkplatePLUS2_Simple_Frontlight.ino example for Soldered Inkplate PLUS2
+   For this example you will need only a USB-C cable and Inkplate PLUS2.
+   Select "Soldered Inkplate PLUS2" from Tools -> Board menu.
+   Don't have "Soldered Inkplate PLUS2" option? Follow our tutorial and add it:
+   https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   This example will show you how to use Inkplate PLUS2 frontlight.
+   This example will show you how to use Inkplate PLUS2 frontlight and set it over Serial.
+   Open Serial monitor at 115200 baud and send the following commands: 
+   "+" to increase frontlight and "-" to decrease frontlight
+   Send "s" to see a light show
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   11 February 2021 by Soldered
+   12 July 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

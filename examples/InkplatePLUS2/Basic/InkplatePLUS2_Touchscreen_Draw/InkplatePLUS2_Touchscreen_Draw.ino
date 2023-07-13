@@ -1,16 +1,16 @@
 /*
-   InkplatePLUS2_Touchscreen_Draw example for Soldered Inkplate PLUS2
-   For this example you will need only USB cable and Inkplate PLUS2
-   Select "e-radionica Inkplate PLUS2" or "Soldered Inkplate PLUS2" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate PLUS2" or "Soldered Inkplate PLUS2" option? Follow our tutorial and add it:
-   https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
+    InkplatePLUS2_Touch_Registers.ino example for Soldered Inkplate PLUS2
+    For this example you will need only a USB-C cable and Inkplate PLUS2.
+    Select "Soldered Inkplate PLUS2" from Tools -> Board menu.
+    Don't have "Soldered Inkplate PLUS2" option? Follow our tutorial and add it:
+    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   This example shows you how to use Inkplate PLUS2 touchscreen.
-   Once the code is uploaded, try drawing on the screen :)
+    This example shows you how to use Inkplate 6PLUS touchscreen.
+    Once the code is uploaded, try drawing on the screen :)
 
-   Want to learn more about Inkplate? Visit www.inkplate.io
-   Looking to get support? Write on our forums: https://forum.soldered.com/
-   11 February 2021 by Soldered
+    Want to learn more about Inkplate? Visit www.inkplate.io
+    Looking to get support? Write on our forums: https://forum.soldered.com/
+    12 July 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -18,38 +18,39 @@
 #error "Wrong board selection for this example, please select Inkplate PLUS2 in the boards menu."
 #endif
 
+// Include Inkplate library
 #include "Inkplate.h"
 
 // Select to draw a line on screen or filled circle
 #define DRAW_LINE
 // #define DRAW_CIRCLE
 
-Inkplate display(INKPLATE_1BIT);
-
 #ifdef DRAW_LINE
 uint16_t xOld, yOld;
 #endif
+
+// Create Inkplate object in monochrome mode
+Inkplate display(INKPLATE_1BIT);
 
 void setup()
 {
     // put your setup code here, to run once:
     Serial.begin(115200);
     display.begin();
-
     display.setCursor(50,50);
     display.setTextSize(2);
-    display.print("Touchscreen test!");
+    display.print("Draw on the screen!");
 
     display.display();
 
     // Init touchscreen and power it on after init (send false as argument to put it in deep sleep right after init)
     if (display.tsInit(true))
     {
-        Serial.println("Touchscreen init ok");
+        Serial.println("Touchscreen init OK!");
     }
     else
     {
-        Serial.println("Touchscreen init fail");
+        Serial.println("Touchscreen init failed!");
         while (true)
             ;
     }
@@ -77,7 +78,9 @@ void loop()
 #ifdef DRAW_CIRCLE // Draw circle on touch event coordinates
             display.fillCircle(x[0], y[0], 20, BLACK);
 #endif
-            display.partialUpdate();
+            // Do partial update with leaving the display ON
+            // This makes the example run much more responsive
+            display.partialUpdate(false, true);
         }
     }
 }

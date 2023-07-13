@@ -20,6 +20,8 @@
 #include "Buzzer.h"
 #include "defines.h"
 
+#ifdef ARDUINO_INKPLATEPLUS2
+
 /**
  * @brief       Initiate the digipot which the buzzer uses to change pitch
  *
@@ -46,3 +48,5 @@ void Buzzer::beep(uint32_t length)
     delay(length);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, HIGH);
 }
+
+#endif

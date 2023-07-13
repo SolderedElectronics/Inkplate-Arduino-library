@@ -32,7 +32,7 @@ bool BME680::begin()
         BME680_Class::setIIRFilter(IIR4);                               // Use enumerated type values
         BME680_Class::setGas(320, 150);
     }
-
+    
     return returnValue;
 }
 
