@@ -206,7 +206,8 @@ bool Inkplate::begin(void)
     }
 
     // Put them back to sleep
-    sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME680 | INKPLATE_ACCELEROMETER | INKPLATE_FUEL_GAUGE);
+    sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME680 | INKPLATE_ACCELEROMETER |
+                    INKPLATE_FUEL_GAUGE);
 
     _beginDone = 1;
     return 1;
