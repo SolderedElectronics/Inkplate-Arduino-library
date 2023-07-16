@@ -29,17 +29,22 @@ Inkplate display(INKPLATE_1BIT);
 
 void setup()
 {
-    // put your setup code here, to run once:
-    Serial.begin(115200);
-    display.begin();
-    display.clearDisplay();
-    display.setCursor(90, 280);
+    Serial.begin(115200); // Init Serial for debugging
+
+    display.begin(); // Init library (you should call this function ONLY ONCE)
+    display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
+    //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside ESP32).
+    
+    // Print Info text on Inkplate
+    display.setCursor(90, 280); 
     display.setTextSize(3);
     display.print("Touch button example.");
     display.setCursor(60, 350);
     display.print("Touch the black button.");
-    display.display();
-    delay(3000);
+    display.display(); // Show the text
+    delay(3000); // Wait a bit so the user can see the text
+
+    // Clear the display buffer
     display.clearDisplay();
     // Init touchscreen and power it on after init (send false as argument to put it in deep sleep right after init)
     if (display.tsInit(true))

@@ -1,8 +1,8 @@
 /*
-   Inkplate6PLUS_Simple_Deep_Sleep example for Soldered Inkplate 6Plus
-   For this example you will need USB cable and Inkplate 6Plus.
-   Select "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
+   InkplatePLUS2_Simple_Deep_Sleep example for Soldered Inkplate PLUS2
+   For this example you will need USB-C cable and Inkplate PLUS2.
+   Select "Soldered Inkplate PLUS2" from Tools -> Board menu.
+   Don't have "Soldered Inkplate PLUS2" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how you can use low power functionality of Inkplate board.
@@ -14,12 +14,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   11 February 2021 by Soldered
+   16 July 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
+#ifndef ARDUINO_INKPLATEPLUS2
+#error "Wrong board selection for this example, please select Soldered InkplatePLUS2 in the boards menu."
 #endif
 
 #include "Inkplate.h"      //Include Inkplate library to the sketch
@@ -47,8 +47,7 @@ void setup()
 
     display.clearDisplay(); // Clear frame buffer of display
     display.drawImage(
-        pictures[slide], 0, 43, 1024,
-        682); // Display selected picture at location X=0, Y=0. All three pictures have resolution of 800x600 pixels
+        pictures[slide], 0, 0, 600, 600); // Display selected picture at location X=0, Y=0. All three pictures have resolution of 600x600 pixels
     display.display(); // Refresh the screen with new picture
     slide++; // Update counter for pictures. With this variable, we choose what picture is going to be displayed on
              // screen
