@@ -28,8 +28,8 @@ Inkplate display(INKPLATE_1BIT);
 
 /**************** CHANGE HERE ******************/
 
-char *ssid = "Soldered"; // Your WiFi SSID
-char *pass = "dasduino"; // Your WiFi password
+char *ssid = ""; // Your WiFi SSID
+char *pass = ""; // Your WiFi password
 
 // Add the URL of the image you want to show on Inkplate
 String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/"
@@ -131,14 +131,14 @@ void setup()
         else
         {
             // Show an error message
-            display.setCursor(0, 0);
+            display.setCursor(30, 150);
             display.println("Invalid response length " + String(size) + " (HTTP " + String(httpCode) + ")");
         }
     }
     else
     {
         // Show an error message
-        display.setCursor(0, 0);
+        display.setCursor(30, 150);
         display.println("HTTP error" + String(httpCode) + "...");
     }
 

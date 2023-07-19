@@ -61,7 +61,7 @@ void setup()
      *   int_pulse
      *       true = interrupt generate a pulse; false = interrupt follows timer flag
      */
-    display.rtcTimerSet(Inkplate::TIMER_CLOCK_1HZ, countdown_time, false, false);
+    display.rtcTimerSet(Inkplate::TIMER_CLOCK_1HZ, countdown_time, true, false);
 }
 
 void loop()

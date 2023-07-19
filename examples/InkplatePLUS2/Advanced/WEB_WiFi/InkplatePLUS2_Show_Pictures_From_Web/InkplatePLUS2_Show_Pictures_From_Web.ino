@@ -1,24 +1,24 @@
 /*
-   Inkplate6PLUS_Show_Pictures_From_Web example for Soldered Inkplate 6Plus
-   For this example you will need a micro USB cable, Inkplate 6Plus, and an available WiFi connection.
-   Select "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
+   InkplatePLUS2_Show_Pictures_From_Web example for Soldered Inkplate PLUS2
+   For this example you will need a USB-C cable, Inkplate PLUS2, and an available WiFi connection.
+   Select "Soldered Inkplate PLUS2" from Tools -> Board menu.
+   Don't have "Soldered Inkplate PLUS2" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
-   24 bit AND have resoluton smaller than 800x600 or otherwise it won't fit on screen.
+   24 bit AND have resoluton smaller than 600x600 or otherwise it won't fit on screen.
 
    This example will show you how you can download a .bmp file (picture) from the web and
    display that image on e-paper display.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   11 February 2021 by Soldered
+   19 July 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
+#ifndef ARDUINO_INKPLATEPLUS2
+#error "Wrong board selection for this example, please select Inkplate PLUS2 in the boards menu."
 #endif
 
 #include "HTTPClient.h"          //Include library for HTTPClient
