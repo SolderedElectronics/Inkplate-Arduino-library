@@ -32,7 +32,8 @@ char *ssid = "Soldered"; // Your WiFi SSID
 char *pass = "dasduino"; // Your WiFi password
 
 // Add the URL of the image you want to show on Inkplate
-String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/InkplatePLUS2/Advanced/WEB_WiFi/InkplatePLUS2_Show_JPG_With_HTTPClient/image.jpg";
+String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/"
+             "InkplatePLUS2/Advanced/WEB_WiFi/InkplatePLUS2_Show_JPG_With_HTTPClient/image.jpg";
 
 /***********************************************/
 
@@ -41,6 +42,7 @@ void setup()
     display.begin();             // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();      // Clear frame buffer of display
     display.setTextSize(2);      // Set text size to be 2 times bigger than original (5x7 px)
+    display.setCursor(30, 30);   // Set text position so it's visible
     display.setTextColor(BLACK); // Set text color to black
 
     // Let's connect to the WiFi
@@ -59,7 +61,8 @@ void setup()
         display.print(".");
         display.partialUpdate();
     }
-    display.println("\nWiFi OK! Downloading...");
+    display.setCursor(30, 70);   // Set text position so it's visible
+    display.println("WiFi OK! Downloading...");
     display.partialUpdate();
 
     // Switch to 3-bit mode so the image will be of better quality
