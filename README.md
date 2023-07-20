@@ -53,6 +53,12 @@ pip3 install pyserial
 apt install python-is-python3
 ```
 
+In case you're getting an [error](https://github.com/SolderedElectronics/Inkplate-Arduino-library/issues/212) while trying to install pyserial, run the following command:
+
+```
+apt install python3-serial
+```
+
 ### Micropython
 
 If you are looking for micropython support, please find all details [here](https://github.com/SolderedElectronics/Inkplate-micropython).
