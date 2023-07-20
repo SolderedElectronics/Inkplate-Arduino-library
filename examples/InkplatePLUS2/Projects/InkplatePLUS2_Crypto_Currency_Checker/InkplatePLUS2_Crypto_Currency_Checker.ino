@@ -1,9 +1,32 @@
+/*
+   InkplatePLUS2_Crypto_Currency_Checker example for Soldered Inkplate PLUS2
+   For this example you will need only USB-C cable, Inkplate PLUS2 and a WiFi connection.
+   Select "Soldered Inkplate PLUS2" from Tools -> Board menu.
+   Don't have "Soldered Inkplate PLUS2" option? Follow our tutorial and add it:
+   https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
+
+   This example will show you how you can use Inkplate PLUS2 to display API data.
+   Here we use Coingecko API to get latest cryptocurrency prices and display
+   them on the Inkplate screen.
+
+   IMPORTANT:
+   Make sure to change your timezone and WiFi credentials below
+   Also have ArduinoJSON installed in your Arduino libraries, download here: https://arduinojson.org/
+
+   Want to learn more about Inkplate? Visit www.inkplate.io
+   Looking to get support? Write on our forums: https://forum.soldered.com/
+   20 July 2023 by Soldered
+*/
+
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate 6PLUS or Soldered Inkplate 6PLUS in the boards menu."
+#ifndef ARDUINO_INKPLATEPLUS2
+#error "Wrong board selection for this example, please select Inkplate PLUS2 in the boards menu."
 #endif
 
+// Include the file which contains the UI data
 #include "Crypto_UI.h"
+
+// Include all the icons so they can be drawn
 #include "Icons/bnc.h"
 #include "Icons/btc.h"
 #include "Icons/doge.h"
@@ -20,19 +43,20 @@
 // create object with all networking functions
 Network network;
 
+// Create Inkplate object in 1bit (monochrome) mode
 Inkplate display(INKPLATE_1BIT);
 
 //---------- CHANGE HERE  -------------:
 
-#define COIN_ICON_X 320
-#define COIN_ICON_Y 50
+#define COIN_ICON_X 53
+#define COIN_ICON_Y 112
 
 // Adjust your time zone, 2 means UTC+2
 int timeZone = 2;
 
 // Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
 
 // OPTIONAL:
 // change to a different currency
@@ -45,15 +69,21 @@ double data[3];
 // Variables for storing all displayed data as char arrays
 char date[64];
 
+// To remember the number of partial updates
+int numOfPartialUpdates = 0;
+
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(115200); // Begin Serial communication for debugging
     display.begin(); // Initialize Inkplate object
-    display.clearDisplay();
+    display.clearDisplay(); // Clear the display buffer
+
+    // Draw the base UI which is always the same
     mainDraw();
     drawCurrencySigns();
     drawCoinIcons();
-    display.display();
+
+    display.display(); // Show on Inkplate with a full refresh
 
     // Initialize touchscreen
     if (!display.tsInit(true))
@@ -61,10 +91,11 @@ void setup()
         Serial.println("Touchscreen init failed!");
     }
 
+    // Get the data from the API
     network.begin();
-
     getCoinPrices();
 
+    // Draw the coin price data which changes
     drawAll();
 }
 
@@ -73,9 +104,10 @@ void loop()
     keysEvents();
 }
 
+// Monitor touchscreen presses
 void keysEvents()
 {
-    if (display.touchInArea(30, 610, 400, 80)) // Refresh Screen
+    if (display.touchInArea(33, 309, 256, 68)) // Refresh Screen
     {
         display.clearDisplay();
         setBlackButton();
@@ -85,7 +117,7 @@ void keysEvents()
         display.display();
     }
 
-    if (display.touchInArea(600, 10, 400, 80)) // Bitcoin
+    if (display.touchInArea(27, 383, 173, 93)) // Bitcoin
     {
         strcpy(currency, "bitcoin");
         strcpy(currencyAbbr, "BTC");
@@ -95,7 +127,7 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.touchInArea(600, 110, 400, 80)) // Ethereum
+    if (display.touchInArea(213, 383, 173, 93)) // Ethereum
     {
         strcpy(currency, "ethereum");
         strcpy(currencyAbbr, "ETH");
@@ -105,7 +137,7 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.touchInArea(600, 210, 400, 80)) // Binance
+    if (display.touchInArea(399, 383, 173, 93)) // Binance
     {
         strcpy(currency, "binance");
         strcpy(currencyAbbr, "BNB");
@@ -115,7 +147,7 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.touchInArea(600, 310, 400, 80)) // XRP
+    if (display.touchInArea(27, 483, 173, 93)) // XRP
     {
         strcpy(currency, "ripple");
         strcpy(currencyAbbr, "XRP");
@@ -125,7 +157,7 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.touchInArea(600, 410, 400, 80)) // Dogecoin
+    if (display.touchInArea(213, 483, 173, 93)) // Dogecoin
     {
         strcpy(currency, "dogecoin");
         strcpy(currencyAbbr, "DOGE");
@@ -135,7 +167,7 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.touchInArea(600, 510, 400, 80)) // Tether
+    if (display.touchInArea(399, 483, 173, 93)) // Tether
     {
         strcpy(currency, "tether");
         strcpy(currencyAbbr, "USDT");
@@ -145,13 +177,14 @@ void keysEvents()
         drawAll();
     }
 
-    if (display.touchInArea(600, 650, 400, 80)) // Refresh price for currently selected coin
+    if (display.touchInArea(313, 309, 256, 68)) // Refresh price for currently selected coin
     {
         getCoinPrices();
         drawAll();
     }
 }
 
+// Get data from the API
 void getCoinPrices()
 {
     text17_content = "Updating..";
@@ -169,17 +202,16 @@ void getCoinPrices()
     text9_content = data[0];
     text11_content = data[1];
     text13_content = data[2];
-
-    drawCurrencySigns();
 }
 
 void drawCurrencySigns()
 {
-    display.drawImage(dollar, 280, 235, 48, 48);
-    display.drawImage(euro, 280, 335, 48, 48);
-    display.drawImage(gbp, 280, 435, 48, 48);
+    display.drawImage(dollar, 306, 98, 48, 48);
+    display.drawImage(euro, 306, 162, 48, 48);
+    display.drawImage(gbp, 306, 226, 48, 48);
 }
 
+// Draw the whole UI
 void drawAll()
 {
     display.clearDisplay();
@@ -187,9 +219,22 @@ void drawAll()
     mainDraw();
     drawCurrencySigns();
     drawCoinIcons();
-    display.partialUpdate();
+
+    // If the counter is at 10, do a full update
+    // This helps the display retain it's quality
+    if(numOfPartialUpdates == 10)
+    {
+        display.display();
+        numOfPartialUpdates = 0;
+    }
+    else
+    {
+        display.partialUpdate();
+        numOfPartialUpdates++;
+    }
 }
 
+// Function which colors the button of the currently selected crypto in black
 void setBlackButton()
 {
     rect0_fill = -1;
@@ -250,6 +295,7 @@ void setBlackButton()
     }
 }
 
+// Function which draws the correct icon
 void drawCoinIcons()
 {
     if (strcmp(currency, "bitcoin") == 0)

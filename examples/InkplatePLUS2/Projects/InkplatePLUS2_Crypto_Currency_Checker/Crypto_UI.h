@@ -1,175 +1,180 @@
 #include "Arduino.h"
 #include "Inkplate.h"
 #include "Fonts/FreeMonoBold24pt7b.h"
+#include "Fonts/FreeMonoBold18pt7b.h"
 #include "Fonts/FreeSans24pt7b.h"
+#include "Fonts/FreeSansBold12pt7b.h"
+#include "Fonts/FreeSans18pt7b.h"
+#include "Fonts/FreeMonoOblique18pt7b.h"
+#include "Fonts/FreeSansBold9pt7b.h"
 
 extern Inkplate display;
 
-int rect0_a_x = 600;
-int rect0_a_y = 10;
-int rect0_b_x = 1000;
-int rect0_b_y = 90;
+int rect0_a_x = 27;
+int rect0_a_y = 383;
+int rect0_b_x = 200;
+int rect0_b_y = 476;
 int rect0_fill = -1;
 int rect0_radius = -1;
 int rect0_color = BLACK;
 
-int rect1_a_x = 600;
-int rect1_a_y = 110;
-int rect1_b_x = 1000;
-int rect1_b_y = 190;
+int rect1_a_x = 213;
+int rect1_a_y = 383;
+int rect1_b_x = 386;
+int rect1_b_y = 476;
 int rect1_fill = -1;
 int rect1_radius = -1;
 int rect1_color = BLACK;
 
-int rect2_a_x = 600;
-int rect2_a_y = 210;
-int rect2_b_x = 1000;
-int rect2_b_y = 290;
+int rect2_a_x = 399;
+int rect2_a_y = 383;
+int rect2_b_x = 572;
+int rect2_b_y = 476;
 int rect2_fill = -1;
 int rect2_radius = -1;
 int rect2_color = BLACK;
 
-int rect3_a_x = 600;
-int rect3_a_y = 310;
-int rect3_b_x = 1000;
-int rect3_b_y = 390;
+int rect3_a_x = 27;
+int rect3_a_y = 483;
+int rect3_b_x = 200;
+int rect3_b_y = 576;
 int rect3_fill = -1;
 int rect3_radius = -1;
 int rect3_color = BLACK;
 
-int rect4_a_x = 600;
-int rect4_a_y = 410;
-int rect4_b_x = 1000;
-int rect4_b_y = 490;
+int rect4_a_x = 213;
+int rect4_a_y = 483;
+int rect4_b_x = 386;
+int rect4_b_y = 576;
 int rect4_fill = -1;
 int rect4_radius = -1;
 int rect4_color = BLACK;
 
-int rect5_a_x = 600;
-int rect5_a_y = 510;
-int rect5_b_x = 1000;
-int rect5_b_y = 590;
+int rect5_a_x = 399;
+int rect5_a_y = 483;
+int rect5_b_x = 572;
+int rect5_b_y = 576;
 int rect5_fill = -1;
 int rect5_radius = -1;
 int rect5_color = BLACK;
 
-int rect6_a_x = 30;
-int rect6_a_y = 610;
-int rect6_b_x = 430;
-int rect6_b_y = 690;
+int rect6_a_x = 33;
+int rect6_a_y = 309;
+int rect6_b_x = 289;
+int rect6_b_y = 377;
 int rect6_fill = -1;
 int rect6_radius = -1;
 int rect6_color = BLACK;
 
-int rect7_a_x = 600;
-int rect7_a_y = 650;
-int rect7_b_x = 1000;
-int rect7_b_y = 740;
+int rect7_a_x = 313;
+int rect7_a_y = 309;
+int rect7_b_x = 569;
+int rect7_b_y = 377;
 int rect7_fill = -1;
 int rect7_radius = -1;
 int rect7_color = BLACK;
 
 String text1_content = "Bitcoin";
-int text1_cursor_x = 710;
-int text1_cursor_y = 61;
+int text1_cursor_x = 72;
+int text1_cursor_y = 436;
 int text1_color_text = BLACK;
 int text1_color_bg = WHITE;
-const GFXfont *text1_font = &FreeMonoBold24pt7b;
+const GFXfont *text1_font = &FreeSansBold12pt7b;
 
 String text2_content = "Ethereum";
-int text2_cursor_x = 700;
-int text2_cursor_y = 170;
+int text2_cursor_x = 242;
+int text2_cursor_y = 436;
 int text2_color_text = BLACK;
 int text2_color_bg = WHITE;
-const GFXfont *text2_font = &FreeMonoBold24pt7b;
+const GFXfont *text2_font = &FreeSansBold12pt7b;
 
 String text3_content = "Binance";
-int text3_cursor_x = 710;
-int text3_cursor_y = 265;
+int text3_cursor_x = 438;
+int text3_cursor_y = 436;
 int text3_color_text = BLACK;
 int text3_color_bg = WHITE;
-const GFXfont *text3_font = &FreeMonoBold24pt7b;
+const GFXfont *text3_font = &FreeSansBold12pt7b;
 
 String text4_content = "Ripple";
-int text4_cursor_x = 720;
-int text4_cursor_y = 373;
+int text4_cursor_x = 76;
+int text4_cursor_y = 536;
 int text4_color_text = BLACK;
 int text4_color_bg = WHITE;
-const GFXfont *text4_font = &FreeMonoBold24pt7b;
+const GFXfont *text4_font = &FreeSansBold12pt7b;
 
 String text5_content = "Dogecoin";
-int text5_cursor_x = 690;
-int text5_cursor_y = 462;
+int text5_cursor_x = 246;
+int text5_cursor_y = 536;
 int text5_color_text = BLACK;
 int text5_color_bg = WHITE;
-const GFXfont *text5_font = &FreeMonoBold24pt7b;
+const GFXfont *text5_font = &FreeSansBold12pt7b;
 
 String text6_content = "Tether";
-int text6_cursor_x = 720;
-int text6_cursor_y = 562;
+int text6_cursor_x = 448;
+int text6_cursor_y = 536;
 int text6_color_text = BLACK;
 int text6_color_bg = WHITE;
-const GFXfont *text6_font = &FreeMonoBold24pt7b;
+const GFXfont *text6_font = &FreeSansBold12pt7b;
 
 String text7_content = "BTC";
-int text7_cursor_x = 32;
-int text7_cursor_y = 100;
-const GFXfont *text7_font = &FreeMonoBold24pt7b;
+int text7_cursor_x = 27;
+int text7_cursor_y = 72;
+const GFXfont *text7_font = &FreeMonoBold18pt7b;
 
 String text8_content = "Prices";
-int text8_cursor_x = 36;
-int text8_cursor_y = 174;
-const GFXfont *text8_font = &FreeMonoBold24pt7b;
+int text8_cursor_x = 411;
+int text8_cursor_y = 75;
+const GFXfont *text8_font = &FreeSansBold9pt7b;
 
 String text10_content = "Dollar:";
-int text10_cursor_x = 36;
-int text10_cursor_y = 270;
-const GFXfont *text10_font = &FreeMonoBold24pt7b;
+int text10_cursor_x = 224;
+int text10_cursor_y = 133;
+const GFXfont *text10_font = &FreeSansBold12pt7b;
 
 String text9_content = "";
-int text9_cursor_x = 320;
-int text9_cursor_y = 270;
+int text9_cursor_x = 354;
+int text9_cursor_y = 137;
 const GFXfont *text9_font = &FreeMonoBold24pt7b;
 
 String text12_content = "Euro:";
-int text12_cursor_x = 36;
-int text12_cursor_y = 371;
-const GFXfont *text12_font = &FreeMonoBold24pt7b;
+int text12_cursor_x = 224;
+int text12_cursor_y = 197;
+const GFXfont *text12_font = &FreeSansBold12pt7b;
 
 String text11_content = "";
-int text11_cursor_x = 320;
-int text11_cursor_y = 372;
+int text11_cursor_x = 354;
+int text11_cursor_y = 201;
 const GFXfont *text11_font = &FreeMonoBold24pt7b;
 
-String text15_content = "GB pound:";
-int text15_cursor_x = 36;
-int text15_cursor_y = 471;
-const GFXfont *text15_font = &FreeMonoBold24pt7b;
+String text15_content = "GBP:";
+int text15_cursor_x = 224;
+int text15_cursor_y = 261;
+const GFXfont *text15_font = &FreeSansBold12pt7b;
 
 String text13_content = "";
-int text13_cursor_x = 320;
-int text13_cursor_y = 472;
+int text13_cursor_x = 354;
+int text13_cursor_y = 265;
 const GFXfont *text13_font = &FreeMonoBold24pt7b;
 
 String text14_content = "Refresh Screen";
-int text14_cursor_x = 35;
-int text14_cursor_y = 665;
-const GFXfont *text14_font = &FreeMonoBold24pt7b;
+int text14_cursor_x = 40;
+int text14_cursor_y = 355;
+const GFXfont *text14_font = &FreeSans18pt7b;
 
 String text16_content = "Refresh Price";
-int text16_cursor_x = 625;
-int text16_cursor_y = 712;
-const GFXfont *text16_font = &FreeMonoBold24pt7b;
+int text16_cursor_x = 338;
+int text16_cursor_y = 355;
+const GFXfont *text16_font = &FreeSans18pt7b;
 
 String text17_content = "";
-int text17_cursor_x = 350;
-int text17_cursor_y = 30;
-const GFXfont *text17_font = &FreeSans24pt7b;
+int text17_cursor_x = 240;
+int text17_cursor_y = 45;
+const GFXfont *text17_font = &FreeSansBold9pt7b;
 
 String text18_content = "";
-int text18_cursor_x = 30;
-int text18_cursor_y = 740;
-const GFXfont *text18_font = &FreeSans24pt7b;
+int text18_cursor_x = 446;
+int text18_cursor_y = 45;
+const GFXfont *text18_font = &FreeSansBold9pt7b;
 
 void mainDraw()
 {
