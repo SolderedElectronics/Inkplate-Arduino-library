@@ -111,7 +111,7 @@ void setup()
 
     // Keep trying to get data if it fails the first time
     Serial.println("Getting data... ");
-    while (!network.getData(calendarURL, data, &dataLen))
+    while (!network.getData(calendarURL, data))
     {
         delay(1000);
     }

@@ -1,18 +1,18 @@
 /*
-   Inkplate4_Google_Calendar example for Soldered Inkplate 4
-   For this example you will need only a USB-C cable and Inkplate 4.
-   Select "Soldered Inkplate4" from Tools -> Board menu.
-   Don't have "Soldered Inkplate4" option? Follow our tutorial and add it:
+   InkplatePLUS2_Google_Calendar example for Soldered Inkplate PLUS2
+   For this example you will need only a USB-C cable and Inkplate PLUS2.
+   Select "Soldered InkplatePLUS2" from Tools -> Board menu.
+   Don't have "Soldered InkplatePLUS2" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   This project shows you how Inkplate 4 can be used to display
+   This project shows you how Inkplate PLUS2 can be used to display
    events in your Google Calendar using their provided API
 
    For this to work you need to change your timezone, wifi credentials and your private calendar url
    which you can find following these steps:
 
     1. Open your google calendar
-    2. Click the 3 menu dots of the calendar you want to access at the bottom of left hand side
+    2. ClIck the 3 menu dots of the calendar you want to access at the bottom of left hand side
     3. Click 'Settings and sharing'
     4. Navigate to 'Integrate Calendar'
     5. Take the 'Secret address in iCal format'
@@ -23,12 +23,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   29 March 2023 by Soldered
+   24 July 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE4
-#error "Wrong board selection for this example, please select Soldered Inkplate4 in the boards menu."
+#ifndef ARDUINO_INKPLATEPLUS2
+#error "Wrong board selection for this example, please select Inkplate PLUS2 in the boards menu."
 #endif
 
 // Include Inkplate library to the sketch
@@ -44,24 +44,24 @@
 #include <algorithm>
 #include <ctime>
 
-// --------------- CHANGE HERE ----------------:
+// CHANGE HERE ---------------
 
-// Enter your WiFi credentials
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "Soldered";
+char pass[] = "dasduino";
+char calendarURL[] = "https://calendar.google.com/calendar/ical/robert%40soldered.com/private-bc147845014b4905f9fed21bea8d25c3/basic.ics";
+int timeZone = 2;
 
-// Secret address in iCal format
-char calendarURL[] = "";
+//---------------------------
 
-int timeZone = 2; // 2 means UTC+2
+// Delay between API calls
+#define DELAY_MS 4 * 60000
 
-// Delay between API calls in seconds
-#define DELAY_SECS 4 * 60 // Every 4 minutes
+// Variables to keep count of when to get new data, and when to just update time
+RTC_DATA_ATTR unsigned int refreshes = 0;
+const int refreshesToGet = 10;
 
-//----------------------------------------------
-
-// Create object on Inkplate library
-Inkplate display;
+// Initiate out Inkplate object
+Inkplate display(INKPLATE_3BIT);
 
 // Our networking functions, see Network.cpp for info
 Network network;
@@ -84,32 +84,30 @@ struct entry
 int entriesNum = 0;
 entry entries[128];
 
+// All our functions declared below setup and loop
+void drawInfo();
+void drawTime();
+void drawGrid();
+void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp);
+bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeeded);
+int cmp(const void *a, const void *b);
+void drawData();
+
 void setup()
 {
-    // Init serial communication
     Serial.begin(115200);
 
-    // Allocate memory for the data
     data = (char *)ps_malloc(2000000LL);
-    if (data == NULL)
-    {
-        Serial.println("Memory allocation error");
-        while (1)
-            ;
-    }
-
-    // Init library (you should call this function ONLY ONCE)
-    display.begin();
 
     // Initial display settings
+    display.begin();
     display.setTextWrap(false);
-    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
+    display.setTextColor(0, 7);
 
-    // Connect Inkplate to the WiFi network
+    delay(5000);
     network.begin(ssid, pass);
 
-    // Get the data from Google Calendar
-    // Repeat attempts until data is fully downloaded
+    // Keep trying to get data if it fails the first time
     Serial.println("Getting data... ");
     while (!network.getData(calendarURL, data))
     {
@@ -119,34 +117,37 @@ void setup()
     // Initial screen clearing
     display.clearDisplay();
 
-    // Drawing all data, functions for that are below
+    // Drawing all data, functions for that are above
     drawInfo();
     drawGrid();
     drawData();
     drawTime();
 
-    // Display the data on the screen
+    // Can't do partial due to deepsleep
     display.display();
 
+    // Increment refreshes
+    ++refreshes;
+
     // Go to sleep before checking again
-    esp_sleep_enable_timer_wakeup(1000000LL * DELAY_SECS); // Activate wakeup timer
-    (void)esp_deep_sleep_start(); // Start deep sleep (this function does not return). Program stops here.
+    esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+    (void)esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
-    // time. loop() must be empty!
+    // Never here
 }
 
 // Function for drawing calendar info
 void drawInfo()
 {
     // Setting font and color
-    display.setFont();
+    display.setTextColor(0, 7);
+    display.setFont(&FreeSans12pt7b);
     display.setTextSize(1);
 
-    display.setCursor(5, 2);
+    display.setCursor(35, 35);
 
     // Find email in raw data
     char temp[64];
@@ -171,13 +172,14 @@ void drawInfo()
 void drawTime()
 {
     // Initial text settings
-    display.setFont();
+    display.setTextColor(0, 7);
+    display.setFont(&FreeSans12pt7b);
     display.setTextSize(1);
 
-    display.setCursor(295, 2);
+    display.setCursor(400, 35);
 
     // Our function to get time
-    network.getTime(date, timeZone);
+    network.getTime(date);
 
     int t = date[16];
     date[16] = 0;
@@ -188,28 +190,28 @@ void drawTime()
 // Draw lines in which to put events
 void drawGrid()
 {
-    // Upper left and low right coordinates
-    int x1 = 3, y1 = 12;
-    int x2 = E_INK_WIDTH - 3, y2 = E_INK_HEIGHT - 3;
+    // upper left and low right coordinates
+    int x1 = 30, y1 = 43;
+    int x2 = 570, y2 = 570;
 
-    // Header size, for day info
-    int header = 20;
+    // header size, for day info
+    int header = 40;
 
     // Columns and rows
-    int n = 1, m = 4;
+    int n = 1, m = 3;
 
     // Line drawing
-    display.drawThickLine(x1, y1 + header, x2, y1 + header, INKPLATE_BLACK, 0.5);
+    display.drawThickLine(x1, y1 + header, x2, y1 + header, 0, 2.0);
     for (int i = 0; i < n + 1; ++i)
     {
         display.drawThickLine(x1, (int)((float)y1 + (float)i * (float)(y2 - y1) / (float)n), x2,
-                              (int)((float)y1 + (float)i * (float)(y2 - y1) / (float)n), INKPLATE_BLACK, 0.5);
+                              (int)((float)y1 + (float)i * (float)(y2 - y1) / (float)n), 0, 2.0);
     }
     for (int i = 0; i < m + 1; ++i)
     {
         display.drawThickLine((int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m), y1,
-                              (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m), y2, INKPLATE_BLACK, 0.5);
-        display.setFont();
+                              (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m), y2, 0, 2.0);
+        display.setFont(&FreeSans9pt7b);
 
         // Display day info using time offset
         char temp[64];
@@ -217,7 +219,7 @@ void drawGrid()
         temp[10] = 0;
 
         // calculate where to put text and print it
-        display.setCursor(5 + (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m) + 15, y1 + header - 12);
+        display.setCursor(40 + (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m) + 15, y1 + header - 6);
         display.println(temp);
     }
 }
@@ -269,13 +271,12 @@ void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp)
 
     dst[11] = 0;
 
-    char day0[64], day1[64], day2[64], day3[64];
+    char day0[64], day1[64], day2[64];
 
     // Find UNIX timestamps for next days to see where to put event
     network.getTime(day0, 0);
     network.getTime(day1, 24 * 3600);
     network.getTime(day2, 48 * 3600);
-    network.getTime(day3, 72 * 3600);
 
     *timeStamp = epoch;
 
@@ -287,9 +288,7 @@ void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp)
         *day = 1;
     else if (strncmp(day2, asctime(&event), 10) == 0)
         *day = 2;
-    else if (strncmp(day3, asctime(&event), 10) == 0)
-        *day = 3;
-    else // event not in next 4 days, don't display
+    else // event not in next 3 days, don't display
         *day = -1;
 }
 
@@ -297,11 +296,11 @@ void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp)
 bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeeded)
 {
     // Upper left coordintes
-    int x1 = 4 + (396 / 4) * day;
-    int y1 = beginY + 3;
+    int x1 = 35 + (565 / 3) * day;
+    int y1 = beginY + 15;
 
     // Setting text font
-    display.setFont();
+    display.setFont(&FreeSans12pt7b);
 
     // Some temporary variables
     int n = 0;
@@ -309,7 +308,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
 
     // Insert line brakes into setTextColor
     int lastSpace = -100;
-    display.setCursor(x1 + 9 - day, beginY + 5);
+    display.setCursor(x1 + 5, beginY + 26);
     for (int i = 0; i < min((size_t)64, strlen(event->name)); ++i)
     {
         // Copy name letter by letter and check if it overflows space given
@@ -325,7 +324,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
         display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
 
         // Char out of bounds, put in next line
-        if (w > display.width() / 4 - 18)
+        if (w > 590 / 3 - 30)
         {
             // if there was a space 5 chars before, break line there
             if (n - lastSpace < 5)
@@ -335,7 +334,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
             }
 
             // Print text line
-            display.setCursor(x1 + 9 - day, display.getCursorY());
+            display.setCursor(x1 + 5, display.getCursorY());
             display.println(line);
 
             // Clears line (null termination on first charachter)
@@ -345,12 +344,12 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
     }
 
     // display last line
-    display.setCursor(x1 + 9 - day, display.getCursorY());
+    display.setCursor(x1 + 5, display.getCursorY());
     display.println(line);
 
     // Set cursor on same y but change x
-    display.setCursor(x1 + 16 - day, display.getCursorY() + 10);
-    display.setFont();
+    display.setCursor(x1 + 3, display.getCursorY());
+    display.setFont(&FreeSans9pt7b);
 
     // Print time
     // also, if theres a location print it
@@ -358,7 +357,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
     {
         display.println(event->time);
 
-        display.setCursor(x1 + 6, display.getCursorY() + 10);
+        display.setCursor(x1 + 5, display.getCursorY());
 
         char line[128] = {0};
 
@@ -373,7 +372,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
             // Gets text bounds
             display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
 
-            if (w > (315 / 4))
+            if (w > (594 / 3))
             {
                 for (int j = i - 1; j > max(-1, i - 4); --j)
                     line[j] = '.';
@@ -388,22 +387,22 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
         display.print(event->time);
     }
 
-    int bx1 = x1 + 3 - day;
+    int bx1 = x1;
     int by1 = y1;
-    int bx2 = x1 + display.width() / 4 - 7;
-    int by2 = display.getCursorY() + 10;
+    int bx2 = x1 + 400 / 3;
+    int by2 = display.getCursorY();
 
     // Draw event rect bounds
-    display.drawThickLine(bx1, by1, bx1, by2, INKPLATE_RED, 0.5);
-    display.drawThickLine(bx1, by2, bx2, by2, INKPLATE_RED, 0.5);
-    display.drawThickLine(bx2, by2, bx2, by1, INKPLATE_RED, 0.5);
-    display.drawThickLine(bx2, by1, bx1, by1, INKPLATE_RED, 0.5);
+    display.drawThickLine(bx1, by1, bx1, by2, 0, 2.0);
+    display.drawThickLine(bx1, by2, bx2, by2, 0, 2.0);
+    display.drawThickLine(bx2, by2, bx2, by1, 0, 2.0);
+    display.drawThickLine(bx2, by1, bx1, by1, 0, 2.0);
 
     // Set how high is the event
     *heigthNeeded = display.getCursorY() + 12 - y1;
 
     // Return is it overflowing
-    return display.getCursorY() < maxHeigth - 6;
+    return display.getCursorY() < maxHeigth - 5;
 }
 
 // Struct event comparison function, by timestamp, used for qsort later on
@@ -445,7 +444,7 @@ void drawData()
             strncpy(entries[entriesNum].name, summary, strchr(summary, '\n') - summary);
             entries[entriesNum].name[strchr(summary, '\n') - summary] = 0;
         }
-        if (location && location < end  && (location - data) > 0)
+        if (location && location < end && (location - data) > 0)
         {
             strncpy(entries[entriesNum].location, location, strchr(location, '\n') - location);
             entries[entriesNum].location[strchr(location, '\n') - location] = 0;
@@ -462,9 +461,9 @@ void drawData()
     qsort(entries, entriesNum, sizeof(entry), cmp);
 
     // Events displayed and overflown counters
-    int columns[4] = {0};
-    bool clogged[4] = {0};
-    int cloggedCount[4] = {0};
+    int columns[3] = {0};
+    bool clogged[3] = {0};
+    int cloggedCount[3] = {0};
 
     // Displaying events one by one
     for (int i = 0; i < entriesNum; ++i)
@@ -477,7 +476,7 @@ void drawData()
 
         // We store how much height did one event take up
         int shift = 0;
-        bool s = drawEvent(&entries[i], entries[i].day, columns[entries[i].day] + 32, E_INK_HEIGHT - 6, &shift);
+        bool s = drawEvent(&entries[i], entries[i].day, columns[entries[i].day] + 76, 800 - 4, &shift);
 
         columns[entries[i].day] += shift;
 
@@ -490,20 +489,17 @@ void drawData()
     }
 
     // Display not shown events info
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 3; ++i)
     {
         if (clogged[i])
         {
             // Draw notification showing that there are more events than drawn ones
-            display.fillRoundRect(6 + i * ((E_INK_WIDTH - 4) / 4) - i, 300 - 24, ((E_INK_WIDTH - 4) / 4) - 5, 20, 10,
-                                  INKPLATE_WHITE);
-            display.drawRoundRect(6 + i * ((E_INK_WIDTH - 4) / 4) - i, 300 - 24, ((E_INK_WIDTH - 4) / 4) - 5, 20, 10,
-                                  INKPLATE_BLACK);
-            display.setCursor(26 + i * ((E_INK_WIDTH - 3) / 4), 280);
-            Serial.println(display.getCursorY());
-            display.setFont(&Picopixel);
+            display.fillRoundRect(6 + i * (594 / 3), 800 - 24, (594 / 3) - 5, 20, 10, 0);
+            display.setCursor(10, 800 - 6);
+            display.setTextColor(7, 0);
+            display.setFont(&FreeSans9pt7b);
             display.print(cloggedCount[i]);
-            display.print(" more events...");
+            display.print(" more events");
         }
     }
 }

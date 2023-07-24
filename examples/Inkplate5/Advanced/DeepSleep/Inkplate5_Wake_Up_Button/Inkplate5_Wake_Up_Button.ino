@@ -1,8 +1,8 @@
 /*
-   InkplatePLUS2_Wake_Up_Button example for Soldered Inkplate PLUS2
-   For this example you will need a USB-C cable and an InkplatePLUS2
-   Select "Soldered InkplatePLUS2" from Tools -> Board menu.
-   Don't have "Soldered InkplatePLUS2" option? Follow our tutorial and add it:
+   Inkplate5_Wake_Up_Button example for Soldered Inkplate 5
+   For this example you will need a USB-C cable and an Inkplate5
+   Select "Soldered Inkplate5" from Tools -> Board menu.
+   Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    Here is shown how to use ESP interrupts to wake up the MCU from deepsleep when wake up button
@@ -18,8 +18,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATEPLUS2
-#error "Wrong board selection for this example, please select Soldered InkplatePLUS2 in the boards menu."
+#ifndef ARDUINO_INKPLATE5
+#error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
 #endif
 
 // Include Inkplate library to the sketch
@@ -71,13 +71,13 @@ void displayInfo()
 
     // Set text cursor and size
     display.setCursor(30, 40);
-    display.setTextSize(2);
+    display.setTextSize(3);
 
     display.print(F("Boot count: "));
     display.println(bootCount, DEC); // Print the number
 
     // Set next line cursor position
-    display.setCursor(30, 80);
+    display.setCursor(30, 100);
 
     // Display wake up reason
     esp_sleep_wakeup_cause_t wakeup_reason;
