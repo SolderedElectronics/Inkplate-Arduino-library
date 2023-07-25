@@ -46,9 +46,9 @@
 
 // CHANGE HERE ---------------
 
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
-char calendarURL[] = "https://calendar.google.com/calendar/ical/robert%40soldered.com/private-bc147845014b4905f9fed21bea8d25c3/basic.ics";
+char ssid[] = "";
+char pass[] = "";
+char calendarURL[] = "";
 int timeZone = 2;
 
 //---------------------------
@@ -219,7 +219,7 @@ void drawGrid()
         temp[10] = 0;
 
         // calculate where to put text and print it
-        display.setCursor(40 + (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m) + 15, y1 + header - 6);
+        display.setCursor(36 + (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m) + 15, y1 + header - 12);
         display.println(temp);
     }
 }
@@ -296,8 +296,8 @@ void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp)
 bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeeded)
 {
     // Upper left coordintes
-    int x1 = 35 + (565 / 3) * day;
-    int y1 = beginY + 15;
+    int x1 = 35 + (540 / 3) * day;
+    int y1 = beginY + 13;
 
     // Setting text font
     display.setFont(&FreeSans12pt7b);
@@ -308,7 +308,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
 
     // Insert line brakes into setTextColor
     int lastSpace = -100;
-    display.setCursor(x1 + 5, beginY + 26);
+    display.setCursor(x1 + 11, beginY + 36);
     for (int i = 0; i < min((size_t)64, strlen(event->name)); ++i)
     {
         // Copy name letter by letter and check if it overflows space given
@@ -324,7 +324,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
         display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
 
         // Char out of bounds, put in next line
-        if (w > 590 / 3 - 30)
+        if (w > 120)
         {
             // if there was a space 5 chars before, break line there
             if (n - lastSpace < 5)
@@ -348,7 +348,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
     display.println(line);
 
     // Set cursor on same y but change x
-    display.setCursor(x1 + 3, display.getCursorY());
+    display.setCursor(x1 + 30, display.getCursorY());
     display.setFont(&FreeSans9pt7b);
 
     // Print time
@@ -357,7 +357,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
     {
         display.println(event->time);
 
-        display.setCursor(x1 + 5, display.getCursorY());
+        display.setCursor(x1 + 16, display.getCursorY());
 
         char line[128] = {0};
 
@@ -372,7 +372,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
             // Gets text bounds
             display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
 
-            if (w > (594 / 3))
+            if (w > (480 / 3))
             {
                 for (int j = i - 1; j > max(-1, i - 4); --j)
                     line[j] = '.';
@@ -389,7 +389,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
 
     int bx1 = x1;
     int by1 = y1;
-    int bx2 = x1 + 400 / 3;
+    int bx2 = x1 + 508 / 3;
     int by2 = display.getCursorY();
 
     // Draw event rect bounds
@@ -399,7 +399,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
     display.drawThickLine(bx2, by1, bx1, by1, 0, 2.0);
 
     // Set how high is the event
-    *heigthNeeded = display.getCursorY() + 12 - y1;
+    *heigthNeeded = display.getCursorY() + 6 - y1;
 
     // Return is it overflowing
     return display.getCursorY() < maxHeigth - 5;
@@ -476,7 +476,7 @@ void drawData()
 
         // We store how much height did one event take up
         int shift = 0;
-        bool s = drawEvent(&entries[i], entries[i].day, columns[entries[i].day] + 76, 800 - 4, &shift);
+        bool s = drawEvent(&entries[i], entries[i].day, columns[entries[i].day] + 76, 580, &shift);
 
         columns[entries[i].day] += shift;
 
@@ -494,8 +494,8 @@ void drawData()
         if (clogged[i])
         {
             // Draw notification showing that there are more events than drawn ones
-            display.fillRoundRect(6 + i * (594 / 3), 800 - 24, (594 / 3) - 5, 20, 10, 0);
-            display.setCursor(10, 800 - 6);
+            display.fillRoundRect(37 + i * (540 / 3), 600 - 45, (500 / 3), 25, 10, 0);
+            display.setCursor(65 + 180 * i, 571);
             display.setTextColor(7, 0);
             display.setFont(&FreeSans9pt7b);
             display.print(cloggedCount[i]);
