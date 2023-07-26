@@ -1,8 +1,8 @@
 /*
-    Inkplate6PLUS_News_API example for Soldered Inkplate 6Plus
-    For this example you will need only USB cable and Inkplate 6PLUS.
-    Select "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" from Tools -> Board menu.
-    Don't have "e-radionica Inkplate 6Plus" or "Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
+    Inkplate6PLUS_News_API example for Soldered Inkplate PLUS2
+    For this example you will need only USB-C cable and Inkplate PLUS2.
+    Select "Soldered Inkplate PLUS2" from Tools -> Board menu.
+    Don't have Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
     https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
     This example will show you how you can use Inkplate 6PLUS to display API data.
@@ -16,7 +16,7 @@
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: https://forum.soldered.com/
-    28 July 2020 by Soldered
+    27 July 2023 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -109,7 +109,7 @@ void drawNews(struct news *entities)
                 display.setCursor(30, y);
             }
             
-            if (display.getCursorY() > 550)
+            if (display.getCursorY() > 580)
             {
                 coll++;
                 y = 32;
@@ -136,7 +136,7 @@ void drawNews(struct news *entities)
                 display.setCursor(30, y);
             }
             
-            if (display.getCursorY() > 530)
+            if (display.getCursorY() > 580)
             {
                 coll++;
                 y = 32;

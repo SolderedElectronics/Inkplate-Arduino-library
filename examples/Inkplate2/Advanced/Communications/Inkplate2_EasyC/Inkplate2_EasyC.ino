@@ -1,10 +1,10 @@
 /*
     Inkplate2_EasyC example for Soldered Inkplate 2
     For this example you will need a micro USB cable, Inkplate 2,
-    BME680 sensor with easyC connector on it: https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/
-    and a easyC cable: https://soldered.com/product/easyc-cable-20cm/
-    Select "Soldered Inkplate2" from Tools -> Board menu.
-    Don't have "Soldered Inkplate2" option? Follow our tutorial and add it:
+    BME680 sensor with easyC connector on it:
+   https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/ and a easyC cable:
+   https://soldered.com/product/easyc-cable-20cm/ Select "Soldered Inkplate2" from Tools -> Board menu. Don't have
+   "Soldered Inkplate2" option? Follow our tutorial and add it:
     https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
     This example will show you how you can read temperature and humidity from BME680.
@@ -22,8 +22,8 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate2 in the boards menu."
 #endif
 
-#include "BME680-SOLDERED.h" // Soldered library for BME680 Sensor
-#include "Inkplate.h"        // Include Inkplate library to the sketch
+#include "Inkplate.h"                        // Include Inkplate library to the sketch
+#include "libs/BME680/src/BME680-SOLDERED.h" // Soldered library for BME680 Sensor
 
 // Bitmaps for the icons
 #include "humidity.h"
