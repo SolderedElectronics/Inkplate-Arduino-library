@@ -24,7 +24,7 @@
     "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
-#include "BME680-SOLDERED.h" // Soldered library for BME680 Sensor
+ #include "libs/BME680/src/BME680-SOLDERED.h" // Soldered library for BME680 Sensor
 #include "Inkplate.h"        // Include Inkplate library to the sketch
 #include "icons.h"
 

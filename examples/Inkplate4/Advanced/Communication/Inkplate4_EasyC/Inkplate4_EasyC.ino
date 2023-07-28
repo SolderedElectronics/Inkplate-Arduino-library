@@ -22,7 +22,7 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate4 in the boards menu."
 #endif
 
-#include "BME680-SOLDERED.h" // Include Soldered library for BME680 Sensor
+ #include "libs/BME680/src/BME680-SOLDERED.h" // Include Soldered library for BME680 Sensor
 #include "Inkplate.h"        // Include Inkplate library to the sketch
 #include "icons.h"           // Include used icons to the sketch
 
