@@ -93,7 +93,7 @@ void setup()
     
     // Print a message
     display.println("RTC calibration");
-    display.setTextColor(INKPLATE_RED);
+    display.setTextColor(INKPLATE4_RED);
     display.println("\nOpen Serial Monitor at 115200\nbaud rate to see what's happening");
     display.display();
     Serial.println("Press the wake-up button to start RTC");

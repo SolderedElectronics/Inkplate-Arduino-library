@@ -321,7 +321,7 @@ void drawForecast()
         sprintf(Output, "http://openweathermap.org/img/wn/%s@2x.png", OWOC.forecast[day].icon);
         Serial.println(Output);
         display.drawImage(Output, textCentre - 48, dayOffset - 62, true, true);
-        display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
+        display.setTextColor(INKPLATE4_BLACK, INKPLATE4_WHITE);
         display.setTextSize(1);
         display.setFont(&FreeSans9pt7b);
         sprintf(Output, "%s", dayShortStr(weekday(OWOC.forecast[day].dt)));
@@ -348,7 +348,7 @@ void drawTime()
     t = now();
 
     // Drawing current time
-    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
+    display.setTextColor(INKPLATE4_BLACK, INKPLATE4_WHITE);
     display.setFont(&FreeSansBold9pt7b);
     display.setTextSize(1);
 
@@ -394,7 +394,7 @@ void drawHourly()
     for (int Houry = 0; Houry <= hoursDisplay; Houry++)
     {
         display.drawLine(xLeft + (Houry * hourPitch), yTop, xLeft + (Houry * hourPitch), yTop + yHeight,
-                         INKPLATE_BLACK);
+                         INKPLATE4_BLACK);
         if (Houry % 2)
         {
             sprintf(Output, "%2d", hour(OWOC.hourly[Houry].dt));
@@ -402,8 +402,8 @@ void drawHourly()
         }
     }
 
-    display.drawLine(xLeft, yTop + yHeight, xLeft + xWidth, yTop + yHeight, INKPLATE_BLACK);
-    display.drawLine(xLeft, yTop, xLeft + xWidth, yTop, INKPLATE_BLACK);
+    display.drawLine(xLeft, yTop + yHeight, xLeft + xWidth, yTop + yHeight, INKPLATE4_BLACK);
+    display.drawLine(xLeft, yTop, xLeft + xWidth, yTop, INKPLATE4_BLACK);
 
     sprintf(Output, "%2.0f%c", (minTemp - 0.499), tempUnit);
     alignText(RIGHT, Output, xLeft - 5, yTop + yHeight);
@@ -420,7 +420,7 @@ void drawHourly()
     for (int Houry = 0; Houry <= (round(maxTemp + 0.499) - round(minTemp - 0.5)); Houry++)
     {
         display.drawLine(xLeft, yTop + (Houry * yTempScale), xLeft + xWidth, yTop + (Houry * yTempScale),
-                         INKPLATE_BLACK);
+                         INKPLATE4_BLACK);
     }
 
     for (int Houry = 0; Houry <= (hoursDisplay - 1); Houry++)
@@ -429,12 +429,12 @@ void drawHourly()
                               yTop + (int)(yTempScale * (round(maxTemp + 0.499) - (OWOC.hourly[Houry].temp))),
                               xLeft + ((Houry + 1) * hourPitch),
                               yTop + (int)(yTempScale * (round(maxTemp + 0.499) - (OWOC.hourly[Houry + 1].temp))),
-                              INKPLATE_BLACK, 3);
+                              INKPLATE4_BLACK, 3);
         float yPrecScale = (yHeight / (round(maxPrec + 0.499)));
         float thisPrec = OWOC.hourly[Houry].rain_1h + OWOC.hourly[Houry].snow_1h;
         display.fillRect(xLeft + (Houry * hourPitch) + round(hourPitch / 3),
                          yTop + (int)(yPrecScale * (round(maxPrec + .499) - thisPrec)), round(hourPitch / 3),
-                         (int)(yPrecScale * thisPrec), INKPLATE_RED);
+                         (int)(yPrecScale * thisPrec), INKPLATE4_RED);
     }
 }
 

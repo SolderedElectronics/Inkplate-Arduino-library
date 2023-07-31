@@ -127,7 +127,7 @@ void setup()
     // Initial display settings
     display.begin();
     display.setTextWrap(false);
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE4_BLACK);
 
     // Our begin function
     network.begin(ssid, pass);
@@ -240,7 +240,7 @@ void drawGraph()
         // If i is not 0, hence prev x and y exsist so draw lines
         if (i)
         {
-            display.drawThickLine(prev_x, prev_y, tx, ty, INKPLATE_BLACK, 2);
+            display.drawThickLine(prev_x, prev_y, tx, ty, INKPLATE4_BLACK, 2);
         }
 
         // Set previous x and y
@@ -250,12 +250,12 @@ void drawGraph()
 
     // Draw grid
     for (int i = 0; i < 4; ++i)
-        display.drawFastHLine(x1, y2 + i * (y1 - y2) / 4, x2 - x1, INKPLATE_RED);
+        display.drawFastHLine(x1, y2 + i * (y1 - y2) / 4, x2 - x1, INKPLATE4_RED);
     for (int i = 0; i < 5; ++i)
-        display.drawFastVLine(x1 + i * (x2 - x1) / 5, y2, y1 - y2, INKPLATE_RED);
+        display.drawFastVLine(x1 + i * (x2 - x1) / 5, y2, y1 - y2, INKPLATE4_RED);
 
-    display.drawFastVLine(x2 - textMargin + 2, y2, y1 - y2, INKPLATE_RED);
-    display.drawThickLine(x1, y1, x2, y1, INKPLATE_RED, 2);
+    display.drawFastVLine(x2 - textMargin + 2, y2, y1 - y2, INKPLATE4_RED);
+    display.drawThickLine(x1, y1, x2, y1, INKPLATE4_RED, 2);
 }
 
 // Function to draw time
@@ -268,7 +268,7 @@ void drawTime()
     network.getTime(date, timeZone);
 
     // Text settings
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE4_BLACK);
     display.setFont(elements[i].font);
     display.setTextSize(1);
 
@@ -304,7 +304,7 @@ void drawAll()
     for (int i = 0; i < sizeof(elements) / sizeof(elements[0]); ++i)
     {
         // Text settings
-        display.setTextColor(INKPLATE_BLACK);
+        display.setTextColor(INKPLATE4_BLACK);
         display.setFont(elements[i].font);
         display.setTextSize(elements[i].size);
 

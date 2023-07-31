@@ -113,7 +113,7 @@ class System : public Esp,
     void setPanelState(uint8_t s);
     uint8_t getPanelState();
 
-#if !defined(ARDUINO_INKPLATE2)
+#if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE7)
 
     int8_t readTemperature();
     uint8_t readTouchpad(uint8_t _pad);

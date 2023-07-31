@@ -266,30 +266,6 @@ void loop()
                 }
                 break;
 
-            case 'N':
-                sscanf(s + 3, "%c", &b);
-                if (b == '?')
-                {
-                    Serial.print("#N(");
-                    Serial.print(display.readTemperature(), DEC);
-                    // Serial.print(23, DEC);
-                    Serial.println(")*");
-                    Serial.flush();
-                }
-                break;
-
-            case 'O':
-                sscanf(s + 3, "%d", &c);
-                if (c >= 0 && c <= 2)
-                {
-                    Serial.print("#O(");
-                    Serial.print(display.readTouchpad(c), DEC);
-                    // Serial.print(0, DEC);
-                    Serial.println(")*");
-                    Serial.flush();
-                }
-                break;
-
             case 'P':
                 sscanf(s + 3, "%c", &b);
                 if (b == '?')
