@@ -72,6 +72,8 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     bool drawImage(const char *path, const Format &format, const Position &position, const bool dither = 1,
                    const bool invert = 0);
 
+    bool getFileExtension(char *_filename, char *_extension);
+
     // Defined in Adafruit-GFX-Library, but should fit here
     // void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w,
     // int16_t h, uint16_t color); void drawBitmap(int16_t x, int16_t y, const

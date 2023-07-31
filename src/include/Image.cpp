@@ -73,22 +73,27 @@ bool Image::drawImage(const String path, int x, int y, bool dither, bool invert)
  */
 bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
 {
+    // Try to get the file extension.
+    char _fileExtension[5];
+    if (!getFileExtension((char *)path, _fileExtension))
+        return false;
+
     if (strncmp(path, "http://", 7) == 0 || strncmp(path, "https://", 8) == 0)
     {
-        if (strstr(path, ".bmp") != NULL || strstr(path, ".dib") != NULL)
+        if (strstr(_fileExtension, "bmp") != NULL || strstr(_fileExtension, "dib") != NULL)
             return drawBitmapFromWeb(path, x, y, dither, invert);
-        if (strstr(path, ".jpg") != NULL || strstr(path, ".jpeg") != NULL)
+        if (strstr(_fileExtension, "jpg") != NULL || strstr(_fileExtension, "jpeg") != NULL)
             return drawJpegFromWeb(path, x, y, dither, invert);
-        if (strstr(path, ".png") != NULL)
+        if (strstr(_fileExtension, "png") != NULL)
             return drawPngFromWeb(path, x, y, dither, invert);
     }
     else
     {
-        if (strstr(path, ".bmp") != NULL || strstr(path, ".dib") != NULL)
+        if (strstr(_fileExtension, "bmp") != NULL || strstr(_fileExtension, "dib") != NULL)
             return drawBitmapFromSd(path, x, y, dither, invert);
-        if (strstr(path, ".jpg") != NULL || strstr(path, ".jpeg") != NULL)
+        if (strstr(_fileExtension, "jpg") != NULL || strstr(_fileExtension, "jpeg") != NULL)
             return drawJpegFromSd(path, x, y, dither, invert);
-        if (strstr(path, ".png") != NULL)
+        if (strstr(_fileExtension, "png") != NULL)
             return drawPngFromSd(path, x, y, dither, invert);
     }
     return 0;
@@ -289,4 +294,53 @@ void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int1
             writePixel((j * 2) + 1 + _x, i + _y, (*(_p + xSize * (i) + j) & 0x0f) >> 1);
     }
     endWrite();
+}
+
+/**
+ * @brief       Get file extension from the filename and convert it into lowercase letters.
+ *
+ * @param       char *_filename
+ *              Pointer to the array that holds filename (with file extension).
+ * @param       char *_extension
+ *              Pointer to the array where file extension needs to be saved.
+ *
+ * @return      True if parsing file extension is successfull, false if not.
+ */
+bool Image::getFileExtension(char *_filename, char *_extension)
+{
+    // Check if the _extension or _filename pointers are not NULL.
+    if (_extension == NULL || _filename == NULL)
+        return false;
+
+    // Find the end of the string
+    int _len = strlen(_filename);
+
+    // Check the lenth. It must be greater then 4 (one char filename + dot + three chars for the extension).
+    if (_len < 5)
+        return false;
+
+    // Go from the back to the start and try to extract file extension.
+    // Try to find the index where file extension starts.
+    int _startIndex;
+    for (_startIndex = _len - 1; (_len >= 0) && (_filename[_startIndex] != '.'); _startIndex--)
+        ;
+
+    // Move by one index to the right.
+    _startIndex++;
+
+    // Check if the extension index is valid.
+    if ((_len - _startIndex) > 4)
+        return false;
+
+    // Copy extension into _extension array and convert it into lowercase.
+    for (int i = 0; i < (_len - _startIndex); i++)
+    {
+        _extension[i] = tolower(_filename[_startIndex + i]);
+    }
+
+    // Add null terminating char.
+    _extension[_len - _startIndex] = '\0';
+
+    // If everything went successfull, return true.
+    return true;
 }
