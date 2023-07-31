@@ -75,7 +75,8 @@ bool Image::drawImage(const char *path, int x, int y, bool dither, bool invert)
 {
     // Try to get the file extension.
     char _fileExtension[5];
-    if (!getFileExtension((char*)path, _fileExtension)) return false;
+    if (!getFileExtension((char *)path, _fileExtension))
+        return false;
 
     if (strncmp(path, "http://", 7) == 0 || strncmp(path, "https://", 8) == 0)
     {
@@ -302,40 +303,44 @@ void Image::drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int1
  *              Pointer to the array that holds filename (with file extension).
  * @param       char *_extension
  *              Pointer to the array where file extension needs to be saved.
- * 
+ *
  * @return      True if parsing file extension is successfull, false if not.
  */
 bool Image::getFileExtension(char *_filename, char *_extension)
 {
     // Check if the _extension or _filename pointers are not NULL.
-    if (_extension == NULL || _filename == NULL) return false;
+    if (_extension == NULL || _filename == NULL)
+        return false;
 
     // Find the end of the string
     int _len = strlen(_filename);
-    
+
     // Check the lenth. It must be greater then 4 (one char filename + dot + three chars for the extension).
-    if (_len < 5) return false;
-    
+    if (_len < 5)
+        return false;
+
     // Go from the back to the start and try to extract file extension.
     // Try to find the index where file extension starts.
     int _startIndex;
-    for (_startIndex = _len - 1; (_len >= 0) && (_filename[_startIndex] != '.'); _startIndex--);
-    
+    for (_startIndex = _len - 1; (_len >= 0) && (_filename[_startIndex] != '.'); _startIndex--)
+        ;
+
     // Move by one index to the right.
     _startIndex++;
-    
+
     // Check if the extension index is valid.
-    if ((_len - _startIndex) > 4) return false;
-    
+    if ((_len - _startIndex) > 4)
+        return false;
+
     // Copy extension into _extension array and convert it into lowercase.
     for (int i = 0; i < (_len - _startIndex); i++)
     {
         _extension[i] = tolower(_filename[_startIndex + i]);
     }
-    
+
     // Add null terminating char.
     _extension[_len - _startIndex] = '\0';
-    
+
     // If everything went successfull, return true.
     return true;
 }
