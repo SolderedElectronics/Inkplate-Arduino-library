@@ -29,8 +29,8 @@
 #define BUSY_TIMEOUT_MS 32000
 
 // ePaper specific defines
-#define E_INK_HEIGHT   300
-#define E_INK_WIDTH    400
+#define E_INK_HEIGHT    300
+#define E_INK_WIDTH     400
 #define INKPLATE4_WHITE 0
 #define INKPLATE4_BLACK 1
 #define INKPLATE4_RED   2
