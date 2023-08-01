@@ -22,7 +22,7 @@
 #error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
- #include "libs/BME680/src/BME680-SOLDERED.h" // Soldered library for BME680 Sensor
+#include <BME680-SOLDERED.h> // Soldered library for BME680 Sensor
 #include "Inkplate.h"        // Include Inkplate library to the sketch
 #include "icons.h"           
 
@@ -31,6 +31,9 @@ BME680 bme680; // Create an object on Soldered BME680 library (with no arguments
                // using I2C communication for BME680 sensor)
 
 int n = 0; // Variable that keep track on how many times screen has been partially updated
+
+// Add temperature offset to calibrate the sensor
+const float temperatureOffset = 0.0;
 
 void setup()
 {
@@ -59,7 +62,7 @@ void loop()
 
     // Display the temperature icon and measured value
     display.setCursor(493, 65);
-    display.print(bme680.readTemperature());
+    display.print(bme680.readTemperature() + temperatureOffset);
     display.print(" *C");
     display.drawImage(temperature_icon, 220, 40, temperature_icon_w, temperature_icon_h,
                       BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
@@ -99,4 +102,7 @@ void loop()
 
     // Wait a little bit between readings
     delay(10000);
+
+    // If you want to save energy, instead of the delay function, you can use deep sleep as we used in DeepSleep
+    // examples
 }

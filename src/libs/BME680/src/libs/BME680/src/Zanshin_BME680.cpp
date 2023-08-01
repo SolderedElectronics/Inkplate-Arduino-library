@@ -5,6 +5,8 @@
     See the main library header file for all details
 */
 
+#ifdef ARDUINO_INKPLATEPLUS2
+
 #include "Zanshin_BME680.h"  // Include the library header definition
 
 /***************************************************************************************************
@@ -576,3 +578,5 @@ void BME680_Class::triggerMeasurement() const {
   putData(BME680_CONTROL_MEASURE_REGISTER,
           (uint8_t)(workRegister | 1));  // Trigger start of next measurement
 }  // of method "triggerMeasurement()"
+
+#endif

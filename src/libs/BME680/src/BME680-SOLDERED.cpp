@@ -9,6 +9,7 @@
  * @authors     Zvonimir Haramustek for Soldered.com
  ***************************************************/
 
+#ifdef ARDUINO_INKPLATEPLUS2
 
 #include "BME680-SOLDERED.h"
 
@@ -133,3 +134,5 @@ float BME680::calculateAltitude(float pressure)
     float seaLevel = 1013.25;
     return 44330.0 * (1.0 - pow(pressure / seaLevel, 0.1903)); // Convert into meters
 }
+
+#endif

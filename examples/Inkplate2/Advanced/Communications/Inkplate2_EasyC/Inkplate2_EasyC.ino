@@ -22,8 +22,8 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate2 in the boards menu."
 #endif
 
-#include "Inkplate.h"                        // Include Inkplate library to the sketch
-#include "libs/BME680/src/BME680-SOLDERED.h" // Soldered library for BME680 Sensor
+#include "Inkplate.h"        // Include Inkplate library to the sketch
+#include <BME680-SOLDERED.h> // Soldered library for BME680 Sensor
 
 // Bitmaps for the icons
 #include "humidity.h"
@@ -31,6 +31,9 @@
 
 Inkplate display; // Create an object on Inkplate library
 BME680 bme680;    // Create an object on BME680 library
+
+// Add temperature offset to calibrate the sensor
+const float temperatureOffset = 0.0;
 
 void setup()
 {
@@ -58,7 +61,7 @@ void loop()
     double temp, hum;
 
     // Read values from the sensor
-    temp = bme680.readTemperature();
+    temp = bme680.readTemperature() + temperatureOffset;
     hum = bme680.readHumidity() / 10;
 
     display.setTextSize(2);                // Set text scaling to two (text will be two times bigger than normal)

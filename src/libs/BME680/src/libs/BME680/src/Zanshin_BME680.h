@@ -1,3 +1,4 @@
+#ifdef ARDUINO_INKPLATEPLUS2
 // clang-format off
 /*! @file Zanshin_BME680.h
 
@@ -341,4 +342,5 @@ class BME680_Class
     int16_t _G2, _T2, _P2, _P4, _P5, _P8, _P9;                ///< signed 16bit configuration vars
     int32_t _tfine, _Temperature, _Pressure, _Humidity, _Gas; ///< signed 32bit configuration vars
 };                                                            // of BME680 class definition
+#endif
 #endif

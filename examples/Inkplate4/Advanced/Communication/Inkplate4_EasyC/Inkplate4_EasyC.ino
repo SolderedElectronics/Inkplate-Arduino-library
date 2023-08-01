@@ -22,16 +22,18 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate4 in the boards menu."
 #endif
 
- #include "libs/BME680/src/BME680-SOLDERED.h" // Include Soldered library for BME680 Sensor
+#include <BME680-SOLDERED.h> // Soldered library for BME680 Sensor
 #include "Inkplate.h"        // Include Inkplate library to the sketch
 #include "icons.h"           // Include used icons to the sketch
 
 // Create an object on Inkplate library
 Inkplate display;
 
-// Create an object on Soldered BME680 library (with no arguments sent to constructor, that means we are using I2C or
-// easyC communication for BME680 sensor)
+// Create an object on Soldered BME680 library
 BME680 bme680;
+
+// Add temperature offset to calibrate the sensor
+const float temperatureOffset = 0.0;
 
 void setup()
 {
@@ -59,7 +61,7 @@ void loop()
 
     // Display the temperature icon and measured value
     display.setCursor(155, 35); // Arguments are: X coordinate, Y coordinate
-    display.print(bme680.readTemperature());
+    display.print(bme680.readTemperature() + temperatureOffset);
     display.print(" *C");
     // Draw thermometer icon
     // Arguments are: array variable name, start X, start Y, size X, size Y
@@ -89,6 +91,9 @@ void loop()
     // This line actually drawing on the Inkplate screen, previous lines just drawing into the frame buffer
     display.display();
 
-    // Wait a bit between readings
+    // Wait a minute between readings
     delay(60000);
+
+    // If you want to save energy, instead of the delay function, you can use deep sleep as we used in DeepSleep
+    // examples
 }

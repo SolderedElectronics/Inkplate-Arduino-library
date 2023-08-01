@@ -9,6 +9,8 @@
  * @authors     Zvonimir Haramustek for Soldered.com
  ***************************************************/
 
+#ifdef ARDUINO_INKPLATEPLUS2
+
 #ifndef __BME680_SOLDERED__
 #define __BME680_SOLDERED__
 
@@ -34,5 +36,7 @@ class BME680 : public BME680_Class
 
   private:
 };
+
+#endif
 
 #endif
