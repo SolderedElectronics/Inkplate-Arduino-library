@@ -336,7 +336,7 @@ bool Inkplate::setPanelDeepSleep(bool _state)
 
         epdSPI.end();
 
-                return true;
+        return true;
 
         pinMode(EPAPER_DIN, INPUT);
         pinMode(EPAPER_CLK, INPUT);
