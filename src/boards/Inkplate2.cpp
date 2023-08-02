@@ -23,7 +23,7 @@
 
 #ifdef ARDUINO_INKPLATE2
 
-SPIClass SPI2(HSPI);
+SPIClass epdSPI(VSPI);
 
 SPISettings epdSpiSettings(1000000UL, MSBFIRST, SPI_MODE0);
 
@@ -175,7 +175,7 @@ bool Inkplate::setPanelDeepSleep(bool _state)
         // _state is false? Wake the panel!
 
         // Set SPI pins
-        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+        epdSPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
 
         // Set up EPD communication pins
         pinMode(EPAPER_CS_PIN, OUTPUT);
@@ -220,7 +220,7 @@ bool Inkplate::setPanelDeepSleep(bool _state)
         delay(1);
 
         // Disable SPI
-        SPI2.end();
+        epdSPI.end();
 
         // To reduce power consumption, set SPI pins as outputs
         pinMode(EPAPER_RST_PIN, INPUT);
@@ -256,9 +256,9 @@ void Inkplate::sendCommand(uint8_t _command)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, LOW);
     delayMicroseconds(10);
-    SPI2.beginTransaction(epdSpiSettings);
-    SPI2.transfer(_command);
-    SPI2.endTransaction();
+    epdSPI.beginTransaction(epdSpiSettings);
+    epdSPI.transfer(_command);
+    epdSPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
@@ -276,9 +276,9 @@ void Inkplate::sendData(uint8_t *_data, int _n)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    SPI2.beginTransaction(epdSpiSettings);
-    SPI2.writeBytes(_data, _n);
-    SPI2.endTransaction();
+    epdSPI.beginTransaction(epdSpiSettings);
+    epdSPI.writeBytes(_data, _n);
+    epdSPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
@@ -294,9 +294,9 @@ void Inkplate::sendData(uint8_t _data)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    SPI2.beginTransaction(epdSpiSettings);
-    SPI2.transfer(_data);
-    SPI2.endTransaction();
+    epdSPI.beginTransaction(epdSpiSettings);
+    epdSPI.transfer(_data);
+    epdSPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
