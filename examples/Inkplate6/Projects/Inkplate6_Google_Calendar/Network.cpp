@@ -124,7 +124,6 @@ bool Network::getData(char *calendarURL, char *data)
             }
         }
 
-        *dataLen = n;
         data[n++] = 0;
 
         if(strstr(data, "END:VCALENDAR") == NULL) f = 1;
