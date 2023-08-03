@@ -107,12 +107,13 @@ void setup()
     display.setTextColor(0, 7);
 
     delay(5000);
-    network.begin(ssid, pass);
+    network.begin();
 
     // Keep trying to get data if it fails the first time
-    Serial.println("Getting data... ");
-    while (!network.getData(calendarURL, data))
+    Serial.print("Failed getting data, retrying");
+    while (!network.getData(data))
     {
+        Serial.print('.');
         delay(1000);
     }
 
@@ -441,12 +442,12 @@ void drawData()
         char *timeStart = strstr(data + i, "DTSTART:") + 8;
         char *timeEnd = strstr(data + i, "DTEND:") + 6;
 
-        if (summary && summary < end && (summary - data) > 0)
+        if (summary && summary < end)
         {
             strncpy(entries[entriesNum].name, summary, strchr(summary, '\n') - summary);
             entries[entriesNum].name[strchr(summary, '\n') - summary] = 0;
         }
-        if (location && location < end && (location - data) > 0)
+        if (location && location < end)
         {
             strncpy(entries[entriesNum].location, location, strchr(location, '\n') - location);
             entries[entriesNum].location[strchr(location, '\n') - location] = 0;

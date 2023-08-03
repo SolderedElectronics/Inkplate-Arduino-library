@@ -15,76 +15,66 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
-#include "Inkplate.h"    // Include Inkplate library to the sketch
-#include "generatedUI.h" // include generated UI
+#include "Inkplate.h"
+#include "generatedUI.h"
 
-#define DELAY_MS 60000 * 60                                         // Delay between fetching data
-#define URL      "https://www.crowdsupply.com/soldered/inkplate-10" // Link to the Inkplate 10 crowdsupply campaign
+#define DELAY_MS 60000 * 60
+#define URL "https://www.crowdsupply.com/soldered/inkplate-10"
 
 // Enter your Wi-Fi credentials
-#define ssid     ""
+#define ssid ""
 #define password ""
 
-// Create an object on Inkplate library and also set library into 1Bit (BW) mode
 Inkplate display(INKPLATE_1BIT);
 
-uint32_t n; // Variable for counting position in the buffer
-char *buf;  // Pointer to the buffer
+RTC_DATA_ATTR unsigned refreshes = 0;
 
-// Declaration of the function used later
+uint32_t n;
+char *buf;
+
 String textInTag(const char *tag, const char *tagEnd, int dt = 1);
 
 void setup()
 {
-    Serial.begin(115200); // Init serial communication
-    display.begin();      // Init Inkplate library (you should call this function ONLY ONCE)
+    Serial.begin(115200);
+    display.begin();
 
-    // Connect to WiFi
-    while (!display.connectWiFi(ssid, password))
+    Serial.print("Connecting to wifi");
+    while (!display.joinAP(ssid, password))
     {
         Serial.print('.');
         delay(1000);
     }
 
-    // Allocate memory for the buffer
     buf = (char *)ps_malloc(100000);
 
-    // Create an HTTPclient object and do the GET request
     HTTPClient http;
     if (http.begin(URL) && http.GET() > 0)
     {
-        // Create an HTTPclient object and do the GET request
         while (http.getStreamPtr()->available())
         {
             char c = http.getStreamPtr()->read();
             buf[n++] = c;
             delayMicroseconds(100);
+            
         }
-
-        // Add the end of the string
         buf[n] = 0;
     }
     Serial.println("Buffer load complete!");
 
-    // Get the values for each field.
-    // When we did a get request, we got HTML as a response because there is no API on this web page.
-    // If you open the source of the page, you will see the HTML code. Here in the function we pass tags we are
-    // interested in and get the value between the tags as a string.
     text1_content = textInTag("<h1>", "</h1>");
     text3_content = textInTag("<h3 class=\"project-teaser\">", "</h3>");
     text4_content = textInTag("<p class=\"project-pledged\">", "</p>");
     text7_content = textInTag("<p class=\"project-goal\">", "</p>");
     text11_content = textInTag("<span class=\"status-bar-left\">", "</span>");
-
+    
     int percent;
     text11_content.replace(",", "");
     sscanf(text11_content.c_str(), "%d%%", &percent);
 
-    // Draw parcent slider
     if (percent < 100 && percent > 0)
     {
         float per = (float)(percent / 100.00);
@@ -101,21 +91,18 @@ void setup()
         line0_end_x = line0_start_x;
     }
 
-    text13_content = textInTag("<a href=\"/soldered/inkplate-10/updates\">", "</a>"); // Separate the number of updates
-    text14_content =
-        textInTag("<a href=\"/soldered/inkplate-10/crowdfunding\">", "</a>");         // Separate the date when founded
-    text17_content = textInTag("<a href=\"/soldered/inkplate-10/backers\">", "</a>"); // Separate the number of backers
+    text13_content = textInTag("<a href=\"/soldered/inkplate-10/updates\">", "</a>");
+    text14_content = textInTag("<a href=\"/soldered/inkplate-10/crowdfunding\">", "</a>");
+    text17_content = textInTag("<a href=\"/soldered/inkplate-10/backers\">", "</a>");
 
-    text19_content += textInTag("<span class=\"badge badge-calendar bg-secondary float-end\">",
-                                "</span>"); // Separate the last update date
+    text19_content += textInTag("<span class=\"badge badge-calendar bg-secondary float-end\">", "</span>");
 
-    // Display the content on the screen
     mainDraw();
     display.display();
 
-    // Free the buffer
-    free(buf);
+    ++refreshes;
 
+    free(buf);
     // Go to sleep
     esp_sleep_enable_timer_wakeup(1000LL * DELAY_MS);
     (void)esp_deep_sleep_start();
@@ -126,34 +113,15 @@ void loop()
     // Never here
 }
 
-/**
- * @brief       The function that returns content between HTML tags as a string.
- *
- * @param const char *tag
- *        The starting tag from which we want to get the value
- *
- * @param const char *tagEnd
- *        The ending tag from which we want to get the value
- *
- * @param int dt
- *        How many end tags (*tagEnd) want to skip. Default is 1
- *
- * @return      String value between passed tags
- */
 String textInTag(const char *tag, const char *tagEnd, int dt)
 {
-    String r;                                     // String for result
-    char *start = strstr(buf, tag) + strlen(tag); // Pointer to the beginning of the text after the tag
-    char *end = start - 1;                        // Set tag end one address before start pointer
+    String r;
+    char *start = strstr(buf, tag) + strlen(tag);
+    char *end = start - 1;
     while (dt--)
-    {
-        // Search where is the "tagEnd" starting from the last "end" which is the beginning for the first time
-        // (*end =  start - 1) and repeat it "dt" times
         end = strstr(end + 1, tagEnd);
-    }
 
-    // Remove "<" and ">" from the result string
-    int d = 0;
+    int d = 0, rc = 0;
     for (char *t = start; t < end; ++t)
     {
         if (*t == '<')
@@ -166,8 +134,8 @@ String textInTag(const char *tag, const char *tagEnd, int dt)
             --d;
     }
 
-    // Remove certain words to get only the data we want
     // Hacky solution:
+
     r.replace("&#34;", "\"");
     r.replace("&nbsp;", " ");
 
@@ -176,10 +144,9 @@ String textInTag(const char *tag, const char *tagEnd, int dt)
     r.replace("Funded!", "");
     r.replace("funded", "");
     r.replace(" on", "");
+
     r.replace("updates", "");
 
-    // Remove the following from the result string if it exists and put it in the separate string that displays on
-    // the screen
     if (r.indexOf("hours left") != -1)
     {
         r.replace("hours left", "");
@@ -192,12 +159,11 @@ String textInTag(const char *tag, const char *tagEnd, int dt)
     }
 
     r.replace("backers", "");
+
     r.replace("Subscribe to Updates", "");
 
-    // Remove extraneous whitespace characters at the beginning or the end of the string
     r.trim();
 
-    // If there is a dollar sign, the result is the string after that
     if (r.indexOf("$") != -1)
         r = r.substring(r.indexOf("$") + 1);
 

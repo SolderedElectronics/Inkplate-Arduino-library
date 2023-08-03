@@ -18,7 +18,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   22 February 2023 by Soldered
+   8 December 2022 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -44,7 +44,7 @@ char currency[] = "bitcoin";
 char currencyAbbr[] = "BTC";
 
 // You can find your currency id here:
-// https://www.coingecko.com/en/all-cryptocurrencies
+// https://api.coingecko.com/api/v3/coins
 
 // If it loads weirdly you can search the JSON using ctrl/command+f for
 // your crypto by name and then find it's id next to it's name and copy those above
@@ -318,7 +318,7 @@ void drawAll()
     for (int i = 0; i < 12; ++i)
     {
         if (strncmp(months[i], date, 3) == 0)
-            sprintf(fromToDate, "%d.%d. to %d.%d.", day, (i % 12 ? i : 12), day, ((i + 1) % 12 ? i + 1 : 12));
+            sprintf(fromToDate, "%d.%d. to %d.%d.", day, ((i + 1) % 12 ? i + 1 : 12), day, ((i + 2) % 12 ? i + 2 : 12));
     }
 
     // Draw graph

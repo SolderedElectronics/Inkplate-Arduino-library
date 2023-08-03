@@ -2,8 +2,6 @@
 #include "Inkplate.h"
 #include "Fonts/FreeSansBold24pt7b.h"
 
-#define X_REZ_OFFSET 15
-
 extern Inkplate display;
 
 int rect0_a_x = 900;

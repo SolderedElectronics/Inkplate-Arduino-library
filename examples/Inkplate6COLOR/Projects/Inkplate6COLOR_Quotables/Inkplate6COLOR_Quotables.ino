@@ -83,19 +83,16 @@ void setup()
     // Full refresh
     display.display();
 
-    // Activate wakeup timer
+    // Go to sleep before checking again
     // This is set in microseconds, so it needs to be
     // multiplied by million to get seconds
     esp_sleep_enable_timer_wakeup(1000000 * DELAY_S);
-
-    // Start deep sleep (this function does not return). Program stops here.
-    esp_deep_sleep_start();
+    (void)esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
-    // time. loop() must be empty!
+    // Never here
 }
 
     

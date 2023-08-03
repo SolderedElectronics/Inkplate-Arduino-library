@@ -16,7 +16,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   22 February 2023 by Soldered
+   11 February 2021 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -42,7 +42,7 @@ char currency[] = "bitcoin";
 char currencyAbbr[] = "BTC";
 
 // You can find your currency id here:
-// https://www.coingecko.com/en/all-cryptocurrencies
+// https://api.coingecko.com/api/v3/coins
 
 // If it loads weirdly you can search the JSON using ctrl/command+f for
 // your crypto by name and then find it's id next to it's name and copy those above
@@ -66,8 +66,14 @@ Network network;
 // create display object
 Inkplate display(INKPLATE_3BIT);
 
+// Refresh counter that's persisant between deepsleeps
+RTC_DATA_ATTR unsigned refreshes = 0;
+
+// Constant to determine when to full update and fetch
+const int fullRefresh = 20;
+
 // Used for storing raw price values
-double data[64];
+RTC_DATA_ATTR double data[64];
 
 // Used to simplify UI design
 struct textElement
@@ -80,15 +86,15 @@ struct textElement
 };
 
 // Variables for storing all displayed data as char arrays
-char date[64];
-char fromToDate[64];
+RTC_DATA_ATTR char date[64];
+RTC_DATA_ATTR char fromToDate[64];
 
-char dates[8 * 8];
-char prices[16 * 16];
+RTC_DATA_ATTR char dates[8 * 8];
+RTC_DATA_ATTR char prices[16 * 16];
 
-char current[16];
-char minimum[16];
-char maximum[16];
+RTC_DATA_ATTR char current[16];
+RTC_DATA_ATTR char minimum[16];
+RTC_DATA_ATTR char maximum[16];
 
 // All months in a year, for finding current date
 char months[][12] = {
@@ -131,29 +137,53 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
+    // Do a new network request every fullRefresh times, defined above
+    if (refreshes % fullRefresh == 0)
+    {
         // Our begin function
         network.begin();
-        
-        // Do a new network request
-        Serial.print("Retrying retriving data ");
+        Serial.print("Retrying retriving data");
         while (!network.getData(data))
         {
             Serial.print('.');
             delay(1000);
         }
-        
         // Our main drawing function
         drawAll();
-        
         // Time drawing function
         drawTime();
-        
         // Full refresh
         display.display();
+    }
+    else
+    {
+        // Our main drawing function
+        drawAll();
+        // Time drawing function
+        drawTime();
+        // Just update time
+        display.display();
+    }
 
+    uint32_t t = millis();
+    while (millis() - t < 20000)
+    {
+        if (display.touchInArea(755, 620, 100, 100))
+        {
+            Serial.println("aa");
+            t = millis();
+        }
+        if (display.touchInArea(870, 620, 100, 100))
+        {
+            Serial.println("bb");
+            t = millis();
+        }
+        delay(15);
+    }
+
+    // Increment refresh count
+    ++refreshes;
     goToSleep();
-    
-    // To wake up and fetch the data, you can also touch the screen
 }
 
 void loop()
@@ -163,6 +193,19 @@ void loop()
 
 void goToSleep()
 {
+    display.setDisplayMode(INKPLATE_1BIT);
+
+    display.fillRect(755, 620, 250, 100, BLACK);
+    display.partialUpdate();
+    display.fillRect(755, 620, 250, 100, WHITE);
+    display.partialUpdate();
+
+    display.setFont(&Roboto_Light_36);
+    display.setTextColor(BLACK, WHITE);
+    display.setCursor(600, 746);
+    display.print("Press screen to wake up.");
+    display.partialUpdate();
+
     Serial.println("Going to sleep...");
 
     // Go to sleep before checking again
@@ -238,7 +281,7 @@ void drawGraph()
         strcat(dates + 8 * (4 - i), ".");
     }
 
-    // Used for drawing lines
+    // Used for drawing linesa
     int prev_x = -1;
     int prev_y = -1;
 
@@ -295,6 +338,12 @@ void drawGraph()
 
     display.drawFastVLine(x2 - textMargin + 2, y2, y1 - y2, 4);
     display.drawThickLine(x1, y1, x2, y1, 0, 3);
+
+    display.fillRoundRect(755, 620, 100, 100, 15, 0);
+    display.fillRoundRect(870, 620, 100, 100, 15, 0);
+
+    display.fillTriangle(815, 680, 815, 660, 795, 670, 7);
+    display.fillTriangle(910, 680, 910, 660, 930, 670, 7);
 }
 
 // Function to draw time
@@ -336,7 +385,7 @@ void drawAll()
     for (int i = 0; i < 12; ++i)
     {
         if (strncmp(months[i], date, 3) == 0)
-            sprintf(fromToDate, "%d.%d. to %d.%d.", day, (i % 12 ? i : 12), day, ((i + 1) % 12 ? i + 1 : 12));
+            sprintf(fromToDate, "%d.%d. to %d.%d.", day, ((i + 1) % 12 ? i + 1 : 12), day, ((i + 2) % 12 ? i + 2 : 12));
     }
 
     // Draw graph
@@ -367,10 +416,4 @@ void drawAll()
         // Print out text to above set cursor location
         display.print(elements[i].text);
     }
-
-    // A message for refresh
-    display.setCursor(690, 670);
-    display.print("Touch the screen"); 
-    display.setCursor(760, 710);
-    display.print("to refresh");
 }

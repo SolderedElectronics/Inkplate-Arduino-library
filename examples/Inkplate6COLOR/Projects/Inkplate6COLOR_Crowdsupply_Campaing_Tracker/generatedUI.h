@@ -110,7 +110,7 @@ const GFXfont *text13_font = &Open_Sans_SemiBold_32;
 
 String text14_content;
 int text14_cursor_x = 335;
-int text14_cursor_y = 280;
+int text14_cursor_y = 290;
 const GFXfont *text14_font = &Open_Sans_SemiBold_32;
 
 String text15_content;

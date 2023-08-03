@@ -43,7 +43,7 @@ uint8_t System::getPanelState()
     return _panelOn;
 }
 
-#if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE7)
+#if !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATECOLOR)
 
 /**
  * @brief       readTemperature reads panel temperature
@@ -96,8 +96,6 @@ uint8_t System::readTouchpad(uint8_t _pad)
 
 #endif
 
-
-#ifndef ARDUINO_INKPLATE2
 /**
  * @brief       readBattery reads voltage of the battery
  *
@@ -143,6 +141,8 @@ double System::readBattery()
     return (double(adc) * 2.0 / 1000);
 }
 
+#ifndef ARDUINO_INKPLATE2
+
 /**
  * @brief       sdCardInit initializes sd card trough SPI
  *
@@ -152,8 +152,7 @@ int16_t System::sdCardInit()
 {
 // New Soldered Inkplate boards use P-MOS to disable supply to the uSD card to reduce power in deep sleep.
 #if defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
-    defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE5) || defined(ARDUINO_INKPLATE4) ||                      \
-    defined(ARDUINO_INKPLATE7) || defined(ARDUINO_INKPLATEPLUS2)
+    defined(ARDUINO_INKPLATECOLOR)
     pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, OUTPUT);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, LOW);
     delay(50);
@@ -169,8 +168,7 @@ int16_t System::sdCardInit()
 void System::sdCardSleep()
 {
 #if defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
-    defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE5) || defined(ARDUINO_INKPLATE4) ||                      \
-    defined(ARDUINO_INKPLATE7) || defined(ARDUINO_INKPLATEPLUS2)
+    defined(ARDUINO_INKPLATECOLOR)
     // Set SPI pins to input to reduce power consumption in deep sleep
     pinMode(12, INPUT);
     pinMode(13, INPUT);
@@ -828,89 +826,6 @@ void System::rtcReset() // datasheet 8.2.1.3.
     Wire.beginTransmission(I2C_ADDR);
     Wire.write(RTC_CTRL_1);
     Wire.write(0x58);
-    Wire.endTransmission();
-}
-
-/**
- * @brief                   Set internal capacitor value.
- *
- * @param bool val          0 or 1 which represents 7pF or 12.5 pF.
- */
-void System::rtcSetInternalCapacitor(bool val)
-{
-    Wire.beginTransmission(I2C_ADDR);
-    Wire.write(RTC_CTRL_1);
-    Wire.endTransmission();
-
-    uint8_t reg;
-    Wire.requestFrom(I2C_ADDR, 1);
-
-    if (Wire.available())
-    {
-        reg = Wire.read();
-    }
-
-    if (val)
-    {
-        reg |= (1 << 0);
-    }
-    else
-    {
-        reg &= ~(1 << 0);
-    }
-
-    Wire.beginTransmission(I2C_ADDR);
-    Wire.write(RTC_CTRL_1);
-    Wire.write(reg);
-    Wire.endTransmission();
-}
-
-/**
- * @brief                   Offset used to correct the frequency of the crystal used for RTC.
- *                          8.2.3 in the datasheet.
- *
- * @param bool mode         0 - normal mode -> offset is made once every two hours.
- *                          Each LSB introduces an offset of 4.34 ppm.
- *                          1 - course mode -> offset is made every 4 minutes.
- *                          Each LSB introduces an offset of 4.069 ppm.
- *
- * @param byte offsetValue  The offset value is coded in two’s complement giving a
- *                          range of +63 LSB to -64 LSB.
- */
-void System::rtcSetClockOffset(bool mode, int offsetValue)
-{
-    // Byte for writting in the register
-    uint8_t regValue;
-
-    // Check offset value
-    if (offsetValue > 63 || offsetValue < -64)
-    {
-        return;
-    }
-
-    // Use two's complement
-    if (offsetValue < 0)
-    {
-        offsetValue += 128;
-    }
-
-    // Save it in the byte for register
-    regValue = (byte)offsetValue;
-
-    // Write mode in the MSB
-    if (mode)
-    {
-        regValue |= (1 << 7); // Set MSB to 1
-    }
-    else
-    {
-        regValue &= ~(1 << 7); // Set MSB to 0
-    }
-
-    // Send to the register
-    Wire.beginTransmission(I2C_ADDR);
-    Wire.write(RTC_OFFSET);
-    Wire.write(regValue);
     Wire.endTransmission();
 }
 

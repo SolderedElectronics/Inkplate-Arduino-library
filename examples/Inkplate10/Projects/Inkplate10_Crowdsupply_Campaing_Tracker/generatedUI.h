@@ -29,6 +29,7 @@ String text3_content;
 int text3_cursor_x = 30;
 int text3_cursor_y = 150;
 const GFXfont *text3_font = &Open_Sans_SemiBold_16;
+//
 
 String text4_content;
 int text4_cursor_x = 70;
@@ -109,7 +110,7 @@ const GFXfont *text13_font = &Open_Sans_SemiBold_32;
 
 String text14_content;
 int text14_cursor_x = 460;
-int text14_cursor_y = 390;
+int text14_cursor_y = 406;
 const GFXfont *text14_font = &Open_Sans_SemiBold_32;
 
 String text15_content;

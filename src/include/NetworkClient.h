@@ -22,10 +22,7 @@
 #include "Arduino.h"
 #include "HTTPClient.h"
 #include "WiFi.h"
-#include "WiFiClientSecure.h"
-#include "WiFiMulti.h"
 #include "defines.h"
-#include "time.h"
 
 /**
  * @brief       BitmapHeader structure that includes standard bitmap parameters
@@ -44,8 +41,6 @@ struct bitmapHeader
                             // for a list of possible values
 };
 
-#define WIFI_TIMEOUT 23
-
 /**
  * @brief       NetworkClient class that holds standard functions for working
  * with network
@@ -53,29 +48,14 @@ struct bitmapHeader
 class NetworkClient
 {
   public:
-    bool connectWiFi(const char *ssid, const char *pass, int timeout = WIFI_TIMEOUT, bool printToSerial = false);
-    bool connectWiFiMulti(int numNetworks, const char **ssids, const char **passwords, int timeout = WIFI_TIMEOUT,
-                          bool printToSerial = false);
+    bool joinAP(const char *ssid, const char *pass);
     void disconnect();
     bool isConnected();
 
     uint8_t *downloadFile(const char *url, int32_t *defaultLen);
-    uint8_t *downloadFileHTTPS(const char *url, int32_t *defaultLen);
     uint8_t *downloadFile(WiFiClient *url, int32_t len);
 
-    // The default parameters for nptServer here are cast to (char*) to keep the compiler happy
-    bool getNTPEpoch(time_t *timeEpoch, int timeZone = 0, char *ntpServer = (char *)"pool.ntp.org",
-                     int daylightSavingsOffsetHours = 0);
-    bool getNTPDateTime(tm *timeEpoch, int timeZone = 0, char *ntpServer = (char *)"pool.ntp.org",
-                        int daylightSavingsOffsetHours = 0);
-
-    void setFollowRedirects(followRedirects_t f);
-
   private:
-    WiFiClientSecure *client;
-    followRedirects_t followRedirects;
-    char *getHostFromURL(const char *urlToGetHostFrom);
-    char *getPathToResourceFromURL(const char *urlToGetPathToResourceFrom);
 };
 
 #endif

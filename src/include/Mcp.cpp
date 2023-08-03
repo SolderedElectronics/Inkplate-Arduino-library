@@ -16,7 +16,8 @@
  * @authors     Soldered
  ***************************************************/
 
-#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6PLUS)
+#if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6PLUS) ||                     \
+    defined(ARDUINO_INKPLATE5)
 
 #include "Mcp.h"
 

@@ -2,16 +2,16 @@
  **************************************************
  *
  * @file        Inkplate2.cpp
- * @brief       Basic funtions for controling inkplate 2
+ * @brief       Basic funtions for controling inkplate 5
  *
- *              https://github.com/SolderedElectronics/Inkplate-Arduino-library
- *              For support, please reach over forums: https://forum.soldered.com/
+ *              https://github.com/e-radionicacom/Inkplate-Arduino-library
+ *              For support, please reach over forums: forum.e-radionica.com/en
  *              For more info about the product, please check: www.inkplate.io
  *
  *              This code is released under the GNU Lesser General Public
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about
- *licensing, please contact hello@soldered.com Distributed as-is; no
+ *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
  *warranty is given.
  *
  * @authors     @ Soldered
@@ -22,8 +22,6 @@
 #include "../include/defines.h"
 
 #ifdef ARDUINO_INKPLATE2
-
-SPIClass epdSPI(VSPI);
 
 SPISettings epdSpiSettings(1000000UL, MSBFIRST, SPI_MODE0);
 
@@ -64,26 +62,20 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t _color)
         break;
     }
 
-    // Find the specific byte in the frame buffer that needs to be modified.
-    // Also find the bit in the byte that needs modification.
     int _x = x0 / 8;
-    int _xSub = x0 % 8;
-
-    int _position = E_INK_WIDTH / 8 * y0 + _x;
-
-    // Clear both black and red frame buffer.
-    *(DMemory4Bit + _position) |= (pixelMaskLUT[7 - _xSub]);
-    *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + _position) |= (pixelMaskLUT[7 - _xSub]);
+    int _x_sub = x0 % 8;
 
     // To optimize writing pixels into EPD, framebuffer is split in half, where first half is for B&W pixels and other
     // half is for red pixels only
     if (_color < 2)
     {
-        *(DMemory4Bit + _position) &= ~(_color << (7 - _xSub));
+        *(DMemory4Bit + E_INK_WIDTH / 8 * y0 + _x) |= (pixelMaskLUT[7 - _x_sub]);
+        *(DMemory4Bit + E_INK_WIDTH / 8 * y0 + _x) &= ~(_color << (7 - _x_sub));
     }
     else
     {
-        *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + _position) &= ~(pixelMaskLUT[7 - _xSub]);
+        *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + E_INK_WIDTH / 8 * y0 + _x) |= (pixelMaskLUT[7 - _x_sub]);
+        *(DMemory4Bit + (E_INK_WIDTH * E_INK_HEIGHT / 8) + E_INK_WIDTH / 8 * y0 + _x) &= ~(pixelMaskLUT[7 - _x_sub]);
     }
 }
 
@@ -98,8 +90,19 @@ bool Inkplate::begin()
 {
     if (!_beginDone)
     {
+        // Set SPI pins
+        SPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+
+        // Set up EPD communication pins
+        pinMode(EPAPER_CS_PIN, OUTPUT);
+        pinMode(EPAPER_DC_PIN, OUTPUT);
+        pinMode(EPAPER_RST_PIN, OUTPUT);
+        pinMode(EPAPER_BUSY_PIN, INPUT_PULLUP);
+
+        delay(10);
+
         // Allocate memory for frame buffer
-        DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);
+        DMemory4Bit = (uint8_t *)malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);
 
         if (DMemory4Bit == NULL)
         {
@@ -115,14 +118,25 @@ bool Inkplate::begin()
         _beginDone = 1;
     }
 
-    // Wake the ePaper and initialize everything
-    // If it fails, return false
-    if (!setPanelDeepSleep(false))
-        return false;
+    // Reset EPD IC
+    resetPanel();
 
-    // Put the panel to deep sleep
-    // The panel is always in sleep unless it's being written display data to
-    setPanelDeepSleep(true);
+    sendCommand(0x04);
+    if (!waitForEpd(BUSY_TIMEOUT_MS))
+        return 0; // Waiting for the electronic paper IC to release the idle signal
+
+    sendCommand(0x00); // Enter panel setting
+    sendData(0x0f);    // LUT from OTP 128x296
+    sendData(0x89);    // Temperature sensor, boost and other related timing settings
+
+    sendCommand(0x61); // Enter panel resolution setting
+    sendData(E_INK_WIDTH);
+    sendData(E_INK_HEIGHT >> 8);
+    sendData(E_INK_HEIGHT & 0xff);
+
+    sendCommand(0x50); // VCOM and data interval setting
+    sendData(0x77);    // WBmode:VBDF 17|D7 VBDW 97 VBDB 57   WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
+
     return true;
 }
 
@@ -130,13 +144,8 @@ bool Inkplate::begin()
  * @brief       Display function that updates display with new data from buffer
  *
  */
-void Inkplate::display()
+void Inkplate::display(bool leaveOn) // Leave on does nothing
 {
-    // Wake the panel and wait a bit
-    // The refresh time is long anyway so this delay doesn't make much impact
-    setPanelDeepSleep(false);
-    delay(20);
-
     // First write B&W pixels to epaper
     sendCommand(0x10);
     sendData(DMemory4Bit, (E_INK_WIDTH * E_INK_HEIGHT / 8));
@@ -153,89 +162,52 @@ void Inkplate::display()
     sendCommand(0x12);
     delayMicroseconds(500); // Wait at least 200 uS
     waitForEpd(60000);
-
-    // Go back to sleep
-    setPanelDeepSleep(true);
 }
 
 /**
- * @brief       setPanelDeepSleep puts the color ePaper into deep sleep, or wakes it and reinitializes it
+ * @brief       setPanelDeepSleep puts color epaper in deep sleep, or starts
+ * epaper, depending on given arguments.
  *
  * @param       bool _state
- *              -'True' sets the panel to sleep
- *              -'False' wakes the panel
- *
- * @returns     True if successful, False if unsuccessful
- *
+ *              HIGH or LOW (1 or 0) 1 will start panel, 0 will put it into deep
+ * sleep
  */
-bool Inkplate::setPanelDeepSleep(bool _state)
+void Inkplate::setPanelDeepSleep(bool _state)
 {
-    if (!_state)
+    _panelState = _state == 0 ? false : true;
+
+    if (_panelState)
     {
-        // _state is false? Wake the panel!
-
-        // Set SPI pins
-        epdSPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
-
-        // Set up EPD communication pins
-        pinMode(EPAPER_CS_PIN, OUTPUT);
-        pinMode(EPAPER_DC_PIN, OUTPUT);
-        pinMode(EPAPER_RST_PIN, OUTPUT);
-        pinMode(EPAPER_BUSY_PIN, INPUT_PULLUP);
-
-        delay(10);
-
-        // Reinit the panel
-        // Reset EPD IC
-        resetPanel();
-
-        sendCommand(0x04);
-        if (!waitForEpd(BUSY_TIMEOUT_MS))
-            return false; // Waiting for the electronic paper IC to release the idle signal
-
-        sendCommand(0x00); // Enter panel setting
-        sendData(0x0f);    // LUT from OTP 128x296
-        sendData(0x89);    // Temperature sensor, boost and other related timing settings
-
-        sendCommand(0x61); // Enter panel resolution setting
-        sendData(E_INK_WIDTH);
-        sendData(E_INK_HEIGHT >> 8);
-        sendData(E_INK_HEIGHT & 0xff);
-
-        sendCommand(0x50); // VCOM and data interval setting
-        sendData(0x77);    // WBmode:VBDF 17|D7 VBDW 97 VBDB 57   WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
-
-        return true;
+        // Send commands to power up panel. According to the datasheet, it can be
+        // powered up from deep sleep only by reseting it and doing reinit.
+        begin();
     }
     else
     {
-        // _state is true? Put the panel to sleep.
 
         sendCommand(0X50); // VCOM and data interval setting
         sendData(0xf7);
+
         sendCommand(0X02); // Power  EPD off
         waitForEpd(BUSY_TIMEOUT_MS);
         sendCommand(0X07); // Put EPD in deep sleep
         sendData(0xA5);
         delay(1);
-
-        // Disable SPI
-        epdSPI.end();
-
-        // To reduce power consumption, set SPI pins as outputs
-        pinMode(EPAPER_RST_PIN, INPUT);
-        pinMode(EPAPER_DC_PIN, INPUT);
-        pinMode(EPAPER_CS_PIN, INPUT);
-        pinMode(EPAPER_BUSY_PIN, INPUT);
-        pinMode(EPAPER_CLK, INPUT);
-        pinMode(EPAPER_DIN, INPUT);
-
-        return true;
     }
 }
 
 /**
- * @brief       resetPanel resets Inkplate 2
+ * @brief       getPanelDeepSleepState returns current state of the panel
+ *
+ * @return      bool _panelState
+ */
+bool Inkplate::getPanelDeepSleepState()
+{
+    return _panelState;
+}
+
+/**
+ * @brief       resetPanel resets Inkplate 6COLOR
  */
 void Inkplate::resetPanel()
 {
@@ -246,7 +218,7 @@ void Inkplate::resetPanel()
 }
 
 /**
- * @brief       sendCommand sends SPI command to Inkplate 2
+ * @brief       sendCommand sends SPI command to Inkplate 6COLOR
  *
  * @param       uint8_t _command
  *              predefined command for epaper control
@@ -256,15 +228,15 @@ void Inkplate::sendCommand(uint8_t _command)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, LOW);
     delayMicroseconds(10);
-    epdSPI.beginTransaction(epdSpiSettings);
-    epdSPI.transfer(_command);
-    epdSPI.endTransaction();
+    SPI.beginTransaction(epdSpiSettings);
+    SPI.transfer(_command);
+    SPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
 
 /**
- * @brief       sendData sends SPI data to Inkplate 2
+ * @brief       sendData sends SPI data to Inkplate 6COLOR
  *
  * @param       uint8_t *_data
  *              pointer to data buffer to be sent to epaper
@@ -276,15 +248,15 @@ void Inkplate::sendData(uint8_t *_data, int _n)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    epdSPI.beginTransaction(epdSpiSettings);
-    epdSPI.writeBytes(_data, _n);
-    epdSPI.endTransaction();
+    SPI.beginTransaction(epdSpiSettings);
+    SPI.transfer(_data, _n);
+    SPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
 
 /**
- * @brief       sendData sends SPI data to Inkplate 2
+ * @brief       sendData sends SPI data to Inkplate 6COLOR
  *
  * @param       uint8_t _data
  *              data to be sent to epaper
@@ -294,9 +266,9 @@ void Inkplate::sendData(uint8_t _data)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    epdSPI.beginTransaction(epdSpiSettings);
-    epdSPI.transfer(_data);
-    epdSPI.endTransaction();
+    SPI.beginTransaction(epdSpiSettings);
+    SPI.transfer(_data);
+    SPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }

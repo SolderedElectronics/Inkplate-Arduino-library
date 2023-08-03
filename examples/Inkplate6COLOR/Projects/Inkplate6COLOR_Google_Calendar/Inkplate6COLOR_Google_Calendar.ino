@@ -67,7 +67,7 @@ Network network;
 char date[64];
 char *data;
 
-// Set background of first task to color green
+// Set background of first task to color yellow
 int currentColor = 2;
 
 // Struct for storing calender event info
@@ -86,6 +86,7 @@ entry entries[100];
 
 // All our functions declared below setup and loop
 void drawInfo();
+void drawTime();
 void drawGrid();
 void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp);
 bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeeded);
@@ -106,41 +107,27 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-    // Connect Inkplate to the WiFi network
-    network.begin(ssid, pass);
+    network.begin();
 
-    // Get the data from Google Calendar
-    // Repeat attempts until data is fully downloaded
-    Serial.println("Getting data... ");
-    while (!network.getData(calendarURL, data))
+    if (network.getData(data)) // Try getting data
     {
-        delay(1000);
+        // Drawing all data, functions for that are above
+        drawInfo();
+        drawGrid();
+        drawData();
+
+        // Actually display all data
+        display.display();
     }
-
-    // Initial screen clearing
-    display.clearDisplay();
-
-    // Drawing all data, functions for that are below
-    drawInfo();
-    drawGrid();
-    drawData();
-
-    // Display the data on the screen
-    display.display();
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    
-     
-
-    // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
-    // time. loop() must be empty!
+    // Never here
 }
 
 // Function for drawing calendar info
@@ -533,12 +520,12 @@ void drawData()
         char *timeStart = strstr(data + i, "DTSTART:") + 8;
         char *timeEnd = strstr(data + i, "DTEND:") + 6;
 
-        if (summary && summary < end && (summary - data) > 0)
+        if (summary && summary < end)
         {
             strncpy(entries[entriesNum].name, summary, strchr(summary, '\n') - summary);
             entries[entriesNum].name[strchr(summary, '\n') - summary] = 0;
         }
-        if (location && location < end && (location - data) > 0)
+        if (location && location < end)
         {
             strncpy(entries[entriesNum].location, location, strchr(location, '\n') - location);
             entries[entriesNum].location[strchr(location, '\n') - location] = 0;
@@ -589,8 +576,8 @@ void drawData()
         {
             // Draw notification showing that there are more events than drawn ones
             display.fillRoundRect(6 + i * (442 / 3), 600 - 24, (442 / 3) - 5, 20, 10, 0);
-            display.setCursor(15 + i * (442 / 3), 600 - 10);
-            display.setTextColor(INKPLATE_WHITE);
+            display.setCursor(10, 600 - 6);
+            display.setTextColor(7, 0);
             display.setFont(&FreeSans9pt7b);
             display.print(cloggedCount[i]);
             display.print(" more events");

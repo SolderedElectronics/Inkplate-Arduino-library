@@ -16,24 +16,27 @@ Distributed as-is; no warranty is given.
 
 #include "Network.h"
 
-// Connect Inkplate to the WiFi
-void Network::begin(char *ssid, char *pass)
+#include <HTTPClient.h>
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+
+void Network::begin()
 {
     // Initiating wifi, like in BasicHttpClient example
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pass);
 
-    // Waiting to WiFi connect
     int cnt = 0;
     Serial.print(F("Waiting for WiFi to connect..."));
     while ((WiFi.status() != WL_CONNECTED))
     {
-        // Prints a dot every second that wifi isn't connected
         Serial.print(F("."));
         delay(1000);
         ++cnt;
 
-        // If it doesn't connect to wifi in 10 seconds, reset the ESP
+        WiFi.reconnect();
+        delay(5000);
+
         if (cnt == 10)
         {
             Serial.println("Can't connect to WIFI, restarting");
@@ -43,14 +46,14 @@ void Network::begin(char *ssid, char *pass)
     }
     Serial.println(F(" connected"));
 
-    // Find and print internet time, the timezone will be added later
+    // Find internet time
     setTime();
 }
 
 // Gets time from ntp server
-void Network::getTime(char *timeStr, long offSet, int timeZone)
+void Network::getTime(char *timeStr, long offSet)
 {
-    // Get seconds since 1.1.1970. and add timezone
+    // Get seconds since 1.1.1970.
     time_t nowSecs = time(nullptr) + (long)timeZone * 3600L + offSet;
 
     // Used to store time
@@ -61,18 +64,19 @@ void Network::getTime(char *timeStr, long offSet, int timeZone)
     strcpy(timeStr, asctime(&timeinfo));
 }
 
-// Function to get all raw data from the web
-bool Network::getData(char *calendarURL, char *data)
+// Function to get all war data from web
+bool Network::getData(char *data)
 {
     // Variable to store fail
     bool f = 0;
 
-    // If not connected to WiFi, reconnect wifi
+    // If not connected to wifi reconnect wifi
     if (WiFi.status() != WL_CONNECTED)
     {
         WiFi.reconnect();
 
-        // Waiting to WiFi connect again
+        delay(5000);
+
         int cnt = 0;
         Serial.println(F("Waiting for WiFi to reconnect..."));
         while ((WiFi.status() != WL_CONNECTED))
@@ -82,7 +86,9 @@ bool Network::getData(char *calendarURL, char *data)
             delay(1000);
             ++cnt;
 
-            // If it doesn't connect to wifi in 10 seconds, reset the ESP
+            WiFi.reconnect();
+            delay(5000);
+
             if (cnt == 10)
             {
                 Serial.println("Can't connect to WIFI, restart initiated.");
@@ -94,46 +100,28 @@ bool Network::getData(char *calendarURL, char *data)
 
     // Http object used to make get request
     HTTPClient http;
+
     http.getStream().setTimeout(10);
     http.getStream().flush();
-    http.getStream().setNoDelay(true);
 
     // Begin http by passing url to it
     http.begin(calendarURL);
 
     delay(300);
 
-    int attempts = 1;
-
-    // Download data until it's a verified complete download
     // Actually do request
     int httpCode = http.GET();
 
     if (httpCode == 200)
     {
         long n = 0;
-
-        long now = millis();
-
-        while (millis() - now < DOWNLOAD_TIMEOUT)
-        {
-            while (http.getStream().available())
-            {
-                data[n++] = http.getStream().read();
-                now = millis();
-            }
-        }
-
+        while (http.getStream().available())
+            data[n++] = http.getStream().read();
         data[n++] = 0;
-
-        // If the calendar doesn't contain this string - it's invalid
-        if(strstr(data, "END:VCALENDAR") == NULL) f = 1;
     }
     else
     {
-        // In case there was another HTTP code, break from the function
-        Serial.print("HTTP Code: ");
-        Serial.print(httpCode);
+        Serial.println(httpCode);
         f = 1;
     }
 
@@ -143,7 +131,6 @@ bool Network::getData(char *calendarURL, char *data)
     return !f;
 }
 
-// Find internet time
 void Network::setTime()
 {
     // Used for setting correct time
@@ -158,13 +145,13 @@ void Network::setTime()
         yield();
         nowSecs = time(nullptr);
     }
+
     Serial.println();
 
     // Used to store time info
     struct tm timeinfo;
     gmtime_r(&nowSecs, &timeinfo);
 
-    // Print the current time without adding a timezone
     Serial.print(F("Current time: "));
     Serial.print(asctime(&timeinfo));
 }

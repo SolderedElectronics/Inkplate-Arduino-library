@@ -17,7 +17,8 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate 6COLOR in the boards menu."
 #endif
 
-#include "Inkplate.h" // Include Inkplate library to the sketch
+#include "Inkplate.h" //Include Inkplate library to the sketch
+#include "SdFat.h"    //Include library for SD card
 Inkplate display;     // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 SdFile file;          // Create SdFile object used for accessing files on SD card
 
@@ -79,18 +80,10 @@ void setup()
 
     // Go to sleep for DELAY_MS
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-
-     
-
-    // Put SD card into deep sleep
-    display.sdCardSleep();
-
-    // Start deep sleep (this function does not return). Program stops here.
     (void)esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
-    // time. loop() must be empty!
+    // Nothing...
 }

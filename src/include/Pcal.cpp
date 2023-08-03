@@ -17,8 +17,7 @@
  ***************************************************/
 
 #if defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
-    defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATECOOL) || defined(ARDUINO_INKPLATE5) ||                   \
-    defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7) || defined(ARDUINO_INKPLATEPLUS2)
+    defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATECOOL)
 
 #include "Pcal.h"
 
@@ -190,7 +189,7 @@ void Expander::updatePCALRegister(uint8_t _addr, uint8_t _regIndex, uint8_t *k, 
  */
 void Expander::pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _ioID)
 {
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE7)
+#ifndef ARDUINO_INKPLATECOLOR
     if ((_ioID == IO_INT_ADDR) && (_pin < 9))
         return;
 #endif
@@ -211,7 +210,7 @@ void Expander::pinModeIO(uint8_t _pin, uint8_t _mode, uint8_t _ioID)
  */
 void Expander::digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _ioID)
 {
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE7)
+#ifndef ARDUINO_INKPLATECOLOR
     if ((_ioID == IO_INT_ADDR) && (_pin < 9))
         return;
 #endif
@@ -230,7 +229,7 @@ void Expander::digitalWriteIO(uint8_t _pin, uint8_t _state, uint8_t _ioID)
  */
 uint8_t Expander::digitalReadIO(uint8_t _pin, uint8_t _ioID)
 {
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE7)
+#ifndef ARDUINO_INKPLATECOLOR
     if ((_ioID == IO_INT_ADDR) && (_pin < 9))
         return 0;
 #endif
@@ -294,7 +293,7 @@ void Expander::setPorts(uint16_t _d, uint8_t _ioID)
 {
     // Can't use this function on internal IO Expander except on a Inkplate Color!
     // Using this function can damage Inkplate!
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE4) && !defined(ARDUINO_INKPLATE7)
+#ifndef ARDUINO_INKPLATECOLOR
     if ((_ioID == IO_INT_ADDR))
         return;
 #endif

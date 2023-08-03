@@ -123,19 +123,10 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
     bool ret = 0;
 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4;
-    uint8_t *buf = 0;
+    uint8_t *buff = downloadFile(url, &defaultLen);
 
-    if (strncmp(url, "http://", 7) == 0)
-    {
-        buf = downloadFile(url, &defaultLen);
-    }
-    else if (strncmp(url, "https://", 8) == 0)
-    {
-        buf = downloadFileHTTPS(url, &defaultLen);
-    }
-
-    ret = drawJpegFromBuffer(buf, defaultLen, x, y, dither, invert);
-    free(buf);
+    ret = drawJpegFromBuffer(buff, defaultLen, x, y, dither, invert);
+    free(buff);
 
     return ret;
 }
@@ -161,16 +152,7 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position,
     bool ret = 0;
 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4;
-
-    uint8_t *buff = 0;
-    if (strncmp(url, "http://", 7) == 0)
-    {
-        buff = downloadFile(url, &defaultLen);
-    }
-    else if (strncmp(url, "https://", 8) == 0)
-    {
-        buff = downloadFileHTTPS(url, &defaultLen);
-    }
+    uint8_t *buff = downloadFile(url, &defaultLen);
 
     uint16_t w = 0;
     uint16_t h = 0;
@@ -328,9 +310,7 @@ bool Image::drawJpegFromBuffer(uint8_t *buff, int32_t len, int x, int y, bool di
     int err = TJpgDec.drawJpg(x, y, buff, len, dither, invert);
 
     if (err == 0)
-    {
         ret = 1;
-    }
 
     return ret;
 };
@@ -374,8 +354,7 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
 
             uint8_t r = _RED(rgb), g = _GREEN(rgb), b = _BLUE(rgb);
 
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) ||                      \
-    defined(ARDUINO_INKPLATE7)
+#ifdef ARDUINO_INKPLATECOLOR
             if (invert)
             {
                 r = 255 - r;
@@ -406,8 +385,8 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
 
             if (invert)
                 val = 7 - val;
-            //            if (_imagePtrJpeg->getDisplayMode() == INKPLATE_1BIT)
-            //                val = (~val >> 2) & 1;
+            if (_imagePtrJpeg->getDisplayMode() == INKPLATE_1BIT)
+                val = (~val >> 2) & 1;
 
             _imagePtrJpeg->writePixel(x + i, y + j, val);
 #endif

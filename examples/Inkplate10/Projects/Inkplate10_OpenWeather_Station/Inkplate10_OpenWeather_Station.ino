@@ -21,8 +21,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 // WiFi Connection required
@@ -38,22 +37,11 @@
 // Change to your wifi ssid and password
 
 #include "OpenWeatherOneCall.h"
-#define SSID ""
-#define PASS ""
+#define HOMESSID ""
+#define HOMEPW   ""
 
-// Openweather API key
-/**
- * Note: The OneCall API has moved on to version 3.0,
- * In this sketch we are still using 2.5, which is free.
- * The only requirement is that you need to have an API key older than approx. early 2023.
- * Those API keys are still valid for OneCall 2.5
- *
- * If your key is invalid, you will be notified by the sketch
- *
- */
-char *APIKEY = "";
-// Also, declare the function to check if the API key is valid
-bool checkIfAPIKeyIsValid(char *APIKEY);
+// Openweather set up information
+#define ONECALLKEY ""
 
 float myLatitude = 45.560001; // I got this from Wikipedia
 float myLongitude = 18.675880;
@@ -136,7 +124,7 @@ void connectWifi()
             if (ConnectCount++ == 20)
             {
                 Serial.println("Connect WiFi");
-                WiFi.begin(SSID, PASS);
+                WiFi.begin(HOMESSID, HOMEPW);
                 Serial.print("Connecting.");
                 ConnectCount = 0;
             }
@@ -144,7 +132,7 @@ void connectWifi()
             delay(1000);
         }
         Serial.print("\nConnected to: ");
-        Serial.println(SSID);
+        Serial.println(HOMESSID);
         Serial.println("IP address: ");
         Serial.println(WiFi.localIP());
         Serial.println("Connected WiFi");
@@ -160,7 +148,7 @@ void GetCurrentWeather()
     connectWifi();
 
     Serial.println("Getting weather");
-    OWOC.parseWeather(APIKEY, NULL, myLatitude, myLongitude, metric, NULL);
+    OWOC.parseWeather(ONECALLKEY, NULL, myLatitude, myLongitude, metric, NULL);
     setTime(OWOC.current.dt);
     t = now();
 
@@ -267,26 +255,6 @@ void setup()
     display.display();
 
     connectWifi();
-
-    // Check if we have a valid API key:
-    Serial.println("Checking if API key is valid...");
-    if (!checkIfAPIKeyIsValid(APIKEY))
-    {
-        // If we don't, notify the user
-        Serial.println("API key is invalid!");
-        display.clearDisplay();
-        display.setCursor(0, 0);
-        display.setTextSize(2);
-        display.println("Can't get data from OpenWeatherMaps! Check your API key!");
-        display.println("Only older API keys for OneCall 2.5 work in free tier.");
-        display.println("See the code comments the example for more info.");
-        display.display();
-        while (1)
-        {
-            delay(100);
-        }
-    }
-    Serial.println("API key is valid!");
 
     // Clear display
     t = now();
@@ -579,76 +547,4 @@ void drawMoon()
     alignText(CENTRE_TOP, Output, MoonCentreX, MoonCentreY + MoonBox - 5);
     int currentphase = moonphase * 28. + .5;
     alignText(CENTRE_TOP, moonphasenames[currentphase], MoonCentreX, MoonCentreY + MoonBox + 20);
-}
-
-/**
- * Make a test API call to see if we have a valid API key
- *
- * Older keys made for OpenWeather 2.5 OneCall API work, while newer ones won't work, due to the service becoming
- * deprecated.
- */
-bool checkIfAPIKeyIsValid(char *APIKEY)
-{
-    bool failed = false;
-
-    // Create the buffer for holding the API response, make it large enough just in case
-    char *data;
-    data = (char *)ps_malloc(50000LL);
-
-    // Http object used to make GET request
-    HTTPClient http;
-    http.getStream().setTimeout(10);
-    http.getStream().flush();
-    http.getStream().setNoDelay(true);
-
-    // Combine the base URL and the API key to do a test call
-    char *baseURL = "https://api.openweathermap.org/data/2.5/onecall?lat=45.560001&lon=18.675880&units=metric&appid=";
-    char apiTestURL[200];
-    sprintf(apiTestURL, "%s%s", baseURL, APIKEY);
-
-    // Begin http by passing url to it
-    http.begin(apiTestURL);
-
-    delay(300);
-
-    // Download data until it's a verified complete download
-    // Actually do request
-    int httpCode = http.GET();
-
-    if (httpCode == 200)
-    {
-        long n = 0;
-
-        long now = millis();
-
-        while (millis() - now < 1000)
-        {
-            while (http.getStream().available())
-            {
-                data[n++] = http.getStream().read();
-                now = millis();
-            }
-        }
-
-        data[n++] = 0;
-
-        // If the reply constains this string - it's invalid
-        if (strstr(data, "Invalid API key.") != NULL)
-            failed = true;
-    }
-    else
-    {
-        // In case there was another HTTP code, it failed
-        Serial.print("Error! HTTP Code: ");
-        Serial.println(httpCode);
-        failed = true;
-    }
-
-    // End http
-    http.end();
-
-    // Free the memory
-    free(data);
-
-    return !failed;
 }

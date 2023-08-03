@@ -229,30 +229,17 @@ void Shapes::drawGradientLine(int x1, int y1, int x2, int y2, int color1, int co
     }
 }
 
-#if defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
+#ifdef ARDUINO_INKPLATE2
 
-/**
- * @brief       Draws text with prev. defined size with shadow
- *
- * @param       int x
- *              Text cursor for the X position
- * @param       int y
- *              Text cursor for the Y position
- * @param       const char *_text
- *              String that needs to be printed
- * @param       uint8_t _colorText
- *              Color of the text (INKPLATE2_BLACK or INKPLATE2_RED)
- * @param       uint8_t _colorShadow
- *              Color of the shadow "below" the text (INKPLATE2_BLACK or INKPLATE2_RED)
- */
-void Shapes::drawTextWithShadow(int x, int y, const char *_text, uint8_t _colorText, uint8_t _colorShadow)
+// Function writes text with shadow
+void Shapes::drawTextWithShadow(int x, int y, const char *_c, uint8_t _color1, uint8_t color2)
 {
-    setTextColor(_colorShadow);
-    setCursor(x + 1, y + 1);
-    print(_text);
-    setTextColor(_colorText);
+    setTextColor(_color1);
     setCursor(x, y);
-    print(_text);
+    print(_c);
+    setTextColor(color2);
+    setCursor(x + 1, y + 1);
+    print(_c);
 }
 
 #endif

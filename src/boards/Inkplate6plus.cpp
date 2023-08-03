@@ -524,6 +524,30 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         delayMicroseconds(230);
     }
 
+    // for (int k = 0; k < 60; ++k)
+    // {
+    //     uint8_t _send = B11111111;
+    //     vscan_start();
+
+    //     writeRow(_send);
+    //     for (int i = 0; i < E_INK_HEIGHT / 2; i++)
+    //     {
+    //         hscan_start(pinLUT[_send]);
+    //         delayMicroseconds(1);
+    //         vscan_end();
+    //     }
+
+    //     _send = B01010101;
+
+    //     writeRow(_send);
+    //     for (int i = 0; i < E_INK_HEIGHT / 2; i++)
+    //     {
+    //         hscan_start(pinLUT[_send]);
+    //         delayMicroseconds(1);
+    //         vscan_end();
+    //     }
+    // }
+
     clean(2, 2);
     clean(3, 1);
     vscan_start();
