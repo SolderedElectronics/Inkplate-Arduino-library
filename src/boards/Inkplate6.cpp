@@ -114,15 +114,25 @@ bool Inkplate::begin(void)
     pinModeInternal(IO_INT_ADDR, ioRegsInt, GMOD, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, SPV, OUTPUT);
 
-    // DATA PINS
-    pinMode(4, OUTPUT); // D0
-    pinMode(5, OUTPUT);
-    pinMode(18, OUTPUT);
-    pinMode(19, OUTPUT);
-    pinMode(23, OUTPUT);
-    pinMode(25, OUTPUT);
-    pinMode(26, OUTPUT);
-    pinMode(27, OUTPUT); // D7
+    // Use only myI2S
+    myI2S = &I2S1;
+
+    // Allocate memory for DMA descriptor and line buffer.
+
+    Serial.println(E_INK_WIDTH, DEC);
+
+    _dmaLineBuffer = (uint8_t *)heap_caps_malloc((E_INK_WIDTH / 4) + 16, MALLOC_CAP_DMA);
+    _dmaI2SDesc = (lldesc_s *)heap_caps_malloc(sizeof(lldesc_t), MALLOC_CAP_DMA);
+
+
+    if (_dmaLineBuffer == NULL || _dmaI2SDesc == NULL)
+    {
+        return 0;
+    }
+
+    // Init the I2S driver. It will allocate the memory for the I2S DMA descriptor and line buffer and setup a I2S
+    // driver.
+    I2SInit(myI2S, NULL, NULL);
 
     // TOUCHPAD PINS
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 10, INPUT);
@@ -148,16 +158,12 @@ bool Inkplate::begin(void)
     memset(_pBuffer, 0, E_INK_WIDTH * E_INK_HEIGHT / 4);
     memset(DMemory4Bit, 255, E_INK_WIDTH * E_INK_HEIGHT / 2);
 
-    for (int i = 0; i < 9; ++i)
+    for (int j = 0; j < 9; ++j)
     {
-        for (uint32_t j = 0; j < 256; ++j)
+        for (int i = 0; i < 256; ++i)
         {
-            uint8_t z = (waveform3Bit[j & 0x07][i] << 2) | (waveform3Bit[(j >> 4) & 0x07][i]);
-            GLUT[i * 256 + j] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
-                                (((z & B00010000) >> 4) << 23) | (((z & B11100000) >> 5) << 25);
-            z = ((waveform3Bit[j & 0x07][i] << 2) | (waveform3Bit[(j >> 4) & 0x07][i])) << 4;
-            GLUT2[i * 256 + j] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
-                                 (((z & B00010000) >> 4) << 23) | (((z & B11100000) >> 5) << 25);
+            GLUT[j*256+i] = (waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j]);
+            GLUT2[j*256+i] = ((waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j])) << 4;
         }
     }
 
@@ -240,13 +246,13 @@ void Inkplate::display1b(bool leaveOn)
         return;
 
     clean(0, 1);
-    clean(1, 21);
+    clean(1, 18);
     clean(2, 1);
-    clean(0, 12);
+    clean(0, 18);
     clean(2, 1);
-    clean(1, 21);
+    clean(1, 18);
     clean(2, 1);
-    clean(0, 12);
+    clean(0, 18);
     clean(2, 1);
 
 // How many cycles / phases / frames of dark pixels
@@ -262,100 +268,66 @@ void Inkplate::display1b(bool leaveOn)
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            dram = *(DMemoryNewPtr--);
-            data = LUTB[dram >> 4];
-            _send = pinLUT[data];
-            hscan_start(_send);
-            data = LUTB[dram & 0x0F];
-            _send = pinLUT[data];
-            GPIO.out_w1ts = (_send) | CL;
-            GPIO.out_w1tc = DATA | CL;
-
-            for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); ++j)
+            for (int n = 0; n < (E_INK_WIDTH/4); n+=4)
             {
-                dram = *(DMemoryNewPtr--);
-                data = LUTB[dram >> 4];
-                _send = pinLUT[data];
-                GPIO.out_w1ts = (_send) | CL;
-                GPIO.out_w1tc = DATA | CL;
-                data = LUTB[dram & 0x0F];
-                _send = pinLUT[data];
-                GPIO.out_w1ts = (_send) | CL;
-                GPIO.out_w1tc = DATA | CL;
+                uint8_t dram1 = *(DMemoryNewPtr);
+                uint8_t dram2 = *(DMemoryNewPtr - 1);
+                _dmaLineBuffer[n] = LUTB[(dram2 >> 4) & 0x0F];//i + 2;
+                _dmaLineBuffer[n + 1] = LUTB[dram2 & 0x0F]; //i + 3;
+                _dmaLineBuffer[n + 2] = LUTB[(dram1 >> 4) & 0x0F];//i;
+                _dmaLineBuffer[n + 3] = LUTB[dram1 & 0x0F];//i + 1;
+                DMemoryNewPtr-=2;
             }
-// New Inkplate6 panel doesn't need last clock
-#ifdef ARDUINO_ESP32_DEV
-            GPIO.out_w1ts = CL;
-            GPIO.out_w1tc = DATA | CL;
-#endif
+            // Send the data using I2S DMA driver.
+            sendDataI2S(myI2S, _dmaI2SDesc);
             vscan_end();
         }
         delayMicroseconds(230);
     }
 
-    uint16_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
-    vscan_start();
-    for (int i = 0; i < E_INK_HEIGHT; ++i)
+    for (int k = 0; k < 1; ++k)
     {
-        dram = *(DMemoryNew + _pos);
-        data = LUT2[dram >> 4];
-        _send = pinLUT[data];
-        hscan_start(_send);
-        data = LUT2[dram & 0x0F];
-        _send = pinLUT[data];
-        GPIO.out_w1ts = (_send) | CL;
-        GPIO.out_w1tc = DATA | CL;
-        _pos--;
-        for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); ++j)
+        uint8_t *DMemoryNewPtr = DMemoryNew + (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
+        vscan_start();
+        for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            dram = *(DMemoryNew + _pos);
-            data = LUT2[dram >> 4];
-            _send = pinLUT[data];
-            GPIO.out_w1ts = (_send) | CL;
-            GPIO.out_w1tc = DATA | CL;
-            data = LUT2[dram & 0x0F];
-            _send = pinLUT[data];
-            GPIO.out_w1ts = (_send) | CL;
-            GPIO.out_w1tc = DATA | CL;
-            _pos--;
+            for (int n = 0; n < (E_INK_WIDTH/4); n+=4)
+            {
+                uint8_t dram1 = *(DMemoryNewPtr);
+                uint8_t dram2 = *(DMemoryNewPtr - 1);
+                _dmaLineBuffer[n] = LUT2[(dram2 >> 4) & 0x0F];//i + 2;
+                _dmaLineBuffer[n + 1] = LUT2[dram2 & 0x0F]; //i + 3;
+                _dmaLineBuffer[n + 2] = LUT2[(dram1 >> 4) & 0x0F];//i;
+                _dmaLineBuffer[n + 3] = LUT2[dram1 & 0x0F];//i + 1;
+                DMemoryNewPtr-=2;
+            }
+            // Send the data using I2S DMA driver.
+            sendDataI2S(myI2S, _dmaI2SDesc);
+            vscan_end();
         }
-// New Inkplate6 panel doesn't need last clock
-#ifdef ARDUINO_ESP32_DEV
-        GPIO.out_w1ts = CL;
-        GPIO.out_w1tc = DATA | CL;
-#endif
-        vscan_end();
+        delayMicroseconds(230);
     }
-    delayMicroseconds(230);
 
-    vscan_start();
-    for (int i = 0; i < E_INK_HEIGHT; ++i)
+    for (int k = 0; k < 1; ++k)
     {
-        dram = *(DMemoryNew + _pos);
-        data = 0;
-        _send = pinLUT[data];
-        hscan_start(_send);
-        data = 0;
-        GPIO.out_w1ts = (_send) | CL;
-        GPIO.out_w1tc = DATA | CL;
-        for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); ++j)
+        vscan_start();
+        for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            GPIO.out_w1ts = (_send) | CL;
-            GPIO.out_w1tc = DATA | CL;
-            GPIO.out_w1ts = (_send) | CL;
-            GPIO.out_w1tc = DATA | CL;
+            for (int n = 0; n < (E_INK_WIDTH/4); n+=4)
+            {
+                _dmaLineBuffer[n] = 0;
+                _dmaLineBuffer[n + 1] = 0;
+                _dmaLineBuffer[n + 2] = 0;
+                _dmaLineBuffer[n + 3] = 0;
+            }
+            // Send the data using I2S DMA driver.
+            sendDataI2S(myI2S, _dmaI2SDesc);
+            vscan_end();
         }
-// New Inkplate6 panel doesn't need last clock
-#ifdef ARDUINO_ESP32_DEV
-        GPIO.out_w1ts = CL;
-        GPIO.out_w1tc = DATA | CL;
-#endif
-        vscan_end();
+        delayMicroseconds(230);
     }
-    delayMicroseconds(230);
 
     vscan_start();
-
     if (!leaveOn)
         einkOff();
 
@@ -376,14 +348,15 @@ void Inkplate::display3b(bool leaveOn)
         return;
 
     clean(0, 1);
-    clean(1, 21);
+    clean(1, 18);
     clean(2, 1);
-    clean(0, 12);
+    clean(0, 18);
     clean(2, 1);
-    clean(1, 21);
+    clean(1, 18);
     clean(2, 1);
-    clean(0, 12);
+    clean(0, 18);
     clean(2, 1);
+
     for (int k = 0; k < 9; ++k)
     {
         uint8_t *dp = DMemory4Bit + E_INK_WIDTH * E_INK_HEIGHT / 2;
@@ -391,30 +364,14 @@ void Inkplate::display3b(bool leaveOn)
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            uint32_t t = GLUT2[k * 256 + (*(--dp))];
-            t |= GLUT[k * 256 + (*(--dp))];
-            hscan_start(t);
-            t = GLUT2[k * 256 + (*(--dp))];
-            t |= GLUT[k * 256 + (*(--dp))];
-            GPIO.out_w1ts = t | CL;
-            GPIO.out_w1tc = DATA | CL;
-
-            for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); ++j)
+            for (int j = 0; j < (E_INK_WIDTH / 4); j+=4)
             {
-                t = GLUT2[k * 256 + (*(--dp))];
-                t |= GLUT[k * 256 + (*(--dp))];
-                GPIO.out_w1ts = t | CL;
-                GPIO.out_w1tc = DATA | CL;
-                t = GLUT2[k * 256 + (*(--dp))];
-                t |= GLUT[k * 256 + (*(--dp))];
-                GPIO.out_w1ts = t | CL;
-                GPIO.out_w1tc = DATA | CL;
+                _dmaLineBuffer[j + 2] = (GLUT2[k*256+(*(--dp))] | GLUT[k*256+(*(--dp))]);
+                _dmaLineBuffer[j + 3] = (GLUT2[k*256+(*(--dp))] | GLUT[k*256+(*(--dp))]);
+                _dmaLineBuffer[j] = (GLUT2[k*256+(*(--dp))] | GLUT[k*256+(*(--dp))]);
+                _dmaLineBuffer[j + 1] = (GLUT2[k*256+(*(--dp))] | GLUT[k*256+(*(--dp))]);
             }
-// New Inkplate6 panel doesn't need last clock
-#ifdef ARDUINO_ESP32_DEV
-            GPIO.out_w1ts = CL;
-            GPIO.out_w1tc = DATA | CL;
-#endif
+            sendDataI2S(myI2S, _dmaI2SDesc);
             vscan_end();
         }
         delayMicroseconds(230);
@@ -500,23 +457,16 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            data = *(_pBuffer + n);
-            _send = pinLUT[data];
-            hscan_start(_send);
-            n--;
-            for (int j = 0; j < ((E_INK_WIDTH / 4) - 1); ++j)
+            for (int j = 0; j < (E_INK_WIDTH / 4); j+=4)
             {
-                data = *(_pBuffer + n);
-                _send = pinLUT[data];
-                GPIO.out_w1ts = _send | CL;
-                GPIO.out_w1tc = DATA | CL;
-                n--;
+                _dmaLineBuffer[j + 2] = *(_pBuffer + n );
+                _dmaLineBuffer[j + 3] = *(_pBuffer + n - 1);
+                _dmaLineBuffer[j] = *(_pBuffer + n - 2);
+                _dmaLineBuffer[j + 1] = *(_pBuffer + n - 3);
+                n -= 4;
             }
-// New Inkplate6 panel doesn't need last clock
-#ifdef ARDUINO_ESP32_DEV
-            GPIO.out_w1ts = CL;
-            GPIO.out_w1tc = DATA | CL;
-#endif
+            // Send the data using I2S DMA driver.
+            sendDataI2S(myI2S, _dmaI2SDesc);
             vscan_end();
         }
         delayMicroseconds(230);
@@ -561,27 +511,28 @@ void Inkplate::clean(uint8_t c, uint8_t rep)
     else if (c == 3)
         data = B11111111;
 
-    uint32_t _send = pinLUT[data];
+    // Fill up the buffer with the data.
+    for (int i = 0; i < (E_INK_WIDTH / 4); i++)
+    {
+        _dmaLineBuffer[i] = data;
+    }
+
+    _dmaI2SDesc->size = (E_INK_WIDTH / 4) + 16;
+    _dmaI2SDesc->length = (E_INK_WIDTH / 4) + 16;
+    _dmaI2SDesc->sosf = 1;
+    _dmaI2SDesc->owner = 1;
+    _dmaI2SDesc->qe.stqe_next = 0;
+    _dmaI2SDesc->eof = 1;
+    _dmaI2SDesc->buf = _dmaLineBuffer;
+    _dmaI2SDesc->offset = 0;
+
     for (int k = 0; k < rep; ++k)
     {
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            hscan_start(_send);
-            GPIO.out_w1ts = (_send) | CL;
-            GPIO.out_w1tc = CL;
-            for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); ++j)
-            {
-                GPIO.out_w1ts = CL;
-                GPIO.out_w1tc = CL;
-                GPIO.out_w1ts = CL;
-                GPIO.out_w1tc = CL;
-            }
-// New Inkplate6 panel doesn't need last clock
-#ifdef ARDUINO_INKPLATE6
-            GPIO.out_w1ts = CL;
-            GPIO.out_w1tc = DATA | CL;
-#endif
+            // Send the data using I2S DMA driver.
+            sendDataI2S(myI2S, _dmaI2SDesc);
             vscan_end();
         }
         delayMicroseconds(230);
