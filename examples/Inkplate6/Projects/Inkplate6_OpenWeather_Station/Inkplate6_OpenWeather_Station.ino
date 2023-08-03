@@ -52,6 +52,8 @@
  * 
 */
 #define APIKEY ""
+// Also, declare the function to check if the API key is valid
+bool checkIfAPIKeyIsValid(char *APIKEY);
 
 float myLatitude = 45.560001; // I got this from Wikipedia
 float myLongitude = 18.675880;
