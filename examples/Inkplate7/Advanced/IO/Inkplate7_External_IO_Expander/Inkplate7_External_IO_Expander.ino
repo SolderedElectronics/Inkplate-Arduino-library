@@ -1,5 +1,5 @@
 /*
-   Inkplate7_Internal_IO_Expander example for Soldered Inkplate 7
+   Inkplate7_External_IO_Expander example for Soldered Inkplate 7
    For this example you will need a USB-C cable, Inkplate7, 330 Ohm resistor and LED diode.
    Select "Soldered Inkplate7" from Tools -> Board menu.
    Don't have "Soldered Inkplate7" option? Follow our tutorial and add it:
@@ -12,7 +12,7 @@
    (component side) of Inkplate. You will have to connect one side of 330 Ohm resistor to P1-7, then other side
    to anode of LED and finally, cathode pin of LED to GND.
 
-   This example will show you how you can manipulate with I/Os of internal IO Expander.
+   This example will show you how you can manipulate with I/Os of external IO Expander.
    If everything is connected ok, after you upload code, LED should blink. Nothing will 
    be displayed on the screen, the content will remain unchanged.
 
@@ -42,14 +42,14 @@ void setup()
     display.begin(); 
 
     // Set P1-7 to output. On that pin, we sholud connect LED with current 
-    // limiting resistor and specify that we want use internal IO expander
-    display.pinModeIO(LED_PIN, OUTPUT, IO_INT_ADDR); 
+    // limiting resistor and specify that we want use external IO expander
+    display.pinModeIO(LED_PIN, OUTPUT, IO_EXT_ADDR); 
 }
 
 void loop()
 {
-    display.digitalWriteIO(LED_PIN, LOW, IO_INT_ADDR);  // Set output to low (LED does not light up)
+    display.digitalWriteIO(LED_PIN, LOW, IO_EXT_ADDR);  // Set output to low (LED does not light up)
     delay(1000);                                        // Wait for one second
-    display.digitalWriteIO(LED_PIN, HIGH, IO_INT_ADDR); // Set output to high (LED lights up)
+    display.digitalWriteIO(LED_PIN, HIGH, IO_EXT_ADDR); // Set output to high (LED lights up)
     delay(1000);                                        // Wait for one second
 }
