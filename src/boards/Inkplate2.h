@@ -2,16 +2,16 @@
  **************************************************
  *
  * @file        Inkplate2.h
- * @brief       Basic funtions for controling inkplate 2
+ * @brief       Basic funtions for controling Inkplate 2
  *
- *              https://github.com/e-radionicacom/Inkplate-Arduino-library
- *              For support, please reach over forums: forum.e-radionica.com/en
+ *              https://github.com/SolderedElectronics/Inkplate-Arduino-library
+ *              For support, please reach over forums: https://forum.soldered.com/
  *              For more info about the product, please check: www.inkplate.io
  *
  *              This code is released under the GNU Lesser General Public
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
  *LICENSE file included with this example. If you have any questions about
- *licensing, please contact techsupport@e-radionica.com Distributed as-is; no
+ *licensing, please contact hello@soldered.com Distributed as-is; no
  *warranty is given.
  *
  * @authors     @ Soldered
@@ -33,9 +33,9 @@
 #define E_INK_WIDTH  104
 
 // in defines.h
-// #define WHITE 0
-// #define BLACK 1
-#define RED 2
+#define INKPLATE2_WHITE 0
+#define INKPLATE2_BLACK 1
+#define INKPLATE2_RED   2
 
 #ifndef _swap_int16_t
 #define _swap_int16_t(a, b)                                                                                            \

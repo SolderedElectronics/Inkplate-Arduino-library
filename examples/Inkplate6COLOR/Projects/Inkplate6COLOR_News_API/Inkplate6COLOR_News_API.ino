@@ -80,9 +80,13 @@ void setup()
 
     ++refreshes;
 
-    // Go to sleep before checking again
+    // Activate wakeup timer
     esp_sleep_enable_timer_wakeup(1000 * DELAY_MS);
-    (void)esp_deep_sleep_start();
+    
+     
+
+    // Start deep sleep (this function does not return). Program stops here.
+    esp_deep_sleep_start();
 }
 
 void drawNews(struct news *entities)
@@ -153,5 +157,6 @@ void drawNews(struct news *entities)
 
 void loop()
 {
-    // Never here
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }

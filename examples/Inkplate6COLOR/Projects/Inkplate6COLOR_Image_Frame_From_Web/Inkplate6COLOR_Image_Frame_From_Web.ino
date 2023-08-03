@@ -21,8 +21,8 @@
 
 Inkplate display;
 
-const char ssid[] = "";         // Your WiFi SSID
-const char *password = "";      // Your WiFi password
+const char *ssid = "";     // Your WiFi SSID
+const char *password = ""; // Your WiFi password
 
 void setup()
 {
@@ -30,7 +30,7 @@ void setup()
     display.begin();
 
     // Join wifi
-    display.joinAP(ssid, password);
+    display.connectWiFi(ssid, password);
     Serial.println("joined wifi");
     char url[256];
     imageUrl(url);
@@ -39,13 +39,20 @@ void setup()
     display.display();
 
     Serial.println("Going to sleep");
+
+    // Activate wakeup timer
     esp_sleep_enable_timer_wakeup(15ll * 60 * 1000 * 1000);
+    
+     
+
+    // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Never here, as deepsleep restarts esp32
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }
 
 void imageUrl(char *a)

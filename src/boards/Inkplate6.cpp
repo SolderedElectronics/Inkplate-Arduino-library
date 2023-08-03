@@ -154,8 +154,8 @@ bool Inkplate::begin(void)
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _pBuffer = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);
     DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 2);
-    GLUT = (uint32_t *)malloc(256 * 8 * sizeof(uint32_t));
-    GLUT2 = (uint32_t *)malloc(256 * 8 * sizeof(uint32_t));
+    GLUT = (uint32_t *)malloc(256 * 9 * sizeof(uint32_t));
+    GLUT2 = (uint32_t *)malloc(256 * 9 * sizeof(uint32_t));
     if (DMemoryNew == NULL || _partial == NULL || _pBuffer == NULL || DMemory4Bit == NULL || GLUT == NULL ||
         GLUT2 == NULL)
     {
@@ -364,7 +364,7 @@ void Inkplate::display3b(bool leaveOn)
     clean(2, 1);
     clean(0, 15);
     clean(2, 1);
-    for (int k = 0; k < 8; ++k)
+    for (int k = 0; k < 9; ++k)
     {
         uint8_t *dp = DMemory4Bit + E_INK_WIDTH * E_INK_HEIGHT / 2;
 

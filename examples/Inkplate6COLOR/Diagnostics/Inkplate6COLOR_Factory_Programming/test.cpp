@@ -15,28 +15,11 @@ void testPeripheral()
     // Send test reports to the UART (this epaper is slow and does not support partial update)
     Serial.println("INKPLATE CHECKLIST");
 
-    // Check I/O expander internal
-    Serial.print("- I/O Expander Internal: ");
+    // Check I/O expander
+    Serial.print("- I/O Expander: ");
     // Try to communicate with I/O expander
     Wire.beginTransmission(IO_INT_ADDR);
-    if (Wire.endTransmission() ==
-        0) // Check if there was an error in communication and print out the results on display.
-    {
-        Serial.println("OK");
-    }
-    else
-    {
-        Serial.println("FAIL");
-        failHandler();
-    }
-
-    // Check I/O expander 1
-    Serial.print("- I/O Expander External: ");
-
-    // Try to communicate with I/O expander
-    Wire.beginTransmission(IO_EXT_ADDR);
-    if (Wire.endTransmission() ==
-        0) // Check if there was an error in communication and print out the results on display.
+    if (Wire.endTransmission() == 0) // Check if there was an error in communication and print out the results on display.
     {
         Serial.println("OK");
     }
@@ -207,7 +190,6 @@ int checkMicroSDCard()
 
 int checkI2C(int address)
 {
-    Wire.setTimeOut(3000);
     Wire.beginTransmission(address);
     if (Wire.endTransmission() == 0)
     {
@@ -221,18 +203,18 @@ int checkI2C(int address)
 
 int checkBattery(float *batVoltage)
 {
-    int temperature;
     float voltage;
-    int result = 1;
-
     voltage = display.readBattery();
     *batVoltage = voltage;
 
-    if (voltage <= 0 || voltage > 100)
+    // Check the battery voltage.
+    // If the measured voltage is below 2.8V and above 4.6V, charger is dead.
+    if (voltage <= 2.8 || voltage >= 4.6)
     {
-        result = 0;
+        return 0;
     }
-    return result;
+
+    return 1;
 }
 
 int rtcCheck()

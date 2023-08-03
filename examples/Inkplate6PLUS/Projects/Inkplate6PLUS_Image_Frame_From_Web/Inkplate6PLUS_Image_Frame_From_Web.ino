@@ -32,7 +32,7 @@ void setup()
     display.setFrontlight(0);
 
     // Join wifi
-    display.joinAP(ssid, password);
+    display.connectWiFi(ssid, password);
 
     char url[256];
     imageUrl(url);

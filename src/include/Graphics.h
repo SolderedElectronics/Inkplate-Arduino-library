@@ -56,7 +56,8 @@ class Graphics : public Shapes, public Image
 
     void drawPixel(int16_t x, int16_t y, uint16_t color) override;
 
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2)
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE4) &&                   \
+    !defined(ARDUINO_INKPLATE7)
     void selectDisplayMode(uint8_t _mode);
     void setDisplayMode(uint8_t _mode);
     uint8_t getDisplayMode();
@@ -79,6 +80,11 @@ class Graphics : public Shapes, public Image
 
     const uint8_t pixelMaskLUT[8] = {0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0x80};
     const uint8_t pixelMaskGLUT[2] = {0xF, 0xF0};
+
+#if defined(ARDUINO_INKPLATE7)
+    // White, black, red LUT for Inkplate 7
+    const uint8_t LUT_IP7[3] = {0b0011, 0b0000, 0b0100};
+#endif
 
     const uint8_t discharge[16] = {0xFF, 0xFC, 0xF3, 0xF0, 0xCF, 0xCC, 0xC3, 0xC0,
                                    0x3F, 0x3C, 0x33, 0x30, 0xF,  0xC,  0x3,  0x0};

@@ -42,7 +42,7 @@ void setup()
     display.begin();      // Initialize display
 
     // Connect to WiFi
-    while (!display.joinAP(ssid, pass))
+    while (!display.connectWiFi(ssid, pass))
     {
         Serial.println("Connecting to wifi");
     }
@@ -60,10 +60,15 @@ void setup()
 
     // Go to sleep for DELAY_MS
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_deep_sleep_start();
+
+     
+
+    // Start deep sleep (this function does not return). Program stops here.
+    esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Nothing...
+    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
+    // time. loop() must be empty!
 }

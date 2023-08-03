@@ -33,6 +33,12 @@
 #include "../boards/Inkplate6Color.h"
 #elif ARDUINO_INKPLATE2
 #include "../boards/Inkplate2.h"
+#elif ARDUINO_INKPLATE4
+#include "../boards/Inkplate4.h"
+#elif ARDUINO_INKPLATE7
+#include "../boards/Inkplate7.h"
+#elif ARDUINO_INKPLATEPLUS2
+#include "../boards/InkplatePLUS2.h"
 #endif
 
 #define INKPLATE6_WAVEFORM1     0
@@ -55,11 +61,18 @@
 
 #endif
 
+#ifndef INKPLATE_6COLOR
+#define PAD1 10
+#define PAD2 11
+#define PAD3 12
+#else
+#define PAD1 10
+#define PAD2 11
+#define PAD3 12
+#endif
+
 #define INKPLATE_1BIT          0
 #define INKPLATE_3BIT          1
-#define PAD1                   10
-#define PAD2                   11
-#define PAD3                   12
 #define PWR_GOOD_OK            0b11111010
 #define INKPLATE_FORCE_PARTIAL true
 

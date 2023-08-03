@@ -1,0 +1,24 @@
+##################################################
+# Syntax Coloring Map For Obstacle-Sensor-SOLDERED
+##################################################
+
+##################################################
+# Datatypes (KEYWORD1)
+MCP4018_SOLDERED    KEYWORD1
+##################################################
+
+##################################################
+# Methods and Functions (KEYWORD2)
+##################################################
+
+begin	KEYWORD2
+setWiperPercent     KEYWORD2
+setWiperValue       KEYWORD2
+getWiperPercent     KEYWORD2
+getWiperPercent     KEYWORD2
+increment           KEYWORD2
+decrement           KEYWORD2
+
+##################################################
+# Constants (LITERAL1)
+##################################################
