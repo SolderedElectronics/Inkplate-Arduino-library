@@ -1,5 +1,5 @@
 /*
-   Inkplate6COLOR_Web_Server example for Soldered Inkplate 6COLOR
+   Inkplate6COLOR_HTTP_Web_Server example for Soldered Inkplate 6COLOR
    For this example you will need a micro USB cable, Inkplate 6COLOR and a device with WiFi and Internet brower (PC, Laptop,
    Smartphone, ...). Select "Soldered Inkplate 6COLOR" from Tools -> Board menu. Don't have "Soldered Inkplate 6COLOR" option? Follow
    our tutorial and add it: https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
