@@ -155,7 +155,8 @@ void IRAM_ATTR sendDataI2S(i2s_dev_t *_i2sDev, volatile lldesc_s *_dmaDecs)
     // Start sending I2S data out.
     _i2sDev->conf.tx_start = 1;
 
-    while (!_i2sDev->int_raw.out_total_eof);
+    while (!_i2sDev->int_raw.out_total_eof)
+        ;
 
     SPH_SET;
 
@@ -163,7 +164,6 @@ void IRAM_ATTR sendDataI2S(i2s_dev_t *_i2sDev, volatile lldesc_s *_dmaDecs)
     _i2sDev->int_clr.val = _i2sDev->int_raw.val;
     _i2sDev->out_link.stop = 1;
     _i2sDev->out_link.start = 0;
-    
 }
 
 void IRAM_ATTR setI2S1pin(uint32_t _pin, uint32_t _function, uint32_t _inv)

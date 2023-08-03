@@ -162,8 +162,8 @@ bool Inkplate::begin(void)
     {
         for (int i = 0; i < 256; ++i)
         {
-            GLUT[j*256+i] = (waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j]);
-            GLUT2[j*256+i] = ((waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j])) << 4;
+            GLUT[j * 256 + i] = (waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j]);
+            GLUT2[j * 256 + i] = ((waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j])) << 4;
         }
     }
 
@@ -268,15 +268,15 @@ void Inkplate::display1b(bool leaveOn)
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            for (int n = 0; n < (E_INK_WIDTH/4); n+=4)
+            for (int n = 0; n < (E_INK_WIDTH / 4); n += 4)
             {
                 uint8_t dram1 = *(DMemoryNewPtr);
                 uint8_t dram2 = *(DMemoryNewPtr - 1);
-                _dmaLineBuffer[n] = LUTB[(dram2 >> 4) & 0x0F];//i + 2;
-                _dmaLineBuffer[n + 1] = LUTB[dram2 & 0x0F]; //i + 3;
-                _dmaLineBuffer[n + 2] = LUTB[(dram1 >> 4) & 0x0F];//i;
-                _dmaLineBuffer[n + 3] = LUTB[dram1 & 0x0F];//i + 1;
-                DMemoryNewPtr-=2;
+                _dmaLineBuffer[n] = LUTB[(dram2 >> 4) & 0x0F];     // i + 2;
+                _dmaLineBuffer[n + 1] = LUTB[dram2 & 0x0F];        // i + 3;
+                _dmaLineBuffer[n + 2] = LUTB[(dram1 >> 4) & 0x0F]; // i;
+                _dmaLineBuffer[n + 3] = LUTB[dram1 & 0x0F];        // i + 1;
+                DMemoryNewPtr -= 2;
             }
             // Send the data using I2S DMA driver.
             sendDataI2S(myI2S, _dmaI2SDesc);
@@ -291,15 +291,15 @@ void Inkplate::display1b(bool leaveOn)
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            for (int n = 0; n < (E_INK_WIDTH/4); n+=4)
+            for (int n = 0; n < (E_INK_WIDTH / 4); n += 4)
             {
                 uint8_t dram1 = *(DMemoryNewPtr);
                 uint8_t dram2 = *(DMemoryNewPtr - 1);
-                _dmaLineBuffer[n] = LUT2[(dram2 >> 4) & 0x0F];//i + 2;
-                _dmaLineBuffer[n + 1] = LUT2[dram2 & 0x0F]; //i + 3;
-                _dmaLineBuffer[n + 2] = LUT2[(dram1 >> 4) & 0x0F];//i;
-                _dmaLineBuffer[n + 3] = LUT2[dram1 & 0x0F];//i + 1;
-                DMemoryNewPtr-=2;
+                _dmaLineBuffer[n] = LUT2[(dram2 >> 4) & 0x0F];     // i + 2;
+                _dmaLineBuffer[n + 1] = LUT2[dram2 & 0x0F];        // i + 3;
+                _dmaLineBuffer[n + 2] = LUT2[(dram1 >> 4) & 0x0F]; // i;
+                _dmaLineBuffer[n + 3] = LUT2[dram1 & 0x0F];        // i + 1;
+                DMemoryNewPtr -= 2;
             }
             // Send the data using I2S DMA driver.
             sendDataI2S(myI2S, _dmaI2SDesc);
@@ -313,7 +313,7 @@ void Inkplate::display1b(bool leaveOn)
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            for (int n = 0; n < (E_INK_WIDTH/4); n+=4)
+            for (int n = 0; n < (E_INK_WIDTH / 4); n += 4)
             {
                 _dmaLineBuffer[n] = 0;
                 _dmaLineBuffer[n + 1] = 0;
@@ -364,12 +364,12 @@ void Inkplate::display3b(bool leaveOn)
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            for (int j = 0; j < (E_INK_WIDTH / 4); j+=4)
+            for (int j = 0; j < (E_INK_WIDTH / 4); j += 4)
             {
-                _dmaLineBuffer[j + 2] = (GLUT2[k*256+(*(--dp))] | GLUT[k*256+(*(--dp))]);
-                _dmaLineBuffer[j + 3] = (GLUT2[k*256+(*(--dp))] | GLUT[k*256+(*(--dp))]);
-                _dmaLineBuffer[j] = (GLUT2[k*256+(*(--dp))] | GLUT[k*256+(*(--dp))]);
-                _dmaLineBuffer[j + 1] = (GLUT2[k*256+(*(--dp))] | GLUT[k*256+(*(--dp))]);
+                _dmaLineBuffer[j + 2] = (GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]);
+                _dmaLineBuffer[j + 3] = (GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]);
+                _dmaLineBuffer[j] = (GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]);
+                _dmaLineBuffer[j + 1] = (GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]);
             }
             sendDataI2S(myI2S, _dmaI2SDesc);
             vscan_end();
@@ -457,9 +457,9 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            for (int j = 0; j < (E_INK_WIDTH / 4); j+=4)
+            for (int j = 0; j < (E_INK_WIDTH / 4); j += 4)
             {
-                _dmaLineBuffer[j + 2] = *(_pBuffer + n );
+                _dmaLineBuffer[j + 2] = *(_pBuffer + n);
                 _dmaLineBuffer[j + 3] = *(_pBuffer + n - 1);
                 _dmaLineBuffer[j] = *(_pBuffer + n - 2);
                 _dmaLineBuffer[j + 1] = *(_pBuffer + n - 3);
