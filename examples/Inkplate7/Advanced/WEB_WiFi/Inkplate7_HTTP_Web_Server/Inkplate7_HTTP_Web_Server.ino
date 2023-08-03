@@ -1,5 +1,5 @@
 /*
-   Inkplate7_Web_Server example for Soldered Inkplate 7
+   Inkplate7_HTTP_Web_Server example for Soldered Inkplate 7
    For this example you will need a USB-C cable, Inkplate 7 and a device with WiFi and Internet browser (PC, Laptop,
    Smartphone, ...). Select "Soldered Inkplate 7" from Tools -> Board menu. 
    Don't have "Soldered Inkplate 7" option? Follow our tutorial and add it: 
