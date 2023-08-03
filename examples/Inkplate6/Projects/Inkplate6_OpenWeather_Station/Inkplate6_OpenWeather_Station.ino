@@ -51,7 +51,7 @@
  * If your key is invalid, you will be notified by the sketch
  * 
 */
-#define APIKEY ""
+char *APIKEY = "";
 // Also, declare the function to check if the API key is valid
 bool checkIfAPIKeyIsValid(char *APIKEY);
 
