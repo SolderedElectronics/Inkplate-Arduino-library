@@ -324,10 +324,10 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 
         case 1: {
 #if defined(ARDUINO_INKPLATECOLOR)
-            writePixel(x + j, y,
+            writePixel(x + j, (h - y - 1),
                        (!invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
 #else
-            writePixel(x + j, y, (invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
+            writePixel(x + j, (h - y - 1), (invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
 #endif
             break;
         }
@@ -352,7 +352,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             if (invert)
                 val = val ^ 1;
 #endif
-            writePixel(x + j, y, val);
+            writePixel(x + j, (h - y - 1), val);
             break;
         }
 
@@ -376,7 +376,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             if (invert)
                 val = val ^ 1;
 #endif
-            writePixel(x + j, y, val);
+            writePixel(x + j, (h - y - 1), val);
             break;
         }
 
@@ -417,7 +417,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 #else
             val = RGB3BIT(r, g, b);
 #endif
-            writePixel(x + j, y, val);
+            writePixel(x + j, (h - y - 1), val);
             break;
         }
         case 24: {
@@ -488,7 +488,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             if (invert)
                 val = val ^ 1;
 #endif
-            writePixel(x + j, y, val);
+            writePixel(x + j, (h - y - 1), val);
             break;
         }
         }
