@@ -44,8 +44,19 @@
 #define SSID ""
 #define PASS ""
 
-// Openweather api key
-#define API_KEY ""
+// Openweather API key
+/**
+ * Note: The OneCall API has moved on to version 3.0,
+ * In this sketch we are still using 2.5, which is free.
+ * The only requirement is that you need to have an API key older than approx. early 2023.
+ * Those API keys are still valid for OneCall 2.5
+ * 
+ * If your key is invalid, you will be notified by the sketch
+ * 
+*/
+char * APIKEY = "";
+// Also, declare the function to check if the API key is valid
+bool checkIfAPIKeyIsValid(char * APIKEY);
 
 float myLatitude = 45.560001; // I got this from Wikipedia
 float myLongitude = 18.675880;
@@ -138,10 +149,8 @@ void GetCurrentWeather()
     // Get the Weather Forecast
     //=================================
 
-    connectWifi();
-
     Serial.println("Getting weather");
-    OWOC.parseWeather(API_KEY, NULL, myLatitude, myLongitude, metric, NULL);
+    OWOC.parseWeather(APIKEY, NULL, myLatitude, myLongitude, metric, NULL);
     setTime(OWOC.current.dt);
     t = now();
 
@@ -195,6 +204,29 @@ void setup()
     // Init Inkplate library (you should call this function ONLY ONCE)
     display.begin();
 
+    connectWifi();
+
+    // Check if we have a valid API key:
+    Serial.println("Checking if API key is valid...");
+    if(!checkIfAPIKeyIsValid(APIKEY))
+    {
+        // If we don't, notify the user
+        Serial.println("API key is invalid!");
+        display.clearDisplay();
+        display.setCursor(0,0);
+        display.setTextSize(2);
+        display.println("Can't get data from OpenWeatherMaps! Check your API key!");
+        display.println("Only older API keys for OneCall 2.5 work in free tier.");
+        display.println("See the code comments the example for more info.");
+        display.display();
+        while(1)
+        {
+            delay(100);
+        }
+    }
+    Serial.println("API key is valid!");
+
+    // Set the temp. unit
     tempUnit = (metric == 1 ? 'C' : 'F');
 }
 
@@ -289,7 +321,7 @@ void drawForecast()
         sprintf(Output, "http://openweathermap.org/img/wn/%s@2x.png", OWOC.forecast[day].icon);
         Serial.println(Output);
         display.drawImage(Output, textCentre - 48, dayOffset - 62, true, true);
-        display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
+        display.setTextColor(INKPLATE4_BLACK, INKPLATE4_WHITE);
         display.setTextSize(1);
         display.setFont(&FreeSans9pt7b);
         sprintf(Output, "%s", dayShortStr(weekday(OWOC.forecast[day].dt)));
@@ -316,7 +348,7 @@ void drawTime()
     t = now();
 
     // Drawing current time
-    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
+    display.setTextColor(INKPLATE4_BLACK, INKPLATE4_WHITE);
     display.setFont(&FreeSansBold9pt7b);
     display.setTextSize(1);
 
@@ -362,7 +394,7 @@ void drawHourly()
     for (int Houry = 0; Houry <= hoursDisplay; Houry++)
     {
         display.drawLine(xLeft + (Houry * hourPitch), yTop, xLeft + (Houry * hourPitch), yTop + yHeight,
-                         INKPLATE_BLACK);
+                         INKPLATE4_BLACK);
         if (Houry % 2)
         {
             sprintf(Output, "%2d", hour(OWOC.hourly[Houry].dt));
@@ -370,8 +402,8 @@ void drawHourly()
         }
     }
 
-    display.drawLine(xLeft, yTop + yHeight, xLeft + xWidth, yTop + yHeight, INKPLATE_BLACK);
-    display.drawLine(xLeft, yTop, xLeft + xWidth, yTop, INKPLATE_BLACK);
+    display.drawLine(xLeft, yTop + yHeight, xLeft + xWidth, yTop + yHeight, INKPLATE4_BLACK);
+    display.drawLine(xLeft, yTop, xLeft + xWidth, yTop, INKPLATE4_BLACK);
 
     sprintf(Output, "%2.0f%c", (minTemp - 0.499), tempUnit);
     alignText(RIGHT, Output, xLeft - 5, yTop + yHeight);
@@ -388,7 +420,7 @@ void drawHourly()
     for (int Houry = 0; Houry <= (round(maxTemp + 0.499) - round(minTemp - 0.5)); Houry++)
     {
         display.drawLine(xLeft, yTop + (Houry * yTempScale), xLeft + xWidth, yTop + (Houry * yTempScale),
-                         INKPLATE_BLACK);
+                         INKPLATE4_BLACK);
     }
 
     for (int Houry = 0; Houry <= (hoursDisplay - 1); Houry++)
@@ -397,12 +429,12 @@ void drawHourly()
                               yTop + (int)(yTempScale * (round(maxTemp + 0.499) - (OWOC.hourly[Houry].temp))),
                               xLeft + ((Houry + 1) * hourPitch),
                               yTop + (int)(yTempScale * (round(maxTemp + 0.499) - (OWOC.hourly[Houry + 1].temp))),
-                              INKPLATE_BLACK, 3);
+                              INKPLATE4_BLACK, 3);
         float yPrecScale = (yHeight / (round(maxPrec + 0.499)));
         float thisPrec = OWOC.hourly[Houry].rain_1h + OWOC.hourly[Houry].snow_1h;
         display.fillRect(xLeft + (Houry * hourPitch) + round(hourPitch / 3),
                          yTop + (int)(yPrecScale * (round(maxPrec + .499) - thisPrec)), round(hourPitch / 3),
-                         (int)(yPrecScale * thisPrec), INKPLATE_RED);
+                         (int)(yPrecScale * thisPrec), INKPLATE4_RED);
     }
 }
 
@@ -487,3 +519,75 @@ void drawMoon()
     display.setCursor(339, 55);
     display.print("Moon Phase");
 }
+
+/**
+ * Make a test API call to see if we have a valid API key
+ *
+ * Older keys made for OpenWeather 2.5 OneCall API work, while newer ones won't work, due to the service becoming
+ * deprecated.
+ */
+bool checkIfAPIKeyIsValid(char *APIKEY)
+{
+    bool failed = false;
+
+    // Create the buffer for holding the API response, make it large enough just in case
+    char * data;
+    data = (char *)ps_malloc(50000LL);
+
+    // Http object used to make GET request
+    HTTPClient http;
+    http.getStream().setTimeout(10);
+    http.getStream().flush();
+    http.getStream().setNoDelay(true);
+
+    // Combine the base URL and the API key to do a test call
+    char * baseURL = "https://api.openweathermap.org/data/2.5/onecall?lat=45.560001&lon=18.675880&units=metric&appid=";
+    char apiTestURL[200];
+    sprintf(apiTestURL, "%s%s", baseURL, APIKEY);
+
+    // Begin http by passing url to it
+    http.begin(apiTestURL);
+
+    delay(300);
+    
+    // Download data until it's a verified complete download
+    // Actually do request
+    int httpCode = http.GET();
+
+    if (httpCode == 200)
+    {
+        long n = 0;
+
+        long now = millis();
+
+        while (millis() - now < 1000)
+        {
+            while (http.getStream().available())
+            {
+                data[n++] = http.getStream().read();
+                now = millis();
+            }
+        }
+
+        data[n++] = 0;
+
+        // If the reply constains this string - it's invalid
+        if(strstr(data, "Invalid API key.") != NULL) failed = true;
+    }
+    else
+    {
+        // In case there was another HTTP code, it failed
+        Serial.print("Error! HTTP Code: ");
+        Serial.println(httpCode);
+        failed = true;
+    }
+
+    // End http
+    http.end();
+
+    // Free the memory
+    free(data);
+
+    return !failed;
+}
+

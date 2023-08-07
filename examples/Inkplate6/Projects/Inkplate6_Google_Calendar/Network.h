@@ -15,22 +15,14 @@ Distributed as-is; no warranty is given.
 */
 
 #include "Arduino.h"
-
-#include <HTTPClient.h>
-#include <WiFi.h>
-#include <WiFiClientSecure.h>
-
-// To get timeZone from main file
-extern int timeZone;
-
-// Wifi ssid and password
-extern char ssid[];
-extern char pass[];
-
-extern char calendarURL[];
+#include "HTTPClient.h"
+#include "WiFi.h"
+#include "WiFiClientSecure.h"
 
 #ifndef NETWORK_H
 #define NETWORK_H
+
+#define DOWNLOAD_TIMEOUT 1000
 
 // All functions defined in Network.cpp
 
@@ -38,9 +30,9 @@ class Network
 {
   public:
     // Functions we can access in main file
-    void begin();
-    void getTime(char *timeStr, long offset = 0);
-    bool getData(char *data);
+    void begin(char *ssid, char *pass);
+    void getTime(char *timeStr, long offset = 0, int timeZone = 0);
+    bool getData(char *calendarURL, char *data);
 
   private:
     // Functions called from within our class

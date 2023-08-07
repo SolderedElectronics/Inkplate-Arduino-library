@@ -7,7 +7,7 @@
 
    In this example we will show how to use partial update of epaper screen with deep sleep functionality of ESP32.
    This example is not same as Inkplate-basic_partial_update! Do not use Inkplate5_Partial_Update with deep sleep,
-   IT WON'T WORK! Reason why you have to use this method with deep sleep is down how partail update works. It saves
+   IT WON'T WORK! Reason why you have to use this method with deep sleep is down how partial update works. It saves
    content from screen in RAM. By calling partialUpdate() function, code finds difference between what is currently on
    screen and what will be written and sends only that. When deep sleep is used, all content form the RAM has been
    deleted, so ESP32 doesn't know what is currently on the screen, so you have to "rewrite" what is currently on the
@@ -74,8 +74,10 @@ void loop()
 
 void createScreen()
 {
-    display.setCursor(200, 250);      // Set text cursor @ X = 200, Y = 250
     display.setTextSize(3);           // Set font to be scaled up three times
+    display.setCursor(35, 100);
+    display.print("Inkplate 7 partial update with deep sleep example");
+    display.setCursor(200, 250);      // Set text cursor @ X = 200, Y = 250
     display.print("First variable:"); // Write first variable to buffer
     display.print(counter, DEC);
     display.setCursor(200, 290);       // Set text cursor @ X = 200, Y = 290

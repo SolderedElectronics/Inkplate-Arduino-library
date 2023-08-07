@@ -53,7 +53,7 @@ void setup()
     // bitmaps from certain softwares. Forth parameter will dither the image.
     if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/Inkplate7/Advanced/WEB_WiFi/Inkplate7_Show_Pictures_From_Web/hearts_mono.bmp", 0, 0, true, false))
     {
-        // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
+        // If something failed (wrong filename or wrong bitmap format), write error message on the screen.
         // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
         display.println("Image open error");
         display.display();
@@ -63,7 +63,7 @@ void setup()
 
     if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/Inkplate7/Advanced/WEB_WiFi/Inkplate7_Show_Pictures_From_Web/roses.bmp", 0, 0, true, false))
     {
-        // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
+        // If something failed (wrong filename or wrong bitmap format), write error message on the screen.
         // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
         display.println("Image open error");
         display.display();
@@ -79,7 +79,7 @@ void setup()
     // image.
     if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/Inkplate7/Advanced/WEB_WiFi/Inkplate7_Show_Pictures_From_Web/flower.jpg", 0, 0, true, false))
     {
-        // If is something failed (wrong filename or format), write error message on the screen.
+        // If something failed (wrong filename or format), write error message on the screen.
         display.println("Image open error");
         display.display();
     }

@@ -30,7 +30,7 @@ void setup()
     display.begin();        // Init library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
     //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside ESP32).
-    display.setTextSize(4); // Set text size to be 4 times bigger than original (5x7 pix)
+    display.setTextSize(4); // Set text size to be 4 times bigger than original (5x7 px)
     display.drawTextWithShadow(50, 175, "Welcome to Inkplate 7!", INKPLATE7_BLACK, INKPLATE7_RED); // Draw a text with shadow
     display.setTextColor(INKPLATE7_BLACK, INKPLATE7_WHITE); // Set text color to black and background to white
     display.display(); // This line actually drawing on the Inkplate screen, previous lines just drawing into the frame

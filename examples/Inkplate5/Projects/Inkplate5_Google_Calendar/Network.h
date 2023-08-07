@@ -22,6 +22,8 @@ Distributed as-is; no warranty is given.
 #ifndef NETWORK_H
 #define NETWORK_H
 
+#define DOWNLOAD_TIMEOUT 1000
+
 // All functions defined in Network.cpp
 
 class Network

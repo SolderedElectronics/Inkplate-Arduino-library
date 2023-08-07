@@ -18,7 +18,7 @@
 
 #include "Touch.h"
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATEPLUS2)
 
 uint16_t _tsXResolution;
 uint16_t _tsYResolution;
@@ -250,6 +250,10 @@ uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos)
     for (int i = 0; i < 2; i++)
     {
         tsGetXY((_raw + 1) + (i * 3), &xRaw[i], &yRaw[i]);
+
+// Default touchscreen rotation
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
+
         switch (getRotation())
         {
         case 0:
@@ -269,6 +273,31 @@ uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos)
             yPos[i] = E_INK_WIDTH - 1 - ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
             break;
         }
+
+// For Inkplate PLUS2, both X and Y are mirrored for the touchscreen
+#elif defined(ARDUINO_INKPLATEPLUS2)
+
+        switch (getRotation())
+        {
+        case 0:
+            yPos[i] = E_INK_HEIGHT - 1 - ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
+            xPos[i] = ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            break;
+        case 1:
+            xPos[i] = E_INK_HEIGHT - 1 - ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
+            yPos[i] = E_INK_WIDTH - 1 - ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            break;
+        case 2:
+            yPos[i] = ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
+            xPos[i] = E_INK_WIDTH - 1 - ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            break;
+        case 3:
+            xPos[i] = ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
+            yPos[i] = ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            break;
+        }
+
+#endif
     }
     return fingers;
 }

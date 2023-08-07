@@ -106,11 +106,11 @@ void setup()
     // Connect Inkplate to the WiFi network
     network.begin(ssid, pass);
 
-    // Keep trying to get data if it fails the first time
-    Serial.print("Getting data ");
+    // Get the data from Google Calendar
+    // Repeat attempts until data is fully downloaded
+    Serial.println("Getting data... ");
     while (!network.getData(calendarURL, data))
     {
-        Serial.print('.');
         delay(1000);
     }
 
@@ -125,8 +125,6 @@ void setup()
 
     // Display the data on the screen
     display.display();
-
-    Serial.println("After display display, just before scleep");
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000000LL * DELAY_SECS); // Activate wakeup timer
@@ -296,7 +294,6 @@ void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp)
 // Function to draw event
 bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeeded)
 {
-    Serial.println("dRAW EVENT! ");
     // Upper left coordintes
     int x1 = 3 + 4 + (954 / 4) * day;
     int y1 = beginY + 3;
@@ -439,14 +436,15 @@ void drawData()
         char *summary = strstr(data + i, "SUMMARY:") + 8;
         char *location = strstr(data + i, "LOCATION:") + 9;
         char *timeStart = strstr(data + i, "DTSTART:") + 8;
+
         char *timeEnd = strstr(data + i, "DTEND:") + 6;
 
-        if (summary && summary < end)
+        if (summary && summary < end && (summary - data) > 0)
         {
             strncpy(entries[entriesNum].name, summary, strchr(summary, '\n') - summary);
             entries[entriesNum].name[strchr(summary, '\n') - summary] = 0;
         }
-        if (location && location < end)
+        if (location && location < end && (location - data) > 0)
         {
             strncpy(entries[entriesNum].location, location, strchr(location, '\n') - location);
             entries[entriesNum].location[strchr(location, '\n') - location] = 0;

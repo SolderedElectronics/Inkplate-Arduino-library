@@ -109,10 +109,11 @@ void setup()
 
     network.begin(ssid, pass); // Connect to wifi and get data
 
-    // Keep trying to get data if it fails the first time
-    while (!network.getData(data, calendarURL))
+    // Get the data from Google Calendar
+    // Repeat attempts until data is fully downloaded
+    Serial.println("Getting data... ");
+    while (!network.getData(calendarURL, data))
     {
-        Serial.println("Failed getting data, retrying");
         delay(1000);
     }
 
@@ -343,13 +344,13 @@ void getEvents()
         char *timeStart = strstr(data + i, "DTSTART:") + 8;
         char *timeEnd = strstr(data + i, "DTEND:") + 6;
 
-        if (summary && summary < end)
+        if (summary && summary < end && (summary - data) > 0)
         {
             strncpy(entries[entriesNum].name, summary,
                     strchr(summary, '\n') - summary); // Copy summary to struct variable name
             entries[entriesNum].name[strchr(summary, '\n') - summary] = 0;
         }
-        if (location && location < end)
+        if (location && location < end && (location - data) > 0)
         {
             strncpy(entries[entriesNum].location, location,
                     strchr(location, '\n') - location); // Copy location to struct variable location

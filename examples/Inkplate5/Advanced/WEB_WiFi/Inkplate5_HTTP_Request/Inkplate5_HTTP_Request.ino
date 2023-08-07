@@ -75,7 +75,7 @@ void setup()
         display.print('.');
         display.partialUpdate();
     }
-    display.print("connected"); // If it's connected, notify user
+    display.print("Connected!"); // If it's connected, notify user
     display.partialUpdate();
 
     HTTPClient http;

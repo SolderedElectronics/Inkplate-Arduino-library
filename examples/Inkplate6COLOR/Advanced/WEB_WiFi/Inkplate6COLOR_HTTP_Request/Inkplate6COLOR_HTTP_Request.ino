@@ -31,6 +31,7 @@ Inkplate display; // Create an object on Inkplate library and also set library i
 
 void setup()
 {
+    Serial.begin(115200);                            // Begin Serial for debugging
     display.begin();                                 // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();                          // Clear frame buffer of display
     display.display();                               // Put clear image on display
@@ -39,7 +40,8 @@ void setup()
     display.setTextColor(INKPLATE_BLACK);            // Set text color to black and background color to white
     Serial.println("Scanning for WiFi networks..."); // Write text
 
-    int n = WiFi.scanNetworks(); // Start searching WiFi networks and put the nubmer of found WiFi networks in variable n
+    int n =
+        WiFi.scanNetworks(); // Start searching WiFi networks and put the nubmer of found WiFi networks in variable n
     if (n == 0)
     { // If you did not find any network, show the message and stop the program.
         Serial.print("No WiFi networks found!");

@@ -27,7 +27,7 @@ uint8_t hours = 12;
 uint8_t minutes = 50;
 uint8_t seconds = 30;
 
-// Set date and weekday (NOTE: In weekdays 0 means Sunday, 1 menas Monday, ...)
+// Set date and weekday (NOTE: In weekdays 0 means Sunday, 1 means Monday, ...)
 uint8_t weekday = 2;
 uint8_t day = 21;
 uint8_t month = 3;
@@ -43,7 +43,7 @@ void setup()
     display.display();      // Put clear image on display
     display.setTextSize(2); // Set text to be 2 times bigger than classic 5x7 px text
 
-    pinMode(39, INPUT_PULLUP);
+    pinMode(39, INPUT_PULLUP); // Set RTC INT pin on ESP32 GPIO39 as input with pullup resistor enabled
 
     display.rtcSetTime(hours, minutes, seconds);   // Send time to RTC
     display.rtcSetDate(weekday, day, month, year); // Send date to RTC
@@ -61,7 +61,7 @@ void setup()
      *   int_pulse
      *       true = interrupt generate a pulse; false = interrupt follows timer flag
      */
-    display.rtcTimerSet(Inkplate::TIMER_CLOCK_1HZ, countdown_time, false, false);
+    display.rtcTimerSet(Inkplate::TIMER_CLOCK_1HZ, countdown_time, true, false);
 }
 
 void loop()

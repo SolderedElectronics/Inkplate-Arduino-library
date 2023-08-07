@@ -24,7 +24,7 @@
 #ifdef ARDUINO_INKPLATE4
 
 SPISettings epdSpiSettings(4000000UL, MSBFIRST, SPI_MODE0);
-SPIClass SPI2(HSPI);
+SPIClass epdSPI(VSPI);
 
 /**
  * @brief       begin function initialize Inkplate object with predefined
@@ -49,7 +49,7 @@ bool Inkplate::begin()
         setIOExpanderForLowPower();
 
         // Set the default text color
-        setTextColor(INKPLATE_BLACK);
+        setTextColor(INKPLATE4_BLACK);
 
         // Clear frame buffer
         clearDisplay();
@@ -92,7 +92,7 @@ void Inkplate::display() // Leave on does nothing
     sendCommand(0x20); // Activate Display Update Sequence
 
     delayMicroseconds(500); // Wait at least 200 uS
-    waitForEpd(24000);
+    waitForEpd(BUSY_TIMEOUT_MS);
 
     // Put the ePaper back to sleep
     setPanelDeepSleep(true);
@@ -118,7 +118,7 @@ bool Inkplate::setPanelDeepSleep(bool _state)
         // powered up from deep sleep only by reseting it and doing reinit.
 
         // Set SPI pins
-        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+        epdSPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
 
         // Set up EPD communication pins
         pinMode(EPAPER_CS_PIN, OUTPUT);
@@ -200,14 +200,14 @@ bool Inkplate::setPanelDeepSleep(bool _state)
         sendCommand(0X50); // VCOM and data interval setting
         sendData(0xf7);
 
-        sendCommand(0X02); // Power  EPD off
-        waitForEpd(BUSY_TIMEOUT_MS);
+        sendCommand(0X02); // Power EPD off
+        delay(10);
         sendCommand(0X07); // Put EPD in deep sleep
         sendData(0xA5);
         delay(1);
 
         // Disable SPI
-        SPI2.end();
+        epdSPI.end();
 
         // To reduce power consumption, set SPI pins as outputs
         pinMode(EPAPER_RST_PIN, INPUT);
@@ -243,9 +243,9 @@ void Inkplate::sendCommand(uint8_t _command)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, LOW);
     delayMicroseconds(10);
-    SPI2.beginTransaction(epdSpiSettings);
-    SPI2.writeBytes((const uint8_t *)(&_command), 1);
-    SPI2.endTransaction();
+    epdSPI.beginTransaction(epdSpiSettings);
+    epdSPI.writeBytes((const uint8_t *)(&_command), 1);
+    epdSPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
@@ -264,9 +264,9 @@ void Inkplate::sendData(uint8_t *_data, int _n)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    SPI2.beginTransaction(epdSpiSettings);
-    SPI2.writeBytes((const uint8_t *)_data, _n);
-    SPI2.endTransaction();
+    epdSPI.beginTransaction(epdSpiSettings);
+    epdSPI.writeBytes((const uint8_t *)_data, _n);
+    epdSPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
@@ -282,9 +282,9 @@ void Inkplate::sendData(uint8_t _data)
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     delayMicroseconds(10);
-    SPI2.beginTransaction(epdSpiSettings);
-    SPI2.writeBytes((const uint8_t *)(&_data), 1);
-    SPI2.endTransaction();
+    epdSPI.beginTransaction(epdSpiSettings);
+    epdSPI.writeBytes((const uint8_t *)(&_data), 1);
+    epdSPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
     delay(1);
 }
@@ -385,11 +385,6 @@ void Inkplate::setIOExpanderForLowPower()
     memset(ioRegsInt, 0, 22);
     ioBegin(IO_INT_ADDR, ioRegsInt);
 
-    // TOUCHPAD PINS
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, INPUT);
-
     // Battery voltage Switch MOSFET
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B1, OUTPUT);
 
@@ -404,6 +399,9 @@ void Inkplate::setIOExpanderForLowPower()
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A7, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B0, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B5, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B6, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B7, OUTPUT);
@@ -417,6 +415,9 @@ void Inkplate::setIOExpanderForLowPower()
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A7, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B0, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B5, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B6, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B7, LOW);

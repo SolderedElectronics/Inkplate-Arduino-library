@@ -25,6 +25,8 @@ Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and als
 #define REFRESH_DELAY 1000 // Delay between refreshes
 unsigned long time1;       // Time for measuring refresh in millis
 
+#define MAX_PARTIAL_UPDATES 9 // How many partial updates to do before a full refresh
+
 // Variable that keeps count on how much screen has been partially updated
 int n = 0;
 
@@ -126,7 +128,7 @@ void loop()
         display.setCursor(380, 360);        // Set position of the text
         printTime(hours, minutes, seconds); // Print the time on screen
 
-        if (n > 9) // Check if you need to do full refresh or you can do partial update
+        if (n > MAX_PARTIAL_UPDATES) // Check if you need to do full refresh or you can do partial update
         {
             display.display(true); // Do a full refresh
             n = 0;

@@ -164,11 +164,11 @@ void drawWeather()
     {
         // If found draw specified icon
         if (strcmp(abbrs[i], currentWeatherAbbr) == 0)
-            display.drawBitmap(10, 10, logos[i], 96, 96, INKPLATE_BLACK);
+            display.drawBitmap(10, 10, logos[i], 96, 96, INKPLATE4_BLACK);
     }
 
     // Draw weather state
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE4_BLACK);
     display.setFont(&Inter12pt7b);
     display.setTextSize(1);
     display.setCursor(30, 110);
@@ -179,7 +179,7 @@ void drawWeather()
 void drawTime()
 {
     // Drawing current time
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE4_BLACK);
     display.setFont(&Inter12pt7b);
     display.setTextSize(1);
 
@@ -191,7 +191,7 @@ void drawTime()
 void drawCity()
 {
     // Drawing city name
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE4_BLACK);
     display.setFont(&Inter12pt7b);
     display.setTextSize(1);
 
@@ -218,7 +218,7 @@ void drawTemps()
 
     display.setFont(&Inter8pt7b);
     display.setTextSize(1);
-    display.setTextColor(INKPLATE_BLACK);
+    display.setTextColor(INKPLATE4_BLACK);
 
     int dayOffset = 10;
 
@@ -241,7 +241,7 @@ void drawTemps()
     // Drawing temperature values into rectangles
     display.setFont(&Inter12pt7b);
     display.setTextSize(1);
-    display.setTextColor(INKPLATE_RED);
+    display.setTextColor(INKPLATE4_RED);
 
     for (int i = 0; i < 4; i++)
     {
@@ -259,7 +259,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr1, abbrs[i]) == 0)
             display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_BLACK, INKPLATE_WHITE);
+                               s_logos[i], 48, 48, INKPLATE4_BLACK, INKPLATE4_WHITE);
     }
 
     for (int i = 0; i < 9; ++i)
@@ -267,7 +267,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr2, abbrs[i]) == 0)
             display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_BLACK, INKPLATE_WHITE);
+                               s_logos[i], 48, 48, INKPLATE4_BLACK, INKPLATE4_WHITE);
     }
 
     for (int i = 0; i < 9; ++i)
@@ -275,7 +275,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr3, abbrs[i]) == 0)
             display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_BLACK, INKPLATE_WHITE);
+                               s_logos[i], 48, 48, INKPLATE4_BLACK, INKPLATE4_WHITE);
     }
 
     for (int i = 0; i < 9; ++i)
@@ -283,7 +283,7 @@ void drawTemps()
         // If found draw specified icon
         if (strcmp(abbr4, abbrs[i]) == 0)
             display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, yRectangleOffset + textMargin + iconOffset,
-                               s_logos[i], 48, 48, INKPLATE_BLACK, INKPLATE_WHITE);
+                               s_logos[i], 48, 48, INKPLATE4_BLACK, INKPLATE4_WHITE);
     }
 }
 
@@ -296,7 +296,7 @@ void drawCurrent()
     display.setFont(&Inter30pt7b);
     display.setTextSize(1);
 
-    display.drawTextWithShadow(140, 85, currentTemp, INKPLATE_BLACK, INKPLATE_RED);
+    display.drawTextWithShadow(140, 85, currentTemp, INKPLATE4_BLACK, INKPLATE4_RED);
 
     int x = display.getCursorX();
     int y = display.getCursorY();
@@ -311,7 +311,7 @@ void drawCurrent()
     display.setFont(&Inter30pt7b);
     display.setTextSize(1);
 
-    display.drawTextWithShadow(270, 85, currentWind, INKPLATE_BLACK, INKPLATE_RED);
+    display.drawTextWithShadow(270, 85, currentWind, INKPLATE4_BLACK, INKPLATE4_RED);
 
     x = display.getCursorX();
     y = display.getCursorY();

@@ -185,7 +185,7 @@ void showSplashScreen(float vComVoltage)
     display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
     display.setTextColor(0, 7);
     display.setTextSize(1);
-    display.setCursor(5, 583);
+    display.setCursor(5, 516);
     display.print(vComVoltage, 2);
     display.print("V");
     display.display();

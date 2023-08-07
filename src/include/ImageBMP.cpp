@@ -186,7 +186,7 @@ bool Image::drawBitmapFromSd(SdFile *p, int x, int y, bool dither, bool invert)
     {
         int16_t n = ROWSIZE(w, c);
         p->read(pixelBuffer, n);
-        displayBmpLine(x, y + bmpHeader.height - i - 1, &bmpHeader, dither, invert);
+        displayBmpLine(x, y + i, &bmpHeader, dither, invert);
     }
     return 1;
 }
@@ -290,7 +290,7 @@ bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool i
     for (int i = 0; i < bmpHeader.height; ++i)
     {
         memcpy(pixelBuffer, bufferPtr, ROWSIZE(bmpHeader.width, bmpHeader.color));
-        displayBmpLine(x, y + bmpHeader.height - i - 1, &bmpHeader, dither, invert);
+        displayBmpLine(x, y + i, &bmpHeader, dither, invert);
         bufferPtr += ROWSIZE(bmpHeader.width, bmpHeader.color);
     }
     return 1;
@@ -313,6 +313,7 @@ bool Image::drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool i
 void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool dither, bool invert)
 {
     int16_t w = bmpHeader->width;
+    int16_t h = bmpHeader->height;
     int8_t c = bmpHeader->color;
 
     startWrite();
@@ -323,10 +324,11 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 
         case 1: {
 #if defined(ARDUINO_INKPLATECOLOR)
-            writePixel(x + j, y,
+            writePixel(x + j, (h - y - 1),
                        (!invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
 #else
-            writePixel(x + j, y, (invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
+            writePixel(x + j, (h - y - 1),
+                       (invert ^ (palette[0] > palette[1])) ^ !!(pixelBuffer[j >> 3] & (1 << (7 - (j & 7)))));
 #endif
             break;
         }
@@ -351,7 +353,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             if (invert)
                 val = val ^ 1;
 #endif
-            writePixel(x + j, y, val);
+            writePixel(x + j, (h - y - 1), val);
             break;
         }
 
@@ -375,7 +377,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             if (invert)
                 val = val ^ 1;
 #endif
-            writePixel(x + j, y, val);
+            writePixel(x + j, (h - y - 1), val);
             break;
         }
 
@@ -416,7 +418,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
 #else
             val = RGB3BIT(r, g, b);
 #endif
-            writePixel(x + j, y, val);
+            writePixel(x + j, (h - y - 1), val);
             break;
         }
         case 24: {
@@ -451,7 +453,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             if (invert)
                 val = val ^ 1;
 #endif
-            writePixel(x + j, y, val);
+            writePixel(x + j, (h - y - 1), val);
             break;
         }
         case 32: {
@@ -487,7 +489,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             if (invert)
                 val = val ^ 1;
 #endif
-            writePixel(x + j, y, val);
+            writePixel(x + j, (h - y - 1), val);
             break;
         }
         }
@@ -572,7 +574,7 @@ bool Image::drawBmpFromSdAtPosition(const char *fileName, const Position &positi
     {
         int16_t n = ROWSIZE(w, c);
         dat.read(pixelBuffer, n);
-        displayBmpLine(posX, posY + bmpHeader.height - i - 1, &bmpHeader, dither, invert);
+        displayBmpLine(posX, posY + i, &bmpHeader, dither, invert);
     }
 
     return 1;

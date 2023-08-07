@@ -1,0 +1,68 @@
+﻿######################################################################################################
+## Syntax Coloring Map for library. The values below MUST be separated by a single "TAB", otherwise ##
+## the file will not be parsed correctly.                                                           ##
+##                                                                                                  ##
+## Date       Developer  Comments                                                                   ##
+## ========== ========== ========================================================================== ##
+## 2020-12-03 SV-Zanshin Added "measuring()" and "triggerMeasurement()"                             ##
+## 2020-06-25 SV-Zanshin Added "getI2CAddress" to list                                              ##
+## 2020-05-23 SV-Zanshin Updated values, added versioning comments                                  ##
+## 2018-06-14 SV-Zanshin Fixed multiple tab errors                                                  ##
+##                                                                                                  ##
+######################################################################################################
+
+######################################################################################################
+## Classes and Datatypes (KEYWORD1)                                                                 ##
+######################################################################################################
+BME680	KEYWORD1
+
+######################################################################################################
+## Methods and Functions (KEYWORD2)                                                                 ##
+######################################################################################################
+begin	KEYWORD2
+setOversampling	KEYWORD2
+setGas	KEYWORD2
+setIIRFilter	KEYWORD2
+getSensorData	KEYWORD2
+getI2CAddress	KEYWORD2
+waitForReadings	KEYWORD2
+reset	KEYWORD2
+measuring	KEYWORD2
+triggerMeasurement	KEYWORD2
+
+######################################################################################################
+## Constants (LITERAL1)                                                                             ##
+######################################################################################################
+SleepMode	KEYWORD2
+ForcedMode	KEYWORD2
+ForcedMode2	KEYWORD2
+NormalMode	KEYWORD2
+TemperatureSensor	KEYWORD2
+HumiditySensor	KEYWORD2
+PressureSensor	KEYWORD2
+UnknownSensor	KEYWORD2
+SensorOff	KEYWORD2
+Oversample1	KEYWORD2
+Oversample2	KEYWORD2
+Oversample4	KEYWORD2
+Oversample8	KEYWORD2
+Oversample16	KEYWORD2
+UnknownOversample	KEYWORD2
+IIROff	KEYWORD2
+IIR2	KEYWORD2
+IIR4	KEYWORD2
+IIR8	KEYWORD2
+IIR16	KEYWORD2
+UnknownIIR	KEYWORD2
+inactiveHalf	KEYWORD2
+inactive63ms	KEYWORD2
+inactive125ms	KEYWORD2
+inactive250ms	KEYWORD2
+inactive500ms	KEYWORD2
+inactive1000ms	KEYWORD2
+inactive10ms	KEYWORD2
+inactive20ms	KEYWORD2
+UnknownInactive	KEYWORD2
+TypicalMeasure	KEYWORD2
+MaximumMeasure	KEYWORD2
+UnknownMeasure	KEYWORD2

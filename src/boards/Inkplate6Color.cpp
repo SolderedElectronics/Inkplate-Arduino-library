@@ -23,7 +23,7 @@
 
 #ifdef ARDUINO_INKPLATECOLOR
 
-SPIClass SPI2(HSPI);
+SPIClass epdSPI(VSPI);
 
 SPISettings epdSpiSettings(2000000, MSBFIRST, SPI_MODE0);
 
@@ -88,9 +88,9 @@ void Inkplate::display()
     sendCommand(0x10);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
-    SPI2.beginTransaction(epdSpiSettings);
-    SPI2.writeBytes(DMemory4Bit, E_INK_WIDTH * E_INK_HEIGHT / 2);
-    SPI2.endTransaction();
+    epdSPI.beginTransaction(epdSpiSettings);
+    epdSPI.writeBytes(DMemory4Bit, E_INK_WIDTH * E_INK_HEIGHT / 2);
+    epdSPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
 
     sendCommand(POWER_OFF_REGISTER);
@@ -170,12 +170,12 @@ void Inkplate::clean()
     sendCommand(0x10);
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
-    SPI2.beginTransaction(epdSpiSettings);
+    epdSPI.beginTransaction(epdSpiSettings);
     for (uint32_t i = 0; i < (E_INK_WIDTH * E_INK_HEIGHT / 2); i++)
     {
-        SPI2.transfer(INKPLATE_WHITE | INKPLATE_WHITE << 4);
+        epdSPI.transfer(INKPLATE_WHITE | INKPLATE_WHITE << 4);
     }
-    SPI2.endTransaction();
+    epdSPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
 
     sendCommand(POWER_OFF_REGISTER);
@@ -211,9 +211,9 @@ void Inkplate::sendCommand(uint8_t _command)
 {
     digitalWrite(EPAPER_DC_PIN, LOW);
     digitalWrite(EPAPER_CS_PIN, LOW);
-    SPI2.beginTransaction(epdSpiSettings);
-    SPI2.transfer(_command);
-    SPI2.endTransaction();
+    epdSPI.beginTransaction(epdSpiSettings);
+    epdSPI.transfer(_command);
+    epdSPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
 }
 
@@ -229,9 +229,9 @@ void Inkplate::sendData(uint8_t *_data, int _n)
 {
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
-    SPI2.beginTransaction(epdSpiSettings);
-    SPI2.writeBytes(_data, _n);
-    SPI2.endTransaction();
+    epdSPI.beginTransaction(epdSpiSettings);
+    epdSPI.writeBytes(_data, _n);
+    epdSPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
 }
 
@@ -245,9 +245,9 @@ void Inkplate::sendData(uint8_t _data)
 {
     digitalWrite(EPAPER_DC_PIN, HIGH);
     digitalWrite(EPAPER_CS_PIN, LOW);
-    SPI2.beginTransaction(epdSpiSettings);
-    SPI2.transfer(_data);
-    SPI2.endTransaction();
+    epdSPI.beginTransaction(epdSpiSettings);
+    epdSPI.transfer(_data);
+    epdSPI.endTransaction();
     digitalWrite(EPAPER_CS_PIN, HIGH);
 }
 
@@ -271,7 +271,7 @@ bool Inkplate::setPanelDeepSleep(bool _state)
         // powered up from deep sleep only by reseting it and doing reinit.
 
         // Init SPI
-        SPI2.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
+        epdSPI.begin(EPAPER_CLK, -1, EPAPER_DIN, -1);
         pinMode(EPAPER_BUSY_PIN, INPUT);
         pinMode(EPAPER_RST_PIN, OUTPUT);
         pinMode(EPAPER_DC_PIN, OUTPUT);
@@ -334,12 +334,10 @@ bool Inkplate::setPanelDeepSleep(bool _state)
         digitalWrite(EPAPER_DC_PIN, LOW);
         digitalWrite(EPAPER_CS_PIN, LOW);
 
-        SPI2.end();
+        epdSPI.end();
 
-        pinMode(12, INPUT);
-        pinMode(13, INPUT);
-        pinMode(14, INPUT);
-        pinMode(15, INPUT);
+        pinMode(EPAPER_DIN, INPUT);
+        pinMode(EPAPER_CLK, INPUT);
         return true;
     }
 }
