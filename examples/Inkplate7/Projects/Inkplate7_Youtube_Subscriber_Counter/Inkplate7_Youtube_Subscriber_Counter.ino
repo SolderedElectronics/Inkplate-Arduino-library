@@ -30,7 +30,6 @@
 #include "Inkplate.h"
 
 // Include font used
-#include "Fonts/FreeSans18pt7b.h"
 #include "Fonts/Inter12pt7b.h"
 #include "Fonts/Inter30pt7b.h"
 
