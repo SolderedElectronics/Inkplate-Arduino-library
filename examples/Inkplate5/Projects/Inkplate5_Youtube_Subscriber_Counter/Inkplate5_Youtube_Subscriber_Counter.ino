@@ -1,8 +1,8 @@
 /*
-    Inkplate6_Youtube_Subscriber_Counter example for Soldered Inkplate 6
-    For this example you will need only USB cable and Inkplate 6.
-    Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.
-    Don't have "e-radionica Inkplate6" or "Soldered Inkplate6" option? Follow our tutorial and add it:
+    Inkplate5_Youtube_Subscriber_Counter example for Soldered Inkplate 5
+    For this example you will need only USB cable and Inkplate 5.
+    Select "Soldered Inkplate5" from Tools -> Board menu.
+    Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
     https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
     This example show how to use Google API to show info about some youtube chhannel.
@@ -22,8 +22,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
+#ifndef ARDUINO_INKPLATE5
+#error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
 #endif
 
 // Include Inkplate library to the sketch
@@ -92,10 +92,10 @@ RTC_DATA_ATTR int bootCount = 0;
 textElement elements[] = {
     {20, 62, &Inter30pt7b, channel.name, 0, 3},
     {19, 60, &Inter30pt7b, channel.name, 0, BLACK},
-    {190, 280, &Roboto_Light_120, (char *)NULL, 0, BLACK},
-    {180, 270, &Inter20pt7b, "Subs:", 1, BLACK},
-    {190, 380, &Roboto_Light_120, (char *)NULL, 0, BLACK},
-    {180, 370, &Inter20pt7b, "Views:", 1, BLACK},
+    {190, 230, &Roboto_Light_120, (char *)NULL, 0, BLACK},
+    {180, 220, &Inter20pt7b, "Subs:", 1, BLACK},
+    {190, 360, &Roboto_Light_120, (char *)NULL, 0, BLACK},
+    {180, 350, &Inter20pt7b, "Views:", 1, BLACK},
     {190, 480, &Roboto_Light_120, (char *)NULL, 0, BLACK},
     {180, 470, &Inter20pt7b, "Videos:", 1, BLACK},
 };
@@ -114,8 +114,8 @@ void setup()
     if (bootCount == 0)
     {
         // Welcome screen
-        display.drawImage(youtube_icon, 125, 219, 549, 123); // Draw the YouTube logo
-        display.setCursor(140, 360); // Set cursor, custom font uses different method for setting cursor
+        display.drawImage(youtube_icon, 205, 209, 549, 123); // Draw the YouTube logo
+        display.setCursor(254, 360); // Set cursor, custom font uses different method for setting cursor
         display.setTextSize(3);
         display.print("Youtube subscribers tracker!");
         display.display();
