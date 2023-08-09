@@ -128,7 +128,7 @@ class Inkplate : public System, public Graphics
 #ifdef ARDUINO_INKPLATEPLUS2
     Buzzer buzzer;
     APDS_9960 apds9960;
-    BME680 bme680;
+    BME680 bme688;
     Soldered_LSM6DS3 accelerometer;
     BQ_27441 battery;
     void wakePeripheral(uint8_t _peripheral);

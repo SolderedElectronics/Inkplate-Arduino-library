@@ -30,8 +30,9 @@ const char text[] = "This is partial update on Inkplate PLUS2 e-paper display! :
 // creating a scrolling effect as it decreases.
 int offset = 600;
 
-// Variable that keeps count on how much screen has been partially updated
+// Variable that keeps count on how  how many times the screen has been partially updated
 int n = 0;
+
 void setup()
 {
     display.begin();                    // Init Inkplate library (you should call this function ONLY ONCE)

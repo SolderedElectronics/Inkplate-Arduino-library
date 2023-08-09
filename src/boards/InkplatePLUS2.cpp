@@ -206,7 +206,7 @@ bool Inkplate::begin(void)
     }
 
     // Put them back to sleep
-    sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME680 | INKPLATE_ACCELEROMETER |
+    sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME688 | INKPLATE_ACCELEROMETER |
                     INKPLATE_FUEL_GAUGE);
 
     _beginDone = 1;
@@ -562,7 +562,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
  *
  * @param       uint8_t _peripheral
  *              The flag which peripheral to wake from deep sleep, you may use:
- *              INKPLATE_ACCELEROMETER, INKPLATE_BME680, INKPLATE_APDS9960 and
+ *              INKPLATE_ACCELEROMETER, INKPLATE_BME688, INKPLATE_APDS9960 and
  *              INKPLATE_FUEL_GAUGE
  *
  * @return      None
@@ -579,12 +579,12 @@ void Inkplate::wakePeripheral(uint8_t _peripheral)
         accelerometer.beginCore();
     }
 
-    if (_peripheral & INKPLATE_BME680)
+    if (_peripheral & INKPLATE_BME688)
     {
         // Wake BME
-        uint8_t bmeControlReg = bme680.readByte(BME_CONTROL_ADDR);
-        bme680.putData(BME_CONTROL_ADDR, bmeControlReg | 0x01);
-        bme680.begin();
+        uint8_t bmeControlReg = bme688.readByte(BME_CONTROL_ADDR);
+        bme688.putData(BME_CONTROL_ADDR, bmeControlReg | 0x01);
+        bme688.begin();
     }
 
     if (_peripheral & INKPLATE_APDS9960)
@@ -609,7 +609,7 @@ void Inkplate::wakePeripheral(uint8_t _peripheral)
  *
  * @param       uint8_t _peripheral
  *              The flag which peripheral to put to deep sleep, you may use:
- *              INKPLATE_ACCELEROMETER, INKPLATE_BME680, INKPLATE_APDS9960 and
+ *              INKPLATE_ACCELEROMETER, INKPLATE_BME688, INKPLATE_APDS9960 and
  *              INKPLATE_FUEL_GAUGE
  *
  * @return      None
@@ -624,11 +624,11 @@ void Inkplate::sleepPeripheral(uint8_t _peripheral)
         accelerometer.writeRegister(0x13, accControlReg | 0x04);
     }
 
-    if (_peripheral & INKPLATE_BME680)
+    if (_peripheral & INKPLATE_BME688)
     {
         // Put BME in sleep mode
-        uint8_t bmeControlReg = bme680.readByte(BME_CONTROL_ADDR);
-        bme680.putData(BME_CONTROL_ADDR, bmeControlReg & 0xFC);
+        uint8_t bmeControlReg = bme688.readByte(BME_CONTROL_ADDR);
+        bme688.putData(BME_CONTROL_ADDR, bmeControlReg & 0xFC);
     }
 
     if (_peripheral & INKPLATE_APDS9960)

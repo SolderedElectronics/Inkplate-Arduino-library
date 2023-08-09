@@ -47,7 +47,7 @@
 // Sensor constants
 #define INKPLATE_BUZZER        0x01
 #define INKPLATE_ACCELEROMETER 0x02
-#define INKPLATE_BME680        0x04
+#define INKPLATE_BME688        0x04
 #define BME_CONTROL_ADDR       0x74
 #define INKPLATE_APDS9960      0x08
 #define INKPLATE_FUEL_GAUGE    0x1
