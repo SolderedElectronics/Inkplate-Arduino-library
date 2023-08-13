@@ -25,8 +25,8 @@
 #define URL      "https://www.crowdsupply.com/soldered/inkplate-5" // Link to the Inkplate 7 crowdsupply campaign
 
 // Enter your WiFi credentials
-char ssid[] = "scifi";
-char pass[] = "eps01555";
+char ssid[] = "";
+char pass[] = "";
 
 // Create an object on Inkplate library and also set library into 1Bit (BW) mode
 Inkplate display(INKPLATE_3BIT);
