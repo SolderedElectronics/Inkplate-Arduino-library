@@ -245,10 +245,10 @@ void Graphics::selectDisplayMode(uint8_t _mode)
     if (_mode != _displayMode)
     {
         _displayMode = _mode & 1;
-        memset(DMemoryNew, 0, 60000);
-        memset(_partial, 0, 60000);
-        memset(_pBuffer, 0, 120000);
-        memset(DMemory4Bit, 255, 240000);
+        memset(DMemoryNew, 0, E_INK_WIDTH * E_INK_HEIGHT / 8);
+        memset(_partial, 0, E_INK_WIDTH * E_INK_HEIGHT / 8);
+        memset(_pBuffer, 0, E_INK_WIDTH * E_INK_HEIGHT / 4);
+        memset(DMemory4Bit, 255, E_INK_WIDTH * E_INK_HEIGHT / 2);
     }
 }
 #endif
