@@ -29,24 +29,80 @@
  */
 void Buzzer::begin()
 {
-    digipot.begin(DIGIPOT_ADDR);
+    // Init the pin for enabling the power to the buzzer
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, OUTPUT);
 }
 
 /**
  * @brief       Beep for a length of time
  *
  * @param       uint32_t length - the length of the beep in ms
+ *              uint8_t freq - the frequency, from 0 to 100
  *
  * @note        This is a blocking function, it will exit only when beeping is done
  *
  * @returns     none
  */
-void Buzzer::beep(uint32_t length)
+void Buzzer::beep(uint32_t length, uint8_t freq)
 {
     // Turn on the buzzer and wait for the length of time before turning it off
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, LOW);
+    // Set the frequency
+    setFrequencyInternal(freq);
+    // Wait for the beep to be done
     delay(length);
+    // Turn everything off
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, HIGH);
+}
+
+/**
+ * @brief       Turn on the buzzer indefinitely
+ *
+ * @param       uint8_t freq - the frequency, from 0 to 100
+ *
+ * @returns     none
+ */
+void Buzzer::beepOn(uint8_t freq)
+{
+    // Turn on the buzzer
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, LOW);
+
+    // Set the frequency
+    setFrequencyInternal(freq);
+}
+
+/**
+ * @brief       Turn off the buzzer
+ *
+ * @returns     none
+ */
+void Buzzer::beepOff()
+{
+    // Turn off the buzzer
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, HIGH);
+}
+
+/**
+ * @brief       Set the frequency by setting the wiper percentage of the digipot
+ *
+ * @param       uint8_t freq - the frequency, from 0 to 100
+ *
+ * @returns     none
+ */
+void Buzzer::setFrequencyInternal(int freq)
+{
+    // Make sure the value is in the 0-100 range
+    if (freq > 100 || freq < 0)
+        return;
+
+    // Init the digipot
+    // It needs to be powered on from before for this to have effect
+    // For that reason, this function is internal to this driver only
+    digipot.begin(DIGIPOT_ADDR);
+    
+    // Set the resistor's value
+    // Inverse, so that 0 is the lowest pitch and 100 the highest
+    digipot.setWiperPercent(100 - freq);
 }
 
 #endif

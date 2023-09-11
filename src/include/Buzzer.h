@@ -35,10 +35,13 @@ class Buzzer : virtual public Expander
   public:
     Buzzer(){};
     void begin();
-    void beep(uint32_t length);
+    void beep(uint32_t length, uint8_t freq = 50);
+    void beepOn(uint8_t freq = 50);
+    void beepOff();
 
   private:
     MCP4018_SOLDERED digipot;
+    void setFrequencyInternal(int freq);
 };
 
 #endif

@@ -57,6 +57,7 @@ void setup()
     // Call main draw function defined below
     mainDrawMenu();
     display.display();
+
 }
 
 void loop()

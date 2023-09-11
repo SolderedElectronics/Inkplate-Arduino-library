@@ -22,8 +22,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_Inkplate6PLUS
-#error "Wrong board selection for this example, please select Inkplate 6PLUS in the boards menu."
+#if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
+#error "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
 #endif
 
 // Include Inkplate library to the sketch
@@ -92,12 +92,12 @@ RTC_DATA_ATTR int bootCount = 0;
 textElement elements[] = {
     {20, 62, &Inter30pt7b, channel.name, 0, 3},
     {19, 60, &Inter30pt7b, channel.name, 0, BLACK},
-    {58, 237, &Inter30pt7b, (char *)NULL, 0, BLACK},
-    {165, 170, &Inter20pt7b, "Subs:", 1, BLACK},
-    {58, 397, &Inter30pt7b, (char *)NULL, 0, BLACK},
-    {180, 330, &Inter20pt7b, "Views:", 1, BLACK},
-    {58, 537, &Inter30pt7b, (char *)NULL, 0, BLACK},
-    {194, 470, &Inter20pt7b, "Videos:", 1, BLACK},
+    {58, 252, &Roboto_Light_120, (char *)NULL, 0, BLACK},
+    {165, 155, &Inter20pt7b, "Subs:", 1, BLACK},
+    {58, 482, &Roboto_Light_120, (char *)NULL, 0, BLACK},
+    {180, 385, &Inter20pt7b, "Views:", 1, BLACK},
+    {58, 692 , &Roboto_Light_120, (char *)NULL, 0, BLACK},
+    {194, 595, &Inter20pt7b, "Videos:", 1, BLACK},
 };
 
 void setup()
@@ -114,8 +114,8 @@ void setup()
     if (bootCount == 0)
     {
         // Welcome screen
-        display.drawImage(youtube_icon, 25, 222, 549, 123); // Draw the YouTube logo
-        display.setCursor(50, 370); // Set cursor, custom font uses different method for setting cursor
+        display.drawImage(youtube_icon, 237, 276, 549, 123); // Draw the YouTube logo
+        display.setCursor(254, 420); // Set cursor, custom font uses different method for setting cursor
         display.setTextSize(3);
         display.print("Youtube subscribers tracker!");
         display.display();

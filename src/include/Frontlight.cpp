@@ -27,7 +27,7 @@
  * @param       uint8_t _v
  *              value to set frontlight to
  *
- * @note        can only be used in inkplate 6PLUS, others don't suport
+ * @note        can only be used in inkplate 6PLUS and PLUS2, others don't suport
  * frontlight
  */
 void Frontlight::setFrontlight(uint8_t _v)

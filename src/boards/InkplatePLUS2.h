@@ -36,7 +36,7 @@
 #define PWR_GOOD_OK   0b11111010
 
 // Buzzer enable pin (pin P1_4 on internal IO expander)
-#define BUZZ_EN 14
+#define BUZZ_EN 12
 
 // Addresss to control the digipot (and affect beep frequency)
 #define DIGIPOT_ADDR 0x2F
