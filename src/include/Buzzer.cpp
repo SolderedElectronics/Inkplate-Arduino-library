@@ -99,7 +99,7 @@ void Buzzer::setFrequencyInternal(int freq)
     // It needs to be powered on from before for this to have effect
     // For that reason, this function is internal to this driver only
     digipot.begin(DIGIPOT_ADDR);
-    
+
     // Set the resistor's value
     // Inverse, so that 0 is the lowest pitch and 100 the highest
     digipot.setWiperPercent(100 - freq);
