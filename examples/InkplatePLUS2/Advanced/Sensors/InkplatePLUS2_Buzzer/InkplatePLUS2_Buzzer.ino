@@ -6,6 +6,7 @@
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how to beep the built-in buzzer and set it's frequency.
+   Read the info at the function calls and listen to the beeps!
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -22,32 +23,100 @@
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
 // Variable for the frequency currently being beeped
-int frequency = 10;
+int frequency = 1099;
 
+// Frequencies for the C Maj7 chord (in Hz):
+//               C    E    G    B
+int scale[4] = {523, 659, 783, 987};
+// This scale best fits the range of the buzzer where the frequency can be accurately conrolled via the digipot
+
+// Some helpful variables for playing the chord
+int currentNoteIndex = 0;
+int repeatCounter = 0;
+
+// Setup code, runs only once
 void setup()
 {
-    display.begin();      // Init Inkplate library (you should call this function ONLY ONCE)
-    display.display();    // Put clear image on display
+    display.begin();   // Init Inkplate library (you should call this function ONLY ONCE)
+    display.display(); // Put clear image on display
 
-    display.buzzer.begin(); // Init the buzzer
+    // Init the buzzer, this must be called if using it
+    display.buzzer.begin();
+
+    // The most basic example
+    // This will produce three short beeps
+    // The beeps are each 8 0ms long
+    display.buzzer.beep(80);
+    delay(80);
+    display.buzzer.beep(80);
+    delay(80);
+    display.buzzer.beep(80);
+    delay(80);
+
+    delay(5000); // Wait 5 seconds before the next example
+
+    // The buzzer may also be controlled by manually turning it on or off
+    // beepOn will turn on the buzzer indefinitely until beepOff is called
+    // This will produce two 200 ms beeps
+    display.buzzer.beepOn();
+    delay(200);
+    display.buzzer.beepOff();
+    delay(200);
+    display.buzzer.beepOn();
+    delay(200);
+    display.buzzer.beepOff();
+    delay(200);
+
+    delay(5000); // Wait 5 seconds before the next example
+
+    // Pitch may also be controlled
+    // Note that pitch is approximated as the digital potentiometer does not affect the pitch in a linear way
+    // Frequencies from 572 to 2933 Hz are supported
+    // Here are two low pitched (~750Hz) followed by two high pitched (~2400Hz) beeps
+    display.buzzer.beep(300, 750);
+    delay(50);
+    display.buzzer.beep(300, 750);
+    delay(50);
+    display.buzzer.beep(300, 2400);
+    delay(50);
+    display.buzzer.beep(300, 2400);
+    delay(50);
+
+    delay(5000); // Wait 5 seconds before the next example
 }
 
+// In the loop, play a little song with the notes of the chord
 void loop()
 {
-    // Beep the buzzer with a set length and frequency
-    // Parameters are length in ms and the frequency
-    // The frequency is a scaled value from 0 to 100, 0 being the lowest, 100 being the highest
-    display.buzzer.beep(500, frequency);
-    delay(200); // Wait a bit
+    // The first two times play the notes normally
+    if (repeatCounter < 2)
+    {
+        // Play the note set to be played for 100 ms
+        display.buzzer.beep(100, scale[currentNoteIndex]);
+        delay(600); // Wait 600 ms so there's room between the notes
+    }
+    // The second four times play the notes twice
+    else
+    {
+        // Play the note set to be played for 100 ms
+        display.buzzer.beep(100, scale[currentNoteIndex]);
+        delay(250); // Wait 300 ms and play it again for 50 ms
+        display.buzzer.beep(50, scale[currentNoteIndex]);
+        delay(300); // Wait for 300 ms, this totals to 700 so it's in rhythm
+    }
 
-    // You can also control the timing as such:
-    display.buzzer.beepOn(frequency); // Turn on the buzzer indefinitely
-    delay(100); // Wait a bit
-    display.buzzer.beepOff(); // Turn off the buzzer
-    
-    delay(950); // Wait a bit longer
-    
-    // Increment the frequency so the pitch increases from 10 to 100
-    frequency += 10;
-    if(frequency == 100) frequency = 10;
+    // Increment the counter and reset if it went out of bounds
+    currentNoteIndex++;
+    if (currentNoteIndex >= 4)
+    {
+        currentNoteIndex = 0;
+
+        // If the loop overall was repeated 4 times, the song is done, a bit longer
+        repeatCounter++;
+        if (repeatCounter >= 4)
+        {
+            repeatCounter = 0;
+            delay(3000);
+        }
+    }
 }

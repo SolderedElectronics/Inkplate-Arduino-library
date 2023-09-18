@@ -30,18 +30,24 @@
 // Include digipot library
 #include "libs/MCP4018/src/MCP4018-SOLDERED.h"
 
+#define BEEP_FREQ_MAX 2933
+#define BEEP_FREQ_MIN 572
+
 class Buzzer : virtual public Expander
 {
   public:
     Buzzer(){};
     void begin();
-    void beep(uint32_t length, uint8_t freq = 50);
-    void beepOn(uint8_t freq = 50);
+    void beep(uint32_t length, int freq);
+    void beep(uint32_t length);
+    void beepOn(int freq);
+    void beepOn();
     void beepOff();
 
   private:
     MCP4018_SOLDERED digipot;
     void setFrequencyInternal(int freq);
+    int freqToWiperPercent(int freq);
 };
 
 #endif

@@ -31,44 +31,86 @@ void Buzzer::begin()
 {
     // Init the pin for enabling the power to the buzzer
     pinModeInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, OUTPUT);
+    beepOff(); // Turn everything off initially
+
+    digipot.begin();
 }
 
 /**
  * @brief       Beep for a length of time
  *
  * @param       uint32_t length - the length of the beep in ms
- *              uint8_t freq - the frequency, from 0 to 100
+ *              uint8_t freq - the frequency in Hz
+ *
+ * @note        This is a blocking function, it will exit only when beeping is done
+ *              If the frequency entered is out of range, it will get capped to the range
+ *
+ * @returns     none
+ */
+void Buzzer::beep(uint32_t length, int freq)
+{
+    // Turn on the buzzer at set frequency
+    beepOn(freq);
+
+    // Wait for the beep to be done
+    delay(length);
+
+    // Turn everything off
+    beepOff();
+}
+
+/**
+ * @brief       Beep for a length of time on the default frequency
+ *
+ * @param       uint32_t length - the length of the beep in ms
  *
  * @note        This is a blocking function, it will exit only when beeping is done
  *
  * @returns     none
  */
-void Buzzer::beep(uint32_t length, uint8_t freq)
+void Buzzer::beep(uint32_t length)
 {
-    // Turn on the buzzer and wait for the length of time before turning it off
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, LOW);
-    // Set the frequency
-    setFrequencyInternal(freq);
+    // Turn on the buzzer
+    beepOn();
+
     // Wait for the beep to be done
     delay(length);
+
     // Turn everything off
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, HIGH);
+    beepOff();
 }
 
 /**
  * @brief       Turn on the buzzer indefinitely
  *
- * @param       uint8_t freq - the frequency, from 0 to 100
+ * @param       uint8_t freq - the frequency in Hz
  *
  * @returns     none
  */
-void Buzzer::beepOn(uint8_t freq)
+void Buzzer::beepOn(int freq)
 {
     // Turn on the buzzer
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, LOW);
 
+    // Calculate the Wiper% based on the desired frequency
+    int wiperPercent = freqToWiperPercent(freq);
+
     // Set the frequency
-    setFrequencyInternal(freq);
+    digipot.setWiperPercent(wiperPercent);
+}
+
+/**
+ * @brief       Turn on the buzzer indefinitely at default frequency
+ *
+ * @returns     none
+ */
+void Buzzer::beepOn()
+{
+    // Turn on the buzzer
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, LOW);
+
+    // Set the default frequency
+    digipot.setWiperPercent(50);
 }
 
 /**
@@ -83,26 +125,20 @@ void Buzzer::beepOff()
 }
 
 /**
- * @brief       Set the frequency by setting the wiper percentage of the digipot
+ * @brief       Calculate the digipot position to get a certain tone frequency
+ *              Approximated by a quadratic regression
  *
- * @param       uint8_t freq - the frequency, from 0 to 100
+ * @param       uint8_t freq - the desired frequency
  *
- * @returns     none
+ * @returns     int of the wiper percent
  */
-void Buzzer::setFrequencyInternal(int freq)
+int Buzzer::freqToWiperPercent(int freq)
 {
-    // Make sure the value is in the 0-100 range
-    if (freq > 100 || freq < 0)
-        return;
+    // First cap the value to the interval
+    int constrainedFreq = constrain(freq, BEEP_FREQ_MIN, BEEP_FREQ_MAX);
 
-    // Init the digipot
-    // It needs to be powered on from before for this to have effect
-    // For that reason, this function is internal to this driver only
-    digipot.begin(DIGIPOT_ADDR);
-
-    // Set the resistor's value
-    // Inverse, so that 0 is the lowest pitch and 100 the highest
-    digipot.setWiperPercent(100 - freq);
+    // Calculate the value
+    return 156.499576 + (-0.130347337 * constrainedFreq);
 }
 
 #endif
