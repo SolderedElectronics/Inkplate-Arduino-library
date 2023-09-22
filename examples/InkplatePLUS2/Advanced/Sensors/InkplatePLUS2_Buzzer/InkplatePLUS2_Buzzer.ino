@@ -6,7 +6,7 @@
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how to beep the built-in buzzer and set it's frequency.
-   Read the info at the function calls and listen to the beeps!
+   Upload the sketch and listen to the beeps!
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -22,12 +22,9 @@
 
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
-// Variable for the frequency currently being beeped
-int frequency = 1099;
-
 // Frequencies for the C Maj7 chord (in Hz):
 //               C    E    G    B
-int scale[4] = {523, 659, 783, 987};
+int chord[4] = {523, 659, 783, 987};
 // This scale best fits the range of the buzzer where the frequency can be accurately conrolled via the digipot
 
 // Some helpful variables for playing the chord
@@ -45,7 +42,7 @@ void setup()
 
     // The most basic example
     // This will produce three short beeps
-    // The beeps are each 8 0ms long
+    // The beeps are each 80ms long
     display.buzzer.beep(80);
     delay(80);
     display.buzzer.beep(80);
@@ -92,16 +89,16 @@ void loop()
     if (repeatCounter < 2)
     {
         // Play the note set to be played for 100 ms
-        display.buzzer.beep(100, scale[currentNoteIndex]);
+        display.buzzer.beep(100, chord[currentNoteIndex]);
         delay(600); // Wait 600 ms so there's room between the notes
     }
     // The second four times play the notes twice
     else
     {
         // Play the note set to be played for 100 ms
-        display.buzzer.beep(100, scale[currentNoteIndex]);
+        display.buzzer.beep(100, chord[currentNoteIndex]);
         delay(250); // Wait 300 ms and play it again for 50 ms
-        display.buzzer.beep(50, scale[currentNoteIndex]);
+        display.buzzer.beep(50, chord[currentNoteIndex]);
         delay(300); // Wait for 300 ms, this totals to 700 so it's in rhythm
     }
 

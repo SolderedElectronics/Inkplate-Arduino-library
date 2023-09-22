@@ -206,9 +206,10 @@ bool Inkplate::begin(void)
     }
 
     // Put them back to sleep
+    /*
     sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME688 | INKPLATE_ACCELEROMETER |
                     INKPLATE_FUEL_GAUGE);
-
+    */
     _beginDone = 1;
     return 1;
 }
@@ -573,10 +574,10 @@ void Inkplate::wakePeripheral(uint8_t _peripheral)
     {
         // Wake accelerometer
         uint8_t accControlReg;
-        accelerometer.readRegister(&accControlReg, 0x13);
-        accelerometer.writeRegister(0x13, accControlReg & 0xBF);
+        lsm6ds3.readRegister(&accControlReg, 0x13);
+        lsm6ds3.writeRegister(0x13, accControlReg & 0xBF);
         delay(2);
-        accelerometer.beginCore();
+        lsm6ds3.beginCore();
     }
 
     if (_peripheral & INKPLATE_BME688)
@@ -620,8 +621,8 @@ void Inkplate::sleepPeripheral(uint8_t _peripheral)
     {
         // Put accelerometer in sleep mode
         uint8_t accControlReg;
-        accelerometer.readRegister(&accControlReg, 0x13);
-        accelerometer.writeRegister(0x13, accControlReg | 0x04);
+        lsm6ds3.readRegister(&accControlReg, 0x13);
+        lsm6ds3.writeRegister(0x13, accControlReg | 0x04);
     }
 
     if (_peripheral & INKPLATE_BME688)
