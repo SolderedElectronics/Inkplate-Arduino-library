@@ -126,11 +126,11 @@ class Inkplate : public System, public Graphics
     };
 
 #ifdef ARDUINO_INKPLATEPLUS2
-    Buzzer buzzer; // Buzzer
-    APDS_9960 apds9960; // Gesture sensor
-    BME680 bme688; // Temperature, pressure and humidity sensor
+    Buzzer buzzer;            // Buzzer
+    APDS_9960 apds9960;       // Gesture sensor
+    BME680 bme688;            // Temperature, pressure and humidity sensor
     Soldered_LSM6DS3 lsm6ds3; // Accelerometer/Gyroscope
-    BQ_27441 battery; // Fuel gauge
+    BQ_27441 battery;         // Fuel gauge
     void wakePeripheral(uint8_t _peripheral);
     void sleepPeripheral(uint8_t _peripheral);
 #endif
