@@ -27,7 +27,7 @@
 #include "include/System.h"
 #include "libs/SdFat/SdFat.h"
 
-#ifdef ARDUINO_INKPLATEPLUS2
+#ifdef ARDUINO_INKPLATE4TEMPERA
 #include "include/Buzzer.h"
 #include "libs/APDS9960/src/APDS9960-SOLDERED.h"
 #include "libs/BME680/src/BME680-SOLDERED.h"
@@ -125,7 +125,7 @@ class Inkplate : public System, public Graphics
         return Graphics::getRotation();
     };
 
-#ifdef ARDUINO_INKPLATEPLUS2
+#ifdef ARDUINO_INKPLATE4TEMPERA
     Buzzer buzzer;            // Buzzer
     APDS_9960 apds9960;       // Gesture sensor
     BME680 bme688;            // Temperature, pressure and humidity sensor

@@ -18,7 +18,7 @@
 
 #include "Touch.h"
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATEPLUS2)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
 
 uint16_t _tsXResolution;
 uint16_t _tsYResolution;
@@ -274,8 +274,8 @@ uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos)
             break;
         }
 
-// For Inkplate PLUS2, both X and Y are mirrored for the touchscreen
-#elif defined(ARDUINO_INKPLATEPLUS2)
+// For Inkplate 4TEMPERA, both X and Y are mirrored for the touchscreen
+#elif defined(ARDUINO_INKPLATE4TEMPERA)
 
         switch (getRotation())
         {

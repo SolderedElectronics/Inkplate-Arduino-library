@@ -76,7 +76,7 @@
 #define RTC_7PF    0
 #define RTC_12_5PF 1
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATEPLUS2)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
 #include "Frontlight.h"
 #include "Touch.h"
 #endif
@@ -87,7 +87,7 @@
 
 #if defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
     defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATECOOL) || defined(ARDUINO_INKPLATE5) ||                   \
-    defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7) || defined(ARDUINO_INKPLATEPLUS2)
+    defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7) || defined(ARDUINO_INKPLATE4TEMPERA)
 #include "Pcal.h"
 #endif
 
@@ -101,7 +101,7 @@ class System : public Esp,
                virtual public Expander,
 #endif
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATEPLUS2)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
                public Touch,
                public Frontlight,
 #endif

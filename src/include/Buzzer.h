@@ -3,7 +3,7 @@
  * @file        Buzzer.h
  * @brief       Basic funtions for controling Inkplate's buzzer
  *
- *              Only available on Inkplate PLUS2
+ *              Only available on Inkplate 4TEMPERA
  *
  *              https://github.com/SolderedElectronics/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -20,7 +20,7 @@
 #ifndef __BUZZER_H__
 #define __BUZZER_H__
 
-#ifdef ARDUINO_INKPLATEPLUS2
+#ifdef ARDUINO_INKPLATE4TEMPERA
 
 #include "Arduino.h"
 #include "Pcal.h"

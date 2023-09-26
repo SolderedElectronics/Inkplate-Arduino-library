@@ -5,7 +5,7 @@
     See the main library header file for all details
 */
 
-#ifdef ARDUINO_INKPLATEPLUS2
+#ifdef ARDUINO_INKPLATE4TEMPERA
 
 #include "Zanshin_BME680.h"  // Include the library header definition
 

@@ -20,7 +20,7 @@
 #include "Buzzer.h"
 #include "defines.h"
 
-#ifdef ARDUINO_INKPLATEPLUS2
+#ifdef ARDUINO_INKPLATE4TEMPERA
 
 /**
  * @brief       Initiate the digipot which the buzzer uses to change pitch

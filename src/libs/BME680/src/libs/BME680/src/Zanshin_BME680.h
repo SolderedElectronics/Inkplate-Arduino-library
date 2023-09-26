@@ -1,4 +1,4 @@
-#ifdef ARDUINO_INKPLATEPLUS2
+#ifdef ARDUINO_INKPLATE4TEMPERA
 // clang-format off
 /*! @file Zanshin_BME680.h
 

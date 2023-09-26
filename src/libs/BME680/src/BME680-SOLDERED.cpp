@@ -9,7 +9,7 @@
  * @authors     Zvonimir Haramustek for Soldered.com
  ***************************************************/
 
-#ifdef ARDUINO_INKPLATEPLUS2
+#ifdef ARDUINO_INKPLATE4TEMPERA
 
 #include "BME680-SOLDERED.h"
 
