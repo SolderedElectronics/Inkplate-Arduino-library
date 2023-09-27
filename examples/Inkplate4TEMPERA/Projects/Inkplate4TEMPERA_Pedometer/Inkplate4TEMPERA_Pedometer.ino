@@ -8,6 +8,8 @@
    This project will show you how to use the lsm6ds3 accelerometer/gyroscope as a pedometer.
    It also shows a cool animation as you walk!
 
+   NOTE: it takes a couple steps for the pedometer to start counting each time you stop, this is expected
+
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
    27 Aug 2023 by Soldered
