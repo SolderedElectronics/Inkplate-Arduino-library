@@ -1,8 +1,8 @@
 /*
-   Inkplate4TEMPERA_Partial_Update_With_Deep_Sleep example for Soldered Inkplate 4TEMPERA
+   Inkplate4TEMPERA_Partial_Update_With_Deep_Sleep example for Soldered Inkplate 4 TEMPERA
    For this example you will need only USB-C cable and Inkplate 4TEMPERA
-   Select "Soldered Inkplate 4TEMPERA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 4TEMPERA" option? Follow our tutorial and add it:
+   Select "Soldered Inkplate 4 TEMPERA" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 4 TEMPERA" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    In this example we will show how to use partial update of epaper screen with deep sleep functionality of ESP32.

@@ -1,5 +1,5 @@
 /*
-   Inkplate4TEMPERA_Calculator example for Soldered Inkplate 4TEMPERA
+   Inkplate4TEMPERA_Calculator example for Soldered Inkplate 4 TEMPERA
    For this example you will need USB-C cable and Inkplate 4TEMPERA (and a calculator, if you don't trust Inkplate :) ).
    Select "Soldered Inkplate 6Plus" from Tools -> Board menu.
    Don't have "Soldered Inkplate 6Plus" option? Follow our tutorial and add it:
@@ -15,7 +15,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE4TEMPERA
-#error "Wrong board selection for this example, please select Inkplate 4TEMPERA in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 4 TEMPERA in the boards menu."
 #endif
 
 #include "Calculator.h"

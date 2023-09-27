@@ -1,5 +1,5 @@
 /*
-   Inkplate4TEMPERA_Wake_Up_Button example for Soldered Inkplate 4TEMPERA
+   Inkplate4TEMPERA_Wake_Up_Button example for Soldered Inkplate 4 TEMPERA
    For this example you will need a USB-C cable and an Inkplate 4TEMPERA
    Select "Soldered Inkplate4TEMPERA" from Tools -> Board menu.
    Don't have "Soldered Inkplate4TEMPERA" option? Follow our tutorial and add it:

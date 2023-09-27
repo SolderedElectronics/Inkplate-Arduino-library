@@ -1,5 +1,5 @@
 /*
-   Inkplate4TEMPERA_Faster_Display_Refreshes example for Soldered Inkplate 4TEMPERA
+   Inkplate4TEMPERA_Faster_Display_Refreshes example for Soldered Inkplate 4 TEMPERA
    For this example you will need an USB-C cable and an Inkplate 4TEMPERA
    Select "e-radionica Inkplate 4TEMPERA" or "Soldered Inkplate 4TEMPERA" from Tools -> Board menu.
    Don't have "e-radionica Inkplate 4TEMPERA" or "Soldered Inkplate 4TEMPERA" option? Follow our tutorial and add it:

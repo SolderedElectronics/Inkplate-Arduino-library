@@ -1,8 +1,8 @@
 /*
-   Inkplate4TEMPERA_Show_JPG_With_HTTPClient example for Soldered Inkplate 4TEMPERA
+   Inkplate4TEMPERA_Show_JPG_With_HTTPClient example for Soldered Inkplate 4 TEMPERA
    For this example you will need a USB-C cable, Inkplate 4TEMPERA, and an available WiFi connection.
-   Select "Soldered Inkplate 4TEMPERA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 4TEMPERA" option? Follow our tutorial and add it:
+   Select "Soldered Inkplate 4 TEMPERA" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 4 TEMPERA" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how to show JPG image using HTTPClient.
@@ -15,7 +15,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE4TEMPERA
-#error "Wrong board selection for this example, please select Inkplate 4TEMPERA in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 4 TEMPERA in the boards menu."
 #endif
 
 // Include needed libraries in the sketch

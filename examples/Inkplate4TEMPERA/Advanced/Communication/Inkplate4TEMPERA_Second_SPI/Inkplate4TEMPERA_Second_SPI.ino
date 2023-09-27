@@ -1,8 +1,8 @@
 /*
-   Inkplate4TEMPERA_Second_SPI example for Soldered Inkplate 4TEMPERA
+   Inkplate4TEMPERA_Second_SPI example for Soldered Inkplate 4 TEMPERA
    For this example you will need a USB-C cable, Inkplate 4TEMPERA, MFRC522 RFID reader, RFID tag and few wires.
-   Select "Soldered Inkplate 4TEMPERA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 4TEMPERA" option? Follow our tutorial and add it:
+   Select "Soldered Inkplate 4 TEMPERA" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 4 TEMPERA" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example shows how to use a second SPI for any breakout that uses SPI communication.

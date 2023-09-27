@@ -35,7 +35,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE4TEMPERA
-#error "Wrong board selection for this example, please select Inkplate 4TEMPERA in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 4 TEMPERA in the boards menu."
 #endif
 
 // Include needed libraries in the sketch

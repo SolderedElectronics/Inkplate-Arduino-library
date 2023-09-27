@@ -1,8 +1,8 @@
 /*
-   Inkplate4TEMPERA_External_IO_Expander example for Soldered Inkplate 4TEMPERA
+   Inkplate4TEMPERA_External_IO_Expander example for Soldered Inkplate 4 TEMPERA
    For this example you will need only a USB-C cable, Inkplate 4TEMPERA, 330 Ohm resistor and LED diode.
-   Select "Soldered Inkplate 4TEMPERA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 4TEMPERA" option? Follow our tutorial and add it:
+   Select "Soldered Inkplate 4 TEMPERA" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 4 TEMPERA" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    Connect resistor to P1-7 pin on IO Expander header at bottom
@@ -19,7 +19,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE4TEMPERA
-#error "Wrong board selection for this example, please select Inkplate 4TEMPERA in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 4 TEMPERA in the boards menu."
 #endif
 
 #include "Inkplate.h" //Include Inkplate library to the sketch

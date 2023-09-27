@@ -1,8 +1,8 @@
 /*
-   Inkplate4TEMPERA_Image_Frame_From_Web example for Soldered Inkplate 4TEMPERA
-   For this example you will need only USB-C cable and Inkplate 4TEMPERA.
-   Select "Soldered Inkplate 4TEMPERA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 4TEMPERA" option? Follow our tutorial and add it:
+   Inkplate4TEMPERA_Image_Frame_From_Web example for Soldered Inkplate 4 TEMPERA
+   For this example you will need only USB-C cable and Inkplate 4 TEMPERA.
+   Select "Soldered Inkplate 4 TEMPERA" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 4 TEMPERA" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    Want to learn more about Inkplate? Visit www.inkplate.io
@@ -12,7 +12,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE4TEMPERA
-#error "Wrong board selection for this example, please select Inkplate 4TEMPERA in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 4 TEMPERA in the boards menu."
 #endif
 
 // Include Inkplate library in the sketch

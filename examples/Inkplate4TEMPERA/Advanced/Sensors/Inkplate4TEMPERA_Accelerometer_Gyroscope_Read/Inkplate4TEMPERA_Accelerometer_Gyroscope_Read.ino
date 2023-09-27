@@ -1,12 +1,12 @@
 /*
-   Inkplate4TEMPERA_Accelerometer_Gyroscope_Read example for Soldered Inkplate 4TEMPERA
-   For this example you will need only a USB-C cable and Inkplate 4TEMPERA.
-   Select "Soldered Inkplate 4TEMPERA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 4TEMPERA" option? Follow our tutorial and add it:
+   Inkplate4TEMPERA_Accelerometer_Gyroscope_Read example for Soldered Inkplate 4 TEMPERA
+   For this example you will need only a USB-C cable and Inkplate 4 TEMPERA.
+   Select "Soldered Inkplate 4 TEMPERA" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 4 TEMPERA" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how to read from the built-in LSM6DS3 gyroscope/accelerometer.
-   The rotation of the 3D Cube is modified by the accelerometer.
+   The rotation of the 3D Cube is modified by the accelerometer values.
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
@@ -15,7 +15,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE4TEMPERA
-#error "Wrong board selection for this example, please select Inkplate 4TEMPERA in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 4 TEMPERA in the boards menu."
 #endif
 
 #include "Inkplate.h" // Include Inkplate library to the sketch
@@ -27,7 +27,7 @@ Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and als
 int numRefreshes = 0;
 
 // How many partial updates we want before doing a full refresh
-// 35 still looks OK, but it's not reccomended to go over this
+// 35 still looks OK, it's not reccomended to go over this
 #define NUM_PARTIAL_UPDATES_BEFORE_FULL_REFRESH 35
 
 // Variables which are used for drawing the 3D Cube
@@ -39,10 +39,19 @@ int edges[12][2] = {
     {4, 5}, {5, 6}, {6, 7}, {7, 4}, // Top face
     {0, 4}, {1, 5}, {2, 6}, {3, 7}  // Vertical edges
 };
-// The angle at which the cube gets projected
+// This value multiplies the accelerometer readings to help project the cube in the orientation of the accelerometer
+// If you want accelerometer movements to have more effect on the cube's retation, increase this
+// And vice versa
+#define ANGLE_MODIFIER 0.0008
+// Variables for the angles at which the cube gets projected
 float angleX = 0;
 float angleY = 0;
 float angleZ = 0;
+// Also, remember the previous angles
+// This is just to calculate the average between the two in order to smooth out the movement
+float previousAngleX = 0;
+float previousAngleY = 0;
+float previousAngleZ = 0;
 
 // Setup code, runs only once
 void setup()
@@ -52,15 +61,16 @@ void setup()
 
     // Set text size to be 2x larger than default (5x7px)
     display.setTextSize(2);
+    display.setTextColor(BLACK); // Set the text color to black also
 
     // Try to init the acccelerometer
     if (display.lsm6ds3.begin() != 0)
     {
-        // This  shouldn't really happen as it's on-board but just in case we can't init, notify the user
+        // In case of initialization failure, notify the user
         display.setCursor(50, 50);
-        display.setTextColor(BLACK);
         display.setFont();
-        display.print("ERROR: can't init gyroscope!");
+        display.print("ERROR: can't init lsm6ds3!");
+
         // Go to sleep
         esp_deep_sleep_start();
     }
@@ -68,7 +78,10 @@ void setup()
 
 void loop()
 {
-    // Read the values from the accelerometer
+    // First, clear what was previously in the frame buffer
+    display.clearDisplay();
+    
+    // Read values from the accelerometer
     float accelX = display.lsm6ds3.readRawAccelX();
     float accelY = display.lsm6ds3.readRawAccelY();
     float accelZ = display.lsm6ds3.readRawAccelZ();
@@ -77,11 +90,6 @@ void loop()
     float gyroX = display.lsm6ds3.readFloatGyroX();
     float gyroY = display.lsm6ds3.readFloatGyroY();
     float gyroZ = display.lsm6ds3.readFloatGyroZ();
-
-    // Compute the angle modifier variables from the accelerometer data
-    angleX = getAngleModifier(accelX);
-    angleY = getAngleModifier(accelY);
-    angleZ = getAngleModifier(accelZ);
 
     // Print accelerometer readings on the display
     display.setCursor(40, 430);
@@ -105,6 +113,23 @@ void loop()
     display.print("GYRO Z:");
     display.print(gyroZ, 4);
 
+    // Let's draw the cube!
+    // Compute the angle modifier variables from the accelerometer data
+    angleX = accelX * ANGLE_MODIFIER;
+    angleY = accelY * ANGLE_MODIFIER;
+    angleZ = accelZ * ANGLE_MODIFIER;
+
+    // Calculate the average between the previous
+    // This makes the movement smoother
+    angleX = (angleX + previousAngleX) / 2;
+    angleY = (angleY + previousAngleY) / 2;
+    angleZ = (angleZ + previousAngleZ) / 2;
+
+    // Remember the value for the next loop
+    previousAngleX = angleX;
+    previousAngleY = angleY;
+    previousAngleZ = angleZ;
+
     // Let's project the cube's edges!
     // For each edge...
     for (int i = 0; i < 12; i++)
@@ -115,15 +140,18 @@ void loop()
 
         // Rotate and project the vertices to 2D
         int x1, y1, x2, y2;
-        project(v1, angleX, angleY, angleZ, &x1, &y1);
-        project(v2, angleX, angleY, angleZ, &x2, &y2);
+
+        // Project it, notice that X, Y and Z are rearranged here and not in the default order
+        // This is due to the orientation of the gyroscope on the actual board
+        project(v1, angleY, angleZ, angleX, &x1, &y1);
+        project(v2, angleY, angleZ, angleX, &x2, &y2);
 
         // Draw the edge
         display.drawLine(x1, y1, x2, y2, BLACK);
     }
 
     // Finally, let's update the screen
-    // Check if you need to do full refresh or you can do partial update
+    // Check if we need to do full refresh or you can do partial update
     if (numRefreshes > NUM_PARTIAL_UPDATES_BEFORE_FULL_REFRESH)
     {
         // Time for a full refresh? Do it
@@ -137,11 +165,8 @@ void loop()
         numRefreshes++;                     // Increment the partial update counter as well
     }
 
-    // Displaying is complete, clear what was drawn from the frame buffer so we can draw again in the next loop
-    display.clearDisplay();
-
-    // Wait 70ms so the frame rate isn't too fast
-    delay(70);
+    // Wait 30ms so the frame rate isn't too fast
+    delay(30);
 }
 
 // This function projects 3D space onto 2D with a set rotation
@@ -166,22 +191,4 @@ void project(float *v, float angleX, float angleY, float angleZ, int *x, int *y)
     float z = 4 / (4 + zrrr);
     *x = xrrr * z * 100 + display.width() / 2;
     *y = yrrr * z * 100 + display.height() / 2;
-}
-
-// This function calculates how much the X, Y and Z angles have to be modified from the measured accelerometer data
-// It scales down the measurement and removes noise
-float getAngleModifier(float accData)
-{
-    float angleModifier = accData;
-
-    // If the value is between -1.5 and 1.5 that's noise, so lower it's significance
-    if (angleModifier < 1.5 && angleModifier > -1.5)
-        angleModifier = angleModifier * 0.05;
-
-    // If the value is still small, just set it to 0
-    if (angleModifier < 0.5 && angleModifier > -0.5)
-        angleModifier = 0;
-
-    // Return the filtered value scaled down
-    return angleModifier * 0.0025;
 }

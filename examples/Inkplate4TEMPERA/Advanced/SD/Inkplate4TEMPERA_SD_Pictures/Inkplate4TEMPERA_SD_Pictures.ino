@@ -1,5 +1,5 @@
 /*
-   Inkplate4TEMPERA_SD_Pictures example for Soldered Inkplate 4TEMPERA
+   Inkplate4TEMPERA_SD_Pictures example for Soldered Inkplate 4 TEMPERA
    For this example you will need a USB-C cable, Inkplate 4TEMPERA and a SD card 
    loaded with images that can be found inside folder of this example.
    Select "Soldered Inkplate4TEMPERA" from Tools -> Board menu.
@@ -19,7 +19,7 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE4TEMPERA
-#error "Wrong board selection for this example, please select Inkplate 4TEMPERA in the boards menu."
+#error "Wrong board selection for this example, please select Inkplate 4 TEMPERA in the boards menu."
 #endif
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch

@@ -1,5 +1,5 @@
 /*
-   Inkplate4TEMPERA_Bluetooth_Peripheral_Mode example for Soldered Inkplate 4TEMPERA
+   Inkplate4TEMPERA_Bluetooth_Peripheral_Mode example for Soldered Inkplate 4 TEMPERA
    For this example you will need a USB-C cable, Inkplate 4TEMPERA and smartphone.
    Select "Soldered Inkplate4TEMPERA" from Tools -> Board menu.
    Don't have "Soldered Inkplate4TEMPERA" option? Follow our tutorial and add it:

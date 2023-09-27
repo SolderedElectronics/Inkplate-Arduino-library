@@ -1,7 +1,7 @@
 /*
-   Inkplate4TEMPERA_EasyC example for Soldered Inkplate 4TEMPERA
+   Inkplate4TEMPERA_EasyC example for Soldered Inkplate 4 TEMPERA
    For this example you will need a USB-C cable, Inkplate 4TEMPERA and Digital Hall Effect Sensor with easyC
-   Select "Soldered Inkplate 4TEMPERA" from Tools -> Board menu. Don't have
+   Select "Soldered Inkplate 4 TEMPERA" from Tools -> Board menu. Don't have
    "Soldered Inkplate 4TEMPERA" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 

@@ -1,8 +1,8 @@
 /*
-   Inkplate4TEMPERA_Simple_Deep_Sleep example for Soldered Inkplate 4TEMPERA
-   For this example you will need USB-C cable and Inkplate 4TEMPERA.
-   Select "Soldered Inkplate 4TEMPERA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 4TEMPERA" option? Follow our tutorial and add it:
+   Inkplate4TEMPERA_Simple_Deep_Sleep example for Soldered Inkplate 4 TEMPERA
+   For this example you will need USB-C cable and Inkplate 4 TEMPERA.
+   Select "Soldered Inkplate 4 TEMPERA" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 4 TEMPERA" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how you can use low power functionality of Inkplate board.
