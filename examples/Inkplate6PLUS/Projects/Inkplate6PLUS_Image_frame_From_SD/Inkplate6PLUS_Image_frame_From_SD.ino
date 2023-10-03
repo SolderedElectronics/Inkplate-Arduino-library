@@ -48,6 +48,8 @@ RTC_DATA_ATTR uint16_t lastImageIndex = 0;
 
 void setup()
 {
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();             // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();      // Clear frame buffer of display
     display.setCursor(0, 0);     // Set the cursor on the beginning of the screen

@@ -84,6 +84,8 @@ void setup()
     }
 
     // Init the Inkplate library (after the check of the I2C bus).
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();
 
     if (isFirstStartup)

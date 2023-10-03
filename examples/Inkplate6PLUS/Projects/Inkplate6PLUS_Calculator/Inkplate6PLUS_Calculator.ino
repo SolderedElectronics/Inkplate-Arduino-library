@@ -41,6 +41,8 @@ void setup()
     Serial.begin(115200);
 
     // Initialize Inkplate object and clear the display buffer
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin(); 
     display.clearDisplay();
 

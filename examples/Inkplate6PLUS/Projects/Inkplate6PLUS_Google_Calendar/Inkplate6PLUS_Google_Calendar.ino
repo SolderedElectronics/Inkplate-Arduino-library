@@ -100,6 +100,8 @@ void setup()
     data = (char *)ps_malloc(2000000LL);
 
     // Initial display settings
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();
 
     display.setRotation(ROTATION);

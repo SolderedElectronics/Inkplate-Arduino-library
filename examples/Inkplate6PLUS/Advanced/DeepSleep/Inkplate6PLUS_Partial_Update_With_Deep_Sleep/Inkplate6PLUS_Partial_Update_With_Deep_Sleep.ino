@@ -42,6 +42,8 @@ RTC_DATA_ATTR float decimal = PI;
 
 void setup()
 {
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
     createScreen();  // Function that contains everything that has to be written on screen
 

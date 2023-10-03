@@ -65,6 +65,8 @@ void setup()
     // Begin serial communitcation, sed for debugging
     Serial.begin(115200);
     // Initial display settings
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();
     display.setTextWrap(false);
 

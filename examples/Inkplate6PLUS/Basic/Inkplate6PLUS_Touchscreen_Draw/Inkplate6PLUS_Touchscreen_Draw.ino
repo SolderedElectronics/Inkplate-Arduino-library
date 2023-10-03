@@ -34,6 +34,8 @@ void setup()
 {
     // put your setup code here, to run once:
     Serial.begin(115200);
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();
     display.display();
     // Init touchscreen and power it on after init (send false as argument to put it in deep sleep right after init)

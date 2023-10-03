@@ -46,6 +46,8 @@ char board[3][3] = {
 void setup()
 {
     Serial.begin(115200);
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin(); // Initialize Inkplate object
 
     // Initialize touchscreen

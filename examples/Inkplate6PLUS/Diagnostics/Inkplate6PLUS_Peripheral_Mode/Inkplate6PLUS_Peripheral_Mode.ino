@@ -40,6 +40,8 @@ char strTemp[2001];
 
 void setup()
 {
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();
     Serial.begin(115200);
     memset(commandBuffer, 0, BUFFER_SIZE);
