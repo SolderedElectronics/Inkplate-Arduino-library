@@ -35,9 +35,6 @@
 #define FRONTLIGHT_EN 11
 #define PWR_GOOD_OK   0b11111010
 
-// Buzzer enable pin (pin P1_4 on internal IO expander)
-#define BUZZ_EN 12
-
 // Addresss to control the digipot (and affect beep frequency)
 #define DIGIPOT_ADDR 0x2F
 
@@ -52,8 +49,12 @@
 #define INKPLATE_APDS9960      0x08
 #define INKPLATE_FUEL_GAUGE    0x1
 
-// Pin interrupt sensor
-// TODO
+// Pin interrupts connected to the internal gpio expander
+#define INT_APDS 9
+#define INT2_LSM 13
+#define INT1_LSM 14
+// Buzzer enable pin (pin P1_4 on internal IO expander)
+#define BUZZ_EN 12
 
 #define DATA 0x0E8C0030 // D0-D7 = GPIO4 GPIO5 GPIO18 GPIO19 GPIO23 GPIO25 GPIO26 GPIO27
 

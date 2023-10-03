@@ -14,16 +14,13 @@
 
 #include "Arduino.h"
 #include "Wire.h"
-#include "libs/Arduino_APDS9960/src/Arduino_APDS9960.h"
+#include "libs/SparkFun_APDS9960/src/SparkFun_APDS9960.h"
 
 
-class APDS_9960 : public APDS9960
+class APDS_9960 : public SparkFun_APDS9960
 {
   public:
-    APDS_9960(int _int) : APDS9960(Wire, _int){};
-    APDS_9960() : APDS9960(Wire, -1){};
+    APDS_9960() : SparkFun_APDS9960(){};
 };
-
-#undef APDS9960
 
 #endif

@@ -127,25 +127,6 @@ bool Inkplate::begin(void)
     delay(1);
     WAKEUP_CLEAR;
 
-    // Set all pins of seconds I/O expander to outputs, low.
-    // For some reason, it draws more current in deep sleep when pins are set as
-    // inputs...
-    // The buzzer pin should be set to HIGH as to not beep the buzzer
-    for (int i = 0; i < 15; i++)
-    {
-        pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);
-        digitalWriteInternal(IO_EXT_ADDR, ioRegsEx, i, LOW);
-    }
-
-    // For same reason, unused pins of first I/O expander have to be also set as
-    // outputs, low.
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, OUTPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, OUTPUT);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, LOW);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 14, HIGH); // Buzzer pin
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 15, LOW);
-
     // CONTROL PINS
     pinMode(0, OUTPUT);
     pinMode(2, OUTPUT);
@@ -165,16 +146,25 @@ bool Inkplate::begin(void)
     pinMode(26, OUTPUT);
     pinMode(27, OUTPUT); // D7
 
-    // Battery voltage Switch MOSFET
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
+    // Set the rest of the internal GPIO expander pins
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, INT_APDS, INPUT_PULLUP); // Gesture interrupt pin
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, INT2_LSM, INPUT_PULLUP); // LSM interrupt pins
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, INT1_LSM, INPUT_PULLUP);
+    
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, OUTPUT); // Buzzer enable
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, HIGH);
 
-    // Disable/Enable Touchscreen PWR
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, TOUCHSCREEN_EN, OUTPUT);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, TOUCHSCREEN_EN, HIGH);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, LOW);
 
-    // Disable/Enable Frontlight PWR
     pinModeInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, OUTPUT);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, LOW);
+    
+    for (int i = 2; i < 15; i++)
+    {
+        pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);
+        digitalWriteInternal(IO_EXT_ADDR, ioRegsEx, i, LOW);
+    }
 
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
@@ -205,11 +195,10 @@ bool Inkplate::begin(void)
         }
     }
 
-    // Put them back to sleep
-    /*
+    // Put all the sensors to sleep
     sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME688 | INKPLATE_ACCELEROMETER |
                     INKPLATE_FUEL_GAUGE);
-    */
+
     _beginDone = 1;
     return 1;
 }
@@ -591,8 +580,9 @@ void Inkplate::wakePeripheral(uint8_t _peripheral)
     if (_peripheral & INKPLATE_APDS9960)
     {
         // Wake APDS
-        apds9960.enablePower();
-        apds9960.begin();
+        //apds9960.enablePower();
+        //
+        // TODO apds9960.begin();
     }
 
     if (_peripheral & INKPLATE_FUEL_GAUGE)
@@ -635,7 +625,7 @@ void Inkplate::sleepPeripheral(uint8_t _peripheral)
     if (_peripheral & INKPLATE_APDS9960)
     {
         // Put APDS in sleep mode
-        apds9960.disablePower();
+        // TODO
     }
 
     if (_peripheral & INKPLATE_FUEL_GAUGE)

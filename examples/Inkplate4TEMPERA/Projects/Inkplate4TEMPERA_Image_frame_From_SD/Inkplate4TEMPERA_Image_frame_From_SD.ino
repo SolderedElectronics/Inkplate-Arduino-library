@@ -84,7 +84,7 @@ void loop()
             lastImageIndex = file.dirIndex();
 
             // Skip hidden files and subdirectories
-            skipHiden();
+            skipHidden();
 
             // Get name of the pucture, create path and draw image on the screen
             if (!displayImage())
@@ -239,7 +239,7 @@ bool displayImage()
 /**
  * @brief     Skip hidden files and subdirectories.
  */
-void skipHiden()
+void skipHidden()
 {
     while (file.isHidden() || file.isSubDir())
     {
