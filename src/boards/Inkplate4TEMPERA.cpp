@@ -150,7 +150,7 @@ bool Inkplate::begin(void)
     pinModeInternal(IO_INT_ADDR, ioRegsInt, INT_APDS, INPUT_PULLUP); // Gesture interrupt pin
     pinModeInternal(IO_INT_ADDR, ioRegsInt, INT2_LSM, INPUT_PULLUP); // LSM interrupt pins
     pinModeInternal(IO_INT_ADDR, ioRegsInt, INT1_LSM, INPUT_PULLUP);
-    
+
     pinModeInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, OUTPUT); // Buzzer enable
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, HIGH);
 
@@ -159,7 +159,7 @@ bool Inkplate::begin(void)
 
     pinModeInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, OUTPUT);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, LOW);
-    
+
     for (int i = 2; i < 15; i++)
     {
         pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);
@@ -580,7 +580,7 @@ void Inkplate::wakePeripheral(uint8_t _peripheral)
     if (_peripheral & INKPLATE_APDS9960)
     {
         // Wake APDS
-        //apds9960.enablePower();
+        // apds9960.enablePower();
         //
         // TODO apds9960.begin();
     }
