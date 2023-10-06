@@ -549,9 +549,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
 
 void Inkplate::setInkplatePowerMode(uint8_t _mode)
 {
-    Serial.println("Setting mode...");
     pwrMode = _mode;
-    Serial.println(pwrMode, HEX);
 }
 
 #endif
