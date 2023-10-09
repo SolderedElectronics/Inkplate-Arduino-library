@@ -51,6 +51,7 @@ void setup()
 
     // Init the display
     // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    // Must be called before display.begin()!
     //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();
 

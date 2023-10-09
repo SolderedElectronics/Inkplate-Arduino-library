@@ -4,6 +4,10 @@
 // (and two GPIO expanders need to be tested)
 // #define OLD_INKPLATE
 
+// !!!IMPORTANT!!!
+// If it's a USB Power Only Inkplate 6PLUS, uncomment this line
+// #define USB_POWER_ONLY
+
 const char sdCardTestStringLength = 100;
 const char *testString = {"This is some test string..."};
 
@@ -159,9 +163,26 @@ void testPeripheral()
     }
 
     float batteryVoltage = 0;
-
     float temperature = 0;
-    // Check battery
+
+#ifdef USB_POWER_ONLY
+    // Check temperature only (skip battery)
+    display.print("- Temperature: ");
+    display.partialUpdate(0, 1);
+    if (checkTemp(&temperature))
+    {
+        display.print("OK ");
+        display.print(temperature);
+        display.println("c");
+        display.partialUpdate(0, 1);
+    }
+    else
+    {
+        display.println("FAIL");
+        failHandler();
+    }
+#else
+    // Check battery and temp
     display.print("- Battery and temperature: ");
     display.partialUpdate(0, 1);
     if (checkBatteryAndTemp(&temperature, &batteryVoltage))
@@ -180,6 +201,7 @@ void testPeripheral()
         display.println("FAIL");
         failHandler();
     }
+#endif
 
     // Text wake up button
     long beginWakeUpTest = millis();
@@ -332,6 +354,25 @@ int checkBatteryAndTemp(float *temp, float *batVoltage)
     {
         result = 0;
     }
+
+    return result;
+}
+
+int checkTemp(float *temp)
+{
+    int temperature;
+    int result = 1;
+
+    temperature = display.readTemperature();
+    *temp = temperature;
+
+    // Check the temperature sensor of the TPS65186.
+    // If the result is -10 or +85, something is wrong.
+    if (temperature <= -10 || temperature >= 85)
+    {
+        result = 0;
+    }
+
     return result;
 }
 
@@ -460,4 +501,15 @@ void failHandler(bool printErrorOnSerial)
     // Inf. loop... halt the program!
     while (true)
         delay(1000);
+}
+
+// Set the according power mode depending on the flag
+// Must be called before display.begin()!
+void setPowerMode()
+{
+#ifdef USB_POWER_ONLY
+    display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
+#else
+    display.setInkplatePowerMode(INKPLATE_NORMAL_PWR_MODE);
+#endif
 }

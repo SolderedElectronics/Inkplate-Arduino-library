@@ -579,10 +579,7 @@ void Inkplate::wakePeripheral(uint8_t _peripheral)
 
     if (_peripheral & INKPLATE_APDS9960)
     {
-        // Wake APDS
-        // apds9960.enablePower();
-        //
-        // TODO apds9960.begin();
+        apds9960.enablePower();
     }
 
     if (_peripheral & INKPLATE_FUEL_GAUGE)
@@ -624,8 +621,7 @@ void Inkplate::sleepPeripheral(uint8_t _peripheral)
 
     if (_peripheral & INKPLATE_APDS9960)
     {
-        // Put APDS in sleep mode
-        // TODO
+        apds9960.disablePower();
     }
 
     if (_peripheral & INKPLATE_FUEL_GAUGE)

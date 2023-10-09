@@ -28,6 +28,7 @@ void setup()
     // put your setup code here, to run once:
     Serial.begin(115200);
     // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    // Must be called before display.begin()!
     //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();
     display.clearDisplay();

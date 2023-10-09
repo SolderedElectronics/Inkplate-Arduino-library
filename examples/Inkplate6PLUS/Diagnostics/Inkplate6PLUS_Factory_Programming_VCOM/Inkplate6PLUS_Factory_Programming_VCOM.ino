@@ -6,6 +6,7 @@
  *
  * @note        !WARNING! VCOM can only be set 100 times, so keep usage to a minimum.
  *              !WARNING! Use at your own risk.
+ *              !WARNING! If it's a USB Power only Inkplate 6PLUS, set the #define in test.cpp
  *
  *              Inkplate 6PLUS does not support auto VCOM, it has to be set manually.
  *              The user will be prompted to enter VCOM via serial (baud 115200).
@@ -14,7 +15,7 @@
  *              Tests will also be done, to pass all tests:
  *              - Edit the WiFi information in test.cpp.
  *              - Connect a slave device via EasyC on address 0x30 (you may change this in test.cpp also).
- *                In the InkplateEasyCTester folder, you can find the code for uploading to Dasduino Core 
+ *                In the InkplateEasyCTester folder, you can find the code for uploading to Dasduino Core
  *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave device for testing an easyC connector
  *                if you don't have a device with address 0x30.
  *              - Insert a formatted microSD card (doesn't have to be empty)
@@ -41,8 +42,8 @@
 
 // Include our functions and image
 #include "Peripheral.h"
-#include "test.h"
 #include "demo_image.h"
+#include "test.h"
 
 // Create object on Inkplate library and set library to work in monochorme mode
 Inkplate display(INKPLATE_1BIT);
@@ -83,9 +84,11 @@ void setup()
         }
     }
 
+    // Set the according power mode depending on the #define in test.cpp
+    // Must be called before display.begin()!
+    setPowerMode();
+
     // Init the Inkplate library (after the check of the I2C bus).
-    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
-    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();
 
     if (isFirstStartup)
@@ -135,9 +138,9 @@ void setup()
 
 void loop()
 {
-    // Peripheral mode 
+    // Peripheral mode
     // More about peripheral mode: https://inkplate.readthedocs.io/en/latest/peripheral-mode.html
-    
+
     if (Serial.available())
     {
         while (Serial.available())

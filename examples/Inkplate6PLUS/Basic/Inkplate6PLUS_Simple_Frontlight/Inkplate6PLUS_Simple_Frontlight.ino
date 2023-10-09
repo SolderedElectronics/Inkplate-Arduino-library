@@ -27,6 +27,7 @@ void setup()
 {
     Serial.begin(115200);    // Set up a serial communication of 115200 baud
     // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    // Must be called before display.begin()!
     //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();         // Init Inkplate library
     display.frontlight(true); // Enable frontlight circuit
