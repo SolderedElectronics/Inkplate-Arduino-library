@@ -200,7 +200,8 @@ bool Inkplate::begin(void)
 
     // Put all the sensors to sleep initially
     // They are woken up with their begin functions
-    sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME688 | INKPLATE_ACCELEROMETER | INKPLATE_FUEL_GAUGE);
+    sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME688 | INKPLATE_ACCELEROMETER |
+                    INKPLATE_FUEL_GAUGE);
 
     _beginDone = 1;
     return 1;

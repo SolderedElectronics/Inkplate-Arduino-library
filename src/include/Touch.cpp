@@ -120,7 +120,7 @@ void Touch::tsHardwareReset()
  * @return      true if successful, false if failed
  */
 bool Touch::tsSoftwareReset()
-{ 
+{
     const uint8_t soft_rst_cmd[] = {0x77, 0x77, 0x77, 0x77};
     if (tsWriteRegs(TS_ADDR, soft_rst_cmd, 4) == 0)
     {

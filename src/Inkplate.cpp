@@ -197,7 +197,7 @@ uint8_t Inkplate::readPowerGood()
     Wire.beginTransmission(0x48);
     Wire.write(0x0F);
     Wire.endTransmission();
-    
+
     Wire.requestFrom(0x48, 1);
     return Wire.read();
 }
