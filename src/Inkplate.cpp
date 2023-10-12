@@ -110,11 +110,22 @@ int Inkplate::einkOn()
     Wire.write(B11100001);
     Wire.endTransmission();
 
+#ifdef ARDUINO_INKPLATE6PLUSV2
+    if (pwrMode != INKPLATE_USB_PWR_ONLY)
+    {
+        // Enable all rails
+        Wire.beginTransmission(0x48);
+        Wire.write(0x01);
+        Wire.write(B00111111);
+        Wire.endTransmission();
+    }
+#else
     // Enable all rails
     Wire.beginTransmission(0x48);
     Wire.write(0x01);
     Wire.write(B00111111);
     Wire.endTransmission();
+#endif
 
     PWRUP_SET;
 
@@ -179,7 +190,12 @@ void Inkplate::einkOff()
 
     // Do not disable WAKEUP if older Inkplate6Plus is used.
 #ifndef ARDUINO_INKPLATE6PLUS
+#ifdef ARDUINO_INKPLATE6PLUSV2
+    if (pwrMode != INKPLATE_USB_PWR_ONLY)
+        WAKEUP_CLEAR;
+#else
     WAKEUP_CLEAR;
+#endif
 #endif
 
     pinsZstate();

@@ -29,6 +29,9 @@ Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set li
 
 void setup()
 {
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    // Must be called before display.begin()!
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();        // Init library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
 

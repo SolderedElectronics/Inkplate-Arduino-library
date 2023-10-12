@@ -56,4 +56,7 @@ static void IRAM_ATTR tsInt()
      {0, 0, 2, 2, 2, 1, 2, 1, 0}, {0, 0, 0, 0, 2, 2, 2, 1, 0}, {0, 0, 2, 1, 2, 1, 1, 2, 0},                            \
      {0, 0, 2, 2, 2, 1, 1, 2, 0}, {0, 0, 0, 0, 2, 2, 2, 2, 0}};
 
+#define INKPLATE_NORMAL_PWR_MODE 0x11
+#define INKPLATE_USB_PWR_ONLY    0x88
+
 #endif

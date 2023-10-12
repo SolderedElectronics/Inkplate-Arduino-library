@@ -135,6 +135,10 @@ class Inkplate : public System, public Graphics
     void sleepPeripheral(uint8_t _peripheral);
 #endif
 
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
+    void setInkplatePowerMode(uint8_t _mode);
+#endif
+
   private:
     void precalculateGamma(uint8_t *c, float gamma);
 
@@ -187,6 +191,10 @@ class Inkplate : public System, public Graphics
 #if defined(ARDUINO_INKPLATE7)
     void ePaperSleep();
     void ePaperWake();
+#endif
+
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
+    uint8_t pwrMode = INKPLATE_NORMAL_PWR_MODE;
 #endif
 };
 

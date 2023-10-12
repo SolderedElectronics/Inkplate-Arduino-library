@@ -38,6 +38,9 @@ String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Ard
 
 void setup()
 {
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    // Must be called before display.begin()!
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();             // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();      // Clear frame buffer of display
     display.setTextSize(2);      // Set text size to be 2 times bigger than original (5x7 px)
