@@ -69,7 +69,8 @@ void setup()
         // In case of initialization failure, notify the user
         display.setCursor(50, 50);
         display.setFont();
-        display.print("ERROR: can't init lsm6ds3!");
+        display.print("ERROR: can't init LSM6DS3!");
+        display.display();
 
         // Go to sleep
         esp_deep_sleep_start();

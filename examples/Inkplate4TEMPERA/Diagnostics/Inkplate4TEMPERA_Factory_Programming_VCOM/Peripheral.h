@@ -630,3 +630,4 @@ void run(char commandBuffer[], size_t n, Inkplate *display)
             *e = 0;
         }
     }
+}

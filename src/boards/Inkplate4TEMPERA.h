@@ -32,16 +32,15 @@
 #define GPIO0_ENABLE  8
 #define INKPLATE_1BIT 0
 #define INKPLATE_3BIT 1
-#define FRONTLIGHT_EN 11
 #define PWR_GOOD_OK   0b11111010
 
 // Addresss to control the digipot (and affect beep frequency)
 #define DIGIPOT_ADDR 0x2F
 
 // Pin on the internal io expander which controls MOSFET for turning on and off the SD card
-#define SD_PMOS_PIN IO_PIN_B2 // 10
+#define SD_PMOS_PIN 11
 
-// Sensor constants
+// Constants for selecting a sensor when turning them on or off
 #define INKPLATE_BUZZER        0x01
 #define INKPLATE_ACCELEROMETER 0x02
 #define INKPLATE_BME688        0x04
@@ -102,61 +101,61 @@
 #define GMOD 1 // GPIOA1
 #define GMOD_SET                                                                                                       \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, GMOD, HIGH);                                               \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, GMOD, HIGH);                                               \
     }
 #define GMOD_CLEAR                                                                                                     \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, GMOD, LOW);                                                \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, GMOD, LOW);                                                \
     }
 
 #define OE 0 // GPIOA0
 #define OE_SET                                                                                                         \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, OE, HIGH);                                                 \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, OE, HIGH);                                                 \
     }
 #define OE_CLEAR                                                                                                       \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, OE, LOW);                                                  \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, OE, LOW);                                                  \
     }
 
 #define SPV 2 // GPIOA5
 #define SPV_SET                                                                                                        \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, SPV, HIGH);                                                \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SPV, HIGH);                                                \
     }
 #define SPV_CLEAR                                                                                                      \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, SPV, LOW);                                                 \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SPV, LOW);                                                 \
     }
 
 #define WAKEUP 3 // GPIOA3
 #define WAKEUP_SET                                                                                                     \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, HIGH);                                             \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, WAKEUP, HIGH);                                             \
     }
 #define WAKEUP_CLEAR                                                                                                   \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, WAKEUP, LOW);                                              \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, WAKEUP, LOW);                                              \
     }
 
 #define PWRUP 4 // GPIOA4
 #define PWRUP_SET                                                                                                      \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, HIGH);                                              \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, PWRUP, HIGH);                                              \
     }
 #define PWRUP_CLEAR                                                                                                    \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, PWRUP, LOW);                                               \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, PWRUP, LOW);                                               \
     }
 
 #define VCOM 5 // GPIOA6
 #define VCOM_SET                                                                                                       \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, VCOM, HIGH);                                               \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, VCOM, HIGH);                                               \
     }
 #define VCOM_CLEAR                                                                                                     \
     {                                                                                                                  \
-        digitalWriteInternal(MCP23017_INT_ADDR, mcpRegsInt, VCOM, LOW);                                                \
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, VCOM, LOW);                                                \
     }
 
 #ifndef _swap_int16_t
@@ -168,9 +167,14 @@
     }
 #endif
 
+// Frontlight
+#define FRONTLIGHT_EN 10
+
 // Touchscreen defines
-#define TOUCHSCREEN_EN 12
-#define TS_RTS         10
+#define TOUCHSCREEN_IO_EXPANDER IO_EXT_ADDR
+#define TOUCHSCREEN_IO_REGS ioRegsEx
+#define TOUCHSCREEN_EN 0
+#define TS_RTS         1
 #define TS_INT         36
 #define TS_ADDR        0x15
 

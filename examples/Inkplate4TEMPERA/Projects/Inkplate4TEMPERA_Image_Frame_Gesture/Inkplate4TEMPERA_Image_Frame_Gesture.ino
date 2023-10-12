@@ -86,7 +86,7 @@ void setup()
         // Make sure gesture is at lowest sensitivity so it doesn't accidentially get triggered
         display.apds9960.setGestureGain(0);
 
-        // Get the file count and file dir indexes and save them to RTC memory
+        // Get the file count and file indexes in the directory and save them to RTC memory
         getFileCount();
 
         // Remember that this config was completed

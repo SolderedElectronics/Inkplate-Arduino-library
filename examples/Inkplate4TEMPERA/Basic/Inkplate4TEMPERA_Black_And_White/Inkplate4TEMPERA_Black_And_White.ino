@@ -397,7 +397,7 @@ void setup()
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
     //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside ESP32).
     display.display(); // Clear everything that has previously been on a screen
-    display.setCursor(70, 300);
+    display.setCursor(40, 300);
     display.setTextSize(3);
     display.print("Welcome to Inkplate 4TEMPERA!");
     display.display(); // Write hello message

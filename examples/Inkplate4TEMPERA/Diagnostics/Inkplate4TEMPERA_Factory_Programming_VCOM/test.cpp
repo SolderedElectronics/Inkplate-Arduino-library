@@ -12,11 +12,15 @@ const uint8_t easyCDeviceAddress = 0x30;
 const int TOUCHSCREEN_TIMEOUT = 30;
 const int GESTURE_TIMEOUT = 30;
 
+// If you're testing with a battery:
 // Change this to the battery you're using to test the device
 int batteryCapacity = 600;
 
 // Short way to add a margin to move the print from the left edge
 #define ADD_PRINT_MARGIN display.print("      ");
+
+// The flag which is set when the APDS interrupt is tested
+volatile bool apdsIntFlag = false;
 
 void testPeripheral()
 {
@@ -34,6 +38,7 @@ void testPeripheral()
     if (!(Wire.endTransmission() == 0) ||
         (display.readPowerGood() != PWR_GOOD_OK)) // Check if there was an error in communication
     {
+        // Notify over Serial because the TPS doesn't work
         Serial.println("- TPS Fail!");
         failHandler();
     }
@@ -68,8 +73,8 @@ void testPeripheral()
 
     // Try to communicate with I/O expander
     Wire.beginTransmission(IO_EXT_ADDR);
-    if (Wire.endTransmission() ==
-        0) // Check if there was an error in communication and print out the results on display.
+    // Check if there was an error in communication and print out the results on display.
+    if (Wire.endTransmission() == 0)
     {
         display.println("OK");
         display.partialUpdate(0, 1);
@@ -85,13 +90,13 @@ void testPeripheral()
     display.frontlight(true);  // Enable frontlight circuit
     display.setFrontlight(63); // Set frontlight intensity to the max.
     ADD_PRINT_MARGIN
-    display.println("- Frontlight test (visual check)*");
+    display.println("- Frontlight test (visual check)");
     display.partialUpdate(0, 1);
     delay(1000);
 
     // Check the touchscreen (init and touch)
     ADD_PRINT_MARGIN
-    display.print("- Touchscreen init*: ");
+    display.print("- Touchscreen init: ");
     display.partialUpdate(0, 1);
     if (checkTouch(TOUCHSCREEN_TIMEOUT))
     {
@@ -106,7 +111,7 @@ void testPeripheral()
 
     // Check the micro SD card
     ADD_PRINT_MARGIN
-    display.print("- microSD card slot:* ");
+    display.print("- microSD card slot: ");
     display.partialUpdate(0, 1);
     if (checkMicroSDCard())
     {
@@ -164,20 +169,14 @@ void testPeripheral()
         failHandler();
     }
 
-    // Check battery
-    float batteryVoltage = 0;
+    // Check Temperature via TPS
     float temperature = 0;
     ADD_PRINT_MARGIN
-    display.print("- Battery and temperature: ");
+    display.print("- Temperature: ");
     display.partialUpdate(0, 1);
-    if (checkBatteryAndTemp(&temperature, &batteryVoltage))
+    if (checkTemp(&temperature))
     {
         display.println("OK");
-        ADD_PRINT_MARGIN
-        ADD_PRINT_MARGIN
-        display.print("- Battery voltage: ");
-        display.print(batteryVoltage);
-        display.println("V");
         ADD_PRINT_MARGIN
         ADD_PRINT_MARGIN
         display.print("- Temperature: ");
@@ -253,7 +252,7 @@ void testPeripheral()
 
     float gyroAccX, gyroAccY, gyroAccZ;
     ADD_PRINT_MARGIN
-    display.print("- Check Gyroscope*: ");
+    display.print("- Check Gyroscope: ");
     display.partialUpdate(0, 1);
     if (checkGyroscope(&gyroAccX, &gyroAccY, &gyroAccZ))
     {
@@ -290,9 +289,14 @@ void testPeripheral()
     ADD_PRINT_MARGIN
     display.print("- Check gesture sensor (swipe, 30s): ");
     display.partialUpdate(0, 1);
-    if (checkGestureSensor(GESTURE_TIMEOUT))
+    String gesture = " ";
+    if (checkGestureSensor(GESTURE_TIMEOUT, &gesture))
     {
         display.println("OK");
+        ADD_PRINT_MARGIN
+        ADD_PRINT_MARGIN
+        display.print("- Gesture: ");
+        display.println(gesture);
     }
     else
     {
@@ -414,27 +418,18 @@ int checkI2C(int address)
     }
 }
 
-int checkBatteryAndTemp(float *temp, float *batVoltage)
+int checkTemp(float *temp)
 {
     int temperature;
     float voltage;
     int result = 1;
 
     temperature = display.readTemperature();
-    voltage = display.readBattery();
     *temp = temperature;
-    *batVoltage = voltage;
 
     // Check the temperature sensor of the TPS65186.
     // If the result is -10 or +85, something is wrong.
     if (temperature <= -10 || temperature >= 85)
-    {
-        result = 0;
-    }
-
-    // Check the battery voltage.
-    // If the measured voltage is below 2.8V and above 4.6V, charger is dead.
-    if (voltage <= 2.8 || voltage >= 4.6)
     {
         result = 0;
     }
@@ -486,7 +481,7 @@ int checkTouch(uint8_t _tsTimeout)
     }
 
     // Now wait for the touch
-    display.print("OK");
+    display.println("OK");
     ADD_PRINT_MARGIN
     display.print("Touch the corner (30s): ");
     display.drawRect(400, 0, 200, 200, BLACK);
@@ -503,7 +498,7 @@ int checkTouch(uint8_t _tsTimeout)
             // See how many fingers are detected (max 2) and copy x and y position of each finger on touchscreen
             n = display.tsGetData(x, y);
 
-            if ((x[0] > 900) && (x[0] < 1024) && (y[0] > 0) && (y[0] < 124))
+            if ((x[0] > 400) && (x[0] < 600) && (y[0] > 0) && (y[0] < 200))
                 return 1;
         }
     }
@@ -581,51 +576,58 @@ void checkBuzzer()
     delay(100);
 }
 
-int checkGestureSensor(int _gestTimeout)
+int checkGestureSensor(int _gestTimeout, String * gesture)
 {
-    // Init and save result
-    int beginResult = display.apds9960.begin();
-    if (beginResult == 0)
-        return 0;
+    // Init APDS and enable the gesture sensor
+    display.apds9960.init();
+    display.apds9960.enableGestureSensor(true);
 
-    // Wait 30 seconds to detect touch in specified area, otherwise return 0 (error).
-    unsigned long _timeout = millis();
+    unsigned long _timeout;
+    _timeout = millis();
+
+    // Set the interrupt chain from the APDS, to the GPIO expander to the ESP32
+    display.pinModeIO(9, INPUT_PULLUP, IO_INT_ADDR);
+    display.setIntPin(9, IO_INT_ADDR);
+    pinMode(GPIO_NUM_34, INPUT);
+    attachInterrupt(GPIO_NUM_34, ISR, FALLING);
+
+    // Wait 30 seconds to detect gesture
     while (((unsigned long)(millis() - _timeout)) < (_gestTimeout * 1000UL))
     {
-        if (display.apds9960.gestureAvailable())
+        // If the APDS interrupt was read
+        if (apdsIntFlag)
         {
-            // a gesture was detected, read and print to Serial Monitor
-            int gesture = display.apds9960.readGesture();
-            ADD_PRINT_MARGIN
-            ADD_PRINT_MARGIN
-            switch (gesture) // Determine which gesture was captured
+            // Get the gesture
+            if (display.apds9960.isGestureAvailable())
             {
-            case GESTURE_UP:
-                display.println("- UP detected!");
-                break;
-
-            case GESTURE_DOWN:
-                display.println("- DOWN detected!");
-                break;
-
-            case GESTURE_LEFT:
-                display.println("- LEFT detected!");
-                break;
-
-            case GESTURE_RIGHT:
-                display.println("- RIGHT detected!");
-                break;
-
-            default:
-                // ignore
-                break;
+                switch (display.apds9960.readGesture())
+                {
+                    // Return the gesture value depending which gesture was made
+                case DIR_UP:
+                    * gesture = "UP";
+                    break;
+                case DIR_DOWN:
+                    * gesture = "DOWN";
+                    break;
+                case DIR_LEFT:
+                    * gesture = "LEFT";
+                    break;
+                case DIR_RIGHT:
+                    * gesture = "RIGHT";
+                    break;
+                case DIR_NEAR:
+                    * gesture = "NEAR";
+                    break;
+                case DIR_FAR:
+                    * gesture = "FAR";
+                    break;
+                default:
+                    * gesture = "NONE";
+                }
+                return 1;
             }
-
-            return 1;
         }
     }
-
-    // We got here? Timeout was reached
     return 0;
 }
 
@@ -634,21 +636,27 @@ int checkGyroscope(float *acX, float *acY, float *acZ)
     // This actually returns 0 on success
     int beginResult = display.lsm6ds3.begin();
 
-    float accelX = display.lsm6ds3.readFloatAccelX();
-    float accelY = display.lsm6ds3.readFloatAccelY();
-    float accelZ = display.lsm6ds3.readFloatAccelZ();
+    // Multiply by 9.81 to get m/s^2
+    float accelX = display.lsm6ds3.readFloatAccelX() * 9.81;
+    float accelY = display.lsm6ds3.readFloatAccelY() * 9.81;
+    float accelZ = display.lsm6ds3.readFloatAccelZ() * 9.81;
+
+    float gyroX = display.lsm6ds3.readFloatGyroX();
+    float gyroY = display.lsm6ds3.readFloatGyroY();
+    float gyroZ = display.lsm6ds3.readFloatGyroZ();
 
     // Let's calculate the total magnitude of the readings
     float magnitude = sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
-    // This should be approx 9.81, allow for some margin of error
+    
+    //  This should be approx 9.81, allow for some margin of error
     if (magnitude <= 8.5 || magnitude > 10.8)
         return 0;
 
-    // Also save via pointer
+    // Also save accel values via pointer
     *acX = accelX;
     *acY = accelY;
     *acZ = accelZ;
-    
+
     // On success of begin, 0 is returned
     // In our case, 1 is a success, so flip it
     if (beginResult == 0)
@@ -667,4 +675,10 @@ void failHandler()
     // Inf. loop... halt the program!
     while (true)
         delay(1000);
+}
+
+// The ISR which tests the interrupt from the gesture sensor
+void IRAM_ATTR ISR()
+{
+    apdsIntFlag = true;
 }

@@ -48,12 +48,10 @@ void Frontlight::frontlight(bool _e)
 {
     if (_e)
     {
-        pinModeInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, OUTPUT);
         digitalWriteInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, HIGH);
     }
     else
     {
-        pinModeInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, OUTPUT);
         digitalWriteInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, LOW);
     }
 }

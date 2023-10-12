@@ -14,15 +14,14 @@
  *              Tests will also be done, to pass all tests:
  *              - Edit the WiFi information in test.cpp.
  *              - Connect a slave device via EasyC on address 0x30 (you may change this in test.cpp also).
- *                In the InkplateEasyCTester folder, you can find the code for uploading to Dasduino Core 
+ *                In the InkplateEasyCTester folder, you can find the code for uploading to Dasduino Core
  *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave device for testing an easyC connector
  *                if you don't have a device with address 0x30.
- *              - For testing the fuel gauge, connect a battery and edit it's mAh capacity in test.cpp
+ *              - If a battery's connected, edit the mAh capacity in test.cpp
  *              - Insert a formatted microSD card (doesn't have to be empty)
  *              - When prompted:
+ *                  - Touch the corner
  *                  - Wave in front of the gesture sensor
- *                  - Shake the device
- *                  - Tap the touchscreen
  *                  - Press wake button to finish testing
  *
  *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
@@ -45,8 +44,8 @@
 
 // Include our functions and image
 #include "Peripheral.h"
-#include "test.h"
 #include "demo_image.h"
+#include "test.h"
 
 // Create object on Inkplate library and set library to work in monochorme mode
 Inkplate display(INKPLATE_1BIT);
@@ -137,9 +136,9 @@ void setup()
 
 void loop()
 {
-    // Peripheral mode 
+    // Peripheral mode
     // More about peripheral mode: https://inkplate.readthedocs.io/en/latest/peripheral-mode.html
-    
+
     if (Serial.available())
     {
         while (Serial.available())

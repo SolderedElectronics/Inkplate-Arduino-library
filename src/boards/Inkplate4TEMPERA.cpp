@@ -160,6 +160,9 @@ bool Inkplate::begin(void)
     pinModeInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, OUTPUT);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, LOW);
 
+    pinModeInternal(TOUCHSCREEN_IO_EXPANDER, ioRegsEx, TOUCHSCREEN_EN, OUTPUT);
+    digitalWriteInternal(TOUCHSCREEN_IO_EXPANDER, ioRegsEx, TOUCHSCREEN_EN, HIGH);
+
     for (int i = 2; i < 15; i++)
     {
         pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);
@@ -195,9 +198,9 @@ bool Inkplate::begin(void)
         }
     }
 
-    // Put all the sensors to sleep
-    sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME688 | INKPLATE_ACCELEROMETER |
-                    INKPLATE_FUEL_GAUGE);
+    // Put all the sensors to sleep initially
+    // They are woken up with their begin functions
+    sleepPeripheral(INKPLATE_BUZZER | INKPLATE_APDS9960 | INKPLATE_BME688 | INKPLATE_ACCELEROMETER | INKPLATE_FUEL_GAUGE);
 
     _beginDone = 1;
     return 1;
@@ -579,10 +582,7 @@ void Inkplate::wakePeripheral(uint8_t _peripheral)
 
     if (_peripheral & INKPLATE_APDS9960)
     {
-        // Wake APDS
-        // apds9960.enablePower();
-        //
-        // TODO apds9960.begin();
+        apds9960.enablePower();
     }
 
     if (_peripheral & INKPLATE_FUEL_GAUGE)
@@ -609,10 +609,13 @@ void Inkplate::sleepPeripheral(uint8_t _peripheral)
 {
     if (_peripheral & INKPLATE_ACCELEROMETER)
     {
-        // Put accelerometer in sleep mode
         uint8_t accControlReg;
-        lsm6ds3.readRegister(&accControlReg, 0x13);
-        lsm6ds3.writeRegister(0x13, accControlReg | 0x04);
+        // First, put the gyro in sleep mode
+        lsm6ds3.readRegister(&accControlReg, 0x16);
+        lsm6ds3.writeRegister(0x16, accControlReg | 0x80);
+        // Then, the accelerometer
+        lsm6ds3.readRegister(&accControlReg, 0x15);
+        lsm6ds3.writeRegister(0x15, accControlReg | 0x10);
     }
 
     if (_peripheral & INKPLATE_BME688)
@@ -624,8 +627,7 @@ void Inkplate::sleepPeripheral(uint8_t _peripheral)
 
     if (_peripheral & INKPLATE_APDS9960)
     {
-        // Put APDS in sleep mode
-        // TODO
+        apds9960.disablePower();
     }
 
     if (_peripheral & INKPLATE_FUEL_GAUGE)

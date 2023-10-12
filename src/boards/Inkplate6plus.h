@@ -42,6 +42,8 @@
 #define TS_RTS         10
 #define TS_INT         36
 #define TS_ADDR        0x15
+#define TOUCHSCREEN_IO_EXPANDER IO_INT_ADDR
+#define TOUCHSCREEN_IO_REGS ioRegsInt
 
 static volatile bool _tsFlag = false;
 static void IRAM_ATTR tsInt()
