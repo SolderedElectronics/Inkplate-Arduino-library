@@ -34,6 +34,9 @@ void setup()
 {
     pinMode(39, INPUT_PULLUP);      // Set RTC INT pin on ESP32 GPIO39 as input with pullup resistor enabled
 
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    // Must be called before display.begin()!
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display

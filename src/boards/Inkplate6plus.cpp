@@ -124,7 +124,19 @@ bool Inkplate::begin(void)
     Wire.write(B00000000); // Power down delay (6mS per rail)
     Wire.endTransmission();
     delay(1);
-    WAKEUP_CLEAR;
+
+    if (pwrMode == INKPLATE_USB_PWR_ONLY)
+    {
+        // Enable all rails
+        Wire.beginTransmission(0x48);
+        Wire.write(0x01);
+        Wire.write(B00111111);
+        Wire.endTransmission();
+    }
+    else
+    {
+        WAKEUP_CLEAR;
+    }
 
     // Set all pins of seconds I/O expander to outputs, low.
     // For some reason, it draw more current in deep sleep when pins are set as
@@ -533,6 +545,11 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
     memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
 
     return changeCount;
+}
+
+void Inkplate::setInkplatePowerMode(uint8_t _mode)
+{
+    pwrMode = _mode;
 }
 
 #endif

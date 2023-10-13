@@ -48,6 +48,9 @@ RTC_DATA_ATTR uint16_t lastImageIndex = 0;
 
 void setup()
 {
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    // Must be called before display.begin()!
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();             // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();      // Clear frame buffer of display
     display.setCursor(0, 0);     // Set the cursor on the beginning of the screen
@@ -86,7 +89,7 @@ void loop()
             lastImageIndex = file.dirIndex();
 
             // Skip hidden files and subdirectories
-            skipHiden();
+            skipHidden();
 
             // Get name of the pucture, create path and draw image on the screen
             if (!displayImage())
@@ -241,7 +244,7 @@ bool displayImage()
 /**
  * @brief     Skip hidden files and subdirectories.
  */
-void skipHiden()
+void skipHidden()
 {
     while (file.isHidden() || file.isSubDir())
     {

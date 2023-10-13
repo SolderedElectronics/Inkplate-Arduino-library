@@ -21,8 +21,10 @@ int checkMicroSDCard();
 int rtcCheck();
 int checkI2C(int address);
 int checkBatteryAndTemp(float *temp, float *batVoltage);
+int checkTemp(float *temp);
 int touchPads(uint8_t _timeoutTouchpads);
 int checkTouch(uint8_t _tsTimeout);
 void failHandler(bool printErrorOnSerial = false);
+void setPowerMode();
 
 #endif

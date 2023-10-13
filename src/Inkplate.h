@@ -27,7 +27,7 @@
 #include "include/System.h"
 #include "libs/SdFat/SdFat.h"
 
-#ifdef ARDUINO_INKPLATEPLUS2
+#ifdef ARDUINO_INKPLATE4TEMPERA
 #include "include/Buzzer.h"
 #include "libs/APDS9960/src/APDS9960-SOLDERED.h"
 #include "libs/BME680/src/BME680-SOLDERED.h"
@@ -125,14 +125,18 @@ class Inkplate : public System, public Graphics
         return Graphics::getRotation();
     };
 
-#ifdef ARDUINO_INKPLATEPLUS2
-    Buzzer buzzer;
-    APDS_9960 apds9960;
-    BME680 bme680;
-    Soldered_LSM6DS3 accelerometer;
-    BQ_27441 battery;
+#ifdef ARDUINO_INKPLATE4TEMPERA
+    Buzzer buzzer;            // Buzzer
+    APDS_9960 apds9960;       // Gesture sensor
+    BME680 bme688;            // Temperature, pressure and humidity sensor
+    Soldered_LSM6DS3 lsm6ds3; // Accelerometer/Gyroscope
+    BQ_27441 battery;         // Fuel gauge
     void wakePeripheral(uint8_t _peripheral);
     void sleepPeripheral(uint8_t _peripheral);
+#endif
+
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
+    void setInkplatePowerMode(uint8_t _mode);
 #endif
 
   private:
@@ -187,6 +191,10 @@ class Inkplate : public System, public Graphics
 #if defined(ARDUINO_INKPLATE7)
     void ePaperSleep();
     void ePaperWake();
+#endif
+
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
+    uint8_t pwrMode = INKPLATE_NORMAL_PWR_MODE;
 #endif
 };
 

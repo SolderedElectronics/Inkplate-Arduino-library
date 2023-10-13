@@ -110,7 +110,7 @@ char currentWind[16] = "-";
 
 char currentTime[16] = "--:--";
 
-int timeZone;
+int timeZone = 2;
 
 char currentWeather[32] = "-";
 char currentWeatherAbbr[8] = "01d";

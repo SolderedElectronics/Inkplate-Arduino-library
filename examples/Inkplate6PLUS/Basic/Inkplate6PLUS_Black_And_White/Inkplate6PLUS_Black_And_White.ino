@@ -219,6 +219,9 @@ int logo_h = 181;
 
 void setup()
 {
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    // Must be called before display.begin()!
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
     display.begin();        // Init library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
     //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside ESP32).

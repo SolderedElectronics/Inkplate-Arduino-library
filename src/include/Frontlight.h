@@ -18,7 +18,7 @@
 #ifndef __FRONTLIGHT_H__
 #define __FRONTLIGHT_H__
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATEPLUS2)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
 
 #include "Arduino.h"
 #include "Wire.h"
@@ -26,13 +26,13 @@
 
 #if defined(ARDUINO_INKPLATE6PLUS)
 #include "Mcp.h"
-#elif defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATEPLUS2)
+#elif defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
 #include "Pcal.h"
 #endif
 
 /**
  * @brief       Frontlight class designed to work with inkplates that support
- * frontlight (Inkplate 6 plus and Inkplate PLUS2)
+ * frontlight (Inkplate 6 plus and Inkplate 4TEMPERA)
  */
 class Frontlight : virtual public Expander
 {

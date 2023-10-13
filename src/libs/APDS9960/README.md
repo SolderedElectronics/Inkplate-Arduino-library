@@ -53,7 +53,7 @@ At Soldered, we design and manufacture a wide selection of electronic products t
 
 ### Original source
 ​
-This library is possible thanks to original [Arduino_APDS9960](https://github.com/arduino-libraries/Arduino_APDS9960) library. Thank you, Arduino.
+This library is possible thanks to original [SparkFun APDS9960](https://github.com/sparkfun/SparkFun_APDS-9960_Sensor_Arduino_Library/tree/V_1.4.2) library. Thank you, Sparkfun.
 
 ### Open-source license
 

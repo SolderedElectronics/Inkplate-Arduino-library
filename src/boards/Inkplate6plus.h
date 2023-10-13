@@ -38,10 +38,12 @@
 #define FRONTLIGHT_EN 11
 
 // Touchscreen defines
-#define TOUCHSCREEN_EN 12
-#define TS_RTS         10
-#define TS_INT         36
-#define TS_ADDR        0x15
+#define TOUCHSCREEN_EN          12
+#define TS_RTS                  10
+#define TS_INT                  36
+#define TS_ADDR                 0x15
+#define TOUCHSCREEN_IO_EXPANDER IO_INT_ADDR
+#define TOUCHSCREEN_IO_REGS     ioRegsInt
 
 static volatile bool _tsFlag = false;
 static void IRAM_ATTR tsInt()
@@ -53,5 +55,8 @@ static void IRAM_ATTR tsInt()
     {{0, 0, 0, 0, 0, 2, 1, 1, 0}, {0, 0, 2, 1, 1, 1, 2, 1, 0}, {0, 2, 2, 2, 1, 1, 2, 1, 0},                            \
      {0, 0, 2, 2, 2, 1, 2, 1, 0}, {0, 0, 0, 0, 2, 2, 2, 1, 0}, {0, 0, 2, 1, 2, 1, 1, 2, 0},                            \
      {0, 0, 2, 2, 2, 1, 1, 2, 0}, {0, 0, 0, 0, 2, 2, 2, 2, 0}};
+
+#define INKPLATE_NORMAL_PWR_MODE 0x11
+#define INKPLATE_USB_PWR_ONLY    0x88
 
 #endif

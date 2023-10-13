@@ -40,8 +40,8 @@ void MCP4018_SOLDERED::setWiperPercent(int _wiper)
 {
     if ((_wiper > 100) || (_wiper < 0))
         return;
-    _value = round(_wiper / 100.0 * 127.0);
-    setWiperValue(_value);
+
+    setWiperValue(round(_wiper / 100.0 * 127.0));
 }
 
 /**
@@ -53,8 +53,7 @@ void MCP4018_SOLDERED::setWiperValue(int _byte)
 {
     _value = _byte & 0x7F;
     const uint8_t _reg = _value;
-    Serial.print("Send data result! ");
-    Serial.println(sendData(&_reg, 1));
+    sendData(&_reg, 1);
 }
 
 /**

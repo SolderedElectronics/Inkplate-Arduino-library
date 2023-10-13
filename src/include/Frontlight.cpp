@@ -19,7 +19,7 @@
 #include "Frontlight.h"
 #include "defines.h"
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATEPLUS2)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
 
 /**
  * @brief       setFrontlight function sets frontlight intensity for inkplate
@@ -27,7 +27,7 @@
  * @param       uint8_t _v
  *              value to set frontlight to
  *
- * @note        can only be used in inkplate 6PLUS, others don't suport
+ * @note        can only be used in inkplate 6PLUS and 4TEMPERA, others don't suport
  * frontlight
  */
 void Frontlight::setFrontlight(uint8_t _v)
@@ -48,12 +48,10 @@ void Frontlight::frontlight(bool _e)
 {
     if (_e)
     {
-        pinModeInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, OUTPUT);
         digitalWriteInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, HIGH);
     }
     else
     {
-        pinModeInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, OUTPUT);
         digitalWriteInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, LOW);
     }
 }

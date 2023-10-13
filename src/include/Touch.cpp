@@ -18,7 +18,7 @@
 
 #include "Touch.h"
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATEPLUS2)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
 
 uint16_t _tsXResolution;
 uint16_t _tsYResolution;
@@ -108,9 +108,9 @@ void Touch::tsReadRegs(uint8_t _addr, uint8_t *_buff, uint8_t _size)
  */
 void Touch::tsHardwareReset()
 {
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, TS_RTS, LOW);
+    digitalWriteInternal(TOUCHSCREEN_IO_EXPANDER, TOUCHSCREEN_IO_REGS, TS_RTS, LOW);
     delay(15);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, TS_RTS, HIGH);
+    digitalWriteInternal(TOUCHSCREEN_IO_EXPANDER, TOUCHSCREEN_IO_REGS, TS_RTS, HIGH);
     delay(15);
 }
 
@@ -160,10 +160,11 @@ bool Touch::tsSoftwareReset()
 bool Touch::tsInit(uint8_t _pwrState)
 {
     // Enable power to TS
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, TOUCHSCREEN_EN, LOW);
+    digitalWriteInternal(TOUCHSCREEN_IO_EXPANDER, TOUCHSCREEN_IO_REGS, TOUCHSCREEN_EN, LOW);
+
+    delay(100);
 
     pinMode(TS_INT, INPUT_PULLUP);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, TS_RTS, OUTPUT);
     attachInterrupt(TS_INT, tsInt, FALLING);
     tsHardwareReset();
     if (!tsSoftwareReset())
@@ -183,7 +184,7 @@ bool Touch::tsInit(uint8_t _pwrState)
  */
 void Touch::tsShutdown()
 {
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, TOUCHSCREEN_EN, HIGH);
+    digitalWriteInternal(TOUCHSCREEN_IO_EXPANDER, TOUCHSCREEN_IO_REGS, TOUCHSCREEN_EN, LOW);
 }
 
 /**
@@ -274,8 +275,8 @@ uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos)
             break;
         }
 
-// For Inkplate PLUS2, both X and Y are mirrored for the touchscreen
-#elif defined(ARDUINO_INKPLATEPLUS2)
+// For Inkplate 4TEMPERA, both X and Y are mirrored for the touchscreen
+#elif defined(ARDUINO_INKPLATE4TEMPERA)
 
         switch (getRotation())
         {

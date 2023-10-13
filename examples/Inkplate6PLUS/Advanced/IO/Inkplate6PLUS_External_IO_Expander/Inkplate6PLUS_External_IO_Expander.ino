@@ -33,6 +33,9 @@ Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and als
 
 void setup()
 {
+    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
+    // Must be called before display.begin()!
+    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY); 
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
     display.pinModeIO(LED_PIN,
                       OUTPUT); // Set P1-7 (or GPB7) to output. On that pin, we sholud connect LED with current limiting

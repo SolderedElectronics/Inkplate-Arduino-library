@@ -3,7 +3,7 @@
  * @file        Buzzer.h
  * @brief       Basic funtions for controling Inkplate's buzzer
  *
- *              Only available on Inkplate PLUS2
+ *              Only available on Inkplate 4TEMPERA
  *
  *              https://github.com/SolderedElectronics/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -20,7 +20,7 @@
 #ifndef __BUZZER_H__
 #define __BUZZER_H__
 
-#ifdef ARDUINO_INKPLATEPLUS2
+#ifdef ARDUINO_INKPLATE4TEMPERA
 
 #include "Arduino.h"
 #include "Pcal.h"
@@ -30,15 +30,24 @@
 // Include digipot library
 #include "libs/MCP4018/src/MCP4018-SOLDERED.h"
 
+#define BEEP_FREQ_MAX 2933
+#define BEEP_FREQ_MIN 572
+
 class Buzzer : virtual public Expander
 {
   public:
     Buzzer(){};
     void begin();
+    void beep(uint32_t length, int freq);
     void beep(uint32_t length);
+    void beepOn(int freq);
+    void beepOn();
+    void beepOff();
 
   private:
     MCP4018_SOLDERED digipot;
+    void setFrequencyInternal(int freq);
+    int freqToWiperPercent(int freq);
 };
 
 #endif
