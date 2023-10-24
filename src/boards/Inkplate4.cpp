@@ -45,8 +45,18 @@ bool Inkplate::begin()
             return false;
         }
 
+        // Set SPI Pins for microSD card to input to reduce power consumption.
+        pinMode(12, INPUT);
+        pinMode(13, INPUT);
+        pinMode(14, INPUT);
+        pinMode(15, INPUT);
+
         // Init TwoWire and GPIO expander
         setIOExpanderForLowPower();
+
+        // Disable the microSD card pin for now.
+        pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, OUTPUT);
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, HIGH);
 
         // Set the default text color
         setTextColor(INKPLATE4_BLACK);
@@ -399,7 +409,6 @@ void Inkplate::setIOExpanderForLowPower()
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A7, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B0, OUTPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B5, OUTPUT);
@@ -415,7 +424,6 @@ void Inkplate::setIOExpanderForLowPower()
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A7, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B0, LOW);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B5, LOW);

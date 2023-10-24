@@ -163,6 +163,7 @@ bool Inkplate::begin(void)
     pinModeInternal(TOUCHSCREEN_IO_EXPANDER, ioRegsEx, TOUCHSCREEN_EN, OUTPUT);
     digitalWriteInternal(TOUCHSCREEN_IO_EXPANDER, ioRegsEx, TOUCHSCREEN_EN, HIGH);
 
+    // Set the rest of the IO Expander pins to low to reduce power in deep sleep.
     for (int i = 2; i < 15; i++)
     {
         pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);

@@ -46,8 +46,18 @@ bool Inkplate::begin()
             return false;
         }
 
+        // Set SPI Pins for microSD card to input pull down to reduce power consumption.
+        pinMode(12, INPUT_PULLDOWN);
+        pinMode(13, INPUT_PULLDOWN);
+        pinMode(14, INPUT_PULLDOWN);
+        pinMode(15, INPUT_PULLDOWN);
+
         // Init TwoWire and GPIO expander
         setIOExpanderForLowPower();
+
+        // Disable the microSD card pin for now.
+        pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, OUTPUT);
+        digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, HIGH);
 
         // Set the default text color
         setTextColor(INKPLATE7_BLACK);
@@ -57,7 +67,6 @@ bool Inkplate::begin()
 
         _beginDone = 1;
     }
-
 
     // Wake the ePaper and initialize everything
     // If it fails, return false
@@ -345,15 +354,11 @@ void Inkplate::setIOExpanderForLowPower()
     memset(ioRegsInt, 0, 22);
     ioBegin(IO_INT_ADDR, ioRegsInt);
 
-    // TOUCHPAD PINS
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, INPUT);
-
     // Battery voltage Switch MOSFET
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B1, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B1, LOW);
 
-    // Rest of pins go to OUTPUT LOW state because in deepSleep mode they are
+    // Rest of pins go to low because in deepSleep mode they are
     // using least amount of power
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A0, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A1, OUTPUT);
@@ -364,6 +369,8 @@ void Inkplate::setIOExpanderForLowPower()
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A7, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B0, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B5, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B6, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B7, OUTPUT);
@@ -377,6 +384,8 @@ void Inkplate::setIOExpanderForLowPower()
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A7, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B0, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B5, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B6, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B7, LOW);
