@@ -72,19 +72,23 @@ bool Inkplate::begin(void)
     WAKEUP_CLEAR;
 
     // To reduce power consumption in deep sleep, unused pins of
-    // first I/O expander have to be also set as inputs with pull down
-    // resistors.
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, INPUT_PULLDOWN);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, INPUT_PULLDOWN);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, INPUT_PULLDOWN);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, INPUT_PULLDOWN);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, INPUT_PULLDOWN);
+    // first I/O expander have to be also set as output with pulled low.
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 11, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 12, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 14, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 15, LOW);
 
-    // Set SPI pins to input to reduce power consumption in deep sleep
-    pinMode(12, INPUT);
-    pinMode(13, INPUT);
-    pinMode(14, INPUT);
-    pinMode(15, INPUT);
+    // Enable pull down resistors on SPI lines to reduce power consumption in deep sleep.
+    pinMode(12, INPUT_PULLDOWN);
+    pinMode(13, INPUT_PULLDOWN);
+    pinMode(14, INPUT_PULLDOWN);
+    pinMode(15, INPUT_PULLDOWN);
 
     // And also disable uSD card supply
     pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, INPUT);
@@ -107,11 +111,6 @@ bool Inkplate::begin(void)
     pinMode(25, OUTPUT);
     pinMode(26, OUTPUT);
     pinMode(27, OUTPUT); // D7
-
-    // TOUCHPAD PINS
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 10, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, INPUT);
 
     // Battery voltage Switch MOSFET
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);

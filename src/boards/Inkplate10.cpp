@@ -143,14 +143,22 @@ bool Inkplate::begin()
     pinMode(25, OUTPUT);
     pinMode(26, OUTPUT);
     pinMode(27, OUTPUT); // D7
-
+#ifdef ARDUINO_INKPLATE10
     // TOUCHPAD PINS
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 10, INPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, INPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, INPUT);
-
+#else
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 10, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 10, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 11, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 12, LOW);
+#endif
     // Battery voltage Switch MOSFET
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
 
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);

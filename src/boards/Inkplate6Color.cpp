@@ -320,6 +320,10 @@ bool Inkplate::setPanelDeepSleep(bool _state)
         sendCommand(0xE3);
         sendData(0xAA);
 
+        delay(100);
+        sendCommand(VCOM_DATA_INTERVAL_REGISTER);
+        sendData(0x37);
+
         return true;
     }
     else
@@ -336,8 +340,6 @@ bool Inkplate::setPanelDeepSleep(bool _state)
 
         epdSPI.end();
 
-        pinMode(EPAPER_DIN, INPUT);
-        pinMode(EPAPER_CLK, INPUT);
         return true;
     }
 }
