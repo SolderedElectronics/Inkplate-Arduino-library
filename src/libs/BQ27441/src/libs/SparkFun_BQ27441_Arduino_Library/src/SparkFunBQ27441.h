@@ -373,6 +373,9 @@ class BQ27441
     */
     uint8_t readBlockData(uint8_t offset);
 
+    // Added by Soldered Electronics. Enable or disable hibernate state to reduce power consumption.
+    void shutdown();
+
   private:
     uint8_t _deviceAddress;  // Stores the BQ27441-G1A's I2C address
     bool _sealFlag;          // Global to identify that IC was previously sealed

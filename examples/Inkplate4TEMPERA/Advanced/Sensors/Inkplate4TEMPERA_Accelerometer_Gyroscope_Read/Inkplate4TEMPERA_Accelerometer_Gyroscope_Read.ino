@@ -59,6 +59,9 @@ void setup()
     display.begin();   // Init Inkplate library (you should call this function ONLY ONCE)
     display.display(); // Put clear image on display
 
+    // Enable the accelerometer & gyroscope.
+    display.wakePeripheral(INKPLATE_ACCELEROMETER);
+
     // Set text size to be 2x larger than default (5x7px)
     display.setTextSize(2);
     display.setTextColor(BLACK); // Set the text color to black also

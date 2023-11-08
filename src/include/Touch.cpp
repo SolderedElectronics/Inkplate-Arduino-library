@@ -184,7 +184,7 @@ bool Touch::tsInit(uint8_t _pwrState)
  */
 void Touch::tsShutdown()
 {
-    digitalWriteInternal(TOUCHSCREEN_IO_EXPANDER, TOUCHSCREEN_IO_REGS, TOUCHSCREEN_EN, LOW);
+    digitalWriteInternal(TOUCHSCREEN_IO_EXPANDER, TOUCHSCREEN_IO_REGS, TOUCHSCREEN_EN, HIGH);
 }
 
 /**

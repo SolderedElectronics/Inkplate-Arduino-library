@@ -36,6 +36,9 @@ void setup()
     display.display();      // Put clear image on display
     display.setTextSize(3); // Set text to be 3 times bigger than classic 5x7 px text
 
+    // Enable the BME688 sensor.
+    display.wakePeripheral(INKPLATE_BME688);
+
     display.bme688.begin(); // Init the sensor
 }
 

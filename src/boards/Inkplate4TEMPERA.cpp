@@ -88,27 +88,20 @@ bool Inkplate::begin(void)
     if (_beginDone == 1)
         return 0;
 
+    // Init Arduino Wire (i2C) library.
     Wire.begin();
 
-    // Turn off the buzzer so it doesn't beep
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, HIGH);
+    // Init IO expander.
+    memset(ioRegsInt, 0, 22);
+    memset(ioRegsEx, 0, 22);
+    ioBegin(IO_INT_ADDR, ioRegsInt);
+    ioBegin(IO_EXT_ADDR, ioRegsEx);
 
 #ifndef ARDUINO_INKPLATECOLOR
     for (uint32_t i = 0; i < 256; ++i)
         pinLUT[i] = ((i & B00000011) << 4) | (((i & B00001100) >> 2) << 18) | (((i & B00010000) >> 4) << 23) |
                     (((i & B11100000) >> 5) << 25);
 #endif
-
-#ifdef ARDUINO_ESP32_DEV
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
-#else
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
-#endif
-
-    memset(ioRegsInt, 0, 22);
-    memset(ioRegsEx, 0, 22);
-    ioBegin(IO_INT_ADDR, ioRegsInt);
-    ioBegin(IO_EXT_ADDR, ioRegsEx);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, VCOM, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, PWRUP, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, WAKEUP, OUTPUT);
@@ -148,28 +141,41 @@ bool Inkplate::begin(void)
 
     // Set the rest of the internal GPIO expander pins
     pinModeInternal(IO_INT_ADDR, ioRegsInt, INT_APDS, INPUT_PULLUP); // Gesture interrupt pin
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, INT2_LSM, INPUT_PULLUP); // LSM interrupt pins
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, INT1_LSM, INPUT_PULLUP);
 
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, OUTPUT); // Buzzer enable
+    // LSM interrupt pins. Pins must be set as inputs, since the default state of the INT pin on LSM is push-pull.
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, INT2_LSM, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, INT1_LSM, INPUT);
+
+    // Turn off the buzzer so it doesn't beep
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, OUTPUT);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, HIGH);
 
+    // Disable microSD card.
     pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, OUTPUT);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, HIGH);
 
+    // Disable frontlight at start.
     pinModeInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, OUTPUT);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, FRONTLIGHT_EN, LOW);
 
+    // Disable touchscreen.
     pinModeInternal(TOUCHSCREEN_IO_EXPANDER, ioRegsEx, TOUCHSCREEN_EN, OUTPUT);
     digitalWriteInternal(TOUCHSCREEN_IO_EXPANDER, ioRegsEx, TOUCHSCREEN_EN, HIGH);
 
+    // Set Fuel Gauge GPOUT to input with pull up enabled.
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, FG_GPOUT, INPUT_PULLUP);
+
+    // Disable SPI pins on microSD card.
+    sdCardSleep();
+
     // Set the rest of the IO Expander pins to low to reduce power in deep sleep.
-    for (int i = 2; i < 15; i++)
+    for (int i = 2; i < 16; i++)
     {
         pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);
         digitalWriteInternal(IO_EXT_ADDR, ioRegsEx, i, LOW);
     }
 
+    // Allocate the memory for the framebuffer.
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
     _pBuffer = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);
@@ -516,30 +522,6 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         delayMicroseconds(230);
     }
 
-    // for (int k = 0; k < 60; ++k)
-    // {
-    //     uint8_t _send = B11111111;
-    //     vscan_start();
-
-    //     writeRow(_send);
-    //     for (int i = 0; i < E_INK_HEIGHT / 2; i++)
-    //     {
-    //         hscan_start(pinLUT[_send]);
-    //         delayMicroseconds(1);
-    //         vscan_end();
-    //     }
-
-    //     _send = B01010101;
-
-    //     writeRow(_send);
-    //     for (int i = 0; i < E_INK_HEIGHT / 2; i++)
-    //     {
-    //         hscan_start(pinLUT[_send]);
-    //         delayMicroseconds(1);
-    //         vscan_end();
-    //     }
-    // }
-
     clean(2, 2);
     clean(3, 1);
     vscan_start();
@@ -567,11 +549,9 @@ void Inkplate::wakePeripheral(uint8_t _peripheral)
     if (_peripheral & INKPLATE_ACCELEROMETER)
     {
         // Wake accelerometer
-        uint8_t accControlReg;
-        lsm6ds3.readRegister(&accControlReg, 0x13);
-        lsm6ds3.writeRegister(0x13, accControlReg & 0xBF);
-        delay(2);
-        lsm6ds3.beginCore();
+        lsm6ds3.settings.gyroEnabled = 1;
+        lsm6ds3.settings.accelEnabled = 1;
+        lsm6ds3.begin(&lsm6ds3.settings);
     }
 
     if (_peripheral & INKPLATE_BME688)
@@ -589,11 +569,11 @@ void Inkplate::wakePeripheral(uint8_t _peripheral)
 
     if (_peripheral & INKPLATE_FUEL_GAUGE)
     {
-        uint8_t fuelGaugeControlReg1 = battery.readBlockData(0x3A);
-        uint8_t fuelGaugeControlReg2 = battery.readBlockData(0x3B);
-        fuelGaugeControlReg2 &= 0xCF;
-        uint16_t fuelGaugeControlRegToWrite = (fuelGaugeControlReg1 << 8) | fuelGaugeControlReg2;
-        battery.writeOpConfig(fuelGaugeControlRegToWrite);
+        // To wake up fuel gauge, just create rising edge signal on GPOUT pin.
+        pinModeInternal(IO_INT_ADDR, ioRegsInt, FG_GPOUT, INPUT_PULLUP);
+
+        // Wait a little bit.
+        delayMicroseconds(250);
     }
 }
 
@@ -611,20 +591,17 @@ void Inkplate::sleepPeripheral(uint8_t _peripheral)
 {
     if (_peripheral & INKPLATE_ACCELEROMETER)
     {
-        uint8_t accControlReg;
-        // First, put the gyro in sleep mode
-        lsm6ds3.readRegister(&accControlReg, 0x16);
-        lsm6ds3.writeRegister(0x16, accControlReg | 0x80);
-        // Then, the accelerometer
-        lsm6ds3.readRegister(&accControlReg, 0x15);
-        lsm6ds3.writeRegister(0x15, accControlReg | 0x10);
+        lsm6ds3.settings.gyroEnabled = 0;
+        lsm6ds3.settings.accelEnabled = 0;
+        lsm6ds3.begin(&lsm6ds3.settings);
     }
 
     if (_peripheral & INKPLATE_BME688)
     {
         // Put BME in sleep mode
         uint8_t bmeControlReg = bme688.readByte(BME_CONTROL_ADDR);
-        bme688.putData(BME_CONTROL_ADDR, bmeControlReg & 0xFC);
+        bmeControlReg &= ~(0b00000011);
+        bme688.putData(BME_CONTROL_ADDR, bmeControlReg);
     }
 
     if (_peripheral & INKPLATE_APDS9960)
@@ -634,11 +611,11 @@ void Inkplate::sleepPeripheral(uint8_t _peripheral)
 
     if (_peripheral & INKPLATE_FUEL_GAUGE)
     {
-        uint8_t fuelGaugeControlReg1 = battery.readBlockData(0x3A);
-        uint8_t fuelGaugeControlReg2 = battery.readBlockData(0x3B);
-        fuelGaugeControlReg2 |= 0x20;
-        uint16_t fuelGaugeControlRegToWrite = (fuelGaugeControlReg1 << 8) | fuelGaugeControlReg2;
-        battery.writeOpConfig(fuelGaugeControlRegToWrite);
+        // First, set the GPOUT pin of the Fuel Gauge to pull down.
+        pinModeInternal(IO_INT_ADDR, ioRegsInt, FG_GPOUT, INPUT_PULLDOWN);
+
+        // Issue a shutdown command.
+        battery.shutdown();
     }
 }
 
