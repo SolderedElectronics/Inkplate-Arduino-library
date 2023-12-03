@@ -53,18 +53,32 @@ static unsigned int width = E_INK_WIDTH, height = E_INK_HEIGHT;
  * @param       uint32_t c
  *              color of the given pixel
  *
+ * @param       uint16_t bias
+ *              an arbitrary value used to break ties, should be different
+ *              for neighboring pixels, and should ideally be random
+ *
  * @return      closest color in pallete array
  */
-uint8_t Image::findClosestPalette(uint32_t c)
+uint8_t Image::findClosestPalette(uint32_t c, uint16_t bias)
 {
-    int mi = 0;
-    for (int i = 1; i < sizeof pallete / sizeof pallete[0]; ++i)
+    int32_t minDistance = 0x7fffffff;
+    uint8_t contenderCount = 0;
+    uint8_t contenderList[sizeof pallete / sizeof pallete[0]];
+
+    for (int i = 0; i < sizeof pallete / sizeof pallete[0]; ++i)
     {
-        if (COLORDISTSQR(c, pallete[i]) < COLORDISTSQR(c, pallete[mi]))
-            mi = i;
+        int32_t currentDistance = COLORDISTSQR(c, pallete[i]);
+        if (currentDistance < minDistance) {
+            minDistance = currentDistance;
+            contenderList[0] = i;
+            contenderCount = 1;
+        } else if (currentDistance == minDistance) {
+            contenderList[contenderCount] = i;
+            contenderCount++;
+        }
     }
 
-    return mi;
+    return contenderList[bias % contenderCount];
 }
 
 /**
@@ -100,7 +114,7 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
     g = max((int16_t)0, min((int16_t)255, g));
     b = max((int16_t)0, min((int16_t)255, b));
 
-    int closest = findClosestPalette(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b));
+    int closest = findClosestPalette(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b), i + j);
 
     int32_t rErr = r - (int32_t)((pallete[closest] >> 16) & 0xFF);
     int32_t gErr = g - (int32_t)((pallete[closest] >> 8) & 0xFF);

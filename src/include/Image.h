@@ -110,7 +110,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     void getPointsForPosition(const Position &position, const uint16_t imageWidth, const uint16_t imageHeight,
                               const uint16_t screenWidth, const uint16_t screenHeight, uint16_t *posX, uint16_t *posY);
-    uint8_t findClosestPalette(uint32_t c);
+    uint8_t findClosestPalette(uint32_t c, uint16_t bias);
 
   private:
     virtual void startWrite(void) = 0;
