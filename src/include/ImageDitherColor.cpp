@@ -77,7 +77,12 @@ uint8_t Image::findClosestPalette(int16_t r, int16_t g, int16_t b)
         }
     }
 
-    return contenderList[contenderCount <= 1 ? 0 : rand() % contenderCount];
+    // If your project has a good way to seed rand(),
+    // you can use rand() here to improve dithering quality
+    // when using shades that are exactly between palette colors.
+    //return contenderList[contenderCount <= 1 ? 0 : rand() % contenderCount];
+
+    return contenderList[0];
 }
 
 /**
