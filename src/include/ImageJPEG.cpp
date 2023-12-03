@@ -390,7 +390,7 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
             }
             else
             {
-                val = _imagePtrJpeg->findClosestPalette(((uint32_t)r << 16) | ((uint32_t)g << 8) | ((uint32_t)b), 0);
+                val = _imagePtrJpeg->findClosestPalette(r, g, b);
             }
 
             _imagePtrJpeg->writePixel(x + i, y + j, val);
