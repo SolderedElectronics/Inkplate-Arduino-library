@@ -384,7 +384,7 @@ void Inkplate::setIOExpanderForLowPower()
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A0, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A1, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A2, LOW);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A3, LOW); 
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A3, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A4, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A5, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, LOW);
