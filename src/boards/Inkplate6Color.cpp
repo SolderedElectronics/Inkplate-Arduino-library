@@ -66,7 +66,6 @@ bool Inkplate::begin(void)
         if (!setPanelDeepSleep(false))
             return false;
 
-
         delay(1000);
     }
     else
@@ -360,9 +359,9 @@ void Inkplate::setIOExpanderForLowPower()
     ioBegin(IO_INT_ADDR, ioRegsInt);
 
     // TOUCHPAD PINS
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, OUTPUT);
 
     // Battery voltage Switch MOSFET
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B1, OUTPUT);
@@ -385,7 +384,7 @@ void Inkplate::setIOExpanderForLowPower()
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A0, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A1, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A2, LOW);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A3, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A3, LOW); 
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A4, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A5, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_A6, LOW);
@@ -396,17 +395,36 @@ void Inkplate::setIOExpanderForLowPower()
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B7, LOW);
 }
 
+/**
+ * @brief       This function is added as a fix for low power for Inkplate 6COLOR
+ *              It further decreases the low-power current and makes waking up from sleep stable and
+ *              avoids a double-reset via brownout.
+ */
 void Inkplate::sleepColorPanel()
 {
-    Serial.println("putting the color panel to sleep...");
+    // First, put the ePaper to sleep
     delay(10);
     sendCommand(DEEP_SLEEP_REGISTER);
-    sendData(0x10);
     sendData(0xA5);
-    delay(100);
-    digitalWrite(EPAPER_RST_PIN, LOW);
-    digitalWrite(EPAPER_DC_PIN, LOW);
-    digitalWrite(EPAPER_CS_PIN, LOW);
+    delay(100); // Wait a bit until it's surely in sleep
+
+    // End the SPI used to communicate with the ePaper
+    epdSPI.end();
+    delay(5);
+
+    // Set the SPI pins as INPUT as they have hw pull-ups
+    pinMode(EPAPER_RST_PIN, INPUT);
+    pinMode(EPAPER_DC_PIN, INPUT);
+    pinMode(EPAPER_CS_PIN, INPUT);
+
+    // Make sure the SD card is in sleep
+    sdCardSleep();
+    delay(10);
+
+    // Make sure VBAT is disabled
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B1, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B1, LOW);
+    delay(10);
 }
 
 #endif
