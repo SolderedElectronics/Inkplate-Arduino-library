@@ -59,19 +59,11 @@ bool Inkplate::begin(void)
 
         _beginDone = true;
 
-        Serial.println("the display has NOT been previously init'ed, starting up...");
         // The display has not been initialized before
         // Wake the ePaper and initialize everything
         // If it fails, return false
         if (!setPanelDeepSleep(false))
             return false;
-
-        delay(1000);
-    }
-    else
-    {
-        Serial.println("the display has been previously init'ed, resetting...");
-        resetPanel();
     }
 
     return true;

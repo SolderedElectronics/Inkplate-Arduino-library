@@ -48,6 +48,9 @@ void setup()
     // Enable wakup from deep sleep on gpio 39 where RTC interrupt is connected
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_39, 0);
 
+    // This function must additionaly be called on Inkplate 6COLOR to initiate sleep
+    display.sleepColorPanel();
+
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }

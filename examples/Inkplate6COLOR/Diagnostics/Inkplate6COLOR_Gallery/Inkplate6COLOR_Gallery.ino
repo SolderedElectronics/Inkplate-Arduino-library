@@ -80,13 +80,14 @@ void setup()
     // Go to sleep for DELAY_MS
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
 
-     
-
     // Put SD card into deep sleep
     display.sdCardSleep();
 
+    // This function must additionaly be called on Inkplate 6COLOR to initiate sleep
+    display.sleepColorPanel();
+
     // Start deep sleep (this function does not return). Program stops here.
-    (void)esp_deep_sleep_start();
+    esp_deep_sleep_start();
 }
 
 void loop()

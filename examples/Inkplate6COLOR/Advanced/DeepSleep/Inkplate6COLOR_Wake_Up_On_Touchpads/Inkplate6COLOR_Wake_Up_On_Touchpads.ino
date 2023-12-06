@@ -55,6 +55,9 @@ void setup()
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_34, LOW);
 
+    // This function must additionaly be called on Inkplate 6COLOR to initiate sleep
+    display.sleepColorPanel();
+
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }

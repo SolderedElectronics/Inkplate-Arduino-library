@@ -88,6 +88,9 @@ void setup()
     // multiplied by million to get seconds
     esp_sleep_enable_timer_wakeup(1000000 * DELAY_S);
 
+    // This function must additionaly be called on Inkplate 6COLOR to initiate sleep
+    display.sleepColorPanel();
+
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }
