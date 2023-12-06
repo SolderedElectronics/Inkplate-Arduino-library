@@ -407,7 +407,6 @@ void Inkplate::sleepColorPanel()
     digitalWrite(EPAPER_RST_PIN, LOW);
     digitalWrite(EPAPER_DC_PIN, LOW);
     digitalWrite(EPAPER_CS_PIN, LOW);
-
 }
 
 #endif

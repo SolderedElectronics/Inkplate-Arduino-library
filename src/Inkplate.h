@@ -200,7 +200,6 @@ class Inkplate : public System, public Graphics
 #if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
     uint8_t pwrMode = INKPLATE_NORMAL_PWR_MODE;
 #endif
-
 };
 
 #endif
