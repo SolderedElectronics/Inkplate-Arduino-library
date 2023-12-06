@@ -56,17 +56,25 @@ bool Inkplate::begin(void)
         // Color whole frame buffer in white color
         memset(DMemory4Bit, INKPLATE_WHITE | (INKPLATE_WHITE << 4), E_INK_WIDTH * E_INK_HEIGHT / 2);
 
+
         _beginDone = true;
+
+        Serial.println("the display has NOT been previously init'ed, starting up...");
+        // The display has not been initialized before
+        // Wake the ePaper and initialize everything
+        // If it fails, return false
+        if (!setPanelDeepSleep(false))
+            return false;
+
+
+        delay(1000);
+    }
+    else
+    {
+        Serial.println("the display has been previously init'ed, resetting...");
+        resetPanel();
     }
 
-    // Wake the ePaper and initialize everything
-    // If it fails, return false
-    if (!setPanelDeepSleep(false))
-        return false;
-
-    // Put the panel to deep sleep
-    // The panel is always in sleep unless it's being written display data to
-    setPanelDeepSleep(true);
     return true;
 }
 
@@ -76,9 +84,6 @@ bool Inkplate::begin(void)
  */
 void Inkplate::display()
 {
-    // Wake the panel back up
-    setPanelDeepSleep(false);
-
     // Set resolution setting
     uint8_t res_set_data[] = {0x02, 0x58, 0x01, 0xc0};
     sendCommand(0x61);
@@ -103,9 +108,6 @@ void Inkplate::display()
     while (digitalRead(EPAPER_BUSY_PIN))
         ; // Wait for busy low signal
     delay(200);
-
-    // Put the panel to sleep again
-    setPanelDeepSleep(true);
 }
 
 /**
@@ -329,6 +331,7 @@ bool Inkplate::setPanelDeepSleep(bool _state)
     else
     {
         // _state is true? Put the panel to sleep.
+        // This is not used in the driver because waking up from deep sleep causes brownout
 
         delay(10);
         sendCommand(DEEP_SLEEP_REGISTER);
@@ -392,4 +395,19 @@ void Inkplate::setIOExpanderForLowPower()
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B6, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B7, LOW);
 }
+
+void Inkplate::sleepColorPanel()
+{
+    Serial.println("putting the color panel to sleep...");
+    delay(10);
+    sendCommand(DEEP_SLEEP_REGISTER);
+    sendData(0x10);
+    sendData(0xA5);
+    delay(100);
+    digitalWrite(EPAPER_RST_PIN, LOW);
+    digitalWrite(EPAPER_DC_PIN, LOW);
+    digitalWrite(EPAPER_CS_PIN, LOW);
+
+}
+
 #endif

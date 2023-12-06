@@ -32,23 +32,25 @@ const uint8_t *pictures[] = {picture1, picture2,
                                         // so we can easly select it by selecting index in array
 
 #define uS_TO_S_FACTOR 1000000 // Conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  20      // How long ESP32 will be in deep sleep (in seconds)
+#define TIME_TO_SLEEP  120      // How long ESP32 will be in deep sleep (in seconds)
 RTC_DATA_ATTR int slide = 0;
 
 Inkplate display; // Create an object on Inkplate library and also set library into 3 Bit mode (gray)
 
 void setup()
 {
+    pinMode(25, OUTPUT);
+    
+    Serial.begin(115200);
+    Serial.println("about to enter begin...");
+    
+
+    delay(1000);
+
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay(); // Clear frame buffer of display
-    display.drawImage(
-        pictures[slide], 0, 0, 600,
-        448); // Display selected picture at location X=0, Y=0. All three pictures have resolution of 600x448 pixels
-    display.display(); // Refresh the screen with new picture
-    slide++; // Update counter for pictures. With this variable, we choose what picture is going to be displayed on
-             // screen
-    if (slide > 2)
-        slide = 0; // We do not have more than 3 images, so roll back to zero
+
+    delay(1000);
+
 
     // Uncomment this line if your Inkplate is older than Aug 2021 as older Inkplates have ESP32 wrover-e chips
     // rtc_gpio_isolate(GPIO_NUM_12); // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
@@ -56,6 +58,14 @@ void setup()
     // Activate wake-up timer -- wake up after 20s here
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 
+    blinkLED();
+    blinkLED();
+    display.sleepColorPanel();
+    delay(1000);
+
+    blinkLED();
+    blinkLED();
+    blinkLED();
     // Put ESP32 into deep sleep. Program stops here.
     esp_deep_sleep_start();
 }
@@ -64,4 +74,16 @@ void loop()
 {
     // Nothing! If you use deep sleep, whole program should be in setup() because each time the board restarts, not in a
     // loop()! loop() must be empty!
+}
+
+void blinkLED()
+{
+    digitalWrite(25,HIGH);
+    delay(100);
+    digitalWrite(25,LOW);
+    delay(100);
+
+    delay(100);
+
+    
 }
