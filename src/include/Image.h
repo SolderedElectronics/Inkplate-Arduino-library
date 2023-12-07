@@ -130,7 +130,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 #endif
 
 #if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
-    int32_t ditherBuffer[3][8][E_INK_WIDTH + 20];
+    int16_t ditherBuffer[3][8][E_INK_WIDTH + 20];
 
     const int kernelWidth = _kernelWidth;
     const int kernelHeight = _kernelHeight;
@@ -140,7 +140,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     const unsigned char (*kernel)[_kernelWidth] = _kernel;
 #elif ARDUINO_INKPLATE2
-    int32_t ditherBuffer[3][8][E_INK_WIDTH + 20];
+    int16_t ditherBuffer[3][8][E_INK_WIDTH + 20];
 
     const int kernelWidth = _kernelWidth;
     const int kernelHeight = _kernelHeight;

@@ -23,12 +23,12 @@
 // one you want below
 
 // Floyd Steinberg
-// const int _coef = 16;
-// const int _kernelX = 1;
-// const unsigned char _kernel[2][3] = {
-//     {0, 0, 7},
-//     {3, 5, 1},
-// };
+const int _coef = 16;
+const int _kernelX = 1;
+const unsigned char _kernel[2][3] = {
+    {0, 0, 7},
+    {3, 5, 1},
+};
 
 /*
 //J F Jarvis, C N Judice, and W H Ninke "Minimized Average Error"
@@ -41,7 +41,7 @@ const unsigned char _kernel[3][5] = {
 };
 */
 
-
+/*
 // Atkinson
 const int _coef = 8;
 const int _kernelX = 1;
@@ -50,6 +50,7 @@ const unsigned char _kernel[3][4] = {
     {1, 1, 1, 0},
     {0, 1, 0, 0},
 };
+*/
 
 
 /*
@@ -88,3 +89,4 @@ const int _kernelWidth = (sizeof _kernel[0] / sizeof _kernel[0][0]);
 const int _kernelHeight = (sizeof _kernel / sizeof _kernel[0]);
 
 #endif
+

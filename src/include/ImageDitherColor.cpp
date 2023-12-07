@@ -66,7 +66,7 @@ uint8_t Image::findClosestPalette(int16_t r, int16_t g, int16_t b)
         int16_t pr = RED8(pallete[i]);
         int16_t pg = GREEN8(pallete[i]);
         int16_t pb = BLUE8(pallete[i]);
-        int64_t currentDistance = SQR(r - pr) + SQR(g - pg) + SQR(b - pb);
+        int32_t currentDistance = SQR(r - pr) + SQR(g - pg) + SQR(b - pb);
         if (currentDistance < minDistance) {
             minDistance = currentDistance;
             contenderList[0] = i;
@@ -109,10 +109,6 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
     int16_t r = RED8(px) + ditherBuffer[0][j % 8][i] / coef;
     int16_t g = GREEN8(px) + ditherBuffer[1][j % 8][i] / coef;
     int16_t b = BLUE8(px) + ditherBuffer[2][j % 8][i] / coef;
-
-    // r = max((int16_t)0, min((int16_t)255, r));
-    // g = max((int16_t)0, min((int16_t)255, g));
-    // b = max((int16_t)0, min((int16_t)255, b));
 
     ditherBuffer[0][j % 8][i] = 0;
     ditherBuffer[1][j % 8][i] = 0;
