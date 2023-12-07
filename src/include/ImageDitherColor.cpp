@@ -106,13 +106,17 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
     if (paletted)
         px = ditherPalette[px];
 
-    int16_t r = RED8(px) + ditherBuffer[0][j % 8][i] / coef;
-    int16_t g = GREEN8(px) + ditherBuffer[1][j % 8][i] / coef;
-    int16_t b = BLUE8(px) + ditherBuffer[2][j % 8][i] / coef;
+    int16_t r = RED8(px) + ditherBuffer[0][j % 8][i];
+    int16_t g = GREEN8(px) + ditherBuffer[1][j % 8][i];
+    int16_t b = BLUE8(px) + ditherBuffer[2][j % 8][i];
 
     ditherBuffer[0][j % 8][i] = 0;
     ditherBuffer[1][j % 8][i] = 0;
     ditherBuffer[2][j % 8][i] = 0;
+
+    r = max((int16_t)0, min((int16_t)255, r));
+    g = max((int16_t)0, min((int16_t)255, g));
+    b = max((int16_t)0, min((int16_t)255, b));
 
     int closest = findClosestPalette(r, g, b);
 
@@ -126,9 +130,9 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
         {
             if (!(0 <= i + l && i + l < w))
                 continue;
-            ditherBuffer[0][(j + k) % 8][i + l] += (kernel[k][l + kernelX] * rErr);
-            ditherBuffer[1][(j + k) % 8][i + l] += (kernel[k][l + kernelX] * gErr);
-            ditherBuffer[2][(j + k) % 8][i + l] += (kernel[k][l + kernelX] * bErr);
+            ditherBuffer[0][(j + k) % 8][i + l] += (kernel[k][l + kernelX] * rErr) / coef;
+            ditherBuffer[1][(j + k) % 8][i + l] += (kernel[k][l + kernelX] * gErr) / coef;
+            ditherBuffer[2][(j + k) % 8][i + l] += (kernel[k][l + kernelX] * bErr) / coef;
         }
     }
 
