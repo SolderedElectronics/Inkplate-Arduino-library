@@ -110,7 +110,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     void getPointsForPosition(const Position &position, const uint16_t imageWidth, const uint16_t imageHeight,
                               const uint16_t screenWidth, const uint16_t screenHeight, uint16_t *posX, uint16_t *posY);
-    uint8_t findClosestPalette(uint32_t c);
+    uint8_t findClosestPalette(int16_t r, int16_t g, int16_t b);
 
   private:
     virtual void startWrite(void) = 0;
@@ -130,11 +130,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 #endif
 
 #if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7)
-    int8_t ditherBuffer[3][16][E_INK_WIDTH + 20];
-
-    int8_t (*ditherBuffer_r)[E_INK_WIDTH + 20] = ditherBuffer[0];
-    int8_t (*ditherBuffer_g)[E_INK_WIDTH + 20] = ditherBuffer[1];
-    int8_t (*ditherBuffer_b)[E_INK_WIDTH + 20] = ditherBuffer[2];
+    int16_t ditherBuffer[3][8][E_INK_WIDTH + 20];
 
     const int kernelWidth = _kernelWidth;
     const int kernelHeight = _kernelHeight;
@@ -144,11 +140,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     const unsigned char (*kernel)[_kernelWidth] = _kernel;
 #elif ARDUINO_INKPLATE2
-    int8_t ditherBuffer[3][16][E_INK_HEIGHT + 20];
-
-    int8_t (*ditherBuffer_r)[E_INK_HEIGHT + 20] = ditherBuffer[0];
-    int8_t (*ditherBuffer_g)[E_INK_HEIGHT + 20] = ditherBuffer[1];
-    int8_t (*ditherBuffer_b)[E_INK_HEIGHT + 20] = ditherBuffer[2];
+    int16_t ditherBuffer[3][8][E_INK_WIDTH + 20];
 
     const int kernelWidth = _kernelWidth;
     const int kernelHeight = _kernelHeight;

@@ -77,7 +77,7 @@ void pngle_on_draw(pngle_t *pngle, uint32_t x, uint32_t y, uint32_t w, uint32_t 
                     b = 255 - b;
                 }
 
-                uint8_t px = _imagePtrPng->findClosestPalette((r << 16) | (g << 8) | (b));
+                uint8_t px = _imagePtrPng->findClosestPalette(r, g, b);
 #else
                 uint8_t px = RGB3BIT(r, g, b);
 #endif

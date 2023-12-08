@@ -112,7 +112,7 @@ void Image::readBmpHeader(uint8_t *buf, bitmapHeader *_h)
 
 #if defined(ARDUINO_INKPLATECOLOR)
             c = c >> 8;
-            palette[i >> 1] |= findClosestPalette(c) << (i & 1 ? 0 : 4);
+            palette[i >> 1] |= findClosestPalette(RED8(c), GREEN8(c), BLUE8(c)) << (i & 1 ? 0 : 4);
             ditherPalette[i] = c;
 #else
             uint8_t r = (c & 0xFF000000) >> 24;
@@ -411,13 +411,6 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
                     val = RGB3BIT(r, g, b);
 #endif
             }
-
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) ||                      \
-    defined(ARDUINO_INKPLATE7)
-            val = findClosestPalette((r << 16) | (g << 8) | (b));
-#else
-            val = RGB3BIT(r, g, b);
-#endif
             writePixel(x + j, (h - y - 1), val);
             break;
         }
@@ -439,7 +432,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             {
 #if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) ||                      \
     defined(ARDUINO_INKPLATE7)
-                val = findClosestPalette((r << 16) | (g << 8) | (b));
+                val = findClosestPalette(r, g, b);
 #else
                 val = RGB3BIT(r, g, b);
 #endif
@@ -474,7 +467,7 @@ void Image::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool d
             {
 #if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) || defined(ARDUINO_INKPLATE4) ||                      \
     defined(ARDUINO_INKPLATE7)
-                val = findClosestPalette((r << 16) | (g << 8) | (b));
+                val = findClosestPalette(r, g, b);
 #else
                 val = RGB3BIT(r, g, b);
 #endif
