@@ -89,4 +89,3 @@ const int _kernelWidth = (sizeof _kernel[0] / sizeof _kernel[0][0]);
 const int _kernelHeight = (sizeof _kernel / sizeof _kernel[0]);
 
 #endif
-

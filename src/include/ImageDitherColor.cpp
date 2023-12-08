@@ -67,11 +67,14 @@ uint8_t Image::findClosestPalette(int16_t r, int16_t g, int16_t b)
         int16_t pg = GREEN8(pallete[i]);
         int16_t pb = BLUE8(pallete[i]);
         int32_t currentDistance = SQR(r - pr) + SQR(g - pg) + SQR(b - pb);
-        if (currentDistance < minDistance) {
+        if (currentDistance < minDistance)
+        {
             minDistance = currentDistance;
             contenderList[0] = i;
             contenderCount = 1;
-        } else if (currentDistance == minDistance) {
+        }
+        else if (currentDistance == minDistance)
+        {
             contenderList[contenderCount] = i;
             contenderCount++;
         }
@@ -80,7 +83,7 @@ uint8_t Image::findClosestPalette(int16_t r, int16_t g, int16_t b)
     // If your project has a good way to seed rand(),
     // you can use rand() here to improve dithering quality
     // when using shades that are exactly between palette colors.
-    //return contenderList[contenderCount <= 1 ? 0 : rand() % contenderCount];
+    // return contenderList[contenderCount <= 1 ? 0 : rand() % contenderCount];
 
     return contenderList[0];
 }
