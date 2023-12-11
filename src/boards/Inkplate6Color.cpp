@@ -405,6 +405,6 @@ void Inkplate::sleepColorPanel()
     digitalWrite(EPAPER_DC_PIN, LOW);
     digitalWrite(EPAPER_CS_PIN, LOW);
     digitalWrite(EPAPER_RST_PIN, HIGH); // Make sure this is HIGH so the display is on
-    gpio_deep_sleep_hold_en(); // Make sure RST pin stays high during sleep
+    gpio_deep_sleep_hold_en();          // Make sure RST pin stays high during sleep
 }
 #endif
