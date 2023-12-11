@@ -39,12 +39,16 @@ Inkplate display; // Create an object on Inkplate library and also set library i
 
 void setup()
 {
+    Serial.begin(115200);
+    Serial.println("about begin..."); Serial.flush();
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.drawImage(
         pictures[slide], 0, 0, 600,
         448); // Display selected picture at location X=0, Y=0. All three pictures have resolution of 600x448 pixels
+    Serial.println("displayin..."); Serial.flush();
     display.display(); // Refresh the screen with new picture
+    Serial.println("done displayin..."); Serial.flush();
     slide++; // Update counter for pictures. With this variable, we choose what picture is going to be displayed on
              // screen
     if (slide > 2)
@@ -53,13 +57,14 @@ void setup()
     // Uncomment this line if your Inkplate is older than Aug 2021 as older Inkplates have ESP32 wrover-e chips
     // rtc_gpio_isolate(GPIO_NUM_12); // Isolate/disable GPIO12 on ESP32 (only to reduce power consumption in sleep)
 
+    Serial.println("about to sleep color panel..."); Serial.flush();
+    display.sleepColorPanel();
     // Activate wake-up timer -- wake up after 20s here
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+    Serial.println("starting sleep..."); Serial.flush();
 
-    // This function must additionaly be called on Inkplate 6COLOR to initiate sleep
-    display.sleepColorPanel();
-
-    // Put ESP32 into deep sleep. Program stops here.
+    
+    // Put ESP32 into deep sleep. Program stops here.   
     esp_deep_sleep_start();
 }
 
