@@ -32,7 +32,7 @@ const uint8_t *pictures[] = {picture1, picture2,
                                         // so we can easly select it by selecting index in array
 
 #define uS_TO_S_FACTOR 1000000 // Conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  120      // How long ESP32 will be in deep sleep (in seconds)
+#define TIME_TO_SLEEP  600      // How long ESP32 will be in deep sleep (in seconds)
 RTC_DATA_ATTR int slide = 0;
 
 Inkplate display; // Create an object on Inkplate library and also set library into 3 Bit mode (gray)
@@ -40,7 +40,7 @@ Inkplate display; // Create an object on Inkplate library and also set library i
 void setup()
 {
     Serial.begin(115200);
-    Serial.println("about begin..."); Serial.flush();
+    Serial.println("about to begin..."); Serial.flush();
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.drawImage(
@@ -65,6 +65,9 @@ void setup()
 
     
     // Put ESP32 into deep sleep. Program stops here.   
+       delay(3000);
+    Serial.println("just before deep sleep start aaa!");
+    Serial.flush();
     esp_deep_sleep_start();
 }
 

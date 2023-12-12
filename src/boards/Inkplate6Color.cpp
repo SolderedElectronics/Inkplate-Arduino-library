@@ -363,6 +363,7 @@ void Inkplate::setIOExpanderForLowPower()
 
     // Battery voltage Switch MOSFET
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B1, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B1, LOW);
 
     // Rest of pins go to OUTPUT LOW state because in deepSleep mode they are
     // using least amount of power
@@ -395,16 +396,48 @@ void Inkplate::setIOExpanderForLowPower()
 
 void Inkplate::sleepColorPanel()
 {
-    // First wake the panel
-    setPanelDeepSleep(false);
+    Serial.println("In sleep colorpanel!");
 
-    // Now send the sleep command        delay(10);
+        delay(3000);
+    Serial.println("JUST BEFORE SET PANEL DEEP SLEEP FALSE!");
+    Serial.flush();
+
+    setPanelDeepSleep(false); // First, wake the panel back up
+
+            delay(3000);
+    Serial.println("JUST BEFORE SENDING SLEEP STUFF!");
+    Serial.flush();
+
+    // put the panel to sleep via command
+    delay(10);
     sendCommand(DEEP_SLEEP_REGISTER);
     sendData(0xA5);
-    delay(100);
-    digitalWrite(EPAPER_DC_PIN, LOW);
-    digitalWrite(EPAPER_CS_PIN, LOW);
-    digitalWrite(EPAPER_RST_PIN, HIGH); // Make sure this is HIGH so the display is on
-    gpio_deep_sleep_hold_en();          // Make sure RST pin stays high during sleep
+    delay(100); // Wait a bit until it's surely in sleep
+    
+                delay(3000);
+    Serial.println("JUST BEFORE SDCARD SLEEP!");
+    Serial.flush();
+
+
+    // Make sure the SD card is in sleep
+    sdCardSleep();
+    delay(10);
+
+            delay(3000);
+    Serial.println("JUST BEFORE  WRITING HIGH RST PIN!");
+    Serial.flush();
+
+
+    digitalWrite(EPAPER_RST_PIN, HIGH);
+
+    delay(3000);
+    Serial.println("just before sleep hold en!");
+    Serial.flush();
+
+    gpio_deep_sleep_hold_en(); // Make sure RST pin stays high during sleep
+
+    delay(3000);
+    Serial.println("just after sleep hold en!");
+    Serial.flush();
 }
 #endif
