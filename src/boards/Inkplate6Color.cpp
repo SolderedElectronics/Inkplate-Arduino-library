@@ -398,13 +398,13 @@ void Inkplate::sleepColorPanel()
 {
     Serial.println("In sleep colorpanel!");
 
-        delay(3000);
+    delay(3000);
     Serial.println("JUST BEFORE SET PANEL DEEP SLEEP FALSE!");
     Serial.flush();
 
     setPanelDeepSleep(false); // First, wake the panel back up
 
-            delay(3000);
+    delay(3000);
     Serial.println("JUST BEFORE SENDING SLEEP STUFF!");
     Serial.flush();
 
@@ -413,8 +413,8 @@ void Inkplate::sleepColorPanel()
     sendCommand(DEEP_SLEEP_REGISTER);
     sendData(0xA5);
     delay(100); // Wait a bit until it's surely in sleep
-    
-                delay(3000);
+
+    delay(3000);
     Serial.println("JUST BEFORE SDCARD SLEEP!");
     Serial.flush();
 
@@ -423,7 +423,7 @@ void Inkplate::sleepColorPanel()
     sdCardSleep();
     delay(10);
 
-            delay(3000);
+    delay(3000);
     Serial.println("JUST BEFORE  WRITING HIGH RST PIN!");
     Serial.flush();
 
