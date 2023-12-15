@@ -32,7 +32,7 @@ const uint8_t *pictures[] = {picture1, picture2,
                                         // so we can easly select it by selecting index in array
 
 #define uS_TO_S_FACTOR 1000000 // Conversion factor for micro seconds to seconds
-#define TIME_TO_SLEEP  600      // How long ESP32 will be in deep sleep (in seconds)
+#define TIME_TO_SLEEP  30      // How long ESP32 will be in deep sleep (in seconds)
 RTC_DATA_ATTR int slide = 0;
 
 Inkplate display; // Create an object on Inkplate library and also set library into 3 Bit mode (gray)
