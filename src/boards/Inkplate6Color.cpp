@@ -59,14 +59,12 @@ bool Inkplate::begin(void)
         _beginDone = true;
     }
 
-    // Wake the ePaper and initialize everything
-    // If it fails, return false
-    if (!setPanelDeepSleep(false))
-        return false;
+    // Set IO expander to the output low state to reduce current consumption in sleep.
+    setIOExpanderForLowPower();
 
-    // Put the panel to deep sleep
-    // The panel is always in sleep unless it's being written display data to
-    setPanelDeepSleep(true);
+    // Disable microSD card for the same reason.
+    sdCardSleep();
+
     return true;
 }
 
@@ -99,7 +97,7 @@ void Inkplate::display()
     sendCommand(DISPLAY_REF_REGISTER);
     while (!(digitalRead(EPAPER_BUSY_PIN)))
         ; // Wait for busy high signal
-    sendCommand(POWER_OFF_REGISTER);
+    sendCommand(0x02);
     while (digitalRead(EPAPER_BUSY_PIN))
         ; // Wait for busy low signal
     delay(200);
@@ -277,6 +275,13 @@ bool Inkplate::setPanelDeepSleep(bool _state)
         pinMode(EPAPER_DC_PIN, OUTPUT);
         pinMode(EPAPER_CS_PIN, OUTPUT);
 
+        // De-select epaper (and also try to charge capacitors to avoid big in-rush current).
+        digitalWrite(EPAPER_DC_PIN, HIGH);
+        digitalWrite(EPAPER_CS_PIN, HIGH);
+
+        // Wait a little bit.
+        delay(100);
+
         // Reset epaper
         resetPanel();
 
@@ -335,10 +340,15 @@ bool Inkplate::setPanelDeepSleep(bool _state)
         sendData(0xA5);
         delay(100);
         digitalWrite(EPAPER_RST_PIN, LOW);
+        delay(100);
         digitalWrite(EPAPER_DC_PIN, LOW);
         digitalWrite(EPAPER_CS_PIN, LOW);
-
         epdSPI.end();
+
+        pinMode(EPAPER_CLK, OUTPUT);
+        pinMode(EPAPER_DIN, OUTPUT);
+        digitalWrite(EPAPER_CLK, LOW);
+        digitalWrite(EPAPER_DIN, LOW);
 
         return true;
     }
@@ -357,9 +367,13 @@ void Inkplate::setIOExpanderForLowPower()
     ioBegin(IO_INT_ADDR, ioRegsInt);
 
     // TOUCHPAD PINS
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, INPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, OUTPUT);
+
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B2, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B3, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B4, LOW);
 
     // Battery voltage Switch MOSFET
     pinModeInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B1, OUTPUT);
@@ -394,21 +408,4 @@ void Inkplate::setIOExpanderForLowPower()
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, IO_PIN_B7, LOW);
 }
 
-void Inkplate::sleepColorPanel()
-{
-
-    setPanelDeepSleep(false); // First, wake the panel back up
-
-    delay(10);
-    sendCommand(DEEP_SLEEP_REGISTER);
-    sendData(0xA5);
-
-
-    // Make sure the SD card is in sleep
-    sdCardSleep();
-    delay(10);
-
-    digitalWrite(EPAPER_RST_PIN, HIGH);
-    gpio_deep_sleep_hold_en(); // Make sure RST pin stays high during sleep
-}
 #endif

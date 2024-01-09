@@ -135,10 +135,6 @@ class Inkplate : public System, public Graphics
     void sleepPeripheral(uint8_t _peripheral);
 #endif
 
-#ifdef ARDUINO_INKPLATECOLOR
-    void sleepColorPanel();
-#endif
-
 #if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
     void setInkplatePowerMode(uint8_t _mode);
 #endif

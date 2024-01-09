@@ -83,9 +83,6 @@ void setup()
     // Put SD card into deep sleep
     display.sdCardSleep();
 
-    // This function must additionaly be called on Inkplate 6COLOR to initiate sleep
-    display.sleepColorPanel();
-
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }
