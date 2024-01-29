@@ -21,9 +21,7 @@
 
 #include "Arduino.h"
 
-#if (defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6V2))
-#include "../boards/Inkplate6.h"
-#elif ARDUINO_INKPLATE5
+#if ARDUINO_INKPLATE5
 #include "../boards/Inkplate5.h"
 #elif (defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE10V2))
 #include "../boards/Inkplate10.h"
@@ -39,6 +37,8 @@
 #include "../boards/Inkplate7.h"
 #elif ARDUINO_INKPLATE4TEMPERA
 #include "../boards/Inkplate4TEMPERA.h"
+#elif (defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6V2))
+#include "../boards/Inkplate6.h"
 #endif
 
 #define INKPLATE6_WAVEFORM1     0
