@@ -28,20 +28,6 @@
  */
 void IRAM_ATTR I2SInit(i2s_dev_t *_i2sDev, volatile lldesc_s **_dmaDecs, uint8_t **_buffer)
 {
-    // // Allocate memory for DMA descriptor and line buffer.
-    // *_buffer = (uint8_t *)heap_caps_malloc(E_INK_WIDTH / 4, MALLOC_CAP_DMA);
-    // *_dmaDecs = (lldesc_s *)heap_caps_malloc(sizeof(lldesc_t), MALLOC_CAP_DMA);
-
-    // if (_dmaDecs == NULL || _dmaDecs == NULL)
-    // {
-    //     Serial.println("DMA Allocation ERROR");
-    //     while (true)
-    //         ;
-    // }
-
-    // Clean line buffer.
-    // memset(_buffer, 0, E_INK_WIDTH / 4);
-
     // Enable I2S peripheral and reset it.
     periph_module_enable(PERIPH_I2S1_MODULE);
     periph_module_reset(PERIPH_I2S1_MODULE);

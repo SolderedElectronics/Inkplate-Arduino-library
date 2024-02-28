@@ -1,8 +1,8 @@
 /**
  **************************************************
  *
- * @file        Inkplate6.cpp
- * @brief       Basic funtions for controling inkplate 6
+ * @file        Inkplate5.cpp
+ * @brief       Basic funtions for controling inkplate 5
  *
  *              https://github.com/e-radionicacom/Inkplate-Arduino-library
  *              For support, please reach over forums: forum.e-radionica.com/en
@@ -24,7 +24,7 @@
 #include "../include/Graphics.h"
 #include "../include/defines.h"
 
-#if (defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6V2))
+#ifdef ARDUINO_INKPLATE5V2
 
 /**
  * @brief       begin function initialize Inkplate object with predefined
@@ -44,11 +44,8 @@ bool Inkplate::begin(void)
         pinLUT[i] = ((i & B00000011) << 4) | (((i & B00001100) >> 2) << 18) | (((i & B00010000) >> 4) << 23) |
                     (((i & B11100000) >> 5) << 25);
 
-#ifdef ARDUINO_ESP32_DEV
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, HIGH);
-#else
+
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
-#endif
 
     memset(ioRegsInt, 0, 22);
     memset(ioRegsEx, 0, 22);
@@ -74,39 +71,29 @@ bool Inkplate::begin(void)
     delay(1);
     WAKEUP_CLEAR;
 
-    // Set all pins of seconds I/O expander to outputs, low.
-    // For some reason, it draw more current in deep sleep when pins are set as
-    // inputs...
-
-    for (int i = 0; i < 15; i++)
-    {
-        pinModeInternal(IO_EXT_ADDR, ioRegsEx, i, OUTPUT);
-        digitalWriteInternal(IO_EXT_ADDR, ioRegsEx, i, LOW);
-    }
-
-    // For same reason, unused pins of first I/O expander have to be also set as
-    // outputs, low.
+    // To reduce power consumption in deep sleep, unused pins of
+    // first I/O expander have to be also set as output with pulled low.
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, OUTPUT);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 11, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 12, LOW);
+    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 14, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 15, LOW);
 
-#ifdef ARDUINO_INKPLATE6V2
-    // Set SPI pins to input to reduce power consumption in deep sleep
-    pinMode(12, INPUT);
-    pinMode(13, INPUT);
-    pinMode(14, INPUT);
-    pinMode(15, INPUT);
+    // Enable pull down resistors on SPI lines to reduce power consumption in deep sleep.
+    pinMode(12, INPUT_PULLDOWN);
+    pinMode(13, INPUT_PULLDOWN);
+    pinMode(14, INPUT_PULLDOWN);
+    pinMode(15, INPUT_PULLDOWN);
 
     // And also disable uSD card supply
     pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, INPUT);
-#else
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, LOW);
-#endif
 
     // CONTROL PINS
-    pinMode(0, OUTPUT);
     pinMode(2, OUTPUT);
     pinMode(32, OUTPUT);
     pinMode(33, OUTPUT);
@@ -131,40 +118,39 @@ bool Inkplate::begin(void)
     // driver.
     I2SInit(myI2S, NULL, NULL);
 
-#ifndef ARDUINO_INKPLATE6V2
-    // TOUCHPAD PINS
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 10, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, INPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, INPUT);
-#else
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 10, OUTPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, OUTPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, OUTPUT);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 10, LOW);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 11, LOW);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 12, LOW);
-#endif
-
     // Battery voltage Switch MOSFET
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
 
+    // Allocate framebuffer for the upcomming framebuffer.
     DMemoryNew = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
+
+    // Buffer for pixel difference in partial update mode.
     _partial = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 8);
+
+    // Buffer for the pixel to EPD conversion.
     _pBuffer = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 4);
+
+    // 3 bit memory buffer.
     DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 2);
+
+    // LUT for fast pixel and wavefrom to EPD conversion.
     GLUT = (uint32_t *)malloc(256 * 9 * sizeof(uint32_t));
     GLUT2 = (uint32_t *)malloc(256 * 9 * sizeof(uint32_t));
+
+    // Check memory allocations. If any failed, return error.
     if (DMemoryNew == NULL || _partial == NULL || _pBuffer == NULL || DMemory4Bit == NULL || GLUT == NULL ||
         GLUT2 == NULL)
     {
         return 0;
     }
+
+    // Clean-up allocated memory buffers.
     memset(DMemoryNew, 0, E_INK_WIDTH * E_INK_HEIGHT / 8);
     memset(_partial, 0, E_INK_WIDTH * E_INK_HEIGHT / 8);
     memset(_pBuffer, 0, E_INK_WIDTH * E_INK_HEIGHT / 4);
     memset(DMemory4Bit, 255, E_INK_WIDTH * E_INK_HEIGHT / 2);
 
+    // Fill up the pixel to EPD LUT for 3 bit mode.
     for (int j = 0; j < 9; ++j)
     {
         for (int i = 0; i < 256; ++i)
@@ -174,7 +160,10 @@ bool Inkplate::begin(void)
         }
     }
 
+    // If everything went ok, set the flag to 1 (preventing memory leak if the begin is called multiple times).
     _beginDone = 1;
+
+    // Return succes!
     return 1;
 }
 
@@ -214,21 +203,38 @@ void Graphics::writePixel(int16_t x0, int16_t y0, uint16_t color)
         break;
     }
 
+    // If the 1 bit mode is used, pixels are packed 1 bit = 1 pixel in frame buffer
     if (getDisplayMode() == 0)
     {
+        // Divide by 8 to find a byte.
         int x = x0 >> 3;
+
+        // Get the remainder of the division to find a exact bit in the byte that needs to be modified.
         int x_sub = x0 & 7;
-        uint8_t temp = *(_partial + 100 * y0 + x);
-        *(_partial + 100 * y0 + x) = (~pixelMaskLUT[x_sub] & temp) | (color ? pixelMaskLUT[x_sub] : 0);
+
+        // Save the currnet state of the byte in the frame buffer.
+        uint8_t temp = *(_partial + (E_INK_WIDTH / 8) * y0 + x);
+
+        // Modify the pixel. First clear the pixel by writing zero then write the 1 if the pixel is set.
+        *(_partial + (E_INK_WIDTH / 8) * y0 + x) = (~pixelMaskLUT[x_sub] & temp) | (color ? pixelMaskLUT[x_sub] : 0);
     }
     else
     {
+        // If 3 bit mode is used, constrain the color value (only 8 possible colors are available).
         color &= 7;
+
+        // Divide by two to find a byte
         int x = x0 >> 1;
+
+        //  Get the remainder of the division to find if the lower or upper 4 bits are needed.
         int x_sub = x0 & 1;
+
+        // Store the current value of the byte.
         uint8_t temp;
-        temp = *(DMemory4Bit + 400 * y0 + x);
-        *(DMemory4Bit + 400 * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
+        temp = *(DMemory4Bit + (E_INK_WIDTH / 2) * y0 + x);
+
+        // Modify the specific pixel by writing all zeros into lower or upper 4 bits and set the needed color.
+        *(DMemory4Bit + (E_INK_WIDTH / 2) * y0 + x) = (pixelMaskGLUT[x_sub] & temp) | (x_sub ? color : color << 4);
     }
 }
 
@@ -253,37 +259,30 @@ void Inkplate::display1b(bool leaveOn)
         return;
 
     clean(0, 1);
-    clean(1, 18);
+    clean(1, 11);
     clean(2, 1);
-    clean(0, 18);
+    clean(0, 11);
     clean(2, 1);
-    clean(1, 18);
+    clean(1, 11);
     clean(2, 1);
-    clean(0, 18);
-    clean(2, 1);
+    clean(0, 11);
 
-// How many cycles / phases / frames of dark pixels
-#if defined(ARDUINO_ESP32_DEV)
-    int rep = 4;
-#elif defined(ARDUINO_INKPLATE6V2)
-    int rep = 5;
-#endif
-
-    for (int k = 0; k < rep; ++k)
+    for (int k = 0; k < 3; ++k)
     {
-        uint8_t *DMemoryNewPtr = DMemoryNew + (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
+        uint8_t *DMemoryNewPtr = DMemoryNew;
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
+            uint8_t *_DMemoryNewPtrFlipped = (DMemoryNewPtr + E_INK_WIDTH / 8) - 1;
             for (int n = 0; n < (E_INK_WIDTH / 4); n += 4)
             {
-                uint8_t dram1 = *(DMemoryNewPtr);
-                uint8_t dram2 = *(DMemoryNewPtr - 1);
+                uint8_t dram1 = *(_DMemoryNewPtrFlipped--);
+                uint8_t dram2 = *(_DMemoryNewPtrFlipped--);
                 _dmaLineBuffer[n] = LUTB[(dram2 >> 4) & 0x0F];     // i + 2;
                 _dmaLineBuffer[n + 1] = LUTB[dram2 & 0x0F];        // i + 3;
                 _dmaLineBuffer[n + 2] = LUTB[(dram1 >> 4) & 0x0F]; // i;
                 _dmaLineBuffer[n + 3] = LUTB[dram1 & 0x0F];        // i + 1;
-                DMemoryNewPtr -= 2;
+                DMemoryNewPtr += 2;
             }
             // Send the data using I2S DMA driver.
             sendDataI2S(myI2S, _dmaI2SDesc);
@@ -294,19 +293,20 @@ void Inkplate::display1b(bool leaveOn)
 
     for (int k = 0; k < 1; ++k)
     {
-        uint8_t *DMemoryNewPtr = DMemoryNew + (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
+        uint8_t *DMemoryNewPtr = DMemoryNew;
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
+            uint8_t *_DMemoryNewPtrFlipped = (DMemoryNewPtr + E_INK_WIDTH / 8) - 1;
             for (int n = 0; n < (E_INK_WIDTH / 4); n += 4)
             {
-                uint8_t dram1 = *(DMemoryNewPtr);
-                uint8_t dram2 = *(DMemoryNewPtr - 1);
+                uint8_t dram1 = *(_DMemoryNewPtrFlipped--);
+                uint8_t dram2 = *(_DMemoryNewPtrFlipped--);
                 _dmaLineBuffer[n] = LUT2[(dram2 >> 4) & 0x0F];     // i + 2;
                 _dmaLineBuffer[n + 1] = LUT2[dram2 & 0x0F];        // i + 3;
                 _dmaLineBuffer[n + 2] = LUT2[(dram1 >> 4) & 0x0F]; // i;
                 _dmaLineBuffer[n + 3] = LUT2[dram1 & 0x0F];        // i + 1;
-                DMemoryNewPtr -= 2;
+                DMemoryNewPtr += 2;
             }
             // Send the data using I2S DMA driver.
             sendDataI2S(myI2S, _dmaI2SDesc);
@@ -334,7 +334,7 @@ void Inkplate::display1b(bool leaveOn)
         delayMicroseconds(230);
     }
 
-    vscan_start();
+    //vscan_start();
     if (!leaveOn)
         einkOff();
 
@@ -351,41 +351,50 @@ void Inkplate::display1b(bool leaveOn)
  */
 void Inkplate::display3b(bool leaveOn)
 {
+    // Check if epaper power supply is successfully turned on.
+    // If not, skip the update (if there is no power to the epaper, sending data to it can damage the epaper!).
     if (!einkOn())
         return;
 
+    // Clear the display by flashing epaper display black, white, black white.
     clean(0, 1);
-    clean(1, 18);
+    clean(1, 11);
     clean(2, 1);
-    clean(0, 18);
+    clean(0, 11);
     clean(2, 1);
-    clean(1, 18);
+    clean(1, 11);
     clean(2, 1);
-    clean(0, 18);
-    clean(2, 1);
+    clean(0, 11);
 
+    // Send everything to the display. There are 9 waveform phases to get the needed graycale.
     for (int k = 0; k < 9; ++k)
     {
-        uint8_t *dp = DMemory4Bit + E_INK_WIDTH * E_INK_HEIGHT / 2;
+        uint8_t *dp = DMemory4Bit;
 
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
+            uint8_t *_DMemoryNewPtrFlipped = (dp + E_INK_WIDTH / 2) - 1;
             for (int j = 0; j < (E_INK_WIDTH / 4); j += 4)
             {
-                _dmaLineBuffer[j + 2] = (GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]);
-                _dmaLineBuffer[j + 3] = (GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]);
-                _dmaLineBuffer[j] = (GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]);
-                _dmaLineBuffer[j + 1] = (GLUT2[k * 256 + (*(--dp))] | GLUT[k * 256 + (*(--dp))]);
+                _dmaLineBuffer[j + 2] = (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
+                _dmaLineBuffer[j + 3] = (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
+                _dmaLineBuffer[j] = (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
+                _dmaLineBuffer[j + 1] = (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
+                dp += 8;
             }
             sendDataI2S(myI2S, _dmaI2SDesc);
             vscan_end();
         }
         delayMicroseconds(230);
     }
-    clean(3, 1);
-    vscan_start();
 
+    // Set the drivers inside epaper panel into dischare state.
+    clean(3, 1);
+
+    //vscan_start();
+
+    // If is needed to leave the epaper power supply on, do not turn it of.
     if (!leaveOn)
         einkOff();
 }
@@ -418,7 +427,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         return 0;
     }
 
-    uint16_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
+    uint32_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
     uint32_t _send;
     uint8_t data = 0;
     uint8_t diffw, diffb;
@@ -451,27 +460,21 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
     if (!einkOn())
         return 0;
 
-// How many cycles / phases / frames to write to the panel.
-#if defined(ARDUINO_ESP32_DEV)
-    int rep = 5;
-#elif defined(ARDUINO_INKPLATE6V2)
-    int rep = 6;
-#endif
-
-    for (int k = 0; k < rep; ++k)
+    for (int k = 0; k < 4; ++k)
     {
+        uint8_t *dp = _pBuffer;
         vscan_start();
-        n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
+            uint8_t *_dpPtrFlipped = (dp + E_INK_WIDTH / 4) - 1;
             for (int j = 0; j < (E_INK_WIDTH / 4); j += 4)
             {
-                _dmaLineBuffer[j + 2] = *(_pBuffer + n);
-                _dmaLineBuffer[j + 3] = *(_pBuffer + n - 1);
-                _dmaLineBuffer[j] = *(_pBuffer + n - 2);
-                _dmaLineBuffer[j + 1] = *(_pBuffer + n - 3);
-                n -= 4;
+                _dmaLineBuffer[j + 2] = *(_dpPtrFlipped--);
+                _dmaLineBuffer[j + 3] = *(_dpPtrFlipped--);
+                _dmaLineBuffer[j] = *(_dpPtrFlipped--);
+                _dmaLineBuffer[j + 1] = *(_dpPtrFlipped--);
             }
+            dp += (E_INK_WIDTH / 4);
             // Send the data using I2S DMA driver.
             sendDataI2S(myI2S, _dmaI2SDesc);
             vscan_end();
@@ -479,8 +482,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         delayMicroseconds(230);
     }
     clean(2, 2);
-    clean(3, 1);
-    vscan_start();
+    //vscan_start();
 
     if (!leaveOn)
         einkOff();
