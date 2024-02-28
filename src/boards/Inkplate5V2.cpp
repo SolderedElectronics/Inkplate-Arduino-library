@@ -334,7 +334,7 @@ void Inkplate::display1b(bool leaveOn)
         delayMicroseconds(230);
     }
 
-    //vscan_start();
+    // vscan_start();
     if (!leaveOn)
         einkOff();
 
@@ -377,10 +377,14 @@ void Inkplate::display3b(bool leaveOn)
             uint8_t *_DMemoryNewPtrFlipped = (dp + E_INK_WIDTH / 2) - 1;
             for (int j = 0; j < (E_INK_WIDTH / 4); j += 4)
             {
-                _dmaLineBuffer[j + 2] = (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
-                _dmaLineBuffer[j + 3] = (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
-                _dmaLineBuffer[j] = (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
-                _dmaLineBuffer[j + 1] = (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
+                _dmaLineBuffer[j + 2] =
+                    (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
+                _dmaLineBuffer[j + 3] =
+                    (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
+                _dmaLineBuffer[j] =
+                    (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
+                _dmaLineBuffer[j + 1] =
+                    (GLUT2[k * 256 + (*(_DMemoryNewPtrFlipped--))] | GLUT[k * 256 + (*(_DMemoryNewPtrFlipped--))]);
                 dp += 8;
             }
             sendDataI2S(myI2S, _dmaI2SDesc);
@@ -392,7 +396,7 @@ void Inkplate::display3b(bool leaveOn)
     // Set the drivers inside epaper panel into dischare state.
     clean(3, 1);
 
-    //vscan_start();
+    // vscan_start();
 
     // If is needed to leave the epaper power supply on, do not turn it of.
     if (!leaveOn)
@@ -482,7 +486,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         delayMicroseconds(230);
     }
     clean(2, 2);
-    //vscan_start();
+    // vscan_start();
 
     if (!leaveOn)
         einkOff();
