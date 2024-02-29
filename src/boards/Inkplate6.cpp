@@ -426,6 +426,15 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
 
     uint32_t changeCount = 0;
 
+    _dmaI2SDesc->size = (E_INK_WIDTH / 4) + 16;
+    _dmaI2SDesc->length = (E_INK_WIDTH / 4) + 16;
+    _dmaI2SDesc->sosf = 1;
+    _dmaI2SDesc->owner = 1;
+    _dmaI2SDesc->qe.stqe_next = 0;
+    _dmaI2SDesc->eof = 1;
+    _dmaI2SDesc->buf = _dmaLineBuffer;
+    _dmaI2SDesc->offset = 0;
+
     for (int i = 0; i < E_INK_HEIGHT; ++i)
     {
         for (int j = 0; j < E_INK_WIDTH / 8; ++j)
