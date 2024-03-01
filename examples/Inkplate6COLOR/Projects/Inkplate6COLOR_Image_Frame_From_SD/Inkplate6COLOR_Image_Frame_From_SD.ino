@@ -179,8 +179,6 @@ void deepSleep()
     // Turn off the power supply for the SD card
     display.sdCardSleep();
 
-     
-
     // Enable wakeup from deep sleep on GPIO 36 (wake button)
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
 

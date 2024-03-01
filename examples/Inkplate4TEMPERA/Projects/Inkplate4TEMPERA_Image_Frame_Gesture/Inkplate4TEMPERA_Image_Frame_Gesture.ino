@@ -64,6 +64,9 @@ void setup()
     display.setTextColor(BLACK); // Set text color to black
     display.setTextSize(5);      // Scale text to be five times bigger then original (5x7 px)
 
+    // Enable the APDS9960 gesture sensor.
+    display.wakePeripheral(INKPLATE_APDS9960);
+
     // Init SD card
     if (!display.sdCardInit())
     {

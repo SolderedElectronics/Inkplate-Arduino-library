@@ -417,9 +417,6 @@ status_t LSM6DS3::begin(SensorSettings *pSettingsYouWanted)
     // Setup the accelerometer******************************
 
     // First, wake the device
-    // This was added by Soldered due to the fact that on Inkplate 4TEMPERA peripherals are off by default
-    settings.accelEnabled = 1;
-    settings.gyroEnabled = 1;
 
     dataToWrite = 0; // Start Fresh!
     if (settings.accelEnabled == 1)

@@ -46,6 +46,12 @@ void setup()
     display.begin();   // Init Inkplate library (you should call this function ONLY ONCE)
     display.display(); // Put clear image on display
 
+    // Enable the Fuel Gauge.
+    // NOTE!
+    // Fuel Gauge is disabled by default. That will impact accuracy of the SoC (State of Charge). You can enable it,
+    // but it will have an impact on the deep sleep current (it will add additional 30-50uA).
+    display.wakePeripheral(INKPLATE_FUEL_GAUGE); 
+
     display.battery.begin(); // Init the fuel gauge
     // Note: You don't actually need to call display.battery.begin() to enable drawing power from the battery
     // Inkplate will do this automatically, this is just if you want to init the fuel gauge

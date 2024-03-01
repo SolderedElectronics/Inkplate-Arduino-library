@@ -130,8 +130,6 @@ void setup()
 
     // Go to sleep before checking again
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    
-     
 
     // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();

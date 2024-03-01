@@ -471,6 +471,13 @@ uint16_t BQ27441::status(void)
 	return readControlWord(BQ27441_CONTROL_STATUS);
 }
 
+// Added by Soldered Electronics.
+void BQ27441::shutdown()
+{
+	readControlWord(BQ27441_CONTROL_SHUTDOWN_ENABLE);
+	readControlWord(BQ27441_CONTROL_SHUTDOWN);
+}
+
 /***************************** Private Functions *****************************/
 
 // Check if the BQ27441-G1A is sealed or not.

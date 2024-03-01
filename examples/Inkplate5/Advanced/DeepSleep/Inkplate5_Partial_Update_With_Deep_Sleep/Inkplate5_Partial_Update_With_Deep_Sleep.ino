@@ -76,7 +76,7 @@ void createScreen()
 {
     display.setTextSize(3);           // Set font to be scaled up three times
     display.setCursor(35, 100);
-    display.print("Inkplate 7 partial update with deep sleep example");
+    display.print("Inkplate 5 partial update with deep sleep example");
     display.setCursor(200, 250);      // Set text cursor @ X = 200, Y = 250
     display.print("First variable:"); // Write first variable to buffer
     display.print(counter, DEC);

@@ -55,6 +55,9 @@
 // Buzzer enable pin (pin P1_4 on internal IO expander)
 #define BUZZ_EN 12
 
+// Pin for Fuel Gauge GPOUT.
+#define FG_GPOUT 15
+
 #define DATA 0x0E8C0030 // D0-D7 = GPIO4 GPIO5 GPIO18 GPIO19 GPIO23 GPIO25 GPIO26 GPIO27
 
 #define CL 0x01 // GPIO0
