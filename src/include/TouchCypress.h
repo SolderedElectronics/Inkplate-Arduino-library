@@ -42,31 +42,31 @@
 #include "TouchCypressTypedefs.h"
 
 // Cypress Touch IC I2C address (7 bit I2C address).
-#define CPYRESS_TOUCH_I2C_ADDR  0x24
+#define CPYRESS_TOUCH_I2C_ADDR 0x24
 
 // GPIOs for touchscreen controller.
 //#define CYPRESS_TOUCH_PWR_MOS_PIN   IO_PIN_B4
 //#define CYPRESS_TOUCH_RST_PIN       IO_PIN_B2
 
 // Cypress touchscreen controller I2C regs.
-#define CYPRESS_TOUCH_BASE_ADDR         0x00
-#define CYPRESS_TOUCH_SOFT_RST_MODE     0x01
-#define CYPRESS_TOUCH_SYSINFO_MODE      0x10
-#define CYPRESS_TOUCH_OPERATE_MODE      0x00
-#define CYPRESS_TOUCH_LOW_POWER_MODE    0x04
-#define CYPRESS_TOUCH_DEEP_SLEEP_MODE   0x02
-#define CYPRESS_TOUCH_REG_ACT_INTRVL    0x1D
+#define CYPRESS_TOUCH_BASE_ADDR       0x00
+#define CYPRESS_TOUCH_SOFT_RST_MODE   0x01
+#define CYPRESS_TOUCH_SYSINFO_MODE    0x10
+#define CYPRESS_TOUCH_OPERATE_MODE    0x00
+#define CYPRESS_TOUCH_LOW_POWER_MODE  0x04
+#define CYPRESS_TOUCH_DEEP_SLEEP_MODE 0x02
+#define CYPRESS_TOUCH_REG_ACT_INTRVL  0x1D
 
 // Active Power state scanning/processing refresh interval
-#define CYPRESS_TOUCH_ACT_INTRVL_DFLT		0x00 /* ms */
+#define CYPRESS_TOUCH_ACT_INTRVL_DFLT 0x00 /* ms */
 // Low Power state scanning/processing refresh interval
-#define CYPRESS_TOUCH_LP_INTRVL_DFLT		0x0A /* ms */
+#define CYPRESS_TOUCH_LP_INTRVL_DFLT 0x0A /* ms */
 // Touch timeout for the Active power */
-#define CYPRESS_TOUCH_TCH_TMOUT_DFLT		0xFF /* ms */
+#define CYPRESS_TOUCH_TCH_TMOUT_DFLT 0xFF /* ms */
 
 // Max X and Y sizes reported by the TSC.
-#define CYPRESS_TOUCH_MAX_X     682
-#define CYPRESS_TOUCH_MAX_Y     1023
+#define CYPRESS_TOUCH_MAX_X 682
+#define CYPRESS_TOUCH_MAX_Y 1023
 
 /**
  * @brief       Touch class holds functionality for interaction with touchscreen
@@ -134,7 +134,6 @@ class Touch : virtual public Expander
 
     // Write into Touchscreen Controller registers with I2C by using Arduino Wire library.
     bool tsWriteI2CRegs(uint8_t _cmd, uint8_t *_buffer, int _len);
-
 };
 
 #endif
