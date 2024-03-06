@@ -177,7 +177,7 @@
 #define TOUCHSCREEN_IO_EXPANDER IO_EXT_ADDR
 #define TOUCHSCREEN_IO_REGS     ioRegsEx
 #define TOUCHSCREEN_EN          0
-#define TS_RTS                  1
+#define TS_RST                  1
 #define TS_INT                  36
 #define TS_ADDR                 0x15
 

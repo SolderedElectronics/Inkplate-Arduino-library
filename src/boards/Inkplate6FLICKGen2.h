@@ -17,18 +17,11 @@
  * @authors     @ Soldered
  ***************************************************/
 
-#ifndef __INKPLATE6PLUS_H__
-#define __INKPLATE6PLUS_H__
+#ifndef __INKPLATE6FLICKGEN2_H__
+#define __INKPLATE6FLICKGEN2_H__
 
-#ifdef ARDUINO_INKPLATE6PLUS
-#define IO_INT_ADDR 0x20
-#define IO_EXT_ADDR 0x22
-#endif
-
-#ifdef ARDUINO_INKPLATE6PLUSV2
 #define IO_INT_ADDR 0x20
 #define IO_EXT_ADDR 0x21
-#endif
 
 // Pin on the internal io expander which controls MOSFET for turning on and off the SD card
 #define SD_PMOS_PIN IO_PIN_B5 // 13
@@ -41,7 +34,6 @@
 #define TOUCHSCREEN_EN          12
 #define TS_RST                  10
 #define TS_INT                  36
-#define TS_ADDR                 0x15
 #define TOUCHSCREEN_IO_EXPANDER IO_INT_ADDR
 #define TOUCHSCREEN_IO_REGS     ioRegsInt
 
@@ -55,8 +47,5 @@ static void IRAM_ATTR tsInt()
     {{0, 0, 0, 0, 0, 2, 1, 1, 0}, {0, 0, 2, 1, 1, 1, 2, 1, 0}, {0, 2, 2, 2, 1, 1, 2, 1, 0},                            \
      {0, 0, 2, 2, 2, 1, 2, 1, 0}, {0, 0, 0, 0, 2, 2, 2, 1, 0}, {0, 0, 2, 1, 2, 1, 1, 2, 0},                            \
      {0, 0, 2, 2, 2, 1, 1, 2, 0}, {0, 0, 0, 0, 2, 2, 2, 2, 0}};
-
-#define INKPLATE_NORMAL_PWR_MODE 0x11
-#define INKPLATE_USB_PWR_ONLY    0x88
 
 #endif

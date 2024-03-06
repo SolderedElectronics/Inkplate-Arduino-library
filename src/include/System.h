@@ -76,9 +76,13 @@
 #define RTC_7PF    0
 #define RTC_12_5PF 1
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA) || defined(ARDUINO_INKPLATE6FLICK)
 #include "Frontlight.h"
-#include "Touch.h"
+#ifdef ARDUINO_INKPLATE6FLICK
+#include "TouchCypress.h"
+#else
+#include "TouchElan.h"
+#endif
 #endif
 
 #if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6PLUS)
@@ -88,7 +92,7 @@
 #if defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE6PLUSV2) ||               \
     defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATECOOL) || defined(ARDUINO_INKPLATE5) ||                   \
     defined(ARDUINO_INKPLATE5V2) || defined(ARDUINO_INKPLATE4) || defined(ARDUINO_INKPLATE7) ||                        \
-    defined(ARDUINO_INKPLATE4TEMPERA)
+    defined(ARDUINO_INKPLATE4TEMPERA) || defined(ARDUINO_INKPLATE6FLICK)
 #include "Pcal.h"
 #endif
 
@@ -102,7 +106,7 @@ class System : public Esp,
                virtual public Expander,
 #endif
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA) || defined(ARDUINO_INKPLATE6FLICK)
                public Touch,
                public Frontlight,
 #endif

@@ -18,7 +18,7 @@
 #ifndef __FRONTLIGHT_H__
 #define __FRONTLIGHT_H__
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA) || defined(ARDUINO_INKPLATE6FLICK)
 
 #include "Arduino.h"
 #include "Wire.h"
@@ -26,7 +26,7 @@
 
 #if defined(ARDUINO_INKPLATE6PLUS)
 #include "Mcp.h"
-#elif defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
+#elif defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA) || defined(ARDUINO_INKPLATE6FLICK)
 #include "Pcal.h"
 #endif
 
