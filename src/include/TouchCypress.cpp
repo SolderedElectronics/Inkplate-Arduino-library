@@ -21,7 +21,7 @@
 #ifdef ARDUINO_INKPLATE6FLICK
 
 // Macro helpers.
-#define TS_GET_BOOTLOADERMODE(reg)		(((reg) & 0x10) >> 4)
+#define TS_GET_BOOTLOADERMODE(reg) (((reg)&0x10) >> 4)
 
 // Interrupt function callback for Touch Interruput event.
 static volatile bool _tsFlag = false;
@@ -111,7 +111,8 @@ bool Touch::tsInit(uint8_t _pwrState)
         tsReset();
 
         // Try to ping it.
-        if(!tsPing(5)) return false;
+        if (!tsPing(5))
+            return false;
 
         // Issue a SW reset.
         tsSendCommand(0x01);
@@ -171,7 +172,7 @@ void Touch::tsShutdown()
  *
  * @param       uint8_t *b
  *              pointer to store register content
- * 
+ *
  * @note        Array must be at least 15 bytes long.
  */
 void Touch::tsGetRawData(uint8_t *b)
@@ -381,18 +382,19 @@ void Touch::tsScale(struct cypressTouchData *_touchData, uint16_t _xSize, uint16
  * @brief       Set power mode of the Touchscreen Controller. There are 3 modes
  *              CYPRESS_TOUCH_OPERATE_MODE - Normal mode (fast response, higher accuracy, higher power consumption).
  *                                           Current ~ 15mA.
- *              CYPRESS_TOUCH_LOW_POWER_MODE - After few seconds of inactivity, TSC goes into low power ode and periodically
- *                                             goes into operating mode to check for touch event. Current ~4mA.
- *              CYPRESS_TOUCH_DEEP_SLEEP_MODE - Disable TSC. Current ~25uA.
- * 
+ *              CYPRESS_TOUCH_LOW_POWER_MODE - After few seconds of inactivity, TSC goes into low power ode and
+ * periodically goes into operating mode to check for touch event. Current ~4mA. CYPRESS_TOUCH_DEEP_SLEEP_MODE - Disable
+ * TSC. Current ~25uA.
+ *
  * @param       uint8_t _s
- *              Power mode - Can only be CYPRESS_TOUCH_OPERATE_MODE, CYPRESS_TOUCH_LOW_POWER_MODE or CYPRESS_TOUCH_DEEP_SLEEP_MODE.
- *              [defined in TouchCypress.h]
+ *              Power mode - Can only be CYPRESS_TOUCH_OPERATE_MODE, CYPRESS_TOUCH_LOW_POWER_MODE or
+ * CYPRESS_TOUCH_DEEP_SLEEP_MODE. [defined in TouchCypress.h]
  */
 void Touch::tsSetPowerState(uint8_t _s)
 {
     // Check for the parameters.
-    if ((_s == CYPRESS_TOUCH_DEEP_SLEEP_MODE) || (_s == CYPRESS_TOUCH_LOW_POWER_MODE) || (_s == CYPRESS_TOUCH_OPERATE_MODE))
+    if ((_s == CYPRESS_TOUCH_DEEP_SLEEP_MODE) || (_s == CYPRESS_TOUCH_LOW_POWER_MODE) ||
+        (_s == CYPRESS_TOUCH_OPERATE_MODE))
     {
         // Set new power mode setting.
         tsSendCommand(_s);
@@ -431,7 +433,7 @@ bool Touch::tsAvailable()
 // Private members.
 /**
  * @brief       Enable or disable power to the Touchscreen Controller.
- * 
+ *
  * @param       bool _pwr
  *              true - Enable power to the Touchscreen/Touchscreen Controller.
  *              false - Disable power to the Touchscreen/Touchscreen Controller to reduce power
@@ -467,9 +469,9 @@ void Touch::tsPower(bool _pwr)
 }
 
 /**
- * @brief       Disable touchscreen. Detach interrupt, clear interrput flag, disable power to the 
+ * @brief       Disable touchscreen. Detach interrupt, clear interrput flag, disable power to the
  *              Touchscreen Controller.
- * 
+ *
  */
 void Touch::tsEnd()
 {
@@ -485,7 +487,7 @@ void Touch::tsEnd()
 
 /**
  * @brief       Method does a HW reset by using RST pin on the Touchscreen/Touchscreen Controller.
- * 
+ *
  */
 void Touch::tsReset()
 {
@@ -500,7 +502,7 @@ void Touch::tsReset()
 
 /**
  * @brief       Method executes a SW reset by using I2C command.
- * 
+ *
  */
 void Touch::tsSwReset()
 {
@@ -513,11 +515,11 @@ void Touch::tsSwReset()
 
 /**
  * @brief       Function reads bootloader registers from the Touchscreen Controller.
- * 
+ *
  * @param       struct cyttspBootloaderData *_blDataPtr
  *              Defined in TouchCypressTypedefs.h, pointer to the struct cyttspBootloaderData to
  *              store bootloader registers data.
- * 
+ *
  * @return      bool
  *              true - Loading bootloader data register was successfull.
  *              false - Loading bootloader data from the registers has failed.
@@ -527,7 +529,8 @@ bool Touch::tsLoadBootloaderRegs(struct cyttspBootloaderData *_blDataPtr)
     // Bootloader temp. registers array.
     uint8_t _bootloaderData[16];
 
-    if (!tsReadI2CRegs(CYPRESS_TOUCH_BASE_ADDR, _bootloaderData, 16)) return false;
+    if (!tsReadI2CRegs(CYPRESS_TOUCH_BASE_ADDR, _bootloaderData, 16))
+        return false;
 
     // Parse Bootloader data into typedef struct.
     memcpy(_blDataPtr, _bootloaderData, 16);
@@ -538,23 +541,22 @@ bool Touch::tsLoadBootloaderRegs(struct cyttspBootloaderData *_blDataPtr)
 /**
  * @brief       Method forces Touchscreen Controller to exit bootloader mode and enters normal
  *              operating mode - to load preloaded firmware (possibly TTSP - TrueTouch Standard Product Firmware).
- * 
+ *
  * @return      bool
  *              true - Touchscreen Controller quit bootloader mode and loaded TTSP FW that is currently executing.
  *              false - Touchscreen Controller failed to exit bootloader mode.
- * 
+ *
  * @note        It exiting bootloader mode fails reading touch events will fail. Do not go further with the code for the
  *              Touchscreen.
  */
 bool Touch::tsExitBootLoaderMode()
 {
     // Bootloader command array.
-    uint8_t _blCommandArry[] = 
-    {
-        0x00,   // File offset.
-        0xFF,   // Command.
-        0xA5,   // Exit bootloader command.
-        0, 1, 2, 3, 4, 5, 6, 7  // Default keys.
+    uint8_t _blCommandArry[] = {
+        0x00,                     // File offset.
+        0xFF,                     // Command.
+        0xA5,                     // Exit bootloader command.
+        0,    1, 2, 3, 4, 5, 6, 7 // Default keys.
     };
 
     // Write bootloader settings.
@@ -569,7 +571,8 @@ bool Touch::tsExitBootLoaderMode()
     tsLoadBootloaderRegs(&_bootloaderData);
 
     // Check for validity.
-    if (TS_GET_BOOTLOADERMODE(_bootloaderData.bl_status)) return false;
+    if (TS_GET_BOOTLOADERMODE(_bootloaderData.bl_status))
+        return false;
 
     // If everything went ok return true.
     return true;
@@ -577,15 +580,15 @@ bool Touch::tsExitBootLoaderMode()
 
 /**
  * @brief       Set Touchscreen Controller into System Info mode.
- * 
+ *
  * @param       struct cyttspSysinfoData *_sysDataPtr
  *              Defined cypressTouchTypedefs.h, pointer to the struct for the system info registers.
- * 
+ *
  * @return      bool
  *              true - System Info mode usccessfully set.
  *              false - System Info mode failed.
- * 
- * @note        As soon as this fails, stop the Touchscreen from executing, touch data will be invalid. 
+ *
+ * @note        As soon as this fails, stop the Touchscreen from executing, touch data will be invalid.
  */
 bool Touch::tsSetSysInfoMode(struct cyttspSysinfoData *_sysDataPtr)
 {
@@ -622,14 +625,14 @@ bool Touch::tsSetSysInfoMode(struct cyttspSysinfoData *_sysDataPtr)
 
 /**
  * @brief       Set System info registers into their default state.
- * 
+ *
  * @param       struct cyttspSysinfoData *_sysDataPtr
  *              Defined in TouchCypressTypedefs.h, poinet to the struct for the system info registers.
- * 
+ *
  * @return      bool
  *              true - Registers are set successfully.
  *              false - Setting registers has failed.
- * 
+ *
  * @note        Stop the tuchscreen code from executing if this fails, touch data will be invalid.
  */
 bool Touch::tsSetSysInfoRegs(struct cyttspSysinfoData *_sysDataPtr)
@@ -642,7 +645,8 @@ bool Touch::tsSetSysInfoRegs(struct cyttspSysinfoData *_sysDataPtr)
     uint8_t _regs[] = {_sysDataPtr->act_intrvl, _sysDataPtr->tch_tmout, _sysDataPtr->lp_intrvl};
 
     // Send the registers to the I2C. Check if failed. If failed, return false.
-    if (!tsWriteI2CRegs(0x1D, _regs, 3)) return false;
+    if (!tsWriteI2CRegs(0x1D, _regs, 3))
+        return false;
 
     // Wait a little bit.
     delay(20);
@@ -654,7 +658,7 @@ bool Touch::tsSetSysInfoRegs(struct cyttspSysinfoData *_sysDataPtr)
 /**
  * @brief       Method does handshake for the Touchscreen/Touchscreen Controller to confirm successfull read
  *              new touch report data.
- * 
+ *
  * @note        Handshake must be done on every new touch event from the Interrupt.
  */
 void Touch::tsHandshake()
@@ -697,10 +701,10 @@ bool Touch::tsPing(int _retries)
 
 /**
  * @brief       Method sends I2C command to the Touchscreen Controller IC.
- * 
+ *
  * @param       uint8_t _cmd
- *              I2C command for the Touchscreen Controller IC. 
- * 
+ *              I2C command for the Touchscreen Controller IC.
+ *
  * @return      true - Command is succesfully send and executed.
  *              false - I2C command send failed.
  */
@@ -708,7 +712,7 @@ bool Touch::tsSendCommand(uint8_t _cmd)
 {
     // Init I2C communication.
     Wire.beginTransmission(CPYRESS_TOUCH_I2C_ADDR);
-    
+
     // I'm not sure about this?
     // Write I2C sub-address (register address).
     Wire.write(CYPRESS_TOUCH_BASE_ADDR);
@@ -720,23 +724,23 @@ bool Touch::tsSendCommand(uint8_t _cmd)
     delay(20);
 
     // Send to I2C!
-    return Wire.endTransmission() == 0?true:false;
+    return Wire.endTransmission() == 0 ? true : false;
 }
 
 /**
  * @brief       Method reads multiple I2C registers at once from the touchscreen controller and save them into buffer.
- * 
+ *
  * @param       uint8_t _cmd
  *              I2C command for the Touchscreen Controller.
  * @param       uint8_t *_buffer
- *              Buffer for the bytes read from the Touchscreen Controller. 
+ *              Buffer for the bytes read from the Touchscreen Controller.
  * @param       int _len
  *              How many bytes to read from the I2C (Touchscreen Controller).
- * 
+ *
  * @return      bool
  *              true - I2C register read was successfull.
  *              false - I2C register read failed.
- * 
+ *
  * @note        More than 32 bytes can be read at the same time.
  */
 bool Touch::tsReadI2CRegs(uint8_t _cmd, uint8_t *_buffer, int _len)
@@ -759,12 +763,12 @@ bool Touch::tsReadI2CRegs(uint8_t _cmd, uint8_t *_buffer, int _len)
     while (_len > 0)
     {
         // Check for the size of the remaining buffer.
-        int _i2cLen = _len > 32?32:_len;
+        int _i2cLen = _len > 32 ? 32 : _len;
 
         // Read the bytes from the I2C.
         Wire.requestFrom(CPYRESS_TOUCH_I2C_ADDR, _i2cLen);
         Wire.readBytes(_buffer + _index, _i2cLen);
-        
+
         // Update the buffer index position.
         _index += _i2cLen;
 
@@ -778,18 +782,18 @@ bool Touch::tsReadI2CRegs(uint8_t _cmd, uint8_t *_buffer, int _len)
 
 /**
  * @brief       Method writes multiple I2C registers at once to the touchscreen controller from buffer provided.
- * 
+ *
  * @param       uint8_t _cmd
  *              I2C command for the Touchscreen Controller.
  * @param       uint8_t *_buffer
- *              Buffer for the bytes that needs to be sent to the Touchscreen Controller. 
+ *              Buffer for the bytes that needs to be sent to the Touchscreen Controller.
  * @param       int _len
  *              How many bytes to write to the I2C (Touchscreen Controller).
- * 
+ *
  * @return      bool
  *              true - I2C register write was successfull.
  *              false - I2C register write failed.
- * 
+ *
  * @note        More than 32 bytes can be written at the same time.
  */
 bool Touch::tsWriteI2CRegs(uint8_t _cmd, uint8_t *_buffer, int _len)
