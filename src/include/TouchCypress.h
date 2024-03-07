@@ -106,7 +106,8 @@ class Touch : virtual public Expander
     bool tsGetTouchData(struct cypressTouchData *_touchData);
 
     // Scale touch data report to fit screen (and also rotation).
-    void tsScale(struct cypressTouchData *_touchData, uint16_t _xSize, uint16_t _ySize, bool _flipX, bool _flipY, bool _swapXY);
+    void tsScale(struct cypressTouchData *_touchData, uint16_t _xSize, uint16_t _ySize, bool _flipX, bool _flipY,
+                 bool _swapXY);
 
     // Disable touchscreen.
     void tsEnd();

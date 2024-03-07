@@ -177,7 +177,7 @@ void Touch::tsShutdown()
  */
 void Touch::tsGetRawData(uint8_t *b)
 {
-    tsReadI2CRegs(CYPRESS_TOUCH_BASE_ADDR, b, 16);   
+    tsReadI2CRegs(CYPRESS_TOUCH_BASE_ADDR, b, 16);
 }
 
 /**
@@ -200,7 +200,8 @@ uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos, uint8_t *z)
     struct cypressTouchData _touchReport;
 
     // Check for the null-pointer.
-    if (xPos == NULL || yPos == NULL) return 0;
+    if (xPos == NULL || yPos == NULL)
+        return 0;
 
     // Fill the array with zeros.
     xPos[0] = 0;
@@ -216,14 +217,16 @@ uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos, uint8_t *z)
     }
 
     // Check the flag for the new data.
-    if (!_tsFlag) return 0;
+    if (!_tsFlag)
+        return 0;
 
     // If there is new data, clear the interrupt flag.
     _tsFlag = false;
 
     // Read the new data from the touchscreen controller IC.
     // Return zero detected fingers if reading has failed.
-    if (!tsGetTouchData(&_touchReport)) return 0;
+    if (!tsGetTouchData(&_touchReport))
+        return 0;
 
     // Scale it to fit the screen.
     tsScale(&_touchReport, E_INK_WIDTH - 1, E_INK_HEIGHT - 1, false, true, true);
@@ -252,25 +255,25 @@ uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos, uint8_t *z)
         // Check for each finger.
         for (int i = 0; i < _touchReport.fingers; i++)
         {
-            switch(getRotation())
+            switch (getRotation())
             {
-                case 1:
-                    // Rotation clockwise (to the right - aka. portrait mode).
-                    _temp = xPos[i];
-                    xPos[i] = map(yPos[i], 0, E_INK_HEIGHT, 0, E_INK_HEIGHT);
-                    yPos[i] = map(_temp, 0, E_INK_WIDTH - 1, E_INK_WIDTH - 1, 0);
-                    break;
-                case 2:
-                    // Flipped by 180 deg.
-                    xPos[i] = map(xPos[i], 0, E_INK_WIDTH - 1, E_INK_WIDTH - 1, 0);
-                    yPos[i] = map(yPos[i], 0, E_INK_HEIGHT - 1, E_INK_HEIGHT - 1, 0);
-                    break;
-                case 3:
-                    // Rotation counter-clockwise from default rotation (90 degs to the left).
-                    _temp = xPos[i];
-                    xPos[i] = map(yPos[i], 0, E_INK_HEIGHT - 1, E_INK_HEIGHT - 1, 0);
-                    yPos[i] = map(_temp, 0, E_INK_WIDTH - 1, 0, E_INK_WIDTH - 1);
-                    break;
+            case 1:
+                // Rotation clockwise (to the right - aka. portrait mode).
+                _temp = xPos[i];
+                xPos[i] = map(yPos[i], 0, E_INK_HEIGHT, 0, E_INK_HEIGHT);
+                yPos[i] = map(_temp, 0, E_INK_WIDTH - 1, E_INK_WIDTH - 1, 0);
+                break;
+            case 2:
+                // Flipped by 180 deg.
+                xPos[i] = map(xPos[i], 0, E_INK_WIDTH - 1, E_INK_WIDTH - 1, 0);
+                yPos[i] = map(yPos[i], 0, E_INK_HEIGHT - 1, E_INK_HEIGHT - 1, 0);
+                break;
+            case 3:
+                // Rotation counter-clockwise from default rotation (90 degs to the left).
+                _temp = xPos[i];
+                xPos[i] = map(yPos[i], 0, E_INK_HEIGHT - 1, E_INK_HEIGHT - 1, 0);
+                yPos[i] = map(_temp, 0, E_INK_WIDTH - 1, 0, E_INK_WIDTH - 1);
+                break;
             }
         }
     }
@@ -281,11 +284,11 @@ uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos, uint8_t *z)
 
 /**
  * @brief       Get the new touch event data from the touchscreen controller.
- * 
+ *
  * @param       struct cypressTouchData _touchData
  *              Pointer to the structure for the touch report data (such as X, Y and
- *              Z values of each touch channel, nuber of fingers etc.)  
- * 
+ *              Z values of each touch channel, nuber of fingers etc.)
+ *
  * @return      bool
  *              true - Touch data is successfully read and the data is valid.
  *              false - Touch data read has failed.
@@ -293,7 +296,8 @@ uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos, uint8_t *z)
 bool Touch::tsGetTouchData(struct cypressTouchData *_touchData)
 {
     // Check for the null-pointer trap.
-    if (_touchData == NULL) return false;
+    if (_touchData == NULL)
+        return false;
 
     // Clear struct for touchscreen data.
     memset(_touchData, 0, sizeof(cypressTouchData));
@@ -303,7 +307,8 @@ bool Touch::tsGetTouchData(struct cypressTouchData *_touchData)
 
     // Read registers for the touch data (32 bytes of data).
     // If read failed for some reason, return false.
-    if (!tsReadI2CRegs(CYPRESS_TOUCH_BASE_ADDR, _regs, sizeof(_regs))) return false;
+    if (!tsReadI2CRegs(CYPRESS_TOUCH_BASE_ADDR, _regs, sizeof(_regs)))
+        return false;
 
     // Send a handshake.
     tsHandshake();
@@ -335,21 +340,22 @@ bool Touch::tsGetTouchData(struct cypressTouchData *_touchData)
 
 /**
  * @brief       Method scales, flips and swaps X and Y cooridinates to ensure X and Y matches the screen.
- * 
+ *
  * @param       struct cypressTouchData _touchData
- *              Defined in cypressTouchTypedefs.h. Filled touch data report. 
+ *              Defined in cypressTouchTypedefs.h. Filled touch data report.
  * @param       uint16_t _xSize
  *              Screen size in pixels for X axis.
  * @param       uint16_t _ySize
  *              Screen size in pixels for Y axis.
  * @param       bool _flipX
  *              Flip the direction of the X axis.
- * @param       bool _flipY 
+ * @param       bool _flipY
  *              Flip the direction of the Y axis.
  * @param       bool _swapXY
  *              Swap X and Y cooridinates.
  */
-void Touch::tsScale(struct cypressTouchData *_touchData, uint16_t _xSize, uint16_t _ySize, bool _flipX, bool _flipY, bool _swapXY)
+void Touch::tsScale(struct cypressTouchData *_touchData, uint16_t _xSize, uint16_t _ySize, bool _flipX, bool _flipY,
+                    bool _swapXY)
 {
     // Temp. variables for the mapped value.
     uint16_t _mappedX = 0;
@@ -359,8 +365,10 @@ void Touch::tsScale(struct cypressTouchData *_touchData, uint16_t _xSize, uint16
     for (int i = 0; i < _touchData->fingers; i++)
     {
         // Check for the flip.
-        if (_flipX) _touchData->x[i] = CYPRESS_TOUCH_MAX_X - _touchData->x[i];
-        if (_flipY) _touchData->y[i] = CYPRESS_TOUCH_MAX_Y - _touchData->y[i];
+        if (_flipX)
+            _touchData->x[i] = CYPRESS_TOUCH_MAX_X - _touchData->x[i];
+        if (_flipY)
+            _touchData->y[i] = CYPRESS_TOUCH_MAX_Y - _touchData->y[i];
 
         // Check for X and Y swap.
         if (_swapXY)
