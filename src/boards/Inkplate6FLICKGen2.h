@@ -37,12 +37,6 @@
 #define TOUCHSCREEN_IO_EXPANDER IO_INT_ADDR
 #define TOUCHSCREEN_IO_REGS     ioRegsInt
 
-static volatile bool _tsFlag = false;
-static void IRAM_ATTR tsInt()
-{
-    _tsFlag = true;
-}
-
 #define WAVEFORM3BIT                                                                                                   \
     {{0, 0, 0, 0, 0, 2, 1, 1, 0}, {0, 0, 2, 1, 1, 1, 2, 1, 0}, {0, 2, 2, 2, 1, 1, 2, 1, 0},                            \
      {0, 0, 2, 2, 2, 1, 2, 1, 0}, {0, 0, 0, 0, 2, 2, 2, 1, 0}, {0, 0, 2, 1, 2, 1, 1, 2, 0},                            \

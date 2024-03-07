@@ -23,6 +23,13 @@
 // Macro helpers.
 #define TS_GET_BOOTLOADERMODE(reg)		(((reg) & 0x10) >> 4)
 
+// Interrupt function callback for Touch Interruput event.
+static volatile bool _tsFlag = false;
+static void IRAM_ATTR tsInt()
+{
+    _tsFlag = true;
+}
+
 /**
  * @brief       touchInArea checks if touch occured in given rectangle area
  *
@@ -39,7 +46,47 @@
  */
 bool Touch::touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h)
 {
+    int16_t x2 = x1 + w, y2 = y1 + h;
+    if (tsAvailable())
+    {
+        uint8_t n;
+        uint16_t x[2], y[2];
+        uint8_t z[2];
+        n = tsGetData(x, y, z);
 
+        // Ugh...touchscreen expects to get handshake packet after each interrupt event, but this
+        // is not possible on EPS32 easly (there should be I2C communication inside ISR). This is a
+        // workaround; get the X and Y position and wait for 100ms. If multiple INT events have been
+        // detected, code will wait until no more new INT events have been detected.
+        unsigned long _tsIntTimeout = millis();
+        while ((millis() - _tsIntTimeout) < 100ULL)
+        {
+            if (_tsFlag)
+            {
+                _tsIntTimeout = millis();
+                _tsFlag = false;
+                tsHandshake();
+            }
+        }
+
+        if (n && z[0] > 0)
+        {
+            touchT = millis();
+            touchN = n;
+            memcpy(touchX, x, 2);
+            memcpy(touchY, y, 2);
+        }
+    }
+
+    if (millis() - touchT < 100)
+    {
+        if (touchN == 1 && BOUND(x1, touchX[0], x2) && BOUND(y1, touchY[0], y2))
+            return true;
+        if (touchN == 2 && ((BOUND(x1, touchX[0], x2) && BOUND(y1, touchY[0], y2)) ||
+                            (BOUND(x1, touchX[1], x2) && BOUND(y1, touchY[1], y2))))
+            return true;
+    }
+    return false;
 }
 
 /**
@@ -95,6 +142,9 @@ bool Touch::tsInit(uint8_t _pwrState)
         pinMode(TS_INT, INPUT);
         attachInterrupt(TS_INT, tsInt, FALLING);
 
+        // Wait a little bit.
+        delay(50);
+
         // Clear the interrpt flag.
         _tsFlag = false;
     }
@@ -126,7 +176,7 @@ void Touch::tsShutdown()
  */
 void Touch::tsGetRawData(uint8_t *b)
 {
-    
+    tsReadI2CRegs(CYPRESS_TOUCH_BASE_ADDR, b, 16);   
 }
 
 /**
@@ -143,9 +193,188 @@ void Touch::tsGetRawData(uint8_t *b)
  * @note        touch screen doesn't return data for two fingers when fingers
  * are align at the y axis, or one above another
  */
-uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos)
+uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos, uint8_t *z)
 {
+    // Struct typedef for touch data report from the touchscreen controller IC.
+    struct cypressTouchData _touchReport;
 
+    // Check for the null-pointer.
+    if (xPos == NULL || yPos == NULL) return 0;
+
+    // Fill the array with zeros.
+    xPos[0] = 0;
+    xPos[1] = 0;
+    yPos[0] = 0;
+    yPos[1] = 0;
+
+    // Copy Z into array only if array address is passed as argument in function.
+    if (z != NULL)
+    {
+        z[0] = 0;
+        z[1] = 0;
+    }
+
+    // Check the flag for the new data.
+    if (!_tsFlag) return 0;
+
+    // If there is new data, clear the interrupt flag.
+    _tsFlag = false;
+
+    // Read the new data from the touchscreen controller IC.
+    // Return zero detected fingers if reading has failed.
+    if (!tsGetTouchData(&_touchReport)) return 0;
+
+    // Scale it to fit the screen.
+    tsScale(&_touchReport, E_INK_WIDTH - 1, E_INK_HEIGHT - 1, false, true, true);
+
+    // Copy values into ararys.
+    for (int i = 0; i < _touchReport.fingers; i++)
+    {
+        // Save values into the arrays.
+        xPos[i] = _touchReport.x[i];
+        yPos[i] = _touchReport.y[i];
+
+        // Copy Z into array only if array address is passed as argument in function.
+        if (z != NULL)
+        {
+            z[i] = _touchReport.z[i];
+        }
+    }
+
+    // Rotate it if needed.
+    // Rotation 0 does not need swapping (defalut rotation).
+    if (getRotation() != 0)
+    {
+        // Temp variable for swap.
+        uint16_t _temp;
+
+        // Check for each finger.
+        for (int i = 0; i < _touchReport.fingers; i++)
+        {
+            switch(getRotation())
+            {
+                case 1:
+                    // Rotation clockwise (to the right - aka. portrait mode).
+                    _temp = xPos[i];
+                    xPos[i] = map(yPos[i], 0, E_INK_HEIGHT, 0, E_INK_HEIGHT);
+                    yPos[i] = map(_temp, 0, E_INK_WIDTH - 1, E_INK_WIDTH - 1, 0);
+                    break;
+                case 2:
+                    // Flipped by 180 deg.
+                    xPos[i] = map(xPos[i], 0, E_INK_WIDTH - 1, E_INK_WIDTH - 1, 0);
+                    yPos[i] = map(yPos[i], 0, E_INK_HEIGHT - 1, E_INK_HEIGHT - 1, 0);
+                    break;
+                case 3:
+                    // Rotation counter-clockwise from default rotation (90 degs to the left).
+                    _temp = xPos[i];
+                    xPos[i] = map(yPos[i], 0, E_INK_HEIGHT - 1, E_INK_HEIGHT - 1, 0);
+                    yPos[i] = map(_temp, 0, E_INK_WIDTH - 1, 0, E_INK_WIDTH - 1);
+                    break;
+            }
+        }
+    }
+
+    // Return number of detected fingers on the touchscreen.
+    return _touchReport.fingers;
+}
+
+/**
+ * @brief       Get the new touch event data from the touchscreen controller.
+ * 
+ * @param       struct cypressTouchData _touchData
+ *              Pointer to the structure for the touch report data (such as X, Y and
+ *              Z values of each touch channel, nuber of fingers etc.)  
+ * 
+ * @return      bool
+ *              true - Touch data is successfully read and the data is valid.
+ *              false - Touch data read has failed.
+ */
+bool Touch::tsGetTouchData(struct cypressTouchData *_touchData)
+{
+    // Check for the null-pointer trap.
+    if (_touchData == NULL) return false;
+
+    // Clear struct for touchscreen data.
+    memset(_touchData, 0, sizeof(cypressTouchData));
+
+    // Buffer for the I2C registers.
+    uint8_t _regs[32];
+
+    // Read registers for the touch data (32 bytes of data).
+    // If read failed for some reason, return false.
+    if (!tsReadI2CRegs(CYPRESS_TOUCH_BASE_ADDR, _regs, sizeof(_regs))) return false;
+
+    // Send a handshake.
+    tsHandshake();
+
+    // Parse the data!
+    // Data goes as follows:
+    // [1 byte] Handshake bit - Must be written back with xor on last MSB bit for TSC knows that INT has been read.
+    // [1 byte] Something? It changes with every new data. Data is always 0x00, 0x40, 0x80, 0xC0)
+    // [1 byte] Number of fingers detected - Zero, one or two.
+    // [2 bytes] X value position of the finger that has been detected first.
+    // [2 bytes] Y value position of the finger that has been detected first.
+    // [1 byte] Z value or the presusre os the touch on the first finger.
+    // [1 byte] Type of detection - 0 or 255 finger released
+    // [2 bytes] X value position of the finger that has been detected second.
+    // [2 bytes] Y value position of the finger that has been detected second.
+    // [1 byte] Z value or the presusre os the touch on the second finger.
+    _touchData->x[0] = _regs[3] << 8 | _regs[4];
+    _touchData->y[0] = _regs[5] << 8 | _regs[6];
+    _touchData->z[0] = _regs[7];
+    _touchData->x[1] = _regs[9] << 8 | _regs[10];
+    _touchData->y[1] = _regs[11] << 8 | _regs[12];
+    _touchData->z[1] = _regs[13];
+    _touchData->detectionType = _regs[8];
+    _touchData->fingers = _regs[2];
+
+    // Everything went ok? Return true.
+    return true;
+}
+
+/**
+ * @brief       Method scales, flips and swaps X and Y cooridinates to ensure X and Y matches the screen.
+ * 
+ * @param       struct cypressTouchData _touchData
+ *              Defined in cypressTouchTypedefs.h. Filled touch data report. 
+ * @param       uint16_t _xSize
+ *              Screen size in pixels for X axis.
+ * @param       uint16_t _ySize
+ *              Screen size in pixels for Y axis.
+ * @param       bool _flipX
+ *              Flip the direction of the X axis.
+ * @param       bool _flipY 
+ *              Flip the direction of the Y axis.
+ * @param       bool _swapXY
+ *              Swap X and Y cooridinates.
+ */
+void Touch::tsScale(struct cypressTouchData *_touchData, uint16_t _xSize, uint16_t _ySize, bool _flipX, bool _flipY, bool _swapXY)
+{
+    // Temp. variables for the mapped value.
+    uint16_t _mappedX = 0;
+    uint16_t _mappedY = 0;
+
+    // Map both touch channels.
+    for (int i = 0; i < _touchData->fingers; i++)
+    {
+        // Check for the flip.
+        if (_flipX) _touchData->x[i] = CYPRESS_TOUCH_MAX_X - _touchData->x[i];
+        if (_flipY) _touchData->y[i] = CYPRESS_TOUCH_MAX_Y - _touchData->y[i];
+
+        // Check for X and Y swap.
+        if (_swapXY)
+        {
+            uint16_t _temp = _touchData->x[i];
+            _touchData->x[i] = _touchData->y[i];
+            _touchData->y[i] = _temp;
+        }
+
+        // Map X value.
+        _mappedX = map(_touchData->x[i], 0, CYPRESS_TOUCH_MAX_X, 0, _xSize);
+
+        // Map Y value.
+        _mappedX = map(_touchData->y[i], 0, CYPRESS_TOUCH_MAX_Y, 0, _ySize);
+    }
 }
 
 /**
@@ -195,11 +424,7 @@ uint8_t Touch::tsGetPowerState()
  */
 bool Touch::tsAvailable()
 {
-    // Check for the handshake.
-    if (_tsFlag) tsHandshake();
-    bool _temp = _tsFlag;
-    _tsFlag = false;
-    return _temp;
+    return _tsFlag;
 }
 
 

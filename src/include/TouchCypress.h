@@ -82,11 +82,15 @@ class Touch : virtual public Expander
     bool tsAvailable();
     void tsSetPowerState(uint8_t _s);
     uint8_t tsGetPowerState();
-    uint8_t tsGetData(uint16_t *xPos, uint16_t *yPos);
+    uint8_t tsGetData(uint16_t *xPos, uint16_t *yPos, uint8_t *z = NULL);
 
     virtual int getRotation() = 0;
 
     void tsGetRawData(uint8_t *b);
+
+    // Do a handshake for Touchscreen Controller to acknowledge successfull touch report read.
+    // Must be public due interrupts.
+    void tsHandshake();
 
   private:
     // Bootloader struct typedef.
@@ -97,6 +101,12 @@ class Touch : virtual public Expander
 
     // Method disables or enables power to the Touchscreen.
     void tsPower(bool _pwr);
+
+    // Get the new touch event data/report.
+    bool tsGetTouchData(struct cypressTouchData *_touchData);
+
+    // Scale touch data report to fit screen (and also rotation).
+    void tsScale(struct cypressTouchData *_touchData, uint16_t _xSize, uint16_t _ySize, bool _flipX, bool _flipY, bool _swapXY);
 
     // Disable touchscreen.
     void tsEnd();
@@ -122,9 +132,6 @@ class Touch : virtual public Expander
     // Try to ping Touchscreen controller via I2C (I2C test).
     bool tsPing(int _retries = 5);
 
-    // Do a handshake for Touchscreen Controller to acknowledge successfull touch report read.
-    void tsHandshake();
-
     // Low-level I2C stuff.
     // Send command to the Touchscreen Controller via I2C.
     bool tsSendCommand(uint8_t _cmd);
@@ -135,6 +142,10 @@ class Touch : virtual public Expander
     // Write into Touchscreen Controller registers with I2C by using Arduino Wire library.
     bool tsWriteI2CRegs(uint8_t _cmd, uint8_t *_buffer, int _len);
 
+    // Used in touchInArea method.
+    uint8_t touchN;
+    uint16_t touchX[2], touchY[2];
+    uint32_t touchT = 0;
 };
 
 #endif
