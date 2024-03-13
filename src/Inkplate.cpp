@@ -319,7 +319,8 @@ void Inkplate::pinsZstate()
     pinMode(26, INPUT);
     pinMode(27, INPUT);
 
-#if defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE5V2) || defined(ARDUINO_INKPLATE6FLICK)
+#if defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE5V2) ||                      \
+    defined(ARDUINO_INKPLATE6FLICK)
     // Disable clock for the EPD.
     myI2S->conf1.tx_stop_en = 0;
 #endif
@@ -337,7 +338,8 @@ void Inkplate::pinsAsOutputs()
     pinModeInternal(IO_INT_ADDR, ioRegsInt, GMOD, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, SPV, OUTPUT);
 
-#if defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE5V2) || defined(ARDUINO_INKPLATE6FLICK)
+#if defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE5V2) ||                      \
+    defined(ARDUINO_INKPLATE6FLICK)
     // Set up the EPD Data and CL pins for I2S.
     setI2S1pin(0, I2S1O_BCK_OUT_IDX, 0);
     setI2S1pin(4, I2S1O_DATA_OUT0_IDX, 0);

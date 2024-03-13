@@ -76,7 +76,8 @@
 #define RTC_7PF    0
 #define RTC_12_5PF 1
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA) || defined(ARDUINO_INKPLATE6FLICK)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA) ||         \
+    defined(ARDUINO_INKPLATE6FLICK)
 #include "Frontlight.h"
 #ifdef ARDUINO_INKPLATE6FLICK
 #include "TouchCypress.h"
@@ -106,7 +107,8 @@ class System : public Esp,
                virtual public Expander,
 #endif
 
-#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA) || defined(ARDUINO_INKPLATE6FLICK)
+#if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA) ||         \
+    defined(ARDUINO_INKPLATE6FLICK)
                public Touch,
                public Frontlight,
 #endif
