@@ -88,22 +88,23 @@ bool Inkplate::begin(void)
     if (_beginDone == 1)
         return 0;
 
+    // Initialize Wire (I2C) library. Needed for I/O expander, RTC and ePaper PMIC.
     Wire.begin();
 
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 9, LOW);
-
+    // Clear registers for both I/O expanders.
     memset(ioRegsInt, 0, 22);
     memset(ioRegsEx, 0, 22);
 
+    // Initialize both I/O expanders.
     ioBegin(IO_INT_ADDR, ioRegsInt);
     ioBegin(IO_EXT_ADDR, ioRegsEx);
 
+    // Set control pins for ePaper PMIC to outputs.
     pinModeInternal(IO_INT_ADDR, ioRegsInt, VCOM, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, PWRUP, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, WAKEUP, OUTPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, GPIO0_ENABLE, OUTPUT);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, GPIO0_ENABLE, HIGH);
 
+    // Enable ePaper PMIC to set proper power up sequence.
     WAKEUP_SET;
     delay(1);
     Wire.beginTransmission(0x48);
@@ -118,14 +119,25 @@ bool Inkplate::begin(void)
 
     // To reduce power consumption in deep sleep, unused pins of
     // first I/O expander have to be also set as output with pulled low.
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 11, OUTPUT);
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, 12, OUTPUT);
+    // VBAT measurement MOSFET switch.
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, TOUCHSCREEN_EN, OUTPUT);
+    pinModeInternal(IO_INT_ADDR, ioRegsInt, TS_RST, OUTPUT);
+
+    // Frontlight.
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 13, OUTPUT);
+
+    // Unused pins on internal GPIO expander.
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 14, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 15, OUTPUT);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 11, LOW);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 12, LOW);
-    digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 13, LOW);
+
+    // Disable touchscreen.
+    tsInit(false);
+
+    // Disable frontlight.
+    frontlight(false);
+
+    // Unused pins on internal GPIO expander.
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 14, LOW);
     digitalWriteInternal(IO_INT_ADDR, ioRegsInt, 15, LOW);
 
@@ -138,7 +150,7 @@ bool Inkplate::begin(void)
     // And also disable uSD card supply
     pinModeInternal(IO_INT_ADDR, ioRegsInt, SD_PMOS_PIN, INPUT);
 
-    // CONTROL PINS
+    // Control pins for ePaper.
     pinMode(2, OUTPUT);
     pinMode(32, OUTPUT);
     pinMode(33, OUTPUT);
@@ -146,22 +158,21 @@ bool Inkplate::begin(void)
     pinModeInternal(IO_INT_ADDR, ioRegsInt, GMOD, OUTPUT);
     pinModeInternal(IO_INT_ADDR, ioRegsInt, SPV, OUTPUT);
 
-    // Use only myI2S
+    // Use only I2S1.
     myI2S = &I2S1;
 
     // Allocate memory for DMA descriptor and line buffer.
     _dmaLineBuffer = (uint8_t *)heap_caps_malloc((E_INK_WIDTH / 4) + 16, MALLOC_CAP_DMA);
     _dmaI2SDesc = (lldesc_s *)heap_caps_malloc(sizeof(lldesc_t), MALLOC_CAP_DMA);
 
-
+    // Check for successfull DMA allocation.
     if (_dmaLineBuffer == NULL || _dmaI2SDesc == NULL)
     {
         return 0;
     }
 
-    // Init the I2S driver. It will allocate the memory for the I2S DMA descriptor and line buffer and setup a I2S
-    // driver.
-    I2SInit(myI2S, NULL, NULL);
+    // Init the I2S driver. It will setup a I2S driver.
+    I2SInit(myI2S, 4);
 
     // Battery voltage Switch MOSFET
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
@@ -291,19 +302,19 @@ void Inkplate::display1b(bool leaveOn)
     if (!einkOn())
         return;
 
-    // Clear the screen.
-    clean(0, 1);
-    clean(1, 12);
+    // Clear the screen (clear sequence).
+    clean(0, 5);
+    clean(1, 22);
     clean(2, 1);
-    clean(0, 12);
+    clean(0, 22);
     clean(2, 1);
-    clean(1, 12);
+    clean(1, 22);
     clean(2, 1);
-    clean(0, 12);
+    clean(0, 22);
     clean(2, 1);
 
     // Write only black pixels.
-    for (int k = 0; k < 4; ++k)
+    for (int k = 0; k < 4; k++)
     {
         uint8_t *DMemoryNewPtr = DMemoryNew + (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
         vscan_start();
@@ -326,7 +337,7 @@ void Inkplate::display1b(bool leaveOn)
     }
 
     // Now write both black and white pixels.
-    for (int k = 0; k < 1; ++k)
+    for (int k = 0; k < 1; k++)
     {
         uint8_t *DMemoryNewPtr = DMemoryNew + (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
         vscan_start();
@@ -350,7 +361,7 @@ void Inkplate::display1b(bool leaveOn)
     }
 
     // Discharge sequence.
-    for (int k = 0; k < 1; ++k)
+    for (int k = 0; k < 1; k++)
     {
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
@@ -392,19 +403,18 @@ void Inkplate::display3b(bool leaveOn)
         return;
 
     // Clear the screen (clear sequence).
-    clean(0, 1);
-    clean(1, 12);
+    clean(0, 5);
+    clean(1, 22);
     clean(2, 1);
-    clean(0, 12);
+    clean(0, 22);
     clean(2, 1);
-    clean(1, 12);
+    clean(1, 22);
     clean(2, 1);
-    clean(0, 12);
+    clean(0, 22);
     clean(2, 1);
 
-    // Update the screen with new image by using custom waveform for the grayscale (can be found in Inkplate6FLICK.h
-    // file).
-    for (int k = 0; k < 9; ++k)
+    // Update the screen with new image by using custom waveform for the grayscale (can be found in Inkplate6FLICK.h file).
+    for (int k = 0; k < 9; k++)
     {
         uint8_t *dp = DMemory4Bit + E_INK_WIDTH * E_INK_HEIGHT / 2;
 
@@ -423,7 +433,7 @@ void Inkplate::display3b(bool leaveOn)
         }
     }
 
-    // Set ePapaer drivers into HiZ state.
+    // Set ePapaer drivers into HiZ state. 
     clean(3, 1);
 
     // Keep the ePaper supply enabled if needed.
@@ -501,7 +511,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
     if (!einkOn())
         return 0;
 
-    for (int k = 0; k < 4; ++k)
+    for (int k = 0; k < 4; k++)
     {
         vscan_start();
         n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
