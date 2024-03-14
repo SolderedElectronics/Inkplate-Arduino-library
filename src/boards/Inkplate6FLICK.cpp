@@ -413,7 +413,8 @@ void Inkplate::display3b(bool leaveOn)
     clean(0, 22);
     clean(2, 1);
 
-    // Update the screen with new image by using custom waveform for the grayscale (can be found in Inkplate6FLICK.h file).
+    // Update the screen with new image by using custom waveform for the grayscale (can be found in Inkplate6FLICK.h
+    // file).
     for (int k = 0; k < 9; k++)
     {
         uint8_t *dp = DMemory4Bit + E_INK_WIDTH * E_INK_HEIGHT / 2;
@@ -433,7 +434,7 @@ void Inkplate::display3b(bool leaveOn)
         }
     }
 
-    // Set ePapaer drivers into HiZ state. 
+    // Set ePapaer drivers into HiZ state.
     clean(3, 1);
 
     // Keep the ePaper supply enabled if needed.
