@@ -233,7 +233,7 @@ uint8_t Touch::tsGetData(uint16_t *xPos, uint16_t *yPos, uint8_t *z)
     tsScale(&_touchReport, E_INK_WIDTH - 1, E_INK_HEIGHT - 1, false, true, true);
 
     // Copy values into ararys.
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < _touchReport.fingers; i++)
     {
         // Save values into the arrays.
         xPos[i] = _touchReport.x[i];
