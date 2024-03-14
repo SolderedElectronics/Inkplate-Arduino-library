@@ -147,6 +147,9 @@ class Touch : virtual public Expander
     uint8_t touchN;
     uint16_t touchX[2], touchY[2];
     uint32_t touchT = 0;
+
+    // Checks status of the touchscreen initialization (for attachInterrupt funciton).
+    bool _tsInitDone = false;
 };
 
 #endif

@@ -27,6 +27,7 @@
 static volatile bool _tsFlag = false;
 static void IRAM_ATTR tsInt()
 {
+    // On interrupt event set flag to true.
     _tsFlag = true;
 }
 
@@ -51,8 +52,7 @@ bool Touch::touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h)
     {
         uint8_t n;
         uint16_t x[2], y[2];
-        uint8_t z[2];
-        n = tsGetData(x, y, z);
+        n = tsGetData(x, y);
 
         // Ugh...touchscreen expects to get handshake packet after each interrupt event, but this
         // is not possible on EPS32 easly (there should be I2C communication inside ISR). This is a
@@ -69,16 +69,13 @@ bool Touch::touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h)
             }
         }
 
-        if (n && z[0] > 0)
-        {
-            touchT = millis();
-            touchN = n;
-            memcpy(touchX, x, 2);
-            memcpy(touchY, y, 2);
-        }
+        touchT = millis();
+        touchN = n;
+        memcpy(touchX, x, 2);
+        memcpy(touchY, y, 2);
     }
 
-    if (millis() - touchT < 100)
+    if ((millis() - touchT) < 150ULL)
     {
         if (touchN == 1 && BOUND(x1, touchX[0], x2) && BOUND(y1, touchY[0], y2))
             return true;
@@ -141,13 +138,17 @@ bool Touch::tsInit(uint8_t _pwrState)
 
         // Add interrupt callback.
         pinMode(TS_INT, INPUT);
-        attachInterrupt(TS_INT, tsInt, FALLING);
+        if (!_tsInitDone)
+            attachInterrupt(TS_INT, tsInt, FALLING);
 
         // Wait a little bit.
         delay(50);
 
         // Clear the interrpt flag.
         _tsFlag = false;
+
+        // Set the touchscreen initialization flag to true.
+        _tsInitDone = true;
     }
     else
     {
@@ -155,7 +156,7 @@ bool Touch::tsInit(uint8_t _pwrState)
     }
 
     // Everything went ok? Return 1 for success.
-    return 1;
+    return true;
 }
 
 /**
@@ -361,6 +362,14 @@ void Touch::tsScale(struct cypressTouchData *_touchData, uint16_t _xSize, uint16
     uint16_t _mappedX = 0;
     uint16_t _mappedY = 0;
 
+    // Check for NULL pointer.
+    if (_touchData == NULL)
+        return;
+
+    // If the number of detected fingers is different than one or two, return.
+    if (_touchData->fingers != 1 && _touchData->fingers != 2)
+        return;
+
     // Map both touch channels.
     for (int i = 0; i < _touchData->fingers; i++)
     {
@@ -484,13 +493,17 @@ void Touch::tsPower(bool _pwr)
 void Touch::tsEnd()
 {
     // Detach interrupt.
-    detachInterrupt(TS_INT);
+    if (_tsInitDone)
+        detachInterrupt(TS_INT);
 
     // Clear interrupt flag.
     _tsFlag = false;
 
     // Disable the power to the touch.
     tsPower(false);
+
+    // Set touchscreen initialization flag to false.
+    _tsInitDone = false;
 }
 
 /**
@@ -537,12 +550,14 @@ bool Touch::tsLoadBootloaderRegs(struct cyttspBootloaderData *_blDataPtr)
     // Bootloader temp. registers array.
     uint8_t _bootloaderData[16];
 
+    // read bootloader data and save it into dedicated struct.
     if (!tsReadI2CRegs(CYPRESS_TOUCH_BASE_ADDR, _bootloaderData, 16))
         return false;
 
     // Parse Bootloader data into typedef struct.
     memcpy(_blDataPtr, _bootloaderData, 16);
 
+    // If everytwent ok, return true for success.
     return true;
 }
 
@@ -650,6 +665,7 @@ bool Touch::tsSetSysInfoRegs(struct cyttspSysinfoData *_sysDataPtr)
     _sysDataPtr->tch_tmout = CYPRESS_TOUCH_TCH_TMOUT_DFLT;
     _sysDataPtr->lp_intrvl = CYPRESS_TOUCH_LP_INTRVL_DFLT;
 
+    // Pack them into array.
     uint8_t _regs[] = {_sysDataPtr->act_intrvl, _sysDataPtr->tch_tmout, _sysDataPtr->lp_intrvl};
 
     // Send the registers to the I2C. Check if failed. If failed, return false.
@@ -775,6 +791,11 @@ bool Touch::tsReadI2CRegs(uint8_t _cmd, uint8_t *_buffer, int _len)
 
         // Read the bytes from the I2C.
         Wire.requestFrom(CPYRESS_TOUCH_I2C_ADDR, _i2cLen);
+
+        // Wait packets to arrive.
+        while (Wire.available() != _i2cLen)
+            ;
+
         Wire.readBytes(_buffer + _index, _i2cLen);
 
         // Update the buffer index position.

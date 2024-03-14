@@ -26,7 +26,7 @@
  *
  * @note        Function must be declared static to fit into Instruction RAM of the ESP32.
  */
-void IRAM_ATTR I2SInit(i2s_dev_t *_i2sDev, volatile lldesc_s **_dmaDecs, uint8_t **_buffer)
+void IRAM_ATTR I2SInit(i2s_dev_t *_i2sDev, uint8_t _clockDivider)
 {
     // Enable I2S peripheral and reset it.
     periph_module_enable(PERIPH_I2S1_MODULE);
@@ -62,12 +62,12 @@ void IRAM_ATTR I2SInit(i2s_dev_t *_i2sDev, volatile lldesc_s **_dmaDecs, uint8_t
     _i2sDev->sample_rate_conf.rx_bck_div_num = 2;
     _i2sDev->sample_rate_conf.tx_bck_div_num = 2;
 
-    // Do not use APLL, divide by 5, BCK should be ~16MHz.
+    // Do not use APLL, divide by 5 by default, BCK should be ~16MHz.
     _i2sDev->clkm_conf.val = 0;
     _i2sDev->clkm_conf.clka_en = 0;
     _i2sDev->clkm_conf.clkm_div_b = 0;
     _i2sDev->clkm_conf.clkm_div_a = 1;
-    _i2sDev->clkm_conf.clkm_div_num = 5;
+    _i2sDev->clkm_conf.clkm_div_num = _clockDivider;
 
     // FIFO buffer setup. Byte packing for FIFO: 0A0B_0B0C = 0, 0A0B_0C0D = 1, 0A00_0B00 = 3. Use dual mono single data
     _i2sDev->fifo_conf.val = 0;

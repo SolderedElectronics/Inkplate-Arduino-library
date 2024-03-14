@@ -8,6 +8,10 @@ jobs:
       matrix:
         include:
           - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate5
+            additional-sketch-paths: |
+              - examples/Inkplate5
+          - board:
               fqbn: Inkplate_Boards:esp32:Inkplate6
             additional-sketch-paths: |
               - examples/Inkplate6
@@ -31,6 +35,10 @@ jobs:
               fqbn: Inkplate_Boards:esp32:Inkplate6plusV2
             additional-sketch-paths: |
               - examples/Inkplate6PLUS
+          - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate6Flick
+            additional-sketch-paths: |
+              - examples/Inkplate_6_FLICK
           - board:
               fqbn: Inkplate_Boards:esp32:Inkplate6COLOR
             additional-sketch-paths: |

@@ -17,8 +17,8 @@
  * @authors     @ Soldered
  ***************************************************/
 
-#ifndef __INKPLATE6FLICKGEN2_H__
-#define __INKPLATE6FLICKGEN2_H__
+#ifndef __INKPLATE6FLICK_H__
+#define __INKPLATE6FLICK_H__
 
 #define IO_INT_ADDR 0x20
 #define IO_EXT_ADDR 0x21
@@ -31,15 +31,15 @@
 #define FRONTLIGHT_EN 11
 
 // Touchscreen defines
-#define TOUCHSCREEN_EN          12
-#define TS_RST                  10
+#define TOUCHSCREEN_EN          IO_PIN_B4
+#define TS_RST                  IO_PIN_B2
 #define TS_INT                  36
 #define TOUCHSCREEN_IO_EXPANDER IO_INT_ADDR
 #define TOUCHSCREEN_IO_REGS     ioRegsInt
 
 #define WAVEFORM3BIT                                                                                                   \
-    {{0, 0, 0, 0, 0, 2, 1, 1, 0}, {0, 0, 2, 1, 1, 1, 2, 1, 0}, {0, 2, 2, 2, 1, 1, 2, 1, 0},                            \
-     {0, 0, 2, 2, 2, 1, 2, 1, 0}, {0, 0, 0, 0, 2, 2, 2, 1, 0}, {0, 0, 2, 1, 2, 1, 1, 2, 0},                            \
-     {0, 0, 2, 2, 2, 1, 1, 2, 0}, {0, 0, 0, 0, 2, 2, 2, 2, 0}};
+    {{0, 0, 0, 0, 0, 1, 1, 1, 0}, {0, 0, 1, 2, 1, 1, 2, 1, 0}, {0, 1, 1, 2, 1, 1, 1, 2, 0},                            \
+     {1, 1, 1, 2, 2, 1, 1, 2, 0}, {1, 1, 1, 2, 1, 2, 1, 2, 0}, {0, 1, 1, 2, 1, 2, 1, 2, 0},                            \
+     {1, 2, 1, 1, 2, 2, 1, 2, 0}, {0, 0, 0, 0, 0, 0, 0, 2, 0}};
 
 #endif
