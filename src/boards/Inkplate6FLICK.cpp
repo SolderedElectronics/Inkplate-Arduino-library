@@ -304,13 +304,13 @@ void Inkplate::display1b(bool leaveOn)
 
     // Clear the screen (clear sequence).
     clean(0, 5);
-    clean(1, 22);
+    clean(1, 15);
     clean(2, 1);
-    clean(0, 22);
+    clean(0, 15);
     clean(2, 1);
-    clean(1, 22);
+    clean(1, 15);
     clean(2, 1);
-    clean(0, 22);
+    clean(0, 15);
     clean(2, 1);
 
     // Write only black pixels.
@@ -404,13 +404,13 @@ void Inkplate::display3b(bool leaveOn)
 
     // Clear the screen (clear sequence).
     clean(0, 5);
-    clean(1, 22);
+    clean(1, 15);
     clean(2, 1);
-    clean(0, 22);
+    clean(0, 15);
     clean(2, 1);
-    clean(1, 22);
+    clean(1, 15);
     clean(2, 1);
-    clean(0, 22);
+    clean(0, 15);
     clean(2, 1);
 
     // Update the screen with new image by using custom waveform for the grayscale (can be found in Inkplate6FLICK.h
@@ -512,7 +512,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
     if (!einkOn())
         return 0;
 
-    for (int k = 0; k < 4; k++)
+    for (int k = 0; k < 5; k++)
     {
         vscan_start();
         n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
