@@ -47,7 +47,6 @@ uint8_t alarmDay = 20;
 
 void setup()
 {
-
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display

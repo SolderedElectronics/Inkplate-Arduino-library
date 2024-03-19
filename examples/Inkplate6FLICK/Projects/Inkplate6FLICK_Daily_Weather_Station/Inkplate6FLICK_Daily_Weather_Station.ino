@@ -32,12 +32,12 @@ char lat[] = "45.5510548";
 char lon[] = "18.695463";
 
 // Change to your wifi ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "";
+char pass[] = "";
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "b1d3e9077193732d4b5e3e2c4c036657";
+char apiKey[] = "";
 
 //----------------------------------
 

@@ -38,7 +38,6 @@ String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Ard
 
 void setup()
 {
-
     display.begin();             // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();      // Clear frame buffer of display
     display.setTextSize(2);      // Set text size to be 2 times bigger than original (5x7 px)

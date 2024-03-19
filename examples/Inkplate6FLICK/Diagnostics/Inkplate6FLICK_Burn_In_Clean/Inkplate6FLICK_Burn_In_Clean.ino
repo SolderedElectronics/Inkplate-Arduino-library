@@ -29,7 +29,6 @@ Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set li
 
 void setup()
 {
-
     display.begin();        // Init library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
 

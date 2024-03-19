@@ -28,7 +28,6 @@ char *dataToWrite = "Hello! This is the file writing example for Inkplate 6FLICK
 
 void setup()
 {
-
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display

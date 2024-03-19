@@ -16,7 +16,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   
+
    15 March 2024 by Soldered
 */
 
@@ -257,18 +257,18 @@ void setup()
 
     // Check if we have a valid API key:
     Serial.println("Checking if API key is valid...");
-    if(!checkIfAPIKeyIsValid(APIKEY))
+    if (!checkIfAPIKeyIsValid(APIKEY))
     {
         // If we don't, notify the user
         Serial.println("API key is invalid!");
         display.clearDisplay();
-        display.setCursor(0,0);
+        display.setCursor(0, 0);
         display.setTextSize(2);
         display.println("Can't get data from OpenWeatherMaps! Check your API key!");
         display.println("Only older API keys for OneCall 2.5 work in free tier.");
         display.println("See the code comments the example for more info.");
         display.display();
-        while(1)
+        while (1)
         {
             delay(100);
         }
@@ -581,7 +581,7 @@ bool checkIfAPIKeyIsValid(char *APIKEY)
     bool failed = false;
 
     // Create the buffer for holding the API response, make it large enough just in case
-    char * data;
+    char *data;
     data = (char *)ps_malloc(50000LL);
 
     // Http object used to make GET request
@@ -591,7 +591,7 @@ bool checkIfAPIKeyIsValid(char *APIKEY)
     http.getStream().setNoDelay(true);
 
     // Combine the base URL and the API key to do a test call
-    char * baseURL = "https://api.openweathermap.org/data/2.5/onecall?lat=45.560001&lon=18.675880&units=metric&appid=";
+    char *baseURL = "https://api.openweathermap.org/data/2.5/onecall?lat=45.560001&lon=18.675880&units=metric&appid=";
     char apiTestURL[200];
     sprintf(apiTestURL, "%s%s", baseURL, APIKEY);
 
@@ -599,7 +599,7 @@ bool checkIfAPIKeyIsValid(char *APIKEY)
     http.begin(apiTestURL);
 
     delay(300);
-    
+
     // Download data until it's a verified complete download
     // Actually do request
     int httpCode = http.GET();
@@ -622,7 +622,8 @@ bool checkIfAPIKeyIsValid(char *APIKEY)
         data[n++] = 0;
 
         // If the reply constains this string - it's invalid
-        if(strstr(data, "Invalid API key.") != NULL) failed = true;
+        if (strstr(data, "Invalid API key.") != NULL)
+            failed = true;
     }
     else
     {

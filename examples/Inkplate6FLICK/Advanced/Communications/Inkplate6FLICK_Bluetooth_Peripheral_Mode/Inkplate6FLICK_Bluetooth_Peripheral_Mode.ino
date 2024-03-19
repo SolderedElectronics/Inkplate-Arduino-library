@@ -49,7 +49,6 @@ void setup() // Initialize everything
     Serial.begin(115200);
 
     // Init Inkplate library (you should call this function ONLY ONCE)
-
     display.begin();
 
     // Init BT communication

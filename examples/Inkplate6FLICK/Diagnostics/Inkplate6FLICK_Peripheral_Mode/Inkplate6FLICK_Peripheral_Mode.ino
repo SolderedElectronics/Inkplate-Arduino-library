@@ -39,7 +39,6 @@ char strTemp[2001];
 
 void setup()
 {
-
     display.begin();
     Serial.begin(115200);
     memset(commandBuffer, 0, BUFFER_SIZE);

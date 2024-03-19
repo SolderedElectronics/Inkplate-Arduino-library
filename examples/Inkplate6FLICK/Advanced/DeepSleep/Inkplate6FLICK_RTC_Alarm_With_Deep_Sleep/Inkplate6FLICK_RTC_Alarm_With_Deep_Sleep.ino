@@ -27,7 +27,6 @@ Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and als
 
 void setup()
 {
-
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
 
     display.rtcClearAlarmFlag(); // Clear alarm flag from any previous alarm

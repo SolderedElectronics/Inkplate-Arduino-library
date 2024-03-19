@@ -42,7 +42,6 @@ RTC_DATA_ATTR float decimal = PI;
 
 void setup()
 {
-
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
     createScreen();  // Function that contains everything that has to be written on screen
 

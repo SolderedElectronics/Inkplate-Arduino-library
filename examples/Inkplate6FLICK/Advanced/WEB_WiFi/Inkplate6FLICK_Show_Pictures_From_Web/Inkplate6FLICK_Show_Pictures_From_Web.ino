@@ -31,7 +31,6 @@ const char *password = ""; // Your WiFi password
 
 void setup()
 {
-
     display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear frame buffer of display
     display.display();      // Put clear image on display
