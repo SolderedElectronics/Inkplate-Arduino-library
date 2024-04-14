@@ -1,8 +1,8 @@
 /*
-   Inkplate5_Black_And_White example for Soldered Inkplate 5
-   For this example you will need only a USB-C cable and Inkplate 5.
-   Select "Soldered Inkplate5" from Tools -> Board menu.
-   Don't have "Soldered Inkplate5" option? Follow our tutorial and add it:
+   Inkplate5V2_Black_And_White example for Soldered Inkplate 5 V2
+   For this example you will need only a USB-C cable and Inkplate 5 V2
+   Select "Soldered Inkplate5 V2" from Tools -> Board menu.
+   Don't have "Soldered Inkplate5 V2" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    This example will show you how you can draw some simple graphics using
@@ -11,32 +11,33 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   28 March 2023 by Soldered
+   12 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE5
-#error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
+
+#ifndef ARDUINO_INKPLATE5V2
+#error "Wrong board selection for this example, please select Soldered Inkplate5 V2 in the boards menu."
 #endif
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch
 #include "logo.h"                // Include header file for Soldered logo. You can see it in next tab inside Arduino IDE
 Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set library to work in monochorme mode
-// Other option is gray mode, which is demonstrated in next example "Inkplate5_Grayscale"
+// Other option is gray mode, which is demonstrated in next example "Inkplate5V2_Grayscale"
 
 // Delay in milliseconds between screen refresh. Refreshing e-paper screens more often than 5s is not recommended
 #define DELAY_MS 5000
-// Want to refresh faster? Use partial update! Find example in "Inkplate5_Partial_Update"
+// Want to refresh faster? Use partial update! Find example in "Inkplate5V2_Partial_Update"
 
 void setup()
 {
     display.begin();        // Init library (you should call this function ONLY ONCE)
     display.clearDisplay(); // Clear any data that may have been in (software) frame buffer.
     //(NOTE! This does not clean image on screen, it only clears it in the frame buffer inside ESP32).
-    display.setCursor(200, 260);
+    display.setCursor(266, 345);
     display.setTextColor(BLACK, WHITE); // Set black text with white background
     display.setTextSize(4);             // Set text size 4 times bigger than original (5 x 7 px)
-    display.print("Welcome to Inkplate 5!");
+    display.print("Welcome to Inkplate 5 V2!");
     display.display(); // Write hello message on the screen
     delay(5000);       // Wait a little bit
 }
@@ -52,7 +53,7 @@ void loop()
         "Drawing a pixel"); // Function which writes small text at bottom left indicating what's currently done
                             // NOTE: you do not need displayCurrentAction function to use Inkplate!
     display.drawPixel(E_INK_WIDTH / 2, E_INK_HEIGHT / 2,
-                      BLACK); // Draw one black pixel at X = E_INK_WIDTH/2 (480), Y = E_INK_HEIGHT/2 (270) position in
+                      BLACK); // Draw one black pixel at X = E_INK_WIDTH/2 (640), Y = E_INK_HEIGHT/2 (360) position in
                               // BLACK color (must be black since Inkplate is in BW mode)
     display.display(); // Send image to display. You need to call this one each time you want to transfer frame buffer
                        // to the screen.
@@ -104,14 +105,14 @@ void loop()
 
     // Now draw a horizontal...
     display.clearDisplay();
-    display.drawFastHLine(180, 270, 600, BLACK); // Arguments are: starting X, starting Y, length, color
+    display.drawFastHLine(239, 359, 798, BLACK); // Arguments are: starting X, starting Y, length, color
     displayCurrentAction("Drawing one horizontal line");
     display.display();
     delay(DELAY_MS);
 
     //... and one vertical line
     display.clearDisplay();
-    display.drawFastVLine(480, 70, 400, BLACK); // Arguments are: starting X, starting Y, length, color
+    display.drawFastVLine(638, 93, 532, BLACK); // Arguments are: starting X, starting Y, length, color
     displayCurrentAction("Drawing one vertical line");
     display.display();
     delay(DELAY_MS);
@@ -130,9 +131,9 @@ void loop()
     display.display();
     delay(DELAY_MS);
 
-    // Draw a rectangle in the center of the screen with a size of 400 x 300 pixels
+    // Draw a rectangle in the center of the screen with a size of 540 x 400 pixels
     display.clearDisplay();
-    display.drawRect(280, 120, 400, 300, BLACK); // Arguments are: start X, start Y, size X, size Y, color
+    display.drawRect(372, 159, 540, 400, BLACK); // Arguments are: start X, start Y, size X, size Y, color
     displayCurrentAction("Drawing rectangle");
     display.display();
     delay(DELAY_MS);
@@ -147,9 +148,9 @@ void loop()
     display.display();
     delay(DELAY_MS);
 
-    // Draw filled black rectangle at X = 280, Y = 120, size of 400x300 pixels
+    // Draw filled black rectangle at X = 372, Y = 159, size of 540x540 pixels
     display.clearDisplay();
-    display.fillRect(280, 120, 400, 300, BLACK); // Arguments are: start X, start Y, size X, size Y, color
+    display.fillRect(372, 159, 540, 400, BLACK); // Arguments are: start X, start Y, size X, size Y, color
     displayCurrentAction("Drawing black rectangle");
     display.display();
     delay(DELAY_MS);
@@ -198,9 +199,9 @@ void loop()
     display.display(); // To show stuff on screen, you always need to call display.display();
     delay(DELAY_MS);
 
-    // Draw rounded rectangle at X = 280, Y = 120 and size of 400x300 pixels and radius of 10 pixels
+    // Draw rounded rectangle at X = 372, Y = 159 and size of 540x400 pixels and radius of 13 pixels
     display.clearDisplay();
-    display.drawRoundRect(280, 120, 400, 300, 10,
+    display.drawRoundRect(372, 159, 540, 400, 13,
                           BLACK); // Arguments are: start X, start Y, size X, size Y, radius, color
     displayCurrentAction("Drawing rectangle with rounded edges");
     display.display();
@@ -216,9 +217,9 @@ void loop()
     display.display();
     delay(DELAY_MS);
 
-    // Draw filled black rect at X = 280, Y = 120, size of 400x300 pixels and radius of 10 pixels
+    // Draw filled black rect at X = 372, Y = 159, size of 540x400 pixels and radius of 13 pixels
     display.clearDisplay();
-    display.fillRoundRect(280, 120, 400, 300, 10,
+    display.fillRoundRect(372, 159, 540, 400, 13,
                           BLACK); // Arguments are: start X, start Y, size X, size Y, radius, color
     displayCurrentAction("This is filled rectangle with rounded edges");
     display.display();
@@ -236,21 +237,21 @@ void loop()
 
     // Draw simple triangle
     display.clearDisplay();
-    display.drawTriangle(305, 440, 480, 90, 655, 440, BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
+    display.drawTriangle(405, 585, 638, 119, 871, 585, BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
     displayCurrentAction("Drawing triangle");
     display.display();
     delay(DELAY_MS);
 
     // Draw filled triangle inside simple triangle (so no display.clearDisplay() this time)
-    display.fillTriangle(380, 390, 480, 190, 580, 390, BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
+    display.fillTriangle(505, 518, 638, 252, 771, 518, BLACK); // Arguments are: X1, Y1, X2, Y2, X3, Y3, color
     displayCurrentAction("Drawing triangle inside exsisting one");
     display.display();
     delay(DELAY_MS);
 
-    // Display some bitmap on screen. We are going to display Soldered logo on display at location X = 75, Y = 200
+    // Display some bitmap on screen. We are going to display Soldered logo on display at location X = 100, Y = 250
     // Image is 800x160 pixels and we want to every pixel of this bitmap to be black.
     display.clearDisplay();
-    display.drawImage(logo, 75, 200, logo_w, logo_h,
+    display.drawImage(logo, 100, 250, logo_w, logo_h,
                       BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
     displayCurrentAction("Drawing Soldered logo");
     display.display();
@@ -261,10 +262,10 @@ void loop()
     display.clearDisplay();
     for (int i = 0; i < 6; i++)
     {
-        display.setTextSize(i + 1);               // textSize parameter starts at 1 and goes up to 6
-        display.setCursor(70, 130 + (i * i * 8)); // setCursor works as same as on LCD displays - sets "the cursor" at
-                                                  // the place you want to write someting next
-        display.print("INKPLATE 5!");             // The actual text you want to show on e-paper as String
+        display.setTextSize(i + 1);                // textSize parameter starts at 1 and goes up to 6
+        display.setCursor(50, 230 + (i * i * 16)); // setCursor works as same as on LCD displays - sets "the cursor" at
+                                                   // the place you want to write someting next
+        display.print("INKPLATE 5 V2!");              // The actual text you want to show on e-paper as String
     }
     displayCurrentAction("Text in different sizes and shadings");
     display.display(); // To show stuff on screen, you always need to call display.display();
@@ -277,15 +278,15 @@ void loop()
     for (int i = 0; i < 6; i++)
     {
         display.setTextSize(i + 1);
-        display.setCursor(500, 130 + (i * i * 8));
-        display.print("INKPLATE 5!");
+        display.setCursor(650, 230 + (i * i * 16));
+        display.print("INKPLATE 5 V2!");
     }
     display.display();
     delay(DELAY_MS);
 
     // Draws an elipse with x radius, y radius, center x, center y and color
     display.clearDisplay();
-    display.drawElipse(100, 200, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, BLACK);
+    display.drawElipse(133, 266, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, BLACK);
     displayCurrentAction("Drawing an elipse");
     display.display();
 
@@ -293,7 +294,7 @@ void loop()
 
     // Fills an elipse with x radius, y radius, center x, center y and color
     display.clearDisplay();
-    display.fillElipse(100, 200, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, BLACK);
+    display.fillElipse(133, 266, E_INK_WIDTH / 2, E_INK_HEIGHT / 2, BLACK);
     displayCurrentAction("Drawing a filled elipse");
     display.display();
 
@@ -342,11 +343,11 @@ void loop()
     display.setTextColor(WHITE, BLACK);
     while (true)
     {
-        display.setCursor(50, 50);
+        display.setCursor(100, 100);
         display.clearDisplay();
         display.setRotation(
             r); // Set rotation will sent rotation for the entire display, so you can use it sideways or upside-down
-        display.print("INKPLATE5");
+        display.print("INKPLATE5 V2");
         display.display();
         r++;
         delay(DELAY_MS);
@@ -360,6 +361,6 @@ void loop()
 void displayCurrentAction(String text)
 {
     display.setTextSize(2);
-    display.setCursor(2, 520);
+    display.setCursor(10, 700);
     display.print(text);
 }
