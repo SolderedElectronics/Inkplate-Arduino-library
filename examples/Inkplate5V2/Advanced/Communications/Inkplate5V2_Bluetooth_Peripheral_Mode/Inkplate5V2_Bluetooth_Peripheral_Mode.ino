@@ -52,7 +52,7 @@ void setup()
     display.begin();
 
     // Init BT communication
-    if (!SerialBT.begin("Inkplate5"))
+    if (!SerialBT.begin("Inkplate5V2"))
     {
         Serial.println("An error occurred initializing Bluetooth");
     }

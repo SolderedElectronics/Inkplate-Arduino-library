@@ -40,8 +40,8 @@ char lat[] = "45.5510548";
 char lon[] = "18.695463";
 
 // Change to your wifi ssid and password
-char ssid[] = "Soldered";
-char pass[] = "dasduino";
+char ssid[] = "scifi";
+char pass[] = "eps01555";
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
@@ -223,10 +223,10 @@ void drawTemps()
     int rectWidth = 150;
     int rectSpacing = ((display.width() - rectWidth * 4) / 5);
 
-    display.fillRect(1 * rectSpacing + 0 * rectWidth, 250, rectWidth, 220, BLACK);
-    display.fillRect(2 * rectSpacing + 1 * rectWidth, 250, rectWidth, 220, BLACK);
-    display.fillRect(3 * rectSpacing + 2 * rectWidth, 250, rectWidth, 220, BLACK);
-    display.fillRect(4 * rectSpacing + 3 * rectWidth, 250, rectWidth, 220, BLACK);
+    display.fillRect(1 * rectSpacing + 0 * rectWidth, 320, rectWidth, 220, BLACK);
+    display.fillRect(2 * rectSpacing + 1 * rectWidth, 320, rectWidth, 220, BLACK);
+    display.fillRect(3 * rectSpacing + 2 * rectWidth, 320, rectWidth, 220, BLACK);
+    display.fillRect(4 * rectSpacing + 3 * rectWidth, 320, rectWidth, 220, BLACK);
 
     int textMargin = 6;
 
@@ -234,16 +234,16 @@ void drawTemps()
     display.setTextSize(1);
     display.setTextColor(WHITE, BLACK);
 
-    display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, 250 + textMargin + 40);
+    display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, 320 + textMargin + 40);
     display.println("Today");
 
-    display.setCursor(2 * rectSpacing + 1 * rectWidth + textMargin, 250 + textMargin + 40);
+    display.setCursor(2 * rectSpacing + 1 * rectWidth + textMargin, 320 + textMargin + 40);
     display.println(wDays[hours + 1 > 6 ? hours + 1 - 6 : hours + 1]);
 
-    display.setCursor(3 * rectSpacing + 2 * rectWidth + textMargin, 250 + textMargin + 40);
+    display.setCursor(3 * rectSpacing + 2 * rectWidth + textMargin, 320 + textMargin + 40);
     display.println(wDays[hours + 2 > 6 ? hours + 2 - 6 : hours + 2]);
 
-    display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, 250+ textMargin + 40);
+    display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, 320+ textMargin + 40);
     display.println(wDays[hours + 3 > 6 ? hours + 3 - 6 : hours + 3]);
 
     // Drawing temperature values into black rectangles
@@ -251,19 +251,19 @@ void drawTemps()
     display.setTextSize(1);
     display.setTextColor(WHITE, BLACK);
 
-    display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, 250 + textMargin + 120);
+    display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, 320 + textMargin + 120);
     display.print(temps[0]);
     display.println(F("C"));
 
-    display.setCursor(2 * rectSpacing + 1 * rectWidth + textMargin, 250 + textMargin + 120);
+    display.setCursor(2 * rectSpacing + 1 * rectWidth + textMargin, 320 + textMargin + 120);
     display.print(temps[1]);
     display.println(F("C"));
 
-    display.setCursor(3 * rectSpacing + 2 * rectWidth + textMargin, 250 + textMargin + 120);
+    display.setCursor(3 * rectSpacing + 2 * rectWidth + textMargin, 320 + textMargin + 120);
     display.print(temps[2]);
     display.println(F("C"));
 
-    display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, 250 + textMargin + 120);
+    display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, 320 + textMargin + 120);
     display.print(temps[3]);
     display.println(F("C"));
 
@@ -271,7 +271,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr1, abbrs[i]) == 0)
-            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, 250 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, 320 + textMargin + 150, s_logos[i], 48, 48,
                                WHITE, BLACK);
     }
 
@@ -279,7 +279,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr2, abbrs[i]) == 0)
-            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, 250 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, 320 + textMargin + 150, s_logos[i], 48, 48,
                                WHITE, BLACK);
     }
 
@@ -287,7 +287,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr3, abbrs[i]) == 0)
-            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, 250 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, 320 + textMargin + 150, s_logos[i], 48, 48,
                                WHITE, BLACK);
     }
 
@@ -295,7 +295,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr4, abbrs[i]) == 0)
-            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, 250 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, 320 + textMargin + 150, s_logos[i], 48, 48,
                                WHITE, BLACK);
     }
 }

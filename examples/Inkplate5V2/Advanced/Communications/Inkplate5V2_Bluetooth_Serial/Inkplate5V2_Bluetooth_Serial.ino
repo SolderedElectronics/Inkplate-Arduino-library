@@ -24,7 +24,7 @@
 #endif
 
 // You can change the Bluetooth device name if you want
-const char *btDeviceName = "Inkplate5";
+const char *btDeviceName = "Inkplate5V2";
 
 // Include Inkplate and BluetoothSerial library to the sketch
 #include "BluetoothSerial.h"

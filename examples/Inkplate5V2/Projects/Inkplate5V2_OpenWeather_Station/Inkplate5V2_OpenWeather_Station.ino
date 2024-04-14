@@ -42,8 +42,8 @@
 // ---------- CHANGE HERE  -------------:
 
 // Change to your wifi ssid and password
-#define SSID ""
-#define PASS ""
+#define SSID "scifi"
+#define PASS "eps01555"
 
 // Openweather API key
 /**
@@ -55,7 +55,7 @@
  * If your key is invalid, you will be notified by the sketch
  * 
 */
-char * APIKEY = "";
+char * APIKEY = "b1d3e9077193732d4b5e3e2c4c036657";
 // Also, declare the function to check if the API key is valid
 bool checkIfAPIKeyIsValid(char * APIKEY);
 
@@ -112,7 +112,7 @@ RTC_DATA_ATTR char refreshes = 0;
 const int fullRefresh = 20;
 
 // Hich line to start drawing the Dayly forecast
-const int dayOffset = 380;
+const int dayOffset = 555;
 
 char Output[200] = {0};
 
@@ -390,9 +390,9 @@ void drawTime()
     display.setFont(&Roboto_Light_120);
     display.setTextSize(1);
 
-    display.fillRect(550, 0, 440, 170, WHITE);
+    display.fillRect(840, 0, 440, 170, WHITE);
     sprintf(Output, "%02d:%02d", hour(t), minute(t));
-    alignText(CENTRE_BOT, Output, 790, 110);
+    alignText(CENTRE_BOT, Output, 1100, 110);
     Serial.print(Output);
     Serial.print(" ");
 
@@ -400,7 +400,7 @@ void drawTime()
     sprintf(Output, "%s %02d ", dayShortStr(weekday(t)) + 0, day());
     sprintf(Output2, "%s %04d", monthShortStr(month(t)) + 0, year());
     strcat(Output, Output2);
-    alignText(CENTRE_BOT, Output, 750, 168);
+    alignText(CENTRE_BOT, Output, 1050, 168);
 
     Serial.println(Output);
 }
@@ -408,10 +408,10 @@ void drawTime()
 // Draw graph which shows hourly weather
 void drawHourly()
 {
-    const int yTop = 180;
-    const int yHeight = 150;
-    const int xLeft = 260;
-    const int xWidth = 576;
+    const int yTop = 200;
+    const int yHeight = 280;
+    const int xLeft = 60;
+    const int xWidth = 1130;
     const int hoursDisplay = 24;
     const int hourPitch = xWidth / hoursDisplay;
     const float minPrec = 0;
@@ -479,26 +479,26 @@ void drawHourly()
 void drawCurrent()
 {
     sprintf(Output, "http://openweathermap.org/img/wn/%s@4x.png", OWOC.current.icon);
-    display.drawImage(Output, 0, 0, true, true);
+    display.drawImage(Output, 0, -10, true, true);
 
     display.setFont(&Roboto_Light_48);
     sprintf(Output, "%2.01f%c", OWOC.current.temp, tempUnit);
-    alignText(CENTRE_BOT, Output, 100, 200);
+    alignText(CENTRE_BOT, Output, 270, 50);
 
     display.setFont(&Roboto_Light_36);
     sprintf(Output, "%2.0f%c/%.0f%c", OWOC.forecast[0].temp_min, tempUnit, OWOC.forecast[0].temp_max, tempUnit);
-    alignText(CENTRE_BOT, Output, 100, 240);
+    alignText(CENTRE_BOT, Output, 270, 90);
 
     display.setFont(&FreeSans12pt7b);
     sprintf(Output, "%02d:%02d-%02d:%02d", hour(OWOC.current.sunrise), minute(OWOC.current.sunrise),
             hour(OWOC.current.sunset), minute(OWOC.current.sunset));
-    alignText(CENTRE_BOT, Output, 100, 270);
+    alignText(CENTRE_BOT, Output, 270, 114);
 
     sprintf(Output, "%4.0fhPa", OWOC.current.pressure);
-    alignText(CENTRE_BOT, Output, 100, 300);
+    alignText(CENTRE_BOT, Output, 270, 143);
 
     sprintf(Output, "%3.0f%% Rh", OWOC.current.humidity);
-    alignText(CENTRE_BOT, Output, 100, 330);
+    alignText(CENTRE_BOT, Output, 270, 168);
 }
 
 float getMoonPhase(time_t tdate)
@@ -528,7 +528,7 @@ float getMoonPhase(time_t tdate)
 // Function for drawing the moon
 void drawMoon()
 {
-    const int MoonCentreX = 370;
+    const int MoonCentreX = 650;
     const int MoonCentreY = 70;
     const int MoonBox = 35;
     float moonphase = getMoonPhase(now());

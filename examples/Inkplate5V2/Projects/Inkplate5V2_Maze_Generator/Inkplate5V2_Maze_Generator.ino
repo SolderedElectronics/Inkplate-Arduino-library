@@ -26,7 +26,7 @@
 Inkplate display(INKPLATE_1BIT);
 
 // Here we define one cell size
-const int cellSize = 10;
+const int cellSize = 30;
 
 // Calculate screen width and height
 const int w = (E_INK_WIDTH - 10) / cellSize, h = (E_INK_HEIGHT - 10) / cellSize;

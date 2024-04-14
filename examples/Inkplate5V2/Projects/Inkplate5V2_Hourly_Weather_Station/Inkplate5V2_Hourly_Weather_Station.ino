@@ -39,12 +39,12 @@ char lon[] = "18.5947808";
 char lat[] = "45.5510548";
 
 // Change to your wifi ssid and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "scifi";
+char pass[] = "eps01555";
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "";
+char apiKey[] = "b1d3e9077193732d4b5e3e2c4c036657";
 
 // Uncomment this for MPH and Fahrenheit output, also uncomment it in the begining of Network.cpp
 // #define AMERICAN
@@ -191,14 +191,14 @@ void drawWeather()
     {
         // If found draw specified icon
         if (strcmp(abbrs[i], currentWeatherAbbr) == 0)
-            display.drawBitmap(70, 50, logos[i], 152, 152, BLACK);
+            display.drawBitmap(200, 90, logos[i], 152, 152, BLACK);
     }
 
     // Draw weather state
     display.setTextColor(BLACK, WHITE);
     display.setFont(&Roboto_Light_36);
     display.setTextSize(1);
-    display.setCursor(70, 210);
+    display.setCursor(220, 260);
     display.println(currentWeather);
 }
 
@@ -243,10 +243,10 @@ void drawTemps()
     int rectWidth = 150;
     int rectSpacing = (display.width() - rectWidth * 4) / 5;
 
-    display.fillRect(1 * rectSpacing + 0 * rectWidth, 250, rectWidth, 220, BLACK);
-    display.fillRect(2 * rectSpacing + 1 * rectWidth, 250, rectWidth, 220, BLACK);
-    display.fillRect(3 * rectSpacing + 2 * rectWidth, 250, rectWidth, 220, BLACK);
-    display.fillRect(4 * rectSpacing + 3 * rectWidth, 250, rectWidth, 220, BLACK);
+    display.fillRect(1 * rectSpacing + 0 * rectWidth, 320, rectWidth, 220, BLACK);
+    display.fillRect(2 * rectSpacing + 1 * rectWidth, 320, rectWidth, 220, BLACK);
+    display.fillRect(3 * rectSpacing + 2 * rectWidth, 320, rectWidth, 220, BLACK);
+    display.fillRect(4 * rectSpacing + 3 * rectWidth, 320, rectWidth, 220, BLACK);
 
     int textMargin = 6;
 
@@ -254,16 +254,16 @@ void drawTemps()
     display.setTextSize(1);
     display.setTextColor(WHITE, BLACK);
 
-    display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, 250 + textMargin + 40);
+    display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, 320 + textMargin + 40);
     display.println(hours[0]);
 
-    display.setCursor(2 * rectSpacing + 1 * rectWidth + textMargin, 250 + textMargin + 40);
+    display.setCursor(2 * rectSpacing + 1 * rectWidth + textMargin, 320 + textMargin + 40);
     display.println(hours[1]);
 
-    display.setCursor(3 * rectSpacing + 2 * rectWidth + textMargin, 250 + textMargin + 40);
+    display.setCursor(3 * rectSpacing + 2 * rectWidth + textMargin, 320 + textMargin + 40);
     display.println(hours[2]);
 
-    display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, 250 + textMargin + 40);
+    display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, 320 + textMargin + 40);
     display.println(hours[3]);
 
     // Drawing temperature values into black rectangles
@@ -271,19 +271,19 @@ void drawTemps()
     display.setTextSize(1);
     display.setTextColor(WHITE, BLACK);
 
-    display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, 250 + textMargin + 120);
+    display.setCursor(1 * rectSpacing + 0 * rectWidth + textMargin, 320 + textMargin + 120);
     display.print(temps[0]);
     drawTempUnit();
 
-    display.setCursor(2 * rectSpacing + 1 * rectWidth + textMargin, 250 + textMargin + 120);
+    display.setCursor(2 * rectSpacing + 1 * rectWidth + textMargin, 320 + textMargin + 120);
     display.print(temps[1]);
     drawTempUnit();
 
-    display.setCursor(3 * rectSpacing + 2 * rectWidth + textMargin, 250 + textMargin + 120);
+    display.setCursor(3 * rectSpacing + 2 * rectWidth + textMargin, 320 + textMargin + 120);
     display.print(temps[2]);
     drawTempUnit();
 
-    display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, 250 + textMargin + 120);
+    display.setCursor(4 * rectSpacing + 3 * rectWidth + textMargin, 320 + textMargin + 120);
     display.print(temps[3]);
     drawTempUnit();
 
@@ -291,7 +291,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr1, abbrs[i]) == 0)
-            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, 250 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(1 * rectSpacing + 0 * rectWidth + textMargin, 320 + textMargin + 150, s_logos[i], 48, 48,
                                WHITE, BLACK);
     }
 
@@ -299,7 +299,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr2, abbrs[i]) == 0)
-            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, 250 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(2 * rectSpacing + 1 * rectWidth + textMargin, 320 + textMargin + 150, s_logos[i], 48, 48,
                                WHITE, BLACK);
     }
 
@@ -307,7 +307,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr3, abbrs[i]) == 0)
-            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, 250 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(3 * rectSpacing + 2 * rectWidth + textMargin, 320 + textMargin + 150, s_logos[i], 48, 48,
                                WHITE, BLACK);
     }
 
@@ -315,7 +315,7 @@ void drawTemps()
     {
         // If found draw specified icon
         if (strcmp(abbr4, abbrs[i]) == 0)
-            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, 250 + textMargin + 150, s_logos[i], 48, 48,
+            display.drawBitmap(4 * rectSpacing + 3 * rectWidth + textMargin, 320 + textMargin + 150, s_logos[i], 48, 48,
                                WHITE, BLACK);
     }
 }
@@ -330,16 +330,13 @@ void drawCurrent()
     display.setTextSize(1);
     display.setTextColor(BLACK, WHITE);
 
-    display.setCursor(325, 150);
+    display.setCursor(550, 200);
     display.print(currentTemp);
-
-    int x = display.getCursorX();
-    int y = display.getCursorY();
 
     display.setFont(&Roboto_Light_48);
     display.setTextSize(1);
 
-    display.setCursor(x, y);
+    display.setCursor(680, 200);
     drawTempUnit();
 
     // Wind:
@@ -347,16 +344,13 @@ void drawCurrent()
     display.setTextSize(1);
     display.setTextColor(BLACK, WHITE);
 
-    display.setCursor(610, 150);
+    display.setCursor(850, 200);
     display.print(currentWind);
-
-    x = display.getCursorX();
-    y = display.getCursorY();
 
     display.setFont(&Roboto_Light_48);
     display.setTextSize(1);
 
-    display.setCursor(x, y);
+    display.setCursor(1000, 200);
 
 #ifdef AMERICAN
     display.println(F("mph"));
@@ -368,9 +362,9 @@ void drawCurrent()
     display.setFont(&Roboto_Light_36);
     display.setTextSize(1);
 
-    display.setCursor(285, 210);
+    display.setCursor(500, 260);
     display.println(F("TEMPERATURE"));
 
-    display.setCursor(630, 210);
+    display.setCursor(834, 260);
     display.println(F("WIND SPEED"));
 }

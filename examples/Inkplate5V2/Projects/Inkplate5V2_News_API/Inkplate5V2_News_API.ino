@@ -28,9 +28,9 @@
 //---------- CHANGE HERE  -------------:
 
 // Put in your WiFi name (ssid) and password
-char ssid[] = "";
-char pass[] = "";
-char apiKey[] = ""; // You can obtain one here: https://newsapi.org/
+char ssid[] = "scifi";
+char pass[] = "eps01555";
+char apiKey[] = "e18d488d5b6f4eca81001d55786c3bd9"; // You can obtain one here: https://newsapi.org/
 
 // Delay between API calls in miliseconds (first 60 represents minutes so you can change to your need)
 // Here is set to 1 call per hour, but if you want to change it, have in mind that in the free plan there are only 100
@@ -106,7 +106,7 @@ void drawNews(struct news *entities)
     // If an entire piece of news doesn't fit on the screen, don't print it
     while (coll < 2)
     {
-        display.setCursor(10 + 320 * coll, y); // Set the cursor to the beginning of the current column
+        display.setCursor(10 + 360 * coll, y); // Set the cursor to the beginning of the current column
         display.setFont(&GT_Pressura16pt7b);   // Set the font for the title
         uint16_t cnt = 0;                      // Index of each character in the title or description that is printing
 
@@ -114,13 +114,13 @@ void drawNews(struct news *entities)
         while (*(entities[i].title + cnt) != '\0')
         {
             // Go to the new line if needed
-            if (display.getCursorX() > 320 * coll + 280 ||
-                (*(entities[i].title + cnt) == ' ' && display.getCursorX() > 320 * coll + 245))
+            if (display.getCursorX() > 360 * coll + 280 ||
+                (*(entities[i].title + cnt) == ' ' && display.getCursorX() > 360 * coll + 245))
             {
                 *(entities[i].title + cnt) == ' ' ? cnt++ : 0;
                 rows++;
                 y += 32;
-                display.setCursor(10 + 320 * coll, y);
+                display.setCursor(10 + 360 * coll, y);
             }
 
             // Go to the next column if there is the end of the current one
@@ -128,7 +128,7 @@ void drawNews(struct news *entities)
             {
                 coll++;
                 y = 32;
-                display.setCursor(10 + 320 * coll, y);
+                display.setCursor(10 + 360 * coll, y);
             }
 
             // Print the text in the frame buffer in before calculated positions
@@ -138,7 +138,7 @@ void drawNews(struct news *entities)
 
         // Move the cursor a bit down and add indentation for the beginning of the sentence
         y = y + 40;
-        display.setCursor(10 + 320 * coll, y);
+        display.setCursor(10 + 360 * coll, y);
         display.print("  ");
 
         // Reset the counter
@@ -149,13 +149,13 @@ void drawNews(struct news *entities)
         while (*(entities[i].description + cnt) != '\0')
         {
             // Go to the new line (row) if needed
-            if (display.getCursorX() > 320 * coll + 280 ||
-                (*(entities[i].description + cnt) == ' ' && display.getCursorX() > 320 * coll + 255))
+            if (display.getCursorX() > 360 * coll + 280 ||
+                (*(entities[i].description + cnt) == ' ' && display.getCursorX() > 360 * coll + 255))
             {
                 *(entities[i].description + cnt) == ' ' ? cnt++ : 0;
                 rows++;
                 y += 26;
-                display.setCursor(10 + 320 * coll, y);
+                display.setCursor(10 + 360 * coll, y);
             }
 
             // Go to the next column if there is the end of the current one
@@ -163,7 +163,7 @@ void drawNews(struct news *entities)
             {
                 coll++;
                 y = 32;
-                display.setCursor(10 + 320 * coll, y);
+                display.setCursor(10 + 360 * coll, y);
             }
 
             // Print the text in the frame buffer in before calculated positions

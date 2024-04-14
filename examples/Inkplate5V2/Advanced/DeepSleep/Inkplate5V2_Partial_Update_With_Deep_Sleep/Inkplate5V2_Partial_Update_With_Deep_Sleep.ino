@@ -75,12 +75,12 @@ void loop()
 void createScreen()
 {
     display.setTextSize(3);           // Set font to be scaled up three times
-    display.setCursor(35, 100);
-    display.print("Inkplate 5 partial update with deep sleep example");
-    display.setCursor(200, 250);      // Set text cursor @ X = 200, Y = 250
+    display.setCursor(220, 300);
+    display.print("Inkplate 5V2 partial update with deep sleep example");
+    display.setCursor(490, 350);      // Set text cursor @ X = 200, Y = 250
     display.print("First variable:"); // Write first variable to buffer
     display.print(counter, DEC);
-    display.setCursor(200, 290);       // Set text cursor @ X = 200, Y = 290
+    display.setCursor(490, 390);       // Set text cursor @ X = 200, Y = 290
     display.print("Second variable:"); // Write second variable to buffer (use two decimals places)
     display.print(decimal, 2);
 }

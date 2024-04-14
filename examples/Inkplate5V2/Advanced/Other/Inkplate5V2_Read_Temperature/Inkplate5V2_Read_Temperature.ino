@@ -28,7 +28,7 @@ void setup()
     display.begin();                    // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();             // Clear frame buffer of display
     display.display();                  // Put clear image on display
-    display.setTextSize(2);             // Scale text to be two times bigger then original (5x7 px)
+    display.setTextSize(4);             // Scale text to be two times bigger then original (5x7 px)
     display.setTextColor(BLACK, WHITE); // Set text color to black and background color to white
 }
 
@@ -37,7 +37,7 @@ void loop()
     int temperature = display.readTemperature();            // Read temperature from on-board temperature sensor
     display.clearDisplay();                                 // Clear everything in frame buffer of e-paper display
     display.drawImage(tempSymbol, 100, 100, 38, 79, BLACK); // Draw temperature symbol at position X=100, Y=100
-    display.setCursor(150, 125);
+    display.setCursor(155, 125);
     display.print(temperature, DEC); // Print temperature
     display.print('C');
     display.display(); // Send everything to display (refresh the screen)

@@ -47,7 +47,7 @@ void setup()
 
     display.println("Reading data from EEPROM:\n"); // Print message
     display.partialUpdate();                        // Use partial updates for refreshing the display
-    display.setTextSize(2);                         // Use smaller text so everything can fit on display
+    display.setTextSize(3);                         // Use smaller text so everything can fit on display
     printEEPROM();                                  // Read data from EEPROM and display it on screen
 }
 

@@ -68,7 +68,7 @@ void loop()
 void printCurrentTime()
 {
     // Set cursor and font size
-    display.setCursor(100, 260);
+    display.setCursor(385, 360);
     display.setTextSize(3);
 
     // Get data from the RTC

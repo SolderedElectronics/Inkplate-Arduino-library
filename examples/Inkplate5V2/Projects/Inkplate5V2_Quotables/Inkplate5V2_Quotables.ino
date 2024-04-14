@@ -30,8 +30,8 @@
 //---------- CHANGE HERE  -------------:
 
 // Put in your ssid (WiFi name) and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "scifi";
+char pass[] = "eps01555";
 
 // Delay between API calls in seconds, 300 seconds is 5 minutes
 #define DELAY_S 300
@@ -118,7 +118,7 @@ void drawAll()
     uint16_t cnt = 0;
     while (quote[cnt] != '\0')
     {
-        if (display.getCursorX() > display.width() - 150 && quote[cnt] == ' ')
+        if (display.getCursorX() > display.width() - 200 && quote[cnt] == ' ')
         {
             row++;
             display.setCursor(48, display.height() / 2 - 24 * rows + row * 48);

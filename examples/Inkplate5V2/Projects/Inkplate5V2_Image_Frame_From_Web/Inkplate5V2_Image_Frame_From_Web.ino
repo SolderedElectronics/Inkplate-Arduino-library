@@ -79,7 +79,7 @@ void imageUrl(char *a)
 
     // Make an url
     char temp[100];
-    sprintf(temp, "https://source.unsplash.com/random/960x540/?%s", topic);
+    sprintf(temp, "https://source.unsplash.com/random/1280x720/?%s", topic);
 
     // Do GET request
     if (http.begin(temp) && http.GET() > 0)
@@ -90,7 +90,7 @@ void imageUrl(char *a)
         int urlEnd = url.indexOf("\">", urlStart);
 
         url = url.substring(urlStart, urlEnd);
-        url = url.substring(0, url.indexOf("?")) + "?crop=entropy&fit=crop&fm=png&h=540&w=960";
+        url = url.substring(0, url.indexOf("?")) + "?crop=entropy&fit=crop&fm=png&h=720&w=1280";
 
         // Print url to the Serial Monitor and copy to the buffer
         Serial.println(url);

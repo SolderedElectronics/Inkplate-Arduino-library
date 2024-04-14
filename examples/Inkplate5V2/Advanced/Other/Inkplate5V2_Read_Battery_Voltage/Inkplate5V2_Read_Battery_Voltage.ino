@@ -26,7 +26,7 @@ void setup()
 {
     display.begin();                    // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();             // Clear frame buffer of display
-    display.setTextSize(2);             // Scale text to be two times bigger then original (5x7 px)
+    display.setTextSize(3);             // Scale text to be three times bigger then original (5x7 px)
     display.setTextColor(BLACK, WHITE); // Set text color to black and background color to white
 }
 
@@ -35,7 +35,7 @@ void loop()
     float voltage = display.readBattery();                   // Read battery voltage
     display.clearDisplay();                                  // Clear everything in frame buffer of e-paper display
     display.drawImage(battSymbol, 100, 100, 106, 45, BLACK); // Draw battery symbol at position X=100 Y=100
-    display.setCursor(210, 120);
+    display.setCursor(230, 110);
     display.print(voltage, 2); // Print battery voltage
     display.print('V');
     display.display(); // Send everything to display (refresh the screen)

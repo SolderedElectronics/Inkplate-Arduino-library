@@ -55,7 +55,7 @@ int n = 0;
 void loop()
 {
     display.clearDisplay();      // Clear frame buffer of display
-    display.setCursor(100, 100); // Set position of the text
+    display.setCursor(300, 332); // Set position of the text
     display.rtcGetRtcData();     // Get the time and date from RTC
 
     // Print the time on screen
@@ -66,7 +66,7 @@ void loop()
     {
         // _alarmFlag = 0;              // Uncomment if you want to clear this flag
         display.rtcClearAlarmFlag(); // It's recommended to clear alarm flag after alarm has occurred
-        display.setCursor(200, 200); // Set position of the text
+        display.setCursor(532, 532); // Set position of the text
         display.print("ALARM");      // Print text
     }
 

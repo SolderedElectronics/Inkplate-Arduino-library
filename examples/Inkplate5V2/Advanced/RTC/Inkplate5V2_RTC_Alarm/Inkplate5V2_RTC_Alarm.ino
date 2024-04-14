@@ -73,13 +73,13 @@ void loop()
         year = display.rtcGetYear();       // Store year in a variable
 
         display.clearDisplay();                                        // Clear content in frame buffer
-        display.setCursor(100, 250);                                   // Set position of the text
+        display.setCursor(300, 332);                                   // Set position of the text
         printTime(hours, minutes, seconds, day, weekday, month, year); // Print the time on screen
 
         if (display.rtcCheckAlarmFlag()) // Check if alarm has occurred
         {
             display.rtcClearAlarmFlag(); // It's recommended to clear alarm flag after alarm has occurred
-            display.setCursor(400, 400); // Set new position for cursor
+            display.setCursor(532, 532); // Set new position for cursor
             display.print("ALARM!");
         }
 

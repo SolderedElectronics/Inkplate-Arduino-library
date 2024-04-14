@@ -50,14 +50,14 @@ Network network;
 Inkplate display(INKPLATE_3BIT);
 
 // Write your SSID and password
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "scifi";
+char pass[] = "eps01555";
 
-char channel_id[] = ""; // To get the channel ID of the public channel, go to the wanted Youtube
+char channel_id[] = "UC2qKQjnZI_tnG7XemGBOHxQ"; // To get the channel ID of the public channel, go to the wanted Youtube
                         // channel in Google Chrome, right click and 'view page source', then
                         // CTRL+F search for "externalId".
 
-char api_key[] = ""; // API key, you can get one on https://console.developers.google.com/
+char api_key[] = "AIzaSyBA0PppZhxgakJlrMNY7VBgFjfw42zEmFo"; // API key, you can get one on https://console.developers.google.com/
                      // First create a project (name it whatever you like), then click on
                      // "Enable APIs and Services" (it's at the top of the screen, it has a
                      // plus sign). Next select "YouTube Data API v3" in Enabled APIs and
@@ -94,10 +94,10 @@ textElement elements[] = {
     {19, 60, &Inter30pt7b, channel.name, 0, BLACK},
     {190, 230, &Roboto_Light_120, (char *)NULL, 0, BLACK},
     {180, 220, &Inter20pt7b, "Subs:", 1, BLACK},
-    {190, 360, &Roboto_Light_120, (char *)NULL, 0, BLACK},
-    {180, 350, &Inter20pt7b, "Views:", 1, BLACK},
-    {190, 480, &Roboto_Light_120, (char *)NULL, 0, BLACK},
-    {180, 470, &Inter20pt7b, "Videos:", 1, BLACK},
+    {190, 460, &Roboto_Light_120, (char *)NULL, 0, BLACK},
+    {180, 450, &Inter20pt7b, "Views:", 1, BLACK},
+    {190, 680, &Roboto_Light_120, (char *)NULL, 0, BLACK},
+    {180, 670, &Inter20pt7b, "Videos:", 1, BLACK},
 };
 
 void setup()
@@ -114,8 +114,8 @@ void setup()
     if (bootCount == 0)
     {
         // Welcome screen
-        display.drawImage(youtube_icon, 205, 209, 549, 123); // Draw the YouTube logo
-        display.setCursor(254, 360); // Set cursor, custom font uses different method for setting cursor
+        display.drawImage(youtube_icon, 1280/2-549/2, 700/2 - 123/2, 549, 123); // Draw the YouTube logo
+        display.setCursor(420, 440); // Set cursor, custom font uses different method for setting cursor
         display.setTextSize(3);
         display.print("Youtube subscribers tracker!");
         display.display();

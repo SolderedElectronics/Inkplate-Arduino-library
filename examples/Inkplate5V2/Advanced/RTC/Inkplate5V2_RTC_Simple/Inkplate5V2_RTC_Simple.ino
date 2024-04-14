@@ -66,7 +66,7 @@ void loop()
         year = display.rtcGetYear();       // Store year in a variable
 
         display.clearDisplay();                                        // Clear content in frame buffer
-        display.setCursor(140, 260);                                   // Set position of the text
+        display.setCursor(300, 332);                                   // Set position of the text
         printTime(hours, minutes, seconds, day, weekday, month, year); // Print the time on screen
 
         if (n > 9) // Check if you need to do full refresh or you can do partial update
