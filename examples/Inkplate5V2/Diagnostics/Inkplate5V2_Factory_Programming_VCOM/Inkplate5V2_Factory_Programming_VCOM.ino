@@ -27,7 +27,7 @@
  *
  * Want to learn more about Inkplate? Visit www.inkplate.io
  * Looking to get support? Write on our forums: https://forum.soldered.com/
- * 28 March 2023 by Soldered
+ * 15 April 2024 by Soldered
  *
  * @authors     Soldered
  ***************************************************/
@@ -185,7 +185,7 @@ void showSplashScreen(float vComVoltage)
     display.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
     display.setTextColor(0, 7);
     display.setTextSize(1);
-    display.setCursor(5, 516);
+    display.setCursor(5, 698);
     display.print(vComVoltage, 2);
     display.print("V");
     display.display();

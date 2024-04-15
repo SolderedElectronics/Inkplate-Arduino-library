@@ -5,7 +5,7 @@
     Don't have "Soldered Inkplate5 V2" option? Follow our tutorial and add it:
     https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-    This example will show you how you can use Inkplate 5 to display API data.
+    This example will show you how you can use Inkplate 5 V2 to display API data.
     Here we use News API to get headline news and short description and display
     them on the Inkplate screen. For this you will need an API key which you can obtain
     here: https://newsapi.org/
@@ -17,7 +17,7 @@
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: https://forum.soldered.com/
-    29 March 2023 by Soldered
+    15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -28,9 +28,9 @@
 //---------- CHANGE HERE  -------------:
 
 // Put in your WiFi name (ssid) and password
-char ssid[] = "scifi";
-char pass[] = "eps01555";
-char apiKey[] = "e18d488d5b6f4eca81001d55786c3bd9"; // You can obtain one here: https://newsapi.org/
+char ssid[] = "";
+char pass[] = "";
+char apiKey[] = ""; // You can obtain one here: https://newsapi.org/
 
 // Delay between API calls in miliseconds (first 60 represents minutes so you can change to your need)
 // Here is set to 1 call per hour, but if you want to change it, have in mind that in the free plan there are only 100

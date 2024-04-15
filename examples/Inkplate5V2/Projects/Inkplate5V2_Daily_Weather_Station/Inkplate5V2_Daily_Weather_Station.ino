@@ -5,7 +5,7 @@
     Don't have "Soldered Inkplate5 V2" option? Follow our tutorial and add it:
     https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-    This example will show you how you can use Inkplate 5 to display API data,
+    This example will show you how you can use Inkplate 5 V2 to display API data,
     e.g. Openweather public weather API. It shows the forecast weather for 4 days 
     at 15 o'clock (3 PM). If it's passed 3 PM, the first rectangle shows the 
     forecast weather for tomorrow at 3 PM. What happens here is basically ESP32 
@@ -22,7 +22,7 @@
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: https://forum.soldered.com/
-    27 March 2023 by Soldered
+    15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -40,12 +40,12 @@ char lat[] = "45.5510548";
 char lon[] = "18.695463";
 
 // Change to your wifi ssid and password
-char ssid[] = "scifi";
-char pass[] = "eps01555";
+char ssid[] = "";
+char pass[] = "";
 
 // Change to your api key, if you don't have one, head over to:
 // https://openweathermap.org/guide , register and copy the key provided
-char apiKey[] = "b1d3e9077193732d4b5e3e2c4c036657";
+char apiKey[] = "";
 
 //----------------------------------
 

@@ -20,7 +20,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   28 July 2020 by Soldered
+   15 April 2024 by Soldered
 
    Code for Moonphase and moon fonts taken from here: https://learn.adafruit.com/epaper-weather-station/arduino-setup
 */
@@ -42,8 +42,8 @@
 // ---------- CHANGE HERE  -------------:
 
 // Change to your wifi ssid and password
-#define SSID "scifi"
-#define PASS "eps01555"
+#define SSID ""
+#define PASS ""
 
 // Openweather API key
 /**
@@ -55,7 +55,7 @@
  * If your key is invalid, you will be notified by the sketch
  * 
 */
-char * APIKEY = "b1d3e9077193732d4b5e3e2c4c036657";
+char * APIKEY = "";
 // Also, declare the function to check if the API key is valid
 bool checkIfAPIKeyIsValid(char * APIKEY);
 

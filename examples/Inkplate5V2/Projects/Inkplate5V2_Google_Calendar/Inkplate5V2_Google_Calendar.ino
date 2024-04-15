@@ -23,7 +23,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   29 March 2023 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -172,7 +172,7 @@ void drawTime()
     display.setFont(&FreeSans12pt7b);
     display.setTextSize(1);
 
-    display.setCursor(765, 20);
+    display.setCursor(1070, 22);
 
     // Our function to get time
     network.getTime(date, timeZone);
@@ -215,7 +215,7 @@ void drawGrid()
         temp[10] = 0;
 
         // calculate where to put text and print it
-        display.setCursor(40 + (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m) + 15, y1 + header - 6);
+        display.setCursor(75 + (int)((float)x1 + (float)i * (float)(x2 - x1) / (float)m) + 15, y1 + header - 6);
         display.println(temp);
     }
 }
@@ -295,7 +295,7 @@ void getToFrom(char *dst, char *from, char *to, int *day, int *timeStamp)
 bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeeded)
 {
     // Upper left coordintes
-    int x1 = 3 + 4 + (954 / 4) * day;
+    int x1 = 3 + 4 + (1274 / 4) * day;
     int y1 = beginY + 3;
 
     // Setting text font
@@ -323,7 +323,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
         display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
 
         // Char out of bounds, put in next line
-        if (w > 950 / 4 - 30)
+        if (w > 1270 / 4 - 30)
         {
             // if there was a space 5 chars before, break line there
             if (n - lastSpace < 5)
@@ -371,7 +371,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
             // Gets text bounds
             display.getTextBounds(line, 0, 0, &xt1, &yt1, &w, &h);
 
-            if (w > (954 / 4))
+            if (w > (1274 / 4))
             {
                 for (int j = i - 1; j > max(-1, i - 4); --j)
                     line[j] = '.';
@@ -388,7 +388,7 @@ bool drawEvent(entry *event, int day, int beginY, int maxHeigth, int *heigthNeed
 
     int bx1 = x1 + 2;
     int by1 = y1;
-    int bx2 = x1 + 950 / 4 - 7;
+    int bx2 = x1 + 1270 / 4 - 7;
     int by2 = display.getCursorY() + 7;
 
     // Draw event rect bounds

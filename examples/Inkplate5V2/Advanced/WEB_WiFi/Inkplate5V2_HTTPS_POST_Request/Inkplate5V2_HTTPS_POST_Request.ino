@@ -13,7 +13,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   21 March 2023 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -29,8 +29,8 @@
 #include "WiFiClientSecure.h"
 
 // Enter your WiFi credentials
-const char *ssid = "";
-const char *pass = "";
+const char *ssid = "Soldered";
+const char *pass = "dasduino";
 
 // Specify the API URL to send a POST request
 const char *apiUrl = "https://jsonplaceholder.typicode.com/posts";
@@ -58,7 +58,7 @@ void setup()
     display.println("HTTPS POST Request example");
     display.println();
 
-    display.setTextSize(4);
+    display.setTextSize(3);
     display.println("Open Serial Monitor at 115200 baud rate to see what's happening");
     display.display();
 

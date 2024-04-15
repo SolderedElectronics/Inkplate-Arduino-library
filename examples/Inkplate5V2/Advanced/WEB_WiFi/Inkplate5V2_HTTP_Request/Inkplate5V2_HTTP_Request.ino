@@ -12,7 +12,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   21 March 2023 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -87,7 +87,7 @@ void setup()
             // If connection was successful, try to read content of the Web page and display it on screen
             String htmlText;
             htmlText = http.getString();
-            display.setTextSize(1); // Set smaller text size, so everything can fit on screen
+            display.setTextSize(2); // Set smaller text size, so everything can fit on screen
             display.clearDisplay();
             display.setCursor(0, 0);
             display.print(htmlText);

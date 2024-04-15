@@ -7,7 +7,8 @@ const char *WSSID = {"Soldered-testingPurposes"};
 const char *WPASS = {"Testing443"};
 
 // Change this to your used slave device
-const uint8_t easyCDeviceAddress = 0x30;
+const uint8_t easyCDeviceAddresss = 0x30;
+const uint8_t easyCDeviceAddress = 0x76;
 
 void testPeripheral()
 {    

@@ -1,6 +1,6 @@
 /*
    Inkplate5V2_easyC example for Soldered Inkplate 5 V2
-   For this example you will need a USB-C cable, Inkplate 5,
+   For this example you will need a USB-C cable, Inkplate 5 V2,
    BME680 sensor with easyC connector on it: https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/ 
    and a easyC cable: https://soldered.com/product/easyc-cable-20cm/ 
    Select "Soldered Inkplate5 V2" from Tools -> Board menu. 
@@ -14,7 +14,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   28 March 2023 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -63,29 +63,29 @@ void loop()
     display.setTextSize(8);
 
     // Display the temperature icon and measured value
-    display.setCursor(350, 40);
+    display.setCursor(465, 53);
     display.print(bme680.readTemperature() + temperatureOffset);
     display.print(" *C");
-    display.drawImage(temperature_icon, 158, 8, temperature_icon_w, temperature_icon_h,
+    display.drawImage(temperature_icon, 210, 10, temperature_icon_w, temperature_icon_h,
                       BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
 
     // Display humidity icon and measured value
-    display.setCursor(350, 245);
+    display.setCursor(465, 325);
     display.print(bme680.readHumidity() / 10);
     display.print(" %");
-    display.drawImage(humidity_icon, 150, 200, humidity_icon_w, humidity_icon_h,
+    display.drawImage(humidity_icon, 199, 266, humidity_icon_w, humidity_icon_h,
                       BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
 
     // Display the pressure icon and measured value
     display.setTextSize(5);
-    display.setCursor(350, 449);
+    display.setCursor(465, 597);
     display.print(bme680.readPressure() * 10);
     display.print(" hPa");
-    display.drawImage(pressure_icon, 150, 400, pressure_icon_w, pressure_icon_h,
+    display.drawImage(pressure_icon, 199, 532, pressure_icon_w, pressure_icon_h,
                       BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
 
     // Display Soldered logo
-    display.drawImage(logo, 755, 495, logo_w, logo_h,
+    display.drawImage(logo, 1004, 658, logo_w, logo_h,
                       BLACK); // Arguments are: array variable name, start X, start Y, size X, size Y, color
 
     // This part of code actually drawing on the Inkplate screen, previous lines just drawing into the frame buffer

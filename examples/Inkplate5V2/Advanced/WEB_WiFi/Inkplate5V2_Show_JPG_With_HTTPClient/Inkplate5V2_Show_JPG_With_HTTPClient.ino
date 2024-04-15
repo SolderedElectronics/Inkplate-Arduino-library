@@ -10,7 +10,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   17 April 2023 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -32,7 +32,7 @@ char *ssid = ""; // Your WiFi SSID
 char *pass = ""; // Your WiFi password
 
 // Add the URL of the image you want to show on Inkplate
-String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/master/examples/Inkplate5/Advanced/WEB_WiFi/Inkplate5V2_Show_JPG_With_HTTPClient/image.jpg";
+String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/master/examples/Inkplate5V2/Advanced/WEB_WiFi/Inkplate5V2_Show_JPG_With_HTTPClient/image.jpg";
 
 /***********************************************/
 

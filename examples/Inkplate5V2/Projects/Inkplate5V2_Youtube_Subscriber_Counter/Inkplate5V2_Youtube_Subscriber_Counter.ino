@@ -18,7 +18,7 @@
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: https://forum.soldered.com/
-    8 July 2023 by Soldered
+    15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -50,14 +50,14 @@ Network network;
 Inkplate display(INKPLATE_3BIT);
 
 // Write your SSID and password
-char ssid[] = "scifi";
-char pass[] = "eps01555";
+char ssid[] = "";
+char pass[] = "";
 
-char channel_id[] = "UC2qKQjnZI_tnG7XemGBOHxQ"; // To get the channel ID of the public channel, go to the wanted Youtube
+char channel_id[] = ""; // To get the channel ID of the public channel, go to the wanted Youtube
                         // channel in Google Chrome, right click and 'view page source', then
                         // CTRL+F search for "externalId".
 
-char api_key[] = "AIzaSyBA0PppZhxgakJlrMNY7VBgFjfw42zEmFo"; // API key, you can get one on https://console.developers.google.com/
+char api_key[] = ""; // API key, you can get one on https://console.developers.google.com/
                      // First create a project (name it whatever you like), then click on
                      // "Enable APIs and Services" (it's at the top of the screen, it has a
                      // plus sign). Next select "YouTube Data API v3" in Enabled APIs and
@@ -114,7 +114,7 @@ void setup()
     if (bootCount == 0)
     {
         // Welcome screen
-        display.drawImage(youtube_icon, 1280/2-549/2, 700/2 - 123/2, 549, 123); // Draw the YouTube logo
+        display.drawImage(youtube_icon, 366, 289, 549, 123); // Draw the YouTube logo
         display.setCursor(420, 440); // Set cursor, custom font uses different method for setting cursor
         display.setTextSize(3);
         display.print("Youtube subscribers tracker!");

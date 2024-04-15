@@ -9,7 +9,7 @@
     from server is in JSON format, so that will be shown too how it is used. What happens
     here is basically ESP32 connects to WiFi and sends API call and server returns data in JSON format
     containing one quote and some information about it, then using library ArduinoJson
-    we extract only quote from JSON data and show it on Inkplate 5. After displaying quote
+    we extract only quote from JSON data and show it on Inkplate 5 V2. After displaying quote
     ESP32 goes to sleep and wakes up every 300 seconds to show new quote (you can change time interval).
 
     IMPORTANT:
@@ -19,7 +19,7 @@
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: https://forum.soldered.com/
-    27 March 2023 by Soldered
+    15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -30,8 +30,8 @@
 //---------- CHANGE HERE  -------------:
 
 // Put in your ssid (WiFi name) and password
-char ssid[] = "scifi";
-char pass[] = "eps01555";
+char ssid[] = "";
+char pass[] = "";
 
 // Delay between API calls in seconds, 300 seconds is 5 minutes
 #define DELAY_S 300

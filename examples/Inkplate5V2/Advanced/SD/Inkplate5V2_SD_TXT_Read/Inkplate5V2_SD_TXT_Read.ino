@@ -13,7 +13,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   21 March 2023 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -26,7 +26,7 @@ Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and als
 SdFile file;                     // Create SdFile object used for accessing files on SD card
 
 // Define how many characters will be read from the .txt file. Change if you want to read larger files
-#define MAX_LENGTH 500
+#define MAX_LENGTH 1500
 
 // Here is the specified name of the file
 const char fileName[] = "/text.txt";

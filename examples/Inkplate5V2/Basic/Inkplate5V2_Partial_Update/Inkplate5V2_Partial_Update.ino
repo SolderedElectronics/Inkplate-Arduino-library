@@ -1,6 +1,6 @@
 /*
    Inkplate5V2_Partial_Update example for Soldered Inkplate 5 V2
-   For this example you will need only a USB-C cable and Inkplate 5
+   For this example you will need only a USB-C cable and Inkplate 5 v2
    Select "Soldered Inkplate5 V2" from Tools -> Board menu.
    Don't have "Soldered Inkplate5 V2" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
@@ -12,7 +12,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   20 March 2023 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

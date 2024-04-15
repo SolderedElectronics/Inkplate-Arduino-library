@@ -5,7 +5,7 @@
    Don't have "Soldered Inkplate5 V2" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   This example shows how you can use Inkplate 5 to write in a .txt file. 
+   This example shows how you can use Inkplate 5 V2 to write in a .txt file. 
    The file name is specified below and you can change it. Just make sure that 
    you specified the .txt extension or otherwise it will create a file that you
    can't open. You can also change the content that will be written in the file
@@ -18,7 +18,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   21 March 2023 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

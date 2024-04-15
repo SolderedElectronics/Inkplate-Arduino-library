@@ -1,6 +1,6 @@
 /*
    Inkplate5V2_HTTP_Web_Server example for Soldered Inkplate 5 V2
-   For this example you will need a USB C cable, Inkplate 5 and a device with WiFi and Internet brower (PC, Laptop,
+   For this example you will need a USB C cable, Inkplate 5 V2 and a device with WiFi and Internet brower (PC, Laptop,
    Smartphone, ...). Select "Soldered Inkplate5 V2" from Tools -> Board menu. Don't have
    "Soldered Inkplate5" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
@@ -17,7 +17,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   23 March 2023 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -90,20 +90,20 @@ void handleString()
 void updatePaper()
 {                              // This function updates screen with new data (text)
     display.clearDisplay();    // Clear everything from epaper frame buffer
-    display.setCursor(140, 40); // Print out instruction on how to connect to Inkplate WiFi and how to open a web page
+    display.setCursor(270, 40); // Print out instruction on how to connect to Inkplate WiFi and how to open a web page
     display.print("Connect to ");
     display.print(ssid);
     display.println(" WiFi with pass: ");
-    display.setCursor(400, 100);
+    display.setCursor(590, 100);
     display.println(pass);
-    display.setCursor(230, 155);
+    display.setCursor(345, 155);
     display.print("Open Your web browser and open");
-    display.setCursor(330, 210);
+    display.setCursor(461, 210);
     display.print("http://");
     display.print(serverIP);
     display.println('/');
     display.println();
-    display.fillRect(10, 240, 940, 4, BLACK);
+    display.fillRect(14, 240, 1246, 4, BLACK);
     display.println("User text:"); // Print out what user typed in web page
     display.print(txt);
     display.display(); // Send everything to screen (refresh the screen)

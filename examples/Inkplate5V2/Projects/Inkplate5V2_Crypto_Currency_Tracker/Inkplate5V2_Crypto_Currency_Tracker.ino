@@ -2,10 +2,10 @@
    Inkplate5V2_Crypto_Currency_Tracker example for Soldered Inkplate 5 V2
    For this example you will need only a USB C cable and Inkplate 5 V2.
    Select "Soldered Inkplate5 V2" from Tools -> Board menu.
-   Don't have ""Soldered Inkplate5" option? Follow our tutorial and add it:
+   Don't have "Soldered Inkplate5 V2" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
-   This example will show you how you can use Inkplate 5 to display API data.
+   This example will show you how you can use Inkplate 5 V2 to display API data.
    Here we use Coingecko API to get last 90 days prices and display
    them on the Inkplate screen:
    https://www.coingecko.com/en/coins/bitcoin/historical_data/usd#panel
@@ -18,7 +18,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   22 February 2023 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
