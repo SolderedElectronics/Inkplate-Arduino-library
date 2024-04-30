@@ -38,16 +38,16 @@ void setup()
     display.display(); // Put clear image on display
 
     // Init the buzzer, this must be called if using it
-    display.buzzer.begin();
+    display.initBuzzer();
 
     // The most basic example
     // This will produce three short beeps
     // The beeps are each 80ms long
-    display.buzzer.beep(80);
+    display.beep(80);
     delay(80);
-    display.buzzer.beep(80);
+    display.beep(80);
     delay(80);
-    display.buzzer.beep(80);
+    display.beep(80);
     delay(80);
 
     delay(5000); // Wait 5 seconds before the next example
@@ -55,13 +55,13 @@ void setup()
     // The buzzer may also be controlled by manually turning it on or off
     // beepOn will turn on the buzzer indefinitely until beepOff is called
     // This will produce two 200 ms beeps
-    display.buzzer.beepOn();
+    display.beepOn();
     delay(200);
-    display.buzzer.beepOff();
+    display.beepOff();
     delay(200);
-    display.buzzer.beepOn();
+    display.beepOn();
     delay(200);
-    display.buzzer.beepOff();
+    display.beepOff();
     delay(200);
 
     delay(5000); // Wait 5 seconds before the next example
@@ -70,13 +70,13 @@ void setup()
     // Note that pitch is approximated as the digital potentiometer does not affect the pitch in a linear way
     // Frequencies from 572 to 2933 Hz are supported
     // Here are two low pitched (~750Hz) followed by two high pitched (~2400Hz) beeps
-    display.buzzer.beep(300, 750);
+    display.beep(300, 750);
     delay(50);
-    display.buzzer.beep(300, 750);
+    display.beep(300, 750);
     delay(50);
-    display.buzzer.beep(300, 2400);
+    display.beep(300, 2400);
     delay(50);
-    display.buzzer.beep(300, 2400);
+    display.beep(300, 2400);
     delay(50);
 
     delay(5000); // Wait 5 seconds before the next example
@@ -89,16 +89,16 @@ void loop()
     if (repeatCounter < 2)
     {
         // Play the note set to be played for 100 ms
-        display.buzzer.beep(100, chord[currentNoteIndex]);
+        display.beep(100, chord[currentNoteIndex]);
         delay(600); // Wait 600 ms so there's room between the notes
     }
     // The second four times play the notes twice
     else
     {
         // Play the note set to be played for 100 ms
-        display.buzzer.beep(100, chord[currentNoteIndex]);
+        display.beep(100, chord[currentNoteIndex]);
         delay(250); // Wait 300 ms and play it again for 50 ms
-        display.buzzer.beep(50, chord[currentNoteIndex]);
+        display.beep(50, chord[currentNoteIndex]);
         delay(300); // Wait for 300 ms, this totals to 700 so it's in rhythm
     }
 

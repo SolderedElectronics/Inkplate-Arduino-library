@@ -27,12 +27,9 @@
  *
  * @returns     None
  */
-void Buzzer::begin()
+void Buzzer::initBuzzer()
 {
-    // Init the pin for enabling the power to the buzzer
-    pinModeInternal(IO_INT_ADDR, ioRegsInt, BUZZ_EN, OUTPUT);
-    beepOff(); // Turn everything off initially
-
+    // Init the digipot
     digipot.begin();
 }
 

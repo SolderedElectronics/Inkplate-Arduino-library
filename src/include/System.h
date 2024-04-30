@@ -81,6 +81,11 @@
 #include "Touch.h"
 #endif
 
+#if defined(ARDUINO_INKPLATE4TEMPERA)
+#include "Buzzer.h"
+#endif
+
+
 #if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_ESP32_DEV) || defined(ARDUINO_INKPLATE6PLUS)
 #include "Mcp.h"
 #endif
@@ -105,6 +110,10 @@ class System : public Esp,
 #if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2) || defined(ARDUINO_INKPLATE4TEMPERA)
                public Touch,
                public Frontlight,
+#endif
+
+#if defined(ARDUINO_INKPLATE4TEMPERA)
+               public Buzzer,
 #endif
 
                virtual public NetworkClient
