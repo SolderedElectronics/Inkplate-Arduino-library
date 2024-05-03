@@ -82,7 +82,7 @@ void setup()
         if (result == 5)
         {
             Serial.println("I2C Bus Error!");
-            failHandler();
+            failHandler(true);
         }
     }
 

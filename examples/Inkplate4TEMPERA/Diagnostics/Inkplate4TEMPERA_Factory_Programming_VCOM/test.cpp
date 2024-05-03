@@ -221,7 +221,7 @@ void testPeripheral()
         display.println("FAIL");
         failHandler();
     }
-    
+
     // Check BME sensor
     float bmeTemp, bmeHumidity, bmePres;
     ADD_PRINT_MARGIN
@@ -254,7 +254,7 @@ void testPeripheral()
     }
     // Put it back to sleep to save power
     display.sleepPeripheral(INKPLATE_BME688);
-    
+
     // Check the fuel gauge
     int fuelGaugeSOC, fuelGaugeVolts;
     ADD_PRINT_MARGIN
@@ -281,7 +281,7 @@ void testPeripheral()
     }
     // Put it back to sleep
     display.sleepPeripheral(INKPLATE_FUEL_GAUGE);
-    
+
 
     // Test the gyroscope
     float gyroAccX, gyroAccY, gyroAccZ;
@@ -313,7 +313,7 @@ void testPeripheral()
     }
     // Put it back to sleep
     display.sleepPeripheral(INKPLATE_ACCELEROMETER);
-    
+
     // Check the gesture sensor
     ADD_PRINT_MARGIN
     display.print("- Check gesture sensor (swipe, 30s): ");
@@ -730,11 +730,18 @@ int checkGyroscope(float *acX, float *acY, float *acZ)
 }
 
 // Show a message and stop the code from executing.
-void failHandler()
+void failHandler(bool printErrorOnSerial)
 {
-    ADD_PRINT_MARGIN
-    display.print(" -> Test stopped!");
-    display.partialUpdate(0, 1);
+    if (printErrorOnSerial)
+    {
+        Serial.println(" -> Test stopped!");
+    }
+    else
+    {
+        ADD_PRINT_MARGIN
+        display.print(" -> Test stopped!");
+        display.partialUpdate(0, 1);
+    }
 
     // Inf. loop... halt the program!
     while (true)

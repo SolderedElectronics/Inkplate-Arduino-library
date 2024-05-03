@@ -28,7 +28,7 @@ int checkFuelGauge(int *_soc, int *_volts);
 int checkGestureSensor(int _gestTimeout, String * gesture);
 int checkGyroscope(float * acX, float * acY, float * acZ);
 void checkBuzzer();
-void failHandler();
+void failHandler(bool printErrorOnSerial = false);
 void IRAM_ATTR ISR();
 
 #endif
