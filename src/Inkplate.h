@@ -68,7 +68,7 @@ class Inkplate : public System, public Graphics
 #if defined(ARDUINO_INKPLATE10) || defined(ARDUINO_INKPLATE10V2)
     void changeWaveform(uint8_t *_wf);
     uint8_t calculateChecksum(struct waveformData _w);
-    bool getWaveform1mEEPROM(struct waveformData *_w);
+    bool getWaveformFromEEPROM(struct waveformData *_w);
     void burnWaveformToEEPROM(struct waveformData _w);
 #endif
     bool begin(void);
