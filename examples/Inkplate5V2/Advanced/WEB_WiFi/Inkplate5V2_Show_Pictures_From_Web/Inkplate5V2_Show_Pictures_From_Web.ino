@@ -25,7 +25,6 @@
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE5V2
 #error "Wrong board selection for this example, please select Soldered Inkplate5 V2 in the boards menu."
-#endif
 
 // Include needed libraries
 #include "HTTPClient.h"          //Include library for HTTPClient
