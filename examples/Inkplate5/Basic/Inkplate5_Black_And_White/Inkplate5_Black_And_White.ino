@@ -15,10 +15,11 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+/**
 #ifndef ARDUINO_INKPLATE5
 #error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
 #endif
-
+*/
 #include "Inkplate.h"            // Include Inkplate library to the sketch
 #include "logo.h"                // Include header file for Soldered logo. You can see it in next tab inside Arduino IDE
 Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set library to work in monochorme mode

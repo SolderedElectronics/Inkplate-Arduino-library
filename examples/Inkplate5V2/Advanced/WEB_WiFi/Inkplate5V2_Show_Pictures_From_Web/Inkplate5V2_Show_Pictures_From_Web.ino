@@ -1,8 +1,8 @@
 /*
-   Inkplate5V2_Show_Pictures_From_Web example for Soldered Inkplate 5
+   Inkplate5V2_Show_Pictures_From_Web example for Soldered Inkplate 5 V2
    For this example you will need a USB C cable, Inkplate 5, and an available WiFi connection.
-   Select "Soldered Inkplate5V2" from Tools -> Board menu.
-   Don't have "Soldered Inkplate5V3" option? Follow our tutorial and add it:
+   Select "Soldered Inkplate5 V2" from Tools -> Board menu.
+   Don't have "Soldered Inkplate5 V2" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    You can open .bmp files that have a color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
@@ -19,13 +19,12 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   15 March 2024 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE5V2
-#error "Wrong board selection for this example, please select Soldered Inkplate5V2 in the boards menu."
-#endif
+#error "Wrong board selection for this example, please select Soldered Inkplate5 V2 in the boards menu."
 
 // Include needed libraries
 #include "HTTPClient.h"          //Include library for HTTPClient

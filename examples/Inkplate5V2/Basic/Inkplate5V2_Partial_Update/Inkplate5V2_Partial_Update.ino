@@ -1,8 +1,8 @@
 /*
-   Inkplate5V2_Partial_Update example for Soldered Inkplate 5
-   For this example you will need only a USB-C cable and Inkplate 5
-   Select "Soldered Inkplate5V2" from Tools -> Board menu.
-   Don't have "Soldered Inkplate5V2" option? Follow our tutorial and add it:
+   Inkplate5V2_Partial_Update example for Soldered Inkplate 5 V2
+   For this example you will need only a USB-C cable and Inkplate 5 v2
+   Select "Soldered Inkplate5 V2" from Tools -> Board menu.
+   Don't have "Soldered Inkplate5 V2" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    In this example we will show how to use partial update functionality of Inkplate 5 e-paper display.
@@ -12,19 +12,18 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
-   20 March 2023 by Soldered
+   15 April 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE5V2
-#error "Wrong board selection for this example, please select Soldered Inkplate5V2 in the boards menu."
-#endif
+#error "Wrong board selection for this example, please select Soldered Inkplate5 V2 in the boards menu."
 
 #include "Inkplate.h"            // Include Inkplate library to the sketch
 Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
 
 // Char array where you can store your text that will be scrolled.
-const char text[] = "This is partial update on Inkplate 5 e-paper display! :)";
+const char text[] = "This is partial update on Inkplate 5V2 e-paper display! :)";
 
 // This variable is used for moving the text (scrolling)
 int offset = E_INK_WIDTH;
@@ -47,7 +46,7 @@ void loop()
     // BASIC USAGE
 
     display.clearDisplay();         // Clear content in frame buffer
-    display.setCursor(offset, 260); // Set new position for text
+    display.setCursor(offset, 380); // Set new position for text
     display.print(text);            // Write text at new position
     if (n > 9)
     {
@@ -68,7 +67,7 @@ void loop()
     // ADVANCED USAGE
 
     display.clearDisplay();         // Clear content in frame buffer
-    display.setCursor(offset, 260); // Set new position for text
+    display.setCursor(offset, 380); // Set new position for text
     display.print(text);            // Write text at new position
 
     display.einkOn(); // Turn on e-ink display
