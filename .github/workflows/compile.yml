@@ -8,6 +8,14 @@ jobs:
       matrix:
         include:
           - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate5
+            additional-sketch-paths: |
+              - examples/Inkplate5
+          - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate5V2
+            additional-sketch-paths: |
+              - examples/Inkplate5V2
+          - board:
               fqbn: Inkplate_Boards:esp32:Inkplate6
             additional-sketch-paths: |
               - examples/Inkplate6

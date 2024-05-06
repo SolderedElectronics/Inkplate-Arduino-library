@@ -33,7 +33,7 @@ char *ssid = ""; // Your WiFi SSID
 char *pass = ""; // Your WiFi password
 
 // Add the URL of the image you want to show on Inkplate
-String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/dev/examples/Inkplate10/Advanced/WEB_WiFi/Inkplate10_Show_JPG_With_HTTPClient/image.jpg";
+String url = "https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/master/examples/Inkplate10/Advanced/WEB_WiFi/Inkplate10_Show_JPG_With_HTTPClient/image.jpg";
 
 /***********************************************/
 

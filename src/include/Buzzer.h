@@ -37,7 +37,7 @@ class Buzzer : virtual public Expander
 {
   public:
     Buzzer(){};
-    void begin();
+    void initBuzzer();
     void beep(uint32_t length, int freq);
     void beep(uint32_t length);
     void beepOn(int freq);

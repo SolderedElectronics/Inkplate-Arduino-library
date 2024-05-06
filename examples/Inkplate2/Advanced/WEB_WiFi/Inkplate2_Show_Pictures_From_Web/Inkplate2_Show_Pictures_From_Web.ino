@@ -68,7 +68,7 @@ void setup()
     display.clearDisplay();
 
     if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
-                           "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced/WEB_WiFi/"
+                           "master/examples/Inkplate2/Advanced/WEB_WiFi/"
                            "Inkplate2_Show_Pictures_From_Web/cat_dithered.jpg",
                            0, 0, false, false))
     {
@@ -87,7 +87,7 @@ void setup()
     http.getStream().setTimeout(1);
 
     http.begin("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
-               "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced/WEB_WiFi/"
+               "master/examples/Inkplate2/Advanced/WEB_WiFi/"
                "Inkplate2_Show_Pictures_From_Web/car.bmp");
 
     // Check response code.
@@ -129,7 +129,7 @@ void setup()
     // true will flip all colors on the image, making black white and white black. fourth parameter will dither the
     // image.
     if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/"
-                           "Inkplate2-DrawImage3Color-And-Examples/examples/Inkplate2/Advanced/WEB_WiFi/"
+                           "master/examples/Inkplate2/Advanced/WEB_WiFi/"
                            "Inkplate2_Show_Pictures_From_Web/mountain.png",
                            0, 0, true, false))
     {

@@ -22,6 +22,35 @@ int batteryCapacity = 600;
 // The flag which is set when the APDS interrupt is tested
 volatile bool apdsIntFlag = false;
 
+// The ISR which tests the interrupt from the gesture sensor
+void IRAM_ATTR ioExpanderISR()
+{
+    apdsIntFlag = true;
+}
+
+// Helper function to clear the gesture buffer for testing the APDS gesture sensor
+bool checkGesture(uint8_t *_gesturePtr)
+{
+    // Check if there is any gesture detected at all.
+    if (display.apds9960.isGestureAvailable())
+    {
+        // If it is, read it.
+        // NOTE: If the gesture is detected, but it's not read, sensor won't fire any interrupt
+        // until the gesture is read from the register.
+        uint8_t _gesture = display.apds9960.readGesture();
+
+        // If the pointer for detected gesture is not NULL, copy the result.
+        if (_gesturePtr != NULL)
+            (*_gesturePtr) = _gesture;
+
+        // Return true for successfully detected gesture.
+        return true;
+    }
+
+    // Otherwise return false.
+    return false;
+}
+
 void testPeripheral()
 {
     // Set display for test report
@@ -123,6 +152,8 @@ void testPeripheral()
         display.println("FAIL");
         failHandler();
     }
+    // Great, put it back to sleep to save power
+    display.sdCardSleep();
 
     // Check the WiFi
     ADD_PRINT_MARGIN
@@ -191,6 +222,7 @@ void testPeripheral()
         failHandler();
     }
 
+    // Check BME sensor
     float bmeTemp, bmeHumidity, bmePres;
     ADD_PRINT_MARGIN
     display.print("- Check BME680 Sensor: ");
@@ -220,12 +252,15 @@ void testPeripheral()
         display.println("FAIL");
         failHandler();
     }
+    // Put it back to sleep to save power
+    display.sleepPeripheral(INKPLATE_BME688);
 
-    int fuelGaugeSOC, fuelGaugeVolts, fuelGaugeCurrent;
+    // Check the fuel gauge
+    int fuelGaugeSOC, fuelGaugeVolts;
     ADD_PRINT_MARGIN
     display.print("- Check Fuel Gauge: ");
     display.partialUpdate(0, 1);
-    if (checkFuelGauge(&fuelGaugeSOC, &fuelGaugeVolts, &fuelGaugeCurrent))
+    if (checkFuelGauge(&fuelGaugeSOC, &fuelGaugeVolts))
     {
         display.println("OK");
         ADD_PRINT_MARGIN
@@ -237,11 +272,6 @@ void testPeripheral()
         display.print("- Voltage: ");
         display.print(fuelGaugeVolts);
         display.println(" mV");
-        ADD_PRINT_MARGIN
-        ADD_PRINT_MARGIN
-        display.print("- Current: ");
-        display.print(fuelGaugeCurrent);
-        display.println(" mA");
     }
     else
     {
@@ -249,7 +279,11 @@ void testPeripheral()
         display.println("FAIL");
         failHandler();
     }
+    // Put it back to sleep
+    display.sleepPeripheral(INKPLATE_FUEL_GAUGE);
 
+
+    // Test the gyroscope
     float gyroAccX, gyroAccY, gyroAccZ;
     ADD_PRINT_MARGIN
     display.print("- Check Gyroscope: ");
@@ -277,13 +311,8 @@ void testPeripheral()
         display.println("FAIL");
         failHandler();
     }
-
-    // Check the buzzer
-    ADD_PRINT_MARGIN
-    display.println("- Check buzzer (audible check): ");
-    display.partialUpdate(0, 1);
-    checkBuzzer();
-    delay(1000);
+    // Put it back to sleep
+    display.sleepPeripheral(INKPLATE_ACCELEROMETER);
 
     // Check the gesture sensor
     ADD_PRINT_MARGIN
@@ -304,6 +333,14 @@ void testPeripheral()
         display.println("FAIL");
         failHandler();
     }
+    // Put it back to sleep
+    display.sleepPeripheral(INKPLATE_APDS9960);
+
+    // Check the buzzer
+    ADD_PRINT_MARGIN
+    display.println("- Check buzzer (audible check): ");
+    display.partialUpdate(0, 1);
+    checkBuzzer();
 
     // Text wake up button
     long beginWakeUpTest = millis();
@@ -312,6 +349,7 @@ void testPeripheral()
     display.println("Press WAKEUP to finish test (30s)!");
     display.partialUpdate(0, 1);
 
+    // Wait for WAKEUP button press
     while (true)
     {
         long now = millis();
@@ -531,8 +569,11 @@ int checkBME(float *temp, float *hum, float *pres)
     return beginResult;
 }
 
-int checkFuelGauge(int *_soc, int *_volts, int *_current)
+int checkFuelGauge(int *_soc, int *_volts)
 {
+    // Wake battery
+    display.wakePeripheral(INKPLATE_FUEL_GAUGE);
+
     // Init fuel gauge
     int beginResult = display.battery.begin();
 
@@ -540,56 +581,70 @@ int checkFuelGauge(int *_soc, int *_volts, int *_current)
     display.battery.setCapacity(batteryCapacity);
 
     // Read values
-    int soc = display.battery.soc();            // Read state-of-charge (%)
-    int volts = display.battery.voltage();      // Read battery voltage (mV)
-    int current = display.battery.current(AVG); // Read average current (mA)
+    int soc = display.battery.soc();       // Read state-of-charge (%)
+    int volts = display.battery.voltage(); // Read battery voltage (mV)
+    // Current will be 0 if no battery is connected
 
     // Also save via pointers
     *_soc = soc;
     *_volts = volts;
-    *_current = current;
 
     // Check if it's within the expected range
     if (soc < 0 || soc > 100)
         return 0;
-    if (volts < 4 || volts > 5500)
-        return 0;
-    if (current < 0 || current > 4000)
+    if (volts < 1000 || volts > 5500)
         return 0;
 
-    return beginResult;
+    return true;
 }
 
 void checkBuzzer()
 {
     // Init buzzer
-    display.buzzer.begin();
+    display.initBuzzer();
 
     // Do two short low beeps then two short high beeps
-    display.buzzer.beep(100, 750);
+    display.beep(100, 750);
     delay(100);
-    display.buzzer.beep(100, 750);
+    display.beep(100, 750);
     delay(100);
-    display.buzzer.beep(100, 2400);
+    display.beep(100, 2400);
     delay(100);
-    display.buzzer.beep(100, 2400);
+    display.beep(100, 2400);
     delay(100);
 }
 
-int checkGestureSensor(int _gestTimeout, String * gesture)
+int checkGestureSensor(int _gestTimeout, String *gesture)
 {
+    // Wake peripheral
+    display.wakePeripheral(INKPLATE_APDS9960);
+
     // Init APDS and enable the gesture sensor
-    display.apds9960.init();
-    display.apds9960.enableGestureSensor(true);
+    if (!display.apds9960.init())
+    {
+        return false;
+    }
+
+    if (!display.apds9960.enableGestureSensor(true))
+    {
+        return false;
+    }
+    delay(250);
+
+    display.apds9960.setGestureGain(0); // Also set gain to lower so it's less sensitive
+    display.apds9960.setGestureIntEnable(true);
+    // Finally, enable the light sensor
+
+    // Set the interrupt chain from the APDS, to the GPIO expander to the ESP32
+    display.pinModeIO(9, INPUT, IO_INT_ADDR);
+    display.setIntPin(9, IO_INT_ADDR);
+    attachInterrupt(digitalPinToInterrupt(34), ioExpanderISR, CHANGE);
+
+    // Clear out any previous detected gestures.
+    checkGesture(NULL);
 
     unsigned long _timeout;
     _timeout = millis();
-
-    // Set the interrupt chain from the APDS, to the GPIO expander to the ESP32
-    display.pinModeIO(9, INPUT_PULLUP, IO_INT_ADDR);
-    display.setIntPin(9, IO_INT_ADDR);
-    pinMode(GPIO_NUM_34, INPUT);
-    attachInterrupt(GPIO_NUM_34, ISR, FALLING);
 
     // Wait 30 seconds to detect gesture
     while (((unsigned long)(millis() - _timeout)) < (_gestTimeout * 1000UL))
@@ -597,35 +652,41 @@ int checkGestureSensor(int _gestTimeout, String * gesture)
         // If the APDS interrupt was read
         if (apdsIntFlag)
         {
-            // Get the gesture
-            if (display.apds9960.isGestureAvailable())
+            if (!display.digitalReadIO(9, IO_INT_ADDR))
             {
-                switch (display.apds9960.readGesture())
+                // Get the gesture
+                if (display.apds9960.isGestureAvailable())
                 {
-                    // Return the gesture value depending which gesture was made
-                case DIR_UP:
-                    * gesture = "UP";
-                    break;
-                case DIR_DOWN:
-                    * gesture = "DOWN";
-                    break;
-                case DIR_LEFT:
-                    * gesture = "LEFT";
-                    break;
-                case DIR_RIGHT:
-                    * gesture = "RIGHT";
-                    break;
-                case DIR_NEAR:
-                    * gesture = "NEAR";
-                    break;
-                case DIR_FAR:
-                    * gesture = "FAR";
-                    break;
-                default:
-                    * gesture = "NONE";
+                    uint8_t detectedGesture;
+                    checkGesture(&detectedGesture);
+                    switch (detectedGesture)
+                    {
+                        // Return the gesture value depending which gesture was made
+                    case DIR_UP:
+                        *gesture = "UP";
+                        break;
+                    case DIR_DOWN:
+                        *gesture = "DOWN";
+                        break;
+                    case DIR_LEFT:
+                        *gesture = "LEFT";
+                        break;
+                    case DIR_RIGHT:
+                        *gesture = "RIGHT";
+                        break;
+                    case DIR_NEAR:
+                        *gesture = "NEAR";
+                        break;
+                    case DIR_FAR:
+                        *gesture = "FAR";
+                        break;
+                    default:
+                        *gesture = "NONE";
+                    }
+                    return 1;
                 }
-                return 1;
             }
+            apdsIntFlag = false;
         }
     }
     return 0;
@@ -633,6 +694,9 @@ int checkGestureSensor(int _gestTimeout, String * gesture)
 
 int checkGyroscope(float *acX, float *acY, float *acZ)
 {
+    // Let's wake the peripheral
+    display.wakePeripheral(INKPLATE_ACCELEROMETER);
+
     // This actually returns 0 on success
     int beginResult = display.lsm6ds3.begin();
 
@@ -647,7 +711,7 @@ int checkGyroscope(float *acX, float *acY, float *acZ)
 
     // Let's calculate the total magnitude of the readings
     float magnitude = sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
-    
+
     //  This should be approx 9.81, allow for some margin of error
     if (magnitude <= 8.5 || magnitude > 10.8)
         return 0;
@@ -666,19 +730,20 @@ int checkGyroscope(float *acX, float *acY, float *acZ)
 }
 
 // Show a message and stop the code from executing.
-void failHandler()
+void failHandler(bool printErrorOnSerial)
 {
-    ADD_PRINT_MARGIN
-    display.print(" -> Test stopped!");
-    display.partialUpdate(0, 1);
+    if (printErrorOnSerial)
+    {
+        Serial.println(" -> Test stopped!");
+    }
+    else
+    {
+        ADD_PRINT_MARGIN
+        display.print(" -> Test stopped!");
+        display.partialUpdate(0, 1);
+    }
 
     // Inf. loop... halt the program!
     while (true)
         delay(1000);
-}
-
-// The ISR which tests the interrupt from the gesture sensor
-void IRAM_ATTR ISR()
-{
-    apdsIntFlag = true;
 }

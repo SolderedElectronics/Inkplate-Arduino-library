@@ -24,11 +24,11 @@ int checkTemp(float *temp);
 int touchPads(uint8_t _timeoutTouchpads);
 int checkTouch(uint8_t _tsTimeout);
 int checkBME(float * bmeTemp, float * bmeHumidity, float * bmePres);
-int checkFuelGauge(int *_soc, int *_volts, int *_current);
+int checkFuelGauge(int *_soc, int *_volts);
 int checkGestureSensor(int _gestTimeout, String * gesture);
 int checkGyroscope(float * acX, float * acY, float * acZ);
 void checkBuzzer();
-void failHandler();
+void failHandler(bool printErrorOnSerial = false);
 void IRAM_ATTR ISR();
 
 #endif
