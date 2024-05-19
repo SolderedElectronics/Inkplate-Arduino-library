@@ -82,7 +82,7 @@ struct entry
 
 // Here we store calendar entries
 int entriesNum = 0;
-entry entries[100];
+entry entries[90];
 
 // All our functions declared below setup and loop
 void drawInfo();
