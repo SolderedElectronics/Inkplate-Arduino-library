@@ -58,14 +58,16 @@ void loop()
     if (display.tsAvailable())
     {
         display.tsGetRawData(touchRegs);
-        for(int i = 0; i < 8; ++i)
+        for(int i = 0; i < 16; ++i)
         {
             Serial.print("Reg ");
+            Serial.print(i);
+            Serial.print(": ");
             Serial.println(touchRegs[i], BIN);
         }
 
         Serial.println("---------------------------");
         Serial.println();
     }
-    delay(1000);
+    delay(50);
 }

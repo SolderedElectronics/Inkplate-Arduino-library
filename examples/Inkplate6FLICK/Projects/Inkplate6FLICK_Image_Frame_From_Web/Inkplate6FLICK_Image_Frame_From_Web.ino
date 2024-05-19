@@ -28,9 +28,13 @@ void setup()
 
     display.begin();
 
-    // Turn off frontlight
-    display.frontlight(true);
-    display.setFrontlight(0);
+    // To turn off frontlight
+    // display.frontlight(true);
+    // display.setFrontlight(0);
+
+    // If you want to use frontlight:
+    // display.frontlight(true);
+    // display.setFrontlight(35);
 
     // Join wifi
     display.connectWiFi(ssid, password);

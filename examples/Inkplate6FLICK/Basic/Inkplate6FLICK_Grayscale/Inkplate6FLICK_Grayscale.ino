@@ -132,13 +132,13 @@ void loop()
 
     // Now, let' make a grid using only horizontal and vertical lines in random colors!
     display.clearDisplay();
-    for (int i = 0; i < 800; i += 8)
+    for (int i = 0; i < 1024; i += 8)
     {
-        display.drawFastVLine(i, 0, 600, (i / 8) & 0x0F);
+        display.drawFastVLine(i, 0, 768, (i / 8) & 0x0F);
     }
-    for (int i = 0; i < 600; i += 4)
+    for (int i = 0; i < 768; i += 4)
     {
-        display.drawFastHLine(0, i, 800, (i / 8) & 0x0F);
+        display.drawFastHLine(0, i, 1024, (i / 8) & 0x0F);
     }
     displayCurrentAction("Drawing a grid using horizontal and vertical lines in different colors");
     display.display();

@@ -69,6 +69,9 @@ void setup()
     // Enable wake from I/O expander port on gpio 34
     esp_sleep_enable_ext1_wakeup(TOUCHPAD_WAKE_MASK, ESP_EXT1_WAKEUP_ALL_LOW);
 
+    // Put the touchscreen in deep sleep mode to use less power
+    display.tsSetPowerState(CYPRESS_TOUCH_DEEP_SLEEP_MODE);
+
     // Go to sleep
     esp_deep_sleep_start();
 }
