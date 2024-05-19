@@ -39,7 +39,7 @@
 
 // Touchscreen defines
 #define TOUCHSCREEN_EN          12
-#define TS_RTS                  10
+#define TS_RST                  10
 #define TS_INT                  36
 #define TS_ADDR                 0x15
 #define TOUCHSCREEN_IO_EXPANDER IO_INT_ADDR

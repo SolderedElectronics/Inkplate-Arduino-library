@@ -40,6 +40,10 @@ jobs:
             additional-sketch-paths: |
               - examples/Inkplate6PLUS
           - board:
+              fqbn: Inkplate_Boards:esp32:Inkplate6Flick
+            additional-sketch-paths: |
+              - examples/Inkplate6FLICK
+          - board:
               fqbn: Inkplate_Boards:esp32:Inkplate6COLOR
             additional-sketch-paths: |
               - examples/Inkplate6COLOR

@@ -114,9 +114,8 @@ bool Inkplate::begin(void)
         return 0;
     }
 
-    // Init the I2S driver. It will allocate the memory for the I2S DMA descriptor and line buffer and setup a I2S
-    // driver.
-    I2SInit(myI2S, NULL, NULL);
+    // Init the I2S driver. It will setup a I2S driver.
+    I2SInit(myI2S);
 
     // Battery voltage Switch MOSFET
     pinModeInternal(IO_INT_ADDR, ioRegsInt, 9, OUTPUT);
