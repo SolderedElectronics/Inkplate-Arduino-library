@@ -31,6 +31,8 @@
 #include "../boards/Inkplate10.h"
 #elif (defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2))
 #include "../boards/Inkplate6plus.h"
+#elif ARDUINO_INKPLATE6FLICK
+#include "../boards/Inkplate6FLICK.h"
 #elif ARDUINO_INKPLATECOLOR
 #include "../boards/Inkplate6Color.h"
 #elif ARDUINO_INKPLATE2

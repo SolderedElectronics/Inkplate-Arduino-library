@@ -29,7 +29,7 @@
 #include "soc/rtc.h"
 #include "soc/soc.h"
 
-void IRAM_ATTR I2SInit(volatile i2s_dev_t *_i2sDev, volatile lldesc_s **_dmaDecs, uint8_t **_buffer);
+void IRAM_ATTR I2SInit(volatile i2s_dev_t *_i2sDev, uint8_t _clockDivider = 5);
 void IRAM_ATTR sendDataI2S(volatile i2s_dev_t *_i2sDev, volatile lldesc_s *_dmaDecs);
 void IRAM_ATTR setI2S1pin(uint32_t _pin, uint32_t _function, uint32_t _inv);
 
