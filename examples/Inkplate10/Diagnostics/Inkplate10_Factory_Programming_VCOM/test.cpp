@@ -70,6 +70,7 @@ void testPeripheral()
     if (checkMicroSDCard())
     {
         display.println("OK");
+
         display.partialUpdate(0, 1);
     }
     else
