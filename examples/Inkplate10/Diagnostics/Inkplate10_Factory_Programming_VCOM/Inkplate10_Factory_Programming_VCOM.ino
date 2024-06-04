@@ -754,7 +754,6 @@ void partialUpdateAnimation()
         {
             numUpdates = 0;
             display.display();
-            return;
         }
 
         if (digitalRead(GPIO_NUM_36) == LOW)
