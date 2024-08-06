@@ -104,10 +104,16 @@ int Inkplate::einkOn()
     WAKEUP_SET;
     delay(5);
 
-    // Modify power up sequence  (VEE and VNEG are swapped)
+    // Modify power up sequence.
     Wire.beginTransmission(0x48);
     Wire.write(0x09);
-    Wire.write(B11100001);
+    Wire.write(B11100100);
+    Wire.endTransmission();
+
+    // Modify power down sequence  (VEE and VNEG are swapped)
+    Wire.beginTransmission(0x48);
+    Wire.write(0x0b);
+    Wire.write(B00011011);
     Wire.endTransmission();
 
 #ifdef ARDUINO_INKPLATE6PLUSV2
