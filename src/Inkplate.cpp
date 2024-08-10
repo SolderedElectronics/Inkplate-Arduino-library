@@ -104,6 +104,23 @@ int Inkplate::einkOn()
     WAKEUP_SET;
     delay(5);
 
+#ifdef ARDUINO_INKPLATE6PLUSV2
+    if (pwrMode != INKPLATE_USB_PWR_ONLY)
+    {
+        // Enable all rails
+        Wire.beginTransmission(0x48);
+        Wire.write(0x01);
+        Wire.write(B00100000);
+        Wire.endTransmission();
+    }
+#else
+    // Enable all rails
+    Wire.beginTransmission(0x48);
+    Wire.write(0x01);
+    Wire.write(B00100000);
+    Wire.endTransmission();
+#endif
+
     // Modify power up sequence.
     Wire.beginTransmission(0x48);
     Wire.write(0x09);
@@ -116,28 +133,8 @@ int Inkplate::einkOn()
     Wire.write(B00011011);
     Wire.endTransmission();
 
-#ifdef ARDUINO_INKPLATE6PLUSV2
-    if (pwrMode != INKPLATE_USB_PWR_ONLY)
-    {
-        // Enable all rails
-        Wire.beginTransmission(0x48);
-        Wire.write(0x01);
-        Wire.write(B00111111);
-        Wire.endTransmission();
-    }
-#else
-    // Enable all rails
-    Wire.beginTransmission(0x48);
-    Wire.write(0x01);
-    Wire.write(B00111111);
-    Wire.endTransmission();
-#endif
-
-    PWRUP_SET;
-
     pinsAsOutputs();
     LE_CLEAR;
-    OE_CLEAR;
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2) && !defined(ARDUINO_INKPLATE6FLICK)
     CL_CLEAR;
 #endif
@@ -146,7 +143,8 @@ int Inkplate::einkOn()
     SPV_SET;
     CKV_CLEAR;
     OE_CLEAR;
-    VCOM_SET;
+    PWRUP_SET;
+    setPanelState(1);
 
     unsigned long timer = millis();
     do
@@ -155,13 +153,12 @@ int Inkplate::einkOn()
     } while ((readPowerGood() != PWR_GOOD_OK) && (millis() - timer) < 250);
     if ((millis() - timer) >= 250)
     {
-        VCOM_CLEAR;
-        PWRUP_CLEAR;
+        einkOff();
         return 0;
     }
 
+    VCOM_SET;
     OE_SET;
-    setPanelState(1);
 
     return 1;
 }
@@ -174,6 +171,7 @@ void Inkplate::einkOff()
 {
     if (getPanelState() == 0)
         return;
+    VCOM_CLEAR;
     OE_CLEAR;
     GMOD_CLEAR;
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2) && !defined(ARDUINO_INKPLATE6FLICK)
@@ -184,8 +182,6 @@ void Inkplate::einkOff()
     CKV_CLEAR;
     SPH_CLEAR;
     SPV_CLEAR;
-
-    VCOM_CLEAR;
     PWRUP_CLEAR;
 
     unsigned long timer = millis();
@@ -200,7 +196,11 @@ void Inkplate::einkOff()
     if (pwrMode != INKPLATE_USB_PWR_ONLY)
         WAKEUP_CLEAR;
 #else
-    WAKEUP_CLEAR;
+    WAKEUP_CLEAR; // Disable 3V3 Switch for ePaper.
+    Wire.beginTransmission(0x48);
+    Wire.write(0x01);
+    Wire.write(B00000000);
+    Wire.endTransmission();
 #endif
 #endif
 
