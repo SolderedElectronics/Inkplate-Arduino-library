@@ -173,6 +173,12 @@ void testPeripheral()
     }
 
     // Text wake up button
+    // Disable touchscreen to avoid accidental TS INT trigger that would trigger WAKE button.
+    // (since Touch INT and WAKE BTN share same line).
+    display.tsInit(true);
+    // Wait a little bit.
+    delay(100);
+    
     long beginWakeUpTest = millis();
     int wakeButtonState = digitalRead(GPIO_NUM_36);
 
