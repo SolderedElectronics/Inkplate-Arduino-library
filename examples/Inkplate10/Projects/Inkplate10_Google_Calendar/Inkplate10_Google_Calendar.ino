@@ -55,6 +55,7 @@ int timeZone = 2;
 
 // Delay between API calls
 #define DELAY_MS 1 * 60000
+#define DELAY_WIFI_RETRY_SECONDS 10
 
 // Variables to keep count of when to get new data, and when to just update time
 RTC_DATA_ATTR unsigned int refreshes = 0;
@@ -125,7 +126,7 @@ void setup()
         display.println(F("Please check SSID and PASS!"));
         // Display the error message on the Inkplate and go to deep sleep
         display.display();
-        esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
         (void)esp_deep_sleep_start();
     }
 
@@ -499,9 +500,7 @@ void drawData()
             getToFrom(entries[entriesNum].time, timeStart, timeEnd, &entries[entriesNum].day,
                       &entries[entriesNum].timeStamp);
         }
-        // Increment the counter
         ++entriesNum;
-        // If we're over the limit, exit the loading loop
         if(entriesNum == 128)
         {
             break;
@@ -515,7 +514,6 @@ void drawData()
     bool clogged[3] = {0};
     int cloggedCount[3] = {0};
 
-    // If required, uncomment this line of debug if required, could be useful:
     //Serial.println("Displaying events one by one. There is " + String(entriesNum) + " events to display.");
     // Displaying events one by one
     for (int i = 0; i < entriesNum; ++i)
@@ -534,6 +532,7 @@ void drawData()
         // If it overflowed, set column to clogged and add one event as not shown
         if (!s)
         {
+            //Serial.println("Event " + String(i) + " has overflowed.");      
             ++cloggedCount[entries[i].day];
             clogged[entries[i].day] = 1;
         }

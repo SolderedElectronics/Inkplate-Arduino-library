@@ -44,6 +44,8 @@
 // Change to your wifi ssid and password
 #define SSID ""
 #define PASS ""
+// Variable to store WiFi connection timeout
+int timeoutSeconds = 100;
 
 // Openweather API key
 /**
@@ -66,7 +68,8 @@ bool metric = true; // <--- true is METRIC, false is IMPERIAL
 
 // Delay between API calls
 #define DELAY_MS 59000
-
+#define DELAY_WIFI_RETRY_SECONDS 5
+#define DELAY_API_RETRY_SECONDS 5
 // ---------------------------------------
 
 // Including fonts used
@@ -118,36 +121,6 @@ char Output[200] = {0};
 
 OpenWeatherOneCall OWOC; // Invoke OpenWeather Library
 time_t t = now();
-
-void connectWifi()
-{
-    if (WiFi.status() == WL_CONNECTED)
-        return;
-
-    // Initiating wifi, like in BasicHttpClient example
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(SSID, PASS);
-
-    int cnt = 0;
-    Serial.print("Waiting for WiFi to connect ");
-    while ((WiFi.status() != WL_CONNECTED))
-    {
-        Serial.print(".");
-        delay(1000);
-        ++cnt;
-
-        if (cnt == 20)
-        {
-            Serial.println("Can't connect to WIFI, restarting");
-            delay(100);
-            ESP.restart();
-        }
-    }
-    Serial.print("\nConnected to ");
-    Serial.println(SSID);
-    Serial.print("IP address: ");
-    Serial.println(WiFi.localIP());
-} //======================== END WIFI CONNECT =======================
 
 void GetCurrentWeather()
 {
@@ -206,75 +179,80 @@ void setup()
     {
         ;
     }
+    Serial.println("Serial Monitor Initialized");
 
-    // Init Inkplate library (you should call this function ONLY ONCE)
+    //
     display.begin();
 
-    connectWifi();
+    // Initial cleaning of buffer and physical screen
+    display.clearDisplay();
+    display.display();
+
+    // Welcome screen
+    display.setCursor(215, 400);
+    display.setTextSize(3);
+    display.print(F("Welcome to Wol Inkplate 5 weather example!"));
+    display.display();
+    Serial.println("Welcome to Wol Inkplate 5 weather example!");
+    display.display();
+
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(SSID, PASS, timeoutSeconds, true))
+    {
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(3);
+        // Set the cursor positions and print the text.
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Unable to connect to "));
+        display.println(F(SSID));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
 
     // Check if we have a valid API key:
     Serial.println("Checking if API key is valid...");
-    if(!checkIfAPIKeyIsValid(APIKEY))
+    if (!checkIfAPIKeyIsValid(APIKEY))
     {
         // If we don't, notify the user
         Serial.println("API key is invalid!");
         display.clearDisplay();
-        display.setCursor(0,0);
+        display.setCursor(0, 0);
         display.setTextSize(2);
         display.println("Can't get data from OpenWeatherMaps! Check your API key!");
         display.println("Only older API keys for OneCall 2.5 work in free tier.");
         display.println("See the code comments the example for more info.");
         display.display();
-        while(1)
-        {
-            delay(100);
-        }
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_API_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
     }
     Serial.println("API key is valid!");
 
-    // Set the temp. unit
-    tempUnit = (metric == 1 ? 'C' : 'F');
-}
-
-void loop()
-{
     // Clear display
     t = now();
-
     if ((minute(t) % 30) == 0) // Also returns 0 when time isn't set
     {
         GetCurrentWeather();
-        Serial.println("got weather data");
         display.clearDisplay();
-        drawCurrent();
-        Serial.println("draw current");
         drawForecast();
-        Serial.println("draw forecast");
+        drawCurrent();
         drawHourly();
-        Serial.println("draw hourly");
         drawTime();
-        Serial.println("draw time");
         drawMoon();
-        Serial.println("draw moon");
         display.display();
     }
     else
     {
         drawTime();
-
-        // Do a refresh
-        if (refreshes >= fullRefresh)
-        {
-            // Full refresh
-            display.display();
-            refreshes = 0;
-        }
-        else
-        {
-            // Partial refresh (only content that was changed)
-            display.partialUpdate();
-            ++refreshes;
-        }
+        display.partialUpdate();
     }
 
     // wait for the turn of the minute before sleeping
@@ -283,8 +261,13 @@ void loop()
     }
 
     // Go to sleep before checking again
+    ++refreshes;
     esp_sleep_enable_timer_wakeup(1000L * DELAY_MS);
-    (void)esp_light_sleep_start();
+    (void)esp_deep_sleep_start();
+}
+
+void loop()
+{
 }
 
 // Function for drawing weather info

@@ -35,8 +35,6 @@ class Network
     bool getData(char *calendarURL, char *data);
 
   private:
-    // Functions called from within our class
-    void setTime();
 };
 
 #endif

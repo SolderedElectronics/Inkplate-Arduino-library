@@ -33,6 +33,8 @@ int timeZone = 2;
 char ssid[] = "";
 char pass[] = "";
 char api_key_news[] = ""; //You can obtain one here: https://newsapi.org/
+// Also, declare the function to check if the API key is valid
+bool checkIfAPIKeyIsValid(char *APIKEY);
 
 //----------------------------------
 
@@ -53,6 +55,8 @@ Inkplate display(INKPLATE_1BIT);
 
 // Delay between API calls in miliseconds (first 60 represents minutes so you can change to your need)
 #define DELAY_MS (uint32_t)60 * 60 * 1000
+#define DELAY_WIFI_RETRY_SECONDS 10
+#define DELAY_API_RETRY_SECONDS 10
 
 // Variable for counting partial refreshes
 RTC_DATA_ATTR unsigned refreshes = 0;
@@ -68,8 +72,43 @@ void setup()
     display.begin();
     display.setTextWrap(false);
 
-    // Our begin function
-    network.begin();
+    // Connect Inkplate to the WiFi network
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
+    {
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(3);
+        // Set the cursor positions and print the text.
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
+
+    if(!checkIfAPIKeyIsValid(api_key_news))
+    {
+        display.clearDisplay();
+        display.setTextSize(3);
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Your API key is invalid or incorrect."));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check your API key."));
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_API_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
+
+    setTime();
 
     struct news *entities;
 
@@ -148,6 +187,64 @@ void drawNews(struct news *entities)
         i++;
     }
 
+}
+
+// Function for getting time from NTP server
+void setTime()
+{
+    // Structure used to hold time information
+    struct tm timeInfo;
+    time_t nowSec;
+    // Fetch current time in epoch format and store it
+    display.getNTPEpoch(&nowSec);
+    // This loop ensures that the NTP time fetched is valid and beyond a certain threshold
+    while (nowSec < 8 * 3600 * 2)
+    {
+        delay(500);
+        yield();
+        nowSec = time(nullptr);
+    }
+    gmtime_r(&nowSec, &timeInfo);
+    Serial.print(F("Current time: "));
+    Serial.print(asctime(&timeInfo));
+}
+
+bool checkIfAPIKeyIsValid(char *APIKEY)
+{
+    bool failed = false;
+    // Create the buffer for holding the API response, make it large enough just in case
+    char *data;
+    data = (char *)ps_malloc(50000LL);
+
+    // Http object used to make GET request
+    HTTPClient http;
+    http.getStream().setTimeout(10);
+    http.getStream().flush();
+    http.getStream().setNoDelay(true);
+
+    // Combine the base URL and the API key to do a test call
+    char *baseURL = "https://newsapi.org/v2/top-headlines?country=us&apiKey=";
+    char apiTestURL[200];
+    sprintf(apiTestURL, "%s%s", baseURL, APIKEY);
+
+    http.begin(apiTestURL);
+    delay(300);
+
+    int httpCode = http.GET();
+
+    if(httpCode != 200)
+    {
+        Serial.println("Your API key is invalid or incorrect.");
+        failed = true;
+    }
+    else
+    {
+        Serial.println("API key OK.");
+    }
+    http.end();
+    free(data);
+
+    return !failed;
 }
 
 void loop()

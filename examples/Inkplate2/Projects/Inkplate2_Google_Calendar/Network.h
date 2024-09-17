@@ -37,8 +37,6 @@ class Network
     time_t getEpoch();
 
   private:
-    // Functions called from within our class
-    void setTime();
     bool getRequest(WiFiClientSecure * client, char * _api_root_url, char * _api_call_url);
 };
 

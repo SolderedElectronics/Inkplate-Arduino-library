@@ -62,6 +62,7 @@ char apiKey[] = "";
 
 // Delay between API calls
 #define DELAY_MS (uint32_t)10 * 60 * 1000 // 10 minute time
+#define DELAY_WIFI_RETRY_SECONDS 10
 
 // Inkplate object
 Inkplate display;
@@ -114,8 +115,36 @@ void setup()
     Serial.begin(115200);
     display.begin();
 
-    // Calling our begin from network.h file
-    network.begin(ssid, pass);
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
+    {
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(3);
+        // Set the cursor positions and print the text.
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check ssid and pass!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
+
+    // After connecting to WiFi we need to get internet time from NTP server
+    time_t nowSec;
+    struct tm timeInfo;
+    // Fetch current time in epoch format and store it
+    display.getNTPEpoch(&nowSec);
+    gmtime_r(&nowSec, &timeInfo);
+    Serial.print(F("Current time: "));
+    Serial.print(asctime(&timeInfo));
 
     // Get all relevant data, see Network.cpp for info
     Serial.print("Fetching data");

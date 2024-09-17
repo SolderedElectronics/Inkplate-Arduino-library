@@ -99,7 +99,7 @@ bool Network::getData(char* text, char* auth)
     http.getStream().flush();
 
     // Initiate http
-    char link[] = "https://api.quotable.io/random";
+    char link[] = "https://favqs.com/api/qotd";
     http.begin(link);
 
     // Actually do request
@@ -125,7 +125,7 @@ bool Network::getData(char* text, char* auth)
 
             Serial.println("Success");
 
-            const char *buff1 = doc["content"];
+            const char *buff1 = doc["body"];
 
             strcpy(text, buff1);
 

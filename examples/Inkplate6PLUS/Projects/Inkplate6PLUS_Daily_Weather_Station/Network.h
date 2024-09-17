@@ -46,8 +46,6 @@ class Network
     int location = -1;
 
   private:
-    // Functions called from within our class
-    void setTime();
     int timeZone = 0;
 };
 

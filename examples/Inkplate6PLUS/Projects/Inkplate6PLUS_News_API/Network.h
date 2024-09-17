@@ -52,8 +52,6 @@ class Network
     struct news* getData();
 
   private:
-    // Functions called from within our class
-    void setTime();
 };
 
 #endif

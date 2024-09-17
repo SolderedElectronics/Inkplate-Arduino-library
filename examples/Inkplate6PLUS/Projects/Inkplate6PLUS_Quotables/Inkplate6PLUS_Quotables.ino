@@ -55,6 +55,7 @@ Inkplate display(INKPLATE_1BIT);
 
 // Delay between API calls in seconds, 300 seconds is 5 minutes
 #define DELAY_S 300
+#define DELAY_WIFI_RETRY_SECONDS 5
 
 // Our functions declared below setup and loop
 void drawAll();
@@ -77,7 +78,27 @@ void setup()
     display.setTextSize(3);
 
     // Our begin function
-    network.begin();
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
+    {
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(3);
+        // Set the cursor positions and print the text.
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
 
     while (!network.getData(quote, author))
     {

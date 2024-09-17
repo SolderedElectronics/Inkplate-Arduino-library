@@ -41,6 +41,7 @@
 
 // Delay between API calls
 #define DELAY_MS 4 * 60000 // 4 minutes times 60000 miliseconds in minute
+#define DELAY_WIFI_RETRY_SECONDS 10
 
 Inkplate display; // Initiate out Inkplate object
 
@@ -107,7 +108,36 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
-    network.begin(ssid, pass); // Connect to wifi and get data
+    // Connect Inkplate to the WiFi network
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
+    {
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(1);
+        // Set the cursor positions and print the text.
+        display.setCursor(0, 0);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
+
+    // After connecting to WiFi we need to get internet time from NTP server
+    time_t nowSec;
+    struct tm timeInfo;
+    // Fetch current time in epoch format and store it
+    display.getNTPEpoch(&nowSec);
+    gmtime_r(&nowSec, &timeInfo);
+    Serial.print(F("Current time: "));
+    Serial.print(asctime(&timeInfo));
 
     // Get the data from Google Calendar
     // Repeat attempts until data is fully downloaded
@@ -362,6 +392,10 @@ void getEvents()
                       &entries[entriesNum].timeStampEnd, &entries[entriesNum].timeStampStart);
         }
         ++entriesNum;
+        if(entriesNum == 128)
+        {
+            break;
+        }
     }
 
     // Sort entries by time

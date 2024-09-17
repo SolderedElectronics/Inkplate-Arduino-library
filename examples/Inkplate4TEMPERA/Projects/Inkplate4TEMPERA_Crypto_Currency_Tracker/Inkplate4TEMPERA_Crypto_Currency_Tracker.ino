@@ -35,7 +35,7 @@ char pass[] = "";
 
 // Delay between API calls in miliseconds
 #define DELAY_MS 3 * 60 * 1000
-
+#define DELAY_WIFI_RETRY_SECONDS 5
 // OPTIONAL:
 // change to a different currency
 char currency[] = "bitcoin";
@@ -116,7 +116,6 @@ textElement elements[] = {
 // Our functions declared below setup and loop
 void drawGraph();
 void drawAll();
-
 void setup()
 {
     // Begin serial communication, sed for debugging
@@ -133,8 +132,36 @@ void setup()
     display.setTextWrap(false);
     display.setTextColor(0, 7);
 
-        // Our begin function
-        network.begin();
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
+    {
+        // Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(3);
+        // Set the cursor positions and print the text.
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check ssid and pass!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
+
+    // After connecting to WiFi we need to get internet time from NTP server
+    time_t nowSec;
+    struct tm timeInfo;
+    // Fetch current time in epoch format and store it
+    display.getNTPEpoch(&nowSec);
+    gmtime_r(&nowSec, &timeInfo);
+    Serial.print(F("Current time: "));
+    Serial.print(asctime(&timeInfo));
         
         // Do a new network request
         Serial.print("Retrying retriving data ");

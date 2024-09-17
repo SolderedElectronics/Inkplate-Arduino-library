@@ -43,8 +43,6 @@ class Network
                  char *currentWeatherAbbr, char *abbr1, char *abbr2, char *abbr3, char *abbr4, uint8_t *hours);
 
   private:
-    // Functions called from within our class
-    void setTime();
     int timeZone = 0;
 };
 

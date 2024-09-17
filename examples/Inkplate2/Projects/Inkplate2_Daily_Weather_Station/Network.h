@@ -37,7 +37,6 @@ class Network
     // Functions we can access in main file
     void begin(char *ssid, char *pass);
     int getData(struct forecastWeather *fw, String lat, String lon, String apiKey, int *timezone);
-    void setTime(int timezone, struct tm *timeinfo);
 };
 
 #endif

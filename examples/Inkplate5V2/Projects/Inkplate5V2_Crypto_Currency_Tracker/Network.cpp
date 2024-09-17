@@ -61,8 +61,6 @@ void Network::begin(char * ssid, char * pass)
     }
     Serial.println(F(" connected"));
 
-    // Find internet time
-    setTime();
 }
 
 /**
@@ -181,34 +179,4 @@ bool Network::getData(double *data, char * currency)
     WiFi.setSleep(sleep);
 
     return !f;
-}
-
-/**
- * @brief       Set the internal time with data from NTP server
- * 
- * @returns     None
-*/
-void Network::setTime()
-{
-    // Used for setting correct time
-    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-
-    Serial.print(F("Waiting for NTP time sync: "));
-    time_t nowSecs = time(nullptr);
-    while (nowSecs < 8 * 3600 * 2)
-    {
-        delay(500);
-        Serial.print(F("."));
-        yield();
-        nowSecs = time(nullptr);
-    }
-
-    Serial.println();
-
-    // Used to store time info
-    struct tm timeinfo;
-    gmtime_r(&nowSecs, &timeinfo);
-
-    Serial.print(F("Current time: "));
-    Serial.print(asctime(&timeinfo));
 }
