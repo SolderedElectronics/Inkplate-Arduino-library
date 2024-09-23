@@ -9,6 +9,10 @@
    Inkplate will change content on the screen every 10 seconds and go
    into deep sleep mode after showing three images.
 
+   In order to convert your images into a format compatible with Inkplate
+   use the Soldered Image Converter available at:
+   https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
+
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
    24 November 2022 by soldered.com
@@ -24,9 +28,11 @@
 #include "picture1.h" // Include .h files of 3 pictures. All three pictures were converted using Inkplate Image Converter and have resolution of 212x104 picels
 #include "picture2.h"
 #include "picture3.h" // This are headers in which are saved pictures that needs to be stored in RAM for showing.
-                      // Any picture (in any format) can be converted in this type of header on this link:
-                      // https://solderedelectronics.github.io/Inkplate-image-converter/ just choose settings for your Inkplate
-                      // and additional settings like dither and bit mode.
+                      /* 
+                        In order to convert your images into a format compatible with Inkplate
+                        use the Soldered Image Converter available at:
+                        https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
+                      */
 
 
 Inkplate display; // Create display object

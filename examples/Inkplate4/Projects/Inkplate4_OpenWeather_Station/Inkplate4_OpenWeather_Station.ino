@@ -23,6 +23,10 @@
    4 April 2023 by Soldered
 
    Code for Moonphase and moon fonts taken from here: https://learn.adafruit.com/epaper-weather-station/arduino-setup
+
+   In order to convert your images into a format compatible with Inkplate
+   use the Soldered Image Converter available at:
+   https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

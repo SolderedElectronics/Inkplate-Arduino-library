@@ -38,6 +38,11 @@
 #include "Network.h"
 
 // Include header files
+/*
+    In order to convert your images into a format compatible with Inkplate
+    use the Soldered Image Converter available at:
+    https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
+*/
 #include "youtube_icon.h"
 
 // Delay between API calls in miliseconds (10 minutes)

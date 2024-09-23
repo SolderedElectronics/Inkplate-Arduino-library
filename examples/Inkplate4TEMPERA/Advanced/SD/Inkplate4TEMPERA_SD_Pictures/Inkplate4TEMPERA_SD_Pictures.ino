@@ -14,6 +14,7 @@
 
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
+
    24 July 2023 by Soldered
 */
 

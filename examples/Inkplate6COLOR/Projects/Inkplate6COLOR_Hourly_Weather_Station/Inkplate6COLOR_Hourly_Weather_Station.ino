@@ -15,6 +15,10 @@
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
    28 July 2020 by Soldered
+   
+   In order to convert your images into a format compatible with Inkplate
+   use the Soldered Image Converter available at:
+   https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

@@ -195,27 +195,6 @@ void setTime()
     Serial.print(F("Current time: "));
     Serial.print(asctime(&timeInfo));
 }
-
-// Function for getting time from NTP server
-void setTime()
-{
-    // Structure used to hold time information
-    struct tm timeInfo;
-    time_t nowSec;
-    // Fetch current time in epoch format and store it
-    display.getNTPEpoch(&nowSec);
-    // This loop ensures that the NTP time fetched is valid and beyond a certain threshold
-    while (nowSec < 8 * 3600 * 2)
-    {
-        delay(500);
-        yield();
-        nowSec = time(nullptr);
-    }
-    gmtime_r(&nowSec, &timeInfo);
-    Serial.print(F("Current time: "));
-    Serial.print(asctime(&timeInfo));
-}
-
 void loop()
 {
     // Never here
