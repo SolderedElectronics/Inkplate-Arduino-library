@@ -222,6 +222,11 @@ bool Image::drawBitmapFromWeb(const char *url, int x, int y, bool dither, bool i
         buf = downloadFileHTTPS(url, &defaultLen);
     }
 
+    // Image sometimes doesn't download, so
+    // check if buffer is empty to avoid trying to draw an empty image
+    if (!buf)
+        return 0;
+
     ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
     free(buf);
 
@@ -250,6 +255,11 @@ bool Image::drawBitmapFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dit
 {
     bool ret = 0;
     uint8_t *buf = downloadFile(s, len);
+
+    // Image sometimes doesn't download, so
+    // check if buffer is empty to avoid trying to draw an empty image
+    if (!buf)
+        return 0;
 
     ret = drawBitmapFromBuffer(buf, x, y, dither, invert);
     free(buf);
@@ -520,6 +530,11 @@ bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 150;
     uint8_t *buf = downloadFileHTTPS(url, &defaultLen);
 
+    // Image sometimes doesn't download, so
+    // check if buffer is empty to avoid trying to draw an empty image
+    if (!buf)
+        return 0;
+        
     bitmapHeader bmpHeader;
     readBmpHeader(buf, &bmpHeader);
 

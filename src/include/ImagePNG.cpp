@@ -233,6 +233,8 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
         buf = downloadFileHTTPS(url, &defaultLen);
     }
 
+    // Image sometimes doesn't download, so
+    // check if buffer is empty to avoid trying to draw an empty image
     if (!buf)
         return 0;
 
@@ -280,6 +282,8 @@ bool Image::drawPngFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dither
 
     uint8_t *buff = downloadFile(s, len);
 
+    // Image sometimes doesn't download, so
+    // check if buffer is empty to avoid trying to draw an empty image
     if (!buff)
         return 0;
 
@@ -325,6 +329,8 @@ bool Image::drawPngFromWebAtPosition(const char *url, const Position &position, 
     int32_t defaultLen = E_INK_WIDTH * E_INK_HEIGHT * 4 + 100;
     uint8_t *buff = downloadFile(url, &defaultLen);
 
+    // Image sometimes doesn't download, so
+    // check if buffer is empty to avoid trying to draw an empty image
     if (!buff)
         return 0;
 
