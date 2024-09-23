@@ -534,7 +534,7 @@ bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, 
     // check if buffer is empty to avoid trying to draw an empty image
     if (!buf)
         return 0;
-        
+
     bitmapHeader bmpHeader;
     readBmpHeader(buf, &bmpHeader);
 
