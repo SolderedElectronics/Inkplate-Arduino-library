@@ -52,7 +52,7 @@ void setup()
     // Try connecting to a WiFi network.
     // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
     // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
-    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
+    if (!display.connectWiFi(ssid, password, WIFI_TIMEOUT, true))
     {
         //Can't connect to netowrk
         // Clear display for the error message
