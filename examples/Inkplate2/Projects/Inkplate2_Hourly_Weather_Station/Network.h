@@ -39,8 +39,6 @@ class Network
     time_t dataEpoch = 0;
 
   private:
-    // Functions called from within our class
-    void setTime();
     int timeZone;
 };
 

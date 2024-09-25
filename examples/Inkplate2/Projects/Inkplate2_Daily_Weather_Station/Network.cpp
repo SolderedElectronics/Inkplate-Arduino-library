@@ -101,28 +101,3 @@ int Network::getData(struct forecastWeather *fw, String lat, String lon, String 
     doc.clear();
     return cnt;
 }
-
-void Network::setTime(int timezone, struct tm *timeinfo)
-{
-    // Used for setting correct time
-    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-
-    Serial.print(F("Waiting for NTP time sync: "));
-    time_t nowSecs = time(nullptr);
-    while (nowSecs < 8 * 3600 * 2)
-    {
-        delay(500);
-        Serial.print(F("."));
-        yield();
-        nowSecs = time(nullptr);
-    }
-
-    Serial.println();
-
-    // Used to store time info
-    nowSecs += timezone;
-    gmtime_r(&nowSecs, timeinfo);
-
-    Serial.print(F("Current time: "));
-    Serial.print(asctime(timeinfo));
-}

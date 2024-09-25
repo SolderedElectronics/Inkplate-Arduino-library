@@ -37,6 +37,7 @@
 
 // Delay between API calls in miliseconds
 #define DELAY_MS 3 * 60 * 1000 // Every 3 minutes, minute has 60 seconds and second has 1000 miliseconds
+#define DELAY_WIFI_RETRY_SECONDS 10
 
 Network network; // Create object with all networking functions
 
@@ -113,10 +114,37 @@ void setup()
 
     display.setCursor(10, 10); // Set cursor, custom font uses different method for setting cursor
     // You can find more about that here https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts
-    display.setTextSize(2); // Set size of font in comparison to original 5x7 font
+    display.setTextSize(1); // Set size of font in comparison to original 5x7 font
 
-    // Our begin function
-    network.begin(ssid, pass);
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
+    {
+        // Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(1);
+        // Set the cursor positions and print the text.
+        display.setCursor(0, 0);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.println(F("Please check ssid and pass!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
+
+    // After connecting to WiFi we need to get internet time from NTP server
+    time_t nowSec;
+    struct tm timeInfo;
+    // Fetch current time in epoch format and store it
+    display.getNTPEpoch(&nowSec);
+    gmtime_r(&nowSec, &timeInfo);
+    Serial.print(F("Current time: "));
+    Serial.print(asctime(&timeInfo));
 
     while (!network.getData(data, currency)) // Get data and check if data is successfully fetched
     {

@@ -17,6 +17,10 @@
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: https://forum.soldered.com/
     2 January 2023 by Soldered
+
+    In order to convert your images into a format compatible with Inkplate
+    use the Soldered Image Converter available at:
+    https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -40,6 +44,7 @@ String lon = "18.5947808";
 String apiKey = "";
 
 #define WAKEUP 30 * 60 * 1000 // The time that ESP will be in deep sleep - refresh weather every 30 minutes
+#define DELAY_WIFI_RETRY_SECONDS 10
 
 Inkplate display;
 Network network;
@@ -72,14 +77,39 @@ void setup()
     // Start serial communication
     Serial.begin(115200);
 
-    // Connect Inkplate to the WiFi
-    network.begin(ssid, password);
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(ssid, password, WIFI_TIMEOUT, true))
+    {
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(1);
+        // Set the cursor positions and print the text.
+        display.setCursor(0, 0);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.println(F("Please check ssid and pass!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(100L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
+
+    // After connecting to WiFi we need to get internet time from NTP server
+    time_t nowSec;
+    struct tm timeInfo;
+    // Fetch current time in epoch format and store it
+    display.getNTPEpoch(&nowSec);
+    gmtime_r(&nowSec, &timeInfo);
+    Serial.print(F("Current time: "));
+    Serial.print(asctime(&timeInfo));
 
     // Get data from API
     cnt = network.getData(fw, lat, lon, apiKey, &timezone);
 
-    // Get the current time and store it to the variables declared on the top
-    network.setTime(timezone, &timeinfo);
 
     // Get the first day to display
     day1 = getFirstDay();

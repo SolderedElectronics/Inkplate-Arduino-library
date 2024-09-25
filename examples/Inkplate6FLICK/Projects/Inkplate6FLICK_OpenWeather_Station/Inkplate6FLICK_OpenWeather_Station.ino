@@ -17,6 +17,10 @@
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
 
+   In order to convert your images into a format compatible with Inkplate
+   use the Soldered Image Converter available at:
+   https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
+
    15 March 2024 by Soldered
 */
 
@@ -77,6 +81,8 @@ bool metric = true; //<------------------------------TRUE is METRIC, FALSE is IM
 
 // Delay between API calls
 #define DELAY_MS 59000
+#define DELAY_WIFI_RETRY_SECONDS 5
+#define DELAY_API_RETRY_SECONDS 5
 
 // Inkplate object
 Inkplate display(INKPLATE_1BIT);
@@ -126,28 +132,26 @@ time_t t = now();
 
 void connectWifi()
 {
-
-    int ConnectCount = 20;
-
-    if (WiFi.status() != WL_CONNECTED)
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(SSID, PASS, WIFI_TIMEOUT, true))
     {
-        while (WiFi.status() != WL_CONNECTED)
-        {
-            if (ConnectCount++ == 20)
-            {
-                Serial.println("Connect WiFi");
-                WiFi.begin(SSID, PASS);
-                Serial.print("Connecting.");
-                ConnectCount = 0;
-            }
-            Serial.print(".");
-            delay(1260);
-        }
-        Serial.print("\nConnected to: ");
-        Serial.println(SSID);
-        Serial.println("IP address: ");
-        Serial.println(WiFi.localIP());
-        Serial.println("Connected WiFi");
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(3);
+        // Set the cursor positions and print the text.
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Unable to connect to "));
+        display.println(F(SSID));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
     }
 } //======================== END WIFI CONNECT =======================
 
@@ -268,10 +272,8 @@ void setup()
         display.println("Only older API keys for OneCall 2.5 work in free tier.");
         display.println("See the code comments the example for more info.");
         display.display();
-        while (1)
-        {
-            delay(100);
-        }
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_API_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
     }
     Serial.println("API key is valid!");
 

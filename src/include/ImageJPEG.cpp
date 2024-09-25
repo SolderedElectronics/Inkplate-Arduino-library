@@ -134,6 +134,11 @@ bool Image::drawJpegFromWeb(const char *url, int x, int y, bool dither, bool inv
         buf = downloadFileHTTPS(url, &defaultLen);
     }
 
+    // Image sometimes doesn't download, so
+    // check if buffer is empty to avoid trying to draw an empty image
+    if (!buf)
+        return 0;
+
     ret = drawJpegFromBuffer(buf, defaultLen, x, y, dither, invert);
     free(buf);
 
@@ -171,6 +176,11 @@ bool Image::drawJpegFromWebAtPosition(const char *url, const Position &position,
     {
         buff = downloadFileHTTPS(url, &defaultLen);
     }
+
+    // Image sometimes doesn't download, so
+    // check if buffer is empty to avoid trying to draw an empty image
+    if (!buff)
+        return 0;
 
     uint16_t w = 0;
     uint16_t h = 0;
@@ -288,6 +298,12 @@ bool Image::drawJpegFromWeb(WiFiClient *s, int x, int y, int32_t len, bool dithe
 {
     bool ret = 0;
     uint8_t *buff = downloadFile(s, len);
+
+    // Image sometimes doesn't download, so
+    // check if buffer is empty to avoid trying to draw an empty image
+    if (!buff)
+        return 0;
+
     ret = drawJpegFromBuffer(buff, len, x, y, dither, invert);
     free(buff);
 

@@ -36,8 +36,6 @@ class Network
     bool getData(double *data, char * currency);
 
   private:
-    // Functions called from within our class
-    void setTime();
 };
 
 #endif

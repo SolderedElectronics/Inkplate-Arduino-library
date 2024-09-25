@@ -38,8 +38,6 @@ class Network
     void getHours(char *hour1, char *hour2, char *hour3, char *hour4, int timeZone);
 
   private:
-    // Functions called from within our class
-    void setTime();
 
     // Used for storing retrieved data timestamp
     time_t dataEpoch = 0;

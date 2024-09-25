@@ -44,7 +44,7 @@ void Network::begin(char *ssid, char *pass)
     Serial.println(F(" connected"));
 
     // Find and print internet time, the timezone will be added later
-    setTime();
+    //setTime();
 }
 
 // Gets time from ntp server

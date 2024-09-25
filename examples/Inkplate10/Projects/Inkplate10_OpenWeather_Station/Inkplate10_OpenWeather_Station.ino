@@ -17,6 +17,10 @@
    11 February 2021 by Soldered
 
    Code for Moonphase and moon fonts taken from here: https://learn.adafruit.com/epaper-weather-station/arduino-setup
+
+   In order to convert your images into a format compatible with Inkplate
+   use the Soldered Image Converter available at:
+   https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -77,7 +81,8 @@ bool metric = true; //<------------------------------TRUE is METRIC, FALSE is IM
 
 // Delay between API calls
 #define DELAY_MS 59000
-
+#define DELAY_WIFI_RETRY_SECONDS 10
+#define DELAY_API_RETRY_SECONDS 10
 // Inkplate object
 Inkplate display(INKPLATE_1BIT);
 
@@ -124,40 +129,11 @@ char Output[200] = {0};
 OpenWeatherOneCall OWOC; // Invoke OpenWeather Library
 time_t t = now();
 
-void connectWifi()
-{
-
-    int ConnectCount = 20;
-
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        while (WiFi.status() != WL_CONNECTED)
-        {
-            if (ConnectCount++ == 20)
-            {
-                Serial.println("Connect WiFi");
-                WiFi.begin(SSID, PASS);
-                Serial.print("Connecting.");
-                ConnectCount = 0;
-            }
-            Serial.print(".");
-            delay(1000);
-        }
-        Serial.print("\nConnected to: ");
-        Serial.println(SSID);
-        Serial.println("IP address: ");
-        Serial.println(WiFi.localIP());
-        Serial.println("Connected WiFi");
-    }
-} //======================== END WIFI CONNECT =======================
-
 void GetCurrentWeather()
 {
     //=================================
     // Get the Weather Forecast
     //=================================
-
-    connectWifi();
 
     Serial.println("Getting weather");
     OWOC.parseWeather(APIKEY, NULL, myLatitude, myLongitude, metric, NULL);
@@ -252,6 +228,7 @@ void setup()
     }
     Serial.println("Serial Monitor Initialized");
 
+    //
     display.begin();
 
     // Initial cleaning of buffer and physical screen
@@ -266,7 +243,27 @@ void setup()
     Serial.println("Welcome to Wol Inkplate 10 weather example!");
     display.display();
 
-    connectWifi();
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(SSID, PASS, WIFI_TIMEOUT, true))
+    {
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(3);
+        // Set the cursor positions and print the text.
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Unable to connect to "));
+        display.println(F(SSID));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
 
     // Check if we have a valid API key:
     Serial.println("Checking if API key is valid...");
@@ -281,16 +278,13 @@ void setup()
         display.println("Only older API keys for OneCall 2.5 work in free tier.");
         display.println("See the code comments the example for more info.");
         display.display();
-        while (1)
-        {
-            delay(100);
-        }
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_API_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
     }
     Serial.println("API key is valid!");
 
     // Clear display
     t = now();
-
     if ((minute(t) % 30) == 0) // Also returns 0 when time isn't set
     {
         GetCurrentWeather();

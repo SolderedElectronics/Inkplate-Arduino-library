@@ -55,6 +55,7 @@ int timeZone = 2;
 
 // Delay between API calls
 #define DELAY_MS 1 * 60000
+#define DELAY_WIFI_RETRY_SECONDS 10
 
 // Variables to keep count of when to get new data, and when to just update time
 RTC_DATA_ATTR unsigned int refreshes = 0;
@@ -107,7 +108,29 @@ void setup()
     display.setTextColor(0, 7);
 
     // Connect Inkplate to the WiFi network
-    network.begin(ssid, pass);
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
+    {
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(3);
+        // Set the cursor positions and print the text.
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
+
+    setTime();
 
     // Get the data from Google Calendar
     // Repeat attempts until data is fully downloaded
@@ -140,6 +163,26 @@ void setup()
 void loop()
 {
     // Never here
+}
+
+void setTime()
+{
+    // Structure used to hold time information
+    struct tm timeInfo;
+    // Fetch current time from an NTP server and store it
+    time_t nowSec;
+    // Fetch current time in epoch format and store it
+    display.getNTPEpoch(&nowSec);
+    // This loop ensures that the NTP time fetched is valid and beyond a certain threshold
+    while(nowSec < 8 * 3600 * 2)
+    {
+        delay(500);
+        yield();
+        display.getNTPEpoch(&nowSec);
+    }
+    gmtime_r(&nowSec, &timeInfo);
+    Serial.print(F("Current time: "));
+    Serial.print(asctime(&timeInfo));
 }
 
 // Function for drawing calendar info
@@ -458,8 +501,11 @@ void drawData()
                       &entries[entriesNum].timeStamp);
         }
         ++entriesNum;
+        if(entriesNum == 128)
+        {
+            break;
+        }
     }
-
     // Sort entries by time
     qsort(entries, entriesNum, sizeof(entry), cmp);
 
@@ -468,9 +514,10 @@ void drawData()
     bool clogged[3] = {0};
     int cloggedCount[3] = {0};
 
+    //Serial.println("Displaying events one by one. There is " + String(entriesNum) + " events to display.");
     // Displaying events one by one
     for (int i = 0; i < entriesNum; ++i)
-    {
+    {   
         // If column overflowed just add event to not shown
         if (entries[i].day != -1 && clogged[entries[i].day])
             ++cloggedCount[entries[i].day];
@@ -480,15 +527,16 @@ void drawData()
         // We store how much height did one event take up
         int shift = 0;
         bool s = drawEvent(&entries[i], entries[i].day, columns[entries[i].day] + 64, 1200 - 4, &shift);
-
         columns[entries[i].day] += shift;
 
         // If it overflowed, set column to clogged and add one event as not shown
         if (!s)
         {
+            //Serial.println("Event " + String(i) + " has overflowed.");      
             ++cloggedCount[entries[i].day];
             clogged[entries[i].day] = 1;
         }
+        delay(100);
     }
 
     // Display not shown events info

@@ -17,6 +17,10 @@
    11 February 2021 by Soldered
 
    Code for Moonphase and moon fonts taken from here: https://learn.adafruit.com/epaper-weather-station/arduino-setup
+
+   In order to convert your images into a format compatible with Inkplate
+   use the Soldered Image Converter available at:
+   https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -40,6 +44,8 @@
 #include "OpenWeatherOneCall.h"
 #define SSID ""
 #define PASS ""
+// Variable to store WiFi connection timeout
+int timeoutSeconds = 100;
 
 // Openweather API key
 /**
@@ -77,6 +83,8 @@ bool metric = true; //<------------------------------TRUE is METRIC, FALSE is IM
 
 // Delay between API calls
 #define DELAY_MS 59000
+#define DELAY_WIFI_RETRY_SECONDS 5
+#define DELAY_API_RETRY_SECONDS 5
 
 // Inkplate object
 Inkplate display(INKPLATE_1BIT);
@@ -123,33 +131,6 @@ char Output[200] = {0};
 
 OpenWeatherOneCall OWOC; // Invoke OpenWeather Library
 time_t t = now();
-
-void connectWifi()
-{
-
-    int ConnectCount = 20;
-
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        while (WiFi.status() != WL_CONNECTED)
-        {
-            if (ConnectCount++ == 20)
-            {
-                Serial.println("Connect WiFi");
-                WiFi.begin(SSID, PASS);
-                Serial.print("Connecting.");
-                ConnectCount = 0;
-            }
-            Serial.print(".");
-            delay(1260);
-        }
-        Serial.print("\nConnected to: ");
-        Serial.println(SSID);
-        Serial.println("IP address: ");
-        Serial.println(WiFi.localIP());
-        Serial.println("Connected WiFi");
-    }
-} //======================== END WIFI CONNECT =======================
 
 void GetCurrentWeather()
 {
@@ -250,36 +231,64 @@ void setup()
     }
     Serial.println("Serial Monitor Initialized");
 
-    // Uncomment this line if you have a USB Power Only Inkplate6PLUS
-    // Must be called before display.begin()!
-    //display.setInkplatePowerMode(INKPLATE_USB_PWR_ONLY);
+    //
     display.begin();
 
-    connectWifi();
+    // Initial cleaning of buffer and physical screen
+    display.clearDisplay();
+    display.display();
+
+    // Welcome screen
+    display.setCursor(215, 400);
+    display.setTextSize(3);
+    display.print(F("Welcome to Wol Inkplate 6PLUS weather example!"));
+    display.display();
+    Serial.println("Welcome to Wol Inkplate 6PLUS weather example!");
+    display.display();
+
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(SSID, PASS, timeoutSeconds, true))
+    {
+        // Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(3);
+        // Set the cursor positions and print the text.
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Unable to connect to "));
+        display.println(F(SSID));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1260L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
 
     // Check if we have a valid API key:
     Serial.println("Checking if API key is valid...");
-    if(!checkIfAPIKeyIsValid(APIKEY))
+    if (!checkIfAPIKeyIsValid(APIKEY))
     {
         // If we don't, notify the user
         Serial.println("API key is invalid!");
         display.clearDisplay();
-        display.setCursor(0,0);
+        display.setCursor(0, 0);
         display.setTextSize(2);
         display.println("Can't get data from OpenWeatherMaps! Check your API key!");
         display.println("Only older API keys for OneCall 2.5 work in free tier.");
         display.println("See the code comments the example for more info.");
+        // Display the error message on the Inkplate and go to deep sleep
         display.display();
-        while(1)
-        {
-            delay(100);
-        }
+        esp_sleep_enable_timer_wakeup(1260L * DELAY_API_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
     }
     Serial.println("API key is valid!");
 
     // Clear display
     t = now();
-
     if ((minute(t) % 30) == 0) // Also returns 0 when time isn't set
     {
         GetCurrentWeather();
@@ -302,11 +311,10 @@ void setup()
     {
     }
 
-    ++refreshes;
-
     // Go to sleep before checking again
+    ++refreshes;
     esp_sleep_enable_timer_wakeup(1260L * DELAY_MS);
-    (void)esp_light_sleep_start();
+    (void)esp_deep_sleep_start();
 }
 
 void loop()
@@ -583,7 +591,7 @@ bool checkIfAPIKeyIsValid(char *APIKEY)
     bool failed = false;
 
     // Create the buffer for holding the API response, make it large enough just in case
-    char * data;
+    char *data;
     data = (char *)ps_malloc(50000LL);
 
     // Http object used to make GET request
@@ -593,7 +601,7 @@ bool checkIfAPIKeyIsValid(char *APIKEY)
     http.getStream().setNoDelay(true);
 
     // Combine the base URL and the API key to do a test call
-    char * baseURL = "https://api.openweathermap.org/data/2.5/onecall?lat=45.560001&lon=18.675880&units=metric&appid=";
+    char *baseURL = "https://api.openweathermap.org/data/2.5/onecall?lat=45.560001&lon=18.675880&units=metric&appid=";
     char apiTestURL[200];
     sprintf(apiTestURL, "%s%s", baseURL, APIKEY);
 
@@ -601,7 +609,7 @@ bool checkIfAPIKeyIsValid(char *APIKEY)
     http.begin(apiTestURL);
 
     delay(300);
-    
+
     // Download data until it's a verified complete download
     // Actually do request
     int httpCode = http.GET();
@@ -624,7 +632,8 @@ bool checkIfAPIKeyIsValid(char *APIKEY)
         data[n++] = 0;
 
         // If the reply constains this string - it's invalid
-        if(strstr(data, "Invalid API key.") != NULL) failed = true;
+        if (strstr(data, "Invalid API key.") != NULL)
+            failed = true;
     }
     else
     {

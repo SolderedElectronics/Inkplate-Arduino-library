@@ -43,8 +43,6 @@ void Network::begin(char *ssid, char *pass)
     }
     Serial.println(F(" connected"));
 
-    // Find and print internet time, the timezone will be added later
-    setTime();
 }
 
 // Gets time from ntp server
@@ -141,30 +139,4 @@ bool Network::getData(char *calendarURL, char *data)
     http.end();
 
     return !f;
-}
-
-// Find internet time
-void Network::setTime()
-{
-    // Used for setting correct time
-    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-
-    Serial.print(F("Waiting for NTP time sync: "));
-    time_t nowSecs = time(nullptr);
-    while (nowSecs < 8 * 3600 * 2)
-    {
-        delay(500);
-        Serial.print(F("."));
-        yield();
-        nowSecs = time(nullptr);
-    }
-    Serial.println();
-
-    // Used to store time info
-    struct tm timeinfo;
-    gmtime_r(&nowSecs, &timeinfo);
-
-    // Print the current time without adding a timezone
-    Serial.print(F("Current time: "));
-    Serial.print(asctime(&timeinfo));
 }

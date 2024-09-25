@@ -15,6 +15,10 @@
    Want to learn more about Inkplate? Visit www.inkplate.io
    Looking to get support? Write on our forums: https://forum.soldered.com/
    5 April 2022 by e-radionica.com
+
+   In order to convert your images into a format compatible with Inkplate
+   use the Soldered Image Converter available at:
+   https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -34,6 +38,7 @@
 
 // Delay between API calls, about 1000000 per month, which is the free tier limit
 #define DELAY_MS 267800L
+#define DELAY_WIFI_RETRY_SECONDS 10
 
 // Inkplate object
 Inkplate display;
@@ -97,8 +102,36 @@ void setup()
     // Initial cleaning of buffer and physical screen
     display.clearDisplay();
 
-    // Calling our begin from network.h file
-    network.begin(ssid, pass);
+    // Connect Inkplate to the WiFi network
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
+    {
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(1);
+        // Set the cursor positions and print the text.
+        display.setCursor(0, 0);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
+
+    // After connecting to WiFi we need to get internet time from NTP server
+    time_t nowSec;
+    struct tm timeInfo;
+    // Fetch current time in epoch format and store it
+    display.getNTPEpoch(&nowSec);
+    gmtime_r(&nowSec, &timeInfo);
+    Serial.print(F("Current time: "));
+    Serial.print(asctime(&timeInfo));
 
     // Clear display
     display.clearDisplay();

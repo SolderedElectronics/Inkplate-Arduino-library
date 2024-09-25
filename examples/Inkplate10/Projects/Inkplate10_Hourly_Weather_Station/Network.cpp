@@ -53,9 +53,6 @@ void Network::begin(char *city)
     }
     Serial.println(F(" connected"));
 
-    // Find internet time
-    setTime();
-
     // reduce power by making WiFi module sleep
     WiFi.setSleep(1);
 }
@@ -227,31 +224,6 @@ bool Network::getData(char *city, char *temp1, char *temp2, char *temp3, char *t
     return !f;
 }
 
-void Network::setTime()
-{
-    // Used for setting correct time
-    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-
-    Serial.print(F("Waiting for NTP time sync: "));
-    time_t nowSecs = time(nullptr);
-    while (nowSecs < 8 * 3600 * 2)
-    {
-        // Print a dot every half a second while time is not set
-        delay(500);
-        Serial.print(F("."));
-        yield();
-        nowSecs = time(nullptr);
-    }
-
-    Serial.println();
-
-    // Used to store time info
-    struct tm timeinfo;
-    gmtime_r(&nowSecs, &timeinfo);
-
-    Serial.print(F("Current time: "));
-    Serial.print(asctime(&timeinfo));
-}
 
 void Network::getHours(char *hour1, char *hour2, char *hour3, char *hour4)
 {

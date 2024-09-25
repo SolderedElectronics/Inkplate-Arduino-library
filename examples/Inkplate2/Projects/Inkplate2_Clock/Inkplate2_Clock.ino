@@ -42,7 +42,7 @@ int timeZone = 2;
 // Put in your ssid and password
 char ssid[] = "";
 char pass[] = "";
-
+#define DELAY_WIFI_RETRY_SECONDS 10
 //----------------------------------
 
 // Bitmaps for 7 segment display. Converted using Inkplate Image Converter https://inkplate.io/home/image-converter/
@@ -63,6 +63,8 @@ char pass[] = "";
 // Array for digital display 7 segment numbers bitmaps
 const uint8_t *numbers[] = {zero, one, two, three, four, five, six, seven, eight, nine};
 
+time_t timeEpoch; // Variable to store epoch
+
 struct tm t; // Structure that contains time info
 
 void setup()
@@ -76,8 +78,29 @@ void setup()
     display.setTextColor(INKPLATE2_BLACK, INKPLATE2_WHITE);
 
     // Our begin function
-    network.begin(ssid, pass);
+    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
+    {
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(1);
+        // Set the cursor positions and print the text.
+        display.setCursor(0, 0);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
 
+    // Get the correct epoch from NTP server
+    Serial.println("Getting time...");
+    display.getNTPEpoch(&timeEpoch, timeZone);
+    Serial.println(gmtime_r(&timeEpoch, &t));
+    
     drawTime(); // Call function drawTime
 
     display.display(); // Display content from buffer on Inkplate

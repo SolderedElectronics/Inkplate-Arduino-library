@@ -36,6 +36,7 @@ char apiKey[] = ""; // You can obtain one here: https://newsapi.org/
 // Here is set to 1 call per hour, but if you want to change it, have in mind that in the free plan there are only 100
 // free API calls
 #define DELAY_MS 60 * 60 * 1000
+#define DELAY_WIFI_RETRY_SECONDS 5
 
 //-------------------------------------
 
@@ -64,8 +65,28 @@ void setup()
     display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
     display.setTextWrap(false);
 
-    // Our begin function
-    network.begin(ssid, pass);
+    // Connect Inkplate to the WiFi network
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
+    {
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(3);
+        // Set the cursor positions and print the text.
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
 
     // Pointer to the struct that will hold all news data
     struct news *entities = NULL;
