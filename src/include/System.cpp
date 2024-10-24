@@ -314,6 +314,7 @@ uint32_t System::rtcGetEpoch()
     _t.tm_wday = rtcBcdToDec(Wire.read() & 0x07);
     _t.tm_mon = rtcBcdToDec(Wire.read() & 0x1F) - 1;
     _t.tm_year = rtcBcdToDec(Wire.read()) + 2000 - 1900;
+    _t.tm_isdst = -1; // we don't know dst state, so attempt to guess
     Wire.endTransmission();
 
     return (uint32_t)(mktime(&_t));
