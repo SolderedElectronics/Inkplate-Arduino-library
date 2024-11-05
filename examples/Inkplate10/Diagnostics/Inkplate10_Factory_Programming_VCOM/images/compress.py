@@ -32,8 +32,8 @@ def create_cpp_array(data, variable_name='compressed_data'):
     return cpp_array
 
 def main():
-    input_file = 'slide02_cropped.h'
-    output_file = 'compressed_data.h'
+    input_file = 'slide_02_uncompresed.h'
+    output_file = 'slide_02.h'
 
     # Check if input file exists
     if not os.path.isfile(input_file):
