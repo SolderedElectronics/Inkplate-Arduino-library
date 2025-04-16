@@ -37,7 +37,7 @@ float longitude = 18.6955; // Longitude of the city
 
 bool metricUnits = true;  // set this to false if you wish to use Imperial units
 
-String ntpServer = "pool.ntp.org";  // in case you want to use a different one
+const char* ntpServer = "pool.ntp.org";  // in case you want to use a different one
 
 // --- Device and Data Objects ---
 Inkplate inkplate(INKPLATE_3BIT); // Create Inkplate display object (3-bit mode for partial grayscale)
