@@ -19,18 +19,13 @@
 
   Units:
   By default, the app uses the metric system.
-  To switch to Imperial units, change the following line in setup():
-      userInfo.useMetric = true;
-  to:
-      userInfo.useMetric = false;
+  To switch to Imperial units, change the metricUnits to "bool metricUnits = false;"
 */
-
-
-#include "includes.h" // Include necessary libraries and dependencies for Inkplate and networking
+#include "src/includes.h" // Include necessary libraries and dependencies for Inkplate and networking
 
 // --- WiFi Configuration ---
-const char *ssid = "Soldered";
-const char *password = "dasduino";
+const char *ssid = "Soldered-testingPurposes";
+const char *password = "Testing443";
 
 // --- User and Location Info ---
 String myUsername = "Username"; // User's name to be displayed on screen
@@ -40,96 +35,20 @@ int timeZone =
 float latitude = 45.5550;  // Latitude of the city
 float longitude = 18.6955; // Longitude of the city
 
+bool metricUnits = true;  // set this to false if you wish to use Imperial units
+
+String ntpServer = "pool.ntp.org";  // in case you want to use a different one
+
 // --- Device and Data Objects ---
 Inkplate inkplate(INKPLATE_3BIT); // Create Inkplate display object (3-bit mode for partial grayscale)
 Network network;                  // Network utility for weather fetching
 Network::UserInfo userInfo;       // Structure to hold user and device info (battery, last updated, etc.)
 WeatherData weatherData;          // Structure to hold fetched weather data
+Gui gui(inkplate);                // Drawing visuals and info
 
 // --- Deep Sleep Configuration ---
 #define uS_TO_S_FACTOR 1000000 // Convert microseconds to seconds
 #define TIME_TO_SLEEP  1800    // Sleep time: 1800 seconds = 30 minutes
-
-// --- UI Drawing: Background Layout ---
-void drawBackground()
-{
-    // Draw main weather info section
-    inkplate.fillRect(25, 25, 800, 200, 5);
-    inkplate.drawRect(25, 25, 800, 200, 0);
-
-    // Draw section for user details and system info
-    inkplate.fillRect(775, 25, 400, 200, 0);
-
-    // Section for extra details (sunrise, wind, etc.)
-    inkplate.fillRect(25, 225, 350, 420, 0);
-
-    // Graph area for hourly temperature and precipitation
-    inkplate.fillRect(375, 225, 800, 420, 5);
-    inkplate.drawRect(375, 225, 800, 420, 0);
-
-    // Weekly forecast section
-    inkplate.fillRect(375, 645, 800, 150, 0);
-
-    // Day/Night section will be drawn later dynamically
-}
-
-// --- Map Weather Code to Icon ---
-const uint8_t *getWeatherIcon(int code)
-{
-    // Open-Meteo specific weather codes
-    switch (code)
-    {
-    case 0:
-        return icon_s_clear_sky;
-    case 1:
-    case 2:
-    case 3:
-        return icon_s_partly_cloudy;
-    case 45:
-    case 48:
-        return icon_s_fog;
-    case 51:
-    case 53:
-    case 55:
-    case 56:
-    case 57:
-    case 61:
-    case 63:
-    case 65:
-    case 66:
-    case 67:
-    case 80:
-    case 81:
-    case 82:
-        return icon_s_rain;
-    case 71:
-    case 73:
-    case 75:
-    case 77:
-    case 85:
-    case 86:
-        return icon_s_snow;
-    case 95:
-    case 96:
-    case 99:
-        return icon_s_storm;
-    default:
-        return icon_s_gray; // Unknown or fallback case
-    }
-}
-
-// --- Map Battery Level to Icon ---
-const uint8_t *getBatteryIcon(int percentage)
-{
-    if (percentage >= 75)
-        return icon_s_full_battery;
-    else if (percentage >= 50)
-        return icon_s_high_battery;
-    else if (percentage >= 25)
-        return icon_s_half_battery;
-    else
-        return icon_s_low_battery;
-}
 
 // --- Main Setup: Runs Once on Boot ---
 void setup()
@@ -151,24 +70,16 @@ void setup()
     // If WiFi failed, display error message
     if (!connected)
     {
-        inkplate.clearDisplay();
-        inkplate.setTextColor(0);
-        inkplate.setFont(&FreeSans18pt7b);
-        inkplate.setCursor(50, 150);
-        inkplate.print("WiFi connection failed.");
-        inkplate.setCursor(50, 200);
-        inkplate.print("Check credentials or try again.");
-        inkplate.display();
+        gui.wifiError();
     }
     else
     {
-        configTime(timeZone * 3600, 0, "pool.ntp.org"); // Set local time via NTP server
+        configTime(timeZone * 3600, 0, ntpServer); // Set local time via NTP server
         // Gather battery and city info
         userInfo.voltage = inkplate.readBattery();
         userInfo.city = myCity;
-
-        // set this to false if you wish to use Imperial
-        userInfo.useMetric = true;
+        userInfo.username = myUsername;
+        userInfo.useMetric = metricUnits;
 
         // Fetch weather data for specified coordinates
         network.fetchWeatherData(&weatherData, &userInfo, &latitude, &longitude);
@@ -176,20 +87,13 @@ void setup()
         // Display if weather API call fails
         if (userInfo.apiError)
         {
-            inkplate.clearDisplay();
-            inkplate.setTextColor(0);
-            inkplate.setFont(&FreeSans18pt7b);
-            inkplate.setCursor(50, 150);
-            inkplate.print("HTTP request failed.");
-            inkplate.setCursor(50, 200);
-            inkplate.print("Check API URL or try again.");
-            inkplate.display();
+            gui.apiError();
         }
         else
         {
             // Success: draw UI and data
-            drawBackground();
-            displayWeatherData();
+            gui.drawBackground();
+            gui.displayWeatherData(&weatherData, &userInfo);
         }
     }
 
@@ -204,301 +108,3 @@ void loop()
     // Nothing to do here - main logic runs once in setup()
 }
 
-// --- Draw Temperature & Precipitation Graph ---
-void drawTemperaturePrecipGraph()
-{
-    // Layout values for graph placement
-    int graphX = 425;
-    int graphY = 280;
-    int graphWidth = 700;
-    int graphHeight = 360;
-
-    inkplate.setCursor(400, 275);
-    inkplate.setFont(&FreeSans12pt7b);
-    inkplate.setTextColor(0);
-    inkplate.print("Hourly temperature and precipitation");
-
-    int marginX = 40;
-    int marginY = 40;
-    int chartLeft = graphX + marginX;
-    int chartBottom = graphY + graphHeight - marginY;
-    int chartTop = graphY + marginY;
-    float actualTempMin = 100, actualTempMax = -100;
-    float precipMax = 100;
-
-    // Find actual min/max for temperature and precipitation
-    for (int i = 0; i < 6; i++)
-    {
-        if (weatherData.hourlyTemps[i] < actualTempMin)
-            actualTempMin = weatherData.hourlyTemps[i];
-        if (weatherData.hourlyTemps[i] > actualTempMax)
-            actualTempMax = weatherData.hourlyTemps[i];
-    }
-
-    // Add padding but ensure min temperature doesn't go below zero (or another reasonable value)
-    float paddedTempMin = actualTempMin - 2;
-    float paddedTempMax = actualTempMax + 2;
-
-    // Calculate the mid temperature as the average of min and max
-    float paddedTempMid = (paddedTempMin + paddedTempMax) / 2;
-
-    float tempRange = paddedTempMax - paddedTempMin;
-    if (tempRange == 0)
-        tempRange = 1; // Avoid division by zero
-    float xStep = (graphWidth - 2 * marginX) / 5.0;
-
-    // Draw axes
-    inkplate.drawLine(chartLeft, chartTop, chartLeft, chartBottom, 0);                   // Y-axis
-    inkplate.drawLine(chartLeft, chartBottom, graphX + graphWidth + 20, chartBottom, 0); // X-axis
-
-    // Calculate Y positions for min, mid, and max temperatures
-    int yMin = chartBottom - ((paddedTempMin - paddedTempMin) / tempRange) * (graphHeight - 2 * marginY);
-    int yMax = chartBottom - ((paddedTempMax - paddedTempMin) / tempRange) * (graphHeight - 2 * marginY);
-    int yMid = chartBottom - ((paddedTempMid - paddedTempMin) / tempRange) * (graphHeight - 2 * marginY);
-
-    // Ensure at least 20px gap between the min, mid, and max temperature labels
-    if (abs(yMax - yMin) < 20)
-    {
-        int offset = 20 - abs(yMax - yMin); // Calculate the gap required
-        yMax = yMin + offset;               // Adjust the max label position to create the gap
-    }
-
-    if (abs(yMid - yMin) < 20)
-    {
-        int offset = 20 - abs(yMid - yMin); // Calculate the gap required
-        yMid = yMin + offset;               // Adjust the mid label position to create the gap
-    }
-
-    if (abs(yMax - yMid) < 20)
-    {
-        int offset = 20 - abs(yMax - yMid); // Calculate the gap required
-        yMax = yMid + offset;               // Adjust the max label position to create the gap
-    }
-
-    // Draw the temperature labels (Min, Mid, and Max)
-    inkplate.setFont(&FreeSans9pt7b);
-    inkplate.setTextColor(0);
-
-    // Draw Min temperature label
-    inkplate.setCursor(chartLeft - 70, yMin - 20);
-    inkplate.print(paddedTempMin, 1); // Show temperature with 1 decimal place
-    inkplate.print(userInfo.temperatureLabel);
-
-    // Draw Mid temperature label
-    inkplate.setCursor(chartLeft - 70, yMid);
-    inkplate.print(paddedTempMid, 1); // Show temperature with 1 decimal place
-    inkplate.print(userInfo.temperatureLabel);
-
-    // Draw Max temperature label
-    inkplate.setCursor(chartLeft - 70, yMax + 20);
-    inkplate.print(paddedTempMax, 1); // Show temperature with 1 decimal place
-    inkplate.print(userInfo.temperatureLabel);
-
-    // Draw precipitation bars
-    for (int i = 0; i < 6; i++)
-    {
-        int x = chartLeft + i * xStep;
-        int barHeight = (precipMax > 0) ? (weatherData.hourlyPrecip[i] / precipMax) * (graphHeight - 2 * marginY) : 0;
-        int y = chartBottom - barHeight;
-
-        // Draw the precipitation bar
-        inkplate.fillRect(x + 5, y + 10, 10, barHeight - 10, 4);
-
-        // Draw precipitation value on top of the bar
-        inkplate.setCursor(x + 5, y - 5);
-        inkplate.print(weatherData.hourlyPrecip[i], 0); // Show precipitation with 1 decimal place
-        inkplate.print("%");
-    }
-
-    // Draw temperature line
-    for (int i = 0; i < 5; i++)
-    {
-        int x1 = chartLeft + i * xStep;
-        int x2 = chartLeft + (i + 1) * xStep;
-
-        int y1 = chartBottom - ((weatherData.hourlyTemps[i] - paddedTempMin) / tempRange) * (graphHeight - 2 * marginY);
-        int y2 =
-            chartBottom - ((weatherData.hourlyTemps[i + 1] - paddedTempMin) / tempRange) * (graphHeight - 2 * marginY);
-
-        inkplate.drawLine(x1, y1, x2, y2, 0);
-    }
-
-    // Time labels under X-axis
-    inkplate.setTextColor(0);
-    for (int i = 0; i < 6; i++)
-    {
-        int x = chartLeft + i * xStep;
-        inkplate.setCursor(x + 3, chartBottom + 20);
-        inkplate.print(weatherData.hourlyTimes[i]);
-    }
-}
-
-// --- Display All Weather Data ---
-void displayWeatherData()
-{
-
-    // Section 1: Main info
-    inkplate.setFont(&FreeSansBold24pt7b);
-    inkplate.setTextColor(0);
-
-    inkplate.drawBitmap(40, 40, icon_s_gray, 48, 48, 0);
-    inkplate.setCursor(110, 75);
-    inkplate.print(myCity);
-
-    inkplate.setFont(&FreeSans18pt7b);
-    inkplate.drawBitmap(40, 100, icon_s_thermometer, 48, 48, 0);
-    inkplate.setCursor(110, 135);
-    inkplate.print(weatherData.currentTemp);
-    inkplate.print(userInfo.temperatureLabel);
-
-    inkplate.drawBitmap(40, 160, getWeatherIcon(weatherData.weatherCode), 48, 48, 0);
-    inkplate.setCursor(110, 200);
-    inkplate.println(weatherData.weatherDescription);
-
-    // Section 2: User Info and Battery
-    inkplate.setFont(&FreeSans12pt7b);
-    inkplate.setTextColor(7);
-
-    int yUser = 55;
-
-    inkplate.drawBitmap(800, 25, getBatteryIcon(userInfo.batteryLevel), 48, 48, 7);
-
-    inkplate.setCursor(850, yUser);
-    inkplate.print(userInfo.batteryLevel);
-    inkplate.println("%");
-
-    yUser += 50;
-    inkplate.setCursor(800, yUser);
-    inkplate.println(userInfo.lastUpdatedDate);
-
-    yUser += 50;
-    inkplate.setCursor(800, yUser);
-    inkplate.print("Last refresh: ");
-    inkplate.println(userInfo.lastUpdatedTime);
-
-    yUser += 50;
-    inkplate.setCursor(800, yUser);
-    inkplate.println(myUsername);
-
-    // Section 3: Additional Info (feels like, wind, etc.)
-    inkplate.setFont(&FreeSans12pt7b);
-    inkplate.setTextColor(7);
-
-    int y = 275;
-    int xPos = 50;
-
-    inkplate.setCursor(xPos, y);
-    inkplate.print("Feels like: ");
-    inkplate.print(weatherData.feelsLike);
-    inkplate.print(userInfo.temperatureLabel);
-
-    y += 65;
-    inkplate.setCursor(xPos, y);
-    inkplate.print("Sunrise: ");
-    inkplate.println(weatherData.sunrise);
-
-    y += 65;
-    inkplate.setCursor(xPos, y);
-    inkplate.print("Sunset: ");
-    inkplate.println(weatherData.sunset);
-
-    y += 65;
-    inkplate.setCursor(xPos, y);
-    inkplate.print("UV index: ");
-    inkplate.println(weatherData.uvIndex);
-
-    y += 65;
-    inkplate.setCursor(xPos, y);
-    inkplate.print("Wind: ");
-    inkplate.print(weatherData.windSpeed);
-    inkplate.print(userInfo.speedLabel);
-
-    y += 65;
-    inkplate.setCursor(xPos, y);
-    inkplate.print("Precipitation: ");
-    inkplate.print(weatherData.precipitation);
-    inkplate.print(" %");
-
-    // Section 4: Weekly Forecast
-    inkplate.setTextColor(7);
-
-    int startX = 385;                      // Starting x-position for the weekly forecast
-    int startY = 675;                      // Starting y-position for the weekly forecast
-    int iconSize = 48;                     // Size of the icon
-    int margin = 5;                        // Margin between elements
-    int dayWidth = iconSize + margin + 63; // Space for icon + margin + text width
-
-    // Loop through the 7-day forecast and display each day
-    for (int i = 0; i < 7; i++)
-    {
-        inkplate.setFont(&FreeSans12pt7b);
-        int xPos = startX + i * dayWidth;
-
-        // Day name
-        inkplate.setCursor(xPos + 15, startY);
-        inkplate.setTextColor(7);
-        inkplate.print(weatherData.dailyNames[i]);
-
-        // Weather icon
-        inkplate.setFont(&FreeSans9pt7b);
-        inkplate.drawBitmap(xPos + 15, startY + 20, getWeatherIcon(weatherData.dailyWeatherCodes[i]), iconSize,
-                            iconSize, 7);
-        int tempYStart = startY + 20 + iconSize + margin + 5;
-
-        // === Max Temp - Up Arrow Triangle ===
-        int arrowX = xPos;
-        int arrowY = tempYStart + 5;
-        // Triangle pointing up
-        inkplate.fillTriangle(arrowX, arrowY,         // bottom center
-                              arrowX - 4, arrowY + 6, // bottom left
-                              arrowX + 4, arrowY + 6, // bottom right
-                              7                       // white color
-        );
-        // Max temp text next to it
-        inkplate.setCursor(arrowX + 10, arrowY + 6);
-        inkplate.print(weatherData.dailyMaxTemp[i]);
-        inkplate.print(userInfo.temperatureLabel);
-        // === Min Temp - Down Arrow Triangle ===
-        arrowY += 20;
-        // Triangle pointing down
-        inkplate.fillTriangle(arrowX, arrowY + 6, // top center
-                              arrowX - 4, arrowY, // bottom left
-                              arrowX + 4, arrowY, // bottom right
-                              7                   // white color
-        );
-        // Min temp text next to it
-        inkplate.setCursor(arrowX + 10, arrowY + 6);
-        inkplate.print(weatherData.dailyMinTemp[i]);
-        inkplate.print(userInfo.temperatureLabel);
-    }
-
-    // Section 5: Day or Night indicator
-    int iconX = 100;
-    int iconY = 700;
-    if (weatherData.isDay)
-    {
-        inkplate.fillRect(25, 645, 350, 150, 5);
-        inkplate.drawRect(25, 645, 350, 150, 0);
-        inkplate.drawBitmap(iconX, iconY, icon_s_clear_sky, 48, 48, 0);
-        inkplate.setCursor(iconX + 60, iconY + 35);
-        inkplate.setTextColor(0);
-        inkplate.setFont(&FreeSans12pt7b);
-        inkplate.print("Daytime");
-    }
-    else
-    {
-        inkplate.fillRect(25, 645, 350, 150, 0);
-        inkplate.drawRect(25, 645, 350, 150, 5);
-        inkplate.drawBitmap(iconX, iconY, icon_s_moon, 48, 48, 7);
-        inkplate.setCursor(iconX + 60, iconY + 35);
-        inkplate.setTextColor(7);
-        inkplate.setFont(&FreeSans12pt7b);
-        inkplate.print("Nighttime");
-    }
-
-    // Section 6: Graph info
-    drawTemperaturePrecipGraph();
-
-    // Finalize drawing
-    inkplate.display();
-}
