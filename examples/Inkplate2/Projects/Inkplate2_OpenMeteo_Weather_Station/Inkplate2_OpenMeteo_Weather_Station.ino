@@ -48,7 +48,7 @@ Gui gui(inkplate);                // Drawing visuals and info
 
 // --- Deep Sleep Configuration ---
 #define uS_TO_S_FACTOR 1000000 // Convert microseconds to seconds
-#define TIME_TO_SLEEP  120   // Sleep time: 1800 seconds = 30 minutes
+#define TIME_TO_SLEEP  600   // Sleep time: 600 seconds = 10 minutes
 
 // Add this above setup()
 RTC_DATA_ATTR int bootCount = 0; // This variable persists across deep sleep resets
