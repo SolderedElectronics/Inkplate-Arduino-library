@@ -1,5 +1,5 @@
 /*
-Inkplate10_Google_Calendar for Soldered Inkplate 10
+Inkplate6FLICK_Google_Calendar for Soldered Inkplate 6FLICK
 
 Getting Started:
 For setup and documentation, visit: https://inkplate.readthedocs.io/en/latest/
