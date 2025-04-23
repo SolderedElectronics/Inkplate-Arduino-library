@@ -1,6 +1,6 @@
 /*
-  Inkplate6FLICK OpenMeteo Weather Station Example
-  Compatible with Soldered Inkplate 6 Flick
+  Inkplate5V2 OpenMeteo Weather Station Example
+  Compatible with Soldered Inkplate 5V2
 
   Getting Started:
   For setup and documentation, visit: https://inkplate.readthedocs.io/en/latest/
