@@ -397,9 +397,9 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
     // Create a new WiFiClientSecure for a new connection
     client = (WiFiClientSecure *)ps_malloc(sizeof(WiFiClientSecure));
     client = new WiFiClientSecure();
-    if(this->certificate)
+    if (this->certificate)
     {
-        client->setCACert(certificate); //Save the certificate if the user has defined it
+        client->setCACert(certificate); // Save the certificate if the user has defined it
     }
     else
     {
@@ -623,7 +623,7 @@ void NetworkClient::setFollowRedirects(followRedirects_t f)
  * @returns     None
  *
  */
-void NetworkClient::applyCertificate(const char* certificate)
+void NetworkClient::applyCertificate(const char *certificate)
 {
-    this->certificate=strdup(certificate);
+    this->certificate = strdup(certificate);
 }
