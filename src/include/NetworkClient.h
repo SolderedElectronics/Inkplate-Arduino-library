@@ -25,6 +25,7 @@
 #include "WiFiClientSecure.h"
 #include "WiFiMulti.h"
 #include "defines.h"
+#include <string.h>
 #include "time.h"
 
 /**
@@ -62,6 +63,7 @@ class NetworkClient
     uint8_t *downloadFile(const char *url, int32_t *defaultLen);
     uint8_t *downloadFileHTTPS(const char *url, int32_t *defaultLen);
     uint8_t *downloadFile(WiFiClient *url, int32_t len);
+    void applyCertificate(const char* certificate);
 
     // The default parameters for nptServer here are cast to (char*) to keep the compiler happy
     bool getNTPEpoch(time_t *timeEpoch, int timeZone = 0, char *ntpServer = (char *)"pool.ntp.org",
@@ -76,6 +78,7 @@ class NetworkClient
     followRedirects_t followRedirects;
     char *getHostFromURL(const char *urlToGetHostFrom);
     char *getPathToResourceFromURL(const char *urlToGetPathToResourceFrom);
+    char *certificate;
 };
 
 #endif
