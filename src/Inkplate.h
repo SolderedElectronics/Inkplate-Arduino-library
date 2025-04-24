@@ -108,7 +108,7 @@ class Inkplate : public System, public Graphics
     {
         return NetworkClient::isConnected();
     };
-    void applyHttpsCertificate(const char* certificate)
+    void applyHttpsCertificate(const char *certificate)
     {
         return NetworkClient::applyHttpsCertificate(certificate);
     };
