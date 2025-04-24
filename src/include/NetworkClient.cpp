@@ -623,7 +623,7 @@ void NetworkClient::setFollowRedirects(followRedirects_t f)
  * @returns     None
  *
  */
-void NetworkClient::applyCertificate(const char *certificate)
+void NetworkClient::applyHttpsCertificate(const char *certificate)
 {
     this->certificate = strdup(certificate);
 }
