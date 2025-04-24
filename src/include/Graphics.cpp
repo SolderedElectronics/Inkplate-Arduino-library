@@ -277,25 +277,25 @@ int16_t Graphics::height()
 /**
  * @brief       Draws a text box with optional border and word-wrapped content
  *
- * @param       int16_t x0  
+ * @param       int16_t x0
  *              Top-left x-coordinate of the text box
- * @param       int16_t y0  
+ * @param       int16_t y0
  *              Top-left y-coordinate of the text box
- * @param       int16_t x1  
+ * @param       int16_t x1
  *              Bottom-right x-coordinate of the text box
- * @param       int16_t y1  
+ * @param       int16_t y1
  *              Bottom-right y-coordinate of the text box
- * @param       const char* text  
+ * @param       const char* text
  *              The null-terminated string to be rendered inside the box
- * @param       uint16_t textSizeMultiplier  
+ * @param       uint16_t textSizeMultiplier
  *              Size multiplier for the text
- * @param       const GFXfont* font  
+ * @param       const GFXfont* font
  *              Pointer to the font to use for rendering the text
- * @param       uint16_t verticalSpacing  
+ * @param       uint16_t verticalSpacing
  *              Vertical spacing (in pixels) between lines of text; if 0 or NULL, defaults to text height + padding
- * @param       bool showBorder  
+ * @param       bool showBorder
  *              Whether to draw a border around the text box
- * @param       uint16_t fontSize  
+ * @param       uint16_t fontSize
  *              Font size in points (pt)
  *
  * @details     This function renders a block of text inside the defined rectangular area.
@@ -303,73 +303,79 @@ int16_t Graphics::height()
  *              If the text does not fit entirely, an ellipsis ("...") is added to the final visible line.
  *              Text is padded with spaces to keep a consistent line length.
  */
-void Graphics::drawTextBox(int16_t x0,int16_t y0,int16_t x1,int16_t y1, const char* text,uint16_t textSizeMultiplier, const GFXfont *font, uint16_t verticalSpacing, bool showBorder, uint16_t fontSize )
+void Graphics::drawTextBox(int16_t x0, int16_t y0, int16_t x1, int16_t y1, const char *text,
+                           uint16_t textSizeMultiplier, const GFXfont *font, uint16_t verticalSpacing, bool showBorder,
+                           uint16_t fontSize)
 {
     int16_t currentX = x0;
     int16_t currentY = y0;
 
-    int16_t textLenght=strlen(text);
-    int offset=0;
-    fontSize=(fontSize*3)/4; //1pt = 4/3 px
-    int numOfCharactersPerLine=(x1-x0)/(textSizeMultiplier*fontSize);
-    int16_t currentLineLenght=numOfCharactersPerLine;
+    int16_t textLenght = strlen(text);
+    int offset = 0;
+    fontSize = (fontSize * 3) / 4; // 1pt = 4/3 px
+    int numOfCharactersPerLine = (x1 - x0) / (textSizeMultiplier * fontSize);
+    int16_t currentLineLenght = numOfCharactersPerLine;
     this->setTextSize(textSizeMultiplier);
     this->setFont(font);
-    if(showBorder)
+    if (showBorder)
     {
-        this->drawRect(x0,y0,(x1-x0),(y1-y0),1);
+        this->drawRect(x0, y0, (x1 - x0), (y1 - y0), 1);
     }
-    if(verticalSpacing==NULL)
+    if (verticalSpacing == NULL)
     {
-        verticalSpacing=textSizeMultiplier*fontSize+6;
+        verticalSpacing = textSizeMultiplier * fontSize + 6;
     }
     for (int i = y0; i < (y1 - verticalSpacing); i += verticalSpacing)
     {
         currentY = i;
         this->setCursor(currentX, currentY);
-    
+
         int remainingLength = textLenght - offset;
         int lineLength = (remainingLength < currentLineLenght) ? remainingLength : currentLineLenght;
-    
+
         // Temporary buffer to hold potential line
-        char* buffer = (char*)malloc((lineLength + 1) * sizeof(char));
+        char *buffer = (char *)malloc((lineLength + 1) * sizeof(char));
         memcpy(buffer, text + offset, lineLength);
         buffer[lineLength] = '\0';
-    
+
         // Find the last space in buffer to wrap at word boundary
         int lastSpaceIndex = -1;
-        for (int j = 0; j < lineLength; ++j) {
-            if (buffer[j] == ' ') lastSpaceIndex = j;
+        for (int j = 0; j < lineLength; ++j)
+        {
+            if (buffer[j] == ' ')
+                lastSpaceIndex = j;
         }
-    
+
         // If a word gets cut, wrap to the next line
-        if ((offset + lineLength < textLenght) && (text[offset + lineLength] != ' ') && (lastSpaceIndex != -1) && ((i + verticalSpacing) < (y1 - verticalSpacing))) {
+        if ((offset + lineLength < textLenght) && (text[offset + lineLength] != ' ') && (lastSpaceIndex != -1) &&
+            ((i + verticalSpacing) < (y1 - verticalSpacing)))
+        {
             lineLength = lastSpaceIndex + 1; // Include the space
         }
-    
+
         // Allocate space for actual line with null-terminator
-        char* textPart = (char*)malloc((currentLineLenght + 1) * sizeof(char));
-        memset(textPart, ' ', currentLineLenght); // Fill with spaces
+        char *textPart = (char *)malloc((currentLineLenght + 1) * sizeof(char));
+        memset(textPart, ' ', currentLineLenght);    // Fill with spaces
         memcpy(textPart, text + offset, lineLength); // Copy valid part
         textPart[currentLineLenght] = '\0';
-    
+
         // Ellipsis on final visible line
-        if ((i + verticalSpacing) >= (y1 - verticalSpacing) && (offset + lineLength < textLenght)) {
+        if ((i + verticalSpacing) >= (y1 - verticalSpacing) && (offset + lineLength < textLenght))
+        {
 
 
             textPart[currentLineLenght - 1] = '.';
             textPart[currentLineLenght - 2] = '.';
             textPart[currentLineLenght - 3] = '.';
         }
-    
+
         this->print(textPart);
-    
+
         offset += lineLength;
         free(buffer);
         free(textPart);
-    
-        if (offset >= textLenght) return;
-    }
-    
 
+        if (offset >= textLenght)
+            return;
+    }
 }
