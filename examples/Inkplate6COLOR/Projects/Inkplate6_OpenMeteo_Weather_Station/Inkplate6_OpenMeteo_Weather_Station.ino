@@ -21,6 +21,12 @@
   By default, the app uses the metric system.
   To switch to Imperial units, change the metricUnits to "bool metricUnits = false;"
 */
+
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
+#error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
+#endif
+
 #include "src/includes.h" // Include necessary libraries and dependencies for Inkplate and networking
 
 // --- WiFi Configuration ---
@@ -40,7 +46,7 @@ bool metricUnits = true;  // set this to false if you wish to use Imperial units
 const char* ntpServer = "pool.ntp.org";  // in case you want to use a different one
 
 // --- Device and Data Objects ---
-Inkplate inkplate; // Create Inkplate display object (3-bit mode for partial grayscale)
+Inkplate inkplate(INKPLATE_3BIT); // Create Inkplate display object (3-bit mode for partial grayscale)
 Network network;                  // Network utility for weather fetching
 Network::UserInfo userInfo;       // Structure to hold user and device info (battery, last updated, etc.)
 WeatherData weatherData;          // Structure to hold fetched weather data
@@ -56,7 +62,6 @@ void setup()
     Serial.begin(115200);    // Initialize serial monitor for debugging
     inkplate.begin();        // Start the Inkplate display
     inkplate.clearDisplay(); // Clear the screen
-    inkplate.setRotation(0);
 
     // Attempt to connect to WiFi
     const unsigned long timeout = 30000;
@@ -77,7 +82,7 @@ void setup()
     {
         configTime(timeZone * 3600, 0, ntpServer); // Set local time via NTP server
         // Gather battery and city info
-        userInfo.voltage = inkplate.readBattery();
+        gui.voltage = inkplate.readBattery();
         userInfo.city = myCity;
         userInfo.username = myUsername;
         userInfo.useMetric = metricUnits;

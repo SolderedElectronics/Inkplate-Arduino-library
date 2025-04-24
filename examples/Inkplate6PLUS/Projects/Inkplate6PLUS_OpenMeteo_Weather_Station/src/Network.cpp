@@ -1,7 +1,7 @@
 #include "Network.h"
 #include <WiFi.h>          
 #include <HTTPClient.h>     
-#include "weatherData.h"     
+#include "WeatherData.h"     
 
 #include <ArduinoJson.h>     
 
@@ -43,14 +43,6 @@ String Network::extractTime(String dateTime) {
       return dateTime.substring(tIndex + 1, tIndex + 6);  // e.g., "06:11"
   }
   return "??:??";
-}
-
-int Network::voltageToPercentage(double voltage) {
-  if (voltage >= 4.2) return 100;
-  if (voltage <= 3.0) return 0;
-
-  // Simple linear approximation
-  return (int)(((voltage - 3.0) / (4.2 - 3.0)) * 100);
 }
 
 String Network::getFormattedTime() {
@@ -126,8 +118,6 @@ void Network::fetchWeatherData(WeatherData* weatherData, UserInfo* userInfo, con
     
     HTTPClient http;
 
-    String fake = "http://this.does.not.exist";  // fake url for api error testing
-
     if (userInfo->useMetric == true){
       userInfo->temperatureLabel = " C";
       userInfo->speedLabel = " km/h";
@@ -152,7 +142,6 @@ void Network::fetchWeatherData(WeatherData* weatherData, UserInfo* userInfo, con
         deserializeJson(doc, payload);  // Deserialize the JSON payload
 
         // UserInfo Data
-        userInfo->batteryLevel = voltageToPercentage(userInfo->voltage);
         userInfo->lastUpdated = getFormattedTime();
         userInfo->currentHour = getCurrentHour();
         userInfo->lastUpdatedDate = extractDate(userInfo->lastUpdated);

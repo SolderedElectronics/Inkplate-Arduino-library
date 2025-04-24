@@ -26,7 +26,6 @@
 #include "fonts/FreeSans18pt7b.h"
 #include "fonts/FreeSans24pt7b.h"
 #include "fonts/FreeSans9pt7b.h"
-#include "fonts/FreeSans6pt7b.h"
 #include "fonts/FreeSans32pt7b.h"
 
 Gui::Gui(Inkplate &inkplate) : inkplate(inkplate)
@@ -39,17 +38,18 @@ void Gui::drawBackground()
     inkplate.fillRect(0, 0, 600, 150, 7);
 
     // user info
-    //inkplate.fillRect(530, 0, 270, 155, 0);
+    inkplate.fillRect(530, 0, 270, 155, 0);
 
     // add info
-    //inkplate.fillRect(0, 155, 200, 295, 0);
-    //inkplate.drawLine(0, 449, 200, 449, 7);
+    inkplate.fillRect(0, 155, 200, 295, 0);
+    inkplate.drawLine(0, 449, 200, 449, 7);
 
     //graph
-    //inkplate.fillRect(200, 155, 600, 295, 7);
+    inkplate.fillRect(200, 155, 600, 295, 7);
+    inkplate.drawLine(200, 155, 800, 155, 0);
 
     // weekly
-    inkplate.fillRect(0, 310, 600, 140, 0);
+    inkplate.fillRect(0, 450, 800, 150, 0);
 }
 
 void Gui::wifiError()
@@ -74,6 +74,14 @@ void Gui::apiError()
     inkplate.setCursor(50, 200);
     inkplate.print("Check API URL or try again.");
     inkplate.display();
+}
+
+int Gui::voltageToPercentage(double voltage) {
+    if (voltage >= 4.2) return 100;
+    if (voltage <= 3.0) return 0;
+  
+    // Simple linear approximation
+    return (int)(((voltage - 3.0) / (4.2 - 3.0)) * 100);
 }
 
 // Weather Icons based on open-meteo api code
@@ -136,13 +144,13 @@ const uint8_t *Gui::getBatteryIcon(int percentage)
 void Gui::drawTemperaturePrecipGraph(WeatherData *weatherData, Network::UserInfo *userInfo)
 {
     // Layout values for graph placement
-    int graphX = 55;
-    int graphY = 125;
-    int graphWidth = 340;
-    int graphHeight = 175;
+    int graphX = 260;
+    int graphY = 185;
+    int graphWidth = 500;
+    int graphHeight = 250;
 
-    inkplate.setCursor(50, 125);
-    inkplate.setFont(&FreeSans9pt7b);
+    inkplate.setCursor(210, 180);
+    inkplate.setFont(&FreeSans12pt7b);
     inkplate.setTextColor(0);
     inkplate.print("Hourly temperature and precipitation");
 
@@ -230,7 +238,7 @@ void Gui::drawTemperaturePrecipGraph(WeatherData *weatherData, Network::UserInfo
         int y = chartBottom - barHeight;
 
         // Draw the precipitation bar
-        inkplate.fillRect(x + 5, y + 10, 10, barHeight - 10, 3);
+        inkplate.fillRect(x + 5, y + 10, 10, barHeight - 10, 4);
 
         // Draw precipitation value on top of the bar
         inkplate.setCursor(x + 5, y - 5);
@@ -266,35 +274,38 @@ void Gui::drawTemperaturePrecipGraph(WeatherData *weatherData, Network::UserInfo
 void Gui::displayWeatherData(WeatherData *weatherData, Network::UserInfo *userInfo)
 {
     // Section 1: Main info
-    inkplate.setFont(&FreeSans12pt7b);
+    inkplate.setFont(&FreeSans18pt7b);
     inkplate.setTextColor(0);
 
     inkplate.drawBitmap(10, 5, icon_s_gray, 48, 48, 0);
     inkplate.setCursor(70, 40);
     inkplate.print(userInfo->city);
 
-    inkplate.setFont(&FreeSans12pt7b);
-    // inkplate.drawBitmap(10, 55, icon_s_thermometer, 48, 48, 0);
+    inkplate.setFont(&FreeSans18pt7b);
+    inkplate.drawBitmap(10, 55, icon_s_thermometer, 48, 48, 0);
     inkplate.setCursor(70, 90);
     inkplate.print(weatherData->currentTemp);
     inkplate.print(userInfo->temperatureLabel);
 
-    inkplate.drawBitmap(10, 55, getWeatherIcon(weatherData->weatherCode), 48, 48, 0);
-    inkplate.setCursor(165, 90);
+    inkplate.drawBitmap(10, 106, getWeatherIcon(weatherData->weatherCode), 48, 48, 0);
+    inkplate.setCursor(70, 140);
     inkplate.println(weatherData->weatherDescription);
 
     // Section 2: User Info and Battery
+
+    batteryLevel = voltageToPercentage(voltage);
+
     inkplate.setFont(&FreeSans12pt7b);
     inkplate.setTextColor(7);
 
     int yUser = 5;
 
-    inkplate.drawBitmap(550, 5, getBatteryIcon(userInfo->batteryLevel), 48, 48, 7);
+    inkplate.drawBitmap(550, 5, getBatteryIcon(batteryLevel), 48, 48, 7);
 
     yUser += 30;
 
     inkplate.setCursor(600, yUser + 2);
-    inkplate.print(userInfo->batteryLevel);
+    inkplate.print(batteryLevel);
     inkplate.println("%");
 
     yUser += 40;
@@ -351,29 +362,29 @@ void Gui::displayWeatherData(WeatherData *weatherData, Network::UserInfo *userIn
     inkplate.print(" %");
 
     // Section 4: Weekly Forecast
-    inkplate.setTextColor(1);
+    inkplate.setTextColor(7);
 
-    int startX = 15;                      // Starting x-position for the weekly forecast
-    int startY = 330;                      // Starting y-position for the weekly forecast
+    int startX = 20;                      // Starting x-position for the weekly forecast
+    int startY = 480;                      // Starting y-position for the weekly forecast
     int iconSize = 48;                     // Size of the icon
     int margin = 5;                        // Margin between elements
-    int dayWidth = iconSize + margin + 30; // Space for icon + margin + text width
+    int dayWidth = iconSize + margin + 63; // Space for icon + margin + text width
 
     // Loop through the 7-day forecast and display each day
     for (int i = 0; i < 7; i++)
     {
-        inkplate.setFont(&FreeSans9pt7b);
+        inkplate.setFont(&FreeSans12pt7b);
         int xPos = startX + i * dayWidth;
 
         // Day name
         inkplate.setCursor(xPos + 15, startY);
-        inkplate.setTextColor(1);
+        inkplate.setTextColor(7);
         inkplate.print(weatherData->dailyNames[i]);
 
         // Weather icon
-        inkplate.setFont(&FreeSans6pt7b);
+        inkplate.setFont(&FreeSans9pt7b);
         inkplate.drawBitmap(xPos + 15, startY + 20, getWeatherIcon(weatherData->dailyWeatherCodes[i]), iconSize,
-                            iconSize, 1);
+                            iconSize, 7);
         int tempYStart = startY + 20 + iconSize + margin + 5;
 
         // === Max Temp - Up Arrow Triangle ===
@@ -383,7 +394,7 @@ void Gui::displayWeatherData(WeatherData *weatherData, Network::UserInfo *userIn
         inkplate.fillTriangle(arrowX, arrowY,         // bottom center
                               arrowX - 4, arrowY + 6, // bottom left
                               arrowX + 4, arrowY + 6, // bottom right
-                              1                       // white color
+                              7                       // white color
         );
         // Max temp text next to it
         inkplate.setCursor(arrowX + 10, arrowY + 6);
@@ -395,12 +406,36 @@ void Gui::displayWeatherData(WeatherData *weatherData, Network::UserInfo *userIn
         inkplate.fillTriangle(arrowX, arrowY + 6, // top center
                               arrowX - 4, arrowY, // bottom left
                               arrowX + 4, arrowY, // bottom right
-                              1                   // white color
+                              7                   // white color
         );
         // Min temp text next to it
         inkplate.setCursor(arrowX + 10, arrowY + 6);
         inkplate.print(weatherData->dailyMinTemp[i]);
         inkplate.print(userInfo->temperatureLabel);
+    }
+
+    // Section 5: Day or Night indicator
+    int iconX = 100;
+    int iconY = 700;
+    if (weatherData->isDay)
+    {
+        inkplate.fillRect(25, 645, 350, 150, 5);
+        inkplate.drawRect(25, 645, 350, 150, 0);
+        inkplate.drawBitmap(iconX, iconY, icon_s_clear_sky, 48, 48, 0);
+        inkplate.setCursor(iconX + 60, iconY + 35);
+        inkplate.setTextColor(0);
+        inkplate.setFont(&FreeSans12pt7b);
+        inkplate.print("Daytime");
+    }
+    else
+    {
+        inkplate.fillRect(25, 645, 350, 150, 0);
+        inkplate.drawRect(25, 645, 350, 150, 5);
+        inkplate.drawBitmap(iconX, iconY, icon_s_moon, 48, 48, 7);
+        inkplate.setCursor(iconX + 60, iconY + 35);
+        inkplate.setTextColor(7);
+        inkplate.setFont(&FreeSans12pt7b);
+        inkplate.print("Nighttime");
     }
 
     // Section 6: Graph info

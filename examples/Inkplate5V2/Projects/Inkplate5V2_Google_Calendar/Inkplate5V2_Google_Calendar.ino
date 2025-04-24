@@ -1,5 +1,5 @@
 /*
-Inkplate5_Google_Calendar for Soldered Inkplate 5
+Inkplate5v2_Google_Calendar for Soldered Inkplate 5v2
 
 Getting Started:
 For setup and documentation, visit: https://inkplate.readthedocs.io/en/latest/
@@ -18,16 +18,23 @@ Before You Start:
 
 #include "src/includes.h" // Include necessary libraries and dependencies for Inkplate and networking
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATE5V2
+#error "Wrong board selection for this example, please select Soldered Inkplate5 V2 in the boards menu."
+#endif
+
+// --- WiFi Configuration ---
 const char *ssid = "Soldered-testingPurposes";
 const char *password = "Testing443";
 
-int timeZone = 2; // timeZone is the number in (UTC + number) in your time zone UTC + 2 for Osijek, UTC - 4 for New York City
-
-String calendarID = "yourpublicid@group.calendar.google.com";
+// --- User Info ---
+String calendarID = "yourpublicgooglecalid@group.calendar.google.com";
 String apiKey = "yourapikey";
 
-// String ntpServer = "pool.ntp.org";  // in case you want to use a different one
+int timeZone = 2; // timeZone is the number in (UTC + number) in your time zone | UTC + 2 for Osijek, UTC - 4 for New York City
+const char  *ntpServer = "pool.ntp.org";  // in case you want to use a different one
 
+// --- Device and Data Objects ---
 Inkplate inkplate(INKPLATE_3BIT);
 calendarData calendar;
 Network network(calendarID, apiKey);
@@ -61,7 +68,7 @@ void setup()
   }
   else
   {
-    configTime(timeZone * 3600, 0, "pool.ntp.org");
+    configTime(timeZone * 3600, 0, ntpServer);
     // Fetch and display calendar
     if (network.fetchCalendar(&calendar))
     {
@@ -75,7 +82,7 @@ void setup()
     }
   }
   // Sleep to save power; wakes every 10 minutes
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Activate wake-up timer -- wake up after 30mins here
+  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Activate wake-up timer
   esp_deep_sleep_start();                                        // Put ESP32 into deep sleep.
 }
 

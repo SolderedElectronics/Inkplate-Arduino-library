@@ -75,6 +75,14 @@ void Gui::apiError()
     inkplate.display();
 }
 
+int Gui::voltageToPercentage(double voltage) {
+    if (voltage >= 4.2) return 100;
+    if (voltage <= 3.0) return 0;
+  
+    // Simple linear approximation
+    return (int)(((voltage - 3.0) / (4.2 - 3.0)) * 100);
+  }
+
 // Weather Icons based on open-meteo api code
 const uint8_t *Gui::getWeatherIcon(int code)
 {
@@ -283,15 +291,18 @@ void Gui::displayWeatherData(WeatherData *weatherData, Network::UserInfo *userIn
     inkplate.println(weatherData->weatherDescription);
 
     // Section 2: User Info and Battery
+
+    batteryLevel = voltageToPercentage(voltage);
+
     inkplate.setFont(&FreeSans12pt7b);
     inkplate.setTextColor(7);
 
     int yUser = 35;
 
-    inkplate.drawBitmap(700, 5, getBatteryIcon(userInfo->batteryLevel), 48, 48, 7);
+    inkplate.drawBitmap(700, 5, getBatteryIcon(batteryLevel), 48, 48, 7);
 
     inkplate.setCursor(750, yUser);
-    inkplate.print(userInfo->batteryLevel);
+    inkplate.print(batteryLevel);
     inkplate.println("%");
 
     yUser += 45;

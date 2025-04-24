@@ -21,6 +21,12 @@
   By default, the app uses the metric system.
   To switch to Imperial units, change the metricUnits to "bool metricUnits = false;"
 */
+
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATE2
+#error "Wrong board selection for this example, please select Soldered Inkplate2 in the boards menu."
+#endif
+
 #include "src/includes.h" // Include necessary libraries and dependencies for Inkplate and networking
 
 // --- WiFi Configuration ---
@@ -42,15 +48,13 @@ const char* ntpServer = "pool.ntp.org";  // in case you want to use a different 
 // --- Device and Data Objects ---
 Inkplate inkplate;
 Network network;                  // Network utility for weather fetching
-Network::UserInfo userInfo;       // Structure to hold user and device info (battery, last updated, etc.)
+Network::UserInfo userInfo;       // Structure to hold user info
 WeatherData weatherData;          // Structure to hold fetched weather data
 Gui gui(inkplate);                // Drawing visuals and info
 
 // --- Deep Sleep Configuration ---
 #define uS_TO_S_FACTOR 1000000 // Convert microseconds to seconds
 #define TIME_TO_SLEEP  600   // Sleep time: 600 seconds = 10 minutes
-
-// Add this above setup()
 RTC_DATA_ATTR int bootCount = 0; // This variable persists across deep sleep resets
 
 // --- Main Setup: Runs Once on Boot ---
@@ -78,8 +82,7 @@ void setup()
     else
     {
         configTime(timeZone * 3600, 0, ntpServer); // Set local time via NTP server
-        // Gather battery and city info
-        // userInfo.voltage = inkplate.readBattery();
+        // Gather user info
         userInfo.city = myCity;
         userInfo.username = myUsername;
         userInfo.useMetric = metricUnits;
@@ -107,9 +110,9 @@ void setup()
         }
     }
 
-    // Sleep to save power; wakes every 30 minutes
+    // Sleep to save power; wakes every 10 minutes
     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP *
-                                  uS_TO_S_FACTOR); // Activate wake-up timer -- wake up after 30mins here
+                                  uS_TO_S_FACTOR); // Activate wake-up timer
     esp_deep_sleep_start();                        // Put ESP32 into deep sleep.
 }
 

@@ -13,8 +13,6 @@ public:
     // --- Struct UserInfo ---
     struct UserInfo {
       String lastUpdated;
-      int batteryLevel;
-      double voltage;
       int currentHour;
       String city;
       String username;
@@ -35,7 +33,6 @@ private:
     String extractDate(String dateTime);
     String extractTime(String dateTime);
     String extractSun(String dateTime);
-    int voltageToPercentage(double voltage);
     String getFormattedTime();
     int getCurrentHour();
     String getDayName(int dayIndex);

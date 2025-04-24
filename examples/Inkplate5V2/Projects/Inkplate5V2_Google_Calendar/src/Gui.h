@@ -3,7 +3,7 @@
 #include <Inkplate.h>
 #include "calendarData.h"
 
-#define MAX_SUMMARY_LENGTH 30
+#define MAX_SUMMARY_LENGTH 26
 
 class Gui {
 public:

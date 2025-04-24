@@ -5,7 +5,7 @@
 #include "fonts/FreeSans12pt7b.h"
 #include "fonts/FreeSans18pt7b.h"
 #include "fonts/FreeSans9pt7b.h"
-#include "fonts/FreeSans6pt7b.h"
+#include "fonts/FreeSans7pt7b.h"
 #include "fonts/FreeSansBold24pt7b.h"
 
 Gui::Gui(Inkplate &inkplate) : inkplate(inkplate) {}
@@ -41,7 +41,7 @@ void Gui::wifiError()
 {
     inkplate.clearDisplay();
     inkplate.setTextColor(INKPLATE2_BLACK);
-    inkplate.setFont(&FreeSans6pt7b);
+    inkplate.setFont(&FreeSans7pt7b);
     inkplate.setCursor(10, 20);
     inkplate.print("WiFi connection failed.");
     inkplate.setCursor(10, 50);
@@ -72,7 +72,7 @@ void Gui::showCalendar(calendarData *calendar)
     // === Calendar Events ===
     Event *events = calendar->getEvents();
     int eventCount = calendar->getEventCount();
-    int y = 12;
+    int y = 20;
     int x = 40;
 
     String lastDate = "";
@@ -110,16 +110,16 @@ void Gui::showCalendar(calendarData *calendar)
             inkplate.println(eventDate);
 
             // Short Day (under date)
-            inkplate.setFont(&FreeSans6pt7b);
-            inkplate.setCursor(5, y + 15);
+            inkplate.setFont(&FreeSans7pt7b);
+            inkplate.setCursor(5, y + 18);
             inkplate.println(getShortDayName(timeStruct.tm_wday));
 
             lastDate = eventDate;
         }
 
-        inkplate.setFont(&FreeSans6pt7b);
+        inkplate.setFont(&FreeSans7pt7b);
         int yLineStart = y;
-        int xTime = 175;
+        int xTime = 170;
 
         // Draw event summary and time
         inkplate.setCursor(x, y);
@@ -130,14 +130,16 @@ void Gui::showCalendar(calendarData *calendar)
         }
         inkplate.println(summary);
         inkplate.setCursor(xTime, y);
-        inkplate.setFont(&FreeSans6pt7b);
+        inkplate.setFont(&FreeSans7pt7b);
         inkplate.println(formatHour(events[i].startTime));
         inkplate.setTextColor(2);
-        y += 10;
-        inkplate.setFont(&FreeSans6pt7b);
+        y += 12;
+        inkplate.setFont(&FreeSans7pt7b);
         inkplate.setCursor(xTime, y);
         inkplate.println(formatHour(events[i].endTime));
         y += 16;
+
+        inkplate.drawLine(33, yLineStart - 12, 33, y - 12, 1);
 
         counter = i;
 
@@ -151,7 +153,7 @@ void Gui::showCalendar(calendarData *calendar)
     if (counter == eventCount - 1 && y < 90)
     {
         inkplate.setTextColor(1);
-        inkplate.setFont(&FreeSans6pt7b);
+        inkplate.setFont(&FreeSans7pt7b);
         inkplate.setCursor(10, y + 5);
         inkplate.println("No more events in the next 2 weeks!");
     }
@@ -163,7 +165,7 @@ void Gui::showCalendar(calendarData *calendar)
 void Gui::showError(const String &message)
 {
     inkplate.clearDisplay();
-    inkplate.setFont(&FreeSans6pt7b);
+    inkplate.setFont(&FreeSans7pt7b);
     inkplate.setTextColor(INKPLATE2_BLACK);
     inkplate.setCursor(10, 10);
     inkplate.println("Error:");

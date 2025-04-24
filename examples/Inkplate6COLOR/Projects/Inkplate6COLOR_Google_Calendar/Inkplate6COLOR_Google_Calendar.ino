@@ -1,5 +1,5 @@
 /*
-Inkplate6_Google_Calendar for Soldered Inkplate 6
+Inkplate6COLOR_Google_Calendar for Soldered Inkplate 6 Color
 
 Getting Started:
 For setup and documentation, visit: https://inkplate.readthedocs.io/en/latest/
@@ -16,17 +16,22 @@ Before You Start:
       Make sure your calendar is public under "Access permissions" in calendar settings.
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATECOLOR
+#error "Wrong board selection for this example, please select Soldered Inkplate 6COLOR in the boards menu."
+#endif
+
 #include "src/includes.h" // Include necessary libraries and dependencies for Inkplate and networking
 
+// --- WiFi Configuration ---
 const char *ssid = "Soldered-testingPurposes";
 const char *password = "Testing443";
 
-int timeZone = 2; // timeZone is the number in (UTC + number) in your time zone UTC + 2 for Osijek, UTC - 4 for New York City
+// --- User Info ---
+String calendarID = "yourpublicgooglecalid@group.calendar.google.com";
+String apiKey = "yourapikey";
 
-String calendarID = "0993f590ad60b390645331333129b9ae7cdfad3eabb2b143b5b716d848b1e241@group.calendar.google.com";
-String apiKey = "AIzaSyA9Zi7rVHQl_yQScNzpn__UIMhc37SBsfc";
-
-int highlightColor = 6;
+int highlightColor = 6;  // this is used to highlight the currently ongoing event | change the integer to change the color (see below)
 
 // 0 -> black
 // 1 -> white
@@ -36,8 +41,10 @@ int highlightColor = 6;
 // 5 -> yellow
 // 6 -> orange
 
-// String ntpServer = "pool.ntp.org";  // in case you want to use a different one
+int timeZone = 2; // timeZone is the number in (UTC + number) in your time zone | UTC + 2 for Osijek, UTC - 4 for New York City
+const char  *ntpServer = "pool.ntp.org";  // in case you want to use a different one
 
+// --- Device and Data Objects ---
 Inkplate inkplate;
 calendarData calendar;
 Network network(calendarID, apiKey);
@@ -71,7 +78,7 @@ void setup()
   }
   else
   {
-    configTime(timeZone * 3600, 0, "pool.ntp.org");
+    configTime(timeZone * 3600, 0, ntpServer);
     // Fetch and display calendar
     if (network.fetchCalendar(&calendar))
     {
@@ -86,7 +93,7 @@ void setup()
     }
   }
   // Sleep to save power; wakes every 10 minutes
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Activate wake-up timer -- wake up after 30mins here
+  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Activate wake-up timer
   esp_deep_sleep_start();                                        // Put ESP32 into deep sleep.
 }
 

@@ -21,6 +21,12 @@
   By default, the app uses the metric system.
   To switch to Imperial units, change the metricUnits to "bool metricUnits = false;"
 */
+
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATE5V2
+#error "Wrong board selection for this example, please select Soldered Inkplate5 V2 in the boards menu."
+#endif
+
 #include "src/includes.h" // Include necessary libraries and dependencies for Inkplate and networking
 
 // --- WiFi Configuration ---
@@ -76,7 +82,7 @@ void setup()
     {
         configTime(timeZone * 3600, 0, ntpServer); // Set local time via NTP server
         // Gather battery and city info
-        userInfo.voltage = inkplate.readBattery();
+        gui.voltage = inkplate.readBattery();
         userInfo.city = myCity;
         userInfo.username = myUsername;
         userInfo.useMetric = metricUnits;

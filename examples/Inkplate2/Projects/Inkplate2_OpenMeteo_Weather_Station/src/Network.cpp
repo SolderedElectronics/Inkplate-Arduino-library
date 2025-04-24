@@ -45,14 +45,6 @@ String Network::extractTime(String dateTime) {
   return "??:??";
 }
 
-int Network::voltageToPercentage(double voltage) {
-  if (voltage >= 4.2) return 100;
-  if (voltage <= 3.0) return 0;
-
-  // Simple linear approximation
-  return (int)(((voltage - 3.0) / (4.2 - 3.0)) * 100);
-}
-
 String Network::getFormattedTime() {
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo)) {
@@ -152,7 +144,6 @@ void Network::fetchWeatherData(WeatherData* weatherData, UserInfo* userInfo, con
         deserializeJson(doc, payload);  // Deserialize the JSON payload
 
         // UserInfo Data
-        userInfo->batteryLevel = voltageToPercentage(userInfo->voltage);
         userInfo->lastUpdated = getFormattedTime();
         userInfo->currentHour = getCurrentHour();
         userInfo->lastUpdatedDate = extractDate(userInfo->lastUpdated);

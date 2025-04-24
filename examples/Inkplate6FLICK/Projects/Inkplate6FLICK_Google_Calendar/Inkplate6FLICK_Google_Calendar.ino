@@ -16,18 +16,25 @@ Before You Start:
       Make sure your calendar is public under "Access permissions" in calendar settings.
 */
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#ifndef ARDUINO_INKPLATE6FLICK
+#error "Wrong board selection for this example, please select Soldered Inkplate 6 FLICK"
+#endif
+
 #include "src/includes.h" // Include necessary libraries and dependencies for Inkplate and networking
 
+// --- WiFi Configuration ---
 const char *ssid = "Soldered-testingPurposes";
 const char *password = "Testing443";
 
-int timeZone = 2; // timeZone is the number in (UTC + number) in your time zone UTC + 2 for Osijek, UTC - 4 for New York City
-
-String calendarID = "yourpublicgooglecalendarid@group.calendar.google.com";
+// --- User Info ---
+String calendarID = "yourpublicgooglecalid@group.calendar.google.com";
 String apiKey = "yourapikey";
 
-// String ntpServer = "pool.ntp.org";  // in case you want to use a different one
+int timeZone = 2; // timeZone is the number in (UTC + number) in your time zone | UTC + 2 for Osijek, UTC - 4 for New York City
+const char  *ntpServer = "pool.ntp.org";  // in case you want to use a different one
 
+// --- Device and Data Objects ---
 Inkplate inkplate(INKPLATE_3BIT);
 calendarData calendar;
 Network network(calendarID, apiKey);
@@ -42,7 +49,7 @@ void setup()
   Serial.begin(115200);    // Initialize serial monitor for debugging
   inkplate.begin();        // Start the Inkplate display
   inkplate.clearDisplay(); // Clear the screen
-  inkplate.setRotation(1); // Portrait mode | if it's upside down do setRotation(3);
+  // inkplate.setRotation(1); // Portrait mode | if it's upside down do setRotation(3);
 
   // Attempt to connect to WiFi
   const unsigned long timeout = 30000;
@@ -61,7 +68,7 @@ void setup()
   }
   else
   {
-    configTime(timeZone * 3600, 0, "pool.ntp.org");
+    configTime(timeZone * 3600, 0, ntpServer);
     // Fetch and display calendar
     if (network.fetchCalendar(&calendar))
     {
@@ -75,7 +82,7 @@ void setup()
     }
   }
   // Sleep to save power; wakes every 10 minutes
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Activate wake-up timer -- wake up after 30mins here
+  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR); // Activate wake-up timer
   esp_deep_sleep_start();                                        // Put ESP32 into deep sleep.
 }
 
