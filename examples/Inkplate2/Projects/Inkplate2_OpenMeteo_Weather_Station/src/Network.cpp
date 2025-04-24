@@ -1,7 +1,7 @@
 #include "Network.h"
 #include <WiFi.h>          
 #include <HTTPClient.h>     
-#include "weatherData.h"     
+#include "WeatherData.h"     
 
 #include <ArduinoJson.h>     
 
@@ -35,7 +35,6 @@ String Network::extractDate(String dateTime) {
   }
   return "????-??-??";
 }
-
 
 String Network::extractTime(String dateTime) {
   int tIndex = dateTime.indexOf(' ');
