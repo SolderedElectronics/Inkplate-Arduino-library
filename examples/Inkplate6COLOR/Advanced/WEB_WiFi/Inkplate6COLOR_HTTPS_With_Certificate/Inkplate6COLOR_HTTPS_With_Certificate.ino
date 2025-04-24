@@ -1,12 +1,12 @@
 /*
-   Inkplate6PLUS_Download_Files_With_Certificate example for Soldered Inkplate 6PLUS
-   For this example you will need a micro USB cable, Inkplate 6PLUS, and an available WiFi connection.
-   Select "Soldered Inkplate 6PLUS" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 6PLUS" option? Follow our tutorial and add it:
+   Inkplate6COLOR_HTTPS_With_Certificate example for Soldered Inkplate 6 COLOR
+   For this example you will need a micro USB cable, Inkplate 6COLOR, and an available WiFi connection.
+   Select "Soldered Inkplate 6COLOR" from Tools -> Board menu.
+   Don't have "Soldered Inkplate 6COLOR" option? Follow our tutorial and add it:
    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
 
    You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
-   24 bit AND have resoluton smaller than 800x600 or otherwise it won't fit on screen.
+   24 bit.
 
    This example will show you how you can download a .bmp file (picture) from the web securely by providing a 
    certificate for the website that will be validated upon conncection and
@@ -18,8 +18,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus in the boards menu."
+#ifndef ARDUINO_INKPLATECOLOR
+#error "Wrong board selection for this example, please select Soldered Inkplate 6COLOR in the boards menu."
 #endif
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
@@ -29,8 +29,6 @@ const char ssid[] = "";    // Your WiFi SSID
 const char *password = ""; // Your WiFi password
 
 //This is the certificate for the website https://varipass.org
-//You can find information on how to get the certificate of a website
-//as well as how to format it here: https://randomnerdtutorials.com/esp32-https-requests/ 
 
 const char* certificate = \
 "-----BEGIN CERTIFICATE-----\n" \
@@ -85,7 +83,7 @@ void setup()
     display.partialUpdate();
 
     //Apply the certificate previously defined
-    display.applyCertificate(certificate);
+    display.applyHttpsCertificate(certificate);
     //Here we will draw the image using a valid certificate. Photo taken by: Roberto Fernandez
     if (!display.drawImage("https://varipass.org/neowise_mono.bmp", 0, 0, false, true))
     {
@@ -99,7 +97,7 @@ void setup()
     display.clearDisplay();
     //Next we will try to load an image from a different website, which will not work as the certificate is 
     //not valid for this page
-    if (!display.drawImage("https://i.imgur.com/WdBS7WL.jpeg", 0, 100, true, false))
+    if (!display.drawImage("https://raw.githubusercontent.com/SolderedElectronics/Inkplate-Arduino-library/master/examples/Inkplate5V2/Advanced/WEB_WiFi/Inkplate5V2_Show_JPG_With_HTTPClient/image.jpg", 0, 100, true, false))
     {
         display.println("This image wont load as the certificate is invalid");
         display.display();

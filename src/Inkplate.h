@@ -108,9 +108,9 @@ class Inkplate : public System, public Graphics
     {
         return NetworkClient::isConnected();
     };
-    void applyCertificate(const char* certificate)
+    void applyHttpsCertificate(const char* certificate)
     {
-        return NetworkClient::applyCertificate(certificate);
+        return NetworkClient::applyHttpsCertificate(certificate);
     };
     // The default parameters for nptServer here are cast to (char*) to keep the compiler happy
     bool getNTPEpoch(time_t *timeEpoch, int timeZone = 0, char *ntpServer = (char *)"pool.ntp.org",

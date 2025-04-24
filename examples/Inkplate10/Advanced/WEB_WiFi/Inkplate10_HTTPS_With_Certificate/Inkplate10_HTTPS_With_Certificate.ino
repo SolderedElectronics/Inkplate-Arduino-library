@@ -1,7 +1,7 @@
 /*
-   Inkplate6_Download_Files_With_Certificate example for Soldered Inkplate 5V2
-   For this example you will need a micro USB cable, Inkplate 5V2, and an available WiFi connection.
-   Select "Soldered Inkplate 5V2" from Tools -> Board menu.
+   Inkplate10_HTTPS_With_Certificate example for Soldered Inkplate 10
+   For this example you will need a micro USB cable, Inkplate 10, and an available WiFi connection.
+   Select "Soldered Inkplate 10" from Tools -> Board menu.
 
    You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
    24 bit 
@@ -16,8 +16,8 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE5V2
-#error "Wrong board selection for this example, please select Soldered Inkplate5 V2 in the boards menu."
+#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
+#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
@@ -27,8 +27,6 @@ const char ssid[] = "";    // Your WiFi SSID
 const char *password = ""; // Your WiFi password
 
 //This is the certificate for the website https://varipass.org
-//You can find information on how to get the certificate of a website
-//as well as how to format it here: https://randomnerdtutorials.com/esp32-https-requests/ 
 
 const char* certificate = \
 "-----BEGIN CERTIFICATE-----\n" \
@@ -83,7 +81,7 @@ void setup()
     display.partialUpdate();
 
     //Apply the certificate previously defined
-    display.applyCertificate(certificate);
+    display.applyHttpsCertificate(certificate);
     //Here we will draw the image using a valid certificate. Photo taken by: Roberto Fernandez
     if (!display.drawImage("https://varipass.org/neowise_mono.bmp", 0, 0, false, true))
     {
