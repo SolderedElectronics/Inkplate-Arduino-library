@@ -25,8 +25,8 @@
 #include "WiFiClientSecure.h"
 #include "WiFiMulti.h"
 #include "defines.h"
-#include <string.h>
 #include "time.h"
+#include <string.h>
 
 /**
  * @brief       BitmapHeader structure that includes standard bitmap parameters
