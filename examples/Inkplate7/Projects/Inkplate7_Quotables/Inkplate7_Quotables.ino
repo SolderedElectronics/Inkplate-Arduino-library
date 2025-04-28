@@ -27,14 +27,24 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate7 in the boards menu."
 #endif
 
-#include "Inkplate.h" // Include Inkplate library to the sketch
+//---------- CHANGE HERE  -------------:
 
-#include "Network.h" // Our networking functions, declared in Network.cpp
+// Put in your ssid and password
+char ssid[] = "";
+char pass[] = "";
 
-#include "Fonts/LoveLetter_Regular10.h" // Include fonts used
+//----------------------------------
 
-// Delay between API calls in seconds, 300 seconds is 5 minutes
-#define DELAY_S 300
+// Include Inkplate library to the sketch
+#include "Inkplate.h"
+
+// Include fonts used
+#include "Fonts/FreeMonoBold24pt7b.h"
+
+// Our networking functions, declared in Network.cpp
+#include "Network.h"
+#include "driver/rtc_io.h" // Include ESP32 library for RTC pin I/O (needed for rtc_gpio_isolate() function)
+#include <rom/rtc.h>       // Include ESP32 library for RTC (needed for rtc_get_reset_reason() function)
 
 // create object with all networking functions
 Network network;
@@ -42,125 +52,77 @@ Network network;
 // create display object
 Inkplate display;
 
-// Put in your ssid and password
-char ssid[] = "";
-char pass[] = "";
+// Delay between API calls in seconds, 300 seconds is 5 minutes
+// Since the function this is used in expects time in microseconds,
+// we have to multiply with 1000000
+#define DELAY_S 300 * 1000000
+#define DELAY_WIFI_RETRY_SECONDS 5
+// Our functions declared below setup and loop
+void drawAll();
 
-// Buffers to store quote, author name and quote length
-char quote[256];
+char quote[128]; // Buffer to store quote
 char author[64];
-int len;
 
 void setup()
 {
-    // Begin serial communitcation, used for debugging
+    // Begin serial communitcation, sed for debugging
     Serial.begin(115200);
 
     // Initial display settings
     display.begin();
-    display.setTextWrap(true); // Set text wrapping to true
-    display.setTextColor(INKPLATE7_BLACK, INKPLATE7_WHITE);
+    display.setTextColor(BLACK);
+    display.setTextWrap(false);
+    display.clearDisplay();
+    display.display();
 
-    // Our begin function
-    network.begin(ssid, pass);
-
-    // Try to get the new random quote from the Internet.
-    while (!network.getData(quote, author, &len, &display))
+    // Try connecting to a WiFi network.
+    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
+    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
     {
-        Serial.println("Retrying retriving data!");
+        //Can't connect to netowrk
+        // Clear display for the error message
+        display.clearDisplay();
+        // Set the font size;
+        display.setTextSize(3);
+        // Set the cursor positions and print the text.
+        display.setCursor((display.width() / 2) - 200, display.height() / 2);
+        display.print(F("Unable to connect to "));
+        display.println(F(ssid));
+        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
+        display.println(F("Please check SSID and PASS!"));
+        // Display the error message on the Inkplate and go to deep sleep
+        display.display();
+        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
+        (void)esp_deep_sleep_start();
+    }
+
+    Serial.print("Retrying retriving data");
+    while (!network.getData(quote, author))
+    {
+        Serial.print('.');
         delay(1000);
     }
 
-    // Our main drawing function
-    drawAll();
-    // Show the text on the display
+    display.clearDisplay();
+    //Draw the quote inside a textbox element
+    display.drawTextBox(48, display.height() / 2 - 36, display.width()-48,display.height()/2+200,quote,1,&FreeMonoBold24pt7b,36,false,34);
+
+    //Print the author in the bottom right corner
+    uint16_t w, h;
+    int16_t x, y;
+    display.getTextBounds(author, 0, 0, &x, &y, &w, &h);
+    display.setCursor(display.width() - w - 50, display.height() - 30); // Set cursor to fit author name in lower right corner
+    display.print("-");
+    display.println(author); // Print author
     display.display();
 
     // Go to sleep before checking again
-    // This is set in microseconds, so it needs to be
-    // multiplied by million to get seconds
-    esp_sleep_enable_timer_wakeup(1000000 * DELAY_S); // Activate wake-up timer
-    esp_deep_sleep_start();                           // Put ESP32 into deep sleep. Program stops here
+    esp_sleep_enable_timer_wakeup(DELAY_S);
+    (void)esp_deep_sleep_start();
 }
 
 void loop()
 {
-    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
-    // time. loop() must be empty!
-}
-
-// Our main drawing function
-void drawAll()
-{
-    // Print quote
-    display.setFont(&LoveLetter_Regular10); // Set custom font
-    display.setTextSize(3);
-    display.setTextColor(INKPLATE7_BLACK, INKPLATE7_WHITE);
-    printQuote();
-
-    // Print author in red
-    display.setTextSize(2);
-    display.setCursor(20, 360);
-    display.setTextColor(INKPLATE7_RED, INKPLATE7_WHITE);
-    display.print("-");
-    display.println(author);
-}
-
-void printQuote()
-{
-    int currentChar = 0;
-    char currentWordBuf[128] = {0};
-    display.setCursor(20, 37);
-    bool lastWord = false;
-    int currentRow = 0;
-
-    while (1)
-    {
-        // Start from the current char
-        int i = currentChar;
-        while (quote[i] != ' ') // Find the next space
-        {
-            i++; // Finds the index where the current word ends
-            if (i > len)
-                lastWord = true; // If we went further than index, we're in the last word
-        }
-
-        // Clear current word buffer and copy the current word substring in it
-        memset(currentWordBuf, 0, 128);
-
-        if (!lastWord)
-        {
-            // copy currently observed part of the string as the current word
-            memcpy(currentWordBuf, quote + currentChar, i - currentChar);
-        }
-        else
-        {
-            // If it's the last word, copy it until the ending
-            memcpy(currentWordBuf, quote + currentChar, len - currentChar);
-        }
-
-        int16_t x1, y1;
-        uint16_t w, h;
-
-        // Check if the current word will go out of bounds
-        display.getTextBounds(currentWordBuf, display.getCursorX(), display.getCursorY(), &x1, &y1, &w, &h);
-        if ((x1 + w) >= 610)
-        {
-            // Print in new row if it will
-            currentRow++;
-            // Offset for each row is 49 pixels
-            // +37 for the first row
-            display.setCursor(20, (49 * currentRow) + 37);
-        }
-
-        // Print word and space
-        display.print(currentWordBuf);
-        display.print(" ");
-
-        // If we've reached the last word, end the print
-        if (lastWord)
-            return;
-
-        currentChar = i + 1;
-    }
+    // Never here
 }
