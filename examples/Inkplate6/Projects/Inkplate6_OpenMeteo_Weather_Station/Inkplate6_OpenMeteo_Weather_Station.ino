@@ -7,7 +7,7 @@
 
   Overview:
   This example demonstrates how to fetch and display weather data from the OpenMeteo API
-  using the Inkplate 10 e-paper display.
+  using the Inkplate 6 e-paper display.
 
   Before You Start:
   - Enter your WiFi credentials carefully (they are case-sensitive).
