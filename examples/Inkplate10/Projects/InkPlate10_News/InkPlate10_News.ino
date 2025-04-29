@@ -1,125 +1,116 @@
 /*
-    Inkplate10_News_API example for Soldered Inkplate 10
-    For this example you will need only USB cable and Inkplate 10.
-    Select "e-radionica Inkplate10" or "Soldered Inkplate10" from Tools -> Board menu.
-    Don't have "e-radionica Inkplate10" or "Soldered Inkplate10" option? Follow our tutorial and add it:
-    https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
-
-    This example will show you how you can use Inkplate 10 to display API data.
-    Here we use News API to get headline news and short description and display
-    them on the Inkplate screen. For this you will need an API key which you can obtain
-    here: https://newsapi.org/
+    Inkplate10_News_API Example for Soldered Inkplate 10
+    This example demonstrates how to use the Inkplate 10 to display news headlines and descriptions
+    fetched from the News API. You will need an API key from https://newsapi.org/ to use this example.
 
     IMPORTANT:
-    Make sure to change your timezone and wifi credentials below
-    Also have ArduinoJSON installed in your Arduino libraries, download here: https://arduinojson.org/
+    - Update your WiFi credentials and API key in the "CHANGE HERE" section below.
+    - Ensure you have the ArduinoJSON library installed: https://arduinojson.org/
+    - Adjust the timezone as needed.
 
-    Want to learn more about Inkplate? Visit www.inkplate.io
-    Looking to get support? Write on our forums: https://forum.soldered.com/
-    28 July 2020 by Soldered
+    For more information, visit:
+    - Inkplate documentation: https://www.inkplate.io
+    - Support forums: https://forum.soldered.com/
+
+    Created by Soldered, 28 July 2020
 */
 
-// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+// Ensure the correct board is selected in the Arduino IDE
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
 #error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 
-//---------- CHANGE HERE  -------------:
+// ---------- CHANGE HERE -------------
+int timeZone = 2; // Adjust your timezone (e.g., 2 means UTC+2)
 
-// Adjust your time zone, 2 means UTC+2
-int timeZone = 2;
+// WiFi credentials
+char ssid[] = "YourWiFiSSID";
+char pass[] = "YourWiFiPassword";
 
-// Put in your ssid and password
-char ssid[] = "Soldered-testingPurposes";
-char pass[] = "Testing443";
-char api_key_news[] = "10fb57f24c784ee7be7a9cc419b775cc"; //You can obtain one here: https://newsapi.org/
-// Also, declare the function to check if the API key is valid
-bool checkIfAPIKeyIsValid(char *APIKEY);
+// News API key (get one from https://newsapi.org/)
+char api_key_news[] = "YourNewsAPIKey";
 
-//----------------------------------
+// ------------------------------------
 
-// Include Inkplate library to the sketch
+// Include necessary libraries
 #include "Inkplate.h"
-
-// Our networking functions, declared in Network.cpp
 #include "Network.h"
+
+// Include necessary libraries for fonts
 #include "Inter12pt7b.h"
 #include "GT_Pressura16pt7b.h"
+#include "FreeSerifItalic24pt7b.h"
+#include "FreeSerifItalic12pt7b.h"
 
-
-// create object with all networking functions
+// Create network and display objects
 Network network;
-
-// create display object
 Inkplate display(INKPLATE_1BIT);
 
-// Delay between API calls in miliseconds (first 60 represents minutes so you can change to your need)
-#define DELAY_MS (uint32_t)60 * 60 * 1000
-#define DELAY_WIFI_RETRY_SECONDS 10
-#define DELAY_API_RETRY_SECONDS 10
+// Constants for delays and refreshes
+#define DELAY_MS (uint32_t)60 * 60 * 1000 // Delay between API calls (1 hour)
+#define DELAY_WIFI_RETRY_SECONDS 10       // Delay for WiFi retry
+#define DELAY_API_RETRY_SECONDS 10        // Delay for API retry
+RTC_DATA_ATTR unsigned refreshes = 0;    // Counter for partial refreshes
+const int fullRefresh = 20;              // Full refresh after 20 partial refreshes
 
-// Variable for counting partial refreshes
-RTC_DATA_ATTR unsigned refreshes = 0;
-
-// Constant to determine when to full update
-const int fullRefresh = 20;
+// Function declarations
+bool checkIfAPIKeyIsValid(char *APIKEY);
+void setTime();
+void drawNews(struct news *entities);
 
 void setup()
 {
-    // Begin serial communitcation, sed for debugging
+    // Initialize serial communication for debugging
     Serial.begin(115200);
-    // Initial display settings
+
+    // Initialize the display
     display.begin();
     display.setTextWrap(false);
 
-    // Connect Inkplate to the WiFi network
-    // Try connecting to a WiFi network.
-    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
-    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
+    // Connect to WiFi
     if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
     {
-        //Can't connect to netowrk
-        // Clear display for the error message
+        // Display WiFi connection error
         display.clearDisplay();
-        // Set the font size;
         display.setTextSize(3);
-        // Set the cursor positions and print the text.
         display.setCursor((display.width() / 2) - 200, display.height() / 2);
-        display.print(F("Unable to connect to "));
-        display.println(F(ssid));
+        display.print(F("Unable to connect to WiFi"));
         display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
-        display.println(F("Please check SSID and PASS!"));
-        // Display the error message on the Inkplate and go to deep sleep
+        display.println(F("Check SSID and Password!"));
         display.display();
         esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
         (void)esp_deep_sleep_start();
     }
 
-    if(!checkIfAPIKeyIsValid(api_key_news))
+    // Validate the API key
+    if (!checkIfAPIKeyIsValid(api_key_news))
     {
+        // Display API key error
         display.clearDisplay();
         display.setTextSize(3);
         display.setCursor((display.width() / 2) - 200, display.height() / 2);
-        display.print(F("Your API key is invalid or incorrect."));
+        display.print(F("Invalid API Key!"));
         display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
-        display.println(F("Please check your API key."));
+        display.println(F("Check your API key."));
         display.display();
         esp_sleep_enable_timer_wakeup(1000L * DELAY_API_RETRY_SECONDS);
         (void)esp_deep_sleep_start();
     }
 
+    // Set the current time
     setTime();
 
-    struct news *entities;
-
-    entities = network.getData();
+    // Fetch news data and display it
+    struct news *entities = network.getData();
     drawNews(entities);
 
+    // Update the display
     display.display();
 
+    // Increment refresh counter
     ++refreshes;
 
-    // Go to sleep before checking again
+    // Enter deep sleep until the next update
     esp_sleep_enable_timer_wakeup(1000 * DELAY_MS);
     (void)esp_deep_sleep_start();
 }
@@ -128,56 +119,95 @@ void drawNews(struct news *entities)
 {
     display.setRotation(3);
 
-    // Add title "World News"
-    display.setFont(&GT_Pressura16pt7b); // Use a bold font for the title
-    display.setTextSize(2); // Set text size for the title
-    int textWidth = strlen("World News") * 12; // Approximate width (12 pixels per character for GT_Pressura16pt7b)
-    int centerX = (display.width() - textWidth) / 2; // Center the title horizontally
-    display.setCursor(centerX-100, 55); // Set the cursor to the calculated position
+    // Display the title "World News"
+    display.setFont(&FreeSerifItalic24pt7b);
+    int textWidth = strlen("World News") * 12; // Approximate width (12 pixels per character)
+    int centerX = (display.width() - textWidth) / 2;
+    display.setCursor(centerX, 60);
     display.print("World News");
-    
-    // Add a dividing line below the title
-    for (int lineY = 60; lineY < 65; lineY++) { // 5-pixel thick line
-        display.drawLine(0, lineY, display.width(), lineY, BLACK);
+
+    // Draw a dividing line below the title
+    int xStart = display.width() * 0.03;
+    int xEnd = display.width() * 0.97;
+    for (int lineY = 80; lineY < 83; lineY++)
+    {
+        display.drawLine(xStart, lineY, xEnd, lineY, BLACK);
     }
 
-    display.setTextSize(1); // Set text size for the news items
-    // Start rendering news items below the title
-  
-    // Start rendering news items below the title
-    int startY = 100; // Starting Y position below the title
-    int boxHeight = 135; // Height of each news box
-    int boxSpacing = 20; // Spacing between boxes
-    int leftMargin = 20; // Left margin for the text
-    int rightMargin = 20; // Right margin for the text  
-    int maxBoxes = (display.height() - startY) / (boxHeight + boxSpacing); // Calculate how many boxes fit on the screen
-
-    const int MAX_NEWS_ITEMS = 7;
-
-    // Loop through the news items and display each in a box
-    for (int i = 0; i < maxBoxes && i < MAX_NEWS_ITEMS && entities[i].title != NULL && entities[i].description != NULL; i++)
+    // Display the current date and time
+    struct tm timeInfo;
+    time_t nowSec;
+    display.getNTPEpoch(&nowSec);
+    while (nowSec < 8 * 3600 * 2)
     {
-        // Calculate the position of the current box
+        delay(500);
+        yield();
+        nowSec = time(nullptr);
+    }
+    gmtime_r(&nowSec, &timeInfo);
+
+        // Prepare date and time strings
+    char dateStr[20];
+    char updateStr[20];
+    sprintf(dateStr, "Date : %02d.%02d.%04d",
+            timeInfo.tm_mday,
+            timeInfo.tm_mon + 1,
+            timeInfo.tm_year + 1900);
+
+    sprintf(updateStr, "Last update : %02d.%02d",
+            timeInfo.tm_hour,
+            timeInfo.tm_min);
+
+    // Choose font
+    display.setFont(&FreeSans12pt7b);
+
+    // Y position for the row
+    int yPos = 105;
+
+    // Print date left-aligned
+    display.setCursor(10, yPos); // 10 px from left
+    display.print(dateStr);
+
+    // Calculate width of 'Last update' string for right alignment
+    int updateStrWidth = strlen(updateStr) * 12; // adjust 12 for your font's avg char width
+    int xRight = display.width() - updateStrWidth - 10; // 10 px margin from right
+
+    // Print 'Last update' right-aligned
+    display.setCursor(xRight, yPos);
+    display.print(updateStr);
+
+    // Draw a line below the date
+    for (int lineY = 113; lineY < 116; lineY++)
+    {
+        display.drawLine(xStart, lineY, xEnd, lineY, BLACK);
+    }
+
+    // Render news items
+    int startY = 200;
+    int boxHeight = 170;
+    int boxSpacing = 20;
+    int leftMargin = 20;
+    int rightMargin = 20;
+    int maxBoxes = (display.height() - startY) / (boxHeight + boxSpacing);
+
+    for (int i = 0; i < maxBoxes && entities[i].title != NULL && entities[i].description != NULL; i++)
+    {
         int y0 = startY + i * (boxHeight + boxSpacing);
         int y1 = y0 + boxHeight;
 
-        // Draw the title in the box
+        // Draw the title
         display.drawTextBox(leftMargin, y0, display.width() - rightMargin, y0 + 80, entities[i].title, 1, &GT_Pressura16pt7b, 30, false, 18);
 
-        // Draw the description in the box
-        display.drawTextBox(leftMargin, y0 + 57, display.width() - rightMargin, y1+100, entities[i].description, 1, &Inter12pt7b, 30, false, 16);
+        // Draw the description
+        display.drawTextBox(leftMargin, y0 + 80, display.width() - rightMargin, y1 + 20, entities[i].description, 1, &FreeSerifItalic12pt7b, 30, false, 16);
     }
 }
 
-// Function for getting time from NTP server
 void setTime()
 {
-    // Structure used to hold time information
     struct tm timeInfo;
     time_t nowSec;
-    // Fetch current time in epoch format and store it
     display.getNTPEpoch(&nowSec);
-    // This loop ensures that the NTP time fetched is valid and beyond a certain threshold
     while (nowSec < 8 * 3600 * 2)
     {
         delay(500);
@@ -191,18 +221,12 @@ void setTime()
 
 bool checkIfAPIKeyIsValid(char *APIKEY)
 {
-    bool failed = false;
-    // Create the buffer for holding the API response, make it large enough just in case
-    char *data;
-    data = (char *)ps_malloc(50000LL);
-
-    // Http object used to make GET request
+    char *data = (char *)ps_malloc(50000LL);
     HTTPClient http;
     http.getStream().setTimeout(10);
     http.getStream().flush();
     http.getStream().setNoDelay(true);
 
-    // Combine the base URL and the API key to do a test call
     char *baseURL = "https://newsapi.org/v2/top-headlines?country=us&apiKey=";
     char apiTestURL[200];
     sprintf(apiTestURL, "%s%s", baseURL, APIKEY);
@@ -211,23 +235,23 @@ bool checkIfAPIKeyIsValid(char *APIKEY)
     delay(300);
 
     int httpCode = http.GET();
+    bool failed = (httpCode != 200);
 
-    if(httpCode != 200)
+    if (failed)
     {
-        Serial.println("Your API key is invalid or incorrect.");
-        failed = true;
+        Serial.println("Invalid API key.");
     }
     else
     {
-        Serial.println("API key OK.");
+        Serial.println("API key is valid.");
     }
+
     http.end();
     free(data);
-
     return !failed;
 }
 
 void loop()
 {
-    // Never here
+    // Not used
 }
