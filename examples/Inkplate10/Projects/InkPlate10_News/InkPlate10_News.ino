@@ -123,7 +123,7 @@ void drawNews(struct news *entities)
     display.setFont(&FreeSerifItalic24pt7b);
     int textWidth = strlen("World News") * 12; // Approximate width (12 pixels per character)
     int centerX = (display.width() - textWidth) / 2;
-    display.setCursor(centerX, 60);
+    display.setCursor(centerX-70, 60); // -70 to ajust text position to center
     display.print("World News");
 
     // Draw a dividing line below the title
@@ -159,18 +159,18 @@ void drawNews(struct news *entities)
             timeInfo.tm_min);
 
     // Choose font
-    display.setFont(&FreeSans12pt7b);
+    display.setFont(&Inter12pt7b);
 
     // Y position for the row
     int yPos = 105;
 
     // Print date left-aligned
-    display.setCursor(10, yPos); // 10 px from left
+    display.setCursor(23, yPos); // 23 px from left
     display.print(dateStr);
 
     // Calculate width of 'Last update' string for right alignment
     int updateStrWidth = strlen(updateStr) * 12; // adjust 12 for your font's avg char width
-    int xRight = display.width() - updateStrWidth - 10; // 10 px margin from right
+    int xRight = display.width() - updateStrWidth - 19; // 19 px margin from right
 
     // Print 'Last update' right-aligned
     display.setCursor(xRight, yPos);
@@ -199,7 +199,7 @@ void drawNews(struct news *entities)
         display.drawTextBox(leftMargin, y0, display.width() - rightMargin, y0 + 80, entities[i].title, 1, &GT_Pressura16pt7b, 30, false, 18);
 
         // Draw the description
-        display.drawTextBox(leftMargin, y0 + 80, display.width() - rightMargin, y1 + 20, entities[i].description, 1, &FreeSerifItalic12pt7b, 30, false, 16);
+        display.drawTextBox(leftMargin, y0 + 80, display.width() - rightMargin, y1 + 20, entities[i].description, 1, &Inter12pt7b, 30, false, 16);
     }
 }
 
