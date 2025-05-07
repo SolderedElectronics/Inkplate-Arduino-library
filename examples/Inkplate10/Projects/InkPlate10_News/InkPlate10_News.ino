@@ -21,13 +21,15 @@
 #endif
 
 // ---------- CHANGE HERE -------------
-int timeZone = 2; // Adjust your timezone (e.g., 2 means UTC+2)
+// Adjust your timezone (e.g., 2 means UTC+2)
+int timeZone = 2;
 
-// WiFi credentials
-char ssid[] = "Soldered-testingPurposes";
-char pass[] = "Testing443";
-char api_key_news[] = "10fb57f24c784ee7be7a9cc419b775cc";
+// WiFi credentials (replace with your WiFi network details)
+char ssid[] = "YourWiFiSSID";       // Replace with your WiFi SSID
+char pass[] = "YourWiFiPassword";   // Replace with your WiFi password
 
+// News API key (get one from https://newsapi.org/)
+char api_key_news[] = "YourNewsAPIKey"; // Replace with your News API key
 // ------------------------------------
 
 // Include necessary libraries
@@ -56,27 +58,36 @@ void setup()
 {
     // Initialize serial communication for debugging
     Serial.begin(115200);
+    Serial.println(F("Starting Inkplate10_News example..."));
 
     // Initialize the display
     inkplate.begin();
     inkplate.setTextWrap(false);
+    Serial.println(F("Display initialized."));
 
     // Connect to WiFi
+    Serial.println(F("Setting WiFi credentials..."));
     network.setCredentials(ssid, pass, api_key_news);
     network.setTimeZone(timeZone);
+    Serial.println(F("Connecting to WiFi..."));
     network.begin();
 
     // Set the current time
+    Serial.println(F("Setting time..."));
     setTime();
 
     // Fetch news data and display it
+    Serial.println(F("Fetching news data..."));
     struct news *entities = network.getData(inkplate);
     if (entities != nullptr)
     {
+        Serial.println(F("News data fetched successfully. Drawing news..."));
         drawNews(entities);
     }
     else
     {
+        Serial.println(F("Failed to fetch news data."));
+        // Display an error message if fetching news fails
         inkplate.clearDisplay();
         inkplate.setCursor(50, 230);
         inkplate.setTextSize(2);
@@ -85,9 +96,11 @@ void setup()
     }
 
     // Update the display
+    Serial.println(F("Updating display..."));
     inkplate.display();
 
     // Enter deep sleep until the next update
+    Serial.println(F("Entering deep sleep..."));
     esp_sleep_enable_timer_wakeup(1000 * DELAY_MS);
     esp_deep_sleep_start();
 }
@@ -170,11 +183,12 @@ void drawNews(struct news *entities)
 
     for (int i = 0; i < maxBoxes && entities[i].title[0] != '\0' && entities[i].description[0] != '\0'; i++)
     {
+        Serial.printf("Drawing news item %d...\n", i + 1);
         int y0 = startY + i * (boxHeight + boxSpacing);
         int y1 = y0 + boxHeight;
 
         // Draw the title
-        inkplate.drawTextBox(leftMargin, y0+5, inkplate.width() - rightMargin, y0 + 80, entities[i].title, 1, &GT_Pressura16pt7b, 30, false, 18);
+        inkplate.drawTextBox(leftMargin, y0 + 5, inkplate.width() - rightMargin, y0 + 80, entities[i].title, 1, &GT_Pressura16pt7b, 30, false, 18);
 
         // Draw the description
         inkplate.drawTextBox(leftMargin, y0 + 80, inkplate.width() - rightMargin, y1 + 20, entities[i].description, 1, &Inter12pt7b, 30, false, 16);
