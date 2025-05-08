@@ -5,7 +5,7 @@
 
 #include <ArduinoJson.h>     
 
-#include <Inkplate.H>
+#include <Inkplate.h>
 
 
 // Function to get weather description based on the weather code
