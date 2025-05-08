@@ -15,122 +15,123 @@
     Created by Soldered, 30.4.2025
 */
 
-// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+// Ensure the correct board is selected in the Arduino IDE
 #ifndef ARDUINO_INKPLATECOLOR
 #error "Wrong board selection for this example, please select Soldered Inkplate 6COLOR in the boards menu."
 #endif
 
 // ---------- CHANGE HERE -------------
-int timeZone = 2; // Adjust your timezone (e.g., 2 means UTC+2)
+// Adjust your timezone (e.g., 2 means UTC+2)
+int timeZone = 2;
 
-// WiFi credentials
-char ssid[] = "YourWiFiSSID";
-char pass[] = "YourWiFiPassword";
+// WiFi credentials (replace with your WiFi network details)
+char ssid[] = "YourWiFiSSID";       // Replace with your WiFi SSID
+char pass[] = "YourWiFiPassword";   // Replace with your WiFi password
 
 // News API key (get one from https://newsapi.org/)
-char api_key_news[] = "YourNewsAPIKey";
-
+char api_key_news[] = "YourNewsAPIKey"; // Replace with your News API key
 // ------------------------------------
+
 
 // Include necessary libraries
 #include "Inkplate.h"
-#include "Network.h"
-#include "Inter12pt7b.h"
-#include "GT_Pressura16pt7b.h"
-#include "GT_Pressura8pt7b.h"
-#include "FreeSerifItalic24pt7b.h"
-#include "FreeSerifItalic12pt7b.h"
+#include "src/Network.h"
 
-// create object with all networking functions
+// Include necessary libraries for fonts
+#include "Fonts/Inter12pt7b.h"
+#include "Fonts/GT_Pressura16pt7b.h"
+#include "Fonts/FreeSerifBold12pt7b.h"
+#include "Fonts/FreeSerifItalic24pt7b.h"
+#include "Fonts/Inter10pt7b.h"
+
+// Create network and display objects
 Network network;
+Inkplate inkplate; // Use color mode for Inkplate 6COLOR
 
-// create display object
-Inkplate display;
+// Constants for delays and refreshes
+#define DELAY_MS (uint32_t)60 * 60 * 1000 // Delay between API calls (1 hour)
+#define DELAY_WIFI_RETRY_SECONDS 10       // Delay for WiFi retry
+#define DELAY_API_RETRY_SECONDS 10        // Delay for API retry
 
-// Delay between API calls in miliseconds (first 60 represents minutes so you can change to your need)
-#define DELAY_MS (uint32_t)60 * 60 * 1000
-#define DELAY_WIFI_RETRY_SECONDS 5
-
-// Variable for counting partial refreshes
-RTC_DATA_ATTR unsigned refreshes = 0;
-
-// Constant to determine when to full update
-const int fullRefresh = 20;
-
+// Function declarations
 void setTime();
+void drawNews(struct news *entities);
 
 void setup()
 {
-    // Begin serial communitcation, sed for debugging
+    // Initialize serial communication for debugging
     Serial.begin(115200);
-    // Initial display settings
-    display.begin();
-    display.setTextWrap(false);
+    Serial.println(F("Starting Inkplate6COLOR_News example..."));
 
-    // Connect Inkplate to the WiFi network
-    // Try connecting to a WiFi network.
-    // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
-    // If the Inkplate isn't able to connect to a network stop further code execution and print an error message.
-    if (!display.connectWiFi(ssid, pass, WIFI_TIMEOUT, true))
-    {
-        //Can't connect to netowrk
-        // Clear display for the error message
-        display.clearDisplay();
-        // Set the font size;
-        display.setTextSize(3);
-        // Set the cursor positions and print the text.
-        display.setCursor((display.width() / 2) - 200, display.height() / 2);
-        display.print(F("Unable to connect to "));
-        display.println(F(ssid));
-        display.setCursor((display.width() / 2) - 200, (display.height() / 2) + 30);
-        display.println(F("Please check SSID and PASS!"));
-        // Display the error message on the Inkplate and go to deep sleep
-        display.display();
-        esp_sleep_enable_timer_wakeup(1000L * DELAY_WIFI_RETRY_SECONDS);
-        (void)esp_deep_sleep_start();
-    }
+    // Initialize the display
+    inkplate.begin();
+    inkplate.setTextWrap(false);
+    Serial.println(F("Display initialized."));
 
+    // Connect to WiFi
+    Serial.println(F("Setting WiFi credentials..."));
+    network.setCredentials(ssid, pass, api_key_news);
+    network.setTimeZone(timeZone);
+    Serial.println(F("Connecting to WiFi..."));
+    network.begin();
+
+    // Set the current time
+    Serial.println(F("Setting time..."));
     setTime();
 
-    struct news *entities;
+    // Fetch news data and display it
+    Serial.println(F("Fetching news data..."));
+    struct news *entities = network.getData(inkplate);
+    if (entities != nullptr)
+    {
+        Serial.println(F("News data fetched successfully. Drawing news..."));
+        drawNews(entities);
+    }
+    else
+    {
+        Serial.println(F("Failed to fetch news data."));
+        // Display an error message if fetching news fails
+        inkplate.clearDisplay();
+        inkplate.setCursor(50, 230);
+        inkplate.setTextSize(2);
+        inkplate.println(F("Failed to fetch news"));
+        inkplate.display();
+    }
 
-    entities = network.getData();
-    drawNews(entities);
+    // Update the display
+    Serial.println(F("Updating display..."));
+    inkplate.display();
 
-    display.display();
-
-    ++refreshes;
-
-    // Activate wakeup timer
+    // Enter deep sleep until the next update
+    Serial.println(F("Entering deep sleep..."));
     esp_sleep_enable_timer_wakeup(1000 * DELAY_MS);
-    
-    // Start deep sleep (this function does not return). Program stops here.
     esp_deep_sleep_start();
 }
 
+// Function to draw news items on the display
 void drawNews(struct news *entities)
 {
-    display.setRotation(3); // Set display to landscape mode
-    display.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
+    inkplate.setRotation(3); // Set display to landscape mode
+    inkplate.setTextColor(INKPLATE_BLACK, INKPLATE_WHITE);
     // Display the title "World News"
-    display.setFont(&FreeSerifItalic24pt7b);
+    inkplate.setFont(&FreeSerifItalic24pt7b);
     int textWidth = strlen("World News") * 10; // Adjust width calculation for smaller screen
-    int centerX = (display.width() - textWidth) / 2;
-    display.setCursor(centerX-60, 40); // Adjust Y position for smaller screen
-    display.print("World News");
+    int centerX = (inkplate.width() - textWidth) / 2;
+    inkplate.setCursor(centerX - 60, 40); // Adjust Y position for smaller screen
+    inkplate.print("World News");
 
     // Draw a dividing line below the title
-    int xStart = display.width() * 0.05; // Adjust margins for smaller screen
-    int xEnd = display.width() * 0.95;
+    int xStart = inkplate.width() * 0.05; // Adjust margins for smaller screen
+    int xEnd = inkplate.width() * 0.95;
     for (int lineY = 60; lineY < 63; lineY++) // Adjust Y position for the line
     {
-        display.drawLine(xStart, lineY, xEnd, lineY, BLACK);
+        inkplate.drawLine(xStart, lineY, xEnd, lineY, INKPLATE_BLACK);
     }
 
-        // Display the current date and time
+    // Display the current date and time
     struct tm timeInfo;
     time_t nowSec;
-    display.getNTPEpoch(&nowSec);
+    inkplate.getNTPEpoch(&nowSec);
     while (nowSec < 8 * 3600 * 2)
     {
         delay(500);
@@ -139,7 +140,7 @@ void drawNews(struct news *entities)
     }
     gmtime_r(&nowSec, &timeInfo);
 
-        // Prepare date and time strings
+    // Prepare date and time strings
     char dateStr[20];
     char updateStr[20];
     sprintf(dateStr, "Date : %02d.%02d.%04d",
@@ -147,63 +148,64 @@ void drawNews(struct news *entities)
             timeInfo.tm_mon + 1,
             timeInfo.tm_year + 1900);
 
-    sprintf(updateStr, "Last update : %02d.%02d",
+    sprintf(updateStr, "Last update : %02d:%02d",
             timeInfo.tm_hour,
             timeInfo.tm_min);
 
     // Choose font
-    display.setFont(&GT_Pressura8pt7b);
+    inkplate.setFont(&Inter10pt7b);
 
     // Y position for the row
     int yPos = 83;
 
     // Print date left-aligned
-    display.setCursor(25, yPos); // 23 px from left
-    display.print(dateStr);
+    inkplate.setCursor(20, yPos); // Adjusted for smaller screen
+    inkplate.print(dateStr);
 
     // Calculate width of 'Last update' string for right alignment
-    int updateStrWidth = strlen(updateStr) * 8; // adjust 8 for your font's avg char width
-    int xRight = display.width() - updateStrWidth; // 28 px margin from right
+    int updateStrWidth = strlen(updateStr) * 12; // Adjust 12 for your font's avg char width
+    int xRight = inkplate.width() - updateStrWidth + 25; // Adjusted margin for smaller screen
 
     // Print 'Last update' right-aligned
-    display.setCursor(xRight, yPos);
-    display.print(updateStr);
+    inkplate.setCursor(xRight, yPos);
+    inkplate.print(updateStr);
 
+    // Draw a line below the date
     for (int lineY = 93; lineY < 96; lineY++) // Adjust Y position for the line
     {
-        display.drawLine(xStart, lineY, xEnd, lineY, BLACK);
+        inkplate.drawLine(xStart, lineY, xEnd, lineY, INKPLATE_BLACK);
     }
 
     // Render news items
-    int startY = 130; // Adjust starting Y position for news items
-    int boxHeight = 90; // Reduce box height for smaller screen
+    int startY = 140; // Adjust starting Y position for news items
+    int boxHeight = 120; // Reduce box height for smaller screen
     int boxSpacing = 10; // Reduce spacing between boxes
-    int leftMargin = 25; // Adjust margins
-    int rightMargin = 25;
-    int maxBoxes = (display.height() - startY) / (boxHeight + boxSpacing);
+    int leftMargin = 10; // Adjust margins
+    int rightMargin = 90;
+    int maxBoxes = (inkplate.height() - startY) / (boxHeight + boxSpacing);
 
-    for (int i = 0; i < maxBoxes && entities[i].title != NULL && entities[i].description != NULL; i++)
+    for (int i = 0; i < maxBoxes && entities[i].title != nullptr && entities[i].description != nullptr; i++)
     {
+        Serial.printf("Drawing news item %d...\n", i + 1);
+        Serial.printf("Title: %s\n", entities[i].title);
+        Serial.printf("Description: %s\n", entities[i].description);
+
         int y0 = startY + i * (boxHeight + boxSpacing);
         int y1 = y0 + boxHeight;
 
         // Draw the title
-        display.drawTextBox(leftMargin, y0, display.width() - rightMargin-100, y0 + 60,entities[i].title, 1, &Inter12pt7b, 18, false, 12);
+        inkplate.drawTextBox(leftMargin, y0, inkplate.width() - rightMargin, y0 + 70, entities[i].title, 1, &FreeSerifBold12pt7b, 26, false, 12);
 
         // Draw the description
-        display.drawTextBox(leftMargin, y0 + 60, display.width() - rightMargin+50, y1,entities[i].description, 1, &GT_Pressura8pt7b, 14, false, 10);
+        inkplate.drawTextBox(leftMargin, y0 + 65, inkplate.width() - rightMargin-25, y1, entities[i].description, 1, &Inter10pt7b, 20, false, 10);
     }
 }
 
-// Function for getting time from NTP server
 void setTime()
 {
-    // Structure used to hold time information
     struct tm timeInfo;
     time_t nowSec;
-    // Fetch current time in epoch format and store it
-    display.getNTPEpoch(&nowSec);
-    // This loop ensures that the NTP time fetched is valid and beyond a certain threshold
+    inkplate.getNTPEpoch(&nowSec);
     while (nowSec < 8 * 3600 * 2)
     {
         delay(500);
@@ -217,6 +219,5 @@ void setTime()
 
 void loop()
 {
-    // Never here! If you are using deep sleep, the whole program should be in setup() because the board restarts each
-    // time. loop() must be empty!
+    // Not used
 }

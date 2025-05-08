@@ -1,9 +1,9 @@
 /*
     Network.cpp
-    Inkplate 10 Arduino library
+    Inkplate 6 Arduino library
     Matej Andračić @ Soldered
     May 5, 2025
-    https://github.com/SolderedElectronics/Inkplate-Arduino-library/tree/master/examples/Inkplate10
+    https://github.com/SolderedElectronics/Inkplate-Arduino-library/tree/master/examples/Inkplate6
 
     For support, please reach over forums: forum.e-radionica.com/en
     For more info about the product, please check: www.inkplate.io
@@ -53,7 +53,7 @@ struct news* Network::getData(Inkplate &inkplate)
 {
     struct news *ent = nullptr;
 
-    // If not connected to WiFi, reconnect
+    // If not connected to WiFi, reconnect,
     if (WiFi.status() != WL_CONNECTED)
     {
         WiFi.reconnect();
@@ -69,7 +69,7 @@ struct news* Network::getData(Inkplate &inkplate)
 
             if (cnt == 7)
             {
-                Serial.println(F("Can't connect to WiFi, restarting..."));
+                Serial.println("Can't connect to WiFi, restarting...");
                 delay(100);
                 ESP.restart();
             }
@@ -88,17 +88,12 @@ struct news* Network::getData(Inkplate &inkplate)
     // Prepare the API URL
     char temp[128];
     sprintf(temp, "https://newsapi.org/v2/top-headlines?country=us&apiKey=%s", this->api_key_news);
-    Serial.printf("API URL: %s\n", temp); // Debugging: Print the API URL
     http.begin(temp);
 
     // Perform the GET request
     int httpCode = http.GET();
-    Serial.printf("HTTP GET Response Code: %d\n", httpCode); // Debugging: Print HTTP response code
-
     if (httpCode == 200)
     {
-        Serial.println(F("HTTP GET request successful. Parsing JSON response..."));
-
         while (http.getStream().available() && http.getStream().peek() != '{')
         {
             (void)http.getStream().read();
@@ -116,13 +111,13 @@ struct news* Network::getData(Inkplate &inkplate)
         if (doc["status"])
         {
             int n = doc["articles"].size();
-            Serial.printf("Number of articles fetched: %d\n", n);
+            Serial.printf("Number of articles: %d\n", n);
 
             // Allocate memory for the news array
             ent = (struct news *)ps_malloc(n * sizeof(struct news));
             if (!ent)
             {
-                Serial.println(F("Memory allocation failed for news array!"));
+                Serial.println(F("Memory allocation failed!"));
                 return nullptr;
             }
 
@@ -132,24 +127,13 @@ struct news* Network::getData(Inkplate &inkplate)
                 const char *temp_title = article["title"];
                 const char *temp_description = article["description"];
 
-                // Debugging: Print the title and description of each article
-                Serial.printf("Article %d Title: %s\n", i + 1, temp_title ? temp_title : "NULL");
-                Serial.printf("Article %d Description: %s\n", i + 1, temp_description ? temp_description : "NULL");
-
                 // Allocate memory for title and copy the string
                 if (temp_title)
                 {
                     size_t title_len = strlen(temp_title) + 1; // Include null terminator
                     ent[i].title = (char *)malloc(title_len);
                     if (ent[i].title)
-                    {
                         memcpy(ent[i].title, temp_title, title_len);
-                    }
-                    else
-                    {
-                        Serial.printf("Memory allocation failed for title of article %d.\n", i + 1);
-                        ent[i].title = nullptr;
-                    }
                 }
                 else
                 {
@@ -162,14 +146,7 @@ struct news* Network::getData(Inkplate &inkplate)
                     size_t description_len = strlen(temp_description) + 1; // Include null terminator
                     ent[i].description = (char *)malloc(description_len);
                     if (ent[i].description)
-                    {
                         memcpy(ent[i].description, temp_description, description_len);
-                    }
-                    else
-                    {
-                        Serial.printf("Memory allocation failed for description of article %d.\n", i + 1);
-                        ent[i].description = nullptr;
-                    }
                 }
                 else
                 {
@@ -182,7 +159,6 @@ struct news* Network::getData(Inkplate &inkplate)
     }
     else if (httpCode == 404)
     {
-        Serial.println(F("HTTP 404: No news found."));
         // Handle case where no news is found
         inkplate.clearDisplay();
         inkplate.setCursor(50, 230);
@@ -191,10 +167,6 @@ struct news* Network::getData(Inkplate &inkplate)
         inkplate.display();
         while (1)
             ;
-    }
-    else
-    {
-        Serial.printf("HTTP GET request failed with code: %d\n", httpCode);
     }
 
     // Clear the JSON document and end the HTTP request
