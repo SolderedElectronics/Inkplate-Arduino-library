@@ -539,7 +539,7 @@ bool Image::drawBmpFromWebAtPosition(const char *url, const Position &position, 
     readBmpHeader(buf, &bmpHeader);
 
     uint16_t posX, posY;
-    getPointsForPosition(position, bmpHeader.width, bmpHeader.height, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
+    getPointsForPosition(position, bmpHeader.width, bmpHeader.height, width(), height(), &posX, &posY);
     ret = drawBitmapFromBuffer(buf, posX, posY, dither, invert);
     free(buf);
 
@@ -583,7 +583,7 @@ bool Image::drawBmpFromSdAtPosition(const char *fileName, const Position &positi
         memset(ditherBuffer, 0, sizeof ditherBuffer);
 
     uint16_t posX, posY;
-    getPointsForPosition(position, bmpHeader.width, bmpHeader.height, E_INK_WIDTH, E_INK_HEIGHT, &posX, &posY);
+    getPointsForPosition(position, bmpHeader.width, bmpHeader.height, width(), height(), &posX, &posY);
 
     for (int i = 0; i < h; ++i)
     {
