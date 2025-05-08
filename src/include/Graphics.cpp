@@ -321,7 +321,7 @@ void Graphics::drawTextBox(int16_t x0, int16_t y0, int16_t x1, int16_t y1, const
     {
         this->drawRect(x0, y0, (x1 - x0), (y1 - y0), 1);
     }
-    if (verticalSpacing == NULL)
+    if (verticalSpacing == 0)
     {
         verticalSpacing = textSizeMultiplier * fontSize + 6;
     }
