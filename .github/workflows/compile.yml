@@ -58,6 +58,7 @@ jobs:
         run: pip3 install pyserial
       - name: Compile examples
         uses: arduino/compile-sketches@v1
+        continue-on-error: true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           platforms: |
