@@ -40,6 +40,7 @@ char pass[] = "";
 
 // Include fonts used
 #include "Fonts/FreeMonoBold12pt7b.h"
+#include "Fonts/FreeMonoBold24pt7b.h"
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
