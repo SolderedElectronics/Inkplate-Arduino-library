@@ -31,7 +31,8 @@ extern char pass[];
 extern Inkplate display;
 
 // Static Json from ArduinoJson library
-StaticJsonDocument<30000> doc;
+ArduinoJson::StaticJsonDocument<30000> doc; // Still technically deprecated, but clarifies the source
+
 
 void Network::begin(char *ssid, char *pass)
 {
