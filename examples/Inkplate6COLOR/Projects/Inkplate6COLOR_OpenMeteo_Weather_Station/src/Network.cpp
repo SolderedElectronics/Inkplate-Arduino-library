@@ -2,9 +2,7 @@
 #include <WiFi.h>          
 #include <HTTPClient.h>     
 #include "WeatherData.h"     
-
 #include <ArduinoJson.h>     
-
 #include <Inkplate.h>
 
 
