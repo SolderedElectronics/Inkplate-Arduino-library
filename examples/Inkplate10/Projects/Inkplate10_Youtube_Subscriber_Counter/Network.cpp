@@ -45,7 +45,7 @@ void Network::begin(char *ssid, char *pass)
 bool Network::getData(channelInfo *channel, char *channel_id, char *api_key, Inkplate *display)
 {
     // Create JSON document
-    doc = new DynamicJsonDocument(20000);
+    doc = new JsonDocument(20000);
     
     bool f = 0;
 

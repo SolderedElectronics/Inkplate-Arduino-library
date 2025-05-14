@@ -76,7 +76,7 @@ struct textElement
     int x;
     int y;
     const GFXfont *font;
-    char *text;
+    const char *text;
     char align;
     uint8_t text_color;
 };

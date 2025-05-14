@@ -47,7 +47,7 @@ class Network
     int getRequest(WiFiClientSecure *client, char *_api_root_url, char *_api_call_url);
 
     // Dynamic Json from ArduinoJson library
-    DynamicJsonDocument * doc;
+    JsonDocument * doc;
 };
 
 #endif
