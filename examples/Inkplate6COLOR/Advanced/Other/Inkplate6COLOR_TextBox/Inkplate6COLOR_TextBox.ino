@@ -12,7 +12,7 @@
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
 #include "Roboto_Light_36.h"
-Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+Inkplate display; // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
 
 // Define the text you will show in the text box
 const char* text="This is an example of a text written in a textbox. When a word doesn't fit into the current row, it goes to the next one."\
