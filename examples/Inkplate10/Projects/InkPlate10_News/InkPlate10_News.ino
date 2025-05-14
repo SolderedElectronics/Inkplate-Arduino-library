@@ -12,7 +12,7 @@
     - Inkplate documentation: https://www.inkplate.io
     - Support forums: https://forum.soldered.com/
 
-    Created by Soldered, 5.5.2025
+    Created by Soldered, 14.5.2025
 */
 
 // Ensure the correct board is selected in the Arduino IDE
