@@ -417,7 +417,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         return 0;
     }
 
-    if(_partialUpdateCounter>=_partialUpdateLimiter && _partialUpdateLimiter != 0)
+    if (_partialUpdateCounter >= _partialUpdateLimiter && _partialUpdateLimiter != 0)
     {
         // Force full update.
         display1b(leaveOn);
@@ -507,7 +507,7 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
 
     memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
 
-    if(_partialUpdateLimiter!=0)
+    if (_partialUpdateLimiter != 0)
         _partialUpdateCounter++;
 
     return changeCount;
