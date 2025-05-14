@@ -50,7 +50,7 @@ char pass[] = "";
 Network network;
 
 // create display object
-Inkplate display;
+Inkplate display(INKPLATE_1BIT);
 
 // Delay between API calls in seconds, 300 seconds is 5 minutes
 // Since the function this is used in expects time in microseconds,
