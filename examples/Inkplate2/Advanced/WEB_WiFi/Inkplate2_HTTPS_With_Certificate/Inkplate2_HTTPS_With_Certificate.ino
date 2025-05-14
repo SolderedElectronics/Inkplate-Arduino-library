@@ -67,17 +67,17 @@ void setup()
     display.display();      // Put clear image on display
 
     display.print("Connecting to WiFi...");
-    display.partialUpdate();
+    display.display();
     display.connectWiFi(ssid, password);
     
     while (!display.isConnected())
     {
         delay(500);
         display.print(".");
-        display.partialUpdate();
+        display.display();
     }
     display.println("\nWiFi OK! Downloading...");
-    display.partialUpdate();
+    display.display();
 
     //Apply the certificate previously defined
     display.applyHttpsCertificate(certificate);

@@ -23,7 +23,7 @@
 #endif
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
-Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+Inkplate display; 
 
 const char ssid[] = "";    // Your WiFi SSID
 const char *password = ""; // Your WiFi password
@@ -70,17 +70,17 @@ void setup()
     display.display();      // Put clear image on display
 
     display.print("Connecting to WiFi...");
-    display.partialUpdate();
+    display.display();
     display.connectWiFi(ssid, password);
     
     while (!display.isConnected())
     {
         delay(500);
         display.print(".");
-        display.partialUpdate();
+        display.display();
     }
     display.println("\nWiFi OK! Downloading...");
-    display.partialUpdate();
+    display.display();
 
     //Apply the certificate previously defined
     display.applyHttpsCertificate(certificate);

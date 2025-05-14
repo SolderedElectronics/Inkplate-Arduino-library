@@ -42,24 +42,20 @@ void Network::begin()
 
     int cnt = 0;
     display.print(F("Waiting for WiFi to connect..."));
-    display.partialUpdate(true);
     while ((WiFi.status() != WL_CONNECTED))
     {
         display.print(F("."));
-        display.partialUpdate(true);
         delay(1000);
         ++cnt;
 
         if (cnt == 20)
         {
             display.println("Can't connect to WIFI, restarting");
-            display.partialUpdate(true);
             delay(100);
             ESP.restart();
         }
     }
     display.println(F(" connected"));
-    display.partialUpdate(true);
 
 }
 
@@ -76,7 +72,6 @@ bool Network::getData(char* text, char* auth)
 
         int cnt = 0;
         display.println(F("Waiting for WiFi to reconnect..."));
-        display.partialUpdate(true);
         while ((WiFi.status() != WL_CONNECTED))
         {
             // Prints a dot every second that wifi isn't connected
