@@ -13,16 +13,11 @@
   If you have any questions about licensing, please contact techsupport@e-radionica.com
   Distributed as-is; no warranty is given.
 */
-
 #include "Arduino.h"
-
-#include <HTTPClient.h>
-#include <WiFi.h>
-#include <WiFiClientSecure.h>
-
-// Wifi ssid and password
-extern char ssid[];
-extern char pass[];
+#include "ArduinoJson.h"
+#include "HTTPClient.h"
+#include "WiFi.h"
+#include "WiFiClientSecure.h"
 
 #ifndef NETWORK_H
 #define NETWORK_H
@@ -33,7 +28,7 @@ class Network
 {
   public:
     // Functions we can access in main file
-    void begin();
+    void begin(char *ssid, char *pass);
     bool getData(char* text, char* auth);
 
   private:
@@ -41,3 +36,4 @@ class Network
 };
 
 #endif
+

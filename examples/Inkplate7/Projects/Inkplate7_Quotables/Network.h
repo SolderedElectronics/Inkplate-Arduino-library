@@ -15,11 +15,10 @@
 */
 
 #include "Arduino.h"
-
-#include <HTTPClient.h>
-#include <WiFi.h>
-#include <WiFiClientSecure.h>
-#include "Inkplate.h"
+#include "ArduinoJson.h"
+#include "HTTPClient.h"
+#include "WiFi.h"
+#include "WiFiClientSecure.h"
 
 #ifndef NETWORK_H
 #define NETWORK_H
@@ -30,8 +29,11 @@ class Network
 {
   public:
     // Functions we can access in main file
-    void begin(char * ssid, char * pass);
-    bool getData(char *quote, char *author, int * len, Inkplate * display);
+    void begin(char *ssid, char *pass);
+    bool getData(char* text, char* auth);
+
+  private:
+    // Functions called from within our class
 };
 
 #endif

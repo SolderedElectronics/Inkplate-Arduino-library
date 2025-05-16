@@ -33,7 +33,8 @@ extern char pass[];
 extern Inkplate display;
 
 // Static Json from ArduinoJson library
-StaticJsonDocument<30000> doc;
+ArduinoJson::StaticJsonDocument<30000> doc; // Still technically deprecated, but clarifies the source
+
 
 void Network::begin()
 {
@@ -42,21 +43,25 @@ void Network::begin()
     WiFi.begin(ssid, pass);
 
     int cnt = 0;
-    Serial.print(F("Waiting for WiFi to connect..."));
+    display.print(F("Waiting for WiFi to connect..."));
+    display.display();
     while ((WiFi.status() != WL_CONNECTED))
     {
-        Serial.print(F("."));
+        display.print(F("."));
+        display.display();
         delay(1000);
         ++cnt;
 
         if (cnt == 20)
         {
-            Serial.println("Can't connect to WIFI, restarting");
+            display.println("Can't connect to WIFI, restarting");
+            display.display();
             delay(100);
             ESP.restart();
         }
     }
-    Serial.println(F(" connected"));
+    display.println(F(" connected"));
+    display.display();
 
 }
 
@@ -72,7 +77,7 @@ bool Network::getData(char* text, char* auth)
         delay(5000);
 
         int cnt = 0;
-        Serial.println(F("Waiting for WiFi to reconnect..."));
+        display.println(F("Waiting for WiFi to reconnect..."));
         while ((WiFi.status() != WL_CONNECTED))
         {
             // Prints a dot every second that wifi isn't connected
@@ -100,7 +105,7 @@ bool Network::getData(char* text, char* auth)
     http.getStream().flush();
 
     // Initiate http
-    char link[] = "https://api.quotable.io/random";
+    char link[] = "https://api.quotable.kurokeita.dev/api/quotes/random";
     http.begin(link);
 
     // Actually do request
@@ -121,15 +126,23 @@ bool Network::getData(char* text, char* auth)
         }
         else
         {
+            if(strlen(doc["quote"]["content"])>128)
+            {
+                return false;
+            }
             // Set all data got from internet using formatTemp and formatWind defined above
             // This part relies heavily on ArduinoJson library
-            const char *buff1 = doc["content"];
 
-            strcpy(text, buff1);
+             const char *buff2 = doc["quote"]["author"]["name"];
+            strncpy(auth,buff2,35);
 
-            const char *buff2 = doc["author"];
+            Serial.println("Success");
 
-            strcpy(auth, buff2);
+            const char *buff1 = doc["quote"]["content"];
+            strncpy(text,buff1,128);
+
+           
+
 
             // Save our data to data pointer from main file
             f = 0;
@@ -141,7 +154,7 @@ bool Network::getData(char* text, char* auth)
         display.clearDisplay();
         display.setCursor(50, 230);
         display.setTextSize(2);
-        display.println(F("Quotes have not been found!"));
+        display.println(F("Info has not been found!"));
         display.display();
         while (1)
             ;

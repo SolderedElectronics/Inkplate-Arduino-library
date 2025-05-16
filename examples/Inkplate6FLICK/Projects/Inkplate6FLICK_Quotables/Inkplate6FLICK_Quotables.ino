@@ -19,7 +19,7 @@
 
     Want to learn more about Inkplate? Visit www.inkplate.io
     Looking to get support? Write on our forums: https://forum.soldered.com/
-    15 March 2024 by Soldered
+    14 March 2024 by Soldered
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -39,7 +39,9 @@ char pass[] = "";
 #include "Inkplate.h"
 
 // Include fonts used
-#include "Fonts/exmouth_40pt7b.h"
+#include "Fonts/FreeMonoBold12pt7b.h"
+
+#include "Fonts/FreeMonoBold24pt7b.h"
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
@@ -53,9 +55,10 @@ Network network;
 Inkplate display(INKPLATE_1BIT);
 
 // Delay between API calls in seconds, 300 seconds is 5 minutes
-#define DELAY_S 300
+// Since the function this is used in expects time in microseconds,
+// we have to multiply with 1000000
+#define DELAY_S 300 * 1000000
 #define DELAY_WIFI_RETRY_SECONDS 5
-
 // Our functions declared below setup and loop
 void drawAll();
 
@@ -68,11 +71,11 @@ void setup()
     Serial.begin(115200);
 
     // Initial display settings
-
     display.begin();
-    display.setTextWrap(false); // Set text wrapping to true
     display.setTextColor(BLACK);
-    display.setTextSize(3);
+    display.setTextWrap(false);
+    display.clearDisplay();
+    display.display();
 
     // Try connecting to a WiFi network.
     // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
@@ -96,111 +99,32 @@ void setup()
         (void)esp_deep_sleep_start();
     }
 
+    Serial.print("Retrying retriving data");
     while (!network.getData(quote, author))
     {
+        Serial.print('.');
         delay(1000);
     }
 
     display.clearDisplay();
-    drawAll(); // Call funtion to draw screen
+    //Draw the quote inside a textbox element
+    display.drawTextBox(48, display.height() / 2 - 36, display.width()-48,display.height()/2+200,quote,1,&FreeMonoBold24pt7b,36,false,38);
+
+    //Print the author in the bottom right corner
+    uint16_t w, h;
+    int16_t x, y;
+    display.getTextBounds(author, 0, 0, &x, &y, &w, &h);
+    display.setCursor(display.width() - w - 50, display.height() - 30); // Set cursor to fit author name in lower right corner
+    display.print("-");
+    display.println(author); // Print author
     display.display();
 
     // Go to sleep before checking again
-    // This is set in microseconds, so it needs to be
-    // multiplied by million to get seconds
-    esp_sleep_enable_timer_wakeup(1000000 * DELAY_S);
+    esp_sleep_enable_timer_wakeup(DELAY_S);
     (void)esp_deep_sleep_start();
 }
 
 void loop()
 {
     // Never here
-}
-
-// Our main drawing function
-void drawAll()
-{
-    display.setFont(&exmouth_40pt7b); // Set custom font
-    display.setTextSize(1);
-    display.setTextColor(BLACK); //Set text color to random color
-    printInBoundaries(quote,62,256,900,350,60);
-    uint16_t w,h;
-    int16_t x,y;
-    display.getTextBounds(author, 0, 0, &x, &y, &w, &h);
-    display.setCursor(display.width() - w - 50, display.height() - 30); // Set cursor to fit author name in lower right corner
-    display.print("-");
-    display.println(author); // Print author
-}
-
-// Function to print text within a text box
-void printInBoundaries(char *text, int x0, int y0, int print_width, int print_height, int rowHeight)
-{
-    int currentCharIndex = 0;
-    char currentWordBuf[128] = {0};
-    char currentWordBufWithThreeDots[128] = {0};
-    bool lastWord = false;
-    bool lastRow = false;
-    int currentRow = 0;
-    int textLen = strlen(text);
-
-    display.setCursor(x0, y0);
-
-    while (true)
-    {
-        int i = currentCharIndex;
-        while (text[i] != ' ')
-        {
-            i++;
-            if (i > textLen)
-            {
-                lastWord = true;
-                break;
-            }
-        }
-
-        memset(currentWordBuf, 0, 128);
-        memcpy(currentWordBuf, text + currentCharIndex, i - currentCharIndex);
-
-        int16_t printing_x0, printing_y0, printing_x1, printing_y1;
-        uint16_t printing_w, printing_h;
-
-        printing_x0 = display.getCursorX();
-        printing_y0 = display.getCursorY();
-		
-        lastRow = (printing_y0 + printing_h + rowHeight > y0 + print_height);
-        if (!lastRow)
-        {
-            display.getTextBounds(currentWordBuf, printing_x0, printing_y0, &printing_x1, &printing_y1, &printing_w,
-                                  &printing_h);
-        }
-        else
-        {
-            memset(currentWordBufWithThreeDots, 0, 128);
-            memcpy(currentWordBufWithThreeDots, currentWordBuf, i - currentCharIndex);
-            strcat(currentWordBufWithThreeDots, " ...");
-            display.getTextBounds(currentWordBufWithThreeDots, printing_x0, printing_y0, &printing_x1, &printing_y1,
-                                  &printing_w, &printing_h);
-        }
-        bool wordCrossesWidthBoundary = printing_x1 + printing_w > x0 + print_width;
-
-        if (wordCrossesWidthBoundary)
-        {
-            currentRow++;
-            display.setCursor(x0, y0 + rowHeight * currentRow);
-            if (lastRow)
-            {
-                display.setCursor(printing_x0, printing_y0);
-                display.print(" ...");
-                return;
-            }
-        }
-        display.print(currentWordBuf);
-        display.print(" ");
-
-        if (lastWord)
-        {
-            return;
-        }
-        currentCharIndex = i + 1;
-    }
 }

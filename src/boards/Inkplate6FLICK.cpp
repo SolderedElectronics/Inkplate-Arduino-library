@@ -470,6 +470,18 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
         return 0;
     }
 
+    if (_partialUpdateCounter >= _partialUpdateLimiter && _partialUpdateLimiter != 0)
+    {
+        // Force full update.
+        display1b(leaveOn);
+
+        // Reset the counter!
+        _partialUpdateCounter = 0;
+
+        // Go back!
+        return 0;
+    }
+
     uint32_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
     uint32_t _send;
     uint8_t data = 0;
@@ -540,7 +552,30 @@ uint32_t Inkplate::partialUpdate(bool _forced, bool leaveOn)
 
     memcpy(DMemoryNew, _partial, E_INK_WIDTH * E_INK_HEIGHT / 8);
 
+    if (_partialUpdateLimiter != 0)
+        _partialUpdateCounter++;
+
     return changeCount;
+}
+
+/**
+ * @brief   Set the number of partial updates afterwhich full screen update is performed.
+ *
+ * @param   uint16_t _numberOfPartialUpdates
+ *          Number of allowed partial updates afterwhich full update is performed.
+ *          0 = disabled, no automatic full update will be performed.
+ *
+ * @note    By default, this is disabled, but to keep best image quality perform a full update
+ *          every 60-80 partial updates.
+ */
+void Inkplate::setFullUpdateThreshold(uint16_t _numberOfPartialUpdates)
+{
+    // Copy the value into the local variable.
+    _partialUpdateLimiter = _numberOfPartialUpdates;
+
+    // If the limiter is enabled, force full update.
+    if (_numberOfPartialUpdates != 0)
+        _blockPartial = 1;
 }
 
 #endif

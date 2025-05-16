@@ -261,6 +261,9 @@ void setup()
 void loop()
 {
     // Let's show the slides!
+    // The first slide is the splash screen
+    showSplashScreen(waveformEEPROM);
+    waitForWakeButtonPress(); // Wait until the wake button is pressed to go to the next slide
 
     // First, certain slides have to be decompressed, so this is not done in a loop automatically
     // This slide is the 'welcome' slide

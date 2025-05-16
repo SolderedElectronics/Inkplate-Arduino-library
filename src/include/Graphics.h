@@ -55,6 +55,9 @@ class Graphics : public Shapes, public Image
     uint8_t getRotation();
 
     void drawPixel(int16_t x, int16_t y, uint16_t color) override;
+    void drawTextBox(int16_t x0, int16_t y0, int16_t x1, int16_t x2, const char *text, uint16_t textSize = 1,
+                     const GFXfont *font = NULL, uint16_t vericalSpacing = 0, bool showBorder = false,
+                     uint16_t fontSize = 8);
 
 #if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE4) &&                   \
     !defined(ARDUINO_INKPLATE7)
@@ -98,6 +101,7 @@ class Graphics : public Shapes, public Image
     void writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
     void writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color) override;
     void endWrite(void) override;
+
 
     uint8_t _displayMode = 0;
 

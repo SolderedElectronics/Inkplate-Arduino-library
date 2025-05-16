@@ -397,7 +397,15 @@ uint8_t *NetworkClient::downloadFileHTTPS(const char *url, int32_t *defaultLen)
     // Create a new WiFiClientSecure for a new connection
     client = (WiFiClientSecure *)ps_malloc(sizeof(WiFiClientSecure));
     client = new WiFiClientSecure();
-    client->setInsecure(); // Use HTTPS but don't check cert
+    if (this->certificate)
+    {
+        client->setCACert(certificate); // Save the certificate if the user has defined it
+    }
+    else
+    {
+        client->setInsecure(); // Use HTTPS but don't check cert
+    }
+
     client->setHandshakeTimeout(1500);
     client->setTimeout(1500);
 
@@ -605,4 +613,17 @@ uint8_t *NetworkClient::downloadFile(const char *url, int32_t *defaultLen)
 void NetworkClient::setFollowRedirects(followRedirects_t f)
 {
     this->followRedirects = f;
+}
+
+/**
+ * @brief       Applies a certificate that will be checked when communicating with a website
+ *
+ * @param       const char* certificate, the certificate in a string format
+ *
+ * @returns     None
+ *
+ */
+void NetworkClient::applyHttpsCertificate(const char *certificate)
+{
+    this->certificate = strdup(certificate);
 }

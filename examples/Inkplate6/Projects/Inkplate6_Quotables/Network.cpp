@@ -33,7 +33,8 @@ extern char pass[];
 extern Inkplate display;
 
 // Static Json from ArduinoJson library
-StaticJsonDocument<30000> doc;
+ArduinoJson::StaticJsonDocument<30000> doc; // Still technically deprecated, but clarifies the source
+
 
 void Network::begin()
 {
@@ -77,7 +78,6 @@ bool Network::getData(char* text, char* auth)
 
         int cnt = 0;
         display.println(F("Waiting for WiFi to reconnect..."));
-        display.partialUpdate(true);
         while ((WiFi.status() != WL_CONNECTED))
         {
             // Prints a dot every second that wifi isn't connected
@@ -105,7 +105,7 @@ bool Network::getData(char* text, char* auth)
     http.getStream().flush();
 
     // Initiate http
-    char link[] = "https://api.quotable.io/random";
+    char link[] = "https://api.quotable.kurokeita.dev/api/quotes/random";
     http.begin(link);
 
     // Actually do request
@@ -128,16 +128,20 @@ bool Network::getData(char* text, char* auth)
         {
             // Set all data got from internet using formatTemp and formatWind defined above
             // This part relies heavily on ArduinoJson library
+            if(strlen(doc["quote"]["content"])>128)
+            {
+                return false;
+            }
+            const char *buff2 = doc["quote"]["author"]["name"];
+            strncpy(auth,buff2,35);
 
             Serial.println("Success");
 
-            const char *buff1 = doc["content"];
+            const char *buff1 = doc["quote"]["content"];
+            strncpy(text,buff1,128);
 
-            strcpy(text, buff1);
+           
 
-            const char *buff2 = doc["author"];
-
-            strcpy(auth, buff2);
 
             // Save our data to data pointer from main file
             f = 0;

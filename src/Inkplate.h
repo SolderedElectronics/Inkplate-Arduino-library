@@ -77,6 +77,7 @@ class Inkplate : public System, public Graphics
 #if !defined(ARDUINO_INKPLATECOLOR) || !defined(ARDUINO_INKPLATE4) || !defined(ARDUINO_INKPLATE7) ||                   \
     !defined(ARDUINO_INKPLATE2)
     uint32_t partialUpdate(bool _forced = false, bool leaveOn = false);
+    void setFullUpdateThreshold(uint16_t _numberOfPartialUpdates);
     int einkOn();
     void einkOff();
     void preloadScreen();
@@ -107,6 +108,10 @@ class Inkplate : public System, public Graphics
     bool isConnected()
     {
         return NetworkClient::isConnected();
+    };
+    void applyHttpsCertificate(const char *certificate)
+    {
+        return NetworkClient::applyHttpsCertificate(certificate);
     };
     // The default parameters for nptServer here are cast to (char*) to keep the compiler happy
     bool getNTPEpoch(time_t *timeEpoch, int timeZone = 0, char *ntpServer = (char *)"pool.ntp.org",
@@ -171,6 +176,10 @@ class Inkplate : public System, public Graphics
     uint32_t pinLUT[256];
     uint32_t *GLUT;
     uint32_t *GLUT2;
+
+    uint16_t _partialUpdateLimiter = 0;
+    uint16_t _partialUpdateCounter = 0;
+
 #endif
 
     uint8_t _beginDone = 0;

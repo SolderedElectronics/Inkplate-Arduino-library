@@ -27,6 +27,7 @@
 #error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
 #endif
 
+
 //---------- CHANGE HERE  -------------:
 
 // Put in your ssid and password
@@ -39,7 +40,7 @@ char pass[] = "";
 #include "Inkplate.h"
 
 // Include fonts used
-#include "Fonts/exmouth_32pt7b.h"
+#include "Fonts/FreeMonoBold24pt7b.h"
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
@@ -53,7 +54,9 @@ Network network;
 Inkplate display(INKPLATE_1BIT);
 
 // Delay between API calls in seconds, 300 seconds is 5 minutes
-#define DELAY_S 300
+// Since the function this is used in expects time in microseconds,
+// we have to multiply with 1000000
+#define DELAY_S 300 * 1000000
 #define DELAY_WIFI_RETRY_SECONDS 5
 // Our functions declared below setup and loop
 void drawAll();
@@ -68,10 +71,8 @@ void setup()
 
     // Initial display settings
     display.begin();
-    display.setTextWrap(false); // Set text wrapping to true
     display.setTextColor(BLACK);
-    display.setTextSize(3);
-
+    display.setTextWrap(false);
     display.clearDisplay();
     display.display();
 
@@ -105,44 +106,24 @@ void setup()
     }
 
     display.clearDisplay();
-    drawAll(); //Call funtion to draw screen
-    display.display();
+    //Draw the quote inside a textbox element
+    display.drawTextBox(48, display.height() / 2 - 36, display.width()-48,display.height()/2+200,quote,1,&FreeMonoBold24pt7b,36,false,38);
 
-    // Go to sleep before checking again
-    // This is set in microseconds, so it needs to be
-    // multiplied by million to get seconds
-    esp_sleep_enable_timer_wakeup(1000000 * DELAY_S);
-    (void)esp_deep_sleep_start();
-}
-
-void loop()
-{
-    // Never here
-}
-
-// Our main drawing function
-void drawAll()
-{
-    uint8_t rows = strlen(quote) / 43, row = 0;
-    display.setFont(&exmouth_32pt7b); // Set custom font
-    display.setTextSize(1);
-    display.setTextColor(BLACK); //Set text color to black
-    display.setCursor(48, display.height() / 2 - 24 * rows); //Place text in the middle
-    uint16_t cnt = 0;
-    while (quote[cnt] != '\0')
-    {
-        if (display.getCursorX() > display.width() - 100 && quote[cnt] == ' ')
-        {
-            row++;
-            display.setCursor(48, display.height() / 2 - 24 * rows + row * 48);
-        }
-        display.print(quote[cnt]);
-        cnt++;
-    }
+    //Print the author in the bottom right corner
     uint16_t w, h;
     int16_t x, y;
     display.getTextBounds(author, 0, 0, &x, &y, &w, &h);
     display.setCursor(display.width() - w - 50, display.height() - 30); // Set cursor to fit author name in lower right corner
     display.print("-");
     display.println(author); // Print author
+    display.display();
+
+    // Go to sleep before checking again
+    esp_sleep_enable_timer_wakeup(DELAY_S);
+    (void)esp_deep_sleep_start();
+}
+
+void loop()
+{
+    // Never here
 }

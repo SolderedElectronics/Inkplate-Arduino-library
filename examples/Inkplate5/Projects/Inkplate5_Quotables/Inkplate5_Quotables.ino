@@ -27,50 +27,54 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate5 in the boards menu."
 #endif
 
+
 //---------- CHANGE HERE  -------------:
 
-// Put in your ssid (WiFi name) and password
+// Put in your ssid and password
 char ssid[] = "";
 char pass[] = "";
 
-// Delay between API calls in seconds, 300 seconds is 5 minutes
-#define DELAY_S 300
-#define DELAY_WIFI_RETRY_SECONDS 5
-
-//-------------------------------------
+//----------------------------------
 
 // Include Inkplate library to the sketch
 #include "Inkplate.h"
 
 // Include fonts used
-#include "Fonts/exmouth_32pt7b.h"
+#include "Fonts/FreeMonoBold24pt7b.h"
 
 // Our networking functions, declared in Network.cpp
 #include "Network.h"
+#include "driver/rtc_io.h" // Include ESP32 library for RTC pin I/O (needed for rtc_gpio_isolate() function)
+#include <rom/rtc.h>       // Include ESP32 library for RTC (needed for rtc_get_reset_reason() function)
 
-// Create object with all networking functions
+// create object with all networking functions
 Network network;
 
-// Create display object
+// create display object
 Inkplate display(INKPLATE_1BIT);
 
-// Define the size of the buffer for storing quotes
-#define BUFFER_SIZE 256
-
+// Delay between API calls in seconds, 300 seconds is 5 minutes
+// Since the function this is used in expects time in microseconds,
+// we have to multiply with 1000000
+#define DELAY_S 300 * 1000000
+#define DELAY_WIFI_RETRY_SECONDS 5
 // Our functions declared below setup and loop
 void drawAll();
 
-char quote[BUFFER_SIZE]; // Buffer to store quote
+char quote[128]; // Buffer to store quote
 char author[64];
 
 void setup()
 {
-    // Begin serial communication at 115200 baud rate for debugging
+    // Begin serial communitcation, sed for debugging
     Serial.begin(115200);
 
     // Initial display settings
     display.begin();
-    display.setTextWrap(false); // Set text wrapping to true
+    display.setTextColor(BLACK);
+    display.setTextWrap(false);
+    display.clearDisplay();
+    display.display();
 
     // Try connecting to a WiFi network.
     // Parameters are network SSID, password, timeout in seconds and whether to print to serial.
@@ -95,61 +99,31 @@ void setup()
     }
 
     Serial.print("Retrying retriving data");
-    int n = 0; // For counting tries
-    while (!network.getData(quote, author, BUFFER_SIZE))
+    while (!network.getData(quote, author))
     {
         Serial.print('.');
-        n++;
         delay(1000);
-
-        // Restart ESP if cannot fetch data more than 10 times
-        if(n > 10)
-        {
-            Serial.println("Something went wrong with fetching data. Restarting ESP");
-            ESP.restart();
-        }
     }
 
     display.clearDisplay();
-    drawAll(); // Call funtion to draw screen
-    display.display();
+    //Draw the quote inside a textbox element
+    display.drawTextBox(48, display.height() / 2 - 36, display.width()-48,display.height()/2+200,quote,1,&FreeMonoBold24pt7b,36,false,34);
 
-    // Go to sleep before checking again
-    Serial.println("Going to sleep");
-    // Activate wake-up timer - this is set in microseconds, so it needs to be multiplied by million to get seconds
-    esp_sleep_enable_timer_wakeup(1000000 * DELAY_S); 
-    (void)esp_deep_sleep_start(); // Put ESP32 into deep sleep (this function does not return). Program stops here.
-}
-
-void loop()
-{
-    // Nothing! If you use deep sleep, whole program should be in setup() because each time the board restarts, not in a
-    // loop()! loop() must be empty!
-}
-
-// Our main drawing function
-void drawAll()
-{
-    uint8_t rows = strlen(quote) / 43, row = 0;
-    display.setFont(&exmouth_32pt7b); // Set custom font
-    display.setTextSize(1);
-    display.setTextColor(BLACK); //Set text color to black
-    display.setCursor(48, display.height() / 2 - 24 * rows); // Place text in the middle
-    uint16_t cnt = 0;
-    while (quote[cnt] != '\0')
-    {
-        if (display.getCursorX() > display.width() - 150 && quote[cnt] == ' ')
-        {
-            row++;
-            display.setCursor(48, display.height() / 2 - 24 * rows + row * 48);
-        }
-        display.print(quote[cnt]);
-        cnt++;
-    }
+    //Print the author in the bottom right corner
     uint16_t w, h;
     int16_t x, y;
     display.getTextBounds(author, 0, 0, &x, &y, &w, &h);
     display.setCursor(display.width() - w - 50, display.height() - 30); // Set cursor to fit author name in lower right corner
     display.print("-");
     display.println(author); // Print author
+    display.display();
+
+    // Go to sleep before checking again
+    esp_sleep_enable_timer_wakeup(DELAY_S);
+    (void)esp_deep_sleep_start();
+}
+
+void loop()
+{
+    // Never here
 }
