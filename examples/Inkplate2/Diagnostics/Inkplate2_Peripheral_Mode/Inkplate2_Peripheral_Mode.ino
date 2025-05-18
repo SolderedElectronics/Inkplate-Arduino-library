@@ -71,7 +71,7 @@ void loop()
     {
         if ((e - s) > 0)
         {
-            int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n, rx, ry, xc, yc;
+            int x, x1, x2, y, y1, y2, x3, y3, l, c, w, h, r, n, rx, ry, xc, yc, fgColor, bgColor;
             char b;
             char temp[150];
             switch (*(s + 1))
@@ -196,6 +196,11 @@ void loop()
                 display.setRotation(c);
                 break;
 
+            case 'H':
+                // Set text and background color
+                sscanf(s + 3, "%d,%d", &fgColor, &bgColor);
+                display.setTextColor(fgColor, bgColor);
+                break;
 
             case 'K':
                 // Clear the display (frame buffer only)
