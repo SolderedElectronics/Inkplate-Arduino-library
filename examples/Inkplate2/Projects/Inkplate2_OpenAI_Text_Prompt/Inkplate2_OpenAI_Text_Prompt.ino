@@ -71,7 +71,7 @@ void setup() {
   // Get current weather data
   if (getWeather(latitude, longitude, temperature, weatherDesc, timeStr)) {
     // Build prompt to send to OpenAI
-    String prompt = "Give me a sarcastic 20-word max summary of the weather in " + location +
+    String prompt = "Give me a sarcastic 15-word max summary of the weather in " + location +
                     ". It's currently " + String(temperature, 1) + "C with " + weatherDesc +
                     " skies at " + timeStr +
                     " (Just take the Hour and minutes, without AM or PM). Make it witty and slightly condescending. Dont use '—' and  ' symbols, use - and ' respectively";
