@@ -80,7 +80,7 @@ void setup() {
     String snarkySummary = getOpenAIResponse(prompt);
 
     // Display the response on screen
-    display.drawTextBox(100, 200, 1180, 620, snarkySummary.c_str(), 1, &FreeMonoBold18pt7b, NULL, false, 28);
+    display.drawTextBox(100, 200, 1180, 620, snarkySummary.c_str(), 1, &FreeMonoBold18pt7b, 38, false, 28);
     display.display(); // Push the buffer to the screen
   } else {
     // Handle weather data fetch failure

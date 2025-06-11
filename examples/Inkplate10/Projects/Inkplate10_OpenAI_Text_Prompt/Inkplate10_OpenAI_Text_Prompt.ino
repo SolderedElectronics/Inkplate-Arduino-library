@@ -71,7 +71,7 @@ void setup() {
   // Get current weather data
   if (getWeather(latitude, longitude, temperature, weatherDesc, timeStr)) {
     // Build prompt to send to OpenAI
-    String prompt = "Give me a sarcastic 120-word max summary of the weather in " + location +
+    String prompt = "Give me a sarcastic 110-word max summary of the weather in " + location +
                     ". It's currently " + String(temperature, 1) + "C with " + weatherDesc +
                     " skies at " + timeStr +
                     " (Just take the Hour and minutes, without AM or PM). Make it witty and slightly condescending. Dont use '—' and  ' symbols, use - and ' respectively";
@@ -80,7 +80,7 @@ void setup() {
     String snarkySummary = getOpenAIResponse(prompt);
 
     // Display the response on screen
-    display.drawTextBox(100, 100, 1100, 720, snarkySummary.c_str(), 1, &FreeMonoBold18pt7b, NULL, false, 28);
+    display.drawTextBox(100, 100, 1100, 720, snarkySummary.c_str(), 1, &FreeMonoBold18pt7b, 38, false, 28);
     display.display(); // Push the buffer to the screen
   } else {
     // Handle weather data fetch failure
