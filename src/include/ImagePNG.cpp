@@ -247,6 +247,53 @@ bool Image::drawPngFromWeb(const char *url, int x, int y, bool dither, bool inve
 }
 
 /**
+ * @brief       drawPngFromBuffer function draws png image from buffer
+ *
+ * @param       int32_t len
+ *              size of buffer
+ * @param       int x
+ *              x position for top left image corner
+ * @param       int y
+ *              y position for top left image corner
+ * @param       bool dither
+ *              1 if using dither, 0 if not
+ * @param       bool invert
+ *              1 if using invert, 0 if not
+ *
+ * @return      1 if drawn successfully, 0 if not
+ */
+bool Image::drawPngFromBuffer(uint8_t *buf, int32_t len, int x, int y, bool dither, bool invert)
+{
+    if (!buf)
+        return 0;
+
+    _pngDither = dither;
+    _pngInvert = invert;
+    lastY = y;
+
+    bool ret = 1;
+
+    if (dither)
+        memset(ditherBuffer, 0, sizeof ditherBuffer);
+
+    pngle_t *pngle = pngle_new();
+    _pngX = x;
+    _pngY = y;
+    pngle_set_draw_callback(pngle, pngle_on_draw);
+
+    if (!buf)
+        return 0;
+
+    if (pngle_feed(pngle, buf, len) < 0)
+        ret = 0;
+
+    pngle_destroy(pngle);
+    free(buf);
+    return ret;
+}
+
+
+/**
  * @brief       drawPngFromWeb function draws png image from sd file
  *
  * @param       WiFiClient *s
