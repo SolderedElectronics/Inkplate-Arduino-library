@@ -244,7 +244,7 @@ void drawGraph()
     for (int i = 0; i < 5; ++i)
     {
         itoa(((day - i * 7) % 31 + 31) % 31, temp, 10);
-        itoa(month - ((day - i * 7) <= 0), temp + 32, 10);
+        itoa(month - ((day - i * 7) <= 0 ? (month == 1 ? -11 : 1) : 0), temp + 32, 10);
 
         strncpy(dates + 8 * (4 - i), temp, 8);
         strcat(dates + 8 * (4 - i), ".");
