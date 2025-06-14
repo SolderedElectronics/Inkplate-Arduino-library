@@ -28,10 +28,11 @@
  */
 #ifndef SdSpiDriver_h
 #define SdSpiDriver_h
-#include "../SdFatConfig.h"
-#include "SPI.h"
-#include "SdSpiBaseDriver.h"
 #include <Arduino.h>
+#include <SPI.h>
+
+#include "../SdFatConfig.h"
+#include "SdSpiBaseDriver.h"
 //------------------------------------------------------------------------------
 /** SDCARD_SPI is defined if board has built-in SD card socket */
 #ifndef SDCARD_SPI
