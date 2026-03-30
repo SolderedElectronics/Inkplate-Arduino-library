@@ -93,28 +93,23 @@ void IOExpander::pinMode(uint8_t _pin, uint8_t _mode, bool _bypassCheck)
     switch (_mode)
     {
     case INPUT:
-        updatePCALRegister(PCAL6416A_CFGPORT0 + _port,
-                           readPCALRegister(PCAL6416A_CFGPORT0 + _port) | (1 << _pin));
+        updatePCALRegister(PCAL6416A_CFGPORT0 + _port, readPCALRegister(PCAL6416A_CFGPORT0 + _port) | (1 << _pin));
         break;
     case OUTPUT:
         // There is a one cacth! Pins are by default (POR) set as HIGH. So first change it to LOW and then set is as
         // output).
-        updatePCALRegister(PCAL6416A_OUTPORT0 + _port,
-                           readPCALRegister(PCAL6416A_OUTPORT0 + _port) & ~(1 << _pin));
-        updatePCALRegister(PCAL6416A_CFGPORT0 + _port,
-                           readPCALRegister(PCAL6416A_CFGPORT0 + _port) & ~(1 << _pin));
+        updatePCALRegister(PCAL6416A_OUTPORT0 + _port, readPCALRegister(PCAL6416A_OUTPORT0 + _port) & ~(1 << _pin));
+        updatePCALRegister(PCAL6416A_CFGPORT0 + _port, readPCALRegister(PCAL6416A_CFGPORT0 + _port) & ~(1 << _pin));
         break;
     case INPUT_PULLUP:
-        updatePCALRegister(PCAL6416A_CFGPORT0 + _port,
-                           readPCALRegister(PCAL6416A_CFGPORT0 + _port) | (1 << _pin));
+        updatePCALRegister(PCAL6416A_CFGPORT0 + _port, readPCALRegister(PCAL6416A_CFGPORT0 + _port) | (1 << _pin));
         updatePCALRegister(PCAL6416A_PUPDEN_REG0 + _port,
                            readPCALRegister(PCAL6416A_PUPDEN_REG0 + _port) | (1 << _pin));
         updatePCALRegister(PCAL6416A_PUPDSEL_REG0 + _port,
                            readPCALRegister(PCAL6416A_PUPDSEL_REG0 + _port) | (1 << _pin));
         break;
     case INPUT_PULLDOWN:
-        updatePCALRegister(PCAL6416A_CFGPORT0 + _port,
-                           readPCALRegister(PCAL6416A_CFGPORT0 + _port) | (1 << _pin));
+        updatePCALRegister(PCAL6416A_CFGPORT0 + _port, readPCALRegister(PCAL6416A_CFGPORT0 + _port) | (1 << _pin));
         updatePCALRegister(PCAL6416A_PUPDEN_REG0 + _port,
                            readPCALRegister(PCAL6416A_PUPDEN_REG0 + _port) | (1 << _pin));
         updatePCALRegister(PCAL6416A_PUPDSEL_REG0 + _port,
@@ -190,8 +185,7 @@ void IOExpander::setIntPin(uint8_t _pin)
     uint8_t _port = _pin / 8;
     _pin %= 8;
 
-    updatePCALRegister(PCAL6416A_INTMSK_REG0 + _port,
-                       readPCALRegister(PCAL6416A_INTMSK_REG0 + _port) & ~(1 << _pin));
+    updatePCALRegister(PCAL6416A_INTMSK_REG0 + _port, readPCALRegister(PCAL6416A_INTMSK_REG0 + _port) & ~(1 << _pin));
 }
 
 /**
@@ -221,8 +215,7 @@ void IOExpander::removeIntPin(uint8_t _pin)
     uint8_t _port = _pin / 8;
     _pin %= 8;
 
-    updatePCALRegister(PCAL6416A_INTMSK_REG0 + _port,
-                       readPCALRegister(PCAL6416A_INTMSK_REG0 + _port) | (1 << _pin));
+    updatePCALRegister(PCAL6416A_INTMSK_REG0 + _port, readPCALRegister(PCAL6416A_INTMSK_REG0 + _port) | (1 << _pin));
 }
 
 /**
