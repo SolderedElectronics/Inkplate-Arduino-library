@@ -47,31 +47,6 @@
 #define PCAL6416A_INTSTAT_REG1   0x4D
 #define PCAL6416A_OUTPORT_CONF   0x4F
 
-// PCAL6416 register index array
-#define PCAL6416A_INPORT0_ARRAY        0
-#define PCAL6416A_INPORT1_ARRAY        1
-#define PCAL6416A_OUTPORT0_ARRAY       2
-#define PCAL6416A_OUTPORT1_ARRAY       3
-#define PCAL6416A_POLINVPORT0_ARRAY    4
-#define PCAL6416A_POLINVPORT1_ARRAY    5
-#define PCAL6416A_CFGPORT0_ARRAY       6
-#define PCAL6416A_CFGPORT1_ARRAY       7
-#define PCAL6416A_OUTDRVST_REG00_ARRAY 8
-#define PCAL6416A_OUTDRVST_REG01_ARRAY 9
-#define PCAL6416A_OUTDRVST_REG10_ARRAY 10
-#define PCAL6416A_OUTDRVST_REG11_ARRAY 11
-#define PCAL6416A_INLAT_REG0_ARRAY     12
-#define PCAL6416A_INLAT_REG1_ARRAY     13
-#define PCAL6416A_PUPDEN_REG0_ARRAY    14
-#define PCAL6416A_PUPDEN_REG1_ARRAY    15
-#define PCAL6416A_PUPDSEL_REG0_ARRAY   16
-#define PCAL6416A_PUPDSEL_REG1_ARRAY   17
-#define PCAL6416A_INTMSK_REG0_ARRAY    18
-#define PCAL6416A_INTMSK_REG1_ARRAY    19
-#define PCAL6416A_INTSTAT_REG0_ARRAY   20
-#define PCAL6416A_INTSTAT_REG1_ARRAY   21
-#define PCAL6416A_OUTPORT_CONF_ARRAY   22
-
 // User pins on IO Expander for Inkplate 6COLOR
 #define IO_PIN_A0 0
 #define IO_PIN_A1 1
@@ -107,41 +82,16 @@ class IOExpander
     uint16_t getPorts();
     void blockPinUsage(uint8_t _pin);
     void unblockPinUsage(uint8_t _pin);
-    uint8_t _ioExpanderRegs[23];
-    void pinModeInternal(uint8_t _pin, uint8_t _mode);
 
   private:
-    // I/O expander interal register copy to avoid read-modify-write.
-
-
-    // IO expander pins that are blocked for user usage )for safety resons.
+    // IO expander pins that are blocked for user usage for safety reasons.
     // User can override this by setting _bypassCheck to true AT IT'S OWN RISK!
     uint16_t _blockedPinsForUser = 0;
 
-    const uint8_t regAddresses[23] = {
-        PCAL6416A_INPORT0,        PCAL6416A_INPORT1,        PCAL6416A_OUTPORT0,       PCAL6416A_OUTPORT1,
-        PCAL6416A_POLINVPORT0,    PCAL6416A_POLINVPORT1,    PCAL6416A_CFGPORT0,       PCAL6416A_CFGPORT1,
-        PCAL6416A_OUTDRVST_REG00, PCAL6416A_OUTDRVST_REG01, PCAL6416A_OUTDRVST_REG10, PCAL6416A_OUTDRVST_REG11,
-        PCAL6416A_INLAT_REG0,     PCAL6416A_INLAT_REG1,     PCAL6416A_PUPDEN_REG0,    PCAL6416A_PUPDEN_REG1,
-        PCAL6416A_PUPDSEL_REG0,   PCAL6416A_PUPDSEL_REG1,   PCAL6416A_INTMSK_REG0,    PCAL6416A_INTMSK_REG1,
-        PCAL6416A_INTSTAT_REG0,   PCAL6416A_INTSTAT_REG1,   PCAL6416A_OUTPORT_CONF};
-
     uint8_t _ioExpanderI2CAddress;
 
-
-    void digitalWriteInternal(uint8_t _pin, uint8_t _state);
-    uint8_t digitalReadInternal(uint8_t _pin);
-    void setIntPinInternal(uint8_t _pin);
-    void removeIntPinInternal(uint8_t _pin);
-    uint16_t getINTInternal();
-    void setPortsInternal(uint16_t _d);
-    uint16_t getPortsInternal();
-
-    void readPCALRegisters();
-    void readPCALRegisters(uint8_t _regIndex, uint8_t _n);
-    void readPCALRegister(uint8_t _regIndex);
-    void updatePCALAllRegisters();
-    void updatePCALRegister(uint8_t _regIndex, uint8_t _d);
+    uint8_t readPCALRegister(uint8_t _regAddr);
+    void updatePCALRegister(uint8_t _regAddr, uint8_t _d);
 
     bool checkForBlockedPins(uint8_t _pin);
 };
