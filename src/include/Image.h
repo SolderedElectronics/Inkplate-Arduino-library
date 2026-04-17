@@ -82,7 +82,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
 
     void drawBitmap3Bit(int16_t _x, int16_t _y, const unsigned char *_p, int16_t _w, int16_t _h);
 
-    bool drawBitmapFromBuffer(uint8_t *buf, int x, int y, bool dither, bool invert);
+    bool drawBitmapFromBuffer(const uint8_t *buf, int x, int y, bool dither, bool invert);
 
     bool drawBitmapFromSd(const char *fileName, int x, int y, bool dither = 0, bool invert = 0);
     bool drawBitmapFromSd(SdFile *p, int x, int y, bool dither = 0, bool invert = 0);
@@ -164,7 +164,7 @@ class Image : virtual public NetworkClient, virtual public Adafruit_GFX
     uint8_t ditherGetPixelJpeg(uint8_t px, int i, int j, int x, int y, int w, int h);
     void ditherSwapBlockJpeg(int x);
 
-    void readBmpHeader(uint8_t *buf, bitmapHeader *_h);
+    void readBmpHeader(const uint8_t *buf, bitmapHeader *_h);
     void readBmpHeaderSd(SdFile *_f, bitmapHeader *_h);
 
     inline void displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, bool dither, bool invert);
