@@ -108,6 +108,10 @@
 #define pass "" // Your WiFi password
 #define BYOS_SERVER "http://YOUR_SERVER_IP:2300"
 
+// WAKE button (same pin as the Inkplate10_Wake_Up_Button example): pressing
+// it during deep sleep wakes the device for an immediate refresh.
+#define WAKE_BUTTON GPIO_NUM_36
+
 Inkplate display(INKPLATE_1BIT);
 
 String deviceId = "";
@@ -117,10 +121,35 @@ String deviceId = "";
 // the server returns the same key for a known MAC address.
 RTC_DATA_ATTR char apiKey[64] = "";
 
+// Last server-issued refresh cadence (seconds), reported back on the next
+// request via the Refresh-Rate header
+RTC_DATA_ATTR int lastRefreshRate = 900;
+
+double batteryVoltage = 0.0; // read before WiFi so radio current doesn't skew it
+
+// Reported to the server via the Update-Source header
+const char *wakeupSource()
+{
+    switch (esp_sleep_get_wakeup_cause())
+    {
+    case ESP_SLEEP_WAKEUP_TIMER:
+        return "timer";
+    case ESP_SLEEP_WAKEUP_EXT0:
+        return "button";
+    default:
+        return "powercycle";
+    }
+}
+
 void setup()
 {
     Serial.begin(115200);
     display.begin();
+
+    // Read the battery BEFORE the radio is energized so WiFi current doesn't
+    // depress the voltage reported to the server.
+    batteryVoltage = display.readBattery();
+
     display.clearDisplay();
     display.setTextSize(2);
     display.setCursor(0, 0);
@@ -199,6 +228,14 @@ void doDisplay()
         http.addHeader("ID", deviceId);
         if (strlen(apiKey) > 0)
             http.addHeader("Access-Token", apiKey);
+        http.addHeader("Content-Type", "application/json");
+        http.addHeader("Update-Source", wakeupSource());
+        http.addHeader("Refresh-Rate", String(lastRefreshRate));
+        http.addHeader("Battery-Voltage", String(batteryVoltage, 2));
+        http.addHeader("RSSI", String(WiFi.RSSI()));
+        http.addHeader("Model", "inkplate_10");
+        http.addHeader("Width", String(display.width()));
+        http.addHeader("Height", String(display.height()));
 
         int code = http.GET();
         if (code > 0)
@@ -222,6 +259,7 @@ void doDisplay()
 
             if (refreshRate <= 0)
                 refreshRate = 900;
+            lastRefreshRate = (int)refreshRate;
 
             http.end();
 
@@ -250,5 +288,6 @@ void doDisplay()
 void goToSleep(long seconds)
 {
     esp_sleep_enable_timer_wakeup((uint64_t)seconds * 1000000ULL);
+    esp_sleep_enable_ext0_wakeup(WAKE_BUTTON, LOW);
     esp_deep_sleep_start();
 }
