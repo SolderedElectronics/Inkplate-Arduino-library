@@ -112,6 +112,11 @@ Inkplate display(INKPLATE_1BIT);
 
 String deviceId = "";
 
+// Access-Token issued by /api/setup; preserved across deep sleep so the
+// device only registers once. Lost only on full power loss, which is fine -
+// the server returns the same key for a known MAC address.
+RTC_DATA_ATTR char apiKey[64] = "";
+
 void setup()
 {
     Serial.begin(115200);
@@ -139,7 +144,8 @@ void setup()
     display.print(deviceId);
     display.display();
 
-    doSetup();     // Register with the BYOS server
+    if (strlen(apiKey) == 0)
+        doSetup(); // Register with the BYOS server (first boot only)
     doDisplay();   // Fetch and show the first screen
 }
 
@@ -158,9 +164,26 @@ void doSetup()
     {
         http.addHeader("ID", deviceId);
         int code = http.GET();
-        if (code > 0)
+        if (code == 200)
         {
-            Serial.println("Setup response: " + http.getString());
+            String payload = http.getString();
+            Serial.println("Setup response: " + payload);
+
+            JsonDocument doc;
+            if (deserializeJson(doc, payload) == DeserializationError::Ok)
+            {
+                const char *key = doc["api_key"] | "";
+                if (strlen(key) > 0)
+                {
+                    strncpy(apiKey, key, sizeof(apiKey) - 1);
+                    apiKey[sizeof(apiKey) - 1] = '\0';
+                    Serial.println("Registered with server; api_key stored");
+                }
+            }
+        }
+        else
+        {
+            Serial.printf("Setup request failed, HTTP %d\n", code);
         }
         http.end();
     }
@@ -174,6 +197,8 @@ void doDisplay()
     if (http.begin(url))
     {
         http.addHeader("ID", deviceId);
+        if (strlen(apiKey) > 0)
+            http.addHeader("Access-Token", apiKey);
 
         int code = http.GET();
         if (code > 0)
