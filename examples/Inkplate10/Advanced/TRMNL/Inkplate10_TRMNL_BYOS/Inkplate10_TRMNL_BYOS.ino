@@ -141,6 +141,10 @@ RTC_DATA_ATTR int lastRefreshRate = 900;
 RTC_DATA_ATTR int wifiRetryCount = 0;
 RTC_DATA_ATTR int apiRetryCount = 0;
 
+// Name of the image currently on the panel: e-paper keeps showing it through
+// deep sleep, so an unchanged image needs no download or refresh at all
+RTC_DATA_ATTR char lastImageName[256] = "";
+
 double batteryVoltage = 0.0; // read before WiFi so radio current doesn't skew it
 
 // Reported to the server via the Update-Source header
@@ -166,12 +170,20 @@ void setup()
     // depress the voltage reported to the server.
     batteryVoltage = display.readBattery();
 
-    display.clearDisplay();
-    display.setTextSize(2);
-    display.setCursor(0, 0);
-    display.setTextColor(BLACK, WHITE);
-    display.println("Connecting to WiFi...");
-    display.display();
+    // Painting the panel here would wipe the current image between routine
+    // refreshes, so only show the connect/pairing banner while the device
+    // isn't registered yet (it displays the MAC address needed to add the
+    // device on the server).
+    bool showBanner = (strlen(apiKey) == 0);
+    if (showBanner)
+    {
+        display.clearDisplay();
+        display.setTextSize(2);
+        display.setCursor(0, 0);
+        display.setTextColor(BLACK, WHITE);
+        display.println("Connecting to WiFi...");
+        display.display();
+    }
 
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pass);
@@ -180,23 +192,32 @@ void setup()
     {
         if (millis() - start > WIFI_TIMEOUT_MS)
         {
-            display.println("WiFi failed; will retry with backoff");
-            display.partialUpdate();
+            if (showBanner)
+            {
+                display.println("WiFi failed; will retry with backoff");
+                display.partialUpdate();
+            }
             wifiErrorSleep(); // deep-sleeps and never returns
         }
         delay(1000);
-        display.print('.');
-        display.partialUpdate();
+        if (showBanner)
+        {
+            display.print('.');
+            display.partialUpdate();
+        }
     }
     wifiRetryCount = 0; // connected: restart the escalation from the top
 
     deviceId = WiFi.macAddress(); // TRMNL identifies devices by MAC address
 
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.print("Connected. ID: ");
-    display.print(deviceId);
-    display.display();
+    if (showBanner)
+    {
+        display.clearDisplay();
+        display.setCursor(0, 0);
+        display.print("Connected. ID: ");
+        display.print(deviceId);
+        display.display();
+    }
 
     if (strlen(apiKey) == 0)
         doSetup(); // Register with the BYOS server (first boot only)
@@ -243,6 +264,17 @@ void doSetup()
     }
 }
 
+// image.draw() picks its decoder from the URL's file extension, so a query
+// string or extension-less URL would fail without even downloading; reject
+// those up front with a clear log message.
+bool hasDrawableExtension(const char *url)
+{
+    String u(url);
+    String ext = u.substring(u.lastIndexOf('.') + 1);
+    ext.toLowerCase();
+    return ext == "bmp" || ext == "dib" || ext == "png" || ext == "jpg" || ext == "jpeg";
+}
+
 void doDisplay()
 {
     HTTPClient http;
@@ -265,6 +297,7 @@ void doDisplay()
     http.addHeader("Model", "inkplate_10");
     http.addHeader("Width", String(display.width()));
     http.addHeader("Height", String(display.height()));
+    http.addHeader("Image-Cached", strlen(lastImageName) > 0 ? "true" : "false");
 
     int code = http.GET();
     if (code <= 0 || code >= 400)
@@ -315,6 +348,25 @@ void doDisplay()
         apiErrorSleep();
     }
 
+    // Prefer the stable filename as the identity of the image, falling back
+    // to the URL
+    const char *filename = doc["filename"] | "";
+    String imageName = strlen(filename) > 0 ? String(filename) : imageUrl;
+
+    if (imageName == lastImageName)
+    {
+        // The e-paper still shows this exact image; skip the download and
+        // the costly full refresh entirely.
+        Serial.println("Image unchanged; skipping redraw");
+        goToSleep(refreshRate);
+    }
+
+    if (!hasDrawableExtension(imageUrl.c_str()))
+    {
+        Serial.println("image_url has no drawable extension: " + imageUrl);
+        apiErrorSleep();
+    }
+
     display.clearDisplay();
     bool ok = display.image.draw(imageUrl.c_str(), 0, 0, true, false);
 
@@ -323,10 +375,12 @@ void doDisplay()
         display.setCursor(0, 0);
         display.print("Failed to draw image from URL");
         display.display();
-        apiErrorSleep(); // retry the same image with backoff
+        apiErrorSleep(); // lastImageName is untouched, so next wake retries
     }
 
     display.display();
+    strncpy(lastImageName, imageName.c_str(), sizeof(lastImageName) - 1);
+    lastImageName[sizeof(lastImageName) - 1] = '\0';
 
     if (updateFirmware)
     {
