@@ -112,6 +112,18 @@
 // it during deep sleep wakes the device for an immediate refresh.
 #define WAKE_BUTTON GPIO_NUM_36
 
+// How long to wait for a WiFi connection before backing off (ms)
+#define WIFI_TIMEOUT_MS 30000
+
+// Escalating backoff schedules (seconds). Once WIFI_RETRY_TIMES is exhausted
+// the device sleeps until the WAKE button is pressed so a dead AP can't
+// drain the battery; once API_RETRY_TIMES is exhausted it settles at
+// API_FALLBACK_SLEEP.
+const int WIFI_RETRY_TIMES[] = {60, 180, 300};
+const int API_RETRY_TIMES[] = {15, 30, 60};
+#define API_FALLBACK_SLEEP 900
+#define NOT_READY_SLEEP 60 // short poll while the server reports not-ready (202/500)
+
 Inkplate display(INKPLATE_1BIT);
 
 String deviceId = "";
@@ -124,6 +136,10 @@ RTC_DATA_ATTR char apiKey[64] = "";
 // Last server-issued refresh cadence (seconds), reported back on the next
 // request via the Refresh-Rate header
 RTC_DATA_ATTR int lastRefreshRate = 900;
+
+// Escalating backoff positions, preserved across deep sleep
+RTC_DATA_ATTR int wifiRetryCount = 0;
+RTC_DATA_ATTR int apiRetryCount = 0;
 
 double batteryVoltage = 0.0; // read before WiFi so radio current doesn't skew it
 
@@ -157,13 +173,22 @@ void setup()
     display.println("Connecting to WiFi...");
     display.display();
 
+    WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pass);
+    unsigned long start = millis();
     while (WiFi.status() != WL_CONNECTED)
     {
+        if (millis() - start > WIFI_TIMEOUT_MS)
+        {
+            display.println("WiFi failed; will retry with backoff");
+            display.partialUpdate();
+            wifiErrorSleep(); // deep-sleeps and never returns
+        }
         delay(1000);
         display.print('.');
         display.partialUpdate();
     }
+    wifiRetryCount = 0; // connected: restart the escalation from the top
 
     deviceId = WiFi.macAddress(); // TRMNL identifies devices by MAC address
 
@@ -223,71 +248,127 @@ void doDisplay()
     HTTPClient http;
     String url = String(BYOS_SERVER) + "/api/display";
 
-    if (http.begin(url))
+    if (!http.begin(url))
     {
-        http.addHeader("ID", deviceId);
-        if (strlen(apiKey) > 0)
-            http.addHeader("Access-Token", apiKey);
-        http.addHeader("Content-Type", "application/json");
-        http.addHeader("Update-Source", wakeupSource());
-        http.addHeader("Refresh-Rate", String(lastRefreshRate));
-        http.addHeader("Battery-Voltage", String(batteryVoltage, 2));
-        http.addHeader("RSSI", String(WiFi.RSSI()));
-        http.addHeader("Model", "inkplate_10");
-        http.addHeader("Width", String(display.width()));
-        http.addHeader("Height", String(display.height()));
-
-        int code = http.GET();
-        if (code > 0)
-        {
-            String payload = http.getString();
-            Serial.println("Display response: " + payload);
-
-            JsonDocument doc;
-            DeserializationError err = deserializeJson(doc, payload);
-
-            if (err)
-            {
-                Serial.println("JSON parse failed");
-                http.end();
-                return;
-            }
-
-            String imageUrl = doc["image_url"].as<String>();
-            long refreshRate = doc["refresh_rate"].as<long>(); // integer, not string
-            bool updateFirmware = doc["update_firmware"].as<bool>();
-
-            if (refreshRate <= 0)
-                refreshRate = 900;
-            lastRefreshRate = (int)refreshRate;
-
-            http.end();
-
-            display.clearDisplay();
-            bool ok = display.image.draw(imageUrl.c_str(), 0, 0, true, false);
-
-            if (!ok)
-            {
-                display.setCursor(0, 0);
-                display.print("Failed to draw image from URL");
-            }
-
-            display.display();
-
-            if (updateFirmware)
-            {
-                Serial.println("Firmware update flagged - not implemented, skipping.");
-            }
-
-            goToSleep(refreshRate);
-        }
-        http.end();
+        Serial.println("http.begin() failed");
+        apiErrorSleep(); // deep-sleeps and never returns
     }
+
+    http.addHeader("ID", deviceId);
+    if (strlen(apiKey) > 0)
+        http.addHeader("Access-Token", apiKey);
+    http.addHeader("Content-Type", "application/json");
+    http.addHeader("Update-Source", wakeupSource());
+    http.addHeader("Refresh-Rate", String(lastRefreshRate));
+    http.addHeader("Battery-Voltage", String(batteryVoltage, 2));
+    http.addHeader("RSSI", String(WiFi.RSSI()));
+    http.addHeader("Model", "inkplate_10");
+    http.addHeader("Width", String(display.width()));
+    http.addHeader("Height", String(display.height()));
+
+    int code = http.GET();
+    if (code <= 0 || code >= 400)
+    {
+        Serial.printf("Display request failed, HTTP %d\n", code);
+        http.end();
+        apiErrorSleep();
+    }
+
+    String payload = http.getString();
+    http.end();
+    Serial.println("Display response: " + payload);
+
+    JsonDocument doc;
+    if (deserializeJson(doc, payload) != DeserializationError::Ok)
+    {
+        Serial.println("JSON parse failed");
+        apiErrorSleep();
+    }
+
+    long refreshRate = doc["refresh_rate"].as<long>(); // integer, not string
+    if (refreshRate <= 0)
+        refreshRate = 900;
+    lastRefreshRate = (int)refreshRate;
+
+    // The device API reports state in the "status" body field: 0 = image
+    // ready, 202 = registered but no screen assigned yet, 500 = server error.
+    int status = doc["status"].as<int>();
+    if (status != 0)
+    {
+        apiRetryCount = 0; // the server answered, so the API path is healthy
+        if (status == 202 || status == 500)
+        {
+            Serial.printf("Server not ready (status %d); polling again shortly\n", status);
+            goToSleep(NOT_READY_SLEEP);
+        }
+        Serial.printf("Unknown status %d; keeping current image\n", status);
+        goToSleep(refreshRate);
+    }
+    apiRetryCount = 0;
+
+    String imageUrl = doc["image_url"].as<String>();
+    bool updateFirmware = doc["update_firmware"].as<bool>();
+
+    if (imageUrl.length() == 0)
+    {
+        Serial.println("No image_url in response");
+        apiErrorSleep();
+    }
+
+    display.clearDisplay();
+    bool ok = display.image.draw(imageUrl.c_str(), 0, 0, true, false);
+
+    if (!ok)
+    {
+        display.setCursor(0, 0);
+        display.print("Failed to draw image from URL");
+        display.display();
+        apiErrorSleep(); // retry the same image with backoff
+    }
+
+    display.display();
+
+    if (updateFirmware)
+    {
+        Serial.println("Firmware update flagged - not implemented, skipping.");
+    }
+
+    goToSleep(refreshRate);
 }
 
 void goToSleep(long seconds)
 {
+    WiFi.disconnect(true);
+    WiFi.mode(WIFI_OFF);
     esp_sleep_enable_timer_wakeup((uint64_t)seconds * 1000000ULL);
     esp_sleep_enable_ext0_wakeup(WAKE_BUTTON, LOW);
     esp_deep_sleep_start();
+}
+
+// Sleep with no timer so only a WAKE press revives the device
+void goToSleepButtonOnly()
+{
+    WiFi.disconnect(true);
+    WiFi.mode(WIFI_OFF);
+    esp_sleep_enable_ext0_wakeup(WAKE_BUTTON, LOW);
+    esp_deep_sleep_start();
+}
+
+// Escalating sleep after an API/HTTP/parse failure
+void apiErrorSleep()
+{
+    int seconds;
+    if (apiRetryCount < (int)(sizeof(API_RETRY_TIMES) / sizeof(API_RETRY_TIMES[0])))
+        seconds = API_RETRY_TIMES[apiRetryCount++];
+    else
+        seconds = API_FALLBACK_SLEEP;
+    goToSleep(seconds);
+}
+
+// Escalating sleep after a WiFi connect failure
+void wifiErrorSleep()
+{
+    if (wifiRetryCount >= (int)(sizeof(WIFI_RETRY_TIMES) / sizeof(WIFI_RETRY_TIMES[0])))
+        goToSleepButtonOnly();
+    goToSleep(WIFI_RETRY_TIMES[wifiRetryCount++]);
 }
