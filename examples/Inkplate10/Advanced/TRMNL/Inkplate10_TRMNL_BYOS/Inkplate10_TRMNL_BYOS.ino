@@ -181,7 +181,7 @@ void doDisplay()
             String payload = http.getString();
             Serial.println("Display response: " + payload);
 
-            StaticJsonDocument<1024> doc;
+            JsonDocument doc;
             DeserializationError err = deserializeJson(doc, payload);
 
             if (err)
