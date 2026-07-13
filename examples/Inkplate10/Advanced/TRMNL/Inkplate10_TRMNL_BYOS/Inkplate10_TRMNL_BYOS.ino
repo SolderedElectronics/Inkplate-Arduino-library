@@ -90,6 +90,37 @@
  * Once all of the above is done, this sketch's doSetup()/doDisplay()
  * calls will fetch and draw whatever screen you've configured.
  *
+ * ------------------------------------------------
+ * How this example behaves once it's configured
+ * ------------------------------------------------
+ * First boot: the panel shows a "Connecting to WiFi..." banner followed by
+ * the device's MAC address (needed for step 4 above). The sketch registers
+ * with the server via /api/setup and stores the returned api_key in RTC
+ * memory, where it survives deep sleep - so registration happens only once,
+ * not on every wake. Only a full power loss clears the key, and even then
+ * the server returns the same key for a known MAC, so the device re-pairs
+ * itself automatically.
+ *
+ * Routine wakes: the device polls /api/display, sending the Access-Token
+ * header plus telemetry the server can show (battery voltage, WiFi RSSI,
+ * model, panel resolution, and what woke the device). It draws the returned
+ * image and deep-sleeps for the refresh_rate the server specifies. If the
+ * server is still serving the image that's already on the panel, the sketch
+ * skips both the download and the costly e-paper refresh, and the banner is
+ * not repainted either - the current image stays intact between wakes.
+ *
+ * Button refresh: pressing the WAKE button (GPIO36) while the device is
+ * asleep wakes it immediately for an on-demand refresh, reported to the
+ * server as Update-Source: button.
+ *
+ * Error recovery: WiFi and API failures never leave the sketch hung. Each
+ * failure deep-sleeps and retries on an escalating schedule (see
+ * WIFI_RETRY_TIMES / API_RETRY_TIMES below). If WiFi keeps failing, the
+ * device eventually sleeps until the WAKE button is pressed so an
+ * unreachable access point can't drain the battery; API errors settle into
+ * a 15-minute polling fallback. A 202/500 "not ready" status from the
+ * server is re-polled after a minute.
+ *
  * @author      Soldered
  * @date        2021-02-11
  * @license     GNU GPL V3
