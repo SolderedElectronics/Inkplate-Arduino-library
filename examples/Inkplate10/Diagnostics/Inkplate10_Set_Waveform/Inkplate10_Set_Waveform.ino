@@ -69,7 +69,7 @@ static void showGradient(int selected)
         display.print(' ');
     }
 
-    display.drawRect((selected * 6 * 4 * 2) + 432 - 3, 740, (6 * 4) + 2, (8 * 4) + 2, 0);
+    display.drawRect(((selected-1) * 6 * 4 * 2) + 432 - 3, 740, (6 * 4) + 2, (8 * 4) + 2, 0);
 
     for (int i = 0; i < 8; i++)
         display.fillRect(i * w, 0, w, h, i);
