@@ -25,7 +25,7 @@ static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0xFFFF00, 0xFF0000, 0x0000FF, 0
 #define INKPLATE_GREEN  6
 
 static uint16_t colorPalette[6] = {INKPLATE_BLACK, INKPLATE_WHITE, INKPLATE_YELLOW,
-                                    INKPLATE_RED,   INKPLATE_BLUE,  INKPLATE_GREEN};
+                                   INKPLATE_RED,   INKPLATE_BLUE,  INKPLATE_GREEN};
 
 // Screen resolution. Landscape-native (unlike Inkplate13SPECTRA/Inkplate2, which are
 // portrait-native panels rotated at the driver level).
@@ -51,13 +51,13 @@ static uint16_t colorPalette[6] = {INKPLATE_BLACK, INKPLATE_WHITE, INKPLATE_YELL
 // -> expander bit. See CLAUDE.md for how this was derived from the schematic.
 static const uint8_t csExpanderBit[8] = {3, 2, 1, 0, 7, 6, 5, 4};
 
-#define SPECTRA315_EXP_VBAT_MOS   IO_PIN_B1  // 9
-#define SPECTRA315_EXP_SD_ENABLE  IO_PIN_B2  // 10
+#define SPECTRA315_EXP_VBAT_MOS    IO_PIN_B1 // 9
+#define SPECTRA315_EXP_SD_ENABLE   IO_PIN_B2 // 10
 #define SPECTRA315_EXP_PMIC_PWR_EN IO_PIN_B3 // 11 - enables external 12V buck/boost feeding the IST9201
-#define SPECTRA315_EXP_IST9201_EN IO_PIN_B4  // 12 - IST9201 chip enable (vendor sample's PMIC_EN)
-#define SPECTRA315_EXP_VDDP_EN    IO_PIN_B5  // 13
-#define SPECTRA315_EXP_VDDN_EN    IO_PIN_B6  // 14
-#define SPECTRA315_EXP_VCNP_EN    IO_PIN_B7  // 15
+#define SPECTRA315_EXP_IST9201_EN  IO_PIN_B4 // 12 - IST9201 chip enable (vendor sample's PMIC_EN)
+#define SPECTRA315_EXP_VDDP_EN     IO_PIN_B5 // 13
+#define SPECTRA315_EXP_VDDN_EN     IO_PIN_B6 // 14
+#define SPECTRA315_EXP_VCNP_EN     IO_PIN_B7 // 15
 
 //======================================================================================
 // ESP32-S3 direct GPIO pin map.
@@ -68,19 +68,19 @@ static const uint8_t csExpanderBit[8] = {3, 2, 1, 0, 7, 6, 5, 4};
 // directly, so those are used here as the authoritative quad-SPI data pins. If real
 // hardware bring-up shows IO4/IO5 are the correct data lines instead, only the four
 // defines below need to change.
-#define SPECTRA315_BUSY_PIN 6  // DRIVER_BUSY_N, input
-#define SPECTRA315_RST_PIN  7  // DRIVER_RST_N, output
-#define SPECTRA315_I2C_SDA  8
-#define SPECTRA315_SD_CS    10
-#define SPECTRA315_SPI_D0   11 // SI0 (quad data 0 / MOSI role)
-#define SPECTRA315_SPI_SCK  12 // SPI_SCL (panel SPI clock)
-#define SPECTRA315_SPI_D1   13 // SI1 (quad data 1 / MISO role)
-#define SPECTRA315_SPI_D2   14 // SI2 (quad data 2 / WP role)
-#define SPECTRA315_SPI_D3   9  // SI3 (quad data 3 / HD role)
-#define SPECTRA315_SD_MOSI  15
-#define SPECTRA315_SD_SCK   16
-#define SPECTRA315_EXP1_INT 17 // Shared with WAKE_BTN on this board.
-#define SPECTRA315_I2C_SCL  21
+#define SPECTRA315_BUSY_PIN    6 // DRIVER_BUSY_N, input
+#define SPECTRA315_RST_PIN     7 // DRIVER_RST_N, output
+#define SPECTRA315_I2C_SDA     8
+#define SPECTRA315_SD_CS       10
+#define SPECTRA315_SPI_D0      11 // SI0 (quad data 0 / MOSI role)
+#define SPECTRA315_SPI_SCK     12 // SPI_SCL (panel SPI clock)
+#define SPECTRA315_SPI_D1      13 // SI1 (quad data 1 / MISO role)
+#define SPECTRA315_SPI_D2      14 // SI2 (quad data 2 / WP role)
+#define SPECTRA315_SPI_D3      9  // SI3 (quad data 3 / HD role)
+#define SPECTRA315_SD_MOSI     15
+#define SPECTRA315_SD_SCK      16
+#define SPECTRA315_EXP1_INT    17 // Shared with WAKE_BTN on this board.
+#define SPECTRA315_I2C_SCL     21
 #define SPECTRA315_TOGGLE_SEL1 38 // PMIC
 #define SPECTRA315_TOGGLE_SEL0 39 // PMIC
 #define SPECTRA315_IST9201_PS  40
@@ -98,9 +98,9 @@ static const uint8_t csExpanderBit[8] = {3, 2, 1, 0, 7, 6, 5, 4};
 // remaining 320 columns of RAM exist but aren't connected to anything.
 // Source: E Ink "EL315TW1 Partial Window Update" app note, confirmed against the
 // product's 2560 total width (400*3+80 = 1280 per half, x2 = 2560).
-#define SPECTRA315_CHIP_COUNT       8
-#define SPECTRA315_CHIP_RAM_WIDTH   400
-#define SPECTRA315_CHIP_HEIGHT      1440
+#define SPECTRA315_CHIP_COUNT        8
+#define SPECTRA315_CHIP_RAM_WIDTH    400
+#define SPECTRA315_CHIP_HEIGHT       1440
 #define SPECTRA315_CHIP_BUFFER_BYTES (SPECTRA315_CHIP_RAM_WIDTH * SPECTRA315_CHIP_HEIGHT / 2) // 288000
 
 // Per-chip visible widths: {400, 400, 400, 80, 400, 400, 400, 80}. chipXOffset below is

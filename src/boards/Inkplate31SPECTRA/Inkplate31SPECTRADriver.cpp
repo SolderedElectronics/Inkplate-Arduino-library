@@ -111,7 +111,8 @@ int EPDDriver::initDriver(Inkplate *_inkplatePtr)
  */
 void EPDDriver::clearDisplay()
 {
-    memset(DMemory4Bit, INKPLATE_WHITE | (INKPLATE_WHITE << 4), (size_t)SPECTRA315_CHIP_COUNT * SPECTRA315_CHIP_BUFFER_BYTES);
+    memset(DMemory4Bit, INKPLATE_WHITE | (INKPLATE_WHITE << 4),
+           (size_t)SPECTRA315_CHIP_COUNT * SPECTRA315_CHIP_BUFFER_BYTES);
 }
 
 /**
@@ -605,7 +606,8 @@ uint8_t EPDDriver::initializeFramebuffers()
         _colNibble[col] = localCol & 1;
     }
 
-    memset(DMemory4Bit, INKPLATE_WHITE | (INKPLATE_WHITE << 4), (size_t)SPECTRA315_CHIP_COUNT * SPECTRA315_CHIP_BUFFER_BYTES);
+    memset(DMemory4Bit, INKPLATE_WHITE | (INKPLATE_WHITE << 4),
+           (size_t)SPECTRA315_CHIP_COUNT * SPECTRA315_CHIP_BUFFER_BYTES);
 
     return 1;
 }

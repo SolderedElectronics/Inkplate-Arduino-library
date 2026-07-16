@@ -8,23 +8,23 @@
 #define IST9201_I2C_ADDR 0x48
 
 // IST9201 register addresses (from vendor pmic.c/pmic.h)
-#define IST9201_REG_VPOS1 0x01
-#define IST9201_REG_VNEG1 0x03
-#define IST9201_REG_VPOS2 0x05
-#define IST9201_REG_VNEG2 0x07
-#define IST9201_REG_VPOS3 0x09
-#define IST9201_REG_VNEG3 0x0B
-#define IST9201_REG_VCOMDC 0x0D
-#define IST9201_REG_VCOMH 0x0F
-#define IST9201_REG_VCOML 0x11
-#define IST9201_REG_DELAY1 0x13
-#define IST9201_REG_DELAY2 0x14
+#define IST9201_REG_VPOS1          0x01
+#define IST9201_REG_VNEG1          0x03
+#define IST9201_REG_VPOS2          0x05
+#define IST9201_REG_VNEG2          0x07
+#define IST9201_REG_VPOS3          0x09
+#define IST9201_REG_VNEG3          0x0B
+#define IST9201_REG_VCOMDC         0x0D
+#define IST9201_REG_VCOMH          0x0F
+#define IST9201_REG_VCOML          0x11
+#define IST9201_REG_DELAY1         0x13
+#define IST9201_REG_DELAY2         0x14
 #define IST9201_REG_VDDH_EXT_DELAY 0x15
-#define IST9201_REG_VGH1 0x16
-#define IST9201_REG_VGH2 0x18
-#define IST9201_REG_0x1A 0x1A
-#define IST9201_REG_0x1B 0x1B
-#define IST9201_REG_0x1C 0x1C
+#define IST9201_REG_VGH1           0x16
+#define IST9201_REG_VGH2           0x18
+#define IST9201_REG_0x1A           0x1A
+#define IST9201_REG_0x1B           0x1B
+#define IST9201_REG_0x1C           0x1C
 
 /**
  * @brief       Driver for the IST9201 PMIC used on the Inkplate 31SPECTRA to generate

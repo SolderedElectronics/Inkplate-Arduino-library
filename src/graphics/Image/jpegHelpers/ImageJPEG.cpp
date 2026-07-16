@@ -14,7 +14,7 @@
  *
  * @authors     Soldered
  ***************************************************/
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE13SPECTRA) &&            \
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE13SPECTRA) &&           \
     !defined(ARDUINO_INKPLATE31SPECTRA)
 #include "../../../system/defines.h"
 #include "Inkplate.h"

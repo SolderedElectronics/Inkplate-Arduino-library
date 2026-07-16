@@ -18,7 +18,7 @@
 #ifndef __IMAGE_COLOR_H__
 #define __IMAGE_COLOR_H__
 #pragma once
-#if defined(ARDUINO_INKPLATE13SPECTRA) || defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) ||               \
+#if defined(ARDUINO_INKPLATE13SPECTRA) || defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2) ||              \
     defined(ARDUINO_INKPLATE31SPECTRA)
 
 #include "../../features/SdFat/SdFat.h"

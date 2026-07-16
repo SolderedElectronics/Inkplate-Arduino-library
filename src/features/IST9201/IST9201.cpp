@@ -8,7 +8,7 @@
  *              psPin, toggleSel0Pin and toggleSel1Pin are direct ESP32 GPIOs.
  */
 void IST9201::begin(IOExpander *expander, uint8_t pwrEnPin, uint8_t chipEnPin, uint8_t vddpPin, uint8_t vddnPin,
-                     uint8_t vcnpPin, uint8_t toggleSel0Pin, uint8_t toggleSel1Pin, uint8_t pgPin, uint8_t psPin)
+                    uint8_t vcnpPin, uint8_t toggleSel0Pin, uint8_t toggleSel1Pin, uint8_t pgPin, uint8_t psPin)
 {
     _expander = expander;
     _pwrEnPin = pwrEnPin;
