@@ -17,6 +17,9 @@
 #if defined(ARDUINO_INKPLATE13SPECTRA)
 #define USE_COLOR_IMAGE
 #include "boards/Inkplate13SPECTRA/Inkplate13SPECTRADriver.h"
+#elif defined(ARDUINO_INKPLATE31SPECTRA)
+#define USE_COLOR_IMAGE
+#include "boards/Inkplate31SPECTRA/Inkplate31SPECTRADriver.h"
 #elif defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE10)
 #define MULTIPLE_DISPLAY_MODES
 #include "boards/Inkplate10/Inkplate10Driver.h"

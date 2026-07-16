@@ -17,7 +17,8 @@
 
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE13SPECTRA)
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE13SPECTRA) &&            \
+    !defined(ARDUINO_INKPLATE31SPECTRA)
 #include "../../features/SdFat/SdFat.h"
 #include "ImageDitherKernels.h"
 #include "WiFi.h"
