@@ -18,7 +18,8 @@
 #ifndef __IMAGE_COLOR_H__
 #define __IMAGE_COLOR_H__
 #pragma once
-#if defined(ARDUINO_INKPLATE13SPECTRA) || defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATE13SPECTRA) || defined(ARDUINO_ESP32S3_DEV) || defined(ARDUINO_INKPLATECOLOR) ||   \
+    defined(ARDUINO_INKPLATE2)
 
 #include "../../features/SdFat/SdFat.h"
 #include "ImageDitherColorKernels.h"
