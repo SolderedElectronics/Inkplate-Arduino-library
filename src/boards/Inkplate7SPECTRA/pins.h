@@ -10,7 +10,6 @@
 static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0xFFFF00, 0xFF0000, 0x0000FF, 0x00FF00};
 
 // Pin on the internal io expander which controls MOSFET for turning on and off the SD card
-// TODO: confirm the final expander pin for the SD card P-MOS.
 #define SD_PMOS_PIN IO_PIN_B2 // 10
 
 // Pinout definition - should be hard-coded.
@@ -25,27 +24,25 @@ static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0xFFFF00, 0xFF0000, 0x0000FF, 0
 #define SPECTRA73_BS1       5
 
 // microSD card SPI pins.
-// TODO: confirm the final microSD pinout.
 #define SPECTRA73_SD_SPI_CLK  12
 #define SPECTRA73_SD_SPI_MISO 13
 #define SPECTRA73_SD_SPI_MOSI 11
 #define SPECTRA73_SD_SPI_CS   10
 
 // Battery measurement pins.
-// TODO: confirm the final battery measurement pinout.
 #define SPECTRA73_BATT_MOSFET_PIN 9 // Pin on the internal io expander
-#define SPECTRA73_BATT_ADC_PIN    1 // ESP32 ADC capable GPIO
+#define SPECTRA73_BATT_ADC_PIN    1 /
 
 // Define the default Spectra6 color indexes.
 #define INKPLATE_BLACK  0
 #define INKPLATE_WHITE  1
 #define INKPLATE_YELLOW 2
 #define INKPLATE_RED    3
-#define INKPLATE_BLUE   5
-#define INKPLATE_GREEN  6
+#define INKPLATE_BLUE   4
+#define INKPLATE_GREEN  5
 
 static uint16_t colorPalette[6] = {INKPLATE_BLACK, INKPLATE_WHITE, INKPLATE_YELLOW,
-                                   INKPLATE_RED,   INKPLATE_BLUE,  INKPLATE_GREEN};
+                                   INKPLATE_RED,   5,  6};
 
 
 // Screen resolution.

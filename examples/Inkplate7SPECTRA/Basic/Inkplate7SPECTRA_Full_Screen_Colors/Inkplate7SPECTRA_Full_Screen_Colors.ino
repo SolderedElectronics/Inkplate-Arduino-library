@@ -31,8 +31,8 @@ void setup()
     display.fillRect(1 * 800 / 6, 0, 800 / 6 + 2, 480, INKPLATE_WHITE);
     display.fillRect(2 * 800 / 6, 0, 800 / 6 + 2, 480, INKPLATE_YELLOW);
     display.fillRect(3 * 800 / 6, 0, 800 / 6 + 2, 480, INKPLATE_RED);
-    display.fillRect(4 * 800 / 6, 0, 800 / 6 + 2, 480, INKPLATE_BLUE - 1);
-    display.fillRect(5 * 800 / 6, 0, 800 / 6 + 2, 480, INKPLATE_GREEN - 1);
+    display.fillRect(4 * 800 / 6, 0, 800 / 6 + 2, 480, INKPLATE_BLUE);
+    display.fillRect(5 * 800 / 6, 0, 800 / 6 + 2, 480, INKPLATE_GREEN);
 
     // Show the Image on the screen
     display.display();

@@ -174,23 +174,6 @@ void EPDDriver::display(bool _leaveOn)
 }
 
 /**
- * @brief       displayPartial updates the display, but the panel controller does not
- *              support partial refresh, so the whole screen is refreshed.
- *
- * @param       int16_t x        Left edge of the update window (user space) - unused
- * @param       int16_t y        Top edge of the update window (user space) - unused
- * @param       int16_t w        Width of the update window in pixels - unused
- * @param       int16_t h        Height of the update window in pixels - unused
- * @param       bool _leaveOn    If true, panel power is left on after the update
- *
- * @note        The 7.3" Spectra 6 panel only supports full refresh.
- */
-void EPDDriver::displayPartial(int16_t x, int16_t y, int16_t w, int16_t h, bool _leaveOn)
-{
-    display(_leaveOn);
-}
-
-/**
  * @brief       returns the current panel state, 0 for off, 1 for on
  *
  */
