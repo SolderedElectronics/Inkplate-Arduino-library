@@ -31,7 +31,7 @@ static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0xFFFF00, 0xFF0000, 0x0000FF, 0
 
 // Battery measurement pins.
 #define SPECTRA73_BATT_MOSFET_PIN 9 // Pin on the internal io expander
-#define SPECTRA73_BATT_ADC_PIN    1 /
+#define SPECTRA73_BATT_ADC_PIN    1
 
 // Define the default Spectra6 color indexes.
 #define INKPLATE_BLACK  0
