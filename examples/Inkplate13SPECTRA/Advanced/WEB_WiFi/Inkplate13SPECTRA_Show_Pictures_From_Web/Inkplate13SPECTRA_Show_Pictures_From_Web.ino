@@ -6,10 +6,7 @@
 
   /////////////////////////// INSERT BOARD DEF LINK HERE
 
-   You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
-   24 bit AND have resoluton smaller than 1600x1200 or otherwise it won't fit on screen.
-
-   This example will show you how you can download a .bmp file (picture) from the web and
+   This example will show you how you can download an image from the web and
    display that image on e-paper display.
 
   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
@@ -24,13 +21,14 @@
 #include "HTTPClient.h" //Include library for HTTPClient
 #include "Inkplate.h"   //Include Inkplate library to the sketch
 #include "WiFi.h"       //Include library for WiFi
-Inkplate inkplate;       // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+Inkplate inkplate;       // Create an object on Inkplate library
 
-const char ssid[] = ""; // Your WiFi SSID
-const char *password = "";     // Your WiFi password
+const char ssid[] = "";     // Your WiFi SSID
+const char *password = ""; // Your WiFi password
 
 void setup()
 {
+    Serial.begin(115200);    // Init serial communication so we can see debug messages
     inkplate.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
     inkplate.clearDisplay(); // Clear frame buffer of display
     inkplate.display();      // Put clear image on display
@@ -48,11 +46,12 @@ void setup()
     Serial.println("\nWiFi OK! Downloading...");
 
     // Draw the first image from web.
-    // Monochromatic bitmap with 1 bit depth. Images like this load quickest.
+    // This image is 1600x1200px, matching Inkplate 13SPECTRA's native resolution exactly,
+    // so drawing it at (0, 0) fills the entire screen.
     // NOTE: Both drawImage methods allow for an optional fifth "invert" parameter. Setting this parameter to true
     // will flip all colors on the image, making black white and white black. This may be necessary when exporting
-    // bitmaps from certain softwares. Forth parameter will dither the image. Photo taken by: Roberto Fernandez
-    if (!inkplate.image.draw("https://varipass.org/neowise_mono.bmp", 0, 0, true, false))
+    // bitmaps from certain softwares. Forth parameter will dither the image.
+    if (!inkplate.image.draw("https://i.imgur.com/ESkX8xU.jpeg", 0, 0, true, false))
     {
         // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
         // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
@@ -60,31 +59,6 @@ void setup()
         inkplate.display();
     }
     inkplate.display();
-
-    if (!inkplate.image.draw("https://varipass.org/neowise.bmp", 0, 0, true, false))
-    {
-        // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-        // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
-        inkplate.println("Image open error");
-        inkplate.display();
-    }
-    inkplate.display();
-
-    inkplate.clearDisplay();
-    delay(3000);
-
-    // Try to load image and display it on e-paper at position X=0, Y=100
-    // NOTE: Both drawJpegFromWeb methods allow for an optional fifth "invert" parameter. Setting this parameter to
-    // true will flip all colors on the image, making black white and white black. forth parameter will dither the
-    // image.
-    if (!inkplate.image.draw("https://varipass.org/destination.jpg", 0, 100, true, false))
-    {
-        // If is something failed (wrong filename or format), write error message on the screen.
-        inkplate.println("Image open error");
-        inkplate.display();
-    }
-    inkplate.display();
-
     WiFi.mode(WIFI_OFF);
 }
 
