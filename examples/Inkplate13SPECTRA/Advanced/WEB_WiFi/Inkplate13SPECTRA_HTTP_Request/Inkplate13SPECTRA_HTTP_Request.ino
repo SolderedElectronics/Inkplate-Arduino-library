@@ -4,7 +4,7 @@
   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
   
-  /////////////////////////// INSERT BOARD DEF LINK HERE
+  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
 
   This example will show you how to connect to WiFi network, get data from Internet and display that data on epaper.
   This example is NOT on to how to parse HTML data from Internet - it will just print HTML on the screen.

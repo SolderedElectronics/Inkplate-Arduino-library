@@ -3,7 +3,7 @@
   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
 
-  /////////////////////////// INSERT BOARD DEF LINK HERE
+  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
 
   Using this sketch, you don't have to program and control e-paper using Arduino code.
   Instead, you can send UART command. This give you flexibility that you can use this Inkplate 13SPECTRA on any platform!

@@ -15,7 +15,7 @@
    This example will show you how to open .txt files and display the content of that file on Inkplate epaper display.
 
    Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our forums: https://forum.soldered.com/
+   Looking to get support? Write on our community forum: https://community.soldered.com/
    15 July 2020 by Soldered
 */
 

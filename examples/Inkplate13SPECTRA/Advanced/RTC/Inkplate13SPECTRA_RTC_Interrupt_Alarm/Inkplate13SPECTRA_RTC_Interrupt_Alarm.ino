@@ -4,7 +4,7 @@
   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
 
-  /////////////////////////// INSERT BOARD DEF LINK HERE
+  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
 
   In this example we will show how to use PCF85063A RTC Alarm functionality with interrupt.
   This example will show how to set time and date, how to set up a alarm, how to read time, how to print time on Inkplate and how to handle interrupt.

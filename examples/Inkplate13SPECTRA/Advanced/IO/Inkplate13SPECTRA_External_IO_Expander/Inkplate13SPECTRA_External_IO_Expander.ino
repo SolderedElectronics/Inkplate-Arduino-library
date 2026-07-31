@@ -4,7 +4,7 @@
    Select "Soldered Inkplate 13 SPECTRA" from Tools -> Board menu.
    Don't have "Soldered Inkplate 13 SPECTRA" option? Follow our tutorial and add it:
    
-   /////////////////////////// INSERT BOARD DEF LINK HERE
+   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
 
    Connect resistor to P1-7 pin on IO Expander 2 header at right on the backside (component side) of Inkplate. You will
    have to connect one side of 330 Ohm resistor to P1-7, then other side to anode of LED and finally, cathode pin

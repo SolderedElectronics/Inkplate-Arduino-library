@@ -4,7 +4,7 @@
     Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
     Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
 
-    /////////////////////////// INSERT BOARD DEF LINK HERE
+    https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
 
     This example shows you how to use simple API call without API key. Response
     from server is in JSON format, so that will be shown too how it is used. What happens

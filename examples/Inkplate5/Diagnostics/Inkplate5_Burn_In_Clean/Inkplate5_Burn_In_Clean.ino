@@ -9,7 +9,7 @@
   Increase the number of refresh / clear cycles if the default 20 isn't enough and upload the sketch.
 
   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  Looking to get support? Write on our forums: https://forum.soldered.com/
+  Looking to get support? Write on our community forum: https://community.soldered.com/
   19 February 2026 by Soldered
 */
 

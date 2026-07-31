@@ -11,7 +11,7 @@
    It shows how to use basic operations with EEPROM like clearing, writing, and reading.
 
    Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our forums: https://forum.soldered.com/
+   Looking to get support? Write on our community forum: https://community.soldered.com/
    22 January 2026
 */
 

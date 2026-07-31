@@ -4,7 +4,7 @@
   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
 
-  /////////////////////////// INSERT BOARD DEF LINK HERE
+  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
 
   In this example we will show how to use PCF85063A RTC Timer functionality.
   This example will show how to set time and date, how to set up a timer, how to read time and how to print time on Inkplate using partial updates.

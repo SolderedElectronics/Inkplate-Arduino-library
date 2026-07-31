@@ -4,12 +4,13 @@
    Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
    Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
 
-   /////////////////////////// INSERT BOARD DEF LINK HERE
+   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
 
    This example will show you how to draw shapes, lines and text using the Adafruit GFX
    functions built into the Inkplate library.
 
    Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
+   Looking to get support? Write on our community forum: https://community.soldered.com/
    23 January 2026 by Soldered Electronics
 */
 

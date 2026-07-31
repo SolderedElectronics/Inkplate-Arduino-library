@@ -4,7 +4,7 @@
   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
 
-  /////////////////////////// INSERT BOARD DEF LINK HERE
+  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
 
   You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
   24 bit.

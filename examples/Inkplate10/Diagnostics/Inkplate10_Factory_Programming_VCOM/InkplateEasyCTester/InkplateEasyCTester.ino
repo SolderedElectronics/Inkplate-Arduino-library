@@ -23,7 +23,7 @@
  * warranty is given.
  *
  * Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
- * Looking to get support? Write on our forums: https://forum.soldered.com/
+ * Looking to get support? Write on our community forum: https://community.soldered.com/
  * 25 April 2023 by Soldered
  *
  * @authors     Borna Biro for Soldered

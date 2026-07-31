@@ -9,7 +9,7 @@
    NOTE: Open the Serial monitor at 115200 baud to see what happens.
 
    Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our forums: https://forum.soldered.com/
+   Looking to get support? Write on our community forum: https://community.soldered.com/
    22 January 2026 by Soldered
 */
 

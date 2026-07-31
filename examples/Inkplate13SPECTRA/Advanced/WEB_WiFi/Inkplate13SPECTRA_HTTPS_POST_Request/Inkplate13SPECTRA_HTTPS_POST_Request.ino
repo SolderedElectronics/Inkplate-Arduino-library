@@ -4,7 +4,7 @@
    Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
    Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
    
-   /////////////////////////// INSERT BOARD DEF LINK HERE
+   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
 
    This example will show you how to connect to a WiFi network and send a POST request via HTTPS.
    We will use JSONPlaceholder fake API for testing to see responses when sending post requests.
