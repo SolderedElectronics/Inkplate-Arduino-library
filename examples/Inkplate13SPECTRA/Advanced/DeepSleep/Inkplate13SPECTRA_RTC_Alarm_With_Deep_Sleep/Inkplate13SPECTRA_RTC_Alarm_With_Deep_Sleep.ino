@@ -1,18 +1,36 @@
-/*
-  Inkplate13SPECTRA_RTC_Alarm_With_Deep_Sleep example for Soldered Inkplate 13SPECTRA
-  For this example you will need only USB cable and Inkplate 13SPECTRA
-  Select "Soldered Inkplate 13SPECTRA" from Tools ->Board menu.
-  Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-  This example will show you how to use RTC alarm interrupt with deep sleep.
-  Inkplate features RTC chip with interrupt for alarm connected to GPIO2
-  Inkplate board will wake up every 60 seconds, refresh screen and go back to sleep.
-
-  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  Looking to get support? Write on our community forum: https://community.soldered.com/
-  21 January 2025 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_RTC_Alarm_With_Deep_Sleep.ino
+ * @brief       RTC alarm wake-up with deep sleep for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to use the RTC alarm interrupt together with deep
+ *              sleep. Inkplate features an RTC chip whose alarm interrupt is
+ *              connected to GPIO2. The board wakes up every 60 seconds,
+ *              refreshes the screen and goes back to sleep.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) The screen refreshes, then the board enters deep sleep.
+ * 4) Every 60 seconds the RTC alarm wakes the board, which refreshes the screen
+ *    and sleeps again.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2025-01-21
+ **************************************************/
 
 #ifndef ARDUINO_INKPLATE13SPECTRA
 #error "Wrong board selection for this example, please select Soldered Inkplate 13SPECTRA in the boards menu."

@@ -1,16 +1,34 @@
-/*
-    Inkplate13_Image_Frame_From_Web example for Soldered Inkplate 13
-    For this example you will need only USB cable and Inkplate 13.
-    Select "Soldered Inkplate 13" from Tools -> Board menu.
-    Don't have "Soldered Inkplate 13" option? Follow our tutorial and add it:
-    https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-    This example shows how you can set inkplate to show random pictures from web.
-
-    Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-    Looking to get support? Write on our community forum: https://community.soldered.com/
-    26 January 2026 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Image_Frame_From_Web.ino
+ * @brief       Web image frame example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how you can set the Inkplate to display random pictures
+ *              from the web.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      WiFi Internet connection
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials in the sketch.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) A random picture is downloaded and shown on the display, refreshed
+ *    periodically.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2026-01-26
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

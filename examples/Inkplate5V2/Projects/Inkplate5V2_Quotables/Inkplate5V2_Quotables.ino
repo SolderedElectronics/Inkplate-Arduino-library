@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate5v2_Quotables.ino
+ * @file        Inkplate5V2_Quotables.ino
  * @brief       Fetches a random quote from the Quotables API over WiFi, displays
  *              it in 1-bit BW, then deep-sleeps between updates.
  *
@@ -19,46 +19,42 @@
  *
  *              After displaying the quote, the ESP32 enters deep sleep for a
  *              configurable interval (default 300 seconds). Deep sleep resets
- *              the ESP32, so the sketch restarts from setup() on every wake-up.
- *              If WiFi connection fails, an error message is shown and the
- *              device sleeps briefly before retrying.
+ *              the ESP32, so the sketch restarts from setup() on every wake-up
+ *              and no state is preserved. If WiFi connection fails, an error
+ *              message is shown and the device sleeps briefly before retrying.
+ *
+ *              The networking layer extracts only the required fields (quote and
+ *              author) from the JSON response; ArduinoJson capacity may need
+ *              adjustment if the response format changes. DELAY_S is expressed
+ *              in microseconds for esp_sleep_enable_timer_wakeup().
+ *
+ *              Expected output: a centered quote rendered in a large font with
+ *              the author signature at the bottom-right (prefixed with a dash),
+ *              Serial output showing retry progress while fetching data, and an
+ *              on-screen error message followed by a short retry sleep if WiFi
+ *              fails.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
  * - Hardware:   Inkplate 5v2, USB cable (battery optional)
  * - Extra:      WiFi Internet connection
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5v2
- * - Serial Monitor: 115200 baud
- * - Set WiFi credentials (ssid, pass)
- * - Install library: ArduinoJson (Arduino Library Manager)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * - Library:    ArduinoJson (Arduino Library Manager)
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Enter your WiFi SSID and password in the sketch.
- * 2) Upload the sketch and open Serial Monitor at 115200 baud (optional).
- * 3) After connecting, a random quote and author are fetched and displayed.
- * 4) The board deep-sleeps for ~5 minutes, then wakes to fetch a new quote.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password (ssid, pass) in the sketch.
+ * 3) Upload the sketch and open Serial Monitor at 115200 baud (optional).
+ * 4) After connecting, a random quote and author are fetched and displayed.
+ * 5) The board deep-sleeps for ~5 minutes, then wakes to fetch a new quote.
  *
- * Expected output:
- * - A centered quote rendered in a large font, with the author signature at the
- *   bottom-right (prefixed with a dash).
- * - Serial output showing retry progress while fetching data.
- * - If WiFi fails: an on-screen error message, followed by a short retry sleep.
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT). This example uses full refreshes.
- * - Deep sleep restarts the ESP32 on every wake-up; no state is preserved.
- * - API parsing: the networking layer extracts only required fields (quote and
- *   author) from the JSON response; ArduinoJson capacity may need adjustment
- *   if the response format changes.
- * - Timing: DELAY_S is expressed in microseconds for esp_sleep_enable_timer_wakeup().
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-04-07

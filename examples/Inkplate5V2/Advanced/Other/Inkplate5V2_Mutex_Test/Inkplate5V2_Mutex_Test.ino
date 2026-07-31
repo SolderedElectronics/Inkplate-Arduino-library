@@ -1,7 +1,7 @@
 /**
  **************************************************
- * @file        Inkplate5V2_MutexTest.ino
- * @brief       Two-task display mutex test for Inkplate 5V2.
+ * @file        Inkplate5V2_Mutex_Test.ino
+ * @brief       Two-task display mutex test for Inkplate 5v2.
  *
  * @details     Spawns two FreeRTOS tasks that independently draw and
  *              partial-update opposite sides of the screen. Each task
@@ -16,7 +16,22 @@
  *              display.displayLock() / displayUnlock() calls.
  *
  * Requirements:
- * - Board: Soldered Inkplate 5V2
+ * - Board:      Soldered Inkplate 5v2
+ * - Hardware:   Inkplate 5v2, USB cable
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 5v2.
+ * 3) Both squares bounce on their own half of the screen without corrupting
+ *    each other's output.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @license     GNU GPL V3

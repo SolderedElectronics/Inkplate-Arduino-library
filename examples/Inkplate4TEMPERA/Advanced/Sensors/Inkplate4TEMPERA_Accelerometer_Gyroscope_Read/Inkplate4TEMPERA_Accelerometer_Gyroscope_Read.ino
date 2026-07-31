@@ -6,61 +6,57 @@
  *
  * @details     This example demonstrates how to use the built-in LSM6DS3 IMU
  *              (inertial measurement unit) on Inkplate 4 TEMPERA. After waking
- *              the accelerometer peripheral and initializing the sensor, the
- *              sketch continuously reads raw accelerometer axes (X/Y/Z) and
- *              gyroscope axes (X/Y/Z). The numeric readings are printed on the
- *              display for reference.
+ *              the accelerometer peripheral (via
+ *              wakePeripheral(INKPLATE_ACCELEROMETER)) and initializing the
+ *              sensor, the sketch continuously reads raw accelerometer axes
+ *              (X/Y/Z) and gyroscope axes (X/Y/Z). The numeric readings are
+ *              printed on the display for reference.
  *
  *              In parallel, the sketch renders a rotating wireframe cube. The
- *              cube’s rotation angles are derived from the accelerometer values
+ *              cube's rotation angles are derived from the accelerometer values
  *              (scaled by ANGLE_MODIFIER) and smoothed by averaging with the
- *              previous frame’s angles. Each cube edge is projected from 3D to
+ *              previous frame's angles. Each cube edge is projected from 3D to
  *              2D using basic rotation matrices and a simple perspective
  *              projection, then drawn as lines.
  *
  *              The display runs in 1-bit black/white mode (INKPLATE_1BIT) to
  *              enable fast partial updates. The cube animation uses frequent
- *              partial updates for smoother motion and forces a full refresh
- *              periodically to reduce ghosting.
+ *              partial updates for a higher apparent frame rate and forces a
+ *              full refresh after NUM_PARTIAL_UPDATES_BEFORE_FULL_REFRESH
+ *              updates to reduce ghosting. Panel power is kept enabled during
+ *              partial updates for stability and speed (higher power usage).
+ *
+ *              This is a visualization example, not a calibrated orientation
+ *              filter. For stable orientation/attitude estimation, use a sensor
+ *              fusion algorithm (e.g. complementary filter, Madgwick, Mahony)
+ *              and calibrated units.
+ *
+ *              Expected output: a wireframe cube rendered near the centre of the
+ *              display, rotating as the device is moved, plus text readouts for
+ *              ACC X/Y/Z and GYRO X/Y/Z updated continuously.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial settings (if relevant): none
- * - Adjust ANGLE_MODIFIER to change how strongly motion affects cube rotation
- * - Adjust NUM_PARTIAL_UPDATES_BEFORE_FULL_REFRESH to tune refresh cadence
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     none
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4 TEMPERA.
- * 2) Tilt and rotate the device; the cube rotation changes with acceleration.
- * 3) Watch live accelerometer and gyroscope readings printed below the cube.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Optionally adjust ANGLE_MODIFIER to change how strongly motion affects cube
+ *    rotation, and NUM_PARTIAL_UPDATES_BEFORE_FULL_REFRESH to tune the refresh
+ *    cadence.
+ * 3) Upload the sketch to Inkplate 4 TEMPERA.
+ * 4) Tilt and rotate the device; the cube rotation changes with acceleration.
+ * 5) Watch live accelerometer and gyroscope readings printed below the cube.
  *
- * Expected output:
- * - A wireframe cube rendered near the center of the display, rotating as the
- *   device is moved.
- * - Text readouts for ACC X/Y/Z and GYRO X/Y/Z updated continuously.
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT).
- * - Partial update: partial updates are used to achieve higher apparent frame
- *   rate; a full refresh is forced after
- *   NUM_PARTIAL_UPDATES_BEFORE_FULL_REFRESH updates to reduce ghosting. Panel
- *   power is kept enabled during partial updates for stability and speed
- *   (higher power usage).
- * - Sensor power: the IMU is enabled via wakePeripheral(INKPLATE_ACCELEROMETER).
- * - This is a visualization example, not a calibrated orientation filter. For
- *   stable orientation/attitude estimation, use a sensor fusion algorithm
- *   (e.g., complementary filter, Madgwick, Mahony) and calibrated units.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-08-10

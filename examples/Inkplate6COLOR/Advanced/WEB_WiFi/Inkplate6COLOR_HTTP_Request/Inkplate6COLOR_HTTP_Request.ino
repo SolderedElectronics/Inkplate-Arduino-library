@@ -19,47 +19,44 @@
  *              understanding how to fetch remote content before adding parsing
  *              logic.
  *
+ *              The example uses plain HTTP, not HTTPS, so traffic is not
+ *              encrypted. Large responses may exceed practical display space or
+ *              memory limits, so shorter text pages are more suitable for this
+ *              workflow. For production web integrations, prefer fetching
+ *              structured data such as JSON rather than printing full HTML
+ *              pages. Display mode is Inkplate 6COLOR colour e-paper mode, using
+ *              full refreshes.
+ *
+ *              Expected output: nearby Wi-Fi SSIDs during the scan, then raw
+ *              HTML/text content fetched from the target web page on the
+ *              display, with scan and Wi-Fi connection progress messages on
+ *              Serial.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      Wi-Fi connection
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial Monitor: 115200 baud
- * - Enter your Wi-Fi SSID and password in the sketch
- * - Update the target URL in http.begin() if you want to fetch a different page
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Enter your Wi-Fi SSID and password in the sketch.
- * 2) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the example.
- * 3) Open Serial Monitor at 115200 baud to follow connection progress.
- * 4) On startup, the sketch scans nearby Wi-Fi networks and shows a short list
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Enter your Wi-Fi SSID and password in the sketch, and update the target URL
+ *    in http.begin() if you want to fetch a different page.
+ * 3) Upload the example to Inkplate 6COLOR.
+ * 4) Open Serial Monitor at 115200 baud to follow connection progress.
+ * 5) On startup, the sketch scans nearby Wi-Fi networks and shows a short list
  *    of detected networks on the display.
- * 5) The board then connects to the configured Wi-Fi network.
- * 6) After connecting, the sketch performs an HTTP GET request and displays the
+ * 6) The board then connects to the configured Wi-Fi network.
+ * 7) After connecting, the sketch performs an HTTP GET request and displays the
  *    returned HTML/text response on the screen.
  *
- * Expected output:
- * - Display: Nearby Wi-Fi SSIDs during scan, then raw HTML/text content fetched
- *   from the target web page.
- * - Serial: Scan and Wi-Fi connection progress messages.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode, using full refreshes.
- * - This example uses plain HTTP, not HTTPS. Traffic is not encrypted.
- * - The received response is printed as raw text only; HTML is not parsed or
- *   rendered as a formatted web page.
- * - Large responses may exceed practical display space or memory limits, so
- *   shorter text pages are more suitable for this workflow.
- * - For production web integrations, prefer fetching structured data such as
- *   JSON rather than printing full HTML pages.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2020-07-15

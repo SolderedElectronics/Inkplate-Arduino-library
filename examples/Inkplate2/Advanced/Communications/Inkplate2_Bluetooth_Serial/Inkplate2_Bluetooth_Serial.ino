@@ -16,41 +16,38 @@
  *
  *              Inkplate 2 operates in 1-bit (black/white) display mode. This
  *              example performs a single full display refresh during setup and
- *              does not use partial updates.
+ *              does not use partial updates. This is classic Bluetooth SPP (not
+ *              BLE), so pairing is required, and no deep sleep is used - the
+ *              ESP32 remains active while powered.
+ *
+ *              Expected output: initialization and pairing instructions shown
+ *              once at startup on the display, all data received from the
+ *              smartphone shown in the Serial Monitor, and all data sent from
+ *              the Serial Monitor shown in the phone app.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      Smartphone + Bluetooth serial terminal app
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial Monitor: 115200 baud
- * - Bluetooth name: edit btDeviceName (optional)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Select the Inkplate 2 board in Tools and upload the sketch.
- * 2) Open Serial Monitor at 115200 baud.
- * 3) Pair your phone with the device name defined in btDeviceName.
- * 4) Open a Bluetooth serial terminal app and connect to Inkplate 2.
- * 5) Type in Serial Monitor to send data to the phone.
- * 6) Type in the phone app to send data back to the Serial Monitor.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Optionally edit btDeviceName to change the Bluetooth name, then upload the
+ *    sketch.
+ * 3) Open Serial Monitor at 115200 baud.
+ * 4) Pair your phone with the device name defined in btDeviceName.
+ * 5) Open a Bluetooth serial terminal app and connect to Inkplate 2.
+ * 6) Type in Serial Monitor to send data to the phone.
+ * 7) Type in the phone app to send data back to the Serial Monitor.
  *
- * Expected output:
- * - Display: initialization and pairing instructions shown once at startup.
- * - Serial Monitor: shows all data received from the smartphone via Bluetooth.
- * - Phone app: shows all data sent from the Serial Monitor.
- *
- * Notes:
- * - This is classic Bluetooth SPP (not BLE). Pairing is required.
- * - Display mode is 1-bit (BW). Only a full refresh is used in this example.
- * - No deep sleep is used; ESP32 remains active while powered.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-17

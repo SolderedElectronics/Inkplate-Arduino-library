@@ -16,46 +16,42 @@
  *
  *              The read data is printed both to the Serial Monitor and the
  *              Inkplate display so that the stored values can be verified.
- *
  *              This technique is useful for storing persistent configuration
  *              values such as device settings, counters, calibration values,
  *              or user preferences.
+ *
+ *              EEPROM on ESP32 is emulated in flash memory, so frequent writes
+ *              may reduce flash lifespan - avoid unnecessary write operations in
+ *              production code. Always call EEPROM.commit() after writing to
+ *              ensure changes are stored, and note that the EEPROM region size
+ *              must be defined during EEPROM.begin() (EEPROM_SIZE in this
+ *              example). The display is used only for text output here.
+ *
+ *              Expected output: a list of stored EEPROM values on the Serial
+ *              Monitor and the same list printed on the screen.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial Monitor: 115200 baud
- * - EEPROM_SIZE defines how many bytes are used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
- * 2) Open the Serial Monitor at 115200 baud.
- * 3) The sketch clears the defined EEPROM region.
- * 4) Sequential values are written into EEPROM.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6COLOR.
+ * 3) Open the Serial Monitor at 115200 baud.
+ * 4) The sketch clears the defined EEPROM region and writes sequential values
+ *    into EEPROM.
  * 5) The stored values are read back and displayed on both the Serial Monitor
  *    and the Inkplate screen.
  *
- * Expected output:
- * - Serial Monitor: A list of stored EEPROM values.
- * - Display: The same list of values printed on the screen.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode (used only for text
- *   output in this example).
- * - EEPROM on ESP32 is emulated in flash memory. Frequent writes may reduce
- *   flash lifespan, so avoid unnecessary write operations in production code.
- * - Always call EEPROM.commit() after writing to ensure changes are stored.
- * - The EEPROM region size must be defined during EEPROM.begin().
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-12-05

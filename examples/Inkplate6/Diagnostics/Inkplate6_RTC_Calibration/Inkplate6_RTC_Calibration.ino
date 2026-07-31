@@ -1,18 +1,39 @@
-/*
-   Inkplate6_RTC_Calibration example for Soldered Inkplate 6
-   For this example you will need USB cable and Inkplate 6.
-   Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate6" or "Soldered Inkplate6" option? Follow our tutorial and add it:
-   https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
-
-   This example will show you how to Calibrate RTC to be more precise and accurate.
-   If you have any issues with the time precision, in this way you can change the internal capacitor value, 
-   and set the clock offset. Please follow the instructions below carefully.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our community forum: https://community.soldered.com/
-   27 April 2023 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate6_RTC_Calibration.ino
+ * @brief       RTC calibration example for Soldered Inkplate 6.
+ *
+ * @details     This example will show you how to calibrate the RTC to be more
+ *              precise and accurate. If you have any issues with time precision,
+ *              this is how you can change the internal capacitor value and set
+ *              the clock offset. Please follow the instructions in the sketch
+ *              carefully.
+ *
+ * Requirements:
+ * - Board:      e-radionica Inkplate 6 or Soldered Inkplate 6
+ * - Hardware:   Inkplate 6, USB cable
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "e-radionica Inkplate6" or
+ *    "Soldered Inkplate6" from Tools -> Board.
+ * 2) Follow the calibration instructions in the sketch to pick the internal
+ *    capacitor value and the clock offset.
+ * 3) Upload the sketch to Inkplate 6.
+ * 4) Observe the displayed time and adjust the values if needed.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Adding the board definition to the Arduino IDE:
+ *              https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
+ *
+ * @author      Soldered
+ * @date        2023-04-27
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)

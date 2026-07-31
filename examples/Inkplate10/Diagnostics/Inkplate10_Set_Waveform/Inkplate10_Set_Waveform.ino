@@ -1,37 +1,40 @@
 /**
  **************************************************
- * @file        Inkplate10_Waveform_Select.ino
+ * @file        Inkplate10_Set_Waveform.ino
  * @brief       Selects and (optionally) burns an Inkplate 10 waveform via Serial.
  *
- * @details     This example lets you preview Inkplate 10 EPD waveforms (1–5) and
- *              choose the best-looking one for your panel. Type a number (1–5)
+ * @details     This example lets you preview Inkplate 10 EPD waveforms (1-5) and
+ *              choose the best-looking one for your panel. Type a number (1-5)
  *              in Serial Monitor to preview that waveform on an 8-step grayscale
  *              gradient. Type "test" to show a demo image. Type "ok" to burn the
  *              currently selected waveform into ESP32 EEPROM using:
  *                  display.setWaveform(waveformNumber, burnToEEPROM)
  *
+ *              EEPROM stores waveform data and has limited endurance, so only
+ *              burn when needed. Display mode is 3-bit grayscale
+ *              (INKPLATE_3BIT).
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 10 / Inkplate 10 V2
  * - Hardware:   Inkplate 10, USB cable
  * - Extra:      image.h (demo image) for "test" command
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- * - Serial Monitor: 115200 baud, Newline (LF)
+ * - Serial:     115200 baud, Newline (LF)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 10.
- * 2) Open Serial Monitor at 115200 baud and set line ending to Newline (LF).
- * 3) Send a number 1–5 to preview waveform on gradient.
- * 4) Send "test" to show demo image.
- * 5) Send "ok" to burn the currently selected waveform to EEPROM.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 10.
+ * 3) Open Serial Monitor at 115200 baud and set line ending to Newline (LF).
+ * 4) Send a number 1-5 to preview that waveform on the gradient.
+ * 5) Send "test" to show the demo image.
+ * 6) Send "ok" to burn the currently selected waveform to EEPROM.
  *
- * Notes:
- * - EEPROM stores waveform data (limited endurance). Only burn when needed.
- * - Display mode: 3-bit grayscale (INKPLATE_3BIT).
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026-03-05

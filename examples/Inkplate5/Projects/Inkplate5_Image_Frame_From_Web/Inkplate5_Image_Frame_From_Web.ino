@@ -3,44 +3,39 @@
  * @file        Inkplate5_Image_Frame_From_Web.ino
  * @brief       Web image frame example using Unsplash random images (Inkplate 5).
  *
- * @details     Demonstrates how to use Inkplate 5 as a simple “image frame”
+ * @details     Demonstrates how to use Inkplate 5 as a simple "image frame"
  *              by downloading an image from the web, rendering it on the
  *              e-paper display, and then entering deep sleep to save power.
- *              The sketch requests a random image (1200×825) from Unsplash,
+ *              The sketch requests a random image (1200x825) from Unsplash,
  *              extracts the final redirected image URL, and draws it on the
- *              Inkplate in 3-bit (grayscale) mode.
+ *              Inkplate in 3-bit (grayscale) mode (INKPLATE_3BIT).
+ *
+ *              Deep sleep restarts the program on every wake-up. The Unsplash
+ *              "random" endpoint returns a redirect, so the sketch extracts the
+ *              final image URL before downloading and rendering. The sleep
+ *              interval in this sketch is set to 15 minutes. Expected output is
+ *              a randomly selected image on the Inkplate screen, with the device
+ *              sleeping after drawing to reduce power consumption.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 5
  * - Hardware:   Inkplate 5, USB cable (or battery for low-power testing)
  * - Extra:      Stable WiFi Internet connection
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5
- * - Enter your WiFi credentials (ssid, password) in the code
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5/quick-start-guide/
- *
  * How to use:
- * 1) Enter your WiFi SSID and password in the sketch.
- * 2) Upload the sketch to Inkplate 5.
- * 3) The board connects to WiFi, fetches a random image URL, and displays it.
- * 4) The device enters deep sleep and wakes periodically to refresh the image.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password (ssid, password) in the sketch.
+ * 3) Upload the sketch to Inkplate 5.
+ * 4) The board connects to WiFi, fetches a random image URL, and displays it.
+ * 5) The device enters deep sleep and wakes periodically to refresh the image.
  *
- * Expected output:
- * - A randomly selected image displayed on the Inkplate screen.
- * - Device sleeps after drawing to reduce power consumption.
- *
- * Notes:
- * - This example uses 3-bit (grayscale) mode (INKPLATE_3BIT).
- * - Deep sleep restarts the program on every wake-up.
- * - The Unsplash “random” endpoint returns a redirect; the sketch extracts the
- *   final image URL before downloading and rendering.
- * - Sleep interval in this sketch is set to 15 minutes.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 5 has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2020-07-28

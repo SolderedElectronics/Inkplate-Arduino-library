@@ -1,22 +1,41 @@
-/*
-   Inkplate13SPECTRA_SD_Pictures example for Soldered Inkplate 13SPECTRA
-   For this example you will need a micro USB cable, Inkplate 13SPECTRA and a SD card loaded with
-   images that can be found inside folder of this example.
-   Select "e-radionica Inkplate 13SPECTRA" or "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate 13SPECTRA" or "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-   You can open .bmp, .jpeg or .png files (but there are some limitations by the library) that have
-   color depth of 1 bit (BW bitmap), 4 bit, 8 bit and 24 bit AND have resoluton smaller than 600x448
-   or otherwise it won't fit on screen. Format your SD card in standard FAT fileformat.
-
-   This example will show you how you can read .bmp and .jpeg files (pictures) from SD card and
-   display that image on e-paper display.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our community forum: https://community.soldered.com/
-   22 January 2026 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_SD_Pictures.ino
+ * @brief       Display images from an SD card on Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to read .bmp and .jpeg files (pictures) from an SD card
+ *              and display them on the e-paper display.
+ *
+ *              You can open .bmp, .jpeg or .png files (but there are some
+ *              limitations in the library) that have a color depth of 1 bit (BW
+ *              bitmap), 4 bit, 8 bit or 24 bit AND have a resolution smaller than
+ *              600x448, otherwise the image won't fit on the screen. Format your
+ *              SD card in the standard FAT file format.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, micro USB cable, SD card loaded with the
+ *               images found inside the folder of this example
+ * - SD card:    standard FAT format
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    (or "e-radionica Inkplate 13SPECTRA") from Tools -> Board.
+ * 2) Copy the example images to a FAT-formatted SD card and insert it into the
+ *    Inkplate.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) The images are read from the SD card and shown on the e-paper display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2026-01-22
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

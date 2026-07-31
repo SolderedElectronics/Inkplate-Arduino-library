@@ -1,17 +1,34 @@
-/*
-  Inkplate13SPECTRA_Mapbox_API example for Inkplate 13SPECTRA
-  For this example you will need only USB cable and an Inkplate 13SPECTRA.
-  Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-  Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-  This example will show you how you can use Inkplate 13SPECTRA to display map data.
-  This example gets html data from crowdsource campaing and displays them on Inkplate screen.
-
-  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Mapbox_API.ino
+ * @brief       Mapbox API map display example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how you can use Inkplate 13SPECTRA to display map data.
+ *              The example gets HTML data from a crowdsource campaign and
+ *              displays it on the Inkplate screen.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      WiFi Internet connection
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials in the sketch.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) The map data is fetched and shown on the e-paper display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

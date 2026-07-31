@@ -11,50 +11,47 @@
  *              index, then immediately enters deep sleep again.
  *
  *              Deep sleep resets the ESP32 on every wake event, so the program
- *              always starts from setup(). The currently selected image index
- *              is stored in RTC memory (RTC_DATA_ATTR) so it survives deep sleep
- *              cycles and the images rotate across wakeups.
+ *              always starts from setup() - keep the logic there and leave
+ *              loop() empty. The currently selected image index is stored in RTC
+ *              memory (RTC_DATA_ATTR) so it survives deep sleep cycles and the
+ *              images rotate across wakeups; RTC_DATA_ATTR variables are reset
+ *              by power loss or a full reset/flash.
+ *
+ *              Display mode is 1-bit (BW) and this sketch uses a full refresh
+ *              (display()) on each wake cycle; no partial updates are used. For
+ *              lowest power, avoid leaving GPIOs in a state that increases
+ *              leakage - the optional rtc_gpio_isolate() line can further reduce
+ *              sleep current on some hardware revisions.
+ *
+ *              Expected output: one of three images on the display, changing on
+ *              each timed wakeup, with very low consumption during deep sleep
+ *              (board-dependent).
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
- * - Extra:      Battery (recommended for measuring low-power behavior)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Timer period: set TIME_TO_SLEEP (seconds)
- * - Images: picture1.h / picture2.h / picture3.h must contain Inkplate-compatible
- *   monochrome bitmap data (generated with Soldered Image Converter)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      Battery (recommended for measuring low-power behavior),
+ *               picture1.h / picture2.h / picture3.h with Inkplate-compatible
+ *               monochrome bitmap data (generated with Soldered Image Converter)
  *
  * How to use:
- * 1) Convert three monochrome images using the Soldered Image Converter and
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Convert three monochrome images using the Soldered Image Converter and
  *    include them as picture1.h, picture2.h, and picture3.h.
- * 2) Upload the sketch to Inkplate 2.
- * 3) Power the board (battery preferred). The display updates once, then the
+ * 3) Set the timer period TIME_TO_SLEEP (seconds).
+ * 4) Upload the sketch to Inkplate 2.
+ * 5) Power the board (battery preferred). The display updates once, then the
  *    ESP32 enters deep sleep.
- * 4) Every TIME_TO_SLEEP seconds the board wakes, shows the next image, and
+ * 6) Every TIME_TO_SLEEP seconds the board wakes, shows the next image, and
  *    returns to deep sleep.
  *
- * Expected output:
- * - Display: one of three images; the image changes on each timed wakeup.
- * - Power: very low consumption during deep sleep (board-dependent).
- *
- * Notes:
- * - Display mode is 1-bit (BW). This sketch uses full refresh (display()) on
- *   each wake cycle; no partial updates are used.
- * - Deep sleep restarts the ESP32 every time it wakes up, so keep the logic in
- *   setup() and leave loop() empty.
- * - RTC_DATA_ATTR variables survive deep sleep, but are reset by power loss or
- *   a full reset/flash.
- * - For lowest power, avoid leaving GPIOs in a state that increases leakage.
- *   The optional rtc_gpio_isolate() line can be used to further reduce sleep
- *   current on some hardware revisions.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-03-29

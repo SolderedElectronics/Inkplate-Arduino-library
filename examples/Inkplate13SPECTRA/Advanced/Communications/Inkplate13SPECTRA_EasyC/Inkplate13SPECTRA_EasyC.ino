@@ -1,20 +1,40 @@
-/*
-  Inkplate13SPECTRA_EasyC example for Soldered Inkplate 13SPECTRA
-  For this example you will need a micro USB cable, Inkplate 13SPECTRA,
-  BME680 sensor with easyC connector on it: https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/
-  and a easyC cable: https://soldered.com/product/easyc-cable-20cm/
-  Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-  Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-  This example will show you how you can read temperature, humidity, and air pressure data from BME680.
-  In order to compile this example successfuly, you will also need to download and install
-  Soldered BME680 library: https://github.com/SolderedElectronics/Soldered-BME280-BME680-Gas-Sensor-Arduino-Library
-
-  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_EasyC.ino
+ * @brief       Read a BME680 sensor over easyC (I2C) on Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to read temperature, humidity and air pressure data
+ *              from a BME680 sensor connected to the Inkplate easyC connector.
+ *              In order to compile this example successfully, you will also need
+ *              to download and install the Soldered BME680 library.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, micro USB cable,
+ *               BME680 sensor with easyC connector
+ *               (https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/),
+ *               easyC cable (https://soldered.com/product/easyc-cable-20cm/)
+ * - Library:    Soldered BME680 library
+ *               (https://github.com/SolderedElectronics/Soldered-BME280-BME680-Gas-Sensor-Arduino-Library)
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Install the Soldered BME680 library.
+ * 3) Connect the BME680 breakout to the Inkplate easyC connector.
+ * 4) Upload the sketch to Inkplate 13SPECTRA.
+ * 5) Temperature, humidity and air pressure readings are shown on the display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

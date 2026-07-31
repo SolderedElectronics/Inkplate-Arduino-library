@@ -18,51 +18,49 @@
  *              "ALARM" on the display.
  *
  *              Because deep sleep resets the ESP32 on every wake, execution
- *              always starts from setup(). The wake reason is checked with
+ *              always starts from setup(), so keep logic there and leave loop()
+ *              empty. The wake reason is checked with
  *              esp_sleep_get_wakeup_cause() to distinguish initial boot from an
  *              alarm wake.
+ *
+ *              Display mode is 1-bit (BW) and this example uses a full refresh
+ *              (display()). The RTC "alarm" depends on the selected match mode:
+ *              if you match only minutes and seconds (RTC_MMSS), the chosen
+ *              values must represent a future match relative to the current
+ *              time, otherwise the alarm cannot be scheduled - for alarms on a
+ *              later day, include day (and possibly month) in the match. The
+ *              example relies on Internet time for initial RTC setup, so without
+ *              WiFi the current time cannot be obtained.
+ *
+ *              Expected output: on first boot, the current time/date plus a
+ *              message indicating seconds until the alarm (or an error if the
+ *              alarm time is not valid), then deep sleep; on alarm wake, large
+ *              "ALARM" text on the e-paper display.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi network (SSID/password), Internet access for NTP
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial Monitor: 115200 baud
- * - WiFi:           set ssid/pass
- * - Timezone:       set timeZone (hours offset from UTC)
- * - Alarm time:     edit alarmTime fields and the RTC match mode (e.g. RTC_MMSS)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Enter your WiFi SSID/password and your local timezone offset.
- * 2) Set the desired alarmTime and select an RTC match mode (e.g. RTC_MMSS).
- * 3) Upload the sketch and open Serial Monitor at 115200 baud (optional).
- * 4) On first run, the display shows current time/date and the configured
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID/password (ssid, pass) and your local timezone offset
+ *    (timeZone, hours from UTC).
+ * 3) Set the desired alarmTime fields and select an RTC match mode
+ *    (e.g. RTC_MMSS).
+ * 4) Upload the sketch and open Serial Monitor at 115200 baud (optional).
+ * 5) On first run, the display shows current time/date and the configured
  *    seconds until the alarm, then the board enters deep sleep.
- * 5) When the alarm time is reached, the board wakes and shows "ALARM".
+ * 6) When the alarm time is reached, the board wakes and shows "ALARM".
  *
- * Expected output:
- * - First boot: current time/date plus a message indicating seconds until alarm
- *   (or an error if the alarm time is not valid), then the device sleeps.
- * - Alarm wake: large "ALARM" text on the e-paper display.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example uses full refresh (display()).
- * - Deep sleep restarts the ESP32 each time it wakes, so keep logic in setup()
- *   and leave loop() empty.
- * - RTC "alarm" depends on the selected match mode. If you match only minutes
- *   and seconds (RTC_MMSS), the chosen values must represent a future match
- *   relative to the current time; otherwise the alarm cannot be scheduled.
- *   For alarms on a later day, include day (and possibly month) in the match.
- * - This example relies on Internet time for initial RTC setup; without WiFi,
- *   the current time cannot be obtained.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-11-28

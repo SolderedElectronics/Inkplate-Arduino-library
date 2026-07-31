@@ -1,45 +1,42 @@
 /**
  **************************************************
  * @file        Inkplate6_Game_Of_Life.ino
- * @brief       Conway’s Game of Life animation (community example) for Soldered Inkplate 6.
+ * @brief       Conway's Game of Life animation (community example) for Soldered Inkplate 6.
  *
- * @details     Community-created example that runs Conway’s Game of Life on the
+ * @details     Community-created example that runs Conway's Game of Life on the
  *              Inkplate 6 e-paper display. A random initial grid is generated,
  *              then the cellular automaton evolves over time. The animation is
  *              drawn using rectangle fills per cell and updated using partial
  *              updates for speed, with an occasional full refresh to reduce
  *              ghosting and maintain image quality.
  *
+ *              The example runs in 1-bit (black & white) mode. A full refresh is
+ *              performed periodically (FULLREFRESH) to reduce ghosting. Expected
+ *              output is a continuously updating Game of Life animation with a
+ *              periodic full refresh, re-randomizing automatically when the
+ *              simulation becomes too static.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6
  * - Hardware:   Inkplate 6, USB cable
  * - Extra:      None
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6
- * - Serial settings: 115200 baud (optional)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * - Serial:     115200 baud (optional)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6.
- * 2) The program generates a random initial state and starts the simulation.
- * 3) Watch the Game of Life evolve on the e-paper display.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6.
+ * 3) The program generates a random initial state and starts the simulation.
+ * 4) Watch the Game of Life evolve on the e-paper display.
  *
- * Expected output:
- * - A continuously updating Conway’s Game of Life animation.
- * - Periodic full refresh after a number of partial updates.
- * - Automatic re-randomization when the simulation becomes too static.
- *
- * Notes:
- * - This example uses 1-bit (black & white) mode.
- * - Partial updates are used for faster animation.
- * - A full refresh is performed periodically (FULLREFRESH) to reduce ghosting.
- * - Original community author: claud9999 (https://github.com/claud9999)
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Original community author: claud9999
+ *              (https://github.com/claud9999)
  *
  * @author      claud9999 (community), adapted for Soldered examples
  * @date        2021-02-11

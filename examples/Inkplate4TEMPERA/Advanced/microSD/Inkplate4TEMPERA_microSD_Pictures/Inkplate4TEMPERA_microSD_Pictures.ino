@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate4TEMPERA_SD_Pictures.ino
+ * @file        Inkplate4TEMPERA_microSD_Pictures.ino
  * @brief       Display images from SD card on Soldered Inkplate 4TEMPERA.
  *
  * @details     Demonstrates how to load image files from an SD card and display
@@ -8,35 +8,33 @@
  *              read supported image formats from a FAT-formatted SD card and
  *              render them using the Inkplate graphics library.
  *
+ *              Supported formats include BMP, JPEG and PNG (with library
+ *              limitations) in 1-bit (BW), 4-bit, 8-bit and 24-bit color depth.
+ *              Maximum supported resolution is 600 x 600 pixels; images larger
+ *              than the display resolution will not fit on screen. Expected
+ *              output is the selected image from the SD card shown on the
+ *              Inkplate display.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 4TEMPERA
  * - Hardware:   Inkplate 4TEMPERA, USB cable, microSD card
  * - Extra:      SD card with compatible image files
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate4TEMPERA
- * - SD card format: FAT / FAT32
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/4TEMPERA/quick-start-guide/
+ * - SD card:    FAT / FAT32 format
  *
  * How to use:
- * 1) Copy supported image files to a FAT-formatted SD card.
- * 2) Insert the SD card into the Inkplate.
- * 3) Upload the sketch to Inkplate 4TEMPERA.
- * 4) The image is read from the SD card and displayed on the e-paper screen.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate4TEMPERA"
+ *    from Tools -> Board.
+ * 2) Copy supported image files to a FAT-formatted SD card.
+ * 3) Insert the SD card into the Inkplate.
+ * 4) Upload the sketch to Inkplate 4TEMPERA.
+ * 5) The image is read from the SD card and displayed on the e-paper screen.
  *
- * Expected output:
- * - Selected image from the SD card is shown on the Inkplate display.
- *
- * Notes:
- * - Supported formats include BMP, JPEG, and PNG (with library limitations).
- * - Supported color depths: 1-bit (BW), 4-bit, 8-bit, and 24-bit.
- * - Maximum supported resolution is 600 × 600 pixels.
- * - Images larger than the display resolution will not fit on screen.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-17

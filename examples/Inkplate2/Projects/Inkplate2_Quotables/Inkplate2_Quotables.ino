@@ -10,53 +10,50 @@
  *              and displaying the result on Inkplate 2.
  *
  *              The quote is rendered inside a text box using drawTextBox() and
- *              the author is printed in the lower-right corner. After updating
- *              the display, the ESP32 enters deep sleep and wakes every
+ *              the author is printed in the lower-right corner. drawTextBox()
+ *              truncates with "..." if the quote exceeds the box height. After
+ *              updating the display, the ESP32 enters deep sleep and wakes every
  *              DELAY_S microseconds (default: 5 minutes) to fetch and show a
  *              new quote.
  *
  *              If WiFi connection fails, an error message is shown and the
  *              device sleeps briefly before retrying. Because deep sleep resets
- *              the ESP32, execution always starts from setup() on each wake.
+ *              the ESP32, execution always starts from setup() on each wake -
+ *              keep logic there and leave loop() empty. Display mode is 1-bit
+ *              (BW) with a full refresh (display()). API behavior/format may
+ *              change over time; if parsing fails, update the NetworkFunctions
+ *              implementation accordingly.
+ *
+ *              Expected output: the fetched quote centered in a text box with the
+ *              author printed at the bottom-right prefixed with "-", fetch retry
+ *              dots and basic status messages in the Serial Monitor, and on WiFi
+ *              failure an "Unable to connect..." message followed by a short
+ *              sleep and automatic retry.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
- * - Extra:      WiFi connection + Internet access, ArduinoJson library
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial Monitor: 115200 baud (recommended for debugging)
- * - WiFi:           set ssid/pass
- * - Update period:  set DELAY_S (microseconds; 300 * 1,000,000 = 5 minutes)
- * - WiFi retry:     set DELAY_WIFI_RETRY_SECONDS (seconds)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      WiFi connection + Internet access
+ * - Library:    ArduinoJson (required by the NetworkFunctions helper)
+ * - Serial:     115200 baud (recommended for debugging)
  *
  * How to use:
- * 1) Install ArduinoJson (required by the NetworkFunctions helper).
- * 2) Enter your WiFi SSID/password.
- * 3) Upload the sketch to Inkplate 2.
- * 4) On each wake, the device fetches a quote and updates the display, then
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Install ArduinoJson.
+ * 3) Enter your WiFi SSID/password (ssid, pass), and optionally set DELAY_S
+ *    (microseconds; 300 * 1,000,000 = 5 minutes) and
+ *    DELAY_WIFI_RETRY_SECONDS.
+ * 4) Upload the sketch to Inkplate 2.
+ * 5) On each wake, the device fetches a quote and updates the display, then
  *    sleeps for the configured interval.
  *
- * Expected output:
- * - Display: the fetched quote centered in a text box; author printed at the
- *   bottom-right, prefixed with "-".
- * - Serial Monitor: fetch retry dots and basic status messages (if opened).
- * - On WiFi failure: "Unable to connect..." message, then a short sleep and
- *   automatic retry.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example uses a full refresh (display()).
- * - Deep sleep restarts the ESP32; keep logic in setup() and leave loop() empty.
- * - API behavior/format may change over time; if parsing fails, update the
- *   NetworkFunctions implementation accordingly.
- * - drawTextBox() truncates with "..." if the quote exceeds the box height.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-04-07

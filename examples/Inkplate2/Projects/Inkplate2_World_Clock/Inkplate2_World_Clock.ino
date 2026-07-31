@@ -1,5 +1,52 @@
-
-
+/**
+ **************************************************
+ * @file        Inkplate2_World_Clock.ino
+ * @brief       Two-city analog world clock for Inkplate 2 using TimeAPI over
+ *              WiFi, refreshed from deep sleep.
+ *
+ * @details     Draws two analog clock faces side by side, one per configured
+ *              city (city1 and city2), with the hour hand in black and the minute
+ *              hand in red, plus an AM/PM label and the city name underneath.
+ *
+ *              On boot the sketch runs a short display self-test, connects to
+ *              WiFi, prints the current NTP time to Serial, fetches the timezone
+ *              list from TimeAPI and then requests the local time for each city
+ *              through the NetworkFunctions helper. If both city lookups fail, a
+ *              "No city time data!" message is shown instead of a blank screen.
+ *              After drawing, the ESP32 sleeps for TIME_TO_SLEEP seconds (300 s
+ *              by default) and repeats on wake; a failed WiFi connection sleeps
+ *              for DELAY_WIFI_RETRY_SECONDS and retries.
+ *
+ *              Deep sleep restarts the ESP32 on every wake, so all logic lives in
+ *              setup() and loop() stays empty. The display uses the Inkplate 2
+ *              tri-color palette (BLACK/WHITE/RED) with a full refresh.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 2
+ * - Hardware:   Inkplate 2, USB cable
+ * - Extra:      WiFi connection + Internet access (TimeAPI + NTP)
+ * - Serial:     115200 baud (recommended for debugging)
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID/password (ssid, pass).
+ * 3) Set city1 and city2 to the cities you want to track, and optionally adjust
+ *    TIME_TO_SLEEP and DELAY_WIFI_RETRY_SECONDS.
+ * 4) Upload the sketch and open Serial Monitor at 115200 baud.
+ * 5) Both clock faces are drawn, then the board deep-sleeps and refreshes every
+ *    TIME_TO_SLEEP seconds.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @license     GNU GPL V3
+ **************************************************/
 #ifndef ARDUINO_INKPLATE2
 #error "Wrong board selection for this example, please select Soldered Inkplate2 in the boards menu."
 #endif

@@ -1,26 +1,49 @@
-/*
-    Inkplate13SPECTRA_Quotables example for Soldered Inkplate 13SPECTRA
-    For this example you will need only USB cable and Inkplate 13SPECTRA.
-    Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-    Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-    https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-    This example shows you how to use simple API call without API key. Response
-    from server is in JSON format, so that will be shown too how it is used. What happens
-    here is basically ESP32 connects to WiFi and sends API call and server returns HTML 
-    document containing one quote and some information about it, then using library ArduinoJSON
-    we extract only quote from JSON data and show it on Inkplate 13SPECTRA. After displaying quote
-    ESP32 goes to sleep and wakes up every 300 seconds to show new quote(you can change time interval).
-
-    IMPORTANT:
-    Make sure to change wifi credentials below
-    Also have ArduinoJSON installed in your Arduino libraries, download here: https://arduinojson.org/
-    You can deserialize JSON data easily using JSON assistant https://arduinojson.org/v6/assistant/
-
-    Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-    21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Quotables.ino
+ * @brief       Random quote from the Quotables API on Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to use a simple API call without an API key. The
+ *              response from the server is in JSON format, so this example also
+ *              shows how that is used. What happens here is basically that the
+ *              ESP32 connects to WiFi and sends the API call, the server returns
+ *              an HTML document containing one quote and some information about
+ *              it, then using the ArduinoJson library we extract only the quote
+ *              from the JSON data and show it on Inkplate 13SPECTRA. After
+ *              displaying the quote the ESP32 goes to sleep and wakes up every
+ *              300 seconds to show a new quote (you can change the time
+ *              interval).
+ *
+ *              IMPORTANT: make sure to change the WiFi credentials in the sketch
+ *              and to have ArduinoJson installed in your Arduino libraries. You
+ *              can deserialize JSON data easily using the JSON assistant at
+ *              https://arduinojson.org/v6/assistant/.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      WiFi Internet connection
+ * - Library:    ArduinoJson (https://arduinojson.org/)
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Install the ArduinoJson library.
+ * 3) Enter your WiFi credentials in the sketch.
+ * 4) Upload the sketch to Inkplate 13SPECTRA.
+ * 5) A quote is shown on the display; the board wakes every 300 seconds to fetch
+ *    a new one.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

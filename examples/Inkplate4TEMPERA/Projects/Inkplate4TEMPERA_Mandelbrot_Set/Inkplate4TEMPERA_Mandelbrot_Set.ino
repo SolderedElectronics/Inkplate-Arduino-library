@@ -5,53 +5,46 @@
  *              (BW) mode by computing each pixel on the ESP32.
  *
  * @details     This example computes and renders a Mandelbrot set region by
- *              iterating the complex function z = z² + c for each pixel on the
+ *              iterating the complex function z = z^2 + c for each pixel on the
  *              display. For every (x, y) coordinate mapped into the complex
  *              plane, the code runs up to MAXITERATIONS iterations and decides
  *              whether the point escapes. Points that do not escape are drawn
  *              as black (inside the set) and others remain white.
  *
  *              Rendering is performed fully in the ESP32 frame buffer and then
- *              pushed to the e-paper panel with a full refresh via display.display().
- *              Because the computation is heavy and uses double-precision math,
- *              this sketch can take a long time to complete on an MCU.
+ *              pushed to the e-paper panel with a full refresh via
+ *              display.display(); partial updates are not used, so the whole
+ *              image is generated before the first refresh. Because the
+ *              computation is heavy and uses double-precision math, this sketch
+ *              can take a long time to complete on an MCU and draws more power
+ *              while computing. MAXITERATIONS controls detail vs. speed:
+ *              increasing it improves boundary detail but increases render time.
+ *
+ *              Expected output: a black/white Mandelbrot set rendering of the
+ *              selected coordinate window, with the row index (j) printed on
+ *              Serial as progress while rendering.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (optional; prints progress per rendered row)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional; prints progress per rendered row)
  *
  * How to use:
- * 1) Select the Inkplate 4 TEMPERA board and upload the sketch.
- * 2) Wait for the render to complete (may take several minutes).
- * 3) The final Mandelbrot image is displayed; after a short delay the render
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) Wait for the render to complete (may take several minutes).
+ * 4) The final Mandelbrot image is displayed; after a short delay the render
  *    repeats.
- * 4) To explore other regions, change xFrom/xTo/yFrom/yTo and re-upload.
+ * 5) To explore other regions, change xFrom/xTo/yFrom/yTo and re-upload.
  *
- * Expected output:
- * - E-paper: A black/white Mandelbrot set rendering of the selected coordinate
- *   window.
- * - Serial: Row index (j) printed as progress while rendering.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example uses full refresh (display.display()).
- * - Rendering is CPU-intensive (nested loops over the full resolution with
- *   iterative complex math). Expect long runtimes and higher power draw while
- *   computing.
- * - MAXITERATIONS controls detail vs. speed. Increasing it improves boundary
- *   detail but increases render time.
- * - Partial updates are not used here; the whole image is generated before the
- *   first refresh.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-07-24

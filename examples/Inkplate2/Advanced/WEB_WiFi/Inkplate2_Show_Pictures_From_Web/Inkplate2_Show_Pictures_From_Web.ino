@@ -11,56 +11,48 @@
  *              - Manual download using HTTPClient and rendering a BMP stream
  *                via drawBitmapFromWeb()
  *
- *              The display runs in 1-bit (black/white) mode. Optional dithering
- *              can be enabled when drawing to convert grayscale/color sources
- *              into a 1-bit dithered image. Image size must fit the Inkplate 2
- *              resolution (212x104 px) and format/encoding must be supported.
+ *              The display runs in 1-bit (black/white) mode and uses a full
+ *              refresh (display()). Optional dithering can be enabled when
+ *              drawing to convert grayscale/color sources into a 1-bit dithered
+ *              image; it improves appearance but increases processing time.
+ *
+ *              Image constraints: max size 212x104 px (larger images may fail or
+ *              render incorrectly); JPG must be baseline DCT with Huffman coding;
+ *              BMP must be Windows BMP, 1/4/8/24-bit, uncompressed (no RLE); PNG
+ *              is generally supported, and if an image fails, re-save it with an
+ *              editor. Large 24-bit images can be slow to download and decode.
  *
  *              After showing several images with delays, WiFi is turned off and
  *              the ESP32 enters deep sleep. Deep sleep restarts the ESP32 on
- *              wake; this sketch does not configure a wake source.
+ *              wake and this sketch does not configure a wake source, so a reset
+ *              or power cycle is required to run it again.
+ *
+ *              Expected output: downloaded images rendered full-screen
+ *              (212x104), each followed by a full refresh, and WiFi connection
+ *              progress plus a "Going to sleep.." message in the Serial Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi connection + Internet access
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial Monitor: 115200 baud (optional, for connection logs)
- * - WiFi:           set ssid/password
- * - Image URLs:     update the URLs if you want to load your own images
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional, for connection logs)
  *
  * How to use:
- * 1) Enter your WiFi SSID and password.
- * 2) Upload the sketch to Inkplate 2.
- * 3) Open Serial Monitor at 115200 baud to watch WiFi connection status.
- * 4) The sketch connects to WiFi, downloads and displays multiple images,
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password (ssid, password) and update the image
+ *    URLs if you want to load your own images.
+ * 3) Upload the sketch to Inkplate 2.
+ * 4) Open Serial Monitor at 115200 baud to watch WiFi connection status.
+ * 5) The sketch connects to WiFi, downloads and displays multiple images,
  *    then turns WiFi off and enters deep sleep.
  *
- * Expected output:
- * - Display: downloaded images rendered full-screen (212x104), each followed by
- *   a full refresh.
- * - Serial Monitor: WiFi connection progress and a "Going to sleep.." message.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example uses full refresh (display()).
- * - Image constraints:
- *   - Max size: 212x104 px (larger images may fail or render incorrectly).
- *   - JPG: Baseline DCT with Huffman coding (common "baseline" JPEG).
- *   - BMP: Windows BMP, 1/4/8/24-bit, uncompressed (no RLE compression).
- *   - PNG: generally supported; if an image fails, re-save it with an editor.
- * - Large 24-bit images can be slow to download and decode.
- * - Dithering improves appearance for grayscale/color sources but increases
- *   processing time.
- * - Deep sleep restarts the ESP32; no wakeup source is configured here, so a
- *   reset or power cycle is required to run again.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-03-28

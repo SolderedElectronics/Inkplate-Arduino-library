@@ -1,22 +1,41 @@
-/*
-   Inkplate13SPECTRA_HTTPS_POST_Request example for Soldered Inkplate 13SPECTRA
-   For this example you will need USB cable, Inkplate 13SPECTRA and stable WiFi Internet connection.
-   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-   
-   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-   This example will show you how to connect to a WiFi network and send a POST request via HTTPS.
-   We will use JSONPlaceholder fake API for testing to see responses when sending post requests.
-   For real API, you must specify the API key and maybe some more parameters to work correctly.
-   When you send a POST request, on the Serial Monitor you will see a response like on the real
-   API but data won't be written on the API.
-
-   NOTE: Open the Serial Monitor at 115200 baud rate to see what's happening!
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_HTTPS_POST_Request.ino
+ * @brief       HTTPS POST request example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to connect to a WiFi network and send a POST request
+ *              via HTTPS. The example uses the JSONPlaceholder fake API for
+ *              testing, so you can see the responses returned when sending POST
+ *              requests. For a real API you must specify the API key and maybe
+ *              some more parameters for it to work correctly.
+ *
+ *              When you send a POST request, the Serial Monitor shows a response
+ *              like the one a real API would return, but the data won't actually
+ *              be written on the API.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      Stable WiFi Internet connection
+ * - Serial:     115200 baud
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials in the sketch.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) Open the Serial Monitor at 115200 baud to see what's happening.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

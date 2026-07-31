@@ -13,51 +13,46 @@
  *
  *              During gameplay, taps on the 3x3 grid place X or O. In single-
  *              player mode, the AI computes its move using a minimax search
- *              (depth controlled by difficultyDepth[]). The UI is redrawn after
- *              each action and updated primarily via partialUpdate() to reduce
- *              flashing. A "Go Back" touch area returns to the menu and resets
+ *              (depth controlled by difficultyDepth[]); higher depths increase
+ *              CPU time per move. The UI is redrawn after each action and updated
+ *              primarily via partialUpdate() to reduce flashing - perform
+ *              occasional full refreshes in long sessions if you notice
+ *              ghosting. A "Go Back" touch area returns to the menu and resets
  *              the board.
+ *
+ *              Display mode is 1-bit (BW), since partial updates are supported
+ *              only in BW mode. The example depends on additional project files:
+ *              ai.h (minimax implementation) and generatedUIMenu.h (UI
+ *              geometry/constants and text variables). The touchscreen must be
+ *              initialized; if init fails, touch input will not work reliably.
+ *
+ *              Expected output: a menu screen with selectable options, followed
+ *              by a Tic-Tac-Toe board, where the top status line shows whose turn
+ *              it is and the game result (ongoing / X won / O won / tie).
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (optional; for debugging)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional; for debugging)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4 TEMPERA.
- * 2) Use the touchscreen menu to choose difficulty (or 2-player), who starts,
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) Use the touchscreen menu to choose difficulty (or 2-player), who starts,
  *    and whether X or O goes first.
- * 3) Tap "Start game" to begin.
- * 4) Tap a board cell to place your mark. In AI mode, the device responds with
+ * 4) Tap "Start game" to begin.
+ * 5) Tap a board cell to place your mark. In AI mode, the device responds with
  *    its move automatically.
- * 5) Tap "Go Back" to return to the menu and reset the board.
+ * 6) Tap "Go Back" to return to the menu and reset the board.
  *
- * Expected output:
- * - E-paper: Menu screen with selectable options, followed by a Tic-Tac-Toe
- *   board. The top status line shows whose turn it is and the game result
- *   (ongoing / X won / O won / tie).
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial updates are supported only in BW mode.
- * - Partial updates are used for most UI interactions; perform occasional full
- *   refreshes in long sessions if you notice ghosting.
- * - AI difficulty is controlled by minimax depth; higher depths increase CPU
- *   time per move.
- * - This example depends on additional project files:
- *   - ai.h (minimax implementation)
- *   - generatedUIMenu.h (UI geometry/constants and text variables)
- * - Touchscreen must be initialized; if init fails, touch input will not work
- *   reliably.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-17

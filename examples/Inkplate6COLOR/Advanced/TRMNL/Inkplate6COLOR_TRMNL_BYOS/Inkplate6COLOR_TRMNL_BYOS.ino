@@ -3,10 +3,10 @@
  * @file        Inkplate6COLOR_TRMNL_BYOS.ino
  * @brief       TRMNL BYOS client example for Soldered Inkplate 6COLOR.
  *
- * @details     Connects Inkplate 6COLOR to WiFi, registers with a
- *              TRMNL-compatible BYOS server via /api/setup, then polls
- *              /api/display on a loop, drawing whatever image the server
- *              returns and deep-sleeping between refreshes.
+ * @details     Connects Inkplate 6COLOR to WiFi, registers with a TRMNL-compatible
+ *              BYOS server via /api/setup, then polls /api/display on a loop,
+ *              drawing whatever image the server returns and deep-sleeping
+ *              between refreshes.
  *
  *              NOTE: Inkplate 6COLOR is a 6-color panel and has no fast
  *              partial-refresh call, so unlike the monochrome boards this
@@ -126,6 +126,13 @@
  * unreachable access point can't drain the battery; API errors settle into
  * a 15-minute polling fallback. A 202/500 "not ready" status from the
  * server is re-polled after a minute.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11

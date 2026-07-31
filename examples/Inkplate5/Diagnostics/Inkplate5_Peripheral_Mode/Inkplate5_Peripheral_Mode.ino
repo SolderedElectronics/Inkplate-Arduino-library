@@ -1,7 +1,7 @@
 /**
  **************************************************
  * @file        Inkplate5_Peripheral_Mode.ino
- * @brief       Runs Inkplate 5 in “Peripheral Mode”, accepting UART commands
+ * @brief       Runs Inkplate 5 in "Peripheral Mode", accepting UART commands
  *              to control the e-paper display without custom Arduino drawing
  *              code.
  *
@@ -15,52 +15,47 @@
  *              mode (INKPLATE_3BIT), then starts the PeripheralMode singleton
  *              with a configurable UART RX/TX pin mapping, serial buffer size,
  *              and command timeout (defined in settings.h). In the main loop it
- *              continuously reads and processes incoming serial data.
+ *              continuously reads and processes incoming serial data. Adjust
+ *              SERIAL_UART_RX_PIN, SERIAL_UART_TX_PIN, SERIAL_BUFFER_SIZE and
+ *              SERIAL_TIMEOUT_MS in settings.h if needed.
  *
  *              Because UART bandwidth is limited, sending many pixel-level
  *              commands (e.g., drawPixel in large loops) is inefficient. For
  *              image-heavy content, store bitmaps/images on the microSD card
- *              and use commands that load and render files instead.
+ *              and use commands that load and render files instead. Partial
+ *              updates are not supported in grayscale mode, so refresh
+ *              operations performed by commands are full refreshes. This sketch
+ *              is commonly used as a "factory" firmware to allow Inkplate to be
+ *              driven from non-Arduino platforms via a simple serial protocol.
+ *
+ *              Expected output: the Serial Monitor prints "READY" when
+ *              initialization succeeds and the display updates in response to
+ *              valid UART commands sent by the host. If initialization fails, an
+ *              error message is printed and the sketch halts.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 5
  * - Hardware:   Inkplate 5, USB-C cable
  * - Extra:      none (optional: microSD card for image file rendering)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5
- * - Serial settings: 115200 baud, standard parity, line ending "\\n\\r"
- *   (both NL & CR) as expected by the command parser
- * - Adjust SERIAL_UART_RX_PIN, SERIAL_UART_TX_PIN, SERIAL_BUFFER_SIZE, and
- *   SERIAL_TIMEOUT_MS in settings.h if needed
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5/quick-start-guide/
+ * - Serial:     115200 baud, standard parity, line ending "\\n\\r"
+ *               (both NL & CR) as expected by the command parser
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 5.
- * 2) Open a serial terminal at 115200 baud and wait for the device to print
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 5.
+ * 3) Open a serial terminal at 115200 baud and wait for the device to print
  *    "READY".
- * 3) Send Peripheral Mode commands terminated with "\\n\\r".
- * 4) For faster image updates, place image/bitmap files on a microSD card and
+ * 4) Send Peripheral Mode commands terminated with "\\n\\r".
+ * 5) For faster image updates, place image/bitmap files on a microSD card and
  *    use commands that load and draw from SD instead of per-pixel drawing.
  *
- * Expected output:
- * - Serial Monitor prints "READY" when initialization succeeds.
- * - The display updates in response to valid UART commands sent by the host.
- * - If initialization fails, an error message is printed and the sketch halts.
- *
- * Notes:
- * - Display mode: 3-bit grayscale (INKPLATE_3BIT). Partial updates are not
- *   supported in grayscale mode, so refresh operations performed by commands
- *   are full refreshes.
- * - Performance: UART command throughput is limited; prefer higher-level draw
- *   operations (lines, rectangles, text, image-from-SD) over repeated pixels.
- * - This sketch is commonly used as a “factory” firmware to allow Inkplate to
- *   be driven from non-Arduino platforms via a simple serial protocol.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 5 has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2024-04-15

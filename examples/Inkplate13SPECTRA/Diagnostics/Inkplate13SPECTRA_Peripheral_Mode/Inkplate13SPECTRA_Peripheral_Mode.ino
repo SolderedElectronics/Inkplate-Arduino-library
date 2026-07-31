@@ -1,26 +1,50 @@
-/*
-  Inkplate13SPECTRA_Peripheral_Mode example for Soldered Inkplate 13SPECTRA
-  Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-  Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-  Using this sketch, you don't have to program and control e-paper using Arduino code.
-  Instead, you can send UART command. This give you flexibility that you can use this Inkplate 13SPECTRA on any platform!
-
-  Because it uses UART, it's little bit slower and it's not recommended to send bunch of
-  drawPixel command to draw some image. Instead, load bitmaps and pictures on SD card and load image from SD.
-  If we missed some function, you can modify this and make yor own.
-  Also, every Inkplate comes with this peripheral mode right from the factory.
-
-  UART settings are: 115200 baud, standard parity, ending with "\n\r" (both)
-  You can send commands via USB port or by directly connecting to ESP32 TX and RX pins.
-  Don't forget you need to send #L(1)* after each command to show it on the display
-  (equal to inkplate.display()).
-
-  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Peripheral_Mode.ino
+ * @brief       UART-controlled peripheral mode for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Using this sketch, you don't have to program and control the
+ *              e-paper using Arduino code. Instead, you can send UART commands.
+ *              This gives you the flexibility to use this Inkplate 13SPECTRA on
+ *              any platform. Every Inkplate comes with this peripheral mode
+ *              right from the factory.
+ *
+ *              Because it uses UART it is a little bit slower, and it is not
+ *              recommended to send a bunch of drawPixel commands to draw an
+ *              image. Instead, load bitmaps and pictures on the SD card and load
+ *              the image from SD. If we missed some function, you can modify this
+ *              sketch and make your own.
+ *
+ *              UART settings are: 115200 baud, standard parity, ending with
+ *              "\n\r" (both). You can send commands via the USB port or by
+ *              directly connecting to the ESP32 TX and RX pins. Don't forget you
+ *              need to send #L(1)* after each command to show it on the display
+ *              (equal to inkplate.display()).
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      Optional microSD card for image files
+ * - Serial:     115200 baud, standard parity, line ending "\n\r" (both)
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) Open a serial terminal at 115200 baud (or connect to the ESP32 TX/RX pins).
+ * 4) Send peripheral mode commands, following each with #L(1)* to refresh the
+ *    display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

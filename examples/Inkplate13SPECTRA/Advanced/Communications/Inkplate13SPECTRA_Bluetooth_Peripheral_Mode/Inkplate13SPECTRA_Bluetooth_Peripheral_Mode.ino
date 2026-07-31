@@ -1,19 +1,43 @@
-/*
-   Inkplate13SPECTRA_Bluetooth_Peripheral_Mode example for Soldered Inkplate 13 SPECTRA
-   For this example you will need USB cable and an Inkplate 13 SPECTRA
-   Select "Soldered Inkplate 13 SPECTRA" from Tools -> Board menu.
-
-   This example shows how to use Inkplate as a peripheral device over Bluetooth.
-
-   Upload this example to the Inkplate and connect your phone to it via Bluetooth.
-   First, you have to pair the Inkplate with your phone in Bluetooth settings in your phone, then go to the
-   Serial Bluetooth Terminal app and you can find the Inkplate in the device list. You can use another similar app.
-   If Bluetooth starts successfully, you can send commands from your phone. Don't forget you need to send #L(1)* after
-   each command to show it on the display (equal to display->display()).
-
-  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Bluetooth_Peripheral_Mode.ino
+ * @brief       Bluetooth peripheral mode example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to use Inkplate as a peripheral device over Bluetooth.
+ *              Upload this example to the Inkplate and connect your phone to it
+ *              via Bluetooth. First pair the Inkplate with your phone in the
+ *              Bluetooth settings on your phone, then open the Serial Bluetooth
+ *              Terminal app (or another similar app) and find the Inkplate in
+ *              the device list.
+ *
+ *              If Bluetooth starts successfully, you can send commands from your
+ *              phone. Don't forget you need to send #L(1)* after each command to
+ *              show it on the display (equal to display->display()).
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable, smartphone
+ * - Extra:      Bluetooth serial terminal app (e.g. Serial Bluetooth Terminal)
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) Pair the Inkplate with your phone in the phone's Bluetooth settings.
+ * 4) Open the Serial Bluetooth Terminal app and connect to the Inkplate.
+ * 5) Send peripheral mode commands, terminating each with #L(1)* to refresh the
+ *    display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Include Inkplate and BLE libraries to the sketch
 #include "Inkplate.h"

@@ -25,42 +25,36 @@
  *
  *              The second example also uses a custom font (Roboto Light) to
  *              demonstrate how external fonts can be used with text boxes.
+ *              Custom fonts may render relative to the font baseline, which can
+ *              require a vertical offset adjustment when positioning the text
+ *              box. Each display update performs a full refresh on the colour
+ *              e-paper panel. drawTextBox() simplifies UI layout for menus,
+ *              descriptions and other formatted text content.
+ *
+ *              Expected output: two rectangular text areas containing wrapped
+ *              text, where words automatically move to the next line at the box
+ *              edge and text exceeding the vertical space ends with "...".
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
- * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Ensure the Roboto_Light_36 font file is present in the sketch folder
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      Roboto_Light_36 font file present in the sketch folder
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
- * 2) After startup, the display is cleared.
- * 3) The sketch renders two text boxes:
- *    - One using the default font and minimal parameters.
- *    - One using a custom font with advanced formatting options.
- * 4) The display refreshes to show both formatted text regions.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6COLOR.
+ * 3) After startup, the display is cleared.
+ * 4) The sketch renders two text boxes: one using the default font and minimal
+ *    parameters, one using a custom font with advanced formatting options.
+ * 5) The display refreshes to show both formatted text regions.
  *
- * Expected output:
- * - Display: Two rectangular text areas containing wrapped text. Words
- *   automatically move to the next line when they reach the box edge. If the
- *   text exceeds the vertical space, it ends with "...".
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - Custom fonts may render relative to the font baseline, which can require
- *   a vertical offset adjustment when positioning the text box.
- * - Each display update performs a full refresh on the color e-paper panel.
- * - drawTextBox() simplifies UI layout for menus, descriptions, and other
- *   formatted text content.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-04-24

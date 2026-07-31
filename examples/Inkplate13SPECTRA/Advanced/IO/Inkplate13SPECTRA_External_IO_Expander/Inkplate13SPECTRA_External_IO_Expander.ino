@@ -1,18 +1,37 @@
-/*
-   Inkplate13SPECTRA_External_IO_Expander example for Soldered Inkplate 13 SPECTRA
-   For this example you will need only a micro USB cable, Inkplate 13 SPECTRA, 330 Ohm resistor and LED diode.
-   Select "Soldered Inkplate 13 SPECTRA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 13 SPECTRA" option? Follow our tutorial and add it:
-   
-   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-   Connect resistor to P1-7 pin on IO Expander 2 header at right on the backside (component side) of Inkplate. You will
-   have to connect one side of 330 Ohm resistor to P1-7, then other side to anode of LED and finally, cathode pin
-   of LED to GND.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_External_IO_Expander.ino
+ * @brief       External IO expander LED example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to drive a pin on the external IO expander of Inkplate
+ *              13SPECTRA. Connect a resistor to the P1-7 pin on the IO Expander 2
+ *              header on the right of the backside (component side) of the
+ *              Inkplate: one side of the 330 Ohm resistor goes to P1-7, the other
+ *              side to the anode of the LED, and the cathode of the LED to GND.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, micro USB cable, 330 Ohm resistor, LED diode
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Wire the LED and 330 Ohm resistor to P1-7 on the IO Expander 2 header as
+ *    described above.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) The LED blinks, driven through the external IO expander.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

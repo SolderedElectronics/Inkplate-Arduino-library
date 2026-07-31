@@ -24,41 +24,38 @@
  *              loop that rotates the screen (0/90/180/270 degrees) and redraws
  *              text at each orientation.
  *
+ *              The example uses a full refresh (display()) for every step, so
+ *              frequent flashing is expected and updates may take noticeable
+ *              time. fillPolygon() can be slower than other primitives, with
+ *              complexity growing with the number of vertices and the filled
+ *              area. Random drawing uses random() without an explicit seed, so
+ *              patterns may repeat between resets.
+ *
+ *              Expected output: sequential pages showing different graphics
+ *              primitives and text with a small caption indicating the current
+ *              action, ending with the text "INKPLATE2" repeatedly redrawn with
+ *              rotation changes.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Demo delay:     set DELAY_MS
- * - Serial settings: none
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     none
  *
  * How to use:
- * 1) Select Inkplate 2 in Tools and upload the sketch.
- * 2) The display cycles through many drawing examples, pausing for DELAY_MS
- *    between steps.
- * 3) At the end, the sketch continuously rotates the display and redraws text.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Optionally set DELAY_MS to change the pause between demo steps.
+ * 3) Upload the sketch to Inkplate 2.
+ * 4) The display cycles through many drawing examples.
+ * 5) At the end, the sketch continuously rotates the display and redraws text.
  *
- * Expected output:
- * - Display: sequential pages showing different graphics primitives and text,
- *   with a small caption indicating the current action.
- * - Final stage: the text "INKPLATE2" repeatedly redrawn with rotation changes.
- *
- * Notes:
- * - Display mode is 1-bit with Inkplate 2 tri-color palette (BLACK/WHITE/RED).
- * - This example uses full refresh (display()) for every step, so frequent
- *   flashing is expected and updates may take noticeable time.
- * - fillPolygon() can be slower than other primitives; complexity grows with
- *   the number of vertices and the filled area.
- * - Random drawing uses random() without an explicit seed, so patterns may
- *   repeat between resets.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-03-30

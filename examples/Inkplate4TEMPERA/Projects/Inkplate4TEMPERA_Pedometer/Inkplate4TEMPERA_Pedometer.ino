@@ -13,48 +13,43 @@
  *              The display runs in 1-bit (BW) mode to enable partial updates
  *              for faster, lower-flash refreshes. Most updates use
  *              partialUpdate(false, true) to keep the e-paper power rails
- *              enabled between updates (faster, but higher power). After all
- *              animation frames have been shown, a full refresh is triggered to
- *              maintain image quality.
+ *              enabled between updates (faster, but higher power - for
+ *              battery-focused designs consider leaveOn = false and/or batching
+ *              updates). After all animation frames have been shown, a full
+ *              refresh is triggered to reduce ghosting from repeated partial
+ *              updates.
+ *
+ *              The LSM6DS3 pedometer is not instantaneous: it may require a few
+ *              steps to start counting after you resume walking, which is
+ *              expected behavior of the embedded algorithm/filtering. This
+ *              example reads the LSM6DS3 step counter registers directly, and
+ *              resetting embedded functions can clear the counter, so avoid
+ *              reinitializing the sensor unless you intend to reset the step
+ *              count.
+ *
+ *              Expected output: "Steps taken: <number>" plus a small animated
+ *              icon that changes frames as you walk.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial settings (if relevant): none
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     none
  *
  * How to use:
- * 1) Select the Inkplate 4 TEMPERA board and upload the sketch.
- * 2) After boot, the screen shows "Start walking!" briefly.
- * 3) Walk with the device; the step count updates when new steps are detected.
- * 4) Watch the small animation advance as steps are counted.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) After boot, the screen shows "Start walking!" briefly.
+ * 4) Walk with the device; the step count updates when new steps are detected.
+ * 5) Watch the small animation advance as steps are counted.
  *
- * Expected output:
- * - E-paper: "Steps taken: <number>" plus a small animated icon that changes
- *   frames as you walk.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial updates are supported only in BW mode.
- * - The LSM6DS3 pedometer is not instantaneous; it may require a few steps to
- *   start counting after you resume walking. This is expected behavior of the
- *   embedded algorithm/filtering.
- * - partialUpdate(false, true) keeps the panel powered for faster successive
- *   updates. For battery-focused designs, consider using leaveOn=false and/or
- *   batching updates.
- * - Full refresh is performed periodically (after a full animation cycle) to
- *   reduce ghosting from repeated partial updates.
- * - This example reads the LSM6DS3 step counter registers directly; resetting
- *   embedded functions can clear the counter, so avoid reinitializing the sensor
- *   unless you intend to reset the step count.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-08-27

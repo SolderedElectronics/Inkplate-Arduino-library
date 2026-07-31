@@ -1,17 +1,33 @@
-/*
-   Inkplate13SPECTRA_TextBox  example for Soldered Inkplate 13SPECTRA
-   For this example you will need a micro USB cable and Inkplate 13SPECTRA.
-   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-   This example will show you how to use the drawTextBox function to automatically wrap
-   text within a defined area, with and without a custom font.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   22 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_TextBox.ino
+ * @brief       TextBox usage example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to use the drawTextBox function to automatically wrap
+ *              text within a defined area, with and without a custom font.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, micro USB cable
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) Two text boxes are drawn - one with the default font and one with a custom
+ *    font - and the display refreshes.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-22
+ **************************************************/
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
 #include "Roboto_Light_36.h"

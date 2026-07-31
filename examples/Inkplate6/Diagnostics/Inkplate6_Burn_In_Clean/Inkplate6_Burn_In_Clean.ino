@@ -12,41 +12,37 @@
  *              refresh limitations.
  *
  *              When the cleaning sequence finishes, a confirmation message is
- *              rendered on the display.
+ *              rendered on the display. Display mode is 1-bit (BW). This routine
+ *              performs many full refreshes, so do not interrupt power during
+ *              the cleaning sequence, and use CYCLES_DELAY >= 5 seconds to avoid
+ *              overstressing the panel and to allow refresh waveforms to
+ *              complete properly. Burn-in/ghosting reduction effectiveness
+ *              depends on the panel condition and the content that caused the
+ *              artifact; multiple runs may be required.
+ *
+ *              Expected output is the panel repeatedly full-refreshing during the
+ *              cleaning routine, followed by the message "Clearing done."
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6
  * - Hardware:   Inkplate 6, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6
- * - Serial settings (if relevant): none
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     none
  *
  * How to use:
- * 1) Set CLEAR_CYCLES to the number of cleaning refresh cycles you want.
- * 2) Set CYCLES_DELAY (ms) between cycles (keep it >= 5000 ms).
- * 3) Upload the sketch and keep the device powered for the entire process.
- * 4) Wait until the screen shows "Clearing done."
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
+ *    from Tools -> Board.
+ * 2) Set CLEAR_CYCLES to the number of cleaning refresh cycles you want.
+ * 3) Set CYCLES_DELAY (ms) between cycles (keep it >= 5000 ms).
+ * 4) Upload the sketch and keep the device powered for the entire process.
+ * 5) Wait until the screen shows "Clearing done."
  *
- * Expected output:
- * - E-paper: The panel will repeatedly full-refresh during the cleaning routine.
- *   After completion, the message "Clearing done." is displayed.
- *
- * Notes:
- * - Display mode is 1-bit (BW).
- * - This routine performs many full refreshes; do not interrupt power during
- *   the cleaning sequence.
- * - Use CYCLES_DELAY >= 5 seconds to avoid overstressing the panel and to allow
- *   refresh waveforms to complete properly.
- * - Burn-in/ghosting reduction effectiveness depends on the panel condition and
- *   the content that caused the artifact; multiple runs may be required.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026-02-19

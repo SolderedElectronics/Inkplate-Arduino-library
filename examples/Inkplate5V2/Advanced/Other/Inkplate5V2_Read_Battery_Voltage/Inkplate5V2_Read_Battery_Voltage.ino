@@ -1,41 +1,40 @@
 /**
  **************************************************
- * @file        Inkplate5v2_Read_Battery_Voltage.ino
+ * @file        Inkplate5V2_Read_Battery_Voltage.ino
  * @brief       Battery voltage reading example for Soldered Inkplate 5v2.
  *
  * @details     Demonstrates how to read the connected Li-ion/Li-Po battery
- *              voltage using Inkplate’s built-in battery measurement circuitry.
+ *              voltage using Inkplate's built-in battery measurement circuitry.
  *              The example shows how to obtain the battery voltage value in
  *              software and display or process it as needed.
  *
+ *              Battery voltage reading is enabled through the onboard
+ *              circuitry, and typically requires enabling the battery
+ *              measurement path in hardware (see Inkplate documentation).
+ *              Accuracy depends on battery condition and load. Expected output
+ *              is the measured battery voltage value reported by the program.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
- * - Hardware:   Inkplate 5v2, USB cable, 3.6–4.2 V Li-ion/Li-Po battery (JST connector)
+ * - Hardware:   Inkplate 5v2, USB cable, 3.6-4.2 V Li-ion/Li-Po battery (JST connector)
  * - Extra:      None
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5v2
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5v2/quick-start-guide/
- *
  * How to use:
- * 1) Connect a supported Li-ion/Li-Po battery to the Inkplate battery connector.
- * 2) Upload the sketch to Inkplate 5v2.
- * 3) The battery voltage is read and can be displayed or logged by the sketch.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Connect a supported Li-ion/Li-Po battery to the Inkplate battery
+ *    connector.
+ * 3) Upload the sketch to Inkplate 5v2.
+ * 4) The battery voltage is read and can be displayed or logged by the sketch.
  *
- * Expected output:
- * - Measured battery voltage value reported by the program.
- *
- * Notes:
- * - Battery voltage reading is enabled through the onboard circuitry.
- * - Accuracy depends on battery condition and load.
- * - Battery reading typically requires enabling the battery measurement path
- *   in hardware (see Inkplate documentation).
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
- * Image tool:   https://tools.soldered.com/tools/image-converter/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Image converter tool:
+ *              https://tools.soldered.com/tools/image-converter/
  *
  * @author      Soldered
  * @date        2023-01-23

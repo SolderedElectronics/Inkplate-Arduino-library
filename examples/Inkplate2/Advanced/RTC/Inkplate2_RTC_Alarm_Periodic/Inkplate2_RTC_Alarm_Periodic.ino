@@ -17,51 +17,44 @@
  *
  *              This is not a hardware RTC interrupt alarm. The alarm is reached
  *              only when the device wakes and performs the comparison, so the
- *              effective trigger resolution depends on the chosen wake period.
- *              Because deep sleep resets the ESP32, execution always starts
- *              from setup() on every wake.
+ *              effective trigger resolution depends on the chosen wake period -
+ *              the alarm triggers on the first wake that occurs after the target
+ *              time. Because deep sleep resets the ESP32, execution always
+ *              starts from setup() on every wake, so keep the logic there and
+ *              leave loop() empty. The example depends on WiFi/NTP at each wake;
+ *              if WiFi is unavailable the alarm check cannot be performed (add
+ *              retries/error handling as needed).
+ *
+ *              Display mode is 1-bit (BW) and this example uses a full refresh
+ *              (display()). Expected output: before the alarm, a "Waiting for"
+ *              screen with the configured alarm time and date, then deep sleep;
+ *              at or after the alarm, "ALARM!" with the device remaining awake
+ *              in an infinite loop.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi connection + Internet access (NTP)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial Monitor: (optional) 115200 baud
- * - WiFi:           set ssid/pass
- * - Timezone:       set timeZone (hours offset from UTC)
- * - Alarm time:     set alarmHour/alarmMins/alarmSecs and alarmDay/alarmMon
- * - Wake period:    set wakeHours/wakeMinutes (how often to re-check)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional)
  *
  * How to use:
- * 1) Enter your WiFi SSID/password and set the correct timeZone.
- * 2) Set the desired alarm date/time and the periodic wake interval.
- * 3) Upload the sketch to Inkplate 2.
- * 4) The device shows a waiting screen, then sleeps.
- * 5) It wakes periodically, fetches the current time again, and triggers the
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID/password (ssid, pass) and set the correct timeZone
+ *    (hours offset from UTC).
+ * 3) Set the alarm time (alarmHour/alarmMins/alarmSecs, alarmDay/alarmMon) and
+ *    the periodic wake interval (wakeHours/wakeMinutes).
+ * 4) Upload the sketch to Inkplate 2.
+ * 5) The device shows a waiting screen, then sleeps.
+ * 6) It wakes periodically, fetches the current time again, and triggers the
  *    alarm screen once the target time has been reached.
  *
- * Expected output:
- * - Before alarm: display shows "Waiting for" with the configured alarm time
- *   and date, then the device enters deep sleep.
- * - At/after alarm: display shows "ALARM!" and the device remains awake in an
- *   infinite loop.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example uses full refresh (display()).
- * - Deep sleep restarts the ESP32 each wake. Keep the logic in setup() and
- *   leave loop() empty.
- * - Alarm resolution is limited by the wake interval: the alarm will trigger
- *   on the first wake that occurs after the target time.
- * - This example depends on WiFi/NTP at each wake. If WiFi is unavailable, the
- *   alarm check cannot be performed (add retries/error handling as needed).
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-11-28

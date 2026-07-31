@@ -13,54 +13,48 @@
  *              After drawing the UI, the ESP32 enters deep sleep for a fixed
  *              interval (default: 30 minutes). On wake-up, the ESP32 restarts
  *              and the sketch runs setup() again, updating the screen with fresh
- *              weather data. The UI also displays user-facing info such as a
- *              username/city label and battery voltage (read from the device).
+ *              weather data; all runtime state is lost unless stored in RTC
+ *              memory, and this sketch recomputes everything each wake cycle. The
+ *              UI also displays user-facing info such as a username/city label
+ *              and battery voltage (read from the device).
+ *
+ *              Display mode is 3-bit grayscale (INKPLATE_3BIT, 8 levels) and
+ *              partial update is not available in grayscale mode, so the UI is
+ *              updated using a full refresh. WiFi connection attempts are
+ *              time-limited; if your network is slow to join, increase the timeout
+ *              or retry settings. RAM usage depends on the UI assets/fonts used by
+ *              src/includes.h and the GUI layer, so keep additional buffers small
+ *              if extending the example.
+ *
+ *              Expected output: a weather dashboard UI (icons/text/values as
+ *              implemented by Gui) including the city/user label and battery
+ *              voltage; a WiFi error screen if the connection fails; an API error
+ *              screen if the Open-Meteo fetch/parsing fails.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      WiFi (2.4 GHz), internet access
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (optional, for debugging)
- * - WiFi credentials / API keys / timezone (if relevant)
- *   - Set ssid / password for your WiFi.
- *   - Set timeZone as UTC offset (e.g., 2 for UTC+2).
- *   - Set latitude / longitude for your location.
- *   - Optional: set myUsername / myCity (display only).
- *   - Units: set metricUnits=false to use Imperial units (as supported by the
- *     helper layer).
- * - NTP server (optional): change ntpServer if you need a different pool.
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional, for debugging)
  *
  * How to use:
- * 1) Enter your WiFi SSID/password and set timeZone, latitude, and longitude.
- * 2) (Optional) Set myUsername and myCity for the on-screen header.
- * 3) Upload the sketch.
- * 4) The device connects to WiFi, fetches weather data, draws the dashboard,
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID/password (ssid, password) and set timeZone (UTC
+ *    offset, e.g. 2 for UTC+2), latitude and longitude.
+ * 3) Optionally set myUsername and myCity for the on-screen header, set
+ *    metricUnits = false for Imperial units, and change ntpServer if you need a
+ *    different pool.
+ * 4) Upload the sketch.
+ * 5) The device connects to WiFi, fetches weather data, draws the dashboard,
  *    then sleeps. It wakes and refreshes automatically every TIME_TO_SLEEP.
  *
- * Expected output:
- * - E-paper: Weather dashboard UI (icons/text/values as implemented by Gui),
- *   including city/user label and battery voltage.
- * - Error screens: WiFi error screen if connection fails; API error screen if
- *   Open-Meteo fetch/parsing fails.
- *
- * Notes:
- * - Display mode is 3-bit grayscale (INKPLATE_3BIT, 8 levels). Partial update is
- *   not available in grayscale mode; the UI is updated using full refresh.
- * - Deep sleep restarts the ESP32. All runtime state is lost unless stored in
- *   RTC memory; this sketch recomputes everything each wake cycle.
- * - WiFi connection attempts are time-limited; if your network is slow to join,
- *   increase the timeout or retry settings.
- * - RAM usage depends on the UI assets/fonts used by src/includes.h and the GUI
- *   layer; keep additional buffers small if extending the example.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

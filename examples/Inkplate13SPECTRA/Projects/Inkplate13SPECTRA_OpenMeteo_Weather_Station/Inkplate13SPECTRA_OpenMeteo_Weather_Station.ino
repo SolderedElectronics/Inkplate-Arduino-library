@@ -1,26 +1,46 @@
-/*
-  Inkplate13SPECTRA_OpenMeteo_Weather_Station Example
-  Compatible with Soldered Inkplate 13 SPECTRA
-
-  Getting Started:
-  For setup and documentation, visit: https://docs.soldered.com/inkplate/
-
-  Overview:
-  This example demonstrates how to fetch and display weather data from the OpenMeteo API
-  using the Inkplate 13SPECTRA e-paper display.
-
-  Before You Start:
-  - Enter your WiFi credentials carefully (they are case-sensitive).
-  - Update the following variables for accurate local weather data:
-      • timeZone
-      • latitude
-      • longitude
-  Set your username and city with `myUsername` and `myCity` (for display only, not essential for the API).
-
-  Units:
-  By default, the app uses the metric system.
-  To switch to Imperial units, change the metricUnits to "bool metricUnits = false;"
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_OpenMeteo_Weather_Station.ino
+ * @brief       Open-Meteo weather station dashboard for Soldered
+ *              Inkplate 13SPECTRA.
+ *
+ * @details     Demonstrates how to fetch and display weather data from the
+ *              OpenMeteo API using the Inkplate 13SPECTRA e-paper display.
+ *
+ *              Before you start:
+ *              - Enter your WiFi credentials carefully (they are case-sensitive).
+ *              - Update the following variables for accurate local weather data:
+ *                timeZone, latitude, longitude.
+ *              - Set your username and city with myUsername and myCity (for
+ *                display only, not essential for the API).
+ *
+ *              Units: by default the app uses the metric system. To switch to
+ *              Imperial units, change metricUnits to
+ *              "bool metricUnits = false;".
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      WiFi Internet connection
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials, timeZone, latitude and longitude in the
+ *    sketch.
+ * 3) Optionally set myUsername, myCity and metricUnits.
+ * 4) Upload the sketch to Inkplate 13SPECTRA.
+ * 5) The weather dashboard is rendered on the e-paper display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

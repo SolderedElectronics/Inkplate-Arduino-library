@@ -1,17 +1,35 @@
-/*
-  Inkplate13SPECTRA_RTC_Alarm example for Soldered Inkplate 13SPECTRA
-  For this example you will need USB cable and Inkplate 13SPECTRA.
-  Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-  Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-  
-  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-  In this example we will show how to use basic alarm and clock functions of PCF85063 RTC on Inkplate board.
-  This example will show how to set time and date, how to set alarm, how to read time and how to print time on Inkplate.
-  
-  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  2 February 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_RTC_Alarm.ino
+ * @brief       RTC time and alarm example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to use the basic alarm and clock functions of the
+ *              PCF85063 RTC on the Inkplate board: how to set time and date, how
+ *              to set an alarm, how to read the time and how to print the time on
+ *              the Inkplate display.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) The sketch sets the time and date and configures the alarm.
+ * 4) The current time is read and printed on the display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-02-02
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

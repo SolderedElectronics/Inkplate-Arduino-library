@@ -17,50 +17,46 @@
  *              - State of health (SoH)
  *
  *              The values are rendered on the e-paper display in 1-bit BW mode
- *              along with a large battery icon. A filled rectangle inside the
- *              icon represents the current SoC. The display is updated every
- *              2 seconds; to reduce flicker and speed up updates, the sketch
- *              performs partial updates most of the time and forces a full
- *              refresh after a configurable number of partial updates.
+ *              (INKPLATE_1BIT) along with a large battery icon. A filled
+ *              rectangle inside the icon represents the current SoC. The display
+ *              is updated every 2 seconds; to reduce flicker and speed up
+ *              updates, the sketch performs partial updates most of the time and
+ *              forces a full refresh after
+ *              NUM_PARTIAL_UPDATES_BEFORE_FULL_REFRESH partial updates. Panel
+ *              power is kept enabled during partial updates for stability and
+ *              speed (higher power usage).
+ *
+ *              The fuel gauge is disabled by default. Enabling it improves SoC
+ *              accuracy but increases deep sleep current by ~30-50 uA. It must be
+ *              configured with the correct battery capacity for meaningful
+ *              capacity/SoC values.
+ *
+ *              Expected output: a battery icon with a fill bar proportional to
+ *              the state of charge, plus text lines showing SoC (%), voltage
+ *              (mV), average current (mA), full and remaining capacity (mAh),
+ *              power (mW) and state of health (%).
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable, Li-Ion battery
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial settings (if relevant): none
- * - Set BATTERY_CAPACITY (mAh) to match your battery for accurate readings
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     none
  *
  * How to use:
- * 1) Connect a Li-Ion battery to Inkplate 4 TEMPERA.
- * 2) Set BATTERY_CAPACITY to your battery capacity in mAh (e.g., 1200 mAh for
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Connect a Li-Ion battery to Inkplate 4 TEMPERA.
+ * 3) Set BATTERY_CAPACITY to your battery capacity in mAh (e.g. 1200 mAh for
  *    the typical bundled battery).
- * 3) Upload the sketch.
- * 4) The screen updates every ~2 seconds with live fuel gauge readings.
+ * 4) Upload the sketch.
+ * 5) The screen updates every ~2 seconds with live fuel gauge readings.
  *
- * Expected output:
- * - A battery icon with a fill bar proportional to the state of charge.
- * - Text lines showing SoC (%), voltage (mV), average current (mA), full and
- *   remaining capacity (mAh), power (mW), and state of health (%).
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT).
- * - Fuel gauge power: the fuel gauge is disabled by default. Enabling it
- *   improves SoC accuracy, but increases deep sleep current by ~30–50 µA.
- * - Partial update: partial updates are used for faster refreshes; a full
- *   refresh is forced after NUM_PARTIAL_UPDATES_BEFORE_FULL_REFRESH to reduce
- *   ghosting. Panel power is kept enabled during partial updates for stability
- *   and speed (higher power usage).
- * - The fuel gauge must be configured with the correct battery capacity for
- *   meaningful capacity/SoC values.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-09-11

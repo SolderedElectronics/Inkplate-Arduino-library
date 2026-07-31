@@ -6,49 +6,46 @@
  * @details     This example demonstrates how to render monochrome bitmap
  *              images stored in program memory (included as header files) and
  *              copied into RAM at runtime. Three pre-converted 1-bit images
- *              (212x104 pixels) are displayed sequentially, each shown for
- *              10 seconds using a full e-paper refresh.
+ *              (212x104 pixels, the full Inkplate 2 resolution) are displayed
+ *              sequentially, each shown for 10 seconds using a full e-paper
+ *              refresh.
  *
  *              After displaying the third image, the ESP32 enters deep sleep.
  *              Since deep sleep resets the microcontroller, execution always
- *              starts from setup() after a reset or power cycle.
+ *              starts from setup() after a reset or power cycle. This example
+ *              does not configure a wakeup source, so a reset or power cycle is
+ *              required to run it again.
  *
  *              Images must be converted to Inkplate-compatible 1-bit format
  *              using the Soldered Image Converter tool and included as
- *              header files.
+ *              header files. Large images consume RAM, so make sure the images
+ *              match the native resolution (212x104) and are properly converted.
+ *
+ *              Expected output: picture1 -> picture2 -> picture3 (each with a
+ *              full refresh), then the device enters deep sleep and stops
+ *              execution.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
- * - Extra:      Three 1-bit bitmap images converted with Soldered Image Converter
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Image size: 212x104 pixels (full Inkplate 2 resolution)
- * - Include picture1.h, picture2.h, picture3.h in the sketch folder
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      Three 1-bit bitmap images (212x104 px) converted with Soldered
+ *               Image Converter, included as picture1.h, picture2.h, picture3.h
  *
  * How to use:
- * 1) Convert three monochrome images (212x104 px) using the Soldered Image Converter.
- * 2) Place the generated header files in the sketch folder and include them.
- * 3) Upload the sketch to Inkplate 2.
- * 4) The device displays each image for 10 seconds, then enters deep sleep.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Convert three monochrome images (212x104 px) using the Soldered Image
+ *    Converter.
+ * 3) Place the generated header files in the sketch folder and include them.
+ * 4) Upload the sketch to Inkplate 2.
+ * 5) The device displays each image for 10 seconds, then enters deep sleep.
  *
- * Expected output:
- * - Display: picture1 → picture2 → picture3 (each with full refresh).
- * - After the third image, the device enters deep sleep and stops execution.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Only full refresh (display()) is used.
- * - Large images consume RAM; ensure images match the native resolution
- *   (212x104) and are properly converted.
- * - Deep sleep restarts the ESP32 on wake; this example does not configure
- *   a wakeup source, so reset or power cycle is required to run again.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-11-24

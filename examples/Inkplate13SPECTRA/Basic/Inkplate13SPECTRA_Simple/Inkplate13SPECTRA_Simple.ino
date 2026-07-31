@@ -1,17 +1,34 @@
-/*
-   Inkplate13SPECTRA_Simple  example for Soldered Inkplate 13SPECTRA
-   For this example you will need a micro USB cable and Inkplate 13SPECTRA.
-   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-   This example will show you how to draw various shapes, colored text, and a bitmap logo
-   on the Inkplate 13SPECTRA display.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   23 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Simple.ino
+ * @brief       Simple shapes, text and bitmap example for Soldered
+ *              Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to draw various shapes, coloured text and a bitmap logo
+ *              on the Inkplate 13SPECTRA display.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, micro USB cable
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) The shapes, coloured text and bitmap logo are drawn and the display
+ *    refreshes.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-23
+ **************************************************/
 
 #ifndef ARDUINO_INKPLATE13SPECTRA
 #error "Wrong board selection for this example, please select Soldered Inkplate 13SPECTRA in the boards menu."

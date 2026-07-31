@@ -15,47 +15,42 @@
  *              full refresh, the device enters deep sleep for
  *              SECS_BETWEEN_IMAGES seconds and then wakes to fetch a new random
  *              image. Because deep sleep resets the ESP32, the program always
- *              restarts from setup() on every wake cycle.
+ *              restarts from setup() on every wake cycle, so keep all logic there
+ *              and leave loop() empty.
+ *
+ *              Web/API behavior can change: this example parses an HTML response
+ *              to find an href link, so if the provider changes the response
+ *              format, URL extraction may fail and require updating the parser.
+ *              Network image decoding and RAM usage depend on image format and
+ *              size, so stick to 212x104 sources to reduce memory pressure and
+ *              improve speed.
+ *
+ *              Expected output: a randomly selected image rendered full-screen
+ *              (212x104) on the display, the resolved image URL and drawImage()
+ *              result code in the Serial Monitor, and "HTTP error" printed on the
+ *              display on error.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi connection + Internet access
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial Monitor: 115200 baud (recommended for debugging)
- * - WiFi:           set ssid/pass
- * - Refresh period: set SECS_BETWEEN_IMAGES (seconds)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * - Serial:     115200 baud (recommended for debugging)
  *
  * How to use:
- * 1) Enter your WiFi SSID and password.
- * 2) Upload the sketch to Inkplate 2.
- * 3) On boot, the device downloads a random 212x104 image and displays it.
- * 4) The device enters deep sleep and repeats after SECS_BETWEEN_IMAGES seconds.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password (ssid, pass) and set
+ *    SECS_BETWEEN_IMAGES (seconds).
+ * 3) Upload the sketch to Inkplate 2.
+ * 4) On boot, the device downloads a random 212x104 image and displays it.
+ * 5) The device enters deep sleep and repeats after SECS_BETWEEN_IMAGES seconds.
  *
- * Expected output:
- * - Display: a randomly selected image rendered full-screen (212x104).
- * - Serial Monitor: the resolved image URL and drawImage() result code.
- * - On error: "HTTP error" printed on the display.
- *
- * Notes:
- * - Display mode is 1-bit with Inkplate 2 tri-color palette available.
- *   This example renders the image in monochrome using the library's image
- *   drawing pipeline and a full refresh (display()).
- * - Deep sleep restarts the ESP32; keep all logic in setup() and leave loop()
- *   empty.
- * - Web/API behavior can change: this example parses an HTML response to find
- *   an href link. If the provider changes response format, URL extraction may
- *   fail and require updating the parser.
- * - Network image decoding and RAM usage depend on image format and size.
- *   Stick to 212x104 sources to reduce memory pressure and improve speed.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-05-23

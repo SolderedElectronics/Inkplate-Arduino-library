@@ -1,24 +1,47 @@
-/*
-   Inkplate13SPECTRA_Image_Frame_From_SD example for Soldered Inkplate 13SPECTRA
-   For this example you will need a micro USB cable, Inkplate 13SPECTRA and a SD card loaded with images.
-   Select "Soldered Inkplate 13SPECTRA" or "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 13SPECTRA" or "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-   You can open .bmp, .jpeg, or .png files that have a color depth of 1-bit (BW bitmap), 4-bit, 8-bit and
-   24 bit, but there are some limitations of the library. It will skip images that can't be drawn.
-   Make sure that the image has a resolution smaller than 1600x1200 or otherwise it won't fit on the screen.
-   Format your SD card in standard FAT file format.
-
-   This example will show you how you can make slideshow images from an SD card. Put your images on
-   the SD card in a file and specify the file path in the sketch. If you don't want to wait defined delay time,
-   you can press the wake button and the next image will be loaded on the screen. It will take some time until
-   the image will be loaded.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our community forum: https://community.soldered.com/
-   23 January 2026 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Image_Frame_From_SD.ino
+ * @brief       SD card image slideshow for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how you can make a slideshow of images from an SD card. Put
+ *              your images on the SD card in a folder and specify the folder path
+ *              in the sketch. If you don't want to wait for the defined delay
+ *              time, you can press the wake button and the next image will be
+ *              loaded on the screen. It will take some time until the image is
+ *              loaded.
+ *
+ *              You can open .bmp, .jpeg or .png files that have a color depth of
+ *              1-bit (BW bitmap), 4-bit, 8-bit and 24-bit, but there are some
+ *              limitations of the library - it will skip images that can't be
+ *              drawn. Make sure that the image has a resolution smaller than
+ *              1600x1200, otherwise it won't fit on the screen. Format your SD
+ *              card in the standard FAT file format.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, micro USB cable, SD card loaded with images
+ * - SD card:    standard FAT format
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Copy your images into a folder on the SD card and insert it into the
+ *    Inkplate.
+ * 3) Specify the folder path in the sketch.
+ * 4) Upload the sketch to Inkplate 13SPECTRA.
+ * 5) The images are shown one after another; press the wake button to skip to
+ *    the next one.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2026-01-23
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

@@ -1,3 +1,44 @@
+/**
+ **************************************************
+ * @file        Inkpate13SPECTRA_Wake_Up_Button.ino
+ * @brief       Wake-up button and timer deep sleep example for Soldered
+ *              Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to wake the ESP32 from deep sleep using the WakeUp
+ *              button (external interrupt on GPIO18) and a fallback timer. A
+ *              boot counter is stored in RTC memory (RTC_DATA_ATTR) so it
+ *              survives deep sleep; on every wake the sketch prints the boot
+ *              count and the wake-up reason (WakeUp button or timer) on the
+ *              e-paper display and then sleeps again for TIME_TO_SLEEP seconds
+ *              (120 s by default).
+ *
+ *              When using deep sleep, the whole program has to be in setup()
+ *              because the board restarts on every wake-up, so loop() must
+ *              remain empty.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) After the boot info is displayed, the board enters deep sleep.
+ * 4) Press the WakeUp button, or wait 120 seconds for the timer wake-up.
+ * 5) On each wake the display shows the new boot count and wake-up reason.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ **************************************************/
+
 #ifndef ARDUINO_INKPLATE13SPECTRA
 #error "Wrong board selection for this example, please select Soldered Inkplate 13SPECTRA in the boards menu."
 #endif

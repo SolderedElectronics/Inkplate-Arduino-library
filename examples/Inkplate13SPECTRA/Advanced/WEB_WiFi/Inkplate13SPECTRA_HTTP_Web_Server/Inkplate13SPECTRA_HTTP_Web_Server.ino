@@ -1,23 +1,43 @@
-/*
-  Inkplate13SPECTRA_HTTP_Web_Server example for Soldered Inkplate 13SPECTRA
-  For this example you will need a micro USB cable, Inkplate 13SPECTRA and a device with WiFi and Internet brower (PC, Laptop,
-  Smartphone, ...). Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu. Don't have "Soldered Inkplate 13SPECTRA" option? Follow
-  our tutorial and add it: 
-
-  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-  This example will show you how you can use Inkplate as a small and simple standlone Web Server.
-  You need to connect to Inkplate with WiFi and open IP address shown on Inkplate display.
-  After opening IP address, you will se text box where you can type some text and after that you press "Send to
-  display". Text will apper on Inkplate display! This is just simple example what you can do with it and of course, you
-  can create much more complex stuff.
-
-  HINT: You can change WiFi name and password of your Inkplate WIFi Access point by changing ssid and pass in #define
-  macros!
-
-  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_HTTP_Web_Server.ino
+ * @brief       Standalone WiFi web server example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to use Inkplate as a small and simple standalone web
+ *              server. Connect to the Inkplate with WiFi and open the IP address
+ *              shown on the Inkplate display. After opening the IP address you
+ *              will see a text box where you can type some text; press "Send to
+ *              display" and the text appears on the Inkplate display. This is
+ *              just a simple example of what you can do with it - of course, you
+ *              can create much more complex things.
+ *
+ *              HINT: you can change the WiFi name and password of the Inkplate
+ *              WiFi access point by changing ssid and pass in the #define macros.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, micro USB cable, device with WiFi and an
+ *               Internet browser (PC, laptop, smartphone, ...)
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) Connect your device to the Inkplate WiFi access point.
+ * 4) Open the IP address shown on the Inkplate display in a browser.
+ * 5) Type text into the text box and press "Send to display".
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

@@ -1,16 +1,32 @@
-/*
-   Inkplate13SPECTRA_Hello_World example for Soldered Inkplate 13SPECTRA
-
-   Select "Soldered Inkplate 13SPECTRA" from the Tools -> Board menu in Arduino IDE.
-   Don't see the "Soldered Inkplate 13SPECTRA" option? Follow this tutorial to add it:
-   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-   This example demonstrates the most basic usage: displaying "Hello World!" on the screen using the Inkplate 13SPECTRA library.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our community forum: https://community.soldered.com/
-   22 January 2026 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Hello_World.ino
+ * @brief       Basic "Hello World" example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Demonstrates the most basic usage: displaying "Hello World!" on
+ *              the screen using the Inkplate 13SPECTRA library.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) "Hello World!" appears on the e-paper display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2026-01-22
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

@@ -9,38 +9,36 @@
  *              and prints the HTTP status code and response body to the Serial
  *              Monitor.
  *
+ *              The example uses HTTPS without certificate validation via
+ *              client.setInsecure(), which is convenient for demos and testing
+ *              but not recommended for production use. JSONPlaceholder is a fake
+ *              API: the response looks real, but data is not persisted. For real
+ *              APIs you may need authentication headers (API keys, tokens) and
+ *              additional fields. Expected output is a short message on the
+ *              display prompting you to open the Serial Monitor, where the WiFi
+ *              connection status, HTTP status code and response body are shown.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable
  * - Extra:      Stable WiFi Internet connection
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- * - Serial settings: 115200 baud
- * - Enter your WiFi credentials (ssid, pass) in the code
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Enter your WiFi SSID and password in the sketch.
- * 2) Upload the sketch to Inkplate 10.
- * 3) Open Serial Monitor (115200 baud).
- * 4) The board connects to WiFi and periodically sends an HTTPS POST request.
- * 5) Observe the returned status code and response payload in Serial Monitor.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password (ssid, pass) in the sketch.
+ * 3) Upload the sketch to Inkplate 10.
+ * 4) Open Serial Monitor (115200 baud).
+ * 5) The board connects to WiFi and periodically sends an HTTPS POST request.
+ * 6) Observe the returned status code and response payload in Serial Monitor.
  *
- * Expected output:
- * - Inkplate display shows a short message prompting to open Serial Monitor.
- * - Serial Monitor shows WiFi connection status, HTTP status code, and response body.
- *
- * Notes:
- * - This example uses HTTPS without certificate validation via client.setInsecure().
- *   This is convenient for demos/testing but is not recommended for production use.
- * - JSONPlaceholder is a fake API: the response looks real, but data is not persisted.
- * - For real APIs you may need authentication headers (API keys, tokens) and additional fields.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-02

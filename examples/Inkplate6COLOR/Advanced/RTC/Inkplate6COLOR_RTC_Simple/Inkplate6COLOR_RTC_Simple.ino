@@ -11,51 +11,44 @@
  *              the e-paper display.
  *
  *              After initialization, the example keeps the ESP32 awake and
- *              refreshes the display once per minute using a millis()-based
- *              timing interval. This demonstrates a simple polling workflow for
- *              RTC-based time display without using alarms, interrupts, or deep
- *              sleep.
+ *              refreshes the display once per minute (full refresh) using a
+ *              millis()-based timing interval. This demonstrates a simple
+ *              polling workflow for RTC-based time display without using alarms,
+ *              interrupts, timers or deep sleep.
  *
  *              This example is useful as a starting point for clocks, wall
  *              displays, dashboards, and other projects that need basic RTC
- *              timekeeping and periodic screen updates.
+ *              timekeeping and periodic screen updates. display.rtc.reset()
+ *              clears previous RTC state, so the configured time/date is
+ *              reapplied on every reset or power cycle. The PCF85063(A) RTC is
+ *              suitable for general timekeeping, but persistence depends on
+ *              correct RTC setup and backup power conditions.
+ *
+ *              Expected output is the current time in HH:MM:SS format followed
+ *              by weekday and date.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Edit the initial RTC time/date values in the sketch before upload
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
  * 2) Adjust the initial time/date values in the sketch if needed.
- * 3) On startup, the sketch resets the RTC and writes the configured time/date.
- * 4) The current time and date are read from the RTC and rendered on the
+ * 3) Upload the sketch to Inkplate 6COLOR.
+ * 4) On startup, the sketch resets the RTC and writes the configured time/date.
+ * 5) The current time and date are read from the RTC and rendered on the
  *    display.
- * 5) The screen is refreshed automatically once per minute.
+ * 6) The screen is refreshed automatically once per minute.
  *
- * Expected output:
- * - Display: Current time in HH:MM:SS format followed by weekday and date.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - This example uses full display refreshes every 60 seconds.
- * - display.rtc.reset() clears previous RTC state, so the configured time/date
- *   is reapplied on every reset or power cycle.
- * - This is a simple RTC polling example only. It does not demonstrate alarm,
- *   interrupt, timer, or deep sleep behavior.
- * - The PCF85063(A) RTC is suitable for general timekeeping, but persistence
- *   depends on correct RTC setup and backup power conditions.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-20

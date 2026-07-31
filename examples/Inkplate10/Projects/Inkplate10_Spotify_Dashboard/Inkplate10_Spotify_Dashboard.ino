@@ -4,82 +4,78 @@
  * @brief       Polls Spotify Web API for the currently playing track and shows
  *              an album-style dashboard on Inkplate 10, then deep-sleeps.
  *
- * @details     This example demonstrates how to build a low-power “now playing”
- *              dashboard using Spotify’s Web API. On each wake cycle, the ESP32
+ * @details     This example demonstrates how to build a low-power "now playing"
+ *              dashboard using Spotify's Web API. On each wake cycle, the ESP32
  *              connects to WiFi, exchanges a stored Spotify refresh token for a
- *              short-lived access token, then queries the “currently playing”
+ *              short-lived access token, then queries the "currently playing"
  *              endpoint. The returned JSON is parsed to extract the playback
  *              state, album/artist/track metadata, progress, duration, and an
  *              album art image URL.
  *
  *              The UI is rendered in 3-bit grayscale mode (INKPLATE_3BIT) using
  *              a GUI helper that draws either an album screen (with album art
- *              and track information) or a “nothing playing” screen when
- *              playback is stopped/paused. To reduce unnecessary e-paper
- *              refreshes, the sketch stores the last shown album ID and state
- *              in RTC memory (RTC_DATA_ATTR) and skips the display update if the
- *              album has not changed since the previous wake.
+ *              and track information) or a "nothing playing" screen when
+ *              playback is stopped/paused. Partial updates are not supported in
+ *              grayscale mode, so any refresh performed is a full refresh. To
+ *              reduce unnecessary e-paper refreshes, the sketch stores the last
+ *              shown album ID and state in RTC memory (RTC_DATA_ATTR) and skips
+ *              the display update if the album has not changed since the
+ *              previous wake.
  *
  *              After handling the update decision, the ESP32 enters deep sleep
  *              for POLL_SECONDS. Deep sleep resets the ESP32, so the workflow
- *              repeats from setup() at each poll interval.
+ *              repeats from setup() at each poll interval and only
+ *              RTC_DATA_ATTR variables persist (lastAlbumId and
+ *              lastWasNothingPlaying).
+ *
+ *              HTTPS handling and JSON parsing are implemented in the src/
+ *              network layer; ensure certificate validation is handled
+ *              appropriately - if the code uses insecure TLS settings, treat it
+ *              as demo-only and prefer proper validation/pinning in production.
+ *              Polling too frequently may increase power consumption and may be
+ *              subject to Spotify API rate limits, so choose POLL_SECONDS
+ *              accordingly. Keep client secrets and refresh tokens private; do
+ *              not commit credentials to public repositories.
+ *
+ *              Expected output: an album dashboard showing album art (downloaded
+ *              from a URL), album/artist/track text and playback progress if
+ *              music is playing; a dedicated "nothing playing" screen otherwise;
+ *              and Serial output indicating whether WiFi/token/API steps
+ *              succeeded and whether the display refresh was performed or
+ *              skipped.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable (battery recommended for deployment)
  * - Extra:      WiFi Internet connection, Spotify account + developer app
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- * - Serial Monitor: 115200 baud
- * - Set WiFi credentials (WIFI_SSID, WIFI_PASSWORD)
- * - Create a Spotify Developer app and set:
- *   - SPOTIFY_CLIENT_ID
- *   - SPOTIFY_CLIENT_SECRET
- *   - SPOTIFY_REFRESH_TOKEN (generated via the helper script in src/)
- * - Set POLL_SECONDS in the project configuration (src/) to control update rate
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Create a Spotify Developer app and configure Redirect URI as instructed
- *    by the project docs/script (commonly a local callback URL).
- * 2) Use the provided token generation script in src/spotify-token to obtain a
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
+ *    from Tools -> Board.
+ * 2) Create a Spotify Developer app and configure Redirect URI as instructed
+ *    by the project docs/script (commonly a local callback URL). Set
+ *    SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET.
+ * 3) Use the provided token generation script in src/spotify-token to obtain a
  *    refresh token, then paste it into SPOTIFY_REFRESH_TOKEN.
- * 3) Fill in WiFi credentials and upload the sketch to Inkplate 10.
- * 4) Open Serial Monitor at 115200 baud to observe token refresh/poll logs.
- * 5) The dashboard updates when the currently playing album changes; otherwise
+ * 4) Fill in WiFi credentials (WIFI_SSID, WIFI_PASSWORD), set POLL_SECONDS in
+ *    the project configuration (src/) to control the update rate, and upload
+ *    the sketch to Inkplate 10.
+ * 5) Open Serial Monitor at 115200 baud to observe token refresh/poll logs.
+ * 6) The dashboard updates when the currently playing album changes; otherwise
  *    it skips the e-paper refresh to save time and power.
  *
- * Expected output:
- * - If music is playing: an album dashboard showing album art (downloaded from
- *   a URL), album/artist/track text, and playback progress information.
- * - If nothing is playing: a dedicated “nothing playing” screen.
- * - Serial output indicates whether WiFi/token/API steps succeeded and whether
- *   the display refresh was performed or skipped.
- *
- * Notes:
- * - Display mode: 3-bit grayscale (INKPLATE_3BIT). Partial updates are not
- *   supported in grayscale mode, so any refresh performed is a full refresh.
- * - Deep sleep restarts the ESP32 on every wake-up; only RTC_DATA_ATTR variables
- *   persist across deep sleep (lastAlbumId and lastWasNothingPlaying).
- * - HTTPS handling and JSON parsing are implemented in the src/ network layer;
- *   ensure certificate validation is handled appropriately. If the code uses
- *   insecure TLS settings, treat it as demo-only and prefer proper validation/
- *   pinning in production.
- * - Polling too frequently may increase power consumption and may be subject to
- *   Spotify API rate limits; choose POLL_SECONDS accordingly.
- * - Keep client secrets and refresh tokens private; do not commit credentials
- *   to public repositories.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026-02-17
  * @license     GNU GPL V3
- **************************************************/    
+ **************************************************/
 
 #include "src/includes.h"
 #include "src/NetworkFunctions.h"

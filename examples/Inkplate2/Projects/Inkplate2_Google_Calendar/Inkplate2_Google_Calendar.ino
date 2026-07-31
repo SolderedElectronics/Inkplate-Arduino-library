@@ -18,54 +18,43 @@
  *
  *              The ESP32 enters deep sleep after each update and wakes every
  *              TIME_TO_SLEEP seconds (default: 10 minutes). Because deep sleep
- *              resets the ESP32, execution always restarts from setup().
+ *              resets the ESP32, execution always restarts from setup(), so all
+ *              logic must remain there.
+ *
+ *              Before use: enable "Google Calendar API" in Google Cloud Console,
+ *              make the selected calendar public, and generate and copy an API
+ *              key into the sketch. Common Google API errors are 403 Forbidden
+ *              (API not enabled) and 404 Not Found (calendar not public or wrong
+ *              ID). API keys should be protected in production environments.
+ *
+ *              Display mode is 1-bit (BW) and a full refresh is used when
+ *              rendering the GUI. Expected output is a formatted list of upcoming
+ *              calendar events; a dedicated WiFi error screen on WiFi error; and
+ *              an error message via the GUI on API error.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi connection, Google Cloud API key, public Google Calendar
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - WiFi:           set ssid/password
- * - Calendar ID:    set calendarID (public calendar)
- * - API Key:        set apiKey (Google Cloud project)
- * - Timezone:       set timeZone (UTC offset)
- * - NTP Server:     set ntpServer if needed
- * - Refresh period: set TIME_TO_SLEEP (seconds)
- *
- * Before use:
- * - Enable "Google Calendar API" in Google Cloud Console.
- * - Make the selected calendar public.
- * - Generate and copy an API key into the sketch.
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
- *
  * How to use:
- * 1) Enter your WiFi credentials.
- * 2) Set your public Google Calendar ID and API key.
- * 3) Adjust timeZone for your location.
- * 4) Upload the sketch to Inkplate 2.
- * 5) After boot, the device connects, fetches events, displays them,
- *    then enters deep sleep.
- * 6) The screen refreshes automatically every TIME_TO_SLEEP seconds.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials (ssid, password).
+ * 3) Set your public Google Calendar ID (calendarID) and API key (apiKey).
+ * 4) Adjust timeZone (UTC offset) for your location, plus ntpServer and
+ *    TIME_TO_SLEEP (seconds) if needed.
+ * 5) Upload the sketch to Inkplate 2.
+ * 6) After boot, the device connects, fetches events, displays them, then enters
+ *    deep sleep.
+ * 7) The screen refreshes automatically every TIME_TO_SLEEP seconds.
  *
- * Expected output:
- * - Display: formatted list of upcoming calendar events.
- * - On WiFi error: dedicated WiFi error screen.
- * - On API error: error message shown via GUI.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Full refresh is used when rendering the GUI.
- * - Deep sleep restarts the ESP32; all logic must remain in setup().
- * - Google API errors:
- *   - 403 Forbidden → API not enabled.
- *   - 404 Not Found → calendar not public or wrong ID.
- * - API keys should be protected in production environments.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

@@ -6,57 +6,51 @@
  * @details     This example demonstrates how to use the external I/O expander
  *              available on Inkplate 6COLOR. The I/O expanders allow additional
  *              GPIO pins to be controlled through I2C, extending the number of
- *              usable digital pins beyond the ESP32’s native GPIOs.
+ *              usable digital pins beyond the ESP32's native GPIOs.
  *
  *              In this example, pin P1-7 on the IO Expander 2 header is
  *              configured as a digital output and used to blink an LED.
  *              The LED is connected through a current-limiting resistor and
- *              toggled every second using the Inkplate library’s expander1
+ *              toggled every second using the Inkplate library's expander1
  *              interface.
  *
  *              Inkplate boards provide two MCP23017-based I/O expanders. The
  *              pins are addressed using GPA/GPB numbering internally. The
  *              mapping is:
  *
- *              GPA0–GPA7 → pins 0–7  
- *              GPB0–GPB7 → pins 8–15  
+ *              GPA0-GPA7 -> pins 0-7
+ *              GPB0-GPB7 -> pins 8-15
  *
- *              These correspond to headers labeled P0-0 … P0-7 and
- *              P1-0 … P1-7 on the board.
+ *              These correspond to headers labeled P0-0 ... P0-7 and
+ *              P1-0 ... P1-7 on the board.
+ *
+ *              The display is not used in this example (no screen updates
+ *              occur). If no expander is explicitly selected, the default target
+ *              is the IO Expander 2 header on the board. I/O expanders
+ *              communicate via I2C, so switching speeds are slower than direct
+ *              ESP32 GPIO pins. Expected output is the LED connected to P1-7
+ *              blinking with a 1-second interval.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
- * - Hardware:   Inkplate 6COLOR, USB cable
- * - Extra:      LED, 330 Ω resistor
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Connect LED anode → resistor → P1-7 (IO Expander 2 header)
- * - Connect LED cathode → GND
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Hardware:   Inkplate 6COLOR, USB cable, LED, 330 Ohm resistor
+ * - Extra:      none
  *
  * How to use:
- * 1) Connect the LED circuit to pin P1-7 as described above.
- * 2) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
- * 3) After startup, the I/O expander pin is configured as a digital output.
- * 4) The LED will toggle ON and OFF every second.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Connect the LED anode through the 330 Ohm resistor to P1-7 (IO Expander 2
+ *    header) and the LED cathode to GND.
+ * 3) Upload the sketch to Inkplate 6COLOR.
+ * 4) After startup, the I/O expander pin is configured as a digital output.
+ * 5) The LED toggles ON and OFF every second.
  *
- * Expected output:
- * - LED connected to P1-7 blinks with a 1-second interval.
- *
- * Notes:
- * - Display mode: not used in this example (no screen updates occur).
- * - I/O expander pins are controlled through the Inkplate library using
- *   display.expander1.
- * - If no expander is explicitly selected, the default target is the
- *   IO Expander 2 header on the board.
- * - I/O expanders communicate via I2C, so switching speeds are slower
- *   than direct ESP32 GPIO pins.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-12-05

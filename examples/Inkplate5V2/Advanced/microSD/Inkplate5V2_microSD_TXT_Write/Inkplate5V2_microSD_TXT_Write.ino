@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate5v2_SD_TXT_Write.ino
+ * @file        Inkplate5V2_microSD_TXT_Write.ino
  * @brief       Write text file to SD card on Soldered Inkplate 5v2.
  *
  * @details     Demonstrates how to initialize the SD card, create a .txt file,
@@ -8,36 +8,33 @@
  *              Inkplate SD card interface. The example writes a short text
  *              string into "test.txt" stored on a FAT-formatted SD card.
  *
+ *              The SD card must be properly formatted (FAT/FAT32). Always close
+ *              files after writing to prevent corruption. The SD card is put
+ *              into sleep mode after the operation to reduce power consumption.
+ *              Expected output is status messages on the Inkplate display and a
+ *              "test.txt" file created on the SD card with the written content.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
  * - Hardware:   Inkplate 5v2, USB cable, microSD card
  * - Extra:      None
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5v2
- * - SD card format: FAT / FAT32
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * - SD card:    FAT / FAT32 format
  *
  * How to use:
- * 1) Insert a FAT-formatted SD card into the Inkplate.
- * 2) Upload the sketch to Inkplate 5v2.
- * 3) The program initializes the SD card.
- * 4) A file named "test.txt" is created (or appended if it exists).
- * 5) The text string defined in the code is written into the file.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Insert a FAT-formatted SD card into the Inkplate.
+ * 3) Upload the sketch to Inkplate 5v2.
+ * 4) The program initializes the SD card.
+ * 5) A file named "test.txt" is created (or appended if it exists).
+ * 6) The text string defined in the code is written into the file.
  *
- * Expected output:
- * - Status messages shown on the Inkplate display.
- * - File "test.txt" created on the SD card with written content.
- *
- * Notes:
- * - SD card must be properly formatted (FAT/FAT32).
- * - Always close files after writing to prevent corruption.
- * - SD card is put into sleep mode after operation to reduce power consumption.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-01-23

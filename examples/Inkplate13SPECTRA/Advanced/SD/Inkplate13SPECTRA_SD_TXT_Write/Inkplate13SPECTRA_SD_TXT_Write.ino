@@ -1,17 +1,32 @@
-/*
-   Inkplate13SPECTRA_SD_TXT_Write example for Soldered Inkplate 13SPECTRA
-   For this example you will need only a micro USB cable, Inkplate 13SPECTRA and a SD card.
-   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-   This example will show you how to write in .txt files.
-   NOTE: Open the Serial monitor at 115200 baud to see what happens.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our community forum: https://community.soldered.com/
-   22 January 2026 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_SD_TXT_Write.ino
+ * @brief       Write a text file to an SD card on Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to write into .txt files on the SD card.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, micro USB cable, SD card
+ * - Serial:     115200 baud
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Insert an SD card into the Inkplate.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) Open the Serial Monitor at 115200 baud to see what happens.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2026-01-22
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

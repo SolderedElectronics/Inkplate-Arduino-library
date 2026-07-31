@@ -17,53 +17,48 @@
  *              HTTPS POST request to OpenAI with the generated prompt.
  *
  *              Deep sleep resets the ESP32 on every wake, so all logic runs in
- *              setup(). The display retains the last image while asleep.
+ *              setup(). The display retains the last image while asleep and this
+ *              example uses a full refresh (display()) in 1-bit (BW) mode.
+ *
+ *              Security warning: client.setInsecure() disables TLS certificate
+ *              validation for both Open-Meteo and OpenAI requests. This is
+ *              acceptable for demos but not recommended for production; use
+ *              proper CA certificates or pinning. API usage and quotas apply
+ *              (OpenAI), so protect your API key and avoid committing it to
+ *              public repositories. ArduinoJson documents and full HTTP responses
+ *              can be large, so keep prompts and expected responses short to
+ *              reduce memory pressure.
+ *
+ *              Expected output: a short AI-generated weather summary rendered via
+ *              drawTextBox(); on failure "Failed to get weather data." or an
+ *              empty/failed response depending on API errors; connection logs and
+ *              optional raw API responses in the Serial Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi connection + Internet access, OpenAI API key
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial Monitor: 115200 baud (recommended for debugging)
- * - WiFi:           set ssid/password
- * - Location:       set location/latitude/longitude
- * - OpenAI:         set openai_key
- * - Sleep period:   set SLEEP_DURATION_IN_MINS (seconds) and uS_TO_S_FACTOR
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (recommended for debugging)
  *
  * How to use:
- * 1) Enter your WiFi credentials.
- * 2) Set location, latitude, and longitude for your area.
- * 3) Create an OpenAI API key and paste it into openai_key.
- * 4) Upload the sketch and open Serial Monitor at 115200 baud.
- * 5) On boot, the device fetches weather, requests a short AI summary, and
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials (ssid, password).
+ * 3) Set location, latitude and longitude for your area.
+ * 4) Create an OpenAI API key and paste it into openai_key. Optionally adjust
+ *    SLEEP_DURATION_IN_MINS and uS_TO_S_FACTOR.
+ * 5) Upload the sketch and open Serial Monitor at 115200 baud.
+ * 6) On boot, the device fetches weather, requests a short AI summary, and
  *    displays it inside a text box.
- * 6) The device enters deep sleep and repeats the process after the configured
+ * 7) The device enters deep sleep and repeats the process after the configured
  *    sleep interval.
  *
- * Expected output:
- * - Display: a short AI-generated weather summary rendered via drawTextBox().
- * - On failure: "Failed to get weather data." or an empty/failed response
- *   depending on API errors.
- * - Serial Monitor: connection logs and (optional) raw API responses.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example uses a full refresh (display()).
- * - Deep sleep restarts the ESP32 on every wake. Keep the logic in setup().
- * - Security warning: client.setInsecure() disables TLS certificate validation
- *   for both Open-Meteo and OpenAI requests. This is acceptable for demos but
- *   not recommended for production; use proper CA certificates or pinning.
- * - API usage and quotas apply (OpenAI). Protect your API key and avoid
- *   committing it to public repositories.
- * - RAM usage: ArduinoJson documents and full HTTP responses can be large.
- *   Keep prompts and expected responses short to reduce memory pressure.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

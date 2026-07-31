@@ -1,17 +1,36 @@
-/*
-  Inkplate13SPECTRA_Show_JPG_With_HTTPClient example for Soldered Inkplate 13SPECTRA
-  For this example you will need a USB-C cable, Inkplate 13SPECTRA, and an available WiFi connection.
-  Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-  Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-  This example will show you how to display JPG image using HTTPClient.
-  Make sure that you entered WiFi credentials and change the image link if you want any other image.
-
-  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Show_JPG_With_HTTPClient.ino
+ * @brief       Display a JPG image fetched with HTTPClient on Soldered
+ *              Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to display a JPG image using HTTPClient. Make sure that
+ *              you entered your WiFi credentials and change the image link if you
+ *              want to use any other image.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB-C cable
+ * - Extra:      Available WiFi connection
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials and (optionally) a different image link in the
+ *    sketch.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) The JPG image is downloaded and shown on the e-paper display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

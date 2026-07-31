@@ -9,37 +9,34 @@
  *              configure an alarm, read current time, print it on the display
  *              using partial updates, and handle the RTC interrupt event.
  *
+ *              Inkplate 5 uses the PCF85063A RTC chip. Partial update works
+ *              only in 1-bit (black & white) mode and is not recommended for
+ *              the first refresh after power-up; perform a full refresh every
+ *              5-10 partial updates to maintain display quality. Expected
+ *              output is the current date and time on the Inkplate display,
+ *              with the alarm interrupt triggered at the configured time.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 5
  * - Hardware:   Inkplate 5, USB cable
  * - Extra:      None
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5
- * - Serial settings: 115200 baud (optional)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5/quick-start-guide/
+ * - Serial:     115200 baud (optional)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 5.
- * 2) Initialize RTC time and date if not already set.
- * 3) Configure the RTC alarm and enable interrupt handling.
- * 4) When the alarm triggers, the interrupt is handled in software.
- * 5) Current time and alarm status are displayed on the screen.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 5.
+ * 3) Initialize RTC time and date if not already set.
+ * 4) Configure the RTC alarm and enable interrupt handling.
+ * 5) When the alarm triggers, the interrupt is handled in software.
+ * 6) Current time and alarm status are displayed on the screen.
  *
- * Expected output:
- * - Inkplate display shows current date and time.
- * - Alarm interrupt is triggered at the configured time.
- *
- * Notes:
- * - Inkplate 5 uses the PCF85063A RTC chip.
- * - Partial update works only in 1-bit (black & white) mode.
- * - It is not recommended to use partial update on the first refresh after power-up.
- * - Perform a full refresh every 5–10 partial updates to maintain display quality.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 5 has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-11-12

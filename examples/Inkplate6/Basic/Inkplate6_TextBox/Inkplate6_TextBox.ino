@@ -15,28 +15,31 @@
  *              of the box, it ends with three dots (...) to indicate that
  *              not all text is displayed.
  *
+ *              The example runs in 1-bit (black & white) mode. Some custom
+ *              fonts are drawn bottom-to-top and may require a vertical offset
+ *              for correct positioning. Always call display.display() after
+ *              drawing operations to update the physical e-paper screen.
+ *              Expected result is two text boxes rendered on the screen: a
+ *              default TextBox and a custom styled TextBox using the Roboto
+ *              font.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6
  * - Hardware:   Inkplate 6, USB cable
  * - Extra:      Custom font file (e.g. Roboto_Light_36.h)
  *
- * Configuration:
- * - Tools -> Board -> "Soldered Inkplate 6"
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6.
+ * 3) Both text boxes are drawn and shown after the display refreshes.
  *
- * Expected result:
- * - Two text boxes rendered on the screen:
- *   1) Default TextBox
- *   2) Custom styled TextBox using Roboto font
- *
- * Notes:
- * - This example runs in 1-bit (black & white) mode.
- * - Some custom fonts are drawn bottom-to-top and may require
- *   a vertical offset for correct positioning.
- * - Always call display.display() after drawing operations
- *   to update the physical e-paper screen.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-04-24

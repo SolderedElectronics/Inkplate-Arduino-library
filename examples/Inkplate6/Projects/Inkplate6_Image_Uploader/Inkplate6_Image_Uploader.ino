@@ -6,47 +6,47 @@
  * @details     Demonstrates how to host a small web app directly on Inkplate 6
  *              (ESP32) that lets the user upload an image via a browser and then
  *              display it on the e-paper screen. The Inkplate starts a WiFi Access
- *              Point (AP), serves an HTML upload page, accepts an uploaded JPEG
- *              into a RAM buffer, provides a preview endpoint, and renders the
- *              uploaded image to the display in 3-bit (grayscale) mode.
+ *              Point (AP+STA mode), serves an HTML upload page (provided via
+ *              src/html.h, INDEX_HTML), accepts an uploaded JPEG into a RAM
+ *              buffer, provides a preview endpoint, and renders the uploaded
+ *              image to the display in 3-bit (grayscale) mode.
+ *
+ *              Uploaded image data is stored in RAM, so large uploads may fail
+ *              due to memory limits. Endpoints used:
+ *              - "/"          Serves upload page
+ *              - "/upload"    Receives file upload (HTTP POST)
+ *              - "/preview"   Shows browser preview of last uploaded image
+ *              - "/image.jpg" Serves the uploaded JPEG from RAM
+ *
+ *              Expected output: the Inkplate display shows the AP credentials
+ *              and local IP address, the web page allows uploading an image and
+ *              previewing the last upload, and the uploaded JPEG is rendered on
+ *              the display after the upload completes.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6
  * - Hardware:   Inkplate 6, USB cable
  * - Extra:      WiFi-capable device with a web browser (PC, laptop, smartphone)
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6
- * - Inkplate runs as WiFi Access Point (AP+STA mode)
- * - Set AP SSID and password in the sketch (ap_ssid, ap_password)
- * - HTML page is provided via src/html.h (INDEX_HTML)
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6.
- * 2) On your phone/PC, connect to the Inkplate WiFi network (SSID/password shown on display).
- * 3) Open the IP address shown on the Inkplate screen in a web browser.
- * 4) Upload an image using the web page form.
- * 5) The uploaded image is displayed on the e-paper screen.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
+ *    from Tools -> Board.
+ * 2) Set the AP SSID and password in the sketch (ap_ssid, ap_password).
+ * 3) Upload the sketch to Inkplate 6.
+ * 4) On your phone/PC, connect to the Inkplate WiFi network (SSID/password
+ *    shown on display).
+ * 5) Open the IP address shown on the Inkplate screen in a web browser.
+ * 6) Upload an image using the web page form.
+ * 7) The uploaded image is displayed on the e-paper screen.
  *
- * Expected output:
- * - Inkplate display shows AP credentials and the local IP address.
- * - Web page allows uploading an image and previewing the last upload.
- * - Uploaded JPEG is rendered on the Inkplate display after upload completes.
- *
- * Notes:
- * - Uploaded image data is stored in RAM; large uploads may fail due to memory limits.
- * - This example renders the image in 3-bit (grayscale) mode.
- * - Endpoints used:
- *   - "/"          Serves upload page
- *   - "/upload"    Receives file upload (HTTP POST)
- *   - "/preview"   Shows browser preview of last uploaded image
- *   - "/image.jpg" Serves the uploaded JPEG from RAM
- *
- * Docs:
- * - Inkplate:   https://docs.soldered.com/inkplate
- * - Project:    https://docs.soldered.com/inkplate/projects/image-uploader
- *
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Project documentation:
+ *              https://docs.soldered.com/inkplate/projects/image-uploader
  *
  * @author      Soldered
  * @date        2025

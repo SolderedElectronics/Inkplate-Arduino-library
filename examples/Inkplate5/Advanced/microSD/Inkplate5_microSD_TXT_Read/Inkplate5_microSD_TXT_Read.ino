@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate5_SD_TXT_Read.ino
+ * @file        Inkplate5_microSD_TXT_Read.ino
  * @brief       Read and display text file from SD card on Soldered Inkplate 5.
  *
  * @details     Demonstrates how to open a .txt file from a FAT-formatted SD card
@@ -8,37 +8,34 @@
  *              The example reads a file named "text.txt" from the SD card and
  *              prints its content on screen.
  *
+ *              The file name must be exactly "text.txt" for this example and the
+ *              text length should not exceed 200 characters. Make sure the
+ *              required SDFat library is properly installed. Expected output is
+ *              the contents of text.txt shown on the Inkplate display.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 5
  * - Hardware:   Inkplate 5, USB cable, microSD card
- * - Extra:      text.txt file on SD card (≤ 200 characters)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5
- * - Additional library required:
- *   https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
- * - SD card format: FAT / FAT32
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5/quick-start-guide/
+ * - Extra:      text.txt file on SD card (max 200 characters)
+ * - Library:    https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
+ * - SD card:    FAT / FAT32 format
  *
  * How to use:
- * 1) Copy a text file named "text.txt" (max 200 characters) to a FAT-formatted SD card.
- * 2) Insert the SD card into the Inkplate.
- * 3) Install the required SDFat library.
- * 4) Upload the sketch to Inkplate 5.
- * 5) The file contents will be read and displayed on the e-paper screen.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5"
+ *    from Tools -> Board.
+ * 2) Copy a text file named "text.txt" (max 200 characters) to a FAT-formatted
+ *    SD card.
+ * 3) Insert the SD card into the Inkplate.
+ * 4) Install the required SDFat library.
+ * 5) Upload the sketch to Inkplate 5.
+ * 6) The file contents will be read and displayed on the e-paper screen.
  *
- * Expected output:
- * - The contents of text.txt are displayed on the Inkplate display.
- *
- * Notes:
- * - File name must be exactly "text.txt" for this example.
- * - Text length should not exceed 200 characters.
- * - Ensure the required SDFat library is properly installed.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 5 has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11

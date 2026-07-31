@@ -121,6 +121,13 @@
  * a 15-minute polling fallback. A 202/500 "not ready" status from the
  * server is re-polled after a minute.
  *
+ * @note        Quick start guide: Inkplate 5 has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
  * @author      Soldered
  * @date        2021-02-11
  * @license     GNU GPL V3

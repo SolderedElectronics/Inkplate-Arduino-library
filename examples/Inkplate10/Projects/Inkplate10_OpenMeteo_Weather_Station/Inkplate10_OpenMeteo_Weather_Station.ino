@@ -19,54 +19,48 @@
  *              screen instead of the dashboard.
  *
  *              The display runs in 3-bit grayscale mode (INKPLATE_3BIT) to
- *              support richer UI elements. After drawing, the ESP32 enters deep
- *              sleep for a fixed interval to save power. Deep sleep resets the
- *              ESP32, so the sketch reruns setup() and fetches fresh data after
- *              every wake-up.
+ *              support richer UI elements; partial updates are not supported in
+ *              grayscale mode, so updates are full refreshes. After drawing, the
+ *              ESP32 enters deep sleep for a fixed interval to save power. Deep
+ *              sleep resets the ESP32, so the sketch reruns setup() and fetches
+ *              fresh data after every wake-up.
+ *
+ *              The WiFi connection uses a fixed timeout, so poor signal or
+ *              captive portals can prevent connection and trigger the WiFi error
+ *              screen. NTP time uses a simple UTC offset (timeZone) and daylight
+ *              saving time is not automatically handled unless your
+ *              configuration accounts for it. API and JSON handling is
+ *              implemented in the provided src/ modules; very large responses or
+ *              connectivity issues may require tuning timeouts/buffers.
+ *
+ *              Expected output: a weather dashboard UI rendered in grayscale,
+ *              showing weather values for the configured coordinates plus
+ *              city/username and battery voltage; a WiFi error screen if WiFi
+ *              fails; an API error screen if the API request fails.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable (battery recommended for deployment)
  * - Extra:      WiFi Internet connection
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- * - Serial Monitor: 115200 baud
- * - Set WiFi credentials (ssid, password)
- * - Set timeZone (UTC offset), latitude, longitude
- * - Optionally set myUsername and myCity (display only)
- * - Set metricUnits = true for metric, false for Imperial units
- * - Optional: change ntpServer if needed
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Enter your WiFi SSID/password and set your location (timezone + coordinates).
- * 2) Upload the sketch to Inkplate 10 and open Serial Monitor (115200) for logs.
- * 3) On boot, the device connects to WiFi, syncs time via NTP, fetches weather,
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID/password and set your location (timeZone UTC offset,
+ *    latitude, longitude). Optionally set myUsername and myCity (display only),
+ *    metricUnits (true for metric, false for Imperial) and ntpServer.
+ * 3) Upload the sketch to Inkplate 10 and open Serial Monitor (115200) for logs.
+ * 4) On boot, the device connects to WiFi, syncs time via NTP, fetches weather,
  *    and renders the dashboard.
- * 4) The board deep-sleeps for ~30 minutes, then wakes and refreshes the data.
+ * 5) The board deep-sleeps for ~30 minutes, then wakes and refreshes the data.
  *
- * Expected output:
- * - A weather dashboard UI rendered in grayscale, showing weather values for the
- *   configured coordinates, plus city/username and battery voltage.
- * - If WiFi fails: a WiFi error screen.
- * - If the API request fails: an API error screen.
- *
- * Notes:
- * - Display mode: 3-bit grayscale (INKPLATE_3BIT). Partial updates are not
- *   supported in grayscale mode, so updates are full refreshes.
- * - Deep sleep restarts the ESP32 on every wake-up; no runtime state persists.
- * - WiFi connection uses a fixed timeout; poor signal or captive portals can
- *   prevent connection and trigger the WiFi error screen.
- * - NTP time uses a simple UTC offset (timeZone). Daylight saving time is not
- *   automatically handled unless your configuration accounts for it.
- * - API and JSON handling is implemented in the provided src/ modules; very
- *   large responses or connectivity issues may require tuning timeouts/buffers.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

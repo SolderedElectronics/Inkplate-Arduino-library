@@ -9,36 +9,33 @@
  *              This example does NOT parse HTML content; it simply prints the
  *              raw HTTP response body on the screen.
  *
+ *              The example is intended to demonstrate basic HTTP communication
+ *              only - no HTML parsing or content extraction is performed, and
+ *              displaying large responses may require text size adjustments.
+ *              Expected output is raw text/HTML fetched from the web shown on
+ *              the Inkplate display.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 4TEMPERA
  * - Hardware:   Inkplate 4TEMPERA, USB cable
  * - Extra:      Stable WiFi Internet connection
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate4TEMPERA
- * - Serial settings: 115200 baud (optional)
- * - Enter your WiFi SSID and password in the sketch
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/4TEMPERA/quick-start-guide/
+ * - Serial:     115200 baud (optional)
  *
  * How to use:
- * 1) Enter your WiFi SSID and password in the sketch.
- * 2) Upload the sketch to Inkplate 4TEMPERA.
- * 3) The board connects to the WiFi network.
- * 4) Data is fetched from a remote web server using HTTP.
- * 5) The received content is printed on the e-paper display.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate4TEMPERA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password in the sketch.
+ * 3) Upload the sketch to Inkplate 4TEMPERA.
+ * 4) The board connects to the WiFi network.
+ * 5) Data is fetched from a remote web server using HTTP.
+ * 6) The received content is printed on the e-paper display.
  *
- * Expected output:
- * - Inkplate display shows raw text/HTML fetched from the web.
- *
- * Notes:
- * - This example is intended to demonstrate basic HTTP communication only.
- * - No HTML parsing or content extraction is performed.
- * - Displaying large responses may require text size adjustments.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11

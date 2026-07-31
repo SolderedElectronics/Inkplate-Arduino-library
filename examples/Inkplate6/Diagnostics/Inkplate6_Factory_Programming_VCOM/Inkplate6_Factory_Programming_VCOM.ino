@@ -22,68 +22,63 @@
  *                power rails (einkOn()) and reads back the stored VCOM value.
  *              - Enters "peripheral mode": a Serial-driven command loop that
  *                forwards commands to the Inkplate peripheral interface (see
- *                Peripheral.h).
+ *                Peripheral.h). Peripheral mode processes Serial input
+ *                continuously, so make sure your terminal does not inject
+ *                unexpected line endings or extra characters if commands are
+ *                strict.
  *
- *              Display modes:
- *              - Uses 1-bit (BW) for initialization and fast updates.
- *              - Switches to 3-bit grayscale to draw the splash bitmap.
+ *              Display modes: 1-bit (BW) is used for initialization and fast
+ *              updates, and the sketch switches to 3-bit grayscale only to draw
+ *              the splash bitmap.
+ *
+ *              einkOn()/einkOff() control the e-paper power supply and are
+ *              intended for controlled factory/service workflows - do not toggle
+ *              them repeatedly in normal applications, as incorrect use may
+ *              damage the display hardware. Factory test requirements depend on
+ *              test.cpp: missing WiFi credentials, I2C slave or microSD may cause
+ *              tests to fail and stop the process.
+ *
+ *              Expected output: test status messages, the VCOM prompt,
+ *              success/failure logs and peripheral-mode interaction on the Serial
+ *              Monitor; a splash/demo image with the programmed VCOM voltage
+ *              printed near the bottom on the e-paper.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6
  * - Hardware:   Inkplate 6 / Inkplate 6 V2, USB cable
  * - Extra:      microSD card (formatted, any content), EasyC I2C slave device
- *              for factory tests (see Notes)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6
- * - Serial Monitor: 115200 baud
- * - Factory tests (in test.cpp):
- *   - Set WiFi credentials (if tests require network)
- *   - Ensure an EasyC/I2C slave responds at the configured address (0x30 by
- *     default; configurable in test.cpp)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ *               for factory tests, WiFi credentials in test.cpp if the tests
+ *               require network
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) (Factory) Connect required test hardware:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
+ *    from Tools -> Board.
+ * 2) (Factory) Connect required test hardware:
  *    - Insert a formatted microSD card.
  *    - Connect an EasyC I2C slave device at the address expected by test.cpp
  *      (0x30 by default). If you don't have one, flash the helper firmware from
  *      the InkplateEasyCTester folder onto a compatible Dasduino board and use
  *      it as the I2C slave.
- * 2) Open Serial Monitor at 115200 baud.
- * 3) Upload the sketch. On first startup it will:
+ * 3) Open Serial Monitor at 115200 baud.
+ * 4) Upload the sketch. On first startup it will:
  *    - Run peripheral tests and print results to Serial.
  *    - Prompt for VCOM voltage; enter the value (include the '-' sign when
  *      required) until programming succeeds.
- * 4) After the splash screen appears, the device stays in peripheral mode.
+ * 5) After the splash screen appears, the device stays in peripheral mode.
  *    Send supported peripheral-mode commands over Serial (see Peripheral.h /
  *    Inkplate peripheral-mode documentation).
  *
- * Expected output:
- * - Serial Monitor: Test status messages, VCOM prompt, success/failure logs, and
- *   peripheral-mode interaction.
- * - E-paper: Splash/demo image with the programmed VCOM voltage printed near
- *   the bottom.
+ * @warning     VCOM programming is limited: the panel VCOM can be programmed a
+ *              finite number of times (typically ~100 writes). Avoid repeated
+ *              programming and use it only when necessary.
  *
- * Notes:
- * - Display mode switches between 1-bit (BW) and 3-bit grayscale; grayscale is
- *   used only for rendering the splash image.
- * - VCOM programming is limited: the panel VCOM can be programmed a finite
- *   number of times (typically ~100 writes). Avoid repeated programming and use
- *   only when necessary.
- * - einkOn()/einkOff() control the e-paper power supply. They are intended for
- *   controlled factory/service workflows. Do not toggle them repeatedly in
- *   normal applications, as incorrect use may damage the display hardware.
- * - Factory test requirements depend on test.cpp; missing WiFi credentials,
- *   I2C slave, or microSD may cause tests to fail and stop the process.
- * - Peripheral mode processes Serial input continuously; ensure your terminal
- *   does not inject unexpected line endings or extra characters if commands are
- *   strict.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026

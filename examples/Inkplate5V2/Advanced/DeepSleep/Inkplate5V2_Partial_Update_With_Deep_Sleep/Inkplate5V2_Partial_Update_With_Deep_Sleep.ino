@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate5v2_Partial_Update_With_Deep_Sleep.ino
+ * @file        Inkplate5V2_Partial_Update_With_Deep_Sleep.ino
  * @brief       Partial e-paper update with ESP32 deep sleep for Soldered Inkplate 5v2.
  *
  * @details     Demonstrates how to correctly use partial screen updates together
@@ -10,39 +10,36 @@
  *              partialUpdate(). This example shows how to preserve variables in
  *              RTC memory, rebuild the screen, and safely perform partial updates.
  *
+ *              Partial update works only in 1-bit (black & white) mode. Do NOT
+ *              use the standard partial update examples together with deep
+ *              sleep, and always rebuild the screen content after deep sleep
+ *              before calling partialUpdate(). A full refresh every 5-10
+ *              partial updates is recommended to maintain good image quality.
+ *              Expected output: first boot performs a full refresh, subsequent
+ *              wake-ups perform partial updates only, and the counter and
+ *              decimal value increment after each deep sleep cycle.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
  * - Hardware:   Inkplate 5v2, USB cable
  * - Extra:      None
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5v2
- * - Serial settings: 115200 baud
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 5v2.
- * 2) After first full refresh, the device will enter deep sleep.
- * 3) Every 5v2 seconds the ESP32 wakes up, updates variables,
- *    rebuilds the screen buffer, and performs a partial update.
- * 4) Observe changing values on the display after each wake cycle.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 5v2.
+ * 3) After the first full refresh, the device enters deep sleep.
+ * 4) Every 10 seconds the ESP32 wakes up, updates variables, rebuilds the
+ *    screen buffer, and performs a partial update.
+ * 5) Observe changing values on the display after each wake cycle.
  *
- * Expected output:
- * - First boot performs a full refresh.
- * - Subsequent wake-ups perform partial updates only.
- * - Counter and decimal value increment after each deep sleep cycle.
- *
- * Notes:
- * - Partial update works only in 1-bit (black & white) mode.
- * - Do NOT use standard partial update examples together with deep sleep.
- * - Always rebuild the screen content after deep sleep before calling partialUpdate().
- * - It is recommended to perform a full refresh every 5–10 partial updates
- *   to maintain good image quality.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11

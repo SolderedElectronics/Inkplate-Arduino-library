@@ -14,56 +14,48 @@
  *              GPIO36 is configured as an external deep sleep wake source for
  *              the wake-up button, while a timer wake source is also enabled so
  *              the board wakes automatically after 30 seconds if the button is
- *              not pressed. This example is useful for low-power interactive
- *              applications where manual wake-up is preferred, but a periodic
- *              automatic wake is also acceptable.
+ *              not pressed. External wake-up and timer wake-up are configured
+ *              independently and can be enabled at the same time. This example
+ *              is useful for low-power interactive applications where manual
+ *              wake-up is preferred, but a periodic automatic wake is also
+ *              acceptable.
  *
  *              Because deep sleep resets the ESP32, program execution always
- *              starts again from setup() after wake-up. Only data explicitly
- *              stored in RTC memory survives between sleep cycles.
+ *              starts again from setup() after wake-up, so loop() should remain
+ *              empty. Only data explicitly stored in RTC memory
+ *              (RTC_DATA_ATTR, here the boot counter) survives between sleep
+ *              cycles. Colour e-paper updates use full refreshes and are slower
+ *              than monochrome partial-update workflows on supported boards.
+ *
+ *              Expected output: the boot count and wake-up reason on the display
+ *              ("Wakeup caused by WakeUp button", "Wakeup caused by timer", or an
+ *              initial power-on/reset message), with the board remaining in deep
+ *              sleep until the button is pressed or the timer expires.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
- * 2) After boot, the display shows the current boot count and wake-up reason.
- * 3) The sketch enables two wake sources: the wake-up button on GPIO36 and a
- *    timer set to 30 seconds.
- * 4) The board enters deep sleep.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6COLOR.
+ * 3) After boot, the display shows the current boot count and wake-up reason.
+ * 4) The sketch enables two wake sources: the wake-up button on GPIO36 and a
+ *    timer set to 30 seconds, then enters deep sleep.
  * 5) Press the wake-up button to wake the board immediately, or wait for the
  *    timer wake-up to occur automatically.
  * 6) After wake-up, the ESP32 restarts, updates the boot counter and reason on
  *    the display, then goes back to sleep.
  *
- * Expected output:
- * - Display: Boot count and wake-up reason:
- *   "Wakeup caused by WakeUp button", "Wakeup caused by timer", or an initial
- *   power-on/reset message.
- * - Power behavior: The board remains in deep sleep until the button is pressed
- *   or the timer expires.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - Deep sleep restarts the ESP32, so all application logic must run from
- *   setup(); loop() should remain empty.
- * - RTC_DATA_ATTR is used to preserve the boot counter across deep sleep cycles.
- * - External wake-up and timer wake-up are configured independently and can be
- *   enabled at the same time.
- * - Color e-paper updates use full refreshes and are slower than monochrome
- *   partial-update workflows on supported boards.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-12-14

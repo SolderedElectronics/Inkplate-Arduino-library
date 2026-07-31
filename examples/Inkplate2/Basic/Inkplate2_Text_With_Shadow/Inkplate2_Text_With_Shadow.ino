@@ -13,44 +13,38 @@
  *              primitives supported by the library.
  *
  *              Inkplate 2 uses a 1-bit display mode with a tri-color palette
- *              (black/white/red). The sketch performs a single full refresh to
+ *              (BLACK/WHITE/RED). The sketch performs a single full refresh to
  *              show the drawing and then enters deep sleep. Because deep sleep
  *              resets the ESP32, the program restarts from setup() after any
- *              wake/reset (this sketch does not configure a wake source).
+ *              wake/reset; this sketch does not configure a wake source, so a
+ *              reset or power cycle is required to run it again. The Inkplate
+ *              Arduino library is compatible with Adafruit GFX primitives, making
+ *              it easy to reuse many existing GFX-based drawing examples.
+ *
+ *              Expected output: "Inkplate 2" in black, then in red, then a red
+ *              "Inkplate 2" with a black shadow; a small "By soldered.com" line
+ *              with a shadow; and a red diagonal line.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial settings: none
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     none
  *
  * How to use:
- * 1) Select Inkplate 2 in Tools and upload the sketch.
- * 2) After upload/reset, the display refreshes once and shows the rendered
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 2.
+ * 3) After upload/reset, the display refreshes once and shows the rendered
  *    text, shadow effects, and a line.
- * 3) The board enters deep sleep after updating the display.
+ * 4) The board enters deep sleep after updating the display.
  *
- * Expected output:
- * - Display: "Inkplate 2" in black, then in red, then a red "Inkplate 2" with
- *   a black shadow; a small "By soldered.com" line with a shadow; and a red
- *   diagonal line.
- *
- * Notes:
- * - Display mode is 1-bit with Inkplate 2 color palette (BLACK/WHITE/RED).
- * - This example uses a full refresh (display()) for the final output.
- * - Deep sleep restarts the ESP32; no wakeup source is configured here, so a
- *   reset or power cycle is required to run again.
- * - The Inkplate Arduino library is compatible with Adafruit GFX primitives,
- *   making it easy to reuse many existing GFX-based drawing examples.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-02-15

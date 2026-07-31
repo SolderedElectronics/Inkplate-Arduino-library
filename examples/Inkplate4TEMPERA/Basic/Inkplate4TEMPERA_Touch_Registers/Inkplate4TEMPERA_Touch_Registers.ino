@@ -17,46 +17,41 @@
  *              draws a small triangle marker and a "(0,0) position" label on
  *              the display. The e-paper output is static; all ongoing debug
  *              information is provided through Serial to avoid slow screen
- *              refresh overhead.
+ *              refresh overhead. Display mode is 1-bit BW (INKPLATE_1BIT) and
+ *              the display is used only for the static origin marker and label.
+ *
+ *              This is a raw-register debug tool: the meaning of individual bits
+ *              depends on the touchscreen controller and firmware, so use it when
+ *              developing or troubleshooting low-level touch handling. If
+ *              touchscreen initialization fails, the sketch halts to avoid
+ *              producing misleading data. For higher-level coordinate reporting,
+ *              see the touchscreen serial or drawing examples instead.
+ *
+ *              Expected output: a triangle marker near the top-left corner and
+ *              the text "(0,0) position" on the display; repeated blocks in the
+ *              Serial Monitor with Reg [0] .. Reg [7] printed in binary and a
+ *              separator line between snapshots.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4 TEMPERA.
- * 2) Open Serial Monitor at 115200 baud.
- * 3) Every second, observe the printed register snapshot (8 bytes).
- * 4) Touch the screen and watch how register values change with activity.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) Open Serial Monitor at 115200 baud.
+ * 4) Every second, observe the printed register snapshot (8 bytes).
+ * 5) Touch the screen and watch how register values change with activity.
  *
- * Expected output:
- * - Display: a triangle marker near the top-left corner and the text
- *   "(0,0) position".
- * - Serial Monitor: repeated blocks such as:
- *   - Reg [0] .. Reg [7] printed in binary
- *   - A separator line between snapshots
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT). The display is used only for the
- *   static origin marker and label.
- * - This is a raw-register debug tool. The meaning of individual bits depends
- *   on the touchscreen controller and firmware; use this when developing or
- *   troubleshooting low-level touch handling.
- * - If touchscreen initialization fails, the sketch halts to avoid producing
- *   misleading data.
- * - For higher-level coordinate reporting, see the touchscreen serial or
- *   drawing examples instead.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-07-12

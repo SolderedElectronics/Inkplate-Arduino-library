@@ -13,48 +13,46 @@
  *
  *              The e-paper display is used only for a short startup message.
  *              All request status and troubleshooting output is sent to the
- *              Serial Monitor. The display runs in 1-bit (black/white) mode.
+ *              Serial Monitor. The display runs in 1-bit (black/white) mode and
+ *              uses only a full refresh (display()).
+ *
+ *              This example uses plain HTTP on port 80 (no TLS); for secure
+ *              transport, use an HTTPS example with WiFiClientSecure and
+ *              certificate validation. The payload uses form encoding, so if you
+ *              post multiple fields, append them as additional key=value pairs
+ *              (e.g. field1=...&field2=...). ThingSpeak rate limits apply, so
+ *              choose an interval that complies with your account/channel limits
+ *              to avoid rejected updates.
+ *
+ *              Expected output: "HTTP POST request example" and a reminder to
+ *              open the Serial Monitor on the display; WiFi connection logs and
+ *              "The POST request is done." messages after each successful POST
+ *              in the Serial Monitor; and the field1 graph updating with the
+ *              posted values on ThingSpeak.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi connection + ThingSpeak account/channel + Write API Key
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial Monitor: 115200 baud
- * - WiFi:           set ssid/pass
- * - ThingSpeak:     set writeAPIKey (Write API Key from your channel)
- * - Interval:       set POSTING_INTERVAL_IN_SESCS (seconds)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Create a ThingSpeak account and a channel with at least one field.
- * 2) Copy the channel Write API Key and paste it into writeAPIKey.
- * 3) Enter your WiFi SSID and password.
- * 4) Upload the sketch and open Serial Monitor at 115200 baud.
- * 5) Every POSTING_INTERVAL_IN_SESCS seconds, the device sends a POST request.
- * 6) Open your ThingSpeak channel to see the incoming data plotted over time.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Create a ThingSpeak account and a channel with at least one field.
+ * 3) Copy the channel Write API Key and paste it into writeAPIKey.
+ * 4) Enter your WiFi SSID and password (ssid, pass) and set
+ *    POSTING_INTERVAL_IN_SESCS (seconds).
+ * 5) Upload the sketch and open Serial Monitor at 115200 baud.
+ * 6) Every POSTING_INTERVAL_IN_SESCS seconds, the device sends a POST request.
+ * 7) Open your ThingSpeak channel to see the incoming data plotted over time.
  *
- * Expected output:
- * - Display: "HTTP POST request example" and a reminder to open Serial Monitor.
- * - Serial Monitor: WiFi connection logs and "The POST request is done."
- *   messages after each successful POST.
- * - ThingSpeak: field1 graph updates with the posted values.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Only a full refresh (display()) is used.
- * - This example uses plain HTTP on port 80 (no TLS). For secure transport,
- *   use an HTTPS example with WiFiClientSecure and certificate validation.
- * - The payload uses form encoding. If you post multiple fields, append them
- *   as additional key=value pairs (e.g., field1=...&field2=...).
- * - ThingSpeak rate limits apply; choose an interval that complies with your
- *   account/channel limits to avoid rejected updates.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-01-26

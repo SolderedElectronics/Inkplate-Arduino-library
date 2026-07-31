@@ -22,52 +22,46 @@
  *              subsequent updates overwrite only the value areas.
  *
  *              The display operates in 1-bit black/white mode (INKPLATE_1BIT)
- *              and uses partial updates for fast, low-flicker refreshes. A full
- *              refresh is performed periodically to reduce ghosting.
+ *              and uses partial updates for fast, low-flicker refreshes; a full
+ *              refresh is forced after NUM_UPDATES_BEFORE_FULL_REFRESH to reduce
+ *              ghosting. Panel power is kept enabled during partial updates for
+ *              stability and speed (higher power usage). APDS9960 sub-features
+ *              (gesture, proximity, light) must be explicitly enabled before
+ *              readings are valid. This example uses polling, not interrupts -
+ *              for ultra-low power designs, consider interrupts and deep sleep
+ *              wake-up workflows.
+ *
+ *              Expected output: a grid background with live fields showing the
+ *              proximity value (0-255) as objects move closer/farther, the last
+ *              detected gesture (Up/Down/Left/Right), red/green/blue channel
+ *              readings (16-bit values) and the ambient light reading (16-bit
+ *              value).
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial settings (if relevant): none
- * - Adjust NUM_UPDATES_BEFORE_FULL_REFRESH to tune partial/full refresh cadence
- * - Adjust proximity/gesture gain if higher sensitivity is required
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     none
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4 TEMPERA.
- * 2) Present a hand/object near the sensor to change proximity and trigger
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Optionally adjust NUM_UPDATES_BEFORE_FULL_REFRESH to tune the partial/full
+ *    refresh cadence, and the proximity/gesture gain for higher sensitivity.
+ * 3) Upload the sketch to Inkplate 4 TEMPERA.
+ * 4) Present a hand/object near the sensor to change proximity and trigger
  *    swipe gestures (Up/Down/Left/Right).
- * 3) Shine colored/bright light toward the sensor to change RGB and ambient
+ * 5) Shine colored/bright light toward the sensor to change RGB and ambient
  *    light readings.
- * 4) The display updates only when readings change; occasional full refreshes
+ * 6) The display updates only when readings change; occasional full refreshes
  *    occur automatically.
  *
- * Expected output:
- * - A grid background with live fields:
- *   - Proximity value (0–255) updated as objects move closer/farther
- *   - Last detected gesture (Up/Down/Left/Right) when a swipe is recognized
- *   - Red/Green/Blue channel readings (16-bit values)
- *   - Ambient light reading (16-bit value)
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT).
- * - Partial update: frequent updates are performed via partialUpdate(); a full
- *   refresh is forced after NUM_UPDATES_BEFORE_FULL_REFRESH to reduce ghosting.
- *   Panel power is kept enabled during partial updates for stability and speed
- *   (higher power usage).
- * - Sensor enablement: APDS9960 sub-features must be explicitly enabled (gesture,
- *   proximity, light) before readings are valid.
- * - This example uses polling (not interrupts). For ultra-low power designs,
- *   consider using interrupts and deep sleep wake-up workflows.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-11-20

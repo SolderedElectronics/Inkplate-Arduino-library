@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate5v2_RTC_Calibration.ino
+ * @file        Inkplate5V2_RTC_Calibration.ino
  * @brief       Demonstrates RTC calibration on Inkplate 5v2 by adjusting the
  *              RTC crystal load capacitor and clock offset registers, then
  *              showing a running clock using partial updates.
@@ -28,58 +28,54 @@
  *              After configuration, the sketch waits for a button press and
  *              starts the RTC at 00:00:00. It then reads the RTC once per
  *              second and updates the displayed time. To reduce flicker and
- *              speed up updates, it uses partial updates in 1-bit BW mode and
- *              performs a full refresh after a limited number of partial
- *              refreshes.
+ *              speed up updates, it uses partial updates in 1-bit BW mode
+ *              (INKPLATE_1BIT) and performs a full refresh after
+ *              MAX_PARTIAL_UPDATES partial refreshes to reduce ghosting.
+ *              Partial updates are performed with panel power kept enabled
+ *              (e.g. via the partialUpdate(..., true) setting), which can
+ *              increase power usage but makes repeated updates faster and more
+ *              stable.
+ *
+ *              E-paper refresh latency can make the shown time appear to "jump"
+ *              occasionally; the RTC time itself remains continuous and
+ *              accurate. The RTC alarm/timer/interrupt features are separate
+ *              from this calibration example - this sketch focuses on crystal
+ *              load and offset trim.
+ *
+ *              Expected output: the prompt "Press the wake button to start
+ *              RTC!", then a large HH:MM:SS clock updated roughly once per
+ *              second.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
  * - Hardware:   Inkplate 5v2, USB cable
  * - Extra:      none (optional: reference clock / oscilloscope for calibration)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5v2
- * - Serial settings (if relevant): none
- * - Select RTC capacitor option:
- *   - display.rtc.setInternalCapacitor(RTC_7PF) or RTC_12_5PF
- *   - If using external capacitors, do not enable the internal capacitor
- * - Set RTC offset:
- *   - display.rtc.setClockOffset(mode, value)
- *   - Follow the included procedure to compute mode/value from measured drift
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * - Serial:     none
+ * - Calibration settings (edit in sketch):
+ *   - display.rtc.setInternalCapacitor(RTC_7PF) or RTC_12_5PF; if using
+ *     external capacitors, do not enable the internal capacitor
+ *   - display.rtc.setClockOffset(mode, value); follow the included procedure to
+ *     compute mode/value from measured drift
  *
  * How to use:
- * 1) Decide whether you are using external crystal capacitors or internal RTC
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Decide whether you are using external crystal capacitors or internal RTC
  *    capacitance (hardware-dependent). Configure setInternalCapacitor() only
  *    if appropriate.
- * 2) For drift measurement runs, comment out setClockOffset() (and optionally
+ * 3) For drift measurement runs, comment out setClockOffset() (and optionally
  *    setInternalCapacitor()) to measure baseline RTC error.
- * 3) Upload the sketch. On the display, press the wake button to start the RTC.
- * 4) Let the clock run and compare against a trusted reference over many hours
+ * 4) Upload the sketch. On the display, press the wake button to start the RTC.
+ * 5) Let the clock run and compare against a trusted reference over many hours
  *    or days to compute ppm error and required offset.
- * 5) Apply the calculated setClockOffset() value, re-upload, and verify.
+ * 6) Apply the calculated setClockOffset() value, re-upload, and verify.
  *
- * Expected output:
- * - A prompt: "Press the wake button to start RTC!"
- * - After pressing the button: a large HH:MM:SS clock updated roughly once per
- *   second.
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT).
- * - Partial update behavior: partial updates are used for the clock and a full
- *   refresh is forced after MAX_PARTIAL_UPDATES to reduce ghosting. Partial
- *   updates are performed with panel power kept enabled (e.g., via the
- *   partialUpdate(..., true) setting), which can increase power usage but makes
- *   repeated updates faster and more stable.
- * - Refresh timing: e-paper refresh latency can make the shown time appear to
- *   “jump” occasionally; the RTC time itself remains continuous and accurate.
- * - RTC concepts: the RTC alarm/timer/interrupt features are separate from this
- *   calibration example; this sketch focuses on crystal load and offset trim.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-04-27

@@ -5,37 +5,34 @@
  *
  * @details     Scans the I2C bus for connected Qwiic/I2C devices and displays
  *              detected device addresses both on the Serial Monitor and on
- *              the Inkplate 4TEMPERA e-paper display. Useful for validating proper
- *              wiring and confirming device communication.
+ *              the Inkplate 4TEMPERA e-paper display. Useful for validating
+ *              proper wiring and confirming device communication.
+ *
+ *              Valid I2C addresses range from 0x01 to 0x7E and the scan repeats
+ *              every 5 seconds. Expected output is a list of detected I2C device
+ *              addresses on the display, with scanning progress and addresses
+ *              logged in the Serial Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4TEMPERA
  * - Hardware:   Inkplate 4TEMPERA, USB cable, optional Qwiic/I2C device
  * - Extra:      None
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate4TEMPERA
- * - Serial settings: 115200 baud
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/4TEMPERA/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Connect a Qwiic/I2C device to the Inkplate.
- * 2) Upload the sketch to Inkplate 4TEMPERA.
- * 3) Open the Serial Monitor (115200 baud).
- * 4) Detected I2C addresses will be shown on both the display and Serial.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate4TEMPERA"
+ *    from Tools -> Board.
+ * 2) Connect a Qwiic/I2C device to the Inkplate.
+ * 3) Upload the sketch to Inkplate 4TEMPERA.
+ * 4) Open the Serial Monitor (115200 baud).
+ * 5) Detected I2C addresses will be shown on both the display and Serial.
  *
- * Expected output:
- * - Inkplate display lists detected I2C device addresses
- * - Serial Monitor logs scanning progress and addresses
- *
- * Notes:
- * - Valid I2C addresses range from 0x01 to 0x7E.
- * - Scan repeats every 5 seconds.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026-02-23

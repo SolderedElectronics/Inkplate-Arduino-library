@@ -17,37 +17,33 @@
  *
  *              If the text exceeds the vertical bounds of the box, it is
  *              truncated and ends with three dots (...) to indicate that not
- *              all content is visible.
+ *              all content is visible. TextBox wraps words but does not
+ *              hyphenate. When using custom fonts, RAM usage increases
+ *              significantly, and some fonts are drawn bottom-to-top so a
+ *              vertical offset may be required to align text correctly (as shown
+ *              in this example).
+ *
+ *              Expected output: two rectangular text areas showing wrapped text,
+ *              the second using a larger custom font and adjusted spacing.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB cable
  * - Extra:      none
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
- *
  * How to use:
- * 1) Select the Inkplate 4 TEMPERA board and upload the sketch.
- * 2) After boot, two text boxes are rendered on the display.
- * 3) Compare default TextBox behavior with the custom-font example.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) After boot, two text boxes are rendered on the display.
+ * 4) Compare default TextBox behavior with the custom-font example.
  *
- * Expected output:
- * - E-paper: Two rectangular text areas showing wrapped text. The second uses
- *   a larger custom font and adjusted spacing.
- *
- * Notes:
- * - Display mode is 1-bit (BW).
- * - TextBox automatically wraps words; it does not hyphenate.
- * - When using custom fonts, RAM usage increases significantly.
- * - Some fonts are drawn bottom-to-top; a vertical offset may be required to
- *   align text correctly (as shown in this example).
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-04-24

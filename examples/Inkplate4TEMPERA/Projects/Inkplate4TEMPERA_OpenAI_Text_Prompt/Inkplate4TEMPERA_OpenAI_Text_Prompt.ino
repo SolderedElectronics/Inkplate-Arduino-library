@@ -6,62 +6,56 @@
  *
  * @details     This example connects Inkplate 4 TEMPERA to WiFi, fetches current
  *              weather data (temperature, weather code, timestamp) from the
- *              Open-Meteo API, and uses that data to build a short “snarky”
+ *              Open-Meteo API, and uses that data to build a short "snarky"
  *              prompt. The prompt is sent to the OpenAI Chat Completions API,
  *              and the returned text is rendered inside a textbox on the e-paper
  *              display.
  *
  *              The display runs in 1-bit (BW) mode for faster updates and lower
  *              memory usage. During WiFi connect, partial updates are used to
- *              incrementally refresh the “connecting” status. After the final
- *              message is drawn, the sketch sets an RTC alarm and enters deep
- *              sleep. Waking from deep sleep restarts the ESP32 and the sketch
- *              runs from setup() again.
+ *              incrementally refresh the "connecting" status; the final text uses
+ *              a full refresh (display.display()). After the final message is
+ *              drawn, the sketch sets an RTC alarm and enters deep sleep. Waking
+ *              from deep sleep restarts the ESP32 and the sketch runs from
+ *              setup() again, so loop() never runs after entering sleep. The
+ *              sketch sets an RTC alarm and enables EXT0 wake on GPIO 39, so make
+ *              sure your board wiring/config matches this wake source.
+ *
+ *              HTTPS warning: client.setInsecure() disables TLS certificate
+ *              validation and is for demo/testing only. For production, use
+ *              proper certificate validation or pinning for both Open-Meteo and
+ *              OpenAI endpoints. ArduinoJson parsing and storing full HTTP
+ *              responses can be memory-intensive, so if you see instability,
+ *              reduce payload sizes and avoid excessive debug printing of raw
+ *              responses. Never commit API keys to public repos and rotate keys
+ *              if exposed.
+ *
+ *              Expected output: a generated short weather summary rendered in a
+ *              text box on the e-paper, plus WiFi status, raw API responses
+ *              (debug) and any error messages on Serial.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      WiFi (2.4 GHz), OpenAI API key, internet access
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (recommended for debugging)
- * - WiFi credentials / API keys / timezone (if relevant)
- *   - Set ssid / password.
- *   - Set openai_key (keep it private).
- *   - Set location / latitude / longitude for accurate local weather.
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (recommended for debugging)
  *
  * How to use:
- * 1) Enter your WiFi SSID and password.
- * 2) Create an OpenAI API key and paste it into openai_key.
- * 3) Set location, latitude, and longitude for your area.
- * 4) Upload the sketch and open Serial Monitor (optional) to see request logs.
- * 5) After it displays the generated text, the device goes to deep sleep and
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password (ssid, password).
+ * 3) Create an OpenAI API key and paste it into openai_key (keep it private).
+ * 4) Set location, latitude and longitude for your area.
+ * 5) Upload the sketch and open Serial Monitor (optional) to see request logs.
+ * 6) After it displays the generated text, the device goes to deep sleep and
  *    wakes periodically based on the configured RTC alarm.
  *
- * Expected output:
- * - E-paper: A generated short weather summary rendered in a text box.
- * - Serial: WiFi status, raw API responses (debug), and error messages if any.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial updates are used only for the WiFi
- *   “progress dots”; the final text uses a full refresh (display.display()).
- * - Deep sleep restarts the ESP32. loop() will not run after entering sleep.
- * - RTC wake-up: the sketch sets an RTC alarm and enables EXT0 wake on GPIO 39.
- *   Ensure your board wiring/config matches this wake source.
- * - HTTPS warning: client.setInsecure() disables TLS certificate validation and
- *   is for demo/testing only. For production, use proper certificate validation
- *   or pinning for both Open-Meteo and OpenAI endpoints.
- * - RAM usage: ArduinoJson parsing and storing full HTTP responses can be
- *   memory-intensive. If you see instability, reduce payload sizes and avoid
- *   excessive debug printing of raw responses.
- * - API security: never commit API keys to public repos; rotate keys if exposed.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

@@ -1,43 +1,44 @@
 /**
  **************************************************
- * @file        Inkplate10_Wake_Up_Button.ino
- * @brief       Wake-up button and timer deep sleep example for Soldered Inkplate 10.
+ * @file        Inkplate4TEMPERA_Wake_Up_Button.ino
+ * @brief       Wake-up button and timer deep sleep example for Soldered
+ *              Inkplate 4TEMPERA.
  *
- * @details     Demonstrates how to wake the ESP32 from deep sleep on Inkplate 10
- *              using an external interrupt (WakeUp button) and a fallback timer.
- *              The example stores a boot counter in RTC memory, shows the boot
- *              count on the e-paper display, and prints the wake-up reason
- *              (button press vs. timer wake-up).
+ * @details     Demonstrates how to wake the ESP32 from deep sleep on Inkplate
+ *              4TEMPERA using an external interrupt (WakeUp button) and a
+ *              fallback timer. The example stores a boot counter in RTC memory,
+ *              shows the boot count on the e-paper display, and prints the
+ *              wake-up reason (button press vs. timer wake-up).
+ *
+ *              Deep sleep restarts the program from the beginning on every
+ *              wake-up. bootCount is stored in RTC memory (RTC_DATA_ATTR) so it
+ *              persists across deep sleep, and the WakeUp button uses EXT0
+ *              wake-up on GPIO36. Expected output is an incrementing boot count
+ *              on the display together with the wake-up reason (WakeUp button
+ *              or timer).
  *
  * Requirements:
- * - Board:      Soldered Inkplate 10
- * - Hardware:   Inkplate 10, USB cable
+ * - Board:      Soldered Inkplate 4TEMPERA
+ * - Hardware:   Inkplate 4TEMPERA, USB cable
  * - Extra:      None
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- * - Serial settings: Not required
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     Not required
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 10.
- * 2) After displaying boot info, the board enters deep sleep.
- * 3) Wake the board by pressing the WakeUp button, or wait 30 seconds for timer wake-up.
- * 4) On each wake, the display updates with the new boot count and wake-up reason.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate4TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4TEMPERA.
+ * 3) After displaying boot info, the board enters deep sleep.
+ * 4) Wake the board by pressing the WakeUp button, or wait 30 seconds for timer
+ *    wake-up.
+ * 5) On each wake, the display updates with the new boot count and wake-up
+ *    reason.
  *
- * Expected output:
- * - Inkplate display shows an incrementing boot count.
- * - Wake-up reason is shown as either WakeUp button or timer.
- *
- * Notes:
- * - Deep sleep restarts the program from the beginning on every wake-up.
- * - bootCount is stored in RTC memory (RTC_DATA_ATTR) so it persists across deep sleep.
- * - WakeUp button wake uses EXT0 wake-up on GPIO36.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-12-14

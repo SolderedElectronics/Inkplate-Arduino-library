@@ -1,17 +1,34 @@
-/*
-   Inkplate13SPECTRA_Show_Pictures_From_Web  example for Soldered Inkplate 13SPECTRA
-   For this example you will need a micro USB cable, Inkplate 13SPECTRA, and an available WiFi connection.
-   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-  https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-   This example will show you how you can download an image from the web and
-   display that image on e-paper display.
-
-  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Show_Pictures_From_Web.ino
+ * @brief       Download and display an image from the web on Soldered
+ *              Inkplate 13SPECTRA.
+ *
+ * @details     Shows how you can download an image from the web and display that
+ *              image on the e-paper display.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, micro USB cable
+ * - Extra:      Available WiFi connection
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials and the image URL in the sketch.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) The image is downloaded and shown on the e-paper display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

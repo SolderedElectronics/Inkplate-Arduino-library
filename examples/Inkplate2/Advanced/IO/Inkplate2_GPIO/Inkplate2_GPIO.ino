@@ -12,40 +12,35 @@
  *
  *              The e-paper display is used only to show instructions and runs
  *              in 1-bit (black/white) mode with a single full refresh during
- *              setup.
+ *              setup. Use only GPIO pins that are exposed on the Inkplate 2
+ *              header and not reserved for internal hardware. Ensure correct
+ *              polarity of the LED and always use a resistor to avoid damaging
+ *              the GPIO pin.
+ *
+ *              Expected output: "Blink example" and wiring instructions on the
+ *              display, and the LED connected to GPIO14 blinking continuously
+ *              (1 s ON, 1 s OFF).
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
- * - Extra:      LED, ~330 Ω resistor, jumper wires, breadboard
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Connect LED anode to GPIO14 through a 330 Ω resistor
- * - Connect LED cathode to GND
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      LED, ~330 Ohm resistor, jumper wires, breadboard
  *
  * How to use:
- * 1) Wire the LED to GPIO14 with a current-limiting resistor.
- * 2) Select Inkplate 2 in Tools and upload the sketch.
- * 3) After reset, read instructions on the display.
- * 4) Observe the LED blinking once per second (1 s ON, 1 s OFF).
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Connect the LED anode to GPIO14 through a 330 Ohm resistor and the LED
+ *    cathode to GND.
+ * 3) Upload the sketch to Inkplate 2.
+ * 4) After reset, read the instructions on the display.
+ * 5) Observe the LED blinking once per second.
  *
- * Expected output:
- * - Display: "Blink example" and wiring instructions.
- * - Hardware: LED connected to GPIO14 blinks continuously.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Only a full refresh (display()) is used.
- * - Use only GPIO pins that are exposed on the Inkplate 2 header and not
- *   reserved for internal hardware.
- * - Ensure correct polarity of the LED and always use a resistor to avoid
- *   damaging the GPIO pin.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-05-10

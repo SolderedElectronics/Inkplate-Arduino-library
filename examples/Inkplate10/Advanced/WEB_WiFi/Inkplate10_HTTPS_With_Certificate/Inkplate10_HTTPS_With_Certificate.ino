@@ -12,39 +12,37 @@
  *              when attempting to load an image from a different host where
  *              the certificate is not valid.
  *
+ *              The certificate must match the target host; it cannot be reused
+ *              for unrelated domains, and if the server rotates it you must
+ *              update it in the sketch. Supported BMP formats are Windows BMP,
+ *              1/4/8/24-bit color depth, no compression. Expected output is a
+ *              successful first HTTPS image download shown on the display, and a
+ *              failed second download (invalid certificate for that host) with
+ *              an error message on the display.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable
- * - Extra:      Available WiFi connection
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- * - Enter your WiFi credentials (ssid, password) in the code
- * - Provide a valid PEM certificate for the target HTTPS host
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      Available WiFi connection, valid PEM certificate for the
+ *               target HTTPS host
  *
  * How to use:
- * 1) Set your WiFi SSID and password in the sketch.
- * 2) Provide the correct PEM certificate for the website you want to access.
- * 3) Upload the sketch to Inkplate 10.
- * 4) The board connects to WiFi, applies the certificate, and downloads a BMP image.
- * 5) A second download attempt demonstrates failure when the certificate does not match.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
+ *    from Tools -> Board.
+ * 2) Set your WiFi SSID and password in the sketch.
+ * 3) Provide the correct PEM certificate for the website you want to access.
+ * 4) Upload the sketch to Inkplate 10.
+ * 5) The board connects to WiFi, applies the certificate, and downloads a BMP
+ *    image.
+ * 6) A second download attempt demonstrates failure when the certificate does
+ *    not match.
  *
- * Expected output:
- * - First HTTPS image download succeeds and is displayed.
- * - Second HTTPS image download fails due to invalid certificate for that host,
- *   and an error message is shown on the display.
- *
- * Notes:
- * - This example validates the remote server using the provided certificate.
- * - The certificate must match the target host; it cannot be reused for unrelated domains.
- * - Supported BMP formats: Windows BMP, 1/4/8/24-bit color depth, no compression.
- * - If the certificate is outdated/rotated by the server, you must update it in the sketch.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2024-03-15

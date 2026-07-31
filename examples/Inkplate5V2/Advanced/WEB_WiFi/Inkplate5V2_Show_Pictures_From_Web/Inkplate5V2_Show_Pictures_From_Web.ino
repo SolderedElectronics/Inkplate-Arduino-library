@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate5v2_Show_Pictures_From_Web.ino
+ * @file        Inkplate5V2_Show_Pictures_From_Web.ino
  * @brief       Download and display BMP images from the web (Inkplate 5v2).
  *
  * @details     Demonstrates how to connect Inkplate 5v2 to a WiFi network,
@@ -8,34 +8,31 @@
  *              the sketch implementation), and render it on the e-paper display
  *              using the Inkplate image drawing functions.
  *
+ *              Supported BMP formats are Windows BMP with 1/4/8/24-bit color
+ *              depth. Images must fit the display; large images may not render
+ *              properly. Make sure the URL points directly to the BMP file (no
+ *              HTML redirect pages). Expected output is the downloaded BMP image
+ *              shown on the Inkplate screen.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
  * - Hardware:   Inkplate 5v2, USB cable
  * - Extra:      Available WiFi connection
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5v2
- * - Enter your WiFi credentials in the sketch
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5v2/quick-start-guide/
- *
  * How to use:
- * 1) Enter your WiFi SSID and password in the sketch.
- * 2) Set the image URL to a compatible BMP file.
- * 3) Upload the sketch to Inkplate 5v2.
- * 4) The board connects to WiFi, downloads the image, and displays it.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password in the sketch.
+ * 3) Set the image URL to a compatible BMP file.
+ * 4) Upload the sketch to Inkplate 5v2.
+ * 5) The board connects to WiFi, downloads the image, and displays it.
  *
- * Expected output:
- * - BMP image downloaded from the web is displayed on the Inkplate screen.
- *
- * Notes:
- * - Supported BMP formats: Windows BMP, 1/4/8/24-bit color depth.
- * - Images must fit the display; large images may not render properly.
- * - Ensure the URL is directly pointing to the BMP file (no HTML redirect pages).
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11
