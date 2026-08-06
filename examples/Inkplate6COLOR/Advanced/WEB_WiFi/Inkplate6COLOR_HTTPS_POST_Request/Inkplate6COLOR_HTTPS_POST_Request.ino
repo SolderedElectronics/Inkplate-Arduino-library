@@ -22,50 +22,43 @@
  *              deployments. For real services, use proper certificate validation
  *              or certificate pinning that matches the target host.
  *
+ *              The display is not used in this example (no screen updates
+ *              occur). JSON payload size affects RAM usage, so larger requests
+ *              may require more careful buffer sizing on embedded targets, and
+ *              repeated POST intervals should respect the target API's rate
+ *              limits and service policies.
+ *
+ *              Expected output on Serial: Wi-Fi connection progress, the
+ *              assigned IP address, the HTTP status code and the JSON response
+ *              returned by the test API.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      Wi-Fi connection
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial Monitor: 115200 baud
- * - Enter your Wi-Fi SSID and password in the sketch
- * - Update the HTTPS API URL if you want to test against a different endpoint
- * - Add API keys, authentication headers, or extra JSON fields if required by
- *   your real service
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Enter your Wi-Fi credentials in the sketch.
- * 2) Upload the example to Inkplate 6COLOR.
- * 3) Open Serial Monitor at 115200 baud.
- * 4) The board connects to Wi-Fi and initializes a secure HTTP client.
- * 5) In loop(), the sketch builds a JSON payload and sends an HTTPS POST
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Enter your Wi-Fi SSID and password in the sketch. Update the HTTPS API URL
+ *    if you want to test against a different endpoint, and add API keys,
+ *    authentication headers or extra JSON fields if your real service needs
+ *    them.
+ * 3) Upload the example to Inkplate 6COLOR.
+ * 4) Open Serial Monitor at 115200 baud.
+ * 5) The board connects to Wi-Fi and initializes a secure HTTP client.
+ * 6) In loop(), the sketch builds a JSON payload and sends an HTTPS POST
  *    request to the configured API endpoint.
- * 6) The HTTP status code and returned response body are printed to Serial.
- * 7) The process repeats after the configured delay.
+ * 7) The HTTP status code and returned response body are printed to Serial, and
+ *    the process repeats after the configured delay.
  *
- * Expected output:
- * - Serial: Wi-Fi connection progress, assigned IP address, HTTP status code,
- *   and the JSON response returned by the test API.
- * - Display: Not used in this example.
- *
- * Notes:
- * - Display mode: not used in this example (no screen updates occur).
- * - HTTPS transport is used, but client.setInsecure() disables certificate
- *   validation. Demo only; not recommended for production.
- * - For production APIs, use proper CA certificates or certificate pinning,
- *   and ensure the certificate matches the target host.
- * - JSON payload size affects RAM usage, so larger requests may require more
- *   careful buffer sizing on embedded targets.
- * - Repeated POST intervals should respect the target API's rate limits and
- *   service policies.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-02

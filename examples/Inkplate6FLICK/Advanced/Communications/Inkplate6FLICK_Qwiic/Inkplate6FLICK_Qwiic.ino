@@ -10,39 +10,40 @@
  *              screen. Useful for troubleshooting wiring and verifying
  *              Qwiic/I2C peripherals.
  *
+ *              The sketch uses the standard I2C scanning method via
+ *              Wire.endTransmission() and shows addresses in hexadecimal
+ *              (7-bit I2C addresses), which is handy for debugging sensors,
+ *              RTCs, displays and other Qwiic modules. Expected output is a
+ *              list of detected I2C addresses in hexadecimal format, or a
+ *              message if no devices are detected.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable,
  *               optional Qwiic/I2C device(s) and cable
  * - Libraries:  Inkplate library, Wire (built-in Arduino I2C library)
- *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Connect an I2C/Qwiic device to the Inkplate.
- * 2) Upload the sketch.
- * 3) Open Serial Monitor (115200 baud).
- * 4) Detected device addresses will appear on Serial Monitor
- *    and on the Inkplate display.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Connect an I2C/Qwiic device to the Inkplate.
+ * 3) Upload the sketch.
+ * 4) Open Serial Monitor (115200 baud).
+ * 5) Detected device addresses appear on the Serial Monitor and on the
+ *    Inkplate display.
  *
- * Expected output:
- * - List of detected I2C addresses in hexadecimal format.
- * - Message shown if no devices are detected.
- *
- * Notes:
- * - Uses standard I2C scanning method via Wire.endTransmission().
- * - Addresses are displayed in hexadecimal (7-bit I2C addresses).
- * - Useful for debugging sensors, RTCs, displays, and other Qwiic modules.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-26
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Inkplate 6FLICK - Qwiic I2C Scanner (Serial + Display)
 // Open Serial Monitor @ 115200 baud.

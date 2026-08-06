@@ -15,38 +15,37 @@
  *              the bottom area of the screen, the position is reset and a full
  *              refresh is performed.
  *
+ *              Partial updates are supported in BW mode. For best visual
+ *              quality, perform a full refresh periodically (this example does a
+ *              full refresh when resetting the rectangle). Touch detection is
+ *              limited to the rectangle area via touchInArea(); touches
+ *              elsewhere are ignored.
+ *
+ *              Expected output: intro text, then a black rectangle that moves
+ *              when tapped, plus "Touchscreen init ok" (or "Touchscreen init
+ *              fail") on Serial.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (optional, for init status messages)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional, for init status messages)
  *
  * How to use:
- * 1) Select the Inkplate 4 TEMPERA board and upload the sketch.
- * 2) After the intro text, a black rectangle appears on the display.
- * 3) Tap inside the rectangle to move it diagonally.
- * 4) Keep tapping until it reaches the bottom; it will reset and do a full
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) After the intro text, a black rectangle appears on the display.
+ * 4) Tap inside the rectangle to move it diagonally.
+ * 5) Keep tapping until it reaches the bottom; it will reset and do a full
  *    refresh.
  *
- * Expected output:
- * - E-paper: Intro text, then a black rectangle that moves when tapped.
- * - Serial: "Touchscreen init ok" (or "Touchscreen init fail").
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial updates are supported in BW mode.
- * - For best visual quality, perform a full refresh periodically (this example
- *   does a full refresh when resetting the rectangle).
- * - Touch detection is limited to the rectangle area via touchInArea(); touches
- *   elsewhere are ignored.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-07-12

@@ -16,49 +16,45 @@
  *              provided, serving the last uploaded JPEG directly from RAM.
  *
  *              This is a network + image-decoding example, so available RAM and
- *              upload size matter. Large images may fail to upload or decode.
+ *              upload size matter - the uploaded JPEG is stored fully in RAM
+ *              before decoding, so keep uploads reasonably sized to avoid
+ *              allocation failures or decode errors. Grayscale refresh is slower
+ *              and uses more energy than 1-bit BW. The example uses an open local
+ *              HTTP server (no authentication, no HTTPS), so use it only on
+ *              trusted networks or for demos, and it runs continuously (no deep
+ *              sleep) to keep the web server available.
+ *
+ *              Expected output: an instructions screen (SSID/password/IP) then
+ *              the last uploaded image rendered in 3-bit grayscale; the browser
+ *              serves the upload page at "/" and an image preview at "/preview";
+ *              the Serial Monitor shows the AP IP, upload progress (bytes
+ *              received) and image serving logs.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Extra:      Phone/PC with WiFi + web browser
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6FLICK
- * - Serial settings: 115200 baud (optional; used for debug logs)
- * - WiFi AP credentials: set ap_ssid / ap_password (password must be >= 8 chars)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Serial:     115200 baud (optional; used for debug logs)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) On the display, read the AP SSID/password and the shown IP address.
- * 3) Connect your phone/PC to the Wi-Fi network (AP) created by Inkplate.
- * 4) Open a browser and navigate to the displayed IP address.
- * 5) Use the web page to upload a JPEG image. After upload, the image is
- *    rendered on the e-paper display. Optionally open /preview to view the last
- *    uploaded image in the browser.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6FLICK"
+ *    from Tools -> Board.
+ * 2) Set the Wi-Fi AP credentials ap_ssid / ap_password (password must be at
+ *    least 8 characters).
+ * 3) Upload the sketch to Inkplate 6FLICK.
+ * 4) On the display, read the AP SSID/password and the shown IP address.
+ * 5) Connect your phone/PC to the Wi-Fi network (AP) created by Inkplate.
+ * 6) Open a browser and navigate to the displayed IP address.
+ * 7) Use the web page to upload a JPEG image; after upload the image is rendered
+ *    on the e-paper display. Optionally open /preview to view the last uploaded
+ *    image in the browser.
  *
- * Expected output:
- * - Display: Instructions screen (SSID/password/IP), then the last uploaded image
- *   rendered in 3-bit grayscale.
- * - Browser: Upload page at "/" and image preview at "/preview".
- * - Serial Monitor: AP IP, upload progress (bytes received), and image serving
- *   logs.
- *
- * Notes:
- * - Display mode is 3-bit grayscale (INKPLATE_3BIT). Grayscale refresh is slower
- *   and uses more energy than 1-bit BW.
- * - RAM usage: the uploaded JPEG is stored fully in RAM before decoding. Keep
- *   uploads reasonably sized to avoid allocation failures or decode errors.
- * - Security: this example uses an open local HTTP server (no authentication,
- *   no HTTPS). Use only on trusted networks / for demos.
- * - Power: this example runs continuously (no deep sleep) to keep the web server
- *   available.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

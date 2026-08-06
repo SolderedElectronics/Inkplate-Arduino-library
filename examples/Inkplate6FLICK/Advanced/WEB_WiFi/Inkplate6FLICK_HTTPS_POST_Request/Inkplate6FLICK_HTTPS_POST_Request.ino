@@ -10,42 +10,42 @@
  *              The Inkplate display shows basic instructions to open the
  *              Serial Monitor for logs.
  *
+ *              This example uses client.setInsecure(), which disables
+ *              certificate validation - for production use, validate the server
+ *              certificate or use certificate pinning. JSONPlaceholder is a fake
+ *              API for testing: it returns a response but does not persist data
+ *              like a real backend, so modify the JSON payload and headers to
+ *              match your real API requirements. Expected output is
+ *              "HTTPS POST Request example" and a Serial Monitor hint on the
+ *              display, with the Wi-Fi connection info, HTTP status code and
+ *              JSON response in the Serial Monitor.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
- *
- * Configuration:
- * - Set ssid/pass to your Wi-Fi credentials
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Extra:      Wi-Fi connection
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Enter your Wi-Fi SSID and password in ssid/pass.
- * 2) Upload the sketch to Inkplate 6FLICK.
- * 3) Open Serial Monitor at 115200 baud.
- * 4) The device sends an HTTPS POST request periodically and prints:
- *    - HTTP status code
- *    - Server response payload
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Enter your Wi-Fi SSID and password in ssid/pass.
+ * 3) Upload the sketch to Inkplate 6FLICK.
+ * 4) Open Serial Monitor at 115200 baud.
+ * 5) The device sends an HTTPS POST request periodically and prints the HTTP
+ *    status code and server response payload.
  *
- * Expected output:
- * - Inkplate display shows “HTTPS POST Request example” and a Serial Monitor hint.
- * - Serial Monitor shows Wi-Fi connection info, HTTP status code, and JSON response.
- *
- * Notes:
- * - This example uses client.setInsecure(), which disables certificate validation.
- *   For production use, validate the server certificate or use certificate pinning.
- * - JSONPlaceholder is a fake API for testing; it returns a response but does not
- *   persist data like a real backend.
- * - Modify the JSON payload and headers to match your real API requirements.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

@@ -9,38 +9,37 @@
  *              default parameters and advanced usage with custom font,
  *              scaling, spacing, and optional border control.
  *
+ *              Custom fonts may require vertical offset adjustments. The
+ *              example runs in 1-bit (black & white) mode, and drawTextBox()
+ *              supports font scaling, spacing and border options. Expected
+ *              output is text automatically wrapped inside the defined
+ *              rectangular areas, with words moving to the next line if they do
+ *              not fit.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Libraries:  Inkplate library
- * - Extra:      Custom font header (e.g., Roboto_Light_36.h)
- *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - Extra:      Custom font header (e.g. Roboto_Light_36.h)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6PLUS.
- * 2) The display will show two text boxes:
- *    - One using default parameters.
- *    - One using a custom font and additional configuration options.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6PLUS"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6PLUS.
+ * 3) The display shows two text boxes: one using default parameters and one
+ *    using a custom font and additional configuration options.
  *
- * Expected output:
- * - Text automatically wrapped inside defined rectangular areas.
- * - Words move to the next line if they do not fit.
- *
- * Notes:
- * - Custom fonts may require vertical offset adjustments.
- * - This example runs in 1-bit (black & white) mode.
- * - drawTextBox() supports font scaling, spacing, and border options.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-26
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 #include "Inkplate.h"            //Include Inkplate library to the sketch
 #include "Roboto_Light_36.h"

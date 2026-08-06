@@ -12,36 +12,32 @@
  *
  *              Inkplate 2 operates in 1-bit mode (black/white with optional
  *              red plane). This example uses standard monochrome text drawing
- *              and a single full refresh.
+ *              and a single full refresh. clearDisplay() clears only the
+ *              framebuffer in RAM, so display() is required to update the
+ *              physical e-paper panel. No deep sleep is used, so the message
+ *              remains on screen after execution.
+ *
+ *              Expected output: "Hello World!" printed near the top-left corner
+ *              of the display.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial settings: none
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     none
  *
  * How to use:
- * 1) Select Inkplate 2 in Tools -> Board.
- * 2) Upload the sketch.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 2.
  * 3) After reset, the display refreshes and shows "Hello World!".
  *
- * Expected output:
- * - Display: "Hello World!" printed near the top-left corner.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example uses a full refresh (display()).
- * - clearDisplay() clears only the framebuffer in RAM; display() is required
- *   to update the physical e-paper panel.
- * - No deep sleep is used; the message remains on screen after execution.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-04-24

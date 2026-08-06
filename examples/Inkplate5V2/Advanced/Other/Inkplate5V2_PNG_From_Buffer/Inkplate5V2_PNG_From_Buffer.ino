@@ -1,42 +1,40 @@
 /**
  **************************************************
  * @file        Inkplate5V2_PNG_From_Buffer.ino
- * @brief       Display a PNG image loaded into a RAM buffer on Soldered Inkplate 5 V2.
+ * @brief       Display a PNG image loaded into a RAM buffer on Soldered Inkplate 5v2.
  *
  * @details     Demonstrates how to read a PNG file from an SD card into a RAM
  *              buffer and then display it using drawPngFromBuffer(). The same
- *              technique applies to PNG data received from any source — a network
+ *              technique applies to PNG data received from any source - a network
  *              socket, a serial transfer, a flash partition, etc.
  *
+ *              The entire PNG file is loaded into heap memory before decoding,
+ *              so make sure the file fits in available RAM (ESP32 has ~300 KB
+ *              free heap). PNG resolution should not exceed 1280 x 720 pixels.
+ *              Dithering is enabled by default; pass false as the fifth argument
+ *              to disable it. Expected output is the PNG image shown on the
+ *              Inkplate display.
+ *
  * Requirements:
- * - Board:      Soldered Inkplate 5 V2
- * - Hardware:   Inkplate 5 V2, USB cable, microSD card
+ * - Board:      Soldered Inkplate 5v2
+ * - Hardware:   Inkplate 5v2, USB cable, microSD card
  * - Extra:      SD card containing a file named "image.png"
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5 V2
- * - SD card format: FAT / FAT32
- * - PNG resolution should not exceed 960 x 540 pixels
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * - SD card:    FAT / FAT32 format
  *
  * How to use:
- * 1) Copy a PNG file named "image.png" to a FAT-formatted SD card.
- * 2) Insert the SD card into the Inkplate.
- * 3) Upload the sketch to Inkplate 5 V2.
- * 4) The PNG is read into RAM and rendered on the e-paper display.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Copy a PNG file named "image.png" to a FAT-formatted SD card.
+ * 3) Insert the SD card into the Inkplate.
+ * 4) Upload the sketch to Inkplate 5v2.
+ * 5) The PNG is read into RAM and rendered on the e-paper display.
  *
- * Expected output:
- * - The PNG image is shown on the Inkplate display.
- *
- * Notes:
- * - The entire PNG file is loaded into heap memory before decoding.
- *   Make sure the file fits in available RAM (ESP32 has ~300 KB free heap).
- * - Dithering is enabled by default; pass false as the fifth argument to disable it.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026-04-20

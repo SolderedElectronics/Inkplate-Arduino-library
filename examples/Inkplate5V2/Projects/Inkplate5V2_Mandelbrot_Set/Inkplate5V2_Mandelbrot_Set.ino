@@ -1,12 +1,12 @@
 /**
  **************************************************
- * @file        Inkplate5_Mandelbrot_Set.ino
- * @brief       Renders the Mandelbrot set on Inkplate 5 using per-pixel
+ * @file        Inkplate5V2_Mandelbrot_Set.ino
+ * @brief       Renders the Mandelbrot set on Inkplate 5v2 using per-pixel
  *              iteration in 1-bit black/white mode.
  *
  * @details     This example demonstrates CPU-based rendering of the Mandelbrot
  *              fractal directly into the Inkplate framebuffer. For each pixel
- *              on the 960x540 e-paper panel, the sketch maps screen
+ *              on the 1280x720 e-paper panel, the sketch maps screen
  *              coordinates to a region of the complex plane and iterates the
  *              Mandelbrot function up to MAXITERATIONS. Pixels that do not
  *              diverge within the iteration limit are drawn as black; others
@@ -17,41 +17,38 @@
  *              render time before the final full refresh is sent to the panel.
  *              Progress is printed to Serial (one line per rendered row).
  *
+ *              Display mode is 1-bit BW (INKPLATE_1BIT); partial updates are
+ *              possible in BW mode in general, but this example performs a
+ *              full-frame render followed by a full refresh. Rendering speed is
+ *              limited by per-pixel double-precision math and the selected
+ *              iteration count, so increasing MAXITERATIONS significantly
+ *              increases runtime. For a full-set view, a reference mapping is
+ *              included in commented code. Expected output is a black/white
+ *              Mandelbrot fractal image on the display plus Serial output
+ *              showing the current rendered row index (0..719).
+ *
  * Requirements:
- * - Board:      Soldered Inkplate 5
- * - Hardware:   Inkplate 5, USB cable
+ * - Board:      Soldered Inkplate 5v2
+ * - Hardware:   Inkplate 5v2, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5
- * - Serial Monitor: 115200 baud
- * - Adjust xFrom/xTo/yFrom/yTo to explore different regions (optional)
- * - Adjust MAXITERATIONS to trade detail vs. render time (optional)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 5.
- * 2) Open Serial Monitor at 115200 baud to watch rendering progress.
- * 3) Wait for the full frame to finish rendering (can take minutes).
- * 4) After the image is shown, the sketch waits 5 seconds and renders again.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Optionally adjust xFrom/xTo/yFrom/yTo to explore different regions and
+ *    MAXITERATIONS to trade detail vs. render time.
+ * 3) Upload the sketch to Inkplate 5v2.
+ * 4) Open Serial Monitor at 115200 baud to watch rendering progress.
+ * 5) Wait for the full frame to finish rendering (can take minutes).
+ * 6) After the image is shown, the sketch waits 5 seconds and renders again.
  *
- * Expected output:
- * - A black/white Mandelbrot fractal image on the Inkplate display.
- * - Serial output showing the current rendered row index (0..824).
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT). Partial updates are possible in BW
- *   mode in general, but this example performs a full-frame render followed by
- *   a full refresh.
- * - Rendering speed is limited by per-pixel double-precision math and the
- *   selected iteration count; increasing MAXITERATIONS significantly increases
- *   runtime.
- * - For a full-set view, a reference mapping is included in commented code.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11

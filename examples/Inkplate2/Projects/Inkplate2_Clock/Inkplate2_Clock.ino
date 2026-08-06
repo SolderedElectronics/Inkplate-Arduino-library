@@ -18,51 +18,49 @@
  *              into the framebuffer, the sketch performs a full refresh and
  *              then enters deep sleep for TIME_TO_SLEEP seconds (default: 5
  *              minutes) to save power. Because deep sleep resets the ESP32,
- *              the program restarts from setup() on every wake cycle.
+ *              the program restarts from setup() on every wake cycle, so keep
+ *              logic in setup() and leave loop() empty.
+ *
+ *              Display mode is 1-bit with the Inkplate 2 tri-color palette
+ *              (BLACK/WHITE/RED) and this sketch uses a full refresh (display())
+ *              for each update cycle. Bitmap digits for the digital clock must be
+ *              present and generated in an Inkplate-compatible format (typically
+ *              via Soldered Image Converter). Time is obtained from NTP on each
+ *              wake, so if WiFi is unavailable the clock cannot update (add
+ *              fallback/RTC handling for production use).
+ *
+ *              Expected output: MODE 0 (digital) shows large HH:MM digits in red
+ *              with a black colon separator; MODE 1 (binary) shows four columns
+ *              with HH, MM, DD and MM (month) as binary circles with labels and
+ *              bit value markers; MODE 2 (analog) shows a clock face with a black
+ *              hour hand and red minute hand. On WiFi failure an error message is
+ *              shown, followed by a short sleep and retry.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi connection + Internet access (NTP)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial Monitor: 115200 baud (recommended for debugging)
- * - WiFi:           set ssid/pass
- * - Timezone:       set timeZone (UTC offset)
- * - Clock mode:     set MODE (0=digital, 1=binary, 2=analog)
- * - Update period:  set TIME_TO_SLEEP (seconds)
- * - WiFi retry:     set DELAY_WIFI_RETRY_SECONDS for quick retry on failure
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (recommended for debugging)
  *
  * How to use:
- * 1) Enter your WiFi SSID/password and set your local timeZone.
- * 2) Choose the clock style by setting MODE (0/1/2).
- * 3) Upload the sketch to Inkplate 2 and open Serial Monitor at 115200 baud.
- * 4) The clock is drawn and the device enters deep sleep.
- * 5) The device wakes every TIME_TO_SLEEP seconds, updates the time, redraws,
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID/password (ssid, pass) and set your local timeZone
+ *    (UTC offset).
+ * 3) Choose the clock style by setting MODE (0 = digital, 1 = binary,
+ *    2 = analog), and optionally TIME_TO_SLEEP (seconds) and
+ *    DELAY_WIFI_RETRY_SECONDS.
+ * 4) Upload the sketch to Inkplate 2 and open Serial Monitor at 115200 baud.
+ * 5) The clock is drawn and the device enters deep sleep.
+ * 6) The device wakes every TIME_TO_SLEEP seconds, updates the time, redraws,
  *    and goes back to sleep.
  *
- * Expected output:
- * - MODE 0 (digital): large HH:MM digits in red with a black colon separator.
- * - MODE 1 (binary): four columns showing HH, MM, DD, MM (month) as binary
- *   circles with labels and bit value markers.
- * - MODE 2 (analog): a clock face with black hour hand and red minute hand.
- * - On WiFi failure: an error message on the display, then short sleep and retry.
- *
- * Notes:
- * - Display mode is 1-bit with Inkplate 2 tri-color palette (BLACK/WHITE/RED).
- *   This sketch uses a full refresh (display()) for each update cycle.
- * - Deep sleep restarts the ESP32; keep logic in setup() and leave loop() empty.
- * - Bitmap digits for the digital clock must be present and generated in an
- *   Inkplate-compatible format (typically via Soldered Image Converter).
- * - Time is obtained from NTP on each wake; if WiFi is unavailable the clock
- *   cannot update (add fallback/RTC handling for production use).
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-03-30

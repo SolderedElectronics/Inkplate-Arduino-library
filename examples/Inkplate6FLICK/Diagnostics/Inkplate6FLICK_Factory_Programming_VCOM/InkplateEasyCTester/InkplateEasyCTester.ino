@@ -1,32 +1,46 @@
 /**
  **************************************************
  * @file        InkplateEasyCTester.ino
+ * @brief       Sketch for converting a Dasduino board (Dasduino Core or Dasduino
+ *              ConnectPlus) into a slave I2C device used for testing the easyC
+ *              connector.
  *
- * @brief       Sketch for converting Dasduino Board (Dasduino Core or Dasduino ConnectPlus
- *              into slave I2C device used for testing easyC connector.
+ * @details     It will respond on 0x30 I2C address by I2C ACK and it will also
+ *              blink the built-in WS2812 LED green, showing that it received
+ *              something on the I2C bus.
  *
- *              It will respond on 0x30 I2C address by I2C ACK and it will also blink an built-in
- *              WS2812 LED green, showing that it received something on I2C bus.
+ * Requirements:
+ * - Board:      Dasduino Core or Dasduino ConnectPlus
+ * - Hardware:   Dasduino Core (https://soldered.com/product/dasduino-core/) or
+ *               Dasduino ConnectPlus
+ *               (https://soldered.com/product/dasduino-connectplus/),
+ *               easyC cable (https://soldered.com/product/easyc-cable-20cm/)
+ * - Library:    Soldered Library For WS2812 LEDs
+ *               (https://github.com/SolderedElectronics/Soldered-WS2812-Smart-Leds-Arduino-Library)
+ * - Extra:      Dasduino Board Definition installed in Arduino IDE
+ *               (https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/blob/master/README.md)
  *
- *              You will need:
- *              - Dasduino Core (https://soldered.com/product/dasduino-core/) or
- *                Dasduino ConnectPlus (https://soldered.com/product/dasduino-connectplus/)
- *              - easyC cable (https://soldered.com/product/easyc-cable-20cm/)
- *              - Soldered Library For WS2812 LEDs
- *                (https://github.com/SolderedElectronics/Soldered-WS2812-Smart-Leds-Arduino-Library)
- *              - Dasduino Board Definition installed on your Arduino:
- *                (https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/blob/master/README.md)
+ * How to use:
+ * 1) Install the Dasduino board definition and the WS2812 library.
+ * 2) Select your Dasduino board in Tools -> Board and upload this sketch.
+ * 3) Connect the Dasduino to the Inkplate easyC connector with an easyC cable.
+ * 4) The Dasduino answers on I2C address 0x30 and blinks its WS2812 LED green
+ *    on every received transfer.
  *
- * License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
- * LICENSE file included with this example. If you have any questions about
- * licensing, please visit https://soldered.com/contact/ Distributed as-is; no
- * warranty is given.
- *
- * Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
- * Looking to get support? Write on our forums: https://forum.soldered.com/
- * 25 April 2023 by Soldered
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
+ *              Please review the LICENSE file included with this example. If you
+ *              have any questions about licensing, please visit
+ *              https://soldered.com/contact/ Distributed as-is; no warranty is
+ *              given.
  *
  * @authors     Borna Biro for Soldered
+ * @date        2023-04-25
  ***************************************************/
 
 // Block usage of this code on Inkplate boards.

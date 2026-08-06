@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate6COLOR_SD_TXT_Read.ino
+ * @file        Inkplate6COLOR_microSD_TXT_Read.ino
  * @brief       Reads a text file from an SD card and displays its contents on
  *              Inkplate 6COLOR.
  *
@@ -18,43 +18,39 @@
  *              cases such as displaying configuration files, logs, notes,
  *              menus, or dynamically updated content stored on an SD card.
  *
+ *              The example limits how much data is read into RAM to prevent
+ *              excessive memory usage, so large files are truncated to fit the
+ *              buffer. The SD card power rail is disabled with sdCardSleep()
+ *              after reading to reduce power consumption. Display mode is
+ *              Inkplate 6COLOR colour e-paper mode and a full display refresh is
+ *              performed when showing the text.
+ *
+ *              Expected output: the contents of text.txt rendered on the screen,
+ *              or an error message if the SD card or file cannot be opened.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      microSD card formatted as FAT/FAT32 containing text.txt
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Install required SD library support (SdFat) if not already included
- * - Place a file named "text.txt" in the root directory of the SD card
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Library:    SdFat SD library support, if not already included
  *
  * How to use:
- * 1) Format a microSD card using FAT or FAT32.
- * 2) Create a file named "text.txt" and place it in the root directory of the
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Format a microSD card using FAT or FAT32.
+ * 3) Create a file named "text.txt" and place it in the root directory of the
  *    SD card.
- * 3) Insert the SD card into the Inkplate 6COLOR slot.
- * 4) Upload the sketch to the board.
- * 5) The sketch initializes the SD card, opens the file, reads its contents,
+ * 4) Insert the SD card into the Inkplate 6COLOR slot.
+ * 5) Upload the sketch to the board.
+ * 6) The sketch initializes the SD card, opens the file, reads its contents,
  *    and prints the text on the display.
  *
- * Expected output:
- * - Display: Contents of text.txt rendered on the Inkplate screen.
- * - Display: Error message if the SD card or file cannot be opened.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - This example performs a full display refresh when showing the text.
- * - The example limits how much data is read into RAM to prevent excessive
- *   memory usage. Large files are truncated to fit the buffer.
- * - The SD card power rail is disabled with sdCardSleep() after reading to
- *   reduce power consumption.
- * - Ensure the SD card is formatted as FAT/FAT32 for compatibility.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2020-07-15

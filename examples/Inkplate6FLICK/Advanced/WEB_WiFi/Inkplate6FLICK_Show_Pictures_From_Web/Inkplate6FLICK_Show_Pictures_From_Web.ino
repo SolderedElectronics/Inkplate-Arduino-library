@@ -7,8 +7,22 @@
  *              download images from the internet for display on the e-paper
  *              screen. The example shows multiple approaches:
  *              - Drawing an image directly from a URL
- *              - Downloading an image via HTTPClient and rendering it from the stream
+ *              - Downloading an image via HTTPClient and rendering it from the
+ *                stream
  *              - Loading and displaying a JPEG image from a URL
+ *
+ *              BMP files must be uncompressed Windows BMP (typical supported
+ *              depths: 1/4/8/24-bit). Very large or high colour-depth images can
+ *              take a long time to download and render. The draw functions may
+ *              provide optional invert/dither parameters depending on the
+ *              format. After finishing, Wi-Fi is turned off to reduce power
+ *              consumption.
+ *
+ *              Expected output: status messages while connecting and
+ *              downloading, a monochrome BMP image first, then a larger BMP
+ *              downloaded via HTTPClient (may take longer), then a JPEG loaded
+ *              from the web, with error messages on-screen if a download or
+ *              format fails.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
@@ -16,38 +30,25 @@
  * - Network:    Available Wi-Fi connection (2.4 GHz)
  * - Libraries:  Inkplate library, WiFi (ESP32), HTTPClient
  *
- * Configuration:
- * - Set ssid/password to your Wi-Fi credentials
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Enter your Wi-Fi SSID and password in the sketch.
- * 2) Upload the sketch to Inkplate 6FLICK.
- * 3) After connecting to Wi-Fi, the device downloads and displays images
- *    from the specified URLs one after another.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Enter your Wi-Fi SSID and password (ssid/password) in the sketch.
+ * 3) Upload the sketch to Inkplate 6FLICK.
+ * 4) After connecting to Wi-Fi, the device downloads and displays images from
+ *    the specified URLs one after another.
  *
- * Expected output:
- * - Status messages shown while connecting and downloading.
- * - A monochrome BMP image displayed first.
- * - A larger BMP image downloaded via HTTPClient and displayed (may take longer).
- * - A JPEG image loaded from the web and displayed.
- * - Error messages shown on-screen if a download/format fails.
- *
- * Notes:
- * - BMP files must be uncompressed Windows BMP (typical supported depths: 1/4/8/24-bit).
- * - Very large or high color-depth images can take a long time to download and render.
- * - The draw functions may provide optional invert/dither parameters depending on format.
- * - After finishing, Wi-Fi is turned off to reduce power consumption.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

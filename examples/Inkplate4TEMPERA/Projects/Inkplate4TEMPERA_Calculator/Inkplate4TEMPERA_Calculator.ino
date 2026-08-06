@@ -16,43 +16,41 @@
  *              Results are shown on-screen and the last expression/result can
  *              be stored as a simple "history" line.
  *
+ *              Display mode is 1-bit (BW), since partial updates are supported
+ *              only in BW mode; for best image quality perform a full refresh
+ *              periodically, as repeated partial updates can leave artifacts on
+ *              e-paper. Touchscreen init is required - if it fails the UI may
+ *              still draw, but touch interaction will not work reliably. Division
+ *              by zero is guarded before calculating (the right operand must be
+ *              non-zero to trigger calculation). GUI layout, fonts and helper
+ *              variables (e.g. text18_content/text19_content) are defined in
+ *              Calculator.h, so keep that file with this example.
+ *
+ *              Expected output: a calculator UI with buttons, an input line and a
+ *              history/result line, updating as buttons are tapped, plus the
+ *              touchscreen init status on Serial.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (optional, for touchscreen init messages)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional, for touchscreen init messages)
  *
  * How to use:
- * 1) Select the Inkplate 4 TEMPERA board and upload the sketch.
- * 2) Use the touchscreen buttons to enter a number.
- * 3) Tap an operator (+, -, x, /), enter the second number, then tap '='.
- * 4) Use "Clear" to reset current input, "Clear history" to erase the history
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) Use the touchscreen buttons to enter a number.
+ * 4) Tap an operator (+, -, x, /), enter the second number, then tap '='.
+ * 5) Use "Clear" to reset current input, "Clear history" to erase the history
  *    line, and "Refresh" to redraw the full UI.
  *
- * Expected output:
- * - E-paper: Calculator UI with buttons, an input line, and a history/result
- *   line. Tapping buttons updates the UI.
- * - Serial: Touchscreen init status (if Serial Monitor is open).
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial updates are supported only in BW mode.
- * - For best image quality, perform a full refresh periodically; repeated
- *   partial updates can leave artifacts on e-paper.
- * - Touchscreen init is required; if init fails the UI may still draw, but
- *   touch interaction will not work reliably.
- * - Division by zero is guarded before calculating (right operand must be non-
- *   zero to trigger calculation).
- * - GUI layout, fonts, and helper variables (e.g., text18_content/text19_content)
- *   are defined in Calculator.h; keep that file with this example.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-07-26

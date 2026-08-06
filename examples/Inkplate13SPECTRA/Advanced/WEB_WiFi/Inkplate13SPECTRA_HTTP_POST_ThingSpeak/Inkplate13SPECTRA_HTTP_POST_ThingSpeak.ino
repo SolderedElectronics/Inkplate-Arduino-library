@@ -1,26 +1,51 @@
-/*
-  Inkplate13SPECTRA_HTTP_POST_Request example for Soldered Inkplate 13SPECTRA
-  For this example you will need USB cable, Inkplate 13SPECTRA and stable WiFi Internet connection.
-  Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-  Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-  /////////////////////////// INSERT BOARD DEF LINK HERE
-
-  This example will show you how to connect to a WiFi network and send a POST request via HTTP.
-  We will use ThingSpeak API to see post requests. It's a free API that allows you to store and retrieve data using
-  HTTP.
-  1. Go to the ThingSpeak.com and create a free account
-  2. Open the Channels tab
-  3. Create a new channel
-  4. Create fields you want to use (this example uses 1 field called field1 and this name must be used when sending data)
-  5. Open the channel, go to the API Keys tab and copy your Write API Key
-  6. Enter your API key in the code below
-
-  When you send a POST request, open your channel and you will see the graph where is your sent data.
-
-Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_HTTP_POST_ThingSpeak.ino
+ * @brief       HTTP POST request to ThingSpeak from Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to connect to a WiFi network and send a POST request
+ *              via HTTP. The example uses the ThingSpeak API, a free API that
+ *              allows you to store and retrieve data using HTTP, to inspect the
+ *              POST requests.
+ *
+ *              To set up ThingSpeak:
+ *              1. Go to ThingSpeak.com and create a free account.
+ *              2. Open the Channels tab.
+ *              3. Create a new channel.
+ *              4. Create the fields you want to use (this example uses 1 field
+ *                 called field1 and this name must be used when sending data).
+ *              5. Open the channel, go to the API Keys tab and copy your Write
+ *                 API Key.
+ *              6. Enter your API key in the code below.
+ *
+ *              When you send a POST request, open your channel and you will see
+ *              the graph with your sent data.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      Stable WiFi Internet connection, ThingSpeak account and Write
+ *               API Key
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Create the ThingSpeak channel and field1 as described above and copy the
+ *    Write API Key.
+ * 3) Enter your WiFi credentials and API key in the sketch.
+ * 4) Upload the sketch to Inkplate 13SPECTRA.
+ * 5) Open your ThingSpeak channel to see the posted data on the graph.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

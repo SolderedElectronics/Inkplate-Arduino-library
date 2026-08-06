@@ -11,55 +11,50 @@
  *
  *              Navigation is controlled by the onboard APDS9960 gesture sensor:
  *              a LEFT gesture advances to the next image and a RIGHT gesture
- *              goes to the previous one. Between image changes, the ESP32 is
- *              placed into deep sleep to reduce power consumption. The APDS9960
- *              remains powered and configured so it can wake the ESP32 via an
- *              interrupt chain (APDS9960 -> IO expander -> ESP32 GPIO).
+ *              goes to the previous one. Gesture sensitivity is set to the lowest
+ *              gain to reduce accidental triggers. Between image changes, the
+ *              ESP32 is placed into deep sleep to reduce power consumption. The
+ *              APDS9960 remains powered and configured so it can wake the ESP32
+ *              via an interrupt chain (APDS9960 -> IO expander -> ESP32 GPIO).
  *
  *              To preserve state across deep sleep resets, the sketch stores the
  *              image directory indices, file count, and current position in RTC
- *              memory (RTC_DATA_ATTR). Due to RTC memory constraints, the image
- *              list is limited to 512 entries.
+ *              memory (RTC_DATA_ATTR); normal RAM does not survive deep sleep.
+ *              Due to RTC memory constraints, the image list is limited to 512
+ *              entries.
+ *
+ *              Partial update is not available in grayscale mode, so each image
+ *              change uses a full refresh (display.display()). Supported file
+ *              types depend on the Inkplate image decoder - the sketch attempts
+ *              to open and draw images and skips files it cannot render. Keep
+ *              images within the display resolution (e.g. <= 600x600) to avoid
+ *              cropping or decode failures.
+ *
+ *              Expected output: one image displayed full-screen, with LEFT/RIGHT
+ *              gestures changing the image and the device sleeping between
+ *              gestures for low power usage.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable, microSD card
- * - Extra:      microSD card (FAT/FAT32), image files on the card
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Set folderPath to the image directory on the SD card (must end with '/')
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      microSD card (FAT/FAT32) with image files on it
  *
  * How to use:
- * 1) Format a microSD card as FAT/FAT32.
- * 2) Create a folder (e.g. /images/) and copy your images into it.
- * 3) Set folderPath in the sketch to match your folder (must end with '/').
- * 4) Upload the sketch and insert the SD card.
- * 5) The current image is displayed; swipe LEFT/RIGHT over the APDS9960 sensor
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Format a microSD card as FAT/FAT32.
+ * 3) Create a folder (e.g. /images/) and copy your images into it.
+ * 4) Set folderPath in the sketch to match your folder (must end with '/').
+ * 5) Upload the sketch and insert the SD card.
+ * 6) The current image is displayed; swipe LEFT/RIGHT over the APDS9960 sensor
  *    area to change images.
  *
- * Expected output:
- * - E-paper: One image displayed full-screen. LEFT/RIGHT gestures change the
- *   image; the device sleeps between gestures for low power usage.
- *
- * Notes:
- * - Display mode is 3-bit grayscale (8 levels). Partial update is not available
- *   in grayscale mode; each image change uses a full refresh (display.display()).
- * - Supported file types depend on the Inkplate image decoder. The sketch
- *   attempts to open and draw images and will skip files it cannot render.
- * - Image size: keep images within the display resolution (e.g. <= 600x600) to
- *   avoid cropping or decode failures.
- * - File limit: maximum of 512 images due to RTC memory allocation for
- *   imageIndexes[].
- * - Deep sleep restarts the ESP32 on every wake. RTC_DATA_ATTR variables retain
- *   state, but normal RAM does not.
- * - Gesture sensitivity is set to the lowest gain to reduce accidental triggers.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-10-02

@@ -11,57 +11,47 @@
  *
  *              The selected coordinate range in this example focuses on a zoomed
  *              region of the fractal, but the bounds can be changed to explore
- *              other parts of the Mandelbrot set, including the full set view.
+ *              other parts of the Mandelbrot set, including the full set view -
+ *              some regions reveal far more detail than the full-set overview.
  *              Because fractal rendering requires many floating-point operations
  *              per pixel, this example is computationally heavy and can take a
- *              long time to complete on a microcontroller.
+ *              long time to complete on a microcontroller; increasing
+ *              MAXITERATIONS improves fractal detail but also increases
+ *              rendering time.
  *
  *              Rendering progress is reported over Serial one row at a time, and
  *              the completed image is shown only after the full framebuffer has
- *              been calculated and sent to the display.
+ *              been calculated and sent to the display in a single full refresh.
+ *              The board runs in Inkplate 6COLOR colour e-paper mode, but this
+ *              example draws using black/white pixel values only.
+ *
+ *              Expected output: a Mandelbrot fractal rendered as a monochrome
+ *              image on the panel, with a startup message and row-by-row
+ *              progress output on Serial during rendering.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial Monitor: 115200 baud
- * - Adjust xFrom, xTo, yFrom, and yTo in the sketch to explore different
- *   fractal regions
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
- * 2) Open Serial Monitor at 115200 baud to observe rendering progress.
- * 3) Wait while the sketch computes the fractal row by row.
- * 4) After rendering finishes, the completed Mandelbrot image is refreshed on
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Optionally adjust xFrom, xTo, yFrom and yTo in the sketch to explore
+ *    different fractal regions.
+ * 3) Upload the sketch to Inkplate 6COLOR.
+ * 4) Open Serial Monitor at 115200 baud to observe rendering progress.
+ * 5) Wait while the sketch computes the fractal row by row.
+ * 6) After rendering finishes, the completed Mandelbrot image is refreshed on
  *    the display.
- * 5) Optionally modify the coordinate bounds in the sketch and upload again to
- *    explore a different zoom level or region.
  *
- * Expected output:
- * - Display: A Mandelbrot fractal rendered as a monochrome image on the
- *   Inkplate 6COLOR panel.
- * - Serial: Startup message and row-by-row progress output during rendering.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode, but this example draws
- *   using black/white pixel values only.
- * - Rendering is intentionally slow because Mandelbrot calculations are
- *   CPU-intensive on low-power MCUs.
- * - This example performs a full-screen pixel-by-pixel render followed by a
- *   full refresh.
- * - Increasing MAXITERATIONS improves fractal detail but also increases
- *   rendering time.
- * - Coordinate bounds strongly affect the visible result; some regions reveal
- *   far more detail than the full-set overview.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2020-07-15

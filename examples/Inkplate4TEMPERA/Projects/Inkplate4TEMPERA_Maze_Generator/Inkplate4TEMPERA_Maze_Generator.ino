@@ -11,42 +11,37 @@
  *              open cells.
  *
  *              The maze is drawn fully into the frame buffer and then shown on
- *              the panel using a full refresh (display.display()). The generated
- *              maze is intended to be a printable/puzzle-style layout—you can
- *              solve it directly on the screen with an erasable marker or soft
- *              pencil, provided you avoid permanent inks.
+ *              the panel using a full refresh (display.display()), after which
+ *              the sketch stays idle. The generated maze is intended to be a
+ *              printable/puzzle-style layout - you can solve it directly on the
+ *              screen with an erasable marker or soft pencil, provided you avoid
+ *              permanent inks (they can stain the panel).
+ *
+ *              Cell size controls maze density: a smaller cellSize increases
+ *              detail but may increase generation and drawing time. Expected
+ *              output is a maze drawn in black lines with an entry and exit
+ *              opening.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial settings (if relevant): 115200 baud (optional; not required)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional; not required)
  *
  * How to use:
- * 1) Select the Inkplate 4 TEMPERA board and upload the sketch.
- * 2) After boot, a maze is generated and displayed.
- * 3) Press reset (or power-cycle) to generate a new random maze.
- * 4) Optionally solve it on the screen using erasable tools.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) After boot, a maze is generated and displayed.
+ * 4) Press reset (or power-cycle) to generate a new random maze.
+ * 5) Optionally solve it on the screen using erasable tools.
  *
- * Expected output:
- * - E-paper: A maze drawn in black lines with an entry and exit opening.
- *
- * Notes:
- * - Display mode is 1-bit (BW).
- * - This sketch performs a single full refresh and then stays idle.
- * - Cell size controls maze density; smaller cellSize increases detail but may
- *   increase generation and drawing time.
- * - If writing on the panel, use only non-permanent tools (whiteboard marker,
- *   soft graphite). Avoid permanent markers to prevent staining.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-07-24

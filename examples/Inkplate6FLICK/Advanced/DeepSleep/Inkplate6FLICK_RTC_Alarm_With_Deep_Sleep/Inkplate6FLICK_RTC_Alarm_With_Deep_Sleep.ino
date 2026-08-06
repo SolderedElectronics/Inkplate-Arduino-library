@@ -9,38 +9,37 @@
  *              fixed interval (e.g., every 10 seconds), refreshes the e-paper
  *              display, and returns to deep sleep.
  *
+ *              Deep sleep is preferred for low-power periodic wake-ups, and the
+ *              interval is configured in code (commonly 10 s in this example).
+ *              Expected output is the screen refreshing periodically based on the
+ *              RTC alarm interval, with very low power consumption between
+ *              wake-ups.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Libraries:  Inkplate library
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) On boot, the sketch configures an RTC alarm.
- * 3) Inkplate enters deep sleep.
- * 4) When the RTC alarm triggers (GPIO39), the ESP32 wakes up,
- *    updates the display, then goes back to sleep.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) On boot, the sketch configures an RTC alarm.
+ * 4) Inkplate enters deep sleep.
+ * 5) When the RTC alarm triggers (GPIO39), the ESP32 wakes up, updates the
+ *    display, then goes back to sleep.
  *
- * Expected output:
- * - Screen refreshes periodically based on the RTC alarm interval.
- * - Very low power consumption between wake-ups.
- *
- * Notes:
- * - RTC alarm interrupt is wired to GPIO39 on Inkplate 6FLICK.
- * - Prefer deep sleep for low-power periodic wake-ups.
- * - Interval is configured in code (commonly 10 s in this example).
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-26
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

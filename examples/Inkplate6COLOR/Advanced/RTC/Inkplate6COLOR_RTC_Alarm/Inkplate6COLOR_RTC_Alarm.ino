@@ -14,53 +14,47 @@
  *              has triggered by reading the alarm flag, and how to clear that
  *              flag after the event occurs. In this sketch, the alarm is set to
  *              occur about 60 seconds after startup, and the display is updated
- *              once per minute.
+ *              once per minute using full refreshes.
  *
  *              This is a polling-based RTC example: it checks the alarm status
  *              in software during normal execution. It does not use the RTC
  *              interrupt pin or deep sleep wake-up. For interrupt-based wake-up
  *              behavior, use the dedicated RTC alarm + deep sleep examples.
  *
+ *              display.rtc.reset() clears previous RTC state, so the configured
+ *              time/date is reapplied on every reset or power cycle. The
+ *              PCF85063(A) RTC is suitable for general timekeeping, but like
+ *              typical RTCs it depends on proper setup and backup power behavior
+ *              for persistence.
+ *
+ *              Expected output: the current time, weekday and date on the
+ *              display, with "ALARM!" appearing after the configured RTC alarm
+ *              condition occurs.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Edit the initial time/date and alarm values in the sketch before upload
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
  * 2) Adjust the initial RTC time/date and alarm values in the sketch if needed.
- * 3) On startup, the sketch resets the RTC and writes the configured time/date.
- * 4) The sketch sets an RTC alarm using hour, minute, second, day, and weekday
+ * 3) Upload the sketch to Inkplate 6COLOR.
+ * 4) On startup, the sketch resets the RTC and writes the configured time/date,
+ *    then sets an RTC alarm using hour, minute, second, day and weekday
  *    parameters.
  * 5) The current time and date are read from the RTC and shown on the display.
  * 6) When the alarm flag becomes active, "ALARM!" is printed on the screen and
  *    the flag is cleared.
  *
- * Expected output:
- * - Display: Current time, weekday, and date.
- * - Display: "ALARM!" appears after the configured RTC alarm condition occurs.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - This example uses full display refreshes with a 60-second delay between
- *   updates.
- * - RTC alarm, RTC timer, and RTC interrupt are related but different features:
- *   this sketch demonstrates alarm configuration and software flag polling only.
- * - display.rtc.reset() clears previous RTC state, so the configured time/date
- *   is reapplied on every reset or power cycle.
- * - The PCF85063(A) RTC is suitable for general timekeeping, but like typical
- *   RTCs it depends on proper setup and backup power behavior for persistence.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-20

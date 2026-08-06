@@ -1,54 +1,48 @@
 /**
  **************************************************
  * @file        Inkplate6FLICK_Game_Of_Life.ino
- * @brief       Conway’s Game of Life animation on Inkplate 6FLICK using fast
+ * @brief       Conway's Game of Life animation on Inkplate 6FLICK using fast
  *              partial e-paper updates.
  *
- * @details     This community example runs Conway’s Game of Life on the Inkplate
+ * @details     This community example runs Conway's Game of Life on the Inkplate
  *              6FLICK e-paper display. The simulation is rendered as a grid of
  *              square cells whose size is randomized on reset to vary the look
- *              and performance. Cells “age” visually: newly born cells are drawn
+ *              and performance. Cells "age" visually: newly born cells are drawn
  *              solid black, while older living cells get a white interior that
  *              expands with age, creating a distinctive fade/outline effect.
  *
  *              The sketch uses double-buffered grids (current/next) and toroidal
  *              wraparound at the edges (neighbors beyond an edge wrap to the
  *              opposite side). The display runs in 1-bit (BW) mode and uses
- *              partialUpdate() for most frames. A full refresh (display()) is
- *              forced periodically to reduce ghosting.
+ *              partialUpdate() for most frames. E-paper partial updates
+ *              accumulate ghosting, so a full refresh (display()) is forced every
+ *              FULLREFRESH frames (default: 40). The example does not use the
+ *              touchscreen and does not use deep sleep.
+ *
+ *              Expected output: a continuous Game of Life animation with cell
+ *              aging visuals, using mostly partial updates with a full refresh
+ *              every FULLREFRESH frames.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6FLICK
- * - Serial settings: 115200 baud (optional; not required for operation)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Serial:     115200 baud (optional; not required for operation)
  *
  * How to use:
- * 1) Select the board "Soldered Inkplate 6FLICK" and upload the sketch.
- * 2) The Game of Life starts automatically after boot.
- * 3) The simulation occasionally re-randomizes the grid (and cell size) when
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) The Game of Life starts automatically after boot.
+ * 4) The simulation occasionally re-randomizes the grid (and cell size) when
  *    activity drops below a threshold to keep the animation interesting.
  *
- * Expected output:
- * - Display: Continuous Game of Life animation with cell aging visuals.
- * - Refresh behavior: Mostly partial updates, with a full refresh every
- *   FULLREFRESH frames.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial updates are used heavily for speed.
- * - E-paper partial updates accumulate ghosting; periodic full refresh
- *   (display()) is required. This example performs a full refresh every
- *   FULLREFRESH frames (default: 40).
- * - This example does not use the touchscreen and does not use deep sleep.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      claud9999 (community example), adapted for Soldered Inkplate 6FLICK
  * @date        2020-09-24

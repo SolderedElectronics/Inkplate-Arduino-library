@@ -14,58 +14,52 @@
  *              fixed font and drawTextBox() for wrapping. The display runs in
  *              1-bit (BW) mode (INKPLATE_1BIT) to keep refresh time and power
  *              usage low. During WiFi connection feedback, partial updates are
- *              used to update only the changed screen area.
+ *              used to update only the changed screen area, while the final
+ *              content is shown with a full refresh.
  *
  *              After drawing the result, the sketch schedules an RTC alarm and
  *              enters ESP32 deep sleep. Deep sleep restarts the ESP32 on wake,
- *              so setup() runs again each cycle.
+ *              so setup() runs again each cycle. RTC alarm scheduling uses the
+ *              onboard RTC (PCF85063(A) on Inkplate) and ext0 wakeup (GPIO 39).
+ *
+ *              HTTPS security: this example calls client.setInsecure() for both
+ *              Open-Meteo and OpenAI, which disables TLS certificate validation
+ *              and is intended for demos only - for production, use proper
+ *              certificate validation/pinning that matches the target hosts.
+ *              Timeouts, rate limits and API key issues can cause empty or
+ *              failed responses, and OpenAI usage may incur cost and is subject
+ *              to account limits. Long replies may not fit well in the chosen
+ *              text box and font, so the prompt asks for ~80 words to keep
+ *              rendering predictable.
+ *
+ *              Expected output: a text block with an AI-generated "snarky"
+ *              weather summary on the display, plus connection and JSON
+ *              parsing/debug messages and the raw OpenAI response on the Serial
+ *              Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Extra:      WiFi access, internet connection, OpenAI API key
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6FLICK
- * - Serial settings: 115200 baud (optional; used for debugging)
- * - WiFi credentials: set ssid / password
- * - Weather location: set location, latitude, longitude
- * - OpenAI: set openai_key (keep it private)
- * - Sleep: adjust SLEEP_DURATION_IN_MINS (RTC alarm interval)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Serial:     115200 baud (optional; used for debugging)
  *
  * How to use:
- * 1) Enter your WiFi SSID/password.
- * 2) Set location name + latitude/longitude for your area.
- * 3) Create an OpenAI API key and paste it into openai_key.
- * 4) Upload the sketch and open Serial Monitor (optional) for debug logs.
- * 5) After boot, the device fetches weather, requests a short snarky summary
- *    from OpenAI, displays it, then goes to deep sleep until the next RTC alarm.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6FLICK"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID/password.
+ * 3) Set the location name plus latitude/longitude for your area.
+ * 4) Create an OpenAI API key and paste it into openai_key (keep it private).
+ *    Adjust SLEEP_DURATION_IN_MINS (RTC alarm interval) if needed.
+ * 5) Upload the sketch and open Serial Monitor (optional) for debug logs.
+ * 6) After boot, the device fetches weather, requests a short snarky summary
+ *    from OpenAI, displays it, then sleeps until the next RTC alarm.
  *
- * Expected output:
- * - Display: A text block with an AI-generated “snarky” weather summary.
- * - Serial Monitor: Connection and JSON parsing/debug messages, plus raw OpenAI
- *   response (as printed by the sketch).
- *
- * Notes:
- * - Display mode is 1-bit (BW). The WiFi connection progress uses partial
- *   updates; the final content is shown with a full refresh.
- * - HTTPS security: this example calls client.setInsecure() for both Open-Meteo
- *   and OpenAI. This disables TLS certificate validation and is intended for
- *   demos only. For production, use proper certificate validation/pinning that
- *   matches the target hosts.
- * - Deep sleep restarts the ESP32 on wake. RTC alarm scheduling uses the
- *   onboard RTC (PCF85063(A) on Inkplate) and ext0 wakeup (GPIO 39).
- * - Network/API reliability: timeouts, rate limits, and API key issues can
- *   cause empty/failed responses. OpenAI usage may incur cost and is subject to
- *   account limits.
- * - RAM/response size: long replies may not fit well in the chosen text box and
- *   font; the prompt asks for ~80 words to keep rendering predictable.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

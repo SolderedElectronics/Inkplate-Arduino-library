@@ -1,7 +1,7 @@
 /**
  **************************************************
  * @file        Inkplate6COLOR_OpenAI_Image_Slideshow.ino
- * @brief       Generates an image from an OpenAI prompt (DALL·E), downloads it,
+ * @brief       Generates an image from an OpenAI prompt (DALL-E), downloads it,
  *              shows it on Inkplate 6COLOR, then deep-sleeps between updates.
  *
  * @details     This example demonstrates an Internet-connected image slideshow
@@ -16,59 +16,52 @@
  *              an image URL is obtained, the sketch switches the display to
  *              3-bit grayscale (INKPLATE_3BIT) for better image quality and
  *              performs a full refresh after drawing the downloaded image.
+ *              Partial updates are not supported in grayscale mode.
  *
  *              The sketch schedules the next wake-up using the on-board RTC
  *              (PCF85063(A)) by setting an alarm epoch time, then enters deep
  *              sleep. Deep sleep resets the ESP32, so the workflow repeats from
- *              setup() every time the device wakes.
+ *              setup() every time the device wakes and no state is preserved.
+ *              Wake-up is configured via RTC alarm epoch and an external wake on
+ *              GPIO 39 (typically tied to the RTC interrupt line), so make sure
+ *              your hardware revision/wiring matches the expected wake behavior.
+ *
+ *              HTTPS security: this sketch uses client.setInsecure(), which
+ *              disables TLS certificate validation. This is for demonstration
+ *              only; for production use, validate certificates or pin the
+ *              correct certificate chain/host. Downloading and decoding large
+ *              PNGs can be slow and memory intensive - if decoding fails, reduce
+ *              the image size or use a simpler format.
+ *
+ *              Expected output: short status messages on the display via partial
+ *              updates during startup, the downloaded image rendered in 3-bit
+ *              grayscale after generation, and the OpenAI response body plus
+ *              resolved image URL on Serial.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable (battery optional)
  * - Extra:      WiFi Internet connection, OpenAI API key
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6COLOR
- * - Serial Monitor: 115200 baud
- * - Install library: ArduinoJson (Arduino Library Manager)
- * - Set WiFi credentials (ssid, password)
- * - Set your OpenAI API key (openai_key) and prompt (imagePrompt)
- * - Adjust sleep interval (SLEEP_DURATION_IN_MINS) if desired
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6COLOR/quick-start-guide/
+ * - Library:    ArduinoJson (Arduino Library Manager)
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Create an OpenAI API key and paste it into openai_key.
- * 2) Enter your WiFi SSID and password.
- * 3) Optionally change imagePrompt and the image size/model settings in the
- *    request JSON.
- * 4) Upload the sketch and open Serial Monitor at 115200 baud.
- * 5) The device connects, requests an image, downloads it, renders it, then
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6COLOR"
+ *    from Tools -> Board.
+ * 2) Create an OpenAI API key and paste it into openai_key.
+ * 3) Enter your WiFi SSID and password (ssid, password).
+ * 4) Optionally change imagePrompt, the image size/model settings in the
+ *    request JSON, and the sleep interval (SLEEP_DURATION_IN_MINS).
+ * 5) Upload the sketch and open Serial Monitor at 115200 baud.
+ * 6) The device connects, requests an image, downloads it, renders it, then
  *    deep-sleeps and wakes periodically to generate the next image.
  *
- * Expected output:
- * - During startup: short status messages on the display via partial updates.
- * - After generation: the downloaded image rendered on the e-paper display in
- *   3-bit grayscale.
- * - Serial output includes the OpenAI response body and the resolved image URL.
- *
- * Notes:
- * - Display mode: status is shown in 1-bit BW; image is rendered in 3-bit
- *   grayscale (INKPLATE_3BIT). Partial updates are not supported in grayscale,
- *   so the image update is a full refresh.
- * - Deep sleep restarts the ESP32 on every wake-up; no state is preserved.
- * - HTTPS security: this sketch uses client.setInsecure(), which disables TLS
- *   certificate validation. This is for demonstration only; for production use,
- *   validate certificates or pin the correct certificate chain/host.
- * - RAM and bandwidth: downloading/decoding large PNGs can be slow and memory
- *   intensive. If decoding fails, reduce image size or use a simpler format.
- * - RTC alarm vs. wake source: wake-up is configured via RTC alarm epoch and an
- *   external wake on GPIO 39 (typically tied to the RTC interrupt line). Ensure
- *   your hardware revision/wiring matches the expected wake behavior.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

@@ -1,16 +1,34 @@
-/*
-   Inkplate6FLICK_microSD_TXT_Write example for Soldered Inkplate 6FLICK
-   For this example you will need only a micro USB cable, Inkplate 6FLICK and a SD card.
-   Select "Soldered Inkplate 6FLICK" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 6FLICK" option? Follow our tutorial and add it:
-   https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
-
-   This example will show you how to write in .txt file.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our forums: https://forum.soldered.com/
-   15 March 2024 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate6FLICK_microSD_TXT_Write.ino
+ * @brief       Write a text file to an SD card on Soldered Inkplate 6FLICK.
+ *
+ * @details     Shows how to write into a .txt file on the SD card.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 6FLICK
+ * - Hardware:   Inkplate 6FLICK, micro USB cable, SD card
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Insert an SD card into the Inkplate.
+ * 3) Upload the sketch to Inkplate 6FLICK.
+ * 4) The text is written into the .txt file on the SD card.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Adding the board definition to the Arduino IDE:
+ *              https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
+ *
+ * @author      Soldered
+ * @date        2024-03-15
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

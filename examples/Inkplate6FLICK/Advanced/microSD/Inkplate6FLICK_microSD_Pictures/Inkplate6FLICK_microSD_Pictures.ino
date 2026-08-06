@@ -9,44 +9,47 @@
  *              an SdFat SdFile object, and drawing a JPEG image. Images are
  *              rendered in 3-bit (grayscale) mode for better visual quality.
  *
+ *              Supported formats include BMP, JPEG and PNG (library-dependent
+ *              limits apply). BMP files must be uncompressed; typical supported
+ *              colour depths are 1/4/8/24-bit. Images must fit the display
+ *              resolution - oversized images may not render properly. Some draw
+ *              functions support optional invert/dither parameters, and invert
+ *              may be required depending on how the bitmap was exported. SD card
+ *              power is disabled at the end with sdCardSleep() to reduce
+ *              consumption.
+ *
+ *              Expected output: an "SD Card OK!" message if initialization
+ *              succeeds, then image1.bmp, image2.bmp and pyramid.jpg displayed in
+ *              sequence, or an error message on screen if an image cannot be
+ *              opened or decoded.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable, microSD card
  * - Extra:      Images on the SD card (provided in the example folder)
  * - Libraries:  Inkplate library (includes SD/SdFat support)
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Format a microSD card as FAT/FAT32.
- * 2) Copy the provided example images (e.g., image1.bmp, image2.bmp, pyramid.jpg)
- *    to the SD card (typically the root folder).
- * 3) Insert the microSD card into Inkplate 6FLICK.
- * 4) Upload the sketch.
- * 5) The display will show images sequentially, with short delays between them.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Format a microSD card as FAT/FAT32.
+ * 3) Copy the provided example images (e.g. image1.bmp, image2.bmp,
+ *    pyramid.jpg) to the SD card (typically the root folder).
+ * 4) Insert the microSD card into Inkplate 6FLICK.
+ * 5) Upload the sketch.
+ * 6) The display shows the images sequentially, with short delays between them.
  *
- * Expected output:
- * - "SD Card OK!" message if initialization succeeds.
- * - image1.bmp displayed, then image2.bmp, then pyramid.jpg.
- * - Error message on screen if an image cannot be opened or decoded.
- *
- * Notes:
- * - Supported formats include BMP, JPEG, and PNG (library-dependent limits apply).
- * - BMP files must be uncompressed; typical supported color depths are 1/4/8/24-bit.
- * - Images must fit the display resolution; oversized images may not render properly.
- * - Some draw functions support optional invert/dither parameters; invert may be
- *   required depending on how the bitmap was exported.
- * - SD card power is disabled at the end with sdCardSleep() to reduce consumption.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

@@ -8,59 +8,56 @@
  * @details     This example turns Inkplate 2 into a simple standalone web app
  *              for uploading an image from a phone/PC. The ESP32 starts a WiFi
  *              Access Point (AP) and an HTTP server on port 80. A web page
- *              (served from src/html.h) lets the user upload a JPEG file to the
- *              device. The uploaded JPEG is stored in a RAM buffer and can be
- *              previewed from the browser via /preview and /image.jpg.
+ *              (served from src/html.h, which must provide INDEX_HTML) lets the
+ *              user upload a JPEG file to the device. The uploaded JPEG is stored
+ *              in a RAM buffer and can be previewed from the browser via /preview
+ *              and /image.jpg.
  *
  *              After a successful upload, the sketch draws the JPEG directly
  *              from the RAM buffer onto the e-paper display using
- *              drawJpegFromBuffer(), then performs a full refresh.
+ *              drawJpegFromBuffer(), then performs a full refresh. The sketch
+ *              initializes the Inkplate display in its default mode (as
+ *              configured by the library for Inkplate 2) and no partial updates
+ *              are used.
  *
- *              The sketch initializes the Inkplate display in its default mode
- *              (as configured by the library for Inkplate 2). No partial
- *              updates are used; image rendering is shown via full refresh.
+ *              The uploaded JPEG is stored fully in RAM, so large files may fail
+ *              to allocate or may be truncated if Content-Length is missing or
+ *              incorrect - the upload handler allocates a buffer based on the
+ *              HTTP Content-Length header and falls back to a small default
+ *              capacity if the header is absent. JPEG decoding and drawing can be
+ *              slow for large images, so prefer reasonably sized uploads. This is
+ *              a demo web server without authentication beyond the AP password,
+ *              so avoid using it in untrusted environments.
+ *
+ *              Expected output: startup instructions (AP SSID/password + IP
+ *              address) on the display, the upload page at "/" and preview page
+ *              at "/preview" in the browser, upload progress and transmitted byte
+ *              counts in the Serial Monitor, and the uploaded image drawn on the
+ *              e-paper display after the upload.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      Phone/PC with WiFi + web browser
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - AP settings:    set ap_ssid / ap_password (min 8 chars for WPA2)
- * - Serial Monitor: 115200 baud (optional, for upload logs)
- * - Web UI:         src/html.h must provide INDEX_HTML (upload page)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional, for upload logs)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 2.
- * 2) On your phone/PC, connect to the WiFi AP shown on the display
- *    (SSID/password from ap_ssid/ap_password).
- * 3) Open a browser and navigate to the AP IP address shown on the display.
- * 4) Use the page to upload a JPEG image.
- * 5) The device stores the upload in RAM, serves a preview, and renders the
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Set ap_ssid / ap_password (minimum 8 characters for WPA2).
+ * 3) Upload the sketch to Inkplate 2.
+ * 4) On your phone/PC, connect to the WiFi AP shown on the display.
+ * 5) Open a browser and navigate to the AP IP address shown on the display.
+ * 6) Use the page to upload a JPEG image.
+ * 7) The device stores the upload in RAM, serves a preview, and renders the
  *    image on the e-paper display after upload completes.
  *
- * Expected output:
- * - Display: startup instructions (AP SSID/password + IP address).
- * - Browser: upload page at "/", preview page at "/preview".
- * - Serial Monitor: upload progress and transmitted byte counts (if opened).
- * - After upload: the uploaded image is drawn on the e-paper display.
- *
- * Notes:
- * - RAM usage: the uploaded JPEG is stored fully in RAM. Large files may fail
- *   to allocate or may be truncated if Content-Length is missing/incorrect.
- * - The upload handler allocates a buffer based on the HTTP Content-Length
- *   header; if the header is absent it falls back to a small default capacity.
- * - JPEG decoding and drawing can be slow for large images. Prefer reasonably
- *   sized uploads to reduce memory pressure and processing time.
- * - This is a demo web server without authentication beyond the AP password;
- *   avoid using it in untrusted environments.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026

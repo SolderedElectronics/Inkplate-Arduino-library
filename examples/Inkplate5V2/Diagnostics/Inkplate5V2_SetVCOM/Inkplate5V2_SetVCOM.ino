@@ -1,10 +1,10 @@
 /**
  **************************************************
- * @file        Inkplate5V2_Set_VCOM.ino
- * @brief       Reads and programs the Inkplate 5V2 EPD VCOM voltage via Serial.
+ * @file        Inkplate5V2_SetVCOM.ino
+ * @brief       Reads and programs the Inkplate 5v2 EPD VCOM voltage via Serial.
  *
  * @details     This example shows how to read the currently stored VCOM value
- *              from the display power IC/EEPROM and program a new
+ *              from the display power IC/EEPROM and (optionally) program a new
  *              VCOM value entered in the Serial Monitor. After reading or
  *              programming, a simple grayscale test pattern is drawn and the
  *              stored VCOM value is shown on the e-paper display.
@@ -14,39 +14,38 @@
  *              VCOM by trial-and-error. Program it once (only if needed) and
  *              leave it unchanged to avoid prematurely wearing out EEPROM.
  *
+ *              Display mode is 3-bit grayscale (INKPLATE_3BIT) and a full
+ *              refresh is used. If programming fails, verify you selected the
+ *              correct Inkplate 5v2 board and use a stable USB connection/power
+ *              source. Expected output is "Stored VCOM: <value> V" plus an
+ *              8-step 3-bit grayscale pattern on the display, and the prompt,
+ *              requested VCOM value and success/failure message on Serial.
+ *
  * Requirements:
- * - Board:      Soldered Inkplate 5V2
- * - Hardware:   Inkplate 5V2, USB cable
+ * - Board:      Soldered Inkplate 5v2
+ * - Hardware:   Inkplate 5v2, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5V2
- * - Serial Monitor: 115200 baud, Newline (LF)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/4TEMPERA/quick-start-guide/
+ * - Serial:     115200 baud, Newline (LF)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 5V2.
- * 2) Open Serial Monitor at 115200 baud and set line ending to Newline (LF).
- * 3) Read the prompt and enter a VCOM value in the range [-5.0, 0.0]
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 5v2.
+ * 3) Open Serial Monitor at 115200 baud and set line ending to Newline (LF).
+ * 4) Read the prompt and enter a VCOM value in the range [-5.0, 0.0]
  *    (example: -1.23), then press Send.
- * 4) The sketch validates the range, programs VCOM (if valid), and refreshes
+ * 5) The sketch validates the range, programs VCOM (if valid), and refreshes
  *    the display to show the stored VCOM and a grayscale bar pattern.
  *
- * Expected output:
- * - Display: "Stored VCOM: <value> V" and an 8-step 3-bit grayscale pattern.
- * - Serial:  Prompt + requested VCOM value + success/failure message.
+ * @warning     VCOM is written to EEPROM with limited write endurance. Avoid
+ *              repeated programming to prevent permanent wear/damage.
  *
- * Notes:
- * - Display mode: 3-bit grayscale (INKPLATE_3BIT). Uses a full refresh.
- * - WARNING: VCOM is written to EEPROM with limited write endurance. Avoid
- *   repeated programming to prevent permanent wear/damage.
- * - If programming fails, verify you selected the correct Inkplate 4TEMPERA board and
- *   use a stable USB connection/power source.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-07-29

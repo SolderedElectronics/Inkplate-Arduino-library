@@ -11,44 +11,42 @@
  *
  *              To make the animation smoother on e-paper, the sketch draws only
  *              the changed regions into the frame buffer and uses partialUpdate()
- *              most frames. A full refresh is performed periodically to reduce
- *              ghosting and maintain contrast. If the simulation stagnates (too
- *              little change over time), the grid is re-randomized to keep the
- *              animation interesting.
+ *              most frames. A full refresh is performed every FULLREFRESH frames
+ *              to reduce ghosting and maintain contrast - periodic full refresh
+ *              is a best practice for long-running animations. If the simulation
+ *              stagnates (too little change over time), the grid is re-randomized
+ *              to keep the animation interesting.
+ *
+ *              Display mode is 1-bit (BW), since partial updates are supported
+ *              only in BW mode. The simulation uses two in-RAM grids sized for
+ *              the minimum cell size, so RAM usage increases with display
+ *              resolution and the chosen cell size range.
+ *
+ *              Expected output: a continuous Game of Life animation using
+ *              black/white cells, where new cells appear as filled black squares
+ *              and older cells are drawn with a shrinking white interior to
+ *              indicate age.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (optional; not required for operation)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional; not required for operation)
  *
  * How to use:
- * 1) Select the Inkplate 4 TEMPERA board and upload the sketch.
- * 2) The Game of Life simulation starts automatically after boot.
- * 3) Watch the evolving patterns; the sketch will occasionally re-randomize
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) The Game of Life simulation starts automatically after boot.
+ * 4) Watch the evolving patterns; the sketch will occasionally re-randomize
  *    when activity drops.
  *
- * Expected output:
- * - E-paper: Continuous Game of Life animation using black/white cells. New
- *   cells appear as filled black squares; older cells are drawn with a shrinking
- *   white interior to indicate age.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial updates are supported only in BW mode.
- * - A full refresh is performed every FULLREFRESH frames to reduce ghosting.
- * - Partial updates can accumulate artifacts; periodic full refresh is a best
- *   practice for long-running animations.
- * - The simulation uses two in-RAM grids sized for the minimum cell size; RAM
- *   usage increases with display resolution and chosen cell size range.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered (community example by Claud9999)
  * @date        2020-09-24

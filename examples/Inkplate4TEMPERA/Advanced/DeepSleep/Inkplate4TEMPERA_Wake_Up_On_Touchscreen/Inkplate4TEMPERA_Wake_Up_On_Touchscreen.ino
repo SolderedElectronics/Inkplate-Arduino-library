@@ -7,7 +7,7 @@
  * @details     This example demonstrates low-power wake-up behavior on Inkplate
  *              4 TEMPERA using ESP32 deep sleep and external wake sources. The
  *              touchscreen controller is initialized and kept powered, and its
- *              interrupt line is routed through the board’s I/O expander to an
+ *              interrupt line is routed through the board's I/O expander to an
  *              ESP32-capable wake input. A press on the wake button or a
  *              touchscreen event can then wake the MCU from deep sleep.
  *
@@ -18,47 +18,44 @@
  *              deep sleep again.
  *
  *              Deep sleep resets the MCU, so all application logic is placed in
- *              setup(), while loop() remains empty.
+ *              setup(), while loop() remains empty. Normal RAM does not survive
+ *              deep sleep - only RTC_DATA_ATTR variables (bootCount) do. Display
+ *              mode is 1-bit BW (INKPLATE_1BIT).
+ *
+ *              Wake sources: EXT0 wake is enabled on GPIO 36 (wake button) in
+ *              this sketch. Touchscreen interrupt wiring may vary by hardware
+ *              revision; some older boards require an additional 10k pull-up
+ *              resistor for reliable operation. If touchscreen initialization
+ *              fails, the sketch halts to avoid entering a sleep state without a
+ *              functional wake source.
+ *
+ *              Expected output: the display shows "Boot count: <number>" and
+ *              "Wakeup caused by timer / external signal / other cause", while
+ *              Serial prints the touchscreen init status.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (optional, for init logs)
- * - Adjust TIME_TO_SLEEP (seconds) to change timer wake interval
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional, for init logs)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4 TEMPERA.
- * 2) The screen shows the current boot count and the wake-up reason.
- * 3) Wait for the timer wake-up, or press the wake button / touch the screen to
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Optionally adjust TIME_TO_SLEEP (seconds) to change the timer wake
+ *    interval.
+ * 3) Upload the sketch to Inkplate 4 TEMPERA.
+ * 4) The screen shows the current boot count and the wake-up reason.
+ * 5) Wait for the timer wake-up, or press the wake button / touch the screen to
  *    wake the device.
- * 4) Observe the boot count increment and the reported wake-up cause.
+ * 6) Observe the boot count increment and the reported wake-up cause.
  *
- * Expected output:
- * - Display shows:
- *   - Boot count: <number>
- *   - Wakeup caused by timer / external signal / other cause
- * - Serial prints touchscreen init status.
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT).
- * - Deep sleep behavior: waking from deep sleep restarts the program; RTC_DATA_ATTR
- *   variables (bootCount) persist, but normal RAM does not.
- * - Wake sources:
- *   - EXT0 wake is enabled on GPIO 36 (wake button) in this sketch.
- *   - Touchscreen interrupt wiring may vary by hardware revision; some older
- *     boards require an additional 10k pull-up resistor for reliable operation.
- * - If touchscreen initialization fails, the sketch halts to avoid entering a
- *   sleep state without a functional wake source.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-07-19

@@ -13,58 +13,50 @@
  *
  *              The RTC alarm output is connected to GPIO39 and is used as the
  *              wake source. Because ESP32 deep sleep resets the MCU, the full
- *              application flow must be placed inside setup(). After each
- *              wake-up, the board starts execution again from the beginning of
- *              setup(), refreshes the display, schedules the next alarm, and
- *              returns to sleep.
+ *              application flow must be placed inside setup() and loop() must
+ *              remain empty. After each wake-up, the board starts execution
+ *              again from the beginning of setup(), refreshes the display,
+ *              schedules the next alarm, and returns to sleep. RTC alarm and
+ *              wake-up are separate steps: the RTC generates the interrupt, and
+ *              ESP32 deep sleep wake-up is enabled separately on GPIO39.
  *
  *              This example is useful for low-power clock, scheduler, and
  *              periodic refresh applications where the display only needs to
- *              update occasionally.
+ *              update occasionally. It only sets the RTC time/date if the RTC is
+ *              not already configured. Display mode is Inkplate 6COLOR color
+ *              e-paper mode; frequent full colour refreshes consume more time and
+ *              energy than monochrome partial-update workflows on supported
+ *              boards.
+ *
+ *              Expected output: the current weekday, date and time rendered on
+ *              the screen, with the board waking once per minute, refreshing the
+ *              display and returning to deep sleep.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Edit the initial RTC time/date in the sketch if the RTC is not already set
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
  * 2) If needed, adjust the initial RTC time/date values in the sketch before
  *    uploading.
- * 3) After boot, the current date and time are drawn on the display.
- * 4) The sketch sets an RTC alarm for 60 seconds in the future.
- * 5) Inkplate enters deep sleep and wakes again when the RTC alarm triggers
+ * 3) Upload the sketch to Inkplate 6COLOR.
+ * 4) After boot, the current date and time are drawn on the display.
+ * 5) The sketch sets an RTC alarm for 60 seconds in the future.
+ * 6) Inkplate enters deep sleep and wakes again when the RTC alarm triggers
  *    on GPIO39.
- * 6) After wake-up, the ESP32 restarts, redraws the time, sets the next alarm,
+ * 7) After wake-up, the ESP32 restarts, redraws the time, sets the next alarm,
  *    and repeats the cycle.
  *
- * Expected output:
- * - Display: Current weekday, date, and time rendered on the Inkplate 6COLOR
- *   screen.
- * - Power behavior: The board wakes once per minute, refreshes the display,
- *   then returns to deep sleep.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - Deep sleep restarts the ESP32, so loop() must remain empty and all logic
- *   must run from setup().
- * - RTC alarm and wake-up are different steps: the RTC generates the interrupt,
- *   and ESP32 deep sleep wake-up is enabled separately on GPIO39.
- * - This example only sets the RTC time/date if the RTC is not already
- *   configured.
- * - Frequent full color refreshes consume more time and energy than monochrome
- *   partial-update workflows on supported boards.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-20

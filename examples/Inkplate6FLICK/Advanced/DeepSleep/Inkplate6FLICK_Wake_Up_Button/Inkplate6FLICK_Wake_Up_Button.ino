@@ -9,38 +9,38 @@
  *              wake-up, the example displays the boot count and the wake-up
  *              reason on the Inkplate e-paper screen.
  *
+ *              With deep sleep, the program restarts from setup() after each
+ *              wake-up. bootCount is stored in RTC memory (RTC_DATA_ATTR) to
+ *              persist across sleep, and the example uses ext0 wake-up (single
+ *              RTC-capable pin, level triggered). Expected output is a "Boot
+ *              count" that increments after every wake-up cycle, with the
+ *              wake-up reason shown as either button wake-up or timer wake-up.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Libraries:  Inkplate library
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) Device enters deep sleep after updating the display.
- * 3) Wake the device by pressing the wake-up button (GPIO36),
- *    or wait for the timer to trigger (30 s).
- * 4) On each wake-up, the display shows boot count and wake-up reason.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) The device enters deep sleep after updating the display.
+ * 4) Wake the device by pressing the wake-up button (GPIO36), or wait for the
+ *    timer to trigger (30 s).
+ * 5) On each wake-up, the display shows the boot count and wake-up reason.
  *
- * Expected output:
- * - "Boot count" increments after every wake-up cycle.
- * - Wake-up reason shown as either button wake-up or timer wake-up.
- *
- * Notes:
- * - With deep sleep, the program restarts from setup() after each wake-up.
- * - bootCount is stored in RTC memory (RTC_DATA_ATTR) to persist across sleep.
- * - This example uses ext0 wake-up (single RTC-capable pin, level triggered).
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-26
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

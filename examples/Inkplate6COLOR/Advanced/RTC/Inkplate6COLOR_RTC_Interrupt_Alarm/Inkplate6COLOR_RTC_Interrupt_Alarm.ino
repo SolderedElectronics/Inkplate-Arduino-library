@@ -10,59 +10,52 @@
  *              ESP32 interrupt handler to the RTC interrupt pin on GPIO39.
  *
  *              During normal operation, the sketch periodically reads the RTC
- *              time/date and prints it on the display. When the RTC alarm
- *              occurs, the interrupt service routine sets a software flag, and
- *              the main loop detects that flag, clears the RTC alarm flag, and
- *              shows an "ALARM" message on the screen.
+ *              time/date and prints it on the display using full refreshes with
+ *              a 60-second delay between updates. When the RTC alarm occurs, the
+ *              interrupt service routine sets a software flag, and the main loop
+ *              detects that flag, clears the RTC alarm flag, and shows an
+ *              "ALARM" message on the screen.
  *
  *              This example demonstrates RTC alarm + interrupt signaling, but
  *              it does not use deep sleep wake-up. The MCU remains awake and
  *              handles the interrupt while running normally. For deep sleep
  *              wake-up via RTC alarm, use the dedicated deep sleep RTC example.
  *
+ *              Keep ISR logic minimal: in this example the interrupt handler
+ *              only sets a volatile flag, while display updates and RTC flag
+ *              clearing are handled in the main loop. Clearing the RTC alarm
+ *              flag after the event is recommended to re-arm alarm-related
+ *              behavior cleanly.
+ *
+ *              Expected output: the current time, weekday and date on the
+ *              display, with "ALARM" appearing after the configured RTC alarm
+ *              interrupt occurs.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial settings: not used in this example
- * - Adjust the initial epoch/alarm configuration in the sketch if needed
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
- * 2) On startup, the sketch resets the RTC and sets the current time using the
- *    configured epoch value.
- * 3) The sketch programs an RTC alarm 60 seconds in the future.
- * 4) GPIO39 is configured as the RTC interrupt input, and an ISR is attached
- *    to detect the falling-edge alarm signal.
- * 5) The display refreshes periodically to show the current time and date.
- * 6) When the RTC alarm triggers, the ISR sets a flag and the main loop prints
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Adjust the initial epoch/alarm configuration in the sketch if needed.
+ * 3) Upload the sketch to Inkplate 6COLOR.
+ * 4) On startup, the sketch resets the RTC, sets the current time from the
+ *    configured epoch value and programs an RTC alarm 60 seconds in the future.
+ * 5) GPIO39 is configured as the RTC interrupt input and an ISR is attached to
+ *    detect the falling-edge alarm signal.
+ * 6) The display refreshes periodically to show the current time and date.
+ * 7) When the RTC alarm triggers, the ISR sets a flag and the main loop prints
  *    "ALARM" after clearing the RTC alarm flag.
  *
- * Expected output:
- * - Display: Current time, weekday, and date.
- * - Display: "ALARM" appears after the configured RTC alarm interrupt occurs.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - This example uses full display refreshes with a 60-second delay between
- *   updates.
- * - RTC alarm, alarm flag, interrupt output, and deep sleep wake-up are
- *   related but separate concepts. This sketch demonstrates alarm generation
- *   and interrupt handling while the ESP32 is awake.
- * - Keep ISR logic minimal. In this example, the interrupt handler only sets a
- *   volatile flag, while display updates and RTC flag clearing are handled in
- *   the main loop.
- * - Clearing the RTC alarm flag after the event is recommended to re-arm
- *   alarm-related behavior cleanly.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-05-19

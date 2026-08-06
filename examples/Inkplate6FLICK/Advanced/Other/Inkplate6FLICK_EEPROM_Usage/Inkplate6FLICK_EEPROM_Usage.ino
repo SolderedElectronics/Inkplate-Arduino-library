@@ -8,34 +8,37 @@
  *              clearing stored data, writing values, and reading them back
  *              while displaying results on the e-paper screen.
  *
+ *              EEPROM retains data even after power loss or reset. Always call
+ *              EEPROM.commit() after writing data on ESP32. Partial display
+ *              updates are used to speed up screen refresh. Expected output is a
+ *              set of messages indicating EEPROM clearing, writing and reading,
+ *              followed by a printed list of stored EEPROM values on the
+ *              display.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Libraries:  Inkplate library, ESP32 EEPROM library
  *
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) EEPROM memory will first be cleared.
- * 3) Example data is written to EEPROM.
- * 4) Stored values are read back and displayed on the screen.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) EEPROM memory is first cleared.
+ * 4) Example data is written to EEPROM.
+ * 5) Stored values are read back and displayed on the screen.
  *
- * Expected output:
- * - Messages indicating EEPROM clearing, writing, and reading.
- * - Printed list of stored EEPROM values on the e-paper display.
- *
- * Notes:
- * - EEPROM retains data even after power loss or reset.
- * - Always call EEPROM.commit() after writing data on ESP32.
- * - Partial display updates are used to speed up screen refresh.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-26
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

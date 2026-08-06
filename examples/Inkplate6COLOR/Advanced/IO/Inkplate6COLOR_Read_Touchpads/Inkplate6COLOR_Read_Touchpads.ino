@@ -10,47 +10,43 @@
  *              touch-sensitive input buttons.
  *
  *              The sketch continuously checks the state of each touchpad using
- *              the display.touchpad.read() function. When a pad is touched,
- *              a message is printed to the Serial Monitor indicating which pad
- *              was activated.
+ *              the display.touchpad.read() function, which returns 1 when a pad
+ *              is touched and 0 when it is not. When a pad is touched, a message
+ *              is printed to the Serial Monitor indicating which pad was
+ *              activated. A short delay between reads prevents excessive Serial
+ *              output.
  *
  *              This example is useful as a starting point for implementing
  *              touch-based user interfaces such as menu navigation, simple
- *              controls, or interactive displays.
+ *              controls, or interactive displays. The display is not used here
+ *              (no screen updates occur). Capacitive touchpads can be affected
+ *              by environmental conditions such as humidity, grounding, or thick
+ *              enclosures placed over the PCB.
+ *
+ *              Expected output: Serial Monitor messages such as "Pad 1
+ *              pressed!", "Pad 2 pressed!" or "Pad 3 pressed!" when the
+ *              corresponding touchpad is activated.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6COLOR
- * - Serial Monitor: 115200 baud
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Select Soldered Inkplate6COLOR in Arduino IDE and upload the sketch.
- * 2) Open Serial Monitor at 115200 baud.
- * 3) Touch the capacitive pads labeled 1, 2, or 3 on the Inkplate PCB.
- * 4) The Serial Monitor prints which pad has been touched.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6COLOR"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6COLOR.
+ * 3) Open Serial Monitor at 115200 baud.
+ * 4) Touch the capacitive pads labeled 1, 2, or 3 on the Inkplate PCB.
+ * 5) The Serial Monitor prints which pad has been touched.
  *
- * Expected output:
- * - Serial Monitor: Messages such as "Pad 1 pressed!", "Pad 2 pressed!",
- *   or "Pad 3 pressed!" when the corresponding touchpad is activated.
- *
- * Notes:
- * - Display mode: not used in this example (no screen updates occur).
- * - The function touchpad.read() returns 1 when a pad is touched and 0 when
- *   it is not.
- * - Capacitive touchpads can be affected by environmental conditions such as
- *   humidity, grounding, or thick enclosures placed over the PCB.
- * - This example uses a short delay between reads to prevent excessive Serial
- *   output.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2020-07-15

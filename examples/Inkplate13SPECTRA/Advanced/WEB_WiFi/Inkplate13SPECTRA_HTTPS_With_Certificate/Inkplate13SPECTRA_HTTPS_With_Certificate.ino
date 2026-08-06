@@ -1,21 +1,39 @@
-/*
-  Inkplate13SPECTRA_HTTPS_With_Certificate example for Soldered Inkplate 13SPECTRA
-  For this example you will need a micro USB cable, Inkplate 13SPECTRA, and an available WiFi connection.
-  Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-  Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-  /////////////////////////// INSERT BOARD DEF LINK HERE
-
-  You can open .bmp files that have color depth of 1 bit (BW bitmap), 4 bit, 8 bit and
-  24 bit.
-
-  This example will show you how you can download a .bmp file (picture) from the web securely by providing a 
-  certificate for the website that will be validated upon conncection and
-  display that image on e-paper display.
-
-  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_HTTPS_With_Certificate.ino
+ * @brief       Secure HTTPS image download using a certificate on Soldered
+ *              Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to download a .bmp file (picture) from the web securely
+ *              by providing a certificate for the website, which is validated
+ *              upon connection, and display that image on the e-paper display.
+ *
+ *              You can open .bmp files that have a color depth of 1 bit (BW
+ *              bitmap), 4 bit, 8 bit and 24 bit.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, micro USB cable
+ * - Extra:      Available WiFi connection, certificate of the target website
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials and the website certificate in the sketch.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) The image is downloaded over a validated HTTPS connection and shown on the
+ *    e-paper display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

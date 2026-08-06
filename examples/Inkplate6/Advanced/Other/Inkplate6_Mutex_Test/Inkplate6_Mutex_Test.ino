@@ -19,6 +19,20 @@
  * - Board:      Soldered Inkplate 6
  * - Hardware:   Inkplate 6, USB cable
  *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6.
+ * 3) Both squares bounce on their own half of the screen without corrupting
+ *    each other's output.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
  * @author      Soldered
  * @license     GNU GPL V3
  ***************************************************/

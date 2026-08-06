@@ -10,37 +10,36 @@
  *              monochrome bitmap (e.g. Soldered logo) using the Inkplate image
  *              helpers.
  *
+ *              Expected output is a sequence of graphics demos: pixels, lines,
+ *              rectangles, circles, triangles, rounded rectangles, ellipses,
+ *              polygons, bitmap drawing and text rendering, with the final part
+ *              continuously rotating and displaying text. 1-bit mode supports
+ *              only BLACK and WHITE colors. Avoid refreshing the full display
+ *              too often; the long delays here exist for demo clarity. For
+ *              faster updates use partial update (see partial update examples).
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 5
  * - Hardware:   Inkplate 5, USB cable
  * - Extra:      Optional bitmap header file (e.g. logo.h)
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 5.
- * 2) The example cycles through multiple drawing demonstrations.
- * 3) Each demo renders to the framebuffer and then updates the e-paper display.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 5.
+ * 3) The example cycles through multiple drawing demonstrations, each rendered
+ *    to the framebuffer and then pushed to the e-paper display.
  *
- * Expected output:
- * - A sequence of graphics demos: pixels, lines, rectangles, circles, triangles,
- *   rounded rectangles, ellipses, polygons, bitmap drawing, and text rendering.
- * - Final part continuously rotates and displays text.
- *
- * Notes:
- * - Inkplate library is compatible with Adafruit GFX drawing functions.
- * - 1-bit mode supports only BLACK and WHITE colors.
- * - Avoid refreshing the full display too often; long delays are used for demo clarity.
- * - For faster updates, use partial update (see partial update examples).
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Adafruit GFX: https://learn.adafruit.com/adafruit-gfx-graphics-library
- * Support:      https://forum.soldered.com/
- * Image tool:   https://tools.soldered.com/tools/image-converter/
+ * @note        Quick start guide: Inkplate 5 has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Adafruit GFX reference:
+ *              https://learn.adafruit.com/adafruit-gfx-graphics-library
+ * @note        Image converter tool:
+ *              https://tools.soldered.com/tools/image-converter/
  *
  * @author      Soldered
  * @date        2022-12-01

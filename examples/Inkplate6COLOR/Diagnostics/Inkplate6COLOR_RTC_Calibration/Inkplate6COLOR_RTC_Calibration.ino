@@ -1,65 +1,67 @@
 /**
  **************************************************
- * @file        Inkplate6_Read_Touchpads.ino
- * @brief       Uses the built-in capacitive touchpads on Inkplate 6 to control
- *              a counter displayed on the screen.
+ * @file        Inkplate6COLOR_RTC_Calibration.ino
+ * @brief       Calibrates the Inkplate 6COLOR RTC by selecting the internal
+ *              crystal load capacitor and applying a clock offset.
  *
- * @details     This example demonstrates how to use the three capacitive
- *              touchpads integrated on the Inkplate 6 PCB. These pads are
- *              labeled 1, 2, and 3 and function as simple touch-sensitive
- *              switches that can be used for user input.
+ * @details     This example shows how to make the on-board PCF85063(A) RTC more
+ *              precise and accurate on Inkplate 6COLOR. Two calibration
+ *              mechanisms are demonstrated:
  *
- *              The sketch continuously reads the state of the touchpads using
- *              display.touchpad.read(). Each pad performs a specific action on
- *              a counter displayed on the screen:
+ *              1) Internal load capacitance selection:
+ *                 display.rtc.setInternalCapacitor(RTC_7PF) or RTC_12_5PF picks
+ *                 the internal load capacitor for the 32.768 kHz crystal. If
+ *                 you use the internal capacitor, external load capacitors must
+ *                 be removed; if you keep the external capacitors, comment the
+ *                 setInternalCapacitor() call out.
  *
- *              - Pad 1 decreases the number
- *              - Pad 2 resets the number to zero
- *              - Pad 3 increases the number
+ *              2) Clock offset correction:
+ *                 display.rtc.setClockOffset(mode, value) applies a periodic
+ *                 signed correction. To measure the baseline drift first,
+ *                 comment out both setClockOffset() and setInternalCapacitor(),
+ *                 run the clock for a few days against a reference, compute the
+ *                 ppm error, and then apply the calculated offset.
  *
- *              The example uses 1-bit display mode and partial updates to keep
- *              screen refreshes fast. After several partial updates, a full
- *              refresh is automatically performed to maintain display quality.
+ *              After configuration, the sketch waits for the wake-up button
+ *              (GPIO36) to be pressed, starts the RTC with setTime(), and then
+ *              reads the RTC and prints the running clock on the display.
+ *              Progress information is sent over Serial because colour e-paper
+ *              refreshes are slow.
+ *
+ *              Expected output: the "RTC calibration" screen with a prompt to
+ *              open the Serial Monitor at 115200 baud, then the running clock
+ *              after the wake-up button is pressed.
  *
  * Requirements:
- * - Board:      Soldered Inkplate 6
- * - Hardware:   Inkplate 6, USB cable
- * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Board:      Soldered Inkplate 6COLOR
+ * - Hardware:   Inkplate 6COLOR, USB cable
+ * - Extra:      optional reference clock / oscilloscope for calibration
+ * - Serial:     115200 baud
+ * - Calibration settings (edit in sketch):
+ *   - display.rtc.setInternalCapacitor(RTC_7PF / RTC_12_5PF)
+ *   - display.rtc.setClockOffset(mode, value)
  *
  * How to use:
- * 1) Select Soldered Inkplate6 in Arduino IDE and upload the sketch.
- * 2) After startup, a number appears in the center of the display.
- * 3) Touch the pads on the bottom of the PCB:
- *    - Touch pad 1 to decrease the number.
- *    - Touch pad 2 to reset the number to zero.
- *    - Touch pad 3 to increase the number.
- * 4) The display updates each time a pad is touched.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Decide whether you use external crystal capacitors or the RTC internal
+ *    capacitor, and edit setInternalCapacitor() accordingly.
+ * 3) For a drift measurement run, comment out setClockOffset() (and
+ *    setInternalCapacitor()) to measure the baseline RTC error.
+ * 4) Upload the sketch and open the Serial Monitor at 115200 baud.
+ * 5) Press the wake-up button to start the RTC.
+ * 6) Compare the displayed time against a trusted reference, compute the offset
+ *    and re-upload with the calculated setClockOffset() value.
  *
- * Expected output:
- * - Display: A large number that changes according to touchpad input.
- * - Display: Symbols "-", "0", and "+" printed above the touchpads as visual
- *   indicators of their functions.
- *
- * Notes:
- * - Display mode: 1-bit black-and-white (INKPLATE_1BIT).
- * - Partial updates are used for faster refresh. After ~20 partial updates,
- *   a full refresh is performed automatically.
- * - Capacitive touchpads are sensitive to environment and grounding and may
- *   behave differently depending on humidity, grounding, or enclosures.
- * - touchpad.read() returns 1 when the pad is touched and 0 when it is not.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
- * @date        2020-07-15
+ * @date        2023-04-27
  * @license     GNU GPL V3
  **************************************************/
 

@@ -1,39 +1,58 @@
-/*
-    Inkplate13SPECTRA_Spotify_Album Example
-    Compatible with Soldered Inkplate 13SPECTRA
-
-    Getting Started:
-    For setup and documentation, visit: https://docs.soldered.com/inkplate/
-
-    Overview:
-    This example demonstrates how to fetch and display album data from Spotify API using
-    the Inkplate 13SPECTRA e-paper display.
-
-    Before You Start:
-        - you need a Spotify account
-        
-        note: the following process needs to be done only once. 
-        - visit "https://developer.spotify.com/" -> Dashboard
-            * Create a new app, fill out *App name**, *App description*, *Redirect URIs* and *APIs used* fields
-                note: Redirect URIs can be a local address, but it needs to be in format: http://127.0.0.1:8888/callback
-                note: In APIs used field select *Web API*
-
-            * Copy *Client ID* and *Client Secret* and paste them into *SPOTIFY_CLIENT_ID* and *SPOTIFY_CLIENT_SECRET* variables
-        
-        - navigate to "src/spotify-token" and open token.js file in code editor of your choice, fill out *CLIENT_ID*, *CLIENT_SECRET* and *REDIRECT_URI* fields.
-            * Open terimnal inside this folder and run command `node token.js` this function will send your api information to Spotify and will generate last piece
-             that you need to use the Spotify API,the *REFRESH_TOKEN*.
-
-            * Open the login page in browser of your choosing and search for "refresh_token", copy it into field **SPOTIFY_REFRESH_TOKEN**
-        
-        -You can now use the example!
-
-    Overview:
-    Thie example demonstrates how to connect your Inkplate 13SPECTRA to Spotify's WEB API service, parse received Json data and
-    display it on the e-paper display.
-
-    17 February 2026
-*/      
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Spotify_Album.ino
+ * @brief       Spotify album dashboard for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Demonstrates how to connect your Inkplate 13SPECTRA to Spotify's
+ *              Web API service, fetch and parse the received JSON album data and
+ *              display it on the e-paper display.
+ *
+ *              Before you start you need a Spotify account. The following process
+ *              needs to be done only once:
+ *              - Visit https://developer.spotify.com/ -> Dashboard
+ *                * Create a new app, fill out the App name, App description,
+ *                  Redirect URIs and APIs used fields.
+ *                  Note: Redirect URIs can be a local address, but it needs to be
+ *                  in the format http://127.0.0.1:8888/callback
+ *                  Note: in the APIs used field select Web API.
+ *                * Copy the Client ID and Client Secret and paste them into the
+ *                  SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET variables.
+ *              - Navigate to "src/spotify-token" and open token.js in a code
+ *                editor of your choice, then fill out the CLIENT_ID,
+ *                CLIENT_SECRET and REDIRECT_URI fields.
+ *                * Open a terminal inside this folder and run `node token.js`.
+ *                  This sends your API information to Spotify and generates the
+ *                  last piece you need to use the Spotify API, the REFRESH_TOKEN.
+ *                * Open the login page in a browser of your choosing, search for
+ *                  "refresh_token" and copy it into the SPOTIFY_REFRESH_TOKEN
+ *                  field.
+ *              - You can now use the example!
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      WiFi Internet connection, Spotify account + developer app,
+ *               Node.js for the token script
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Complete the Spotify developer app setup described above and fill in
+ *    SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET and SPOTIFY_REFRESH_TOKEN.
+ * 3) Enter your WiFi credentials in the sketch.
+ * 4) Upload the sketch to Inkplate 13SPECTRA.
+ * 5) The current album data is fetched and displayed on the e-paper display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2026-02-17
+ **************************************************/
 
 #include "src/includes.h"
 #include "src/NetworkFunctions.h"

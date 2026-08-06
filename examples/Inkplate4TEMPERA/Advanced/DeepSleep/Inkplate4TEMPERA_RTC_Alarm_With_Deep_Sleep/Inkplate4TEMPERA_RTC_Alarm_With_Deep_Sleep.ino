@@ -4,41 +4,40 @@
  * @brief       RTC alarm wake-up with deep sleep for Soldered Inkplate 4TEMPERA.
  *
  * @details     Demonstrates how to use the onboard RTC alarm interrupt to wake
- *              the Inkplate 4TEMPERA from ESP32 deep sleep. The RTC alarm is configured
- *              to trigger periodically, waking the board, refreshing the
- *              e-paper display with the current date and time, and then
+ *              the Inkplate 4TEMPERA from ESP32 deep sleep. The RTC alarm is
+ *              configured to trigger periodically, waking the board, refreshing
+ *              the e-paper display with the current date and time, and then
  *              returning the system back to low-power deep sleep mode.
+ *
+ *              The RTC alarm interrupt is connected to GPIO39 on Inkplate
+ *              4TEMPERA. When using deep sleep, all application logic must be
+ *              placed in setup() and loop() must remain empty. Expected output is
+ *              the current weekday, date and time on the Inkplate display,
+ *              refreshed automatically on every RTC alarm wake-up.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4TEMPERA
  * - Hardware:   Inkplate 4TEMPERA, USB cable
  * - Extra:      None
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate4TEMPERA
- * - Serial settings: 115200 baud (optional, not required for output)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/4TEMPERA/quick-start-guide/
+ * - Serial:     115200 baud (optional, not required for output)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4TEMPERA.
- * 2) On first boot, the RTC time and date are initialized if not already set.
- * 3) The current time and date are shown on the display.
- * 4) The board enters deep sleep and wakes up every 10 seconds using the RTC alarm.
- * 5) After each wake-up, the display is refreshed and the board goes back to sleep.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate4TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4TEMPERA.
+ * 3) On first boot, the RTC time and date are initialized if not already set,
+ *    and the current time and date are shown on the display.
+ * 4) The board enters deep sleep and wakes up every 10 seconds using the RTC
+ *    alarm.
+ * 5) After each wake-up, the display is refreshed and the board goes back to
+ *    sleep.
  *
- * Expected output:
- * - Inkplate display shows the current weekday, date, and time.
- * - Display refreshes automatically on every RTC alarm wake-up.
- *
- * Notes:
- * - RTC alarm interrupt is connected to GPIO39 on Inkplate 4TEMPERA.
- * - When using deep sleep, all application logic must be placed in setup().
- * - loop() must remain empty when deep sleep is used.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-20

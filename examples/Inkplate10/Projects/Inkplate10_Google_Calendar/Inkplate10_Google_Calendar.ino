@@ -13,46 +13,44 @@
  *              after updating the display and periodically wakes up to
  *              refresh calendar data.
  *
+ *              Before you start: make sure your Google Calendar is set to
+ *              public (Settings -> Access permissions for events), enable the
+ *              Google Calendar API in Google Cloud Console, and create an API
+ *              key under APIs & Services -> Credentials. Only public calendars
+ *              can be accessed without OAuth, and API limits apply according to
+ *              your Google Cloud project settings. The example is designed for
+ *              low-power, always-on wall or desk calendar use.
+ *
+ *              Expected output: calendar events displayed in a readable layout
+ *              on the Inkplate screen, error messages on the display if WiFi or
+ *              API requests fail, and an automatic refresh every sleep interval
+ *              (default: 10 minutes).
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable
- * - Extra:      Stable WiFi Internet connection
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- * - Enter WiFi credentials (SSID & password)
- * - Set your local time zone (UTC offset)
- * - Provide a public Google Calendar ID and Google API key
- *
- * Before you start:
- * - Make sure your Google Calendar is set to *public*
- *   (Settings → Access permissions for events).
- * - Enable **Google Calendar API** in Google Cloud Console.
- * - Create an API key under *APIs & Services → Credentials*.
+ * - Extra:      Stable WiFi Internet connection, public Google Calendar ID and
+ *               Google API key
  *
  * How to use:
- * 1) Enter WiFi credentials in the sketch.
- * 2) Set your time zone (UTC offset).
- * 3) Insert your public Google Calendar ID and API key.
- * 4) Upload the sketch to Inkplate 10.
- * 5) The calendar is fetched, rendered on screen, then the device enters deep sleep.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
+ *    from Tools -> Board.
+ * 2) Enter WiFi credentials (SSID & password) in the sketch.
+ * 3) Set your local time zone (UTC offset).
+ * 4) Insert your public Google Calendar ID and API key.
+ * 5) Upload the sketch to Inkplate 10.
+ * 6) The calendar is fetched, rendered on screen, then the device enters deep
+ *    sleep.
  *
- * Expected output:
- * - Calendar events displayed in a readable layout on the Inkplate screen.
- * - Error messages shown on the display if WiFi or API requests fail.
- * - Automatic refresh every defined sleep interval (default: 10 minutes).
- *
- * Notes:
- * - Only **public** calendars can be accessed without OAuth.
- * - API limits apply according to Google Cloud project settings.
- * - Designed for low-power, always-on wall or desk calendar use.
- *
- * Docs:
- * - Inkplate:   https://docs.soldered.com/inkplate
- * - Project:    https://docs.soldered.com/inkplate/projects/GoogleCalendar
- * - Google API: https://developers.google.com/calendar
- *
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Project documentation:
+ *              https://docs.soldered.com/inkplate/projects/GoogleCalendar
+ * @note        Google Calendar API: https://developers.google.com/calendar
  *
  * @author      Soldered
  * @date        2025

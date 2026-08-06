@@ -12,41 +12,38 @@
  *
  *              Sending 's' runs a simple "light show" that ramps the frontlight
  *              up and down several times to demonstrate the full brightness
- *              range.
+ *              range. The demo uses delays, so Serial input is not processed
+ *              during the ramp animation.
+ *
+ *              This sketch runs the display in 1-bit (BW) mode, but it does not
+ *              draw anything on the e-paper panel; only the frontlight is
+ *              controlled. Brightness is clamped to the valid range (0-63).
+ *
+ *              Expected output: Serial prints the current brightness as
+ *              "Frontlight:<value>/63" after a change or after the demo
+ *              completes, and the frontlight intensity changes immediately.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud, Newline: "No line ending" recommended
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud, Newline: "No line ending" recommended
  *
  * How to use:
- * 1) Select the Inkplate 4 TEMPERA board and upload the sketch.
- * 2) Open the Serial Monitor at 115200 baud.
- * 3) Send '+' to increase brightness (max 63).
- * 4) Send '-' to decrease brightness (min 0).
- * 5) Send 's' to run the brightness ramp demo.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) Open the Serial Monitor at 115200 baud.
+ * 4) Send '+' to increase brightness (max 63).
+ * 5) Send '-' to decrease brightness (min 0).
+ * 6) Send 's' to run the brightness ramp demo.
  *
- * Expected output:
- * - Serial: Prints the current brightness as "Frontlight:<value>/63" after a
- *   change or after the demo completes.
- * - Hardware: Frontlight intensity changes immediately.
- *
- * Notes:
- * - This sketch runs the display in 1-bit (BW) mode, but it does not draw
- *   anything on the e-paper panel; only the frontlight is controlled.
- * - Brightness is clamped to the valid range (0–63).
- * - The 's' demo uses delays; during the ramp animation Serial input is not
- *   processed.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-07-12

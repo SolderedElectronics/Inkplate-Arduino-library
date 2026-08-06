@@ -1,19 +1,38 @@
-/*
-   Inkplate13SPECTRA_EEPROM_Usage example for Soldered Inkplate 13SPECTRA
-   For this example, you will need only USB cable and Inkplate 13SPECTRA.
-   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-   [LIKN PLACEHOLDER]
-
-   This example will show you how to use EEPROM with Inkplate board.
-   EEPROM is a permanent memory that holds data even if the power supply is disconnected.
-   You can use EEPROM to store any data you don't want to lose during restarting or powering down the device.
-   It shows how to use basic operations with EEPROM like clearing, writing, and reading.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our forums: https://forum.soldered.com/
-   22 January 2026
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_EEPROM_Usage.ino
+ * @brief       EEPROM read/write example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to use EEPROM with the Inkplate board. EEPROM is a
+ *              permanent memory that holds data even if the power supply is
+ *              disconnected, so you can use it to store any data you don't want
+ *              to lose when restarting or powering down the device. The example
+ *              demonstrates the basic EEPROM operations: clearing, writing and
+ *              reading.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) The sketch clears the user EEPROM area, writes sample data and reads it
+ *    back.
+ * 4) The written and read values are shown on the display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2026-01-22
+ **************************************************/
 
 
 

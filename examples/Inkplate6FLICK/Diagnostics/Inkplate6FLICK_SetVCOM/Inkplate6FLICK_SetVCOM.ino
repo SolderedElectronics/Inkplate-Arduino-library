@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate6FLICK_Set_VCOM.ino
+ * @file        Inkplate6FLICK_SetVCOM.ino
  * @brief       Reads and programs the Inkplate 6FLICK EPD VCOM voltage via Serial.
  *
  * @details     This example shows how to read the currently stored VCOM value
@@ -14,39 +14,38 @@
  *              VCOM by trial-and-error. Program it once (only if needed) and
  *              leave it unchanged to avoid prematurely wearing out EEPROM.
  *
+ *              Display mode is 3-bit grayscale (INKPLATE_3BIT) and a full
+ *              refresh is used. If programming fails, verify you selected the
+ *              correct Inkplate 6FLICK board and use a stable USB connection/power
+ *              source. Expected output is "Stored VCOM: <value> V" plus an
+ *              8-step 3-bit grayscale pattern on the display, and the prompt,
+ *              requested VCOM value and success/failure message on Serial.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6FLICK
- * - Serial Monitor: 115200 baud, Newline (LF)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6FLICK/quick-start-guide/
+ * - Serial:     115200 baud, Newline (LF)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) Open Serial Monitor at 115200 baud and set line ending to Newline (LF).
- * 3) Read the prompt and enter a VCOM value in the range [-5.0, 0.0]
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) Open Serial Monitor at 115200 baud and set line ending to Newline (LF).
+ * 4) Read the prompt and enter a VCOM value in the range [-5.0, 0.0]
  *    (example: -1.23), then press Send.
- * 4) The sketch validates the range, programs VCOM (if valid), and refreshes
+ * 5) The sketch validates the range, programs VCOM (if valid), and refreshes
  *    the display to show the stored VCOM and a grayscale bar pattern.
  *
- * Expected output:
- * - Display: "Stored VCOM: <value> V" and an 8-step 3-bit grayscale pattern.
- * - Serial:  Prompt + requested VCOM value + success/failure message.
+ * @warning     VCOM is written to EEPROM with limited write endurance. Avoid
+ *              repeated programming to prevent permanent wear/damage.
  *
- * Notes:
- * - Display mode: 3-bit grayscale (INKPLATE_3BIT). Uses a full refresh.
- * - WARNING: VCOM is written to EEPROM with limited write endurance. Avoid
- *   repeated programming to prevent permanent wear/damage.
- * - If programming fails, verify you selected the correct Inkplate 6FLICK board and
- *   use a stable USB connection/power source.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-07-29

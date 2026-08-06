@@ -1,17 +1,47 @@
-/*
-Inkplate6COLOR_Google_Calendar for Soldered Inkplate 6 Color
-
-Before You Start:
-
-  - Enter your WiFi credentials carefully (they are case-sensitive).
-
-  - Update the timeZone variable according to your data
-
-  - Get Google Calendar public calendar ID and API key:
-      1. Calendar ID: Go to calendar.google.com > Settings > Select your calendar > "Integrate calendar" > Copy "Calendar ID" (e.g. random@group.calendar.google.com).
-      2. API Key: Go to console.cloud.google.com > Select/create a project > "APIs & Services" > "Credentials" > "Create credentials" > API key.
-      Make sure your calendar is public under "Access permissions" in calendar settings.
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Google_Calendar.ino
+ * @brief       Google Calendar dashboard example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Fetches events from a public Google Calendar and renders them on
+ *              the Inkplate 13SPECTRA e-paper display.
+ *
+ *              Before you start:
+ *              - Enter your WiFi credentials carefully (they are case-sensitive).
+ *              - Update the timeZone variable according to your data.
+ *              - Get a Google Calendar public calendar ID and API key:
+ *                1. Calendar ID: go to calendar.google.com > Settings > select
+ *                   your calendar > "Integrate calendar" > copy "Calendar ID"
+ *                   (e.g. random@group.calendar.google.com).
+ *                2. API key: go to console.cloud.google.com > select/create a
+ *                   project > "APIs & Services" > "Credentials" >
+ *                   "Create credentials" > API key.
+ *                Make sure your calendar is public under "Access permissions"
+ *                in the calendar settings.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      WiFi Internet connection, public Google Calendar ID and Google
+ *               API key
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials and timeZone in the sketch.
+ * 3) Enter your public Google Calendar ID and API key.
+ * 4) Upload the sketch to Inkplate 13SPECTRA.
+ * 5) The calendar events are fetched and rendered on the display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

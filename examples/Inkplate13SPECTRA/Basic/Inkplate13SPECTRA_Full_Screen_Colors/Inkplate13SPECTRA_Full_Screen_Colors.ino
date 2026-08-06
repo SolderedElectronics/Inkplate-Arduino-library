@@ -1,15 +1,31 @@
-/*
-   Inkplate13SPECTRA_Full_Screen_Colors example for Soldered Inkplate 6COLOR
-   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-
-   Simple Inkplate example showing all colors of the Inkplate.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our forums: https://forum.soldered.com/
-   23 January 2026 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Full_Screen_Colors.ino
+ * @brief       Full screen colour example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Simple Inkplate example showing all colours of the Inkplate.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) Each colour of the Spectra 6 palette is shown full screen in turn.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2026-01-23
+ **************************************************/
 
 #include "Inkplate.h"
 

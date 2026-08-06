@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate10_LAN_Gallery.ino
+ * @file        Inkplate10_Lan_Gallery.ino
  * @brief       Hosts a LAN web page to upload images to SD, then displays the
  *              uploaded images randomly on Inkplate 10 in 3-bit grayscale.
  *
@@ -25,52 +25,48 @@
  *              sleep); images rotate based on a configurable interval, and the
  *              image list is rebuilt after each upload.
  *
+ *              SD card access is shared between the web server upload handler
+ *              and the display loop, so this example uses a mutex to serialize
+ *              SD reads/writes. Only files in the SD root directory are scanned;
+ *              large SD card directories may slow down rebuildImageList()
+ *              because it re-scans. JPEG/BMP decoding and buffering consume RAM,
+ *              so very large images may fail to decode or draw. If mDNS ".local"
+ *              addressing does not work on your network/device, use the
+ *              Inkplate's IP address shown in Serial Monitor.
+ *
+ *              Expected output: the e-paper display shows a randomly chosen
+ *              image from the SD card, centered, with a small footer label
+ *              rendered on top; the Serial Monitor prints WiFi connection
+ *              progress, SD scan results, detected image dimensions and
+ *              upload/write diagnostics. After an upload completes, the new
+ *              images become eligible for rotation.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable, microSD card (FAT32 formatted)
  * - Extra:      WiFi network + a phone/PC with a web browser on the same LAN
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- * - Serial Monitor: 115200 baud
- * - Install libraries: AsyncTCP, ESPAsyncWebServer (Arduino Library Manager)
- * - Set WiFi credentials (ssid, password) in the sketch
- * - Set IMAGE_CHANGE_INTERVAL (milliseconds) to control rotation timing
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Libraries:  AsyncTCP, ESPAsyncWebServer (Arduino Library Manager)
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Format a microSD card as FAT32 and insert it into Inkplate 10.
- * 2) Install AsyncTCP and ESPAsyncWebServer from Arduino Library Manager.
- * 3) Edit ssid/password and (optionally) IMAGE_CHANGE_INTERVAL.
- * 4) Upload the sketch and open Serial Monitor at 115200 baud.
- * 5) From a device on the same network, open the gallery page (mDNS hostname
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
+ *    from Tools -> Board.
+ * 2) Format a microSD card as FAT32 and insert it into Inkplate 10.
+ * 3) Install AsyncTCP and ESPAsyncWebServer from Arduino Library Manager.
+ * 4) Edit ssid/password and (optionally) IMAGE_CHANGE_INTERVAL (milliseconds,
+ *    controls rotation timing).
+ * 5) Upload the sketch and open Serial Monitor at 115200 baud.
+ * 6) From a device on the same network, open the gallery page (mDNS hostname
  *    such as "langallery.local" if available, otherwise use the printed IP).
- * 6) Upload BMP/JPG images; after each upload the list is rebuilt and a random
+ * 7) Upload BMP/JPG images; after each upload the list is rebuilt and a random
  *    image is shown. Images will also rotate automatically over time.
  *
- * Expected output:
- * - E-paper display shows a randomly chosen image from the SD card, centered,
- *   with a small footer label rendered on top.
- * - Serial Monitor prints WiFi connection progress, SD scan results, detected
- *   image dimensions, and upload/write diagnostics.
- * - After an upload completes, the new images become eligible for rotation.
- *
- * Notes:
- * - Display mode: 3-bit grayscale (INKPLATE_3BIT); partial updates are not
- *   available in grayscale mode, so each change is a full refresh.
- * - SD card access is shared between the web server upload handler and the
- *   display loop; this example uses a mutex to serialize SD reads/writes.
- * - Only files in the SD root directory are scanned in this sketch; large SD
- *   card directories may slow down rebuildImageList() because it re-scans.
- * - JPEG/BMP decoding and buffering consume RAM; very large images may fail to
- *   decode or draw.
- * - If mDNS ".local" addressing does not work on your network/device, use the
- *   Inkplate's IP address shown in Serial Monitor.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2020

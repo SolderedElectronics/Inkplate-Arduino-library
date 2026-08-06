@@ -10,38 +10,37 @@
  *              using partial refreshes with occasional full refreshes to keep
  *              image quality high.
  *
+ *              Partial update is available only in 1-bit (black & white) mode.
+ *              Avoid partial update immediately after power-on - use a full
+ *              refresh first - and do a full refresh every 5-10 partial
+ *              refreshes to maintain quality. This example keeps the e-paper
+ *              power supply enabled during partial updates. Expected output is
+ *              the time shown as HH:MM:SS plus the weekday and date in a
+ *              readable format (e.g. Monday, 11/11/21).
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Libraries:  Inkplate library (RTC support included)
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) The sketch sets the RTC time/date defined in the code.
- * 3) The display updates once per second with the current time and date.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) The sketch sets the RTC time/date defined in the code.
+ * 4) The display updates once per second with the current time and date.
  *
- * Expected output:
- * - Time shown as HH:MM:SS.
- * - Weekday and date shown in a readable format (e.g., Monday, 11/11/21).
- * - Mostly partial updates, with periodic full refreshes.
- *
- * Notes:
- * - Partial update is available only in 1-bit (black & white) mode.
- * - Avoid partial update immediately after power-on; use a full refresh first.
- * - Doing a full refresh every 5–10 partial refreshes helps maintain quality.
- * - This example keeps the e-paper power supply enabled during partial updates.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

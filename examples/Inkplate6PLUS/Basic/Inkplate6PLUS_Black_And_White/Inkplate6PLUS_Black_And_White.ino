@@ -4,48 +4,49 @@
  * @brief       Basic black & white graphics demo for Soldered Inkplate 6PLUS.
  *
  * @details     Demonstrates drawing simple graphics primitives on the Inkplate
- *              6PLUS e-paper display using Adafruit GFX-compatible functions.
+ *              6FLICK e-paper display using Adafruit GFX-compatible functions.
  *              The example runs in 1-bit (black & white) mode and showcases:
  *              pixels, lines (including thick lines), rectangles (outlined and
  *              filled), circles (outlined and filled), rounded rectangles,
  *              triangles, ellipses, polygons, bitmap rendering, text in
  *              multiple sizes, inverted text colors, and display rotation.
  *
+ *              Refreshing e-paper too frequently is not recommended, so this
+ *              example uses a 5 s delay between full refreshes (DELAY_MS); for
+ *              faster refresh, use partial updates (see the partial update
+ *              examples). The helper displayCurrentAction() writes a label at
+ *              the bottom indicating the currently demonstrated feature.
+ *
+ *              Expected output: a sequence of graphics demos displayed one by
+ *              one, the Soldered logo bitmap rendered on the display, text shown
+ *              in multiple sizes and with inverted colours, and continuous
+ *              rotated "INKPLATE 6FLICK" text at the end.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6PLUS.
- * 2) The display will cycle through multiple drawing demonstrations.
- * 3) Each scene is drawn into the framebuffer and shown using display.display().
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6PLUS"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6PLUS.
+ * 3) The display cycles through multiple drawing demonstrations, each drawn
+ *    into the framebuffer and shown using display.display().
  * 4) At the end, the example continuously rotates and redraws text.
  *
- * Expected output:
- * - A sequence of graphics demos displayed one by one.
- * - Soldered logo bitmap rendered on the display.
- * - Text shown in multiple sizes and with inverted colors.
- * - Continuous rotated “INKPLATE 6PLUS” text at the end.
- *
- * Notes:
- * - Refreshing e-paper too frequently is not recommended; this example uses a
- *   5 s delay between full refreshes (DELAY_MS).
- * - For faster refresh, use partial updates (see partial update examples).
- * - The helper displayCurrentAction() writes a label at the bottom indicating
- *   the currently demonstrated feature.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * GFX:          https://learn.adafruit.com/adafruit-gfx-graphics-library
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Adafruit GFX reference:
+ *              https://learn.adafruit.com/adafruit-gfx-graphics-library
  *
  * @author      Soldered Electroncis
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)

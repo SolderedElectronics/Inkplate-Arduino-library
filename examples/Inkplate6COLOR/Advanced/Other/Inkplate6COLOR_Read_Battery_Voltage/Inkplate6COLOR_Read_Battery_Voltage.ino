@@ -14,43 +14,40 @@
  *              display.readBattery(), clears the display buffer, draws a
  *              battery icon, and prints the measured voltage value beside it.
  *              The screen is refreshed every 10 seconds with a new reading.
+ *              The example includes a bitmap image (battSymbol.h) used to render
+ *              the battery icon.
  *
  *              This example is useful for battery-powered projects where it
  *              is important to monitor charge level and display the current
- *              supply voltage on the screen.
+ *              supply voltage on the screen. Each update performs a full display
+ *              refresh, which is slower and consumes more energy than monochrome
+ *              partial-update workflows on supported boards. Battery voltage
+ *              measurement accuracy depends on the onboard ADC and voltage
+ *              divider tolerances, so readings should be treated as approximate.
+ *
+ *              Expected output: a battery symbol and the measured voltage value
+ *              (for example 3.85 V) on the display.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
- * - Hardware:   Inkplate 6COLOR, USB cable
- * - Extra:      3.7V Li-Po/Li-Ion battery with JST connector
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Connect the battery to the onboard JST battery connector
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Hardware:   Inkplate 6COLOR, USB cable, 3.7 V Li-Po/Li-Ion battery with JST
+ *               connector
+ * - Extra:      none
  *
  * How to use:
- * 1) Connect a compatible lithium battery to the Inkplate battery connector.
- * 2) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
- * 3) After startup, the display shows a battery icon and the measured voltage.
- * 4) The measurement updates every 10 seconds.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Connect a compatible lithium battery to the onboard JST battery connector.
+ * 3) Upload the sketch to Inkplate 6COLOR.
+ * 4) After startup, the display shows a battery icon and the measured voltage.
+ * 5) The measurement updates every 10 seconds.
  *
- * Expected output:
- * - Display: Battery symbol and measured voltage value (for example: 3.85V).
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - Each update performs a full display refresh, which is slower and consumes
- *   more energy than monochrome partial-update workflows on supported boards.
- * - Battery voltage measurement accuracy depends on the onboard ADC and
- *   voltage divider tolerances, so readings should be treated as approximate.
- * - The example includes a bitmap image (battSymbol.h) used to render the
- *   battery icon on the display.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-01-23

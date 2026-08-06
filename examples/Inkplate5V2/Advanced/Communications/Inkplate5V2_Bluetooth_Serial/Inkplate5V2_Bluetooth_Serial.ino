@@ -1,6 +1,7 @@
+
 /**
  **************************************************
- * @file        Inkplate5v2_Bluetooth_Serial.ino
+ * @file        Inkplate5V2_Bluetooth_Serial.ino
  * @brief       Bluetooth SPP serial bridge example for Soldered Inkplate 5v2.
  *
  * @details     Demonstrates how to use classic Bluetooth (SPP profile) on the
@@ -10,36 +11,34 @@
  *              sent from the Inkplate (via Serial Monitor) is forwarded to
  *              the connected phone.
  *
+ *              Expected output is text received over Bluetooth shown on the
+ *              Inkplate display, with sent and received messages logged in the
+ *              Serial Monitor. Bluetooth pairing and app behavior may differ
+ *              between Android and iOS; some iOS apps do not support classic
+ *              Bluetooth SPP.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
- * - Hardware:   Inkplate 10, USB cable
+ * - Hardware:   Inkplate 5v2, USB cable
  * - Extra:      Bluetooth serial terminal app (e.g. Serial Bluetooth Terminal)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- * - Serial settings: 115200 baud
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 10.
- * 2) Pair the Inkplate with your phone in Bluetooth settings.
- * 3) Open a Bluetooth serial terminal app and connect to Inkplate.
- * 4) Send text from the phone and verify it appears on the Inkplate display
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 5v2.
+ * 3) Pair the Inkplate with your phone in Bluetooth settings.
+ * 4) Open a Bluetooth serial terminal app and connect to Inkplate.
+ * 5) Send text from the phone and verify it appears on the Inkplate display
  *    and in the Serial Monitor.
- * 5) Send text from the Serial Monitor and verify it appears in the phone app.
+ * 6) Send text from the Serial Monitor and verify it appears in the phone app.
  *
- * Expected output:
- * - Inkplate display shows text received over Bluetooth
- * - Serial Monitor logs sent and received messages
- *
- * Notes:
- * - Bluetooth pairing and app behavior may differ between Android and iOS.
- * - Some iOS apps do not support classic Bluetooth SPP.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-17

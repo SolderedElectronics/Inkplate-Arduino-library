@@ -15,40 +15,38 @@
  *              not configure an RTC alarm or deep sleep; it only periodically
  *              updates the displayed time.
  *
+ *              Display mode is 1-bit (BW) and the sketch uses a full refresh
+ *              (display()). Frequent full refreshes increase update time and may
+ *              cause more visible flashing, so consider longer intervals for
+ *              battery-powered use. WiFi must remain connected for each NTP
+ *              fetch; if WiFi is unavailable, time retrieval will fail (add
+ *              error handling for production use).
+ *
+ *              Expected output: a large HH:MM time with the DD.MM.YYYY date
+ *              below it on the display; the Serial Monitor only shows basic logs
+ *              if you add your own prints.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi connection + Internet access (NTP)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial Monitor: (optional) 115200 baud
- * - WiFi:           set ssid/pass
- * - Timezone:       set timeZone (hours offset from UTC)
- * - Update period:  set DELAY_TIME (ms)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional)
  *
  * How to use:
- * 1) Enter your WiFi SSID/password and set your local timeZone.
- * 2) Upload the sketch to Inkplate 2.
- * 3) The display shows the current time and date.
- * 4) The screen is refreshed again after each DELAY_TIME interval.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID/password (ssid, pass) and set your local timeZone
+ *    (hours offset from UTC) and DELAY_TIME (ms) update period.
+ * 3) Upload the sketch to Inkplate 2.
+ * 4) The display shows the current time and date.
+ * 5) The screen is refreshed again after each DELAY_TIME interval.
  *
- * Expected output:
- * - Display: large HH:MM time, and DD.MM.YYYY date below it.
- * - Serial Monitor: only basic logs if you add your own prints.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This sketch uses full refresh (display()).
- * - Frequent full refreshes increase update time and may cause more visible
- *   flashing; consider longer intervals for battery-powered use.
- * - WiFi must remain connected for each NTP fetch. If WiFi is unavailable,
- *   time retrieval will fail (add error handling for production use).
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-12-01

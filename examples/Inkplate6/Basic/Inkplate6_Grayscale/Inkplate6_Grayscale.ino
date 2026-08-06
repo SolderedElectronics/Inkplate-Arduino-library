@@ -11,35 +11,33 @@
  *              shapes, polygons), renders a grayscale bitmap, and shows text in
  *              different sizes and shades.
  *
+ *              Expected output is a sequence of grayscale graphics demos
+ *              (shades 0-7) and text rendering, with the final part
+ *              continuously rotating and displaying text. Avoid refreshing the
+ *              full display too often; the long delays here exist for demo
+ *              clarity. Partial update is primarily intended for 1-bit mode,
+ *              see the partial update examples.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6
  * - Hardware:   Inkplate 6, USB cable
  * - Extra:      Optional grayscale bitmap header file (e.g. image.h)
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6.
- * 2) The example cycles through multiple grayscale drawing demonstrations.
- * 3) Each demo renders to the framebuffer and then updates the e-paper display.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6.
+ * 3) The example cycles through multiple grayscale drawing demonstrations, each
+ *    rendered to the framebuffer and then pushed to the e-paper display.
  *
- * Expected output:
- * - A sequence of grayscale graphics demos (0–7 shades) and text rendering.
- * - Final part continuously rotates and displays text.
- *
- * Notes:
- * - Inkplate library is compatible with Adafruit GFX drawing functions.
- * - Grayscale (3-bit) mode supports 8 shades: 0 (black) to 7 (white).
- * - Avoid refreshing the full display too often; long delays are used for demo clarity.
- * - Partial update is primarily intended for 1-bit mode; see partial update examples.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Adafruit GFX: https://learn.adafruit.com/adafruit-gfx-graphics-library
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Adafruit GFX reference:
+ *              https://learn.adafruit.com/adafruit-gfx-graphics-library
  *
  * @author      Soldered
  * @date        2022-12-02

@@ -12,51 +12,44 @@
  *              Serial Monitor.
  *
  *              For simplicity, TLS certificate validation is disabled via
- *              client.setInsecure(). This is suitable for demos/testing only.
- *              For production use, validate the server using a root CA
- *              certificate or certificate pinning that matches the target host.
+ *              client.setInsecure(). This is suitable for demos/testing only and
+ *              makes the connection vulnerable to MITM attacks. For production
+ *              use, validate the server using a root CA certificate or
+ *              certificate pinning that matches the target host. JSONPlaceholder
+ *              is a fake test API: it returns realistic responses but does not
+ *              persist posted data.
  *
  *              The e-paper display is used only to show basic instructions at
  *              startup. The display runs in 1-bit (black/white) mode and is
- *              refreshed once during setup.
+ *              refreshed once during setup with a full refresh.
+ *
+ *              Expected output: "HTTPS POST Request example" and a reminder to
+ *              open the Serial Monitor on the display; connection logs followed
+ *              by repeated blocks containing the HTTP status code and JSON
+ *              response in the Serial Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi connection + Internet access
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - Serial Monitor: 115200 baud
- * - WiFi:           set ssid/pass
- * - API URL:        set apiUrl (HTTPS endpoint)
- * - Request period: set DELAY_BETWEEN_REQUESTS (ms)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Enter your WiFi SSID and password.
- * 2) (Optional) Change apiUrl to your endpoint and adjust headers/payload.
- * 3) Upload the sketch and open Serial Monitor at 115200 baud.
- * 4) Every DELAY_BETWEEN_REQUESTS milliseconds, the sketch sends an HTTPS POST
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password (ssid, pass).
+ * 3) Optionally change apiUrl to your HTTPS endpoint, adjust headers/payload and
+ *    set DELAY_BETWEEN_REQUESTS (ms).
+ * 4) Upload the sketch and open Serial Monitor at 115200 baud.
+ * 5) Every DELAY_BETWEEN_REQUESTS milliseconds, the sketch sends an HTTPS POST
  *    request and prints the status code and response payload.
  *
- * Expected output:
- * - Display: "HTTPS POST Request example" and a reminder to open Serial Monitor.
- * - Serial Monitor: connection logs, then repeated blocks containing HTTP
- *   status code and the JSON response from the server.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Only a full refresh (display()) is used.
- * - Security warning: client.setInsecure() disables TLS certificate validation
- *   and makes the connection vulnerable to MITM attacks. Use proper
- *   certificate validation for real APIs.
- * - JSONPlaceholder is a fake test API; it returns realistic responses but
- *   does not persist posted data.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-01-27

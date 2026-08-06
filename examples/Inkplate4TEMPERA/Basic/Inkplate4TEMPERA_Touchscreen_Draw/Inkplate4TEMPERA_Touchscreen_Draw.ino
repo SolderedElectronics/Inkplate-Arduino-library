@@ -10,54 +10,43 @@
  *              sketch continuously checks for touch availability, retrieves up
  *              to two simultaneous touch points, and draws either:
  *              - A line segment from the previous touch point to the new point
- *                (DRAW_LINE), creating a “scribble” effect, or
+ *                (DRAW_LINE), creating a "scribble" effect, or
  *              - A filled circle at the touch position (DRAW_CIRCLE).
  *
- *              The display runs in 1-bit black/white mode (INKPLATE_1BIT) and
- *              uses partial updates while keeping panel power enabled to make
- *              the interaction responsive. Because partial updates can leave
- *              ghosting over time, a periodic full refresh may be desirable in
- *              longer drawing sessions (not implemented in this sketch).
+ *              The display runs in 1-bit black/white mode (INKPLATE_1BIT), where
+ *              partial updates are supported, and keeps panel power enabled via
+ *              display.partialUpdate(false, true) to make the interaction
+ *              responsive at the cost of increased power consumption. Repeated
+ *              partial updates accumulate ghosting artifacts, so for longer
+ *              sessions add an occasional full refresh (display.display()) to
+ *              clean the panel. The API can return up to 2 touch points, but this
+ *              example uses only the first point (x[0], y[0]) for drawing.
+ *
+ *              Expected output: the text "Draw on the screen!" on startup, then
+ *              drawing where you touch, updated quickly via partial refreshes.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (optional, for init logs)
- * - Select drawing mode:
- *   - #define DRAW_LINE   (default)
- *   - #define DRAW_CIRCLE
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional, for init logs)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4 TEMPERA.
- * 2) Touch and drag on the screen to draw.
- * 3) If DRAW_LINE is enabled, continuous strokes are drawn by connecting points.
- *    If DRAW_CIRCLE is enabled, tapping draws filled circles.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Select the drawing mode: #define DRAW_LINE (default) or #define
+ *    DRAW_CIRCLE.
+ * 3) Upload the sketch to Inkplate 4 TEMPERA.
+ * 4) Touch and drag on the screen to draw.
+ * 5) If DRAW_LINE is enabled, continuous strokes are drawn by connecting points;
+ *    if DRAW_CIRCLE is enabled, tapping draws filled circles.
  *
- * Expected output:
- * - The text "Draw on the screen!" on startup.
- * - Drawing appears where you touch, updated quickly via partial refreshes.
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT). Partial updates are supported only
- *   in BW mode.
- * - Partial update behavior: display.partialUpdate(false, true) keeps panel
- *   power enabled for faster and more reliable repeated partial updates, at the
- *   cost of increased power consumption.
- * - Ghosting: repeated partial updates will accumulate artifacts. For longer
- *   sessions, add an occasional full refresh (display.display()) to clean the
- *   panel.
- * - Multi-touch: the API can return up to 2 touch points, but this example uses
- *   only the first point (x[0], y[0]) for drawing.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-07-12

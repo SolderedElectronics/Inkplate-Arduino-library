@@ -15,55 +15,49 @@
  *              external router, cloud service, or companion app. A client
  *              device connects directly to the Inkplate access point, opens the
  *              IP address shown on the display, and interacts with the hosted
- *              web interface.
+ *              web interface. Because the board runs as an access point,
+ *              Internet access is not required for basic operation.
  *
  *              The example uses plain HTTP on port 80 and is designed as a
  *              simple demonstration of local browser-to-display communication.
- *              It can be extended into richer local dashboards, message boards,
- *              control panels, and custom interfaces.
+ *              It is intended for local/demo use and does not provide HTTPS or
+ *              authentication beyond Wi-Fi access control. It can be extended
+ *              into richer local dashboards, message boards, control panels, and
+ *              custom interfaces. Long submitted text may wrap across multiple
+ *              lines depending on available display space and current text
+ *              settings. Display mode is Inkplate 6COLOR colour e-paper mode with
+ *              full refreshes, which are slower than monochrome partial-update
+ *              workflows on supported boards.
+ *
+ *              Expected output: the Wi-Fi SSID, password, local server URL and
+ *              the most recently submitted user text on the display, plus a
+ *              simple web page with a text input field in the browser.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      Phone / tablet / computer with Wi-Fi and web browser
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Change the AP SSID and password in the sketch if needed
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6COLOR.
- * 2) After boot, Inkplate starts a Wi-Fi access point using the configured
- *    SSID and password.
- * 3) On the display, note the network name, password, and local server IP.
- * 4) Connect a phone, tablet, or computer to the Inkplate Wi-Fi network.
- * 5) Open a browser and navigate to the IP address shown on the display.
- * 6) Enter text in the web form and submit it.
- * 7) The submitted text is shown on the Inkplate display.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Change the AP SSID and password in the sketch if needed.
+ * 3) Upload the sketch to Inkplate 6COLOR.
+ * 4) After boot, Inkplate starts a Wi-Fi access point using the configured
+ *    SSID and password; note the network name, password and local server IP
+ *    shown on the display.
+ * 5) Connect a phone, tablet, or computer to the Inkplate Wi-Fi network.
+ * 6) Open a browser and navigate to the IP address shown on the display.
+ * 7) Enter text in the web form and submit it - the submitted text is shown on
+ *    the Inkplate display.
  *
- * Expected output:
- * - Display: Wi-Fi SSID, password, local server URL, and the most recently
- *   submitted user text.
- * - Browser: A simple web page with a text input field for sending text to the
- *   display.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode with full refreshes.
- * - This example uses plain HTTP only. It is intended for local/demo use and
- *   does not provide HTTPS or authentication beyond Wi-Fi access control.
- * - Because the board runs as an access point, Internet access is not required
- *   for basic operation.
- * - Long submitted text may wrap across multiple lines depending on available
- *   display space and current text settings.
- * - Frequent full color refreshes are slower than monochrome partial-update
- *   workflows on supported boards.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-12-02

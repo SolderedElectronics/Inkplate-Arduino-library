@@ -8,43 +8,43 @@
  *              ThingSpeak API as a simple endpoint for storing and visualizing
  *              posted data. Sent values are printed to the Serial Monitor.
  *
+ *              The example posts a random value as field1 - replace it with real
+ *              sensor data. It uses plain HTTP on port 80 (not HTTPS), and if a
+ *              connection fails the sketch retries on the next interval.
+ *              Expected output is basic instructions on the display to open the
+ *              Serial Monitor, the Wi-Fi connection status and posted field data
+ *              in the Serial Monitor, and the ThingSpeak channel graph updating
+ *              with the posted values.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
- *
- * Configuration:
- * - Set ssid/pass to your Wi-Fi credentials
- * - Set writeAPIKey to your ThingSpeak Write API Key
- * - POST interval: POSTING_INTERVAL_IN_SESCS (min ~15 s for free ThingSpeak)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Extra:      Wi-Fi connection, ThingSpeak account with a channel and Write
+ *               API Key
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Create a free ThingSpeak account and a channel with at least "field1".
- * 2) Copy the channel Write API Key into writeAPIKey.
- * 3) Enter your Wi-Fi SSID and password in ssid/pass.
- * 4) Upload the sketch and open Serial Monitor at 115200 baud.
- * 5) Every interval, the device sends a POST request with field1 data.
- * 6) Open your ThingSpeak channel to view the received data/graph.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Create a free ThingSpeak account and a channel with at least "field1".
+ * 3) Copy the channel Write API Key into writeAPIKey.
+ * 4) Enter your Wi-Fi SSID and password in ssid/pass, and set
+ *    POSTING_INTERVAL_IN_SESCS (minimum ~15 s for free ThingSpeak).
+ * 5) Upload the sketch and open Serial Monitor at 115200 baud.
+ * 6) Every interval, the device sends a POST request with field1 data.
+ * 7) Open your ThingSpeak channel to view the received data/graph.
  *
- * Expected output:
- * - Inkplate display shows basic instructions to open Serial Monitor.
- * - Serial Monitor shows Wi-Fi connection status and posted field data.
- * - ThingSpeak channel graph updates with the posted values.
- *
- * Notes:
- * - This example posts a random value as field1; replace it with real sensor data.
- * - Uses plain HTTP on port 80 (not HTTPS).
- * - If connection fails, the sketch retries on the next interval.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

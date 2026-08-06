@@ -10,55 +10,49 @@
  *              simple input controls for user interaction.
  *
  *              The sketch continuously reads the state of the touchpads using
- *              display.touchpad.read(). Each pad performs a different action
- *              on a displayed counter value:
+ *              display.touchpad.read(), which returns 1 when the pad is touched
+ *              and 0 otherwise. Each pad performs a different action on a
+ *              displayed counter value:
  *
  *              - Pad 1 decreases the displayed number
  *              - Pad 2 resets the number to zero
  *              - Pad 3 increases the number
  *
  *              To improve refresh speed and reduce panel wear, the example uses
- *              partial display updates in 1-bit mode. After several partial
- *              updates, a full refresh is automatically performed to maintain
- *              display quality.
+ *              partial display updates in 1-bit black-and-white mode
+ *              (INKPLATE_1BIT). After ~20 partial updates, a full refresh is
+ *              automatically performed to maintain display quality.
+ *
+ *              Expected output is a large number on the display that changes
+ *              according to touchpad input, with the symbols "-", "0" and "+"
+ *              printed above the touchpads as visual indicators of their
+ *              function. Capacitive touchpads are sensitive to environment and
+ *              grounding and may not work reliably through thick enclosures or
+ *              insulating materials.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Select Soldered Inkplate10 in Arduino IDE and upload the sketch.
- * 2) After initialization, a number appears in the center of the display.
- * 3) Touch the pads on the bottom of the PCB:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 10.
+ * 3) After initialization, a number appears in the center of the display.
+ * 4) Touch the pads on the bottom of the PCB:
  *    - Touch pad 1 to decrease the number.
  *    - Touch pad 2 to reset the number to zero.
  *    - Touch pad 3 to increase the number.
- * 4) The display updates each time a pad is touched.
+ * 5) The display updates each time a pad is touched.
  *
- * Expected output:
- * - Display: A large number that changes according to touchpad input.
- * - Display: Symbols "-", "0", and "+" printed above the touchpads as
- *   visual indicators of their function.
- *
- * Notes:
- * - Display mode: 1-bit black-and-white (INKPLATE_1BIT).
- * - Partial updates are used for faster refresh. After ~20 partial updates,
- *   a full refresh is performed automatically.
- * - Capacitive touchpads are sensitive to environment and grounding and may
- *   not work reliably through thick enclosures or insulating materials.
- * - The function touchpad.read() returns 1 when the pad is touched and 0
- *   otherwise.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11

@@ -1,23 +1,45 @@
-/*
-   Inkplate6_SD_TXT_Read example for Soldered Inkplate 6
-   For this example you will need only a micro USB cable, Inkplate 6 and a SD card
-   loaded with text.txt file that can be found inside folder of this example.
-   Select "e-radionica Inkplate6" or "Soldered Inkplate6" from Tools -> Board menu.
-   Don't have "e-radionica Inkplate6" or "Soldered Inkplate6" option? Follow our tutorial and add it:
-   https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
-
-   To work with SD card on Inkplate, you will need to add one extra library.
-   Download and install it from here: https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
-
-   You can open your own .txt file, but in order to this example works properly it should
-   not have more than 200 chars and you should name it text.txt
-
-   This example will show you how to open .txt files and display the content of that file on Inkplate epaper display.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our forums: https://forum.soldered.com/
-   15 July 2020 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate6_microSD_TXT_Read.ino
+ * @brief       Read and display a text file from an SD card on Soldered
+ *              Inkplate 6.
+ *
+ * @details     Shows how to open .txt files and display the content of the file
+ *              on the Inkplate e-paper display. You can open your own .txt file,
+ *              but for this example to work properly it should not have more than
+ *              200 characters and it should be named text.txt.
+ *
+ *              To work with the SD card on Inkplate, you need to add one extra
+ *              library - download and install it from
+ *              https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
+ *
+ * Requirements:
+ * - Board:      e-radionica Inkplate 6 or Soldered Inkplate 6
+ * - Hardware:   Inkplate 6, micro USB cable, SD card loaded with the text.txt
+ *               file found inside the folder of this example
+ * - Library:    https://github.com/e-radionicacom/Inkplate-6-SDFat-Arduino-Library
+ * - Extra:      text.txt must be max 200 characters
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "e-radionica Inkplate6" or
+ *    "Soldered Inkplate6" from Tools -> Board.
+ * 2) Install the SDFat library linked above.
+ * 3) Copy text.txt to the SD card and insert it into the Inkplate.
+ * 4) Upload the sketch to Inkplate 6.
+ * 5) The contents of text.txt are shown on the e-paper display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Adding the board definition to the Arduino IDE:
+ *              https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
+ *
+ * @author      Soldered
+ * @date        2020-07-15
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)

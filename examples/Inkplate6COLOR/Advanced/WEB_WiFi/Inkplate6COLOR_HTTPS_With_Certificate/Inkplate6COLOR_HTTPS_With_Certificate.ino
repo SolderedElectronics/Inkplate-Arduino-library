@@ -16,60 +16,49 @@
  *              from a website covered by the provided certificate, it attempts
  *              to load a second image from a different domain. That request is
  *              expected to fail because the certificate is not valid for that
- *              host.
+ *              host - a certificate valid for one domain will not validate a
+ *              different domain.
  *
  *              This is a practical demonstration of HTTPS certificate-based
- *              validation for web image workflows. It is more secure than
- *              insecure TLS modes, but the certificate must match the server
- *              you are connecting to. For web image examples, supported image
- *              formats and available RAM must also be considered.
+ *              validation for web image workflows, unlike setInsecure()-based
+ *              demos. BMP support is the safest option in embedded workflows;
+ *              BMP files should use supported bit depths and, in typical
+ *              Inkplate image workflows, uncompressed formats are preferred. Web
+ *              image downloads can be limited by RAM, image size and network
+ *              stability, so keep image dimensions suitable for the 600x448
+ *              display. Display mode is Inkplate 6COLOR colour e-paper mode with
+ *              full refreshes.
+ *
+ *              Expected output: Wi-Fi connection progress messages followed by
+ *              the downloaded BMP image from the certificate-matched server, then
+ *              an error message when attempting to load content from a host that
+ *              does not match the applied certificate.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
- * - Extra:      WiFi
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Enter your Wi-Fi SSID and password in the sketch
- * - Provide a valid PEM certificate for the target HTTPS host
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      WiFi, valid PEM certificate for the target HTTPS host
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Enter your Wi-Fi credentials in the sketch.
- * 2) Verify that the embedded PEM certificate matches the HTTPS host you want
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Enter your Wi-Fi credentials in the sketch.
+ * 3) Verify that the embedded PEM certificate matches the HTTPS host you want
  *    to access.
- * 3) Upload the sketch to Inkplate 6COLOR.
- * 4) The board connects to Wi-Fi and applies the configured certificate.
- * 5) A BMP image is downloaded securely from the matching host and displayed
+ * 4) Upload the sketch to Inkplate 6COLOR.
+ * 5) The board connects to Wi-Fi and applies the configured certificate.
+ * 6) A BMP image is downloaded securely from the matching host and displayed
  *    on the screen.
- * 6) The sketch then attempts to load an image from a different host to
+ * 7) The sketch then attempts to load an image from a different host to
  *    demonstrate certificate validation failure.
  *
- * Expected output:
- * - Display: Wi-Fi connection progress messages followed by the downloaded BMP
- *   image from the certificate-matched server.
- * - Display: An error message when attempting to load content from a host that
- *   does not match the applied certificate.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode with full refreshes.
- * - For remote image loading, BMP support is the safest option in embedded
- *   workflows. The original example uses BMP over HTTPS.
- * - BMP files should use supported bit depths and, in typical Inkplate image
- *   workflows, uncompressed formats are preferred.
- * - Certificate pinning/validation must match the target host. A certificate
- *   valid for one domain will not validate a different domain.
- * - Web image downloads can be limited by RAM, image size, and network
- *   stability. Keep image dimensions suitable for the 600x448 display.
- * - This example demonstrates secure validation, unlike setInsecure()-based
- *   demos.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2024-03-15

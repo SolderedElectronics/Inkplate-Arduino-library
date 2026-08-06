@@ -18,47 +18,40 @@
  *              After displaying a quote, the ESP32 enters deep sleep for a
  *              configurable interval. Deep sleep restarts the ESP32 on wake, so
  *              setup() runs again and a new quote is fetched each cycle.
+ *              Internet outages or service changes can prevent retrieval, and
+ *              the sketch retries fetching until it succeeds. Text length varies,
+ *              so very long quotes may wrap heavily or exceed the chosen text
+ *              box/font settings.
+ *
+ *              Expected output: a wrapped quote in a large font with the author
+ *              printed at the bottom-right (prefixed with "-"), connection status
+ *              and retry dots on the Serial Monitor, and - if WiFi fails - an
+ *              error message followed by a short sleep before retrying.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Extra:      WiFi access (internet connection required)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Serial settings: 115200 baud (optional; used for debug output)
- * - WiFi credentials: set ssid / pass
- * - Update interval: adjust DELAY_S (default: 300 seconds)
- * - ArduinoJson: required by the networking helper (install from arduinojson.org)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - Library:    ArduinoJson (required by the networking helper,
+ *               https://arduinojson.org/)
+ * - Serial:     115200 baud (optional; used for debug output)
  *
  * How to use:
- * 1) Enter your WiFi SSID and password in the sketch.
- * 2) Install ArduinoJson if it is not already available in your environment.
- * 3) Upload the sketch to Inkplate 6PLUS.
- * 4) After boot, the device connects to WiFi, fetches a quote, displays it, and
- *    deep-sleeps. It wakes periodically and repeats.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password (ssid/pass) in the sketch and adjust
+ *    DELAY_S (default: 300 seconds) if needed.
+ * 3) Install ArduinoJson if it is not already available in your environment.
+ * 4) Upload the sketch to Inkplate 6PLUS.
+ * 5) After boot, the device connects to WiFi, fetches a quote, displays it, and
+ *    deep-sleeps; it wakes periodically and repeats.
  *
- * Expected output:
- * - Display: A wrapped quote in a large font and the author printed at the
- *   bottom-right (prefixed with "-").
- * - Serial Monitor: Connection status and retry dots while fetching data.
- * - Error case: If WiFi fails, an error message is shown and the device sleeps
- *   briefly before retrying.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example uses a full refresh after drawing.
- * - Deep sleep restarts the ESP32 on wake; WiFi connection and API fetch occur
- *   again each interval.
- * - Network/API reliability: internet outages or service changes can prevent
- *   retrieval; the sketch retries fetching until it succeeds.
- * - Text length varies; very long quotes may wrap heavily or exceed the chosen
- *   text box/font settings.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2024-03-14

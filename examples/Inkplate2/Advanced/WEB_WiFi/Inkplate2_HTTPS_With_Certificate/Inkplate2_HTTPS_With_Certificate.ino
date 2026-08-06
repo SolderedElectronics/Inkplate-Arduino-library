@@ -14,50 +14,45 @@
  *              an image from a different domain. That request fails because the
  *              configured certificate does not match the second host.
  *
- *              The display runs in 1-bit (black/white) mode. The drawn image is
- *              a Windows BMP and must use a supported bit depth and no
- *              compression.
+ *              The display runs in 1-bit (black/white) mode and uses a full
+ *              refresh (display()). The drawn image must be a Windows BMP,
+ *              1/4/8/24-bit, uncompressed (no RLE). TLS certificates are
+ *              host-specific: the certificate you apply must match the domain
+ *              you connect to, otherwise the connection or download will fail.
+ *              Certificates can expire or change, so if downloads stop working,
+ *              refresh the certificate for the target host. Using setInsecure()
+ *              would bypass validation, but this example intentionally validates
+ *              the host via certificate configuration.
+ *
+ *              Expected output: connection status messages followed by the
+ *              downloaded BMP image, then after clearing, a message indicating
+ *              the second image will not load due to an invalid/mismatched
+ *              certificate.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
- * - Extra:      WiFi connection + Internet access
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - WiFi:           set ssid/password
- * - Certificate:    set the PEM certificate string for the target host
- * - URLs:           update the HTTPS image URL(s) as needed
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      WiFi connection + Internet access, PEM certificate for the
+ *               target host
  *
  * How to use:
- * 1) Enter your WiFi SSID and password.
- * 2) Provide the correct PEM certificate for the HTTPS host you want to access.
- * 3) Upload the sketch.
- * 4) The display shows WiFi connection progress, then downloads and renders the
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password (ssid, password).
+ * 3) Provide the correct PEM certificate for the HTTPS host you want to access
+ *    and update the HTTPS image URL(s) as needed.
+ * 4) Upload the sketch.
+ * 5) The display shows WiFi connection progress, then downloads and renders the
  *    first BMP image over HTTPS.
- * 5) The second download attempt from a different host is expected to fail due
+ * 6) The second download attempt from a different host is expected to fail due
  *    to certificate mismatch.
  *
- * Expected output:
- * - Display: connection status messages, then the downloaded BMP image.
- * - Display: after clearing, a message indicating the second image will not
- *   load due to an invalid/mismatched certificate.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example uses full refresh (display()).
- * - BMP requirements: Windows BMP, 1/4/8/24-bit, uncompressed (no RLE).
- * - TLS certificates are host-specific. The certificate you apply must match
- *   the domain you connect to; otherwise the connection or download will fail.
- * - Certificates can expire or change; if downloads stop working, refresh the
- *   certificate for the target host.
- * - For demos only: using setInsecure() would bypass validation, but this
- *   example intentionally validates the host via certificate configuration.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2024-03-15

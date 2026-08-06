@@ -9,34 +9,32 @@
  *              from EEPROM, while respecting reserved address ranges used by
  *              the e-paper waveform data.
  *
+ *              EEPROM addresses 0-75 are reserved for waveform data, so DO NOT
+ *              read from or write to addresses below 76. Changing the EEPROM
+ *              size may erase waveform data and affect display operation.
+ *              Expected output is a set of messages indicating EEPROM clearing,
+ *              writing and reading, followed by a list of values read back from
+ *              EEPROM shown on the display.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 5
  * - Hardware:   Inkplate 5, USB cable
  * - Extra:      None
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 5.
- * 2) The display will first clear user EEPROM data.
- * 3) Sample data is written to EEPROM.
- * 4) Stored data is read back and shown on the display.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 5.
+ * 3) The display will first clear user EEPROM data.
+ * 4) Sample data is written to EEPROM.
+ * 5) Stored data is read back and shown on the display.
  *
- * Expected output:
- * - Messages indicating EEPROM clearing, writing, and reading.
- * - A list of values read from EEPROM displayed on the screen.
- *
- * Notes:
- * - EEPROM addresses 0–75 are reserved for waveform data.
- * - DO NOT read from or write to addresses below 76.
- * - Changing EEPROM size may erase waveform data and affect display operation.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 5 has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-03-13

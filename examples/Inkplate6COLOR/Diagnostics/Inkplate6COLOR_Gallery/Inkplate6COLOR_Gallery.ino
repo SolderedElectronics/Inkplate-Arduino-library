@@ -11,62 +11,55 @@
  *
  *              Supported files in this example are discovered by filename
  *              extension and include BMP, JPG, and PNG entries found in the
- *              root folder. After one image is displayed, the board sleeps for
- *              a fixed interval and restarts from setup() on wake-up. This
- *              makes it suitable for low-power gallery/signage workflows where
- *              the displayed content only changes occasionally.
+ *              root folder (subfolders are not searched). After one image is
+ *              displayed, the board sleeps for a fixed interval and restarts
+ *              from setup() on wake-up. This makes it suitable for low-power
+ *              gallery/signage workflows where the displayed content only
+ *              changes occasionally.
  *
  *              Because deep sleep resets the ESP32, all runtime logic is placed
- *              in setup(). The SD card is also put into sleep mode before the
- *              MCU enters deep sleep to reduce power consumption.
+ *              in setup() and loop() stays empty. The SD card is also put into
+ *              sleep mode before the MCU enters deep sleep to reduce power
+ *              consumption.
+ *
+ *              Image decode success depends on file format support, image
+ *              dimensions and available RAM; BMP is usually the safest format
+ *              for embedded workflows, while large or unsupported JPG/PNG files
+ *              may fail to decode or need more memory than available. Frequent
+ *              full colour refreshes are slower and more power-hungry than
+ *              monochrome partial-update workflows on supported boards.
+ *
+ *              Expected output: one randomly selected image from the SD card
+ *              root directory on the display, with the detected image filenames
+ *              and the chosen filename printed on Serial.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
- * - Extra:      microSD card with image files in the root directory
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial Monitor: 115200 baud
- * - Format the microSD card as FAT/FAT32
- * - Copy supported image files (.bmp, .jpg, .png) to the root directory
- * - Adjust DELAY_MS in the sketch to change the sleep/display interval
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      microSD card (FAT/FAT32) with image files in the root directory
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Format a microSD card and copy supported image files to its root folder.
- * 2) Insert the card into Inkplate 6COLOR.
- * 3) Upload the sketch and open Serial Monitor at 115200 baud if you want to
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Format a microSD card and copy supported image files (.bmp, .jpg, .png)
+ *    to its root folder.
+ * 3) Insert the card into Inkplate 6COLOR and adjust DELAY_MS in the sketch to
+ *    change the sleep/display interval if needed.
+ * 4) Upload the sketch and open Serial Monitor at 115200 baud if you want to
  *    see detected filenames and the selected image.
- * 4) On boot, the sketch scans the SD card root and builds a list of image
- *    files.
- * 5) One image is chosen at random, displayed on the screen, and its filename
- *    is printed to Serial.
+ * 5) On boot, the sketch scans the SD card root and builds a list of image
+ *    files, then displays one at random.
  * 6) The SD card is put to sleep and the ESP32 enters timed deep sleep.
  * 7) After wake-up, the ESP32 restarts and the process repeats with another
  *    random image selection.
  *
- * Expected output:
- * - Display: One randomly selected image from the SD card root directory.
- * - Serial: Detected image filenames and the filename of the image chosen for
- *   display.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode with full refresh.
- * - Deep sleep restarts the ESP32, so all application logic must remain in
- *   setup(); loop() should stay empty.
- * - Image decode success depends on file format support, image dimensions, and
- *   available RAM. BMP is usually the safest format for embedded workflows.
- * - Large or unsupported JPG/PNG files may fail to decode or may require more
- *   memory than available.
- * - The example searches only the SD card root directory, not subfolders.
- * - Frequent full color refreshes are slower and more power-hungry than
- *   monochrome partial-update workflows on supported boards.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-07-08

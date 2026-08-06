@@ -4,8 +4,8 @@
  * @brief       Download a JPEG image from the web (following an HTTP redirect),
  *              display it in 3-bit grayscale, then deep-sleep between refreshes.
  *
- * @details     This example turns Inkplate 6PLUS into a simple “web image
- *              frame”. It connects to WiFi, resolves an HTTP redirect from a
+ * @details     This example turns Inkplate 6PLUS into a simple "web image
+ *              frame". It connects to WiFi, resolves an HTTP redirect from a
  *              starting URL, then downloads and renders the final JPEG directly
  *              from the internet using drawJpegFromWeb().
  *
@@ -14,49 +14,44 @@
  *              header, normalizes relative / protocol-relative redirects, and
  *              then uses the resolved URL for image download.
  *
- *              The display runs in 3-bit grayscale mode (INKPLATE_3BIT). After
- *              drawing the image and performing a full refresh, the ESP32 enters
- *              deep sleep for 15 minutes. Deep sleep restarts the ESP32 on wake,
- *              so setup() reruns and a new image is fetched each cycle.
+ *              The display runs in 3-bit grayscale mode (INKPLATE_3BIT), which
+ *              is slower and uses more energy than 1-bit BW. After drawing the
+ *              image and performing a full refresh, the ESP32 enters deep sleep
+ *              for 15 minutes; deep sleep restarts the ESP32 on wake, so setup()
+ *              reruns and a new image is fetched each cycle.
+ *
+ *              This example uses plain HTTP for the redirect source - for HTTPS
+ *              endpoints, certificate handling may be required depending on the
+ *              server and library configuration. Web image decoding and buffering
+ *              can be memory-intensive, so very large images or uncommon JPEG
+ *              encodings may fail due to RAM limits.
+ *
+ *              Expected output: a downloaded image rendered on the e-paper
+ *              display (grayscale), with the WiFi join message, resolved URL,
+ *              HTTP status code and the return value of drawJpegFromWeb()
+ *              (1 = success, 0 = failure) on the Serial Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Extra:      WiFi access (internet connection required)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Serial settings: 115200 baud (optional; used for debug logs)
- * - WiFi credentials: set ssid/password
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - Serial:     115200 baud (optional; used for debug logs)
  *
  * How to use:
- * 1) Enter your WiFi SSID/password in the sketch.
- * 2) Upload the sketch to Inkplate 6PLUS.
- * 3) After boot, the device connects to WiFi, resolves the redirect URL, then
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID/password in the sketch.
+ * 3) Upload the sketch to Inkplate 6PLUS.
+ * 4) After boot, the device connects to WiFi, resolves the redirect URL, then
  *    downloads and displays a JPEG image.
- * 4) The device deep-sleeps for 15 minutes and repeats after waking.
+ * 5) The device deep-sleeps for 15 minutes and repeats after waking.
  *
- * Expected output:
- * - Display: A downloaded image rendered on the e-paper display (grayscale).
- * - Serial Monitor: WiFi join message, resolved URL, HTTP status code, and the
- *   return value of drawJpegFromWeb() (1 = success, 0 = failure).
- *
- * Notes:
- * - Display mode is 3-bit grayscale (INKPLATE_3BIT). Grayscale updates are
- *   slower and use more energy than 1-bit BW.
- * - Deep sleep restarts the ESP32 on wake, so all initialization repeats and a
- *   new image is fetched each cycle.
- * - This example uses plain HTTP for the redirect source. For HTTPS endpoints,
- *   certificate handling may be required depending on the server and library
- *   configuration.
- * - Web image decoding and buffering can be memory-intensive; very large images
- *   or uncommon JPEG encodings may fail due to RAM limits.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2024-03-15

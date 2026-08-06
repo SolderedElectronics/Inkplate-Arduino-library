@@ -1,19 +1,40 @@
-/*
-   Inkplate13SPECTRA_Partial_Update example for Soldered Inkplate 13SPECTRA
-   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-
-   This example demonstrates partial screen updates on the Inkplate 13SPECTRA.
-   It draws a grid of 100x100 pixel coloured squares covering the entire screen,
-   then continuously picks a random square and updates only that square with a
-   new colour using displayPartial(), leaving the rest of the screen untouched.
-
-   displayPartial(x, y, w, h) accepts coordinates in the same user space as all
-   drawing functions (rotation=1: 1600 px wide, 1200 px tall).
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our forums: https://forum.soldered.com/
-   24 March 2026 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Partial_Update.ino
+ * @brief       Partial screen update example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Demonstrates partial screen updates on the Inkplate 13SPECTRA.
+ *              It draws a grid of 100x100 pixel coloured squares covering the
+ *              entire screen, then continuously picks a random square and
+ *              updates only that square with a new colour using
+ *              displayPartial(), leaving the rest of the screen untouched.
+ *
+ *              displayPartial(x, y, w, h) accepts coordinates in the same user
+ *              space as all drawing functions (rotation = 1: 1600 px wide,
+ *              1200 px tall).
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) The grid of coloured squares is drawn, then single squares keep changing
+ *    colour via partial updates.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2026-03-24
+ **************************************************/
 
 #ifndef ARDUINO_INKPLATE13SPECTRA
 #error "Wrong board selection for this example, please select Soldered Inkplate 13SPECTRA in the boards menu."

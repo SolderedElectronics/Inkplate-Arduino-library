@@ -1,19 +1,44 @@
-/*
-    Inkplate13SPECTRA_News_API Example for Soldered Inkplate 13SPECTRA
-    This example demonstrates how to use the Inkplate 13SPECTRA to display news headlines and descriptions
-    fetched from the News API. You will need an API key from https://newsapi.org/ to use this example.
-
-    IMPORTANT:
-    - Update your WiFi credentials and API key in the "CHANGE HERE" section below.
-    - Ensure you have the ArduinoJSON library installed: https://arduinojson.org/
-    - Adjust the timezone as needed.
-
-    For more information, visit:
-    - Inkplate documentation: https://https://docs.soldered.com/inkplate/
-    - Support forums: https://forum.soldered.com/
-
-    Created by Soldered, 02.02.2026
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_News.ino
+ * @brief       News headlines dashboard for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Demonstrates how to use the Inkplate 13SPECTRA to display news
+ *              headlines and descriptions fetched from the News API. You will
+ *              need an API key from https://newsapi.org/ to use this example.
+ *
+ *              IMPORTANT:
+ *              - Update your WiFi credentials and API key in the "CHANGE HERE"
+ *                section of the sketch.
+ *              - Ensure you have the ArduinoJson library installed:
+ *                https://arduinojson.org/
+ *              - Adjust the timezone as needed.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      WiFi Internet connection, newsapi.org API key
+ * - Library:    ArduinoJson (https://arduinojson.org/)
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Install the ArduinoJson library.
+ * 3) Enter your WiFi credentials, API key and timezone in the "CHANGE HERE"
+ *    section.
+ * 4) Upload the sketch to Inkplate 13SPECTRA.
+ * 5) The news headlines and descriptions are shown on the display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2026-02-02
+ **************************************************/
 
 // Ensure the correct board is selected in the Arduino IDE
 /*#ifndef ARDUINO_INKPLATE13SPECTRA

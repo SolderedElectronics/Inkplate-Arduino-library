@@ -1,61 +1,52 @@
 /**
  **************************************************
- * @file        Inkplate6COLOR_RTC_Simple.ino
- * @brief       Demonstrates basic RTC time/date setup and display on
+ * @file        Inkplate6COLOR_RTC_Timer.ino
+ * @brief       Demonstrates the PCF85063(A) RTC countdown timer on
  *              Inkplate 6COLOR.
  *
- * @details     This example shows how to use the onboard PCF85063(A) real-time
- *              clock on Inkplate 6COLOR for basic clock functionality. The
- *              sketch resets the RTC, sets an initial time and date, reads the
- *              current RTC values, and prints the formatted time and date on
- *              the e-paper display.
+ * @details     This example shows how to use the RTC countdown timer on
+ *              Inkplate 6COLOR. The sketch resets the RTC, sets the time and
+ *              date, and starts a 15-second countdown timer with
+ *              display.rtc.timerSet(RTC::TIMER_CLOCK_1HZ, countdown_time, true,
+ *              false).
  *
- *              After initialization, the example keeps the ESP32 awake and
- *              refreshes the display once per minute using a millis()-based
- *              timing interval. This demonstrates a simple polling workflow for
- *              RTC-based time display without using alarms, interrupts, or deep
- *              sleep.
+ *              The available timer clock sources determine the possible
+ *              countdown range:
+ *              - Inkplate::TIMER_CLOCK_4096HZ   -> min 244 us,  max 62.256 ms
+ *              - Inkplate::TIMER_CLOCK_64HZ     -> min 15.625 ms, max 3.984 s
+ *              - RTC::TIMER_CLOCK_1HZ           -> min 1 s,     max 255 s
+ *              - Inkplate::TIMER_CLOCK_1PER60HZ -> min 60 s,    max 4 h 15 min
  *
- *              This example is useful as a starting point for clocks, wall
- *              displays, dashboards, and other projects that need basic RTC
- *              timekeeping and periodic screen updates.
+ *              The main loop reads and displays the current RTC time and checks
+ *              the timer flag with display.rtc.checkTimerFlag(). When the timer
+ *              event occurs, the flag is cleared with clearTimerFlag() and the
+ *              timer is disabled with disableTimer() to make it a one-shot; keep
+ *              disableTimer() commented out if you want the timer to repeat.
+ *
+ *              The interrupt behavior is configurable too: the timer interrupt
+ *              can generate a pulse or follow the timer flag.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Edit the initial RTC time/date values in the sketch before upload
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
- * 2) Adjust the initial time/date values in the sketch if needed.
- * 3) On startup, the sketch resets the RTC and writes the configured time/date.
- * 4) The current time and date are read from the RTC and rendered on the
- *    display.
- * 5) The screen is refreshed automatically once per minute.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Adjust the initial time/date and countdown_time in the sketch if needed.
+ * 3) Upload the sketch to Inkplate 6COLOR.
+ * 4) The display shows the current RTC time and date.
+ * 5) After the countdown elapses, the timer flag is detected, cleared and the
+ *    timer is disabled.
  *
- * Expected output:
- * - Display: Current time in HH:MM:SS format followed by weekday and date.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - This example uses full display refreshes every 60 seconds.
- * - display.rtc.reset() clears previous RTC state, so the configured time/date
- *   is reapplied on every reset or power cycle.
- * - This is a simple RTC polling example only. It does not demonstrate alarm,
- *   interrupt, timer, or deep sleep behavior.
- * - The PCF85063(A) RTC is suitable for general timekeeping, but persistence
- *   depends on correct RTC setup and backup power conditions.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-20

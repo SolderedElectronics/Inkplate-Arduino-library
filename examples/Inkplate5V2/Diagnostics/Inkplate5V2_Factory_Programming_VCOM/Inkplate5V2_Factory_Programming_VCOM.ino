@@ -1,13 +1,13 @@
 /**
  **************************************************
- * @file        Inkplate5v2_Factory_Programming_VCOM.ino
- * @brief       Factory utility for Inkplate 5v2: program panel VCOM, run hardware
- *              self-tests, select and store a display waveform, then play the
- *              onboarding slide sequence.
+ * @file        Inkplate5V2_Factory_Programming_VCOM.ino
+ * @brief       Factory utility for Inkplate 5v2: program panel VCOM, run
+ *              hardware self-tests, select and store a display waveform, then
+ *              play the onboarding slide sequence.
  *
- * @details     This sketch is intended for factory/production use on Inkplate 5v2.
- *              It performs a first-boot provisioning
- *              flow and a subsequent onboarding/demo flow.
+ * @details     This sketch is intended for factory/production use on Inkplate
+ *              4TEMPERA. It performs a first-boot provisioning flow and a
+ *              subsequent onboarding/demo flow.
  *
  *              First boot flow:
  *              - Performs I2C sanity checks and peripheral tests (see test.h /
@@ -28,68 +28,63 @@
  *                stored in RLE-compressed form and are decompressed at runtime
  *                into a large buffer to save flash space.
  *
- *              Display modes:
- *              - Uses 1-bit (BW) mode for partial-update demonstrations and fast
- *                UI elements.
- *              - Switches to 3-bit grayscale for most onboarding slides.
+ *              Display modes: 1-bit (BW) mode is used for partial-update
+ *              demonstrations and fast UI elements, and 3-bit grayscale for most
+ *              onboarding slides. Partial updates are used only in BW mode.
+ *
+ *              This sketch allocates a large PSRAM buffer for decompression
+ *              (ps_malloc(393938)); it requires sufficient PSRAM and will halt
+ *              with an on-screen error if allocation fails. RLE decompression
+ *              expands compressed slide data into a raw 3-bit bitmap buffer, so
+ *              avoid modifying buffer sizes unless you also update the assets.
+ *              Factory test requirements depend on test.cpp: missing WiFi
+ *              credentials, I2C slave or microSD may cause tests to fail and stop
+ *              the process.
+ *
+ *              Expected output: test status messages, prompts for VCOM and
+ *              waveform selection and programming success/failure messages on the
+ *              Serial Monitor; a splash screen showing VCOM and waveform ID on
+ *              the e-paper, followed by a multi-slide onboarding sequence with a
+ *              sidebar and BW/grayscale slides (including a partial-update
+ *              animation demo).
  *
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
  * - Hardware:   Inkplate 5v2, USB cable
  * - Extra:      microSD card (formatted, any content), EasyC I2C slave device
- *              for factory tests (see Notes)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5v2
- * - Serial Monitor: 115200 baud
- * - Factory tests (in test.cpp):
- *   - Set WiFi credentials (if tests require network)
- *   - Ensure an EasyC/I2C slave responds at the configured address (0x30 by
- *     default; configurable in test.cpp)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ *               for factory tests, WiFi credentials in test.cpp if the tests
+ *               require network
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) (Factory) Connect required test hardware:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) (Factory) Connect required test hardware:
  *    - Insert a formatted microSD card.
  *    - Connect an EasyC I2C slave device at the address expected by test.cpp
  *      (0x30 by default). If you don't have one, flash the helper firmware from
  *      the InkplateEasyCTester folder onto a compatible Dasduino board and use
  *      it as the I2C slave.
- * 2) Open Serial Monitor at 115200 baud.
- * 3) Upload the sketch. On first startup it will:
+ * 3) Open Serial Monitor at 115200 baud.
+ * 4) Upload the sketch. On first startup it will:
  *    - Run peripheral tests and print results to Serial.
  *    - Prompt for VCOM voltage; enter the value (include the '-' sign when
  *      required) and confirm until programming succeeds.
  *    - Prompt to select a waveform (send '1'..'5' and then 'OK' to confirm).
- * 4) After successful setup, the device shows a splash screen and then remains
+ * 5) After successful setup, the device shows a splash screen and then remains
  *    idle. Power-cycle or reset to start the onboarding slideshow.
- * 5) During onboarding, press the wake button to advance through slides.
+ * 6) During onboarding, press the wake button to advance through slides.
  *
- * Expected output:
- * - Serial Monitor: Test status messages, prompts for VCOM and waveform
- *   selection, and programming success/failure messages.
- * - E-paper: Splash screen showing VCOM and waveform ID, then a multi-slide
- *   onboarding sequence with a sidebar and BW/grayscale slides (including a
- *   partial-update animation demo).
+ * @warning     VCOM programming is limited: the panel VCOM can be programmed a
+ *              finite number of times (typically ~100 writes). Avoid repeated
+ *              programming and use it only when necessary.
  *
- * Notes:
- * - Display mode switches between 1-bit (BW) and 3-bit grayscale depending on
- *   slide content. Partial updates are used only in BW mode.
- * - VCOM programming is limited: the panel VCOM can be programmed a finite
- *   number of times (typically ~100 writes). Avoid repeated programming and use
- *   only when necessary.
- * - This sketch allocates a large PSRAM buffer for decompression
- *   (ps_malloc(393938)). It requires sufficient PSRAM and will halt with an
- *   on-screen error if allocation fails.
- * - RLE decompression expands compressed slide data into a raw 3-bit bitmap
- *   buffer; avoid modifying buffer sizes unless you also update assets.
- * - Factory test requirements depend on test.cpp; missing WiFi credentials,
- *   I2C slave, or microSD may cause tests to fail and stop the process.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026

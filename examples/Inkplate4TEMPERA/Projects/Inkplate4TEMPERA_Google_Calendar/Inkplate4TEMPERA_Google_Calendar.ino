@@ -6,7 +6,7 @@
  *
  * @details     This example connects Inkplate 4 TEMPERA to a WiFi network,
  *              synchronizes time using the configured timezone, and then
- *              requests event data from a **public** Google Calendar via the
+ *              requests event data from a public Google Calendar via the
  *              Google Calendar API using a Calendar ID and API key.
  *
  *              The sketch is intended as a practical template for building
@@ -14,58 +14,52 @@
  *              connect to WiFi -> obtain correct time -> perform HTTPS request
  *              -> parse the API response -> render events on the display.
  *
+ *              This example is typically used in 1-bit (BW) mode unless the
+ *              sketch selects a different mode; partial update behavior depends
+ *              on the chosen mode (partial updates are BW-only). API keys can be
+ *              restricted by Google Cloud policies, and requests may fail if the
+ *              Calendar API is not enabled or the calendar is not public. Parsing
+ *              API responses (JSON) can be memory-intensive, so keep the number
+ *              of requested events reasonable if you encounter instability. If the
+ *              sketch uses insecure TLS settings (e.g. setInsecure()), treat it as
+ *              demo-only and use proper certificate validation/pinning in
+ *              production.
+ *
+ *              Expected output: a calendar view showing fetched event data (event
+ *              titles/times as implemented by the sketch) on the e-paper, plus
+ *              connection/status logs and any HTTP/API error messages on Serial.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
- * - Extra:      WiFi (2.4 GHz), Google Calendar public calendar ID, Google API key
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial settings (if relevant): 115200 baud (recommended for debugging)
- * - WiFi credentials / API keys / timezone:
- *   - Set your WiFi SSID and password (case-sensitive).
- *   - Set the timeZone value to match your location.
- *   - Provide:
- *     - Google Calendar *public* Calendar ID
- *     - Google API key with Google Calendar API enabled
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      WiFi (2.4 GHz), Google Calendar public calendar ID, Google API
+ *               key with the Google Calendar API enabled
+ * - Serial:     115200 baud (recommended for debugging)
  *
  * How to use:
- * 1) Make your calendar public:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Make your calendar public:
  *    Google Calendar -> Settings -> your calendar -> Access permissions ->
  *    enable public access (otherwise API requests may return 404).
- * 2) Get the Calendar ID:
+ * 3) Get the Calendar ID:
  *    Google Calendar -> Settings -> your calendar -> Integrate calendar ->
  *    copy "Calendar ID" (e.g. ...@group.calendar.google.com).
- * 3) Create an API key and enable the Google Calendar API:
+ * 4) Create an API key and enable the Google Calendar API:
  *    Google Cloud Console -> APIs & Services -> enable "Google Calendar API",
  *    then Credentials -> Create credentials -> API key (otherwise you may see
  *    403 errors).
- * 4) Enter WiFi credentials, timeZone, Calendar ID, and API key in the sketch.
- * 5) Upload the sketch, then open Serial Monitor (optional) to verify network
+ * 5) Enter your WiFi SSID and password (case-sensitive), the timeZone value for
+ *    your location, the Calendar ID and the API key in the sketch.
+ * 6) Upload the sketch, then open Serial Monitor (optional) to verify network
  *    connection and API responses.
  *
- * Expected output:
- * - E-paper: A calendar view showing fetched event data (event titles/times as
- *   implemented by the sketch).
- * - Serial: Connection/status logs and any HTTP/API error messages (if enabled).
- *
- * Notes:
- * - Display mode: this example is typically used in 1-bit (BW) mode unless the
- *   sketch selects a different mode. Partial update behavior depends on the
- *   chosen mode (partial updates are BW-only).
- * - HTTPS/API limits: API keys can be restricted by Google Cloud policies, and
- *   requests may fail if the Calendar API is not enabled or the calendar is not
- *   public.
- * - RAM usage: parsing API responses (JSON) can be memory-intensive; keep the
- *   number of requested events reasonable if you encounter instability.
- * - If the sketch uses insecure TLS settings (e.g., setInsecure()), treat it as
- *   demo-only. For production, use proper certificate validation/pinning.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

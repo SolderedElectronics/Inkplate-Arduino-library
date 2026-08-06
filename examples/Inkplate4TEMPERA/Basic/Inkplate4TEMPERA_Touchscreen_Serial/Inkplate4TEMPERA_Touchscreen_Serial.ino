@@ -14,40 +14,36 @@
  *              The example is intended as a debugging and learning tool for
  *              understanding raw touchscreen behavior before integrating touch
  *              input into a graphical user interface. No drawing or visual
- *              feedback is shown on the e-paper display itself.
+ *              feedback is shown on the e-paper display itself, and no deep
+ *              sleep is used - the MCU runs continuously. The touchscreen must
+ *              be successfully initialized, otherwise no touch events will be
+ *              reported. For low-power designs, combine touchscreen interrupts
+ *              with the deep sleep wake-up examples instead of continuous
+ *              polling.
+ *
+ *              Expected output: Serial Monitor messages indicating touchscreen
+ *              events, including touch detection and coordinate information.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4 TEMPERA.
- * 2) Open the Serial Monitor and set the baud rate to 115200.
- * 3) Touch the screen with a finger or stylus.
- * 4) Observe touch event data printed in the Serial Monitor.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) Open the Serial Monitor and set the baud rate to 115200.
+ * 4) Touch the screen with a finger or stylus.
+ * 5) Observe touch event data printed in the Serial Monitor.
  *
- * Expected output:
- * - Serial Monitor messages indicating touchscreen events, including touch
- *   detection and coordinate information.
- *
- * Notes:
- * - Display mode: not relevant; the e-paper display is not actively used.
- * - This example does not use deep sleep; the MCU runs continuously.
- * - Touchscreen must be successfully initialized; if initialization fails,
- *   no touch events will be reported.
- * - For low-power designs, combine touchscreen interrupts with deep sleep
- *   wake-up examples instead of continuous polling.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-07-12

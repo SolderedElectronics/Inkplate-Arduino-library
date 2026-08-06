@@ -1,22 +1,44 @@
-/*
-  Inkplate13SPECTRA_Bluetooth_Serial example for Soldered Inkplate 13SPECTRA
-  For this example you will need USB cable, Inkplate 13SPECTRA and smartphone.
-  Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-  Don't have "Inkplate 13SPECTRA" or "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-  /////////////////////////// INSERT BOARD DEF LINK HERE
-
-  This example shows how to use Bluetooth on Inkplate devices.
-  Upload this example to the Inkplate and connect your phone to it via Bluetooth.
-  First, you have to pair the Inkplate with your phone in Bluetooth settings in your phone, then go to the
-  Serial Bluetooth Terminal app and you can find the Inkplate in the device list. You can use another similar app.
-  If Bluetooth starts successfully, you can send anything from your phone to an Inkplate or vice versa.
-  On the Serial Monitor, you will see what the phone sends while in the app you will see what the Inkplate
-  sends over the Serial Monitor.
-
-  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-  21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Bluetooth_Serial.ino
+ * @brief       Bluetooth serial bridge example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to use Bluetooth on Inkplate devices. Upload this
+ *              example to the Inkplate and connect your phone to it via
+ *              Bluetooth. First pair the Inkplate with your phone in the
+ *              Bluetooth settings on your phone, then open the Serial Bluetooth
+ *              Terminal app (or another similar app) and find the Inkplate in
+ *              the device list.
+ *
+ *              If Bluetooth starts successfully, you can send anything from your
+ *              phone to the Inkplate or vice versa. On the Serial Monitor you
+ *              will see what the phone sends, while in the app you will see what
+ *              the Inkplate sends over the Serial Monitor.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable, smartphone
+ * - Extra:      Bluetooth serial terminal app (e.g. Serial Bluetooth Terminal)
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) Pair the Inkplate with your phone in the phone's Bluetooth settings.
+ * 4) Open the Serial Bluetooth Terminal app and connect to the Inkplate.
+ * 5) Send text in either direction and observe it in the app and in the Serial
+ *    Monitor.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

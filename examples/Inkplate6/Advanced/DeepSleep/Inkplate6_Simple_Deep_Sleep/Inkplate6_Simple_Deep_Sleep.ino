@@ -8,37 +8,37 @@
  *              with the next image in a small slideshow, performs a full display
  *              refresh, and then returns to deep sleep.
  *
+ *              Deep sleep restarts the program from the beginning on every
+ *              wake-up. RAM contents are lost during deep sleep, so standard
+ *              partial updates cannot be used. This example runs in 3-bit
+ *              (grayscale) mode, which requires full refresh updates. Expected
+ *              output is a new image on the display every 20 seconds, looping
+ *              through all provided images.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6
  * - Hardware:   Inkplate 6, USB cable (or battery for low-power testing)
  * - Extra:      Converted image header files (picture1.h, picture2.h, picture3.h)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6
- * - Serial settings: Not required
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * - Serial:     Not required
  *
  * How to use:
- * 1) Convert 3 images using the Soldered Image Converter and include them as
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
+ *    from Tools -> Board.
+ * 2) Convert 3 images using the Soldered Image Converter and include them as
  *    picture1.h, picture2.h, and picture3.h.
- * 2) Upload the sketch to Inkplate 6.
- * 3) The board will show an image, go to deep sleep, and wake up every 20 seconds.
- * 4) After each wake-up, the next image is shown (loops through 3 images).
+ * 3) Upload the sketch to Inkplate 6.
+ * 4) The board shows an image, goes to deep sleep, and wakes up every
+ *    20 seconds.
+ * 5) After each wake-up, the next image is shown (loops through 3 images).
  *
- * Expected output:
- * - Inkplate display shows a new image every 20 seconds.
- * - The slideshow loops through all provided images.
- *
- * Notes:
- * - Deep sleep restarts the program from the beginning on every wake-up.
- * - RAM contents are lost during deep sleep, so standard partial updates cannot be used.
- * - This example uses 3-bit (grayscale) mode, which requires full refresh updates.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Image tool:   https://tools.soldered.com/tools/image-converter/
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Image converter tool:
+ *              https://tools.soldered.com/tools/image-converter/
  *
  * @author      Soldered
  * @date        2021-02-11

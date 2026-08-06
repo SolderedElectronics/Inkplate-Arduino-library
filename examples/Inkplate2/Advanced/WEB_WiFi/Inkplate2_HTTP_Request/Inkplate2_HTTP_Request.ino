@@ -15,49 +15,47 @@
  *              extract structured data.
  *
  *              The display uses the Inkplate 2 1-bit mode with tri-color
- *              palette (black/white/red). Network scan results are shown with
- *              RSSI values highlighted in red. The downloaded HTML is printed
- *              in red text on the display.
+ *              palette (BLACK/WHITE/RED). Network scan results are shown with
+ *              RSSI values highlighted in red, and the downloaded HTML is
+ *              printed in red text.
+ *
+ *              This example uses plain HTTP (no TLS). Many modern sites redirect
+ *              to HTTPS or block HTTP, so if the request fails, try an
+ *              HTTP-capable endpoint or use an HTTPS example with proper
+ *              certificate handling. The sketch allocates a large buffer
+ *              (100000 bytes), so make sure allocation succeeds and be mindful of
+ *              memory limits in more complex sketches. The response is read until
+ *              stream.available() is exhausted, which is a simple approach and not
+ *              robust for chunked/streaming responses or very large pages.
+ *
+ *              Expected output: WiFi scan results (SSID + open/encrypted marker
+ *              + RSSI) followed by the downloaded HTML content on the display,
+ *              and connection progress plus the same HTML payload in the Serial
+ *              Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi connection + Internet access
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - WiFi:           set ssid/pass
- * - Serial Monitor: 115200 baud (optional)
- * - URL:            change the http.begin() URL if needed (HTTP only)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional)
  *
  * How to use:
- * 1) Enter your WiFi SSID and password.
- * 2) Upload the sketch to Inkplate 2.
- * 3) (Optional) Open Serial Monitor at 115200 baud.
- * 4) The device scans and lists up to 10 nearby WiFi networks.
- * 5) It connects to the configured SSID, then performs an HTTP GET request.
- * 6) The raw HTML response is printed to the display and Serial Monitor.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password (ssid, pass) and change the
+ *    http.begin() URL if needed (HTTP only).
+ * 3) Upload the sketch to Inkplate 2.
+ * 4) Optionally open Serial Monitor at 115200 baud.
+ * 5) The device scans and lists up to 10 nearby WiFi networks.
+ * 6) It connects to the configured SSID, then performs an HTTP GET request.
+ * 7) The raw HTML response is printed to the display and Serial Monitor.
  *
- * Expected output:
- * - Display: WiFi scan results (SSID + open/encrypted marker + RSSI), then
- *   the downloaded HTML content printed on-screen.
- * - Serial Monitor: connection progress and the same HTML payload.
- *
- * Notes:
- * - Display mode is 1-bit with Inkplate 2 color palette (BLACK/WHITE/RED).
- * - This example uses plain HTTP (no TLS). Many modern sites redirect to HTTPS
- *   or block HTTP; if the request fails, try an HTTP-capable endpoint or use an
- *   HTTPS example with proper certificate handling.
- * - RAM usage: the sketch allocates a large buffer (100000 bytes). Ensure
- *   allocation succeeds and be mindful of memory limits on more complex sketches.
- * - The response is read until stream.available() is exhausted; this is a simple
- *   approach and not robust for chunked/streaming responses or very large pages.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-03-30

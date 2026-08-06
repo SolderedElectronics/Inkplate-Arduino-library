@@ -1,42 +1,38 @@
 /**
  **************************************************
- * @file        Inkplate5v2_IO_Expanders.ino
- * @brief       Internal expander control example for Soldered Inkplate 5v2.
+ * @file        Inkplate5V2_IO_Expanders.ino
+ * @brief       Internal IO expander control example for Soldered Inkplate 5v2.
  *
- * @details     Demonstrates how to control GPIO pins on both the internal IO
- *              expander available on Inkplate 5v2. The example
- *              alternates blinking an LED connected to the internal IO expander
- *              , showing correct usage and addressing.
+ * @details     Demonstrates how to control GPIO pins on the internal IO
+ *              expander available on Inkplate 5v2. The example blinks an LED
+ *              connected to the internal IO expander, showing correct usage and
+ *              addressing.
+ *
+ *              The internal IO expander has restrictions: DO NOT use GPA0-GPA7
+ *              or GPB0, use only pins 9-15 (P1-1 to P1-7). Using restricted pins
+ *              may permanently damage the display. Expected output is the
+ *              internal IO expander LED blinking for 5 seconds, repeating
+ *              continuously.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
- * - Hardware:   Inkplate 5v2, USB cable, 2× LED, 2× 330 Ω resistors
+ * - Hardware:   Inkplate 5v2, USB cable, LED, 330 Ohm resistor
  * - Extra:      None
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5v2
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5v2/quick-start-guide/
- *
  * How to use:
- * 1) Connect an LED + 330 Ω resistor to P1-7 (GPB7) on IO Expander 2 (external).
- * 2) Connect another LED + 330 Ω resistor to P1-7 (GPB7) on IO Expander 1 (internal).
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Connect an LED + 330 Ohm resistor to P1-7 (GPB7) on the internal
+ *    IO expander (IO Expander 1).
  * 3) Upload the sketch to Inkplate 5v2.
- * 4) Observe alternating blinking between external and internal LEDs.
+ * 4) Observe the LED blinking.
  *
- * Expected output:
- * - Internal IO expander LED blinks for 5 seconds.
- * - Sequence repeats continuously.
- *
- * Notes:
- * - Internal IO expander has restrictions:
- *   - DO NOT use GPA0–GPA7 or GPB0.
- *   - Use only pins 9–15 (P1-1 to P1-7).
- * - Using restricted pins may permanently damage the display.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-12-05

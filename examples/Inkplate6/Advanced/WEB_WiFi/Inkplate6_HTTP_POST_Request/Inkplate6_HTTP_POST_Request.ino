@@ -8,40 +8,36 @@
  *              online service allows real-time inspection of HTTP requests,
  *              making it useful for testing IoT data transmission.
  *
+ *              The example uses plain HTTP (port 80) for simplicity and sends
+ *              data in URL-encoded format
+ *              (application/x-www-form-urlencoded); replace the example data
+ *              with real sensor readings if needed. Expected output is example
+ *              information on the Inkplate display, WiFi connection and POST
+ *              status in the Serial Monitor, and incoming POST requests visible
+ *              on webhook.site every 20 seconds.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6
  * - Hardware:   Inkplate 6, USB cable
  * - Extra:      Stable WiFi connection, webhook.site URL
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6
- * - Serial settings: 115200 baud
- * - Enter your WiFi credentials (ssid, pass) in the code
- * - Set WEBHOOK_PATH to your unique webhook.site path
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Visit https://webhook.site and copy your unique webhook URL.
- * 2) Paste only the path part (e.g. "/abcd-1234-efgh") into WEBHOOK_PATH.
- * 3) Enter your WiFi credentials in the sketch.
- * 4) Upload the sketch to Inkplate 6.
- * 5) Open Serial Monitor (115200 baud) to observe connection status.
- * 6) Watch incoming POST requests live on webhook.site.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
+ *    from Tools -> Board.
+ * 2) Visit https://webhook.site and copy your unique webhook URL.
+ * 3) Paste only the path part (e.g. "/abcd-1234-efgh") into WEBHOOK_PATH.
+ * 4) Enter your WiFi credentials (ssid, pass) in the sketch.
+ * 5) Upload the sketch to Inkplate 6.
+ * 6) Open Serial Monitor (115200 baud) to observe connection status.
+ * 7) Watch incoming POST requests live on webhook.site.
  *
- * Expected output:
- * - Inkplate display shows example information.
- * - Serial Monitor logs WiFi connection and POST status.
- * - webhook.site displays incoming POST requests every 20 seconds.
- *
- * Notes:
- * - Example uses HTTP (port 80) for simplicity.
- * - Data is sent in URL-encoded format (application/x-www-form-urlencoded).
- * - Replace example data with real sensor readings if needed.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026-01-01

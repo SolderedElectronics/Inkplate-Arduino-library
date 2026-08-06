@@ -8,7 +8,8 @@
  *              TEMPERA and exposes a small web app that lets you upload an
  *              image from a phone or PC browser. The device creates its own
  *              WiFi Access Point (AP) so you can connect directly without an
- *              existing router.
+ *              existing router; AP+STA mode is enabled but the example primarily
+ *              uses AP mode for direct connections.
  *
  *              When a file is uploaded via HTTP POST, the sketch stores the
  *              received JPEG bytes in RAM and serves them back at /image.jpg
@@ -18,53 +19,50 @@
  *              The display is operated in 3-bit grayscale mode (INKPLATE_3BIT),
  *              which supports 8 intensity levels. Image resizing/fit behavior
  *              depends on the Inkplate JPEG draw function parameters; large
- *              images may be scaled to fit the screen.
+ *              images may be scaled to fit the screen. Partial update is not
+ *              available in grayscale mode, so image rendering uses a full
+ *              refresh (display.display()).
+ *
+ *              The uploaded image is stored fully in RAM, so large uploads can
+ *              fail due to limited heap memory - keep images reasonably sized.
+ *              The buffer capacity is derived from the HTTP Content-Length
+ *              header; if the header is missing or invalid, a fallback buffer
+ *              size is used. This sketch accepts and renders JPEG data as
+ *              provided; for production use, consider validating file type/size
+ *              and adding upload size limits/timeouts.
+ *
+ *              Expected output: the e-paper first shows connection instructions
+ *              (SSID/password/IP) and after an upload displays the uploaded image
+ *              in 3-bit grayscale; the browser serves the upload UI at '/', a
+ *              preview page at '/preview' and image bytes at '/image.jpg'; Serial
+ *              shows upload progress, buffer allocation size and bytes
+ *              received/sent.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      WiFi-capable phone/PC with a browser (connects to Inkplate AP)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (recommended for upload/debug logs)
- * - WiFi credentials / API keys / timezone:
- *   - Configure AP SSID/password (ap_ssid / ap_password).
- *   - Password must be at least 8 characters for WPA2 AP mode.
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (recommended for upload/debug logs)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4 TEMPERA.
- * 2) On the e-paper screen, note the AP SSID, password, and IP address.
- * 3) On your phone/PC, connect to the shown WiFi network (AP mode).
- * 4) Open a browser and navigate to the displayed IP address.
- * 5) Upload a JPEG image through the web page; after upload, the image is
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Configure the AP SSID/password (ap_ssid / ap_password); the password must
+ *    be at least 8 characters for WPA2 AP mode.
+ * 3) Upload the sketch to Inkplate 4 TEMPERA.
+ * 4) On the e-paper screen, note the AP SSID, password and IP address.
+ * 5) On your phone/PC, connect to the shown WiFi network (AP mode).
+ * 6) Open a browser and navigate to the displayed IP address.
+ * 7) Upload a JPEG image through the web page; after upload, the image is
  *    rendered on the e-paper display. You can also open /preview to view the
  *    last uploaded image in the browser.
  *
- * Expected output:
- * - E-paper: First shows connection instructions (SSID/password/IP). After an
- *   upload, displays the uploaded image in 3-bit grayscale.
- * - Browser: Upload UI at '/', preview page at '/preview', image bytes at
- *   '/image.jpg'.
- * - Serial: Upload progress, buffer allocation size, bytes received/sent.
- *
- * Notes:
- * - Display mode is 3-bit grayscale (8 levels). Partial update is not available
- *   in grayscale mode; image rendering uses full refresh (display.display()).
- * - RAM usage: the uploaded image is stored fully in RAM. Large uploads can
- *   fail due to limited heap memory; keep images reasonably sized.
- * - The buffer capacity is derived from the HTTP Content-Length header; if the
- *   header is missing/invalid, a fallback buffer size is used.
- * - This sketch accepts and renders JPEG data as provided. For production use,
- *   consider validating file type/size and adding upload size limits/timeouts.
- * - AP+STA mode is enabled; this example primarily uses AP mode for direct
- *   connections.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

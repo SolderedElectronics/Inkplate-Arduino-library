@@ -1,11 +1,36 @@
-/*
-  Inkplate13SPECTRA Image Uploader Example
-  Compatible with Soldered Inkplate 13SPECTRA
-
-  Overview:
-  This example demonstrates how to upload an image to a webapp hosted by Inkplate 13SPECTRA
-  and display it on the e‐ink display. Image will be automatically resized.
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Image_Uploader.ino
+ * @brief       Web image uploader example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Demonstrates how to upload an image to a web app hosted by
+ *              Inkplate 13SPECTRA and display it on the e-ink display. The image
+ *              will be automatically resized.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable, device with WiFi and a web
+ *               browser (PC, laptop, smartphone)
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) Connect your device to the Inkplate WiFi network and open the address shown
+ *    on the display.
+ * 4) Upload an image through the web app.
+ * 5) The image is resized and shown on the e-ink display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ **************************************************/
 
 // Ensure correct board is selected
 #ifndef ARDUINO_INKPLATE13SPECTRA

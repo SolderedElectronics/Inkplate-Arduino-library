@@ -1,11 +1,11 @@
 /**
  **************************************************
- * @file        Inkplate10_Maze_Generator.ino
- * @brief       Generates a random maze and draws it on Inkplate 10 in 1-bit
+ * @file        Inkplate5V2_Maze_Generator.ino
+ * @brief       Generates a random maze and draws it on Inkplate 5v2 in 1-bit
  *              black/white mode.
  *
  * @details     This example demonstrates simple procedural content generation
- *              on Inkplate 10 by creating a new random maze at startup and
+ *              on Inkplate 5v2 by creating a new random maze at startup and
  *              rendering it to the e-paper display. The maze is generated on a
  *              grid of cells (cellSize pixels per cell) using a carving
  *              algorithm: the grid starts filled, then corridors are carved by
@@ -21,41 +21,39 @@
  *              screen (e.g., with a whiteboard marker or soft pencil). Avoid
  *              permanent markers to prevent staining the panel surface.
  *
+ *              Display mode is 1-bit BW (INKPLATE_1BIT); partial updates are
+ *              possible in BW mode in general, but this example performs a full
+ *              draw followed by a full refresh. Maze randomness is seeded at
+ *              startup, so each reset produces a different result (depending on
+ *              available time source/seed behavior). Larger cellSize values
+ *              render faster but produce a less detailed maze; smaller values
+ *              increase detail at the cost of more drawing operations. Expected
+ *              output is a randomly generated maze drawn in black on a white
+ *              background, with an entry at the top edge and an exit near the
+ *              bottom edge.
+ *
  * Requirements:
- * - Board:      Soldered Inkplate 10
- * - Hardware:   Inkplate 10, USB cable
+ * - Board:      Soldered Inkplate 5v2
+ * - Hardware:   Inkplate 5v2, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- * - Serial Monitor: 115200 baud (optional; no mandatory output)
- * - Adjust cellSize to change maze density and rendering speed (optional)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional; no mandatory output)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 10.
- * 2) On boot, a new random maze is generated and shown on the display.
- * 3) Solve the maze directly on the screen using an erasable whiteboard marker
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Optionally adjust cellSize to change maze density and rendering speed.
+ * 3) Upload the sketch to Inkplate 5v2.
+ * 4) On boot, a new random maze is generated and shown on the display.
+ * 5) Solve the maze directly on the screen using an erasable whiteboard marker
  *    or a non-permanent pencil/graphite tool, then wipe clean when finished.
- * 4) reset the board to generate a new maze.
+ * 6) Reset the board to generate a new maze.
  *
- * Expected output:
- * - A randomly generated maze drawn in black on a white background, with an
- *   entry at the top edge and an exit near the bottom edge.
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT). Partial updates are possible in BW
- *   mode in general, but this example performs a full draw followed by a full
- *   refresh.
- * - Maze randomness is seeded at startup; each reset produces a different
- *   result (depending on available time source/seed behavior).
- * - Larger cellSize values render faster but produce a less detailed maze;
- *   smaller values increase detail at the cost of more drawing operations.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11

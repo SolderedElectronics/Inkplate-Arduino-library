@@ -1,20 +1,37 @@
-/*
-   Inkplate13SPECTRA_SD_TXT_Read example for Soldered Inkplate 13SPECTRA
-   For this example you will need only a micro USB cable, Inkplate 13SPECTRA and a SD card
-   loaded with text.txt file that can be found inside folder of this example.
-   Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-   https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
-   
-   You can open your own .txt file, but in order to this example works properly it should
-   not have more than 200 chars and you should name it text.txt
-
-   This example will show you how to open .txt files and display the content of that file on Inkplate epaper display.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our forums: https://forum.soldered.com/
-   22 January 2026 by Soldered
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_SD_TXT_Read.ino
+ * @brief       Read and display a text file from an SD card on Soldered
+ *              Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to open .txt files and display the content of the file
+ *              on the Inkplate e-paper display. You can open your own .txt file,
+ *              but for this example to work properly it should not have more than
+ *              200 characters and it should be named text.txt.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, micro USB cable, SD card loaded with the
+ *               text.txt file found inside the folder of this example
+ * - Extra:      text.txt must be max 200 characters
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Copy text.txt to the SD card and insert it into the Inkplate.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) The contents of text.txt are shown on the e-paper display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ * @date        2026-01-22
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

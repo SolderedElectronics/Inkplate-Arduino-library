@@ -1,20 +1,36 @@
-/*
-   Inkplate6COLOR_Read_Battery_Voltage example for Soldered Inkplate 6COLOR
-   For this example you will need USB cable, Inkplate 6COLOR and a Lithium battery (3.6V) with two pin JST connector.
-   Select "Soldered Inkplate 6COLOR" from Tools -> Board menu.
-   Don't have "Soldered Inkplate 6COLOR" option? Follow our tutorial and add it:
-   https://soldered.com/learn/add-inkplate-6-board-definition-to-arduino-ide/
-
-   This example will show you how to read voltage of the battery.
-
-   Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-   Looking to get support? Write on our forums: https://forum.soldered.com/
-   23 January 2023 by Soldered
-
-   In order to convert your images into a format compatible with Inkplate
-   use the Soldered Image Converter available at:
-   https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Read_Battery_Voltage.ino
+ * @brief       Battery voltage reading example for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how to read the voltage of the connected battery.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable, Lithium battery (3.6 V) with a
+ *               two pin JST connector
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Connect the battery to the Inkplate battery connector.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) The measured battery voltage is shown on the display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        In order to convert your images into a format compatible with
+ *              Inkplate, use the Soldered Image Converter available at
+ *              https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
+ *
+ * @author      Soldered
+ * @date        2023-01-23
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

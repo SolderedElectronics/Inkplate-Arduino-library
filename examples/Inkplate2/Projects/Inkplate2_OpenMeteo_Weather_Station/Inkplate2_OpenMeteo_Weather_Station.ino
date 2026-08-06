@@ -14,56 +14,45 @@
  *
  *              To add variety, the sketch alternates between two different UI
  *              layouts on each wake cycle using an RTC-persisted counter
- *              (bootCount). After drawing the screen, the ESP32 enters deep
- *              sleep and wakes every TIME_TO_SLEEP seconds (default: 10 minutes)
- *              to refresh the data.
+ *              (bootCount). RTC_DATA_ATTR bootCount persists across deep sleep
+ *              but resets on power loss or a full reset/flash. After drawing the
+ *              screen, the ESP32 enters deep sleep and wakes every
+ *              TIME_TO_SLEEP seconds (default: 10 minutes) to refresh the data.
  *
  *              Deep sleep resets the ESP32 each time it wakes up, so execution
- *              always starts from setup(). The display retains the last image
- *              while the device is asleep.
+ *              always starts from setup() - keep all logic there and leave loop()
+ *              empty. The display retains the last image while the device is
+ *              asleep. Display mode is 1-bit (BW) and a full refresh is used for
+ *              dashboard rendering. Weather accuracy and availability depend on
+ *              Open-Meteo and network access.
+ *
+ *              Expected output: a weather dashboard whose layout alternates
+ *              between two designs on each wake; a WiFi error screen on WiFi
+ *              failure; an API error screen on API failure.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      WiFi connection + Internet access (Open-Meteo + NTP)
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - WiFi:           set ssid/password
- * - Timezone:       set timeZone (UTC offset)
- * - Location:       set latitude/longitude (API), myCity/myUsername (display)
- * - Units:          set metricUnits (true = metric, false = imperial)
- * - NTP server:     set ntpServer if needed
- * - Refresh period: set TIME_TO_SLEEP (seconds)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
- *
  * How to use:
- * 1) Enter your WiFi credentials.
- * 2) Set timeZone and your location coordinates (latitude/longitude).
- * 3) Optionally set myUsername and myCity for display labels.
- * 4) Choose units with metricUnits (true/false).
- * 5) Upload the sketch to Inkplate 2.
- * 6) The device fetches weather, displays the dashboard, then sleeps and
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials (ssid, password).
+ * 3) Set timeZone (UTC offset) and your location coordinates
+ *    (latitude/longitude), plus ntpServer and TIME_TO_SLEEP if needed.
+ * 4) Optionally set myUsername and myCity for display labels.
+ * 5) Choose units with metricUnits (true = metric, false = imperial).
+ * 6) Upload the sketch to Inkplate 2.
+ * 7) The device fetches weather, displays the dashboard, then sleeps and
  *    refreshes automatically every TIME_TO_SLEEP seconds.
  *
- * Expected output:
- * - Display: a weather dashboard (layout alternates between two designs on each
- *   wake due to bootCount).
- * - On WiFi failure: a WiFi error screen.
- * - On API failure: an API error screen.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Full refresh is used for dashboard rendering.
- * - Deep sleep restarts the ESP32; keep all logic in setup() and leave loop()
- *   empty.
- * - RTC_DATA_ATTR bootCount persists across deep sleep but resets on power loss
- *   or full reset/flash.
- * - Weather accuracy and availability depend on Open-Meteo and network access.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

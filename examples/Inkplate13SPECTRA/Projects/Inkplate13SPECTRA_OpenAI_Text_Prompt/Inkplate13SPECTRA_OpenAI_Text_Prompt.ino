@@ -1,23 +1,41 @@
-/*
-  Inkplate13SPECTRA OpenAI text prompt generator
-  Compatible with Soldered Inkplate 13SPECTRA
-
-  For this example you will need only USB cable and Inkplate 13SPECTRA.
-  Select "Soldered Inkplate13SPECTRA" from Tools -> Board menu.
-  Don't have "Soldered Inkplate13SPECTRA" option? Follow our tutorial and add it: https://docs.soldered.com/inkplate/13SPECTRA/quick-start-guide/
-
-  Overview:
-  This example demonstrates how to fetch the temperature and weather, then with that information it creates a snarky prompt which is displayed 
-  on the Inkplate
-
-  Before You Start:
-  - Enter your WiFi credentials carefully (they are case-sensitive).
-  - Update the following variables for accurate local weather data:
-      • location
-      • latitude
-      • longitude
-  - After creating an OpenAI API key, enter it in the openai_key variable
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_OpenAI_Text_Prompt.ino
+ * @brief       OpenAI text prompt generator for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Demonstrates how to fetch the temperature and weather, then with
+ *              that information create a snarky prompt which is displayed on the
+ *              Inkplate.
+ *
+ *              Before you start:
+ *              - Enter your WiFi credentials carefully (they are case-sensitive).
+ *              - Update the following variables for accurate local weather data:
+ *                location, latitude, longitude.
+ *              - After creating an OpenAI API key, enter it in the openai_key
+ *                variable.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      WiFi Internet connection, OpenAI API key
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials, location/latitude/longitude and OpenAI API key
+ *    (openai_key) in the sketch.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) The weather is fetched, the generated text is shown on the display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ **************************************************/
 
 #include <WiFiClientSecure.h>     // Secure WiFi client for HTTPS communication
 #include <ArduinoJson.h>          // Library for parsing and generating JSON

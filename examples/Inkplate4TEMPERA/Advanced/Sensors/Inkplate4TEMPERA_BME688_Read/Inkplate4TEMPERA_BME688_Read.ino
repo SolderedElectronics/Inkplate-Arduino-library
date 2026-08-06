@@ -18,46 +18,42 @@
  *              bitmap icons for temperature, humidity, and pressure. The screen
  *              is updated once per second. To reduce flicker and improve update
  *              speed, the sketch performs partial updates most of the time and
- *              forces a full refresh periodically to limit ghosting.
+ *              forces a full refresh after ~10 partial updates to limit
+ *              ghosting. Panel power is kept enabled during partial updates for
+ *              stability and speed (higher power usage).
+ *
+ *              The BME688 is enabled via wakePeripheral(INKPLATE_BME688);
+ *              disable or deep-sleep peripherals when optimizing for low power.
+ *              Altitude is an estimate derived from pressure and depends on
+ *              reference sea level assumptions, so it is not a precision
+ *              altitude measurement.
+ *
+ *              Expected output: temperature (degrees C), humidity (%) and
+ *              pressure (hPa) shown with icons, gas resistance and altitude
+ *              values printed as text on the lower half of the screen, with
+ *              values refreshing about once per second.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial settings (if relevant): none
- * - Set the temperature calibration offset (offset, in °C) if needed
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     none
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4 TEMPERA.
- * 2) The device powers the BME688, reads sensor values, and updates the display
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Set the temperature calibration offset (offset, in degrees C) if needed.
+ * 3) Upload the sketch to Inkplate 4 TEMPERA.
+ * 4) The device powers the BME688, reads sensor values, and updates the display
  *    continuously once per second.
- * 3) If temperature reads consistently high/low, adjust the offset constant.
+ * 5) If temperature reads consistently high/low, adjust the offset constant.
  *
- * Expected output:
- * - Temperature (°C), humidity (%), and pressure (hPa) shown with icons.
- * - Gas resistance and altitude values printed as text on the lower half of the
- *   screen.
- * - Values refresh every ~1 second.
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT).
- * - Partial update: partial updates are used for faster refreshes; a full
- *   refresh is forced after ~10 partial updates to reduce ghosting. Panel power
- *   is kept enabled during partial updates for stability and speed (higher
- *   power usage).
- * - Sensor power: the BME688 is enabled via wakePeripheral(INKPLATE_BME688);
- *   disable or deep-sleep peripherals when optimizing for low power.
- * - Altitude is an estimate derived from pressure and depends on reference sea
- *   level assumptions; it is not a precision altitude measurement.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-08-09

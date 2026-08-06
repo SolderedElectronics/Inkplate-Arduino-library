@@ -19,6 +19,20 @@
  * - Board:      Soldered Inkplate 4TEMPERA
  * - Hardware:   Inkplate 4TEMPERA, USB cable
  *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate4TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4TEMPERA.
+ * 3) Both squares bounce on their own half of the screen without corrupting
+ *    each other's output.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
  * @author      Soldered
  * @license     GNU GPL V3
  ***************************************************/

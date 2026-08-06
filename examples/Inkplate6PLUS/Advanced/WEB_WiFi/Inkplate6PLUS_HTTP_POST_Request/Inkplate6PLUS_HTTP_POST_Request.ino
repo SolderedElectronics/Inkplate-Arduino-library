@@ -1,44 +1,45 @@
 /**
  **************************************************
- * @file        Inkplate6PLUS_HTTP_Request.ino
- * @brief       Simple HTTP web content fetch example for Soldered Inkplate 6PLUS.
+ * @file        Inkplate6PLUS_HTTP_POST_Request.ino
+ * @brief       HTTP POST request demo for Soldered Inkplate 6PLUS.
  *
- * @details     Demonstrates how to connect Inkplate 6PLUS to a WiFi network,
- *              perform a basic HTTP request to retrieve data from the Internet,
- *              and display the received content on the e-paper display.
- *              This example does NOT parse HTML content; it simply prints the
- *              raw HTTP response body on the screen.
+ * @details     Demonstrates how to connect Inkplate 6PLUS to a Wi-Fi network
+ *              and send periodic HTTP POST requests. This example uses the
+ *              ThingSpeak API as a simple endpoint for storing and visualizing
+ *              posted data. Sent values are printed to the Serial Monitor.
+ *
+ *              The example posts a random value as field1 - replace it with real
+ *              sensor data. It uses plain HTTP on port 80 (not HTTPS), and if a
+ *              connection fails the sketch retries on the next interval.
+ *              Expected output is basic instructions on the display to open the
+ *              Serial Monitor, the Wi-Fi connection status and posted field data
+ *              in the Serial Monitor, and the ThingSpeak channel graph updating
+ *              with the posted values.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
- * - Extra:      Stable WiFi Internet connection
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Serial settings: 115200 baud (optional)
- * - Enter your WiFi SSID and password in the sketch
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - Extra:      Wi-Fi connection, ThingSpeak account with a channel and Write
+ *               API Key
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Enter your WiFi SSID and password in the sketch.
- * 2) Upload the sketch to Inkplate 6PLUS.
- * 3) The board connects to the WiFi network.
- * 4) Data is fetched from a remote web server using HTTP.
- * 5) The received content is printed on the e-paper display.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6PLUS"
+ *    from Tools -> Board.
+ * 2) Create a free ThingSpeak account and a channel with at least "field1".
+ * 3) Copy the channel Write API Key into writeAPIKey.
+ * 4) Enter your Wi-Fi SSID and password in ssid/pass, and set
+ *    POSTING_INTERVAL_IN_SESCS (minimum ~15 s for free ThingSpeak).
+ * 5) Upload the sketch and open Serial Monitor at 115200 baud.
+ * 6) Every interval, the device sends a POST request with field1 data.
+ * 7) Open your ThingSpeak channel to view the received data/graph.
  *
- * Expected output:
- * - Inkplate display shows raw text/HTML fetched from the web.
- *
- * Notes:
- * - This example is intended to demonstrate basic HTTP communication only.
- * - No HTML parsing or content extraction is performed.
- * - Displaying large responses may require text size adjustments.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11

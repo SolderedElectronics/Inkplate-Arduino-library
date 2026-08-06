@@ -1,10 +1,10 @@
 /**
  **************************************************
- * @file        Inkplate13SPECTRA_Spotify_Dashboard.ino
+ * @file        Inkplate6COLOR_Spotify_Dashboard.ino
  * @brief       Connects to Spotify Web API, fetches album/track data, and
- *              displays it on Inkplate 13SPECTRA.
+ *              displays it on Inkplate 6COLOR.
  *
- * @details     This example demonstrates how to connect Inkplate 13SPECTRA to
+ * @details     This example demonstrates how to connect Inkplate 6COLOR to
  *              Spotify's Web API, authenticate using OAuth credentials, parse
  *              the returned JSON data, and render Spotify content on the
  *              e-paper display.
@@ -13,58 +13,47 @@
  *              credentials, and a refresh token. The refresh token is generated
  *              once using the helper script included with the project, then
  *              reused by the sketch to obtain access tokens for API requests.
+ *              Expired or incorrect credentials will prevent data loading.
  *
  *              This example is intended as a dashboard-style integration for
- *              displaying Spotify album, track, or playback-related data on a
- *              large color e-paper panel. Because the workflow depends on web
- *              APIs, JSON parsing, authentication, and image/content fetching,
- *              network reliability and RAM usage must be considered carefully.
+ *              displaying Spotify album, track, or playback-related data on the
+ *              colour e-paper panel. Because the workflow depends on web APIs,
+ *              JSON parsing, authentication, and image/content fetching, network
+ *              reliability and RAM usage must be considered carefully, and API
+ *              rate limits, token handling and network errors should be taken
+ *              into account during extended or repeated use.
+ *
+ *              Expected output: Spotify dashboard content such as album/track
+ *              information and related visual data, depending on the
+ *              implementation in the sketch, plus optional authentication,
+ *              network or API debug output on the Serial Monitor.
  *
  * Requirements:
- * - Board:      Soldered Inkplate 13SPECTRA
- * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Board:      Soldered Inkplate 6COLOR
+ * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      WiFi, Spotify account, Spotify Developer app, browser
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 13SPECTRA
- * - Enter your WiFi credentials in the sketch
- * - Create a Spotify Developer app and copy Client ID and Client Secret
- * - Set Redirect URI to: http://127.0.0.1:8888/callback
- * - Enable Spotify Web API for the app
- * - Generate and enter a valid Spotify refresh token
- * - Serial settings (if relevant)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
- *
  * How to use:
- * 1) Create a Spotify Developer application in the Spotify Developer Dashboard.
- * 2) Copy the Client ID and Client Secret into the sketch/project config.
- * 3) Open the token helper script in src/spotify-token and fill in the
- *    required CLIENT_ID, CLIENT_SECRET, and REDIRECT_URI values.
- * 4) Run the token helper script to generate the refresh token, then copy the
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Create a Spotify Developer application in the Spotify Developer Dashboard,
+ *    set the Redirect URI to http://127.0.0.1:8888/callback and enable the
+ *    Spotify Web API for the app.
+ * 3) Copy the Client ID and Client Secret into the sketch/project config.
+ * 4) Open the token helper script in src/spotify-token and fill in the
+ *    required CLIENT_ID, CLIENT_SECRET and REDIRECT_URI values.
+ * 5) Run the token helper script to generate the refresh token, then copy the
  *    resulting refresh_token into the sketch configuration.
- * 5) Enter your WiFi credentials and upload the sketch to Inkplate 13SPECTRA.
- * 6) After connecting to WiFi, the board authenticates with Spotify Web API,
+ * 6) Enter your WiFi credentials and upload the sketch to Inkplate 6COLOR.
+ * 7) After connecting to WiFi, the board authenticates with the Spotify Web API,
  *    fetches the configured data, and displays it on the e-paper screen.
  *
- * Expected output:
- * - Display: Spotify dashboard content such as album/track information and
- *   related visual data, depending on the implementation in the sketch.
- * - Serial Monitor: Optional authentication, network, or API debug output if
- *   used in the sketch.
- *
- * Notes:
- * - Display mode: Inkplate 13SPECTRA full-color e-paper mode.
- * - Spotify API access requires valid OAuth credentials and a working refresh
- *   token. Expired or incorrect credentials will prevent data loading.
- * - JSON parsing, authentication flows, and image/content handling may use
- *   substantial RAM, especially on larger dashboard-style examples.
- * - API rate limits, token handling, and network errors should be considered
- *   during extended or repeated use.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026-02-17

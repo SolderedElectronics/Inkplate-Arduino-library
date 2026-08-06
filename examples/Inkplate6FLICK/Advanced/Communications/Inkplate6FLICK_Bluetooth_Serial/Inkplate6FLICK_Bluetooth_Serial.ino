@@ -8,40 +8,41 @@
  *              + e-paper display). Useful for validating Bluetooth pairing
  *              and basic serial communication.
  *
+ *              Partial screen updates are used for faster e-paper refresh.
+ *              Some iOS apps don't support classic Bluetooth SPP profiles, and
+ *              the correct Inkplate board package must be installed. Expected
+ *              output is the received Bluetooth text on the Inkplate display,
+ *              transmitted/received messages logged in the Serial Monitor and
+ *              the Bluetooth device visible for pairing.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB-C cable
  * - Extra:      Serial Bluetooth Terminal (Android) or equivalent app
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) Pair your phone with the device named "Inkplate 6FLICK"
- *    (or the custom name defined in btDeviceName).
- * 3) Open a Bluetooth serial terminal app and connect.
- * 4) Send text from the phone → appears on Inkplate display and Serial Monitor.
- * 5) Send text from Serial Monitor → forwarded to the phone via Bluetooth.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) Pair your phone with the device named "Inkplate 6FLICK" (or the custom
+ *    name defined in btDeviceName).
+ * 4) Open a Bluetooth serial terminal app and connect.
+ * 5) Send text from the phone - it appears on the Inkplate display and Serial
+ *    Monitor.
+ * 6) Send text from the Serial Monitor - it is forwarded to the phone via
+ *    Bluetooth.
  *
- * Expected output:
- * - Inkplate display shows received Bluetooth text.
- * - Serial Monitor logs transmitted/received messages.
- * - Bluetooth device visible for pairing.
- *
- * Notes:
- * - Some iOS apps don’t support classic Bluetooth SPP profiles.
- * - Partial screen updates are used for faster e-paper refresh.
- * - Make sure the correct Inkplate board package is installed.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-26
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

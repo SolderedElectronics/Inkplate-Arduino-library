@@ -9,41 +9,40 @@
  *              the previous screen content after waking from deep sleep before
  *              applying a new partial refresh.
  *
+ *              Partial update works only in 1-bit (black & white) mode. After
+ *              deep sleep, the previous screen content must be recreated before
+ *              calling partialUpdate(), periodic full refreshes are recommended
+ *              to maintain image quality, and partial update should be avoided
+ *              immediately after power-on. Expected output is two variables
+ *              displayed on the e-paper screen whose values update after each
+ *              deep sleep cycle, with reduced power consumption thanks to ESP32
+ *              deep sleep.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Libraries:  Inkplate library
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) Device displays variables on screen.
- * 3) ESP32 enters deep sleep for a defined interval (10 s by default).
- * 4) After wake-up, screen is reconstructed and partially refreshed
- *    with updated values.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) The device displays variables on screen.
+ * 4) The ESP32 enters deep sleep for a defined interval (10 s by default).
+ * 5) After wake-up, the screen is reconstructed and partially refreshed with
+ *    updated values.
  *
- * Expected output:
- * - Two variables displayed on the e-paper screen.
- * - Values update after each deep sleep cycle.
- * - Reduced power consumption thanks to ESP32 deep sleep.
- *
- * Notes:
- * - Partial update works only in 1-bit (black & white) mode.
- * - After deep sleep, previous screen content must be recreated
- *   before calling partialUpdate().
- * - Periodic full refreshes are recommended to maintain image quality.
- * - Avoid partial update immediately after power-on.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-26
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

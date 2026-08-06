@@ -11,39 +11,39 @@
  *              The display is updated using partial refreshes with occasional
  *              full refreshes to preserve image quality.
  *
+ *              Partial update is available only in 1-bit (black & white) mode.
+ *              Avoid partial update immediately after power-on - use a full
+ *              refresh first - and do a full refresh every 5-10 partial
+ *              refreshes to maintain quality. This example keeps the e-paper
+ *              power supply enabled during partial updates. Expected output is
+ *              the time shown as HH:MM:SS with the date/weekday printed on the
+ *              display, and "ALARM!" appearing when the configured alarm
+ *              triggers.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Libraries:  Inkplate library
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) The sketch sets the RTC time/date and arms an alarm (10 s after start).
- * 3) Current time/date is refreshed on screen once per second.
- * 4) When the alarm fires, "ALARM!" appears and the alarm flag is cleared.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) The sketch sets the RTC time/date and arms an alarm (10 s after start).
+ * 4) The current time/date is refreshed on screen once per second.
+ * 5) When the alarm fires, "ALARM!" appears and the alarm flag is cleared.
  *
- * Expected output:
- * - Time shown as HH:MM:SS and date/weekday printed on the display.
- * - "ALARM!" message appears when the configured alarm triggers.
- * - Mostly partial updates, with periodic full refreshes.
- *
- * Notes:
- * - Partial update is available only in 1-bit (black & white) mode.
- * - Avoid partial update immediately after power-on; use a full refresh first.
- * - Doing a full refresh every 5–10 partial refreshes helps maintain quality.
- * - This example keeps the e-paper power supply enabled during partial updates.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-26
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

@@ -12,44 +12,43 @@
  *              on the e-paper display.
  *
  *              The sketch uses 1-bit (black/white) display mode and relies on
- *              partial updates for fast refresh. When the text reaches the
- *              bottom of the screen, the framebuffer is cleared and a full
- *              refresh is performed to prevent ghosting buildup.
+ *              partial updates for fast refresh - partial update is supported
+ *              only in 1-bit mode. When the text reaches the bottom of the
+ *              screen, the framebuffer is cleared and a full refresh is
+ *              performed to prevent ghosting buildup; for best image quality a
+ *              periodic full refresh is recommended, which this sketch does
+ *              automatically when the screen is full. This is classic Bluetooth
+ *              SPP (not BLE), so pairing is required before use.
+ *
+ *              Expected output: a "Bluetooth Serial Example" header on the
+ *              display, then received Bluetooth text appended line-by-line with
+ *              partial updates and a full refresh when the screen fills; the
+ *              phone app shows bytes sent from the Arduino Serial Monitor via
+ *              Bluetooth.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Extra:      Smartphone + Bluetooth serial terminal app
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Serial Monitor: 115200 baud
- * - Bluetooth name: edit btDeviceName (optional)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Select the Inkplate 6PLUS board in Tools and upload the sketch.
- * 2) Open Serial Monitor at 115200 baud (optional, for sending text to phone).
- * 3) On your phone, pair with the advertised device name (btDeviceName).
- * 4) Open a Bluetooth serial terminal app and connect to the Inkplate.
- * 5) Type in the app to display text on Inkplate; type in Serial Monitor to
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Optionally edit btDeviceName to change the advertised Bluetooth name, then
+ *    upload the sketch.
+ * 3) Open Serial Monitor at 115200 baud (optional, for sending text to phone).
+ * 4) On your phone, pair with the advertised device name (btDeviceName).
+ * 5) Open a Bluetooth serial terminal app and connect to the Inkplate.
+ * 6) Type in the app to display text on Inkplate; type in Serial Monitor to
  *    send text back to the phone.
  *
- * Expected output:
- * - Display: "Bluetooth Serial Example" header, then received Bluetooth text
- *   appended line-by-line with partial updates; full refresh when screen fills.
- * - Phone app: shows bytes sent from Arduino Serial Monitor via Bluetooth.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial update is supported only in 1-bit mode.
- * - For best image quality, do a full refresh periodically (this sketch does
- *   one automatically when the screen is full).
- * - This is classic Bluetooth SPP (not BLE). Pairing is required before use.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-17

@@ -1,23 +1,47 @@
 /**
  **************************************************
  * @file        Inkplate13SPECTRA_Factory_Programming.ino
+ * @brief       File for factory programming Inkplate 13SPECTRA.
  *
- * @brief       File for factory programming Inkplate 13 SPECTRA
+ * @details     Runs the factory programming routine together with the hardware
+ *              test suite. Output of the tests is done via Serial due to the slow
+ *              screen refresh rate.
  *
- * @note        Tests will also be done, to pass all tests:
+ *              Tests will also be done. To pass all tests:
  *              - Edit the WiFi information in test.cpp.
- *              - Connect a slave device via EasyC on address 0x76 (you may change this in test.cpp also).
- *                In the InkplateEasyCTester folder, you can find the code for uploading to Dasduino Core 
- *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave device for testing an easyC connector
- *                if you don't have a device with address 0x76.
- *              - Insert a formatted microSD card (doesn't have to be empty)
- *              - Press wake button to finish testing
- *              Output of the tests will be done via Serial due to slow screen refresh rate.
+ *              - Connect a slave device via EasyC on address 0x76 (you may
+ *                change this in test.cpp also). In the InkplateEasyCTester
+ *                folder, you can find the code for uploading to Dasduino Core
+ *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave
+ *                device for testing an easyC connector if you don't have a
+ *                device with address 0x76.
+ *              - Insert a formatted microSD card (doesn't have to be empty).
+ *              - Press wake button to finish testing.
  *
- *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
- *LICENSE file included with this example. If you have any questions about
- *licensing, please visit https://soldered.com/contact/ Distributed as-is; no
- *warranty is given.
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable, formatted microSD card,
+ *               EasyC slave device on address 0x76
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Edit the WiFi information in test.cpp and connect the EasyC slave device.
+ * 3) Insert a formatted microSD card and upload the sketch.
+ * 4) Follow the test output on the Serial Monitor.
+ * 5) Press the wake button to finish testing.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
+ *              Please review the LICENSE file included with this example. If you
+ *              have any questions about licensing, please visit
+ *              https://soldered.com/contact/ Distributed as-is; no warranty is
+ *              given.
  *
  * @authors     Soldered
  ***************************************************/

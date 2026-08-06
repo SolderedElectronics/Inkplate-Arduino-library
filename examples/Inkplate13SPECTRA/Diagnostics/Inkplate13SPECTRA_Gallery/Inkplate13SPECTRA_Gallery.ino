@@ -1,16 +1,35 @@
-/*
-    Inkplate13SPECTRA_Gallery example for Inkplate 13SPECTRA
-    For this example you will need only USB cable and an Inkplate 13SPECTRA.
-    Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-    Don't have "Soldered Inkplate 13SPECTRA" option? Follow our tutorial and add it:
-
-    /////////////////////////// INSERT BOARD DEF LINK HERE
-
-    This example will show you how you can use Inkplate 13SPECTRA to random images in the root sdcard folder.
-
-    Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
-    21 January 2026 by Soldered Electronics
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_Gallery.ino
+ * @brief       Random SD card image gallery for Soldered Inkplate 13SPECTRA.
+ *
+ * @details     Shows how you can use Inkplate 13SPECTRA to display random images
+ *              from the root folder of the SD card.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable, microSD card with images in the
+ *               root folder
+ * - Extra:      None
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Copy images to the root folder of the SD card and insert it into the
+ *    Inkplate.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) A random image from the SD card is shown on the display.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered Electronics
+ * @date        2026-01-21
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA

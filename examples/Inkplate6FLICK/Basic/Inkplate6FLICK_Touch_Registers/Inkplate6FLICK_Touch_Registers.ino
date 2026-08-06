@@ -9,41 +9,39 @@
  *              controller and prints them to the Serial Monitor for debugging
  *              or development purposes.
  *
+ *              touchscreen.available() checks if a touch event occurred and
+ *              touchscreen.getRawData() reads the raw controller register data.
+ *              Touchscreen coordinates are automatically adjusted when the
+ *              display rotation changes. This example is mainly intended for
+ *              debugging and low-level touchscreen development. Expected output
+ *              is raw touchscreen register values in the Serial Monitor when the
+ *              screen is touched, plus a small marker and label indicating the
+ *              (0,0) screen position on the display.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
- *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) Open the Serial Monitor at 115200 baud.
- * 3) Touch the screen to generate touchscreen events.
- * 4) Raw touchscreen register values will be printed in the Serial Monitor.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) Open the Serial Monitor at 115200 baud.
+ * 4) Touch the screen to generate touchscreen events.
+ * 5) Raw touchscreen register values are printed in the Serial Monitor.
  *
- * Expected output:
- * - Serial Monitor displays raw touchscreen register values when the screen
- *   is touched.
- * - A small marker and label indicating the (0,0) screen position appear
- *   on the display.
- *
- * Notes:
- * - touchscreen.available() checks if a touch event occurred.
- * - touchscreen.getRawData() reads raw controller register data.
- * - Touchscreen coordinates are automatically adjusted when the display
- *   rotation changes.
- * - This example is mainly intended for debugging and low-level touchscreen
- *   development.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

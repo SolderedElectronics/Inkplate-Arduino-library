@@ -10,51 +10,48 @@
  *              display using the Inkplate image helper.
  *
  *              The display is configured in 3-bit grayscale mode (INKPLATE_3BIT),
- *              which supports 8 intensity levels (0–7). After displaying the
+ *              which supports 8 intensity levels (0-7). After displaying the
  *              downloaded image, the ESP32 sets a wake-up timer and enters deep
  *              sleep. When the timer expires, the ESP32 restarts from setup(),
- *              causing the image to be downloaded and displayed again.
+ *              causing the image to be downloaded and displayed again - loop()
+ *              never runs after esp_deep_sleep_start().
+ *
+ *              Partial update is not available in grayscale mode, so this example
+ *              uses a full refresh via display.display(). HTTPS warning:
+ *              secure.setInsecure() disables certificate validation and is for
+ *              demo/testing only - for production use, validate TLS properly
+ *              (e.g. a CA certificate or certificate pinning that matches the
+ *              host). Web images and decoding can be RAM-intensive, so large
+ *              JPEGs or complex images may fail to decode depending on available
+ *              memory. Network endpoints can change behavior (redirects,
+ *              user-agent filtering, rate limits); if downloads fail, check the
+ *              Serial log and try a different image source.
+ *
+ *              Expected output: a 600x600 JPEG image rendered on the display in
+ *              3-bit grayscale, with WiFi join status, resolved URL, HTTP status
+ *              codes and the draw result on Serial.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      WiFi (2.4 GHz), internet access
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (recommended for debugging)
- * - WiFi credentials / API keys / timezone:
- *   - Set ssid and password for your network.
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (recommended for debugging)
  *
  * How to use:
- * 1) Enter your WiFi SSID and password in the sketch.
- * 2) Upload the sketch and open the Serial Monitor at 115200 baud.
- * 3) After connecting, the sketch resolves the redirect URL and downloads a
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password (ssid, password) in the sketch.
+ * 3) Upload the sketch and open the Serial Monitor at 115200 baud.
+ * 4) After connecting, the sketch resolves the redirect URL and downloads a
  *    JPEG image, then renders it full-screen.
- * 4) The device enters deep sleep and wakes periodically to refresh the image.
+ * 5) The device enters deep sleep and wakes periodically to refresh the image.
  *
- * Expected output:
- * - E-paper: A 600x600 JPEG image rendered on the display in 3-bit grayscale.
- * - Serial: WiFi join status, resolved URL, HTTP status codes, and draw result.
- *
- * Notes:
- * - Display mode is 3-bit grayscale (8 levels). Partial update is not available
- *   in grayscale mode; this example uses full refresh via display.display().
- * - Deep sleep restarts the ESP32. loop() will not run after esp_deep_sleep_start().
- * - HTTPS warning: secure.setInsecure() disables certificate validation and is
- *   for demo/testing only. For production use, validate TLS properly (e.g., use
- *   a CA certificate or certificate pinning that matches the host).
- * - Web images and decoding can be RAM-intensive. Large JPEGs or complex images
- *   may fail to decode depending on available memory.
- * - Network endpoints can change behavior (redirects, user-agent filtering,
- *   rate limits). If downloads fail, check the Serial log and try a different
- *   image source.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-07-24

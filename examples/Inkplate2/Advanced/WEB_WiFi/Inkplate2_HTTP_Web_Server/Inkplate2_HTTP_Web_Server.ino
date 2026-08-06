@@ -13,52 +13,49 @@
  *              The submitted text is passed to the device via a URL route
  *              (/string/{...}), then displayed on the e-paper screen. The
  *              current AP SSID/password and the server IP address are also
- *              printed on the display to guide the user.
+ *              printed on the display to guide the user. The web server runs on
+ *              port 80 (HTTP).
  *
  *              The display runs in 1-bit mode with the Inkplate 2 tri-color
- *              palette (black/white/red). The sketch uses full refresh updates
+ *              palette (BLACK/WHITE/RED). The sketch uses full refresh updates
  *              when showing instructions and when showing the submitted text.
+ *
+ *              The device runs as an AP (no router required); range and
+ *              performance depend on the environment and client device. Text is
+ *              passed in the URL path, so very long strings or special characters
+ *              may require encoding and can exceed typical URL length limits. No
+ *              authentication beyond the AP password is implemented, so treat
+ *              this as a demo and avoid exposing it in untrusted environments.
+ *
+ *              Expected output: instructions (AP SSID/password + IP address) on
+ *              the display, then "User text" and the submitted string
+ *              (highlighted using the red colour); a simple page served from the
+ *              Inkplate in the browser; and server start/IP plus received user
+ *              text in the Serial Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
  * - Hardware:   Inkplate 2, USB cable
  * - Extra:      Phone/PC with WiFi + web browser
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate2
- * - AP SSID/pass:   edit #define ssid / #define pass
- * - Web server:     runs on port 80 (HTTP)
- * - Serial Monitor: 115200 baud (optional)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 2.
- * 2) On your phone/PC, connect to the WiFi network shown on the display
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
+ *    from Tools -> Board.
+ * 2) Optionally edit #define ssid / #define pass to change the AP credentials.
+ * 3) Upload the sketch to Inkplate 2.
+ * 4) On your phone/PC, connect to the WiFi network shown on the display
  *    (default SSID "Inkplate", password "soldered").
- * 3) Open a browser and navigate to the displayed address (http://<AP IP>/).
- * 4) Enter text in the page and send it to the display.
- * 5) The Inkplate updates the screen to show the received text.
+ * 5) Open a browser and navigate to the displayed address (http://<AP IP>/).
+ * 6) Enter text in the page and send it to the display.
+ * 7) The Inkplate updates the screen to show the received text.
  *
- * Expected output:
- * - Display: instructions (AP SSID/password + IP address), then "User text"
- *   and the submitted string (highlighted using the red color).
- * - Browser: simple page served from Inkplate; submitting text triggers an
- *   update on the device.
- * - Serial Monitor: prints server start/IP and received user text (if opened).
- *
- * Notes:
- * - Display mode is 1-bit with Inkplate 2 color palette (BLACK/WHITE/RED).
- * - The device runs as an AP (no router required). Range and performance
- *   depend on environment and client device.
- * - Text is passed in the URL path; very long strings or special characters
- *   may require encoding and can exceed typical URL length limits.
- * - No authentication beyond the AP password is implemented; treat this as a
- *   demo and avoid exposing it in untrusted environments.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-03-29

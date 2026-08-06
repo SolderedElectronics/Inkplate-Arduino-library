@@ -18,44 +18,39 @@
  *
  *              Pitch control is approximate: the buzzer frequency is set via a
  *              digital potentiometer, which does not behave linearly. Only a
- *              limited frequency range is supported reliably.
+ *              limited frequency range is supported reliably (approximately
+ *              572-2933 Hz); frequencies outside this range may be unstable or
+ *              inaudible. Delays are used for rhythm and spacing between notes,
+ *              so this example is intentionally blocking and focused on
+ *              demonstrating the buzzer API. Display mode is 1-bit BW
+ *              (INKPLATE_1BIT); the display is not actively used here, it is
+ *              only initialized as part of the standard board setup.
+ *
+ *              Expected output: audible beeps from the on-board buzzer - three
+ *              short beeps at startup, two longer beeps using manual on/off
+ *              control, two low-frequency beeps followed by two high-frequency
+ *              beeps, then a repeating short "song" built from the chord notes.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial settings (if relevant): none
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     none
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4 TEMPERA.
- * 2) Listen to the startup demo sequences (short beeps, on/off beeps, then
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) Listen to the startup demo sequences (short beeps, on/off beeps, then
  *    low/high pitched beeps).
- * 3) After the demos, the loop continuously plays a simple melody pattern.
+ * 4) After the demos, the loop continuously plays a simple melody pattern.
  *
- * Expected output:
- * - Audible beeps from the on-board buzzer:
- *   - Three short beeps (startup)
- *   - Two longer beeps using manual on/off control
- *   - Two low-frequency beeps followed by two high-frequency beeps
- *   - A repeating short “song” built from the chord notes
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT). The display is not actively used in
- *   this example; it is initialized as part of the standard board setup.
- * - Frequency range: pitch control is supported only within a limited range
- *   (approximately 572–2933 Hz). Frequencies outside this range may be unstable
- *   or inaudible.
- * - Timing: delays are used for rhythm and spacing between notes; this example
- *   is intentionally blocking and focused on demonstrating the buzzer API.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-09-11

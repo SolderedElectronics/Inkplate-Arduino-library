@@ -12,61 +12,50 @@
  *
  *              The sketch first connects to Wi-Fi, then attempts to load and
  *              display several remote images in sequence. It demonstrates the
- *              use of optional image-processing parameters such as dithering and
- *              color inversion, which can be useful when converting source
- *              images for e-paper rendering.
+ *              use of optional image-processing parameters: invert helps when
+ *              source bitmaps have reversed black/white polarity, and dither can
+ *              improve visual conversion for some images at the cost of
+ *              additional processing.
  *
  *              Web image examples are convenient for connected dashboards,
  *              signage, and remote content display, but they depend on network
  *              reliability, server availability, supported image formats, and
  *              available RAM. BMP files are generally the most predictable
- *              option for embedded rendering, while JPEG decoding may require
- *              more processing and memory.
+ *              option for embedded rendering (supported bit depths and
+ *              uncompressed formats matter), while JPEG decoding may require
+ *              more processing and memory. Image dimensions should fit the
+ *              Inkplate 6COLOR panel resolution (600x448); oversized images may
+ *              fail or require preprocessing. Display mode is Inkplate 6COLOR
+ *              colour e-paper mode with full refreshes.
+ *
+ *              Expected output: a sequence of downloaded images rendered full-
+ *              screen or near full-screen, followed by any image-load error
+ *              messages if a fetch or decode fails, with Wi-Fi connection
+ *              progress messages on Serial.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      WiFi
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Enter your Wi-Fi SSID and password in the sketch
- * - Serial settings: optional if you want to monitor connection progress
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     optional, if you want to monitor connection progress
  *
  * How to use:
- * 1) Enter your Wi-Fi credentials in the sketch.
- * 2) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the example.
- * 3) On startup, the board connects to the configured Wi-Fi network.
- * 4) The sketch downloads several remote images in sequence and displays each
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Enter your Wi-Fi credentials in the sketch.
+ * 3) Upload the example to Inkplate 6COLOR.
+ * 4) On startup, the board connects to the configured Wi-Fi network.
+ * 5) The sketch downloads several remote images in sequence and displays each
  *    one on the e-paper panel.
- * 5) If an image cannot be opened or decoded, an error message is shown on the
+ * 6) If an image cannot be opened or decoded, an error message is shown on the
  *    display.
  *
- * Expected output:
- * - Display: A sequence of downloaded images rendered full-screen or near
- *   full-screen, followed by any image-load error messages if a fetch or decode
- *   fails.
- * - Serial: Wi-Fi connection progress messages, if Serial is monitored.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode with full refreshes.
- * - Remote image rendering is limited by available RAM, decode complexity, and
- *   network stability.
- * - BMP/JPEG support depends on library capabilities. BMP is typically the
- *   safest format for predictable embedded workflows.
- * - For BMP files, supported bit depths and uncompressed formats are important.
- * - Image dimensions should fit the Inkplate 6COLOR panel resolution
- *   (600x448). Oversized images may fail or require preprocessing.
- * - The optional invert parameter can help when source bitmaps have reversed
- *   black/white polarity.
- * - The optional dither parameter can improve visual conversion for some images
- *   at the cost of additional processing.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2020-07-23

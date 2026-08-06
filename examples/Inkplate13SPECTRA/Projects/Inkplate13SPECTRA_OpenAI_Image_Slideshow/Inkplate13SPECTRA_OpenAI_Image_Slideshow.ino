@@ -1,19 +1,41 @@
-/*
-  Inkplate13SPECTRA OpenAI Image slideshow
-  Compatible with Soldered Inkplate 13SPECTRA
-
-  For this example you will need only USB cable and Inkplate 13SPECTRA.
-  Select "Soldered Inkplate 13SPECTRA" from Tools -> Board menu.
-  Don't have "Soldered Inkplate13SPECTRA" option? Follow our tutorial and add it:https://docs.soldered.com/inkplate/13SPECTRA/quick-start-guide/
-
-  Overview:
-  This example demonstrates how to send a prompt to the GPT DALL-E API in order to generate an image which will be displayed on the Inkplate
-  It generates an image every 30mins, after which it goes to deep sleep.
-
-  Before You Start:
-  - Enter your WiFi credentials carefully (they are case-sensitive).
-  - After creating an OpenAI API key, enter it in the openai_key variable
-*/
+/**
+ **************************************************
+ * @file        Inkplate13SPECTRA_OpenAI_Image_Slideshow.ino
+ * @brief       OpenAI (DALL-E) generated image slideshow for Soldered
+ *              Inkplate 13SPECTRA.
+ *
+ * @details     Demonstrates how to send a prompt to the GPT DALL-E API in order
+ *              to generate an image which will be displayed on the Inkplate. It
+ *              generates an image every 30 minutes, after which it goes to deep
+ *              sleep.
+ *
+ *              Before you start:
+ *              - Enter your WiFi credentials carefully (they are case-sensitive).
+ *              - After creating an OpenAI API key, enter it in the openai_key
+ *                variable.
+ *
+ * Requirements:
+ * - Board:      Soldered Inkplate 13SPECTRA
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
+ * - Extra:      WiFi Internet connection, OpenAI API key
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi credentials and OpenAI API key (openai_key) in the sketch.
+ * 3) Upload the sketch to Inkplate 13SPECTRA.
+ * 4) An image is generated, downloaded and shown on the display, then the board
+ *    deep-sleeps for 30 minutes and repeats.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ *
+ * @author      Soldered
+ **************************************************/
 
 #include <WiFiClientSecure.h>     // Enables secure (HTTPS) communication over WiFi
 #include <ArduinoJson.h>          // Library for JSON parsing and creation

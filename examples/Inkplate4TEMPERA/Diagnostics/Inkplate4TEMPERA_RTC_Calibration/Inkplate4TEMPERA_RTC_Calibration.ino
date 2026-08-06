@@ -28,54 +28,52 @@
  *              updates most of the time and forces a full refresh after a
  *              defined number of partial updates.
  *
+ *              Display mode is 1-bit (BW), since partial updates are supported
+ *              only in BW mode. The displayed seconds may appear to "skip" or
+ *              look uneven because e-paper refresh takes time; the RTC time
+ *              itself continues accurately. Partial update best practice is a
+ *              full refresh every 5-10 partial updates to maintain image quality
+ *              (this example enforces a threshold), and partialUpdate(false,
+ *              true) keeps the e-paper power enabled for faster successive
+ *              updates at higher power usage. RTC offset parameters are
+ *              hardware-specific; refer to the PCF85063(A) datasheet section on
+ *              offset calibration for exact ppm/LSB behavior. Expected output is
+ *              a prompt to press the wake button, then a large HH:MM:SS time
+ *              that updates about once per second.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 4TEMPERA
  * - Hardware:   Inkplate 4TEMPERA, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate4TEMPERA
- * - Serial settings (if relevant): none
+ * - Serial:     none
  * - Calibration settings (edit in sketch):
  *   - Optional: display.rtc.setInternalCapacitor(RTC_7PF / RTC_12_5PF)
  *   - Optional: display.rtc.setClockOffset(mode, value)
  *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/4TEMPERA/quick-start-guide/
- *
  * How to use:
- * 1) Decide whether you are using external crystal capacitors or the RTC's
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate4TEMPERA"
+ *    from Tools -> Board.
+ * 2) Decide whether you are using external crystal capacitors or the RTC's
  *    internal capacitor setting:
  *    - Using internal capacitor: remove external capacitors and enable
  *      setInternalCapacitor(...).
  *    - Using external capacitors: comment out setInternalCapacitor(...).
- * 2) (Optional) Determine and set the clock offset:
+ * 3) (Optional) Determine and set the clock offset:
  *    - Best: measure the 32.768 kHz clock frequency and compute ppm deviation,
  *      then choose mode and offset register value accordingly.
  *    - Alternative: run without setClockOffset(), compare RTC time drift over
- *      2–3 days, estimate frequency error, then compute and apply an offset.
- * 3) Upload the sketch.
- * 4) Press the wake button when prompted to start the RTC counter.
- * 5) Observe the displayed time; adjust capacitor/offset values if needed and
+ *      2-3 days, estimate frequency error, then compute and apply an offset.
+ * 4) Upload the sketch.
+ * 5) Press the wake button when prompted to start the RTC counter.
+ * 6) Observe the displayed time; adjust capacitor/offset values if needed and
  *    re-upload.
  *
- * Expected output:
- * - E-paper: A prompt to press the wake button, then a large HH:MM:SS time that
- *   updates about once per second.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial updates are supported only in BW mode.
- * - The displayed seconds may appear to “skip” or look uneven because e-paper
- *   refresh takes time; the RTC time itself continues accurately.
- * - Partial update best practice: do a full refresh every 5–10 partial updates
- *   to maintain image quality (this example enforces a threshold).
- * - partialUpdate(false, true) keeps the e-paper power enabled for faster
- *   successive updates (higher power usage).
- * - RTC offset parameters are hardware-specific; refer to the PCF85063(A)
- *   datasheet section on offset calibration for exact ppm/LSB behavior.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-04-27

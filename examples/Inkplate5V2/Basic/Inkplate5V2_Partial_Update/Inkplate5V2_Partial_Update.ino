@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate5v2_Partial_Update.ino
+ * @file        Inkplate5V2_Partial_Update.ino
  * @brief       Partial update text scrolling example for Soldered Inkplate 5v2.
  *
  * @details     Demonstrates how to use partial update functionality on the
@@ -10,37 +10,35 @@
  *              periodically forced (every N partial updates) to maintain good
  *              image quality.
  *
+ *              Partial update is available only in 1-bit (black & white) mode
+ *              and is not recommended for the first refresh after power-up.
+ *              Perform a full refresh every 5-10 partial updates to maintain
+ *              good picture quality. partialUpdate(_forced, leaveOn) takes two
+ *              optional arguments: _forced is for advanced use (e.g. deep sleep
+ *              workflows) to force a partial update, and leaveOn keeps the
+ *              e-paper power rails enabled between updates for faster
+ *              refreshes.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
  * - Hardware:   Inkplate 5v2, USB cable
  * - Extra:      None
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5v2
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5v2/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 5v2.
- * 2) The display performs an initial full refresh.
- * 3) Text scrolls across the screen using partial updates.
- * 4) A full refresh is automatically forced after a defined number of partial updates.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 5v2.
+ * 3) The display performs an initial full refresh, then text scrolls across the
+ *    screen using partial updates.
+ * 4) A full refresh is automatically forced after a defined number of partial
+ *    updates, reducing ghosting and maintaining display quality.
  *
- * Expected output:
- * - Scrolling text rendered on the display using partial updates.
- * - Periodic full refresh to reduce ghosting and maintain display quality.
- *
- * Notes:
- * - Partial update is available only in 1-bit (black & white) mode.
- * - It is not recommended to use partial update on the first refresh after power-up.
- * - Perform a full refresh every 5–10 partial updates to maintain good picture quality.
- * - partialUpdate(_forced, leaveOn):
- *   - _forced: advanced use (e.g. deep sleep workflows) to force a partial update
- *   - leaveOn: keeps the e-paper power rails enabled between updates for faster refreshes
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11

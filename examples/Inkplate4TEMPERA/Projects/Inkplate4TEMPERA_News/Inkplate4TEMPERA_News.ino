@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate4TEMPERA_News_API.ino
+ * @file        Inkplate4TEMPERA_News.ino
  * @brief       Fetch news headlines from NewsAPI.org over WiFi, render a
  *              "World News" layout, then deep sleep between updates.
  *
@@ -14,57 +14,51 @@
  *
  *              After updating the e-paper display, the ESP32 enters deep sleep
  *              for a fixed interval. When it wakes, the ESP32 restarts from
- *              setup(), fetches fresh news, and redraws the screen.
+ *              setup(), fetches fresh news, and redraws the screen; loop() is not
+ *              used after entering sleep.
+ *
+ *              Display mode is 1-bit (BW) and partial update is not used - the
+ *              layout is drawn once and pushed with a full refresh (display()).
+ *              NewsAPI.org enforces rate limits and plan restrictions, so if
+ *              requests fail, check API limits, key validity and WiFi stability.
+ *              The sketch waits until NTP time is valid before rendering
+ *              date/time fields, so make sure timeZone matches your location.
+ *              JSON parsing and multiple custom fonts can consume significant
+ *              memory; if you experience instability, reduce the number of items
+ *              fetched or simplify fonts/layout. HTTPS/TLS behavior depends on
+ *              the implementation in src/Network.h - if the code uses insecure
+ *              TLS settings (e.g. setInsecure()), treat it as demo-only and use
+ *              proper certificate validation for production.
+ *
+ *              Expected output: a "World News" title, date and last update time,
+ *              followed by a list of headline boxes with descriptions (as
+ *              provided by NewsAPI.org), plus the current time printout and any
+ *              network/debug output from the helper layer on Serial.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      WiFi (2.4 GHz), NewsAPI.org API key
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- * - Serial Monitor: 115200 baud (recommended for debug/time output)
- * - WiFi credentials / API keys / timezone:
- *   - Set ssid and pass for your WiFi network.
- *   - Set api_key_news to your NewsAPI.org API key.
- *   - Set timeZone to your local offset (e.g., 2 for UTC+2).
- * - Library dependency:
- *   - ArduinoJson must be installed (used by the network/parser layer).
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Library:    ArduinoJson (used by the network/parser layer)
+ * - Serial:     115200 baud (recommended for debug/time output)
  *
  * How to use:
- * 1) Install ArduinoJson in the Arduino IDE Library Manager.
- * 2) Create a NewsAPI.org account and generate an API key.
- * 3) Enter WiFi SSID/password, API key, and timeZone in the "CHANGE HERE" block.
- * 4) Upload the sketch.
- * 5) The device fetches news, renders the page once, then sleeps. It wakes and
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Install ArduinoJson in the Arduino IDE Library Manager.
+ * 3) Create a NewsAPI.org account and generate an API key.
+ * 4) Enter your WiFi SSID/password (ssid, pass), the API key (api_key_news) and
+ *    timeZone (e.g. 2 for UTC+2) in the "CHANGE HERE" block.
+ * 5) Upload the sketch.
+ * 6) The device fetches news, renders the page once, then sleeps. It wakes and
  *    refreshes on the configured interval.
  *
- * Expected output:
- * - E-paper: "World News" title, date and last update time, followed by a list
- *   of headline boxes with descriptions (as provided by NewsAPI.org).
- * - Serial: Current time printout and any network/debug output from the helper
- *   layer (useful for troubleshooting).
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial update is not used; the layout is drawn
- *   once and pushed with a full refresh (display()).
- * - Deep sleep restarts the ESP32. loop() is not used after entering sleep.
- * - API/network limits: NewsAPI.org enforces rate limits and plan restrictions.
- *   If requests fail, check API limits, key validity, and WiFi stability.
- * - Time handling: the sketch waits until NTP time is valid before rendering
- *   date/time fields. Ensure timeZone matches your location.
- * - RAM usage: JSON parsing and multiple custom fonts can consume significant
- *   memory. If you experience instability, reduce the number of items fetched
- *   or simplify fonts/layout.
- * - HTTPS/TLS behavior depends on the implementation in src/Network.h. If the
- *   code uses insecure TLS settings (e.g., setInsecure()), treat it as demo-only
- *   and use proper certificate validation for production.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-04-30

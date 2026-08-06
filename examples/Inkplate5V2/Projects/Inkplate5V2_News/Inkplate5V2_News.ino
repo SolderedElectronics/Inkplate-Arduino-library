@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate5v2_News_API.ino
+ * @file        Inkplate5V2_News.ino
  * @brief       Fetches latest news via NewsAPI.org over WiFi, renders headlines
  *              and descriptions in a newspaper layout, then deep-sleeps.
  *
@@ -14,57 +14,51 @@
  *              News" header, a date/time row ("Date" and "Last update"), and a
  *              sequence of article blocks below. The display is driven in
  *              1-bit black/white mode (INKPLATE_1BIT) and updated with a full
- *              refresh.
+ *              refresh; partial updates are not used.
  *
  *              After rendering, the ESP32 enters deep sleep for a fixed period
  *              (DELAY_MS). Deep sleep resets the ESP32, so the sketch restarts
  *              from setup() on every wake-up and fetches fresh headlines again.
  *
+ *              Network reliability matters: API requests can fail due to
+ *              connectivity, rate limits, or invalid credentials, and
+ *              NewsAPI.org has usage limits depending on plan, so frequent
+ *              polling may hit rate limits. Handle API key secrecy
+ *              appropriately. TLS/HTTPS behavior depends on the networking
+ *              implementation in src/Network.h; if certificates are not
+ *              validated, treat it as demo-only and prefer proper certificate
+ *              validation/pinning for production deployments.
+ *
+ *              Expected output: the e-paper display shows a "World News" page
+ *              with current date / last update time and multiple news items
+ *              (headline + description), while the Serial Monitor logs WiFi
+ *              connection, time sync, fetch status and drawing progress for each
+ *              news item.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
  * - Hardware:   Inkplate 5v2, USB cable (battery optional for low-power testing)
  * - Extra:      WiFi Internet connection, NewsAPI.org API key
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate5v2
- * - Serial Monitor: 115200 baud
- * - Set WiFi credentials (ssid/pass) and News API key in the "CHANGE HERE"
- *   section
- * - Set timeZone (UTC offset) appropriate for your location
- * - ArduinoJson library required by the networking layer (install via Library
- *   Manager if not already present)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * - Library:    ArduinoJson (install via Library Manager if not present)
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Create an account at NewsAPI.org and generate an API key.
- * 2) Enter your WiFi SSID, password, API key, and timezone in the sketch.
- * 3) Upload the sketch and open Serial Monitor at 115200 baud.
- * 4) On boot, the device connects to WiFi, syncs time, fetches news, and draws
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate5v2"
+ *    from Tools -> Board.
+ * 2) Create an account at NewsAPI.org and generate an API key.
+ * 3) Enter your WiFi SSID, password, API key and timeZone (UTC offset) in the
+ *    "CHANGE HERE" section of the sketch.
+ * 4) Upload the sketch and open Serial Monitor at 115200 baud.
+ * 5) On boot, the device connects to WiFi, syncs time, fetches news, and draws
  *    the newspaper-style page.
- * 5) The board deep-sleeps for ~1 hour, then wakes and repeats the process.
+ * 6) The board deep-sleeps for ~1 hour, then wakes and repeats the process.
  *
- * Expected output:
- * - E-paper display shows a "World News" page with current date / last update
- *   time and multiple news items (headline + description).
- * - Serial Monitor logs WiFi connection, time sync, fetch status, and drawing
- *   progress for each news item.
- *
- * Notes:
- * - Display mode: 1-bit BW (INKPLATE_1BIT). This example performs full refresh
- *   updates; partial updates are not used.
- * - Deep sleep restarts the ESP32 on every wake-up; all state is re-initialized.
- * - Network reliability matters: API requests can fail due to connectivity,
- *   rate limits, or invalid credentials. Handle API key secrecy appropriately.
- * - NewsAPI.org has usage limits depending on plan; frequent polling may hit
- *   rate limits.
- * - TLS/HTTPS behavior depends on the networking implementation in
- *   src/Network.h; if certificates are not validated, treat it as demo-only and
- *   prefer proper certificate validation/pinning for production deployments.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-05-14

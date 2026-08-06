@@ -6,7 +6,7 @@
  *
  * @details     This example runs the Inkplate 4 TEMPERA in 3-bit grayscale
  *              mode (INKPLATE_3BIT), providing 8 intensity levels: 0 (black),
- *              7 (white), and 1–6 as intermediate grays.
+ *              7 (white), and 1-6 as intermediate grays.
  *
  *              It showcases a wide range of Adafruit GFX-compatible drawing
  *              functions (pixels, lines, thick/gradient lines, rectangles,
@@ -18,44 +18,42 @@
  *
  *              Each demo step draws into the ESP32 frame buffer first, then
  *              transfers the buffer to the e-paper panel using display.display().
- *              A short label is printed at the bottom using displayCurrentAction()
- *              to indicate the current demo step.
+ *              A short label is printed at the bottom using
+ *              displayCurrentAction() to indicate the current demo step.
+ *
+ *              Partial update is not available in grayscale mode. E-paper
+ *              refreshes are relatively slow; refreshing more often than ~5 s is
+ *              not recommended for full updates (this example uses a
+ *              multi-second delay). Grayscale frame buffers and bitmap drawing
+ *              consume significantly more RAM than 1-bit (BW) mode, so keep
+ *              bitmap sizes reasonable. Bitmap data is provided via image.h and
+ *              must match the expected format for Inkplate grayscale drawing
+ *              (pre-converted pixel data, not a BMP/JPEG file). setRotation()
+ *              affects the entire coordinate system, so all drawing operations
+ *              after it use the rotated orientation.
+ *
+ *              Expected output: a sequence of drawing demonstrations (shapes,
+ *              lines, text, bitmap), each shown for a few seconds, ending with
+ *              "Inkplate4TEMPERA" rotating continuously.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4 TEMPERA
  * - Hardware:   Inkplate 4 TEMPERA, USB-C cable
  * - Extra:      none
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 4 TEMPERA
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
- *
  * How to use:
- * 1) Select the Inkplate 4 TEMPERA board and upload the sketch.
- * 2) The display will cycle through multiple grayscale drawing demos.
- * 3) After the final section, the sketch continuously rotates rendered text.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 4 TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4 TEMPERA.
+ * 3) The display will cycle through multiple grayscale drawing demos.
+ * 4) After the final section, the sketch continuously rotates rendered text.
  *
- * Expected output:
- * - E-paper: A sequence of drawing demonstrations (shapes, lines, text, bitmap),
- *   each shown for a few seconds. At the end, "Inkplate4TEMPERA" rotates
- *   continuously.
- *
- * Notes:
- * - Display mode is 3-bit grayscale (8 levels: 0–7). Partial update is not
- *   available in grayscale mode.
- * - E-paper refreshes are relatively slow; refreshing more often than ~5 s is
- *   not recommended for full updates (this example uses a multi-second delay).
- * - Grayscale frame buffers and bitmap drawing consume significantly more RAM
- *   than 1-bit (BW) mode; keep bitmap sizes reasonable.
- * - Bitmap data is provided via image.h and must match the expected format for
- *   Inkplate grayscale drawing (pre-converted pixel data, not a BMP/JPEG file).
- * - setRotation() affects the entire coordinate system; all drawing operations
- *   after it use the rotated orientation.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-07-12

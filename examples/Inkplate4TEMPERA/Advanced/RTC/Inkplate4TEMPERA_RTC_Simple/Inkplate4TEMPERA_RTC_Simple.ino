@@ -4,39 +4,36 @@
  * @brief       Basic RTC time and date example for Soldered Inkplate 4TEMPERA.
  *
  * @details     Demonstrates basic usage of the PCF85063A real-time clock (RTC)
- *              integrated on the Inkplate 4TEMPERA board. The example shows how to
- *              set the current time and date, read the RTC values, and display
+ *              integrated on the Inkplate 4TEMPERA board. The example shows how
+ *              to set the current time and date, read the RTC values, and display
  *              the time on the e-paper screen using partial updates.
+ *
+ *              Inkplate 4TEMPERA uses the PCF85063A RTC chip. Partial update
+ *              works only in 1-bit (black & white) mode and is not recommended
+ *              for the first refresh after power-up; perform a full refresh every
+ *              5-10 partial updates to maintain display quality. Expected output
+ *              is the current date and time on the Inkplate display.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 4TEMPERA
  * - Hardware:   Inkplate 4TEMPERA, USB cable
  * - Extra:      None
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate4TEMPERA
- * - Serial settings: 115200 baud (optional)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/4TEMPERA/quick-start-guide/
+ * - Serial:     115200 baud (optional)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 4TEMPERA.
- * 2) Set the initial RTC time and date in the code if not already configured.
- * 3) The current time is periodically read from the RTC.
- * 4) Time and date are displayed on the Inkplate screen.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate4TEMPERA"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 4TEMPERA.
+ * 3) Set the initial RTC time and date in the code if not already configured.
+ * 4) The current time is periodically read from the RTC.
+ * 5) Time and date are displayed on the Inkplate screen.
  *
- * Expected output:
- * - Inkplate display shows the current date and time.
- *
- * Notes:
- * - Inkplate 4TEMPERA uses the PCF85063A RTC chip.
- * - Partial update works only in 1-bit (black & white) mode.
- * - It is not recommended to use partial update on the first refresh after power-up.
- * - Perform a full refresh every 5–10 partial updates to maintain display quality.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-11-12
