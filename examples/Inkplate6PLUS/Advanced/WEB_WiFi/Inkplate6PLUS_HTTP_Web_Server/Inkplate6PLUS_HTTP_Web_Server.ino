@@ -5,41 +5,38 @@
  *
  * @details     Demonstrates how to use Inkplate 6PLUS as a simple standalone
  *              WiFi access point and HTTP web server. After connecting a PC,
- *              smartphone, or other WiFi-capable device to the Inkplate’s
+ *              smartphone, or other WiFi-capable device to the Inkplate's
  *              access point, a web page can be opened in a browser where text
  *              can be entered and sent directly to the Inkplate e-paper display.
+ *
+ *              Inkplate operates as a WiFi Access Point (AP); the SSID and
+ *              password can be changed in the code via #define macros. This is a
+ *              basic demonstration intended for simple interaction and
+ *              prototyping - more advanced web interfaces and logic can be built
+ *              on top of it. Expected output is the Inkplate display showing its
+ *              IP address and the received text, with the web page allowing
+ *              custom text to be sent to the display.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Extra:      WiFi-capable device with a web browser (PC, laptop, smartphone)
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Inkplate operates as a WiFi Access Point (AP)
- * - SSID and password can be changed in the code via #define macros
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6PLUS.
- * 2) Connect your device to the Inkplate WiFi access point.
- * 3) Open the IP address shown on the Inkplate display in a web browser.
- * 4) Enter text into the web page and press “Send to display”.
- * 5) The submitted text appears on the Inkplate display.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6PLUS.
+ * 3) Connect your device to the Inkplate WiFi access point.
+ * 4) Open the IP address shown on the Inkplate display in a web browser.
+ * 5) Enter text into the web page and press "Send to display".
+ * 6) The submitted text appears on the Inkplate display.
  *
- * Expected output:
- * - Inkplate display shows its IP address and received text.
- * - Web page allows sending custom text to the display.
- *
- * Notes:
- * - This is a basic demonstration of using Inkplate as a web server.
- * - Intended for simple interaction and prototyping.
- * - More advanced web interfaces and logic can be built on top of this example.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-12-02

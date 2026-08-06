@@ -13,52 +13,44 @@
  *              Gui).
  *
  *              The display runs in 3-bit grayscale mode (INKPLATE_3BIT) to allow
- *              shaded UI elements. After drawing, the ESP32 enters deep sleep to
- *              conserve power and wakes periodically using the timer. Deep sleep
- *              restarts the ESP32 on wake, so setup() runs again each cycle.
+ *              shaded UI elements; grayscale updates are slower and consume more
+ *              energy than 1-bit BW. After drawing, the ESP32 enters deep sleep
+ *              to conserve power and wakes periodically using the timer. Deep
+ *              sleep restarts the ESP32 on wake, so all initialization and
+ *              network calls repeat each refresh cycle. Open-Meteo is accessed
+ *              over the network, so availability, latency and API changes can
+ *              affect results.
+ *
+ *              Expected output: a weather dashboard UI showing current
+ *              conditions for the configured coordinates plus battery voltage
+ *              and update metadata; a WiFi error screen if the connection fails
+ *              or an API error screen if the Open-Meteo request fails; optional
+ *              debug output on the Serial Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Extra:      WiFi access (internet connection required)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6FLICK
- * - Serial settings: 115200 baud (optional; used for debugging)
- * - WiFi credentials: set ssid / password
- * - Location: set myCity (display only), latitude, longitude, and timeZone
- * - Units: set metricUnits = true (metric) or false (imperial)
- * - NTP: optionally change ntpServer
- * - Update interval: TIME_TO_SLEEP (default: 30 minutes)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Serial:     115200 baud (optional; used for debugging)
  *
  * How to use:
- * 1) Enter your WiFi SSID/password and set your location variables
- *    (timeZone, latitude, longitude). Optionally set myUsername/myCity.
- * 2) Upload the sketch to Inkplate 6FLICK.
- * 3) On boot, the device connects to WiFi, syncs time, fetches weather data,
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6FLICK"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID/password and set your location variables (timeZone,
+ *    latitude, longitude). Optionally set myUsername/myCity (display only),
+ *    metricUnits (true = metric, false = imperial), ntpServer and
+ *    TIME_TO_SLEEP (default: 30 minutes).
+ * 3) Upload the sketch to Inkplate 6FLICK.
+ * 4) On boot, the device connects to WiFi, syncs time, fetches weather data,
  *    renders the dashboard, then deep-sleeps.
- * 4) The device wakes automatically after TIME_TO_SLEEP and refreshes the data.
+ * 5) The device wakes automatically after TIME_TO_SLEEP and refreshes the data.
  *
- * Expected output:
- * - Display: Weather dashboard UI showing current conditions for the configured
- *   coordinates, plus battery voltage and update metadata.
- * - Display (error cases): A WiFi error screen if connection fails, or an API
- *   error screen if the Open-Meteo request fails.
- * - Serial Monitor: Optional debug output.
- *
- * Notes:
- * - Display mode is 3-bit grayscale (INKPLATE_3BIT). Grayscale updates are
- *   slower and consume more energy than 1-bit BW.
- * - Deep sleep restarts the ESP32 on wake; all initialization and network calls
- *   repeat each refresh cycle.
- * - Open-Meteo is accessed over the network; availability, latency, and API
- *   changes can affect results.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

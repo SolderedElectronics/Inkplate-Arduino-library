@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate6PLUS_News_API.ino
+ * @file        Inkplate6PLUS_News.ino
  * @brief       Fetch top news headlines from NewsAPI.org over WiFi and render
  *              them on Inkplate 6PLUS, then deep-sleep between updates.
  *
@@ -16,47 +16,44 @@
  *
  *              After updating the screen, the ESP32 enters deep sleep for a
  *              fixed interval (DELAY_MS). Deep sleep restarts the ESP32 on wake,
- *              so setup() runs again each cycle (WiFi + NTP + API fetch + draw).
+ *              so setup() runs again each cycle (WiFi + NTP + API fetch + draw)
+ *              and the displayed content is refreshed only when the device
+ *              wakes.
+ *
+ *              Handle API rate limits and connectivity issues: if the API call
+ *              fails, the sketch shows an on-screen error before sleeping. Long
+ *              titles/descriptions are wrapped into text boxes, so very verbose
+ *              feeds may be truncated by the chosen font size and box
+ *              dimensions.
+ *
+ *              Expected output: a "World News" page with the current date/time
+ *              and several news items (title + description), or an error message
+ *              if the fetch fails, plus the current time printout and basic
+ *              status/debug output on the Serial Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
- * - Extra:      WiFi access, NewsAPI.org API key
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Serial settings: 115200 baud (recommended for debugging)
- * - WiFi credentials: set ssid / pass
- * - NewsAPI key: set api_key_news (https://newsapi.org/)
- * - Timezone: set timeZone (UTC offset hours)
- * - Update interval: adjust DELAY_MS (default: 1 hour)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - Extra:      WiFi access, NewsAPI.org API key (https://newsapi.org/)
+ * - Serial:     115200 baud (recommended for debugging)
  *
  * How to use:
- * 1) Create a NewsAPI.org account and generate an API key.
- * 2) Enter your WiFi SSID/password, NewsAPI key, and timeZone in the sketch.
- * 3) Upload the sketch to Inkplate 6PLUS.
- * 4) After boot, the device will connect, sync time, fetch news, and render the
- *    page. It will then deep-sleep until the next scheduled refresh.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Create a NewsAPI.org account and generate an API key.
+ * 3) Enter your WiFi SSID/password (ssid/pass), the NewsAPI key
+ *    (api_key_news) and timeZone (UTC offset hours) in the sketch, and adjust
+ *    DELAY_MS (default: 1 hour) if needed.
+ * 4) Upload the sketch to Inkplate 6PLUS.
+ * 5) After boot, the device connects, syncs time, fetches news and renders the
+ *    page, then deep-sleeps until the next scheduled refresh.
  *
- * Expected output:
- * - Display: "World News" page with current date/time and several news items
- *   (title + description). If the fetch fails, an error message is shown.
- * - Serial Monitor: Current time printout and basic status/debug output.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example uses a full refresh after drawing.
- * - Deep sleep restarts the ESP32 on wake; the displayed content is refreshed
- *   only when the device wakes and reruns setup().
- * - API/network reliability: handle rate limits and connectivity issues. If the
- *   API call fails, the sketch shows an on-screen error before sleeping.
- * - Long titles/descriptions are wrapped into text boxes; very verbose feeds may
- *   be truncated by the chosen font size and box dimensions.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-04-30

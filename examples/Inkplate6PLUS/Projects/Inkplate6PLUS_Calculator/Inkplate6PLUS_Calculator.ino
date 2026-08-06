@@ -11,42 +11,38 @@
  *              entry or the on-screen history.
  *
  *              The display runs in 1-bit (BW) mode and uses partialUpdate() for
- *              responsive UI redraws after each touch. A full refresh is
- *              recommended periodically (every 5–10 partial updates) to reduce
- *              ghosting; the example provides a dedicated Refresh button for a
- *              full redraw.
+ *              responsive UI redraws after each touch. E-paper partial updates
+ *              accumulate ghosting, so a full refresh is recommended
+ *              periodically (about every 5-10 partial updates); the example
+ *              provides a dedicated Refresh button for a full redraw. The
+ *              example is interactive and does not use deep sleep.
+ *
+ *              Expected output: the calculator GUI with the current
+ *              expression/result and a running history on the display, plus the
+ *              touchscreen init status (e.g. a failure message if init fails) on
+ *              the Serial Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Serial settings: 115200 baud (optional; used for init status messages)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - Serial:     115200 baud (optional; used for init status messages)
  *
  * How to use:
- * 1) Select the correct board (Soldered Inkplate 6PLUS) and upload the sketch.
- * 2) After boot, the calculator UI appears on the e-paper display.
- * 3) Tap digits and operators to build an expression, then tap "=" to calculate.
- * 4) Use "Clear" to reset the current entry or "Clear history" to erase history.
- * 5) Use "Refresh" to perform a full redraw and reduce partial-update ghosting.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6PLUS.
+ * 3) After boot, the calculator UI appears on the e-paper display.
+ * 4) Tap digits and operators to build an expression, then tap "=" to calculate.
+ * 5) Use "Clear" to reset the current entry or "Clear history" to erase history.
+ * 6) Use "Refresh" to perform a full redraw and reduce partial-update ghosting.
  *
- * Expected output:
- * - Display: Calculator GUI with current expression/result and a running history.
- * - Serial Monitor: Touchscreen init status (e.g., failure message if init fails).
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial updates are used heavily for snappy UI.
- * - E-paper partial updates accumulate ghosting; perform a full refresh regularly
- *   (about every 5–10 partial updates) for best image quality.
- * - This example is interactive and does not use deep sleep.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2024-03-15

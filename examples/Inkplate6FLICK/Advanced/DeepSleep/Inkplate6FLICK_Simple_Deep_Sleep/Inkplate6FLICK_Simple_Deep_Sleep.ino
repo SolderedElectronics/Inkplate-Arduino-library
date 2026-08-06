@@ -8,38 +8,37 @@
  *              (20 seconds by default), updates the e-paper screen by drawing
  *              the next image in a small slideshow, then returns to deep sleep.
  *
+ *              With deep sleep, the program restarts from setup() after each
+ *              wake-up and RAM contents are erased, so partial updates cannot be
+ *              used - this example uses 3-bit (grayscale) mode for image
+ *              rendering. On older Inkplate hardware you may need to isolate
+ *              GPIO12 to reduce sleep current. Expected output is a repeating
+ *              3-image slideshow on the display, updating every 20 seconds
+ *              (TIME_TO_SLEEP), with low power consumption between updates.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Extra:      Converted image headers (picture1.h / picture2.h / picture3.h)
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Convert 3 images to Inkplate-compatible .h files (picture1/2/3.h).
- * 2) Upload the sketch to Inkplate 6FLICK.
- * 3) Inkplate will wake periodically, display the next image, and sleep again.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Convert 3 images to Inkplate-compatible .h files (picture1/2/3.h).
+ * 3) Upload the sketch to Inkplate 6FLICK.
+ * 4) Inkplate wakes periodically, displays the next image, and sleeps again.
  *
- * Expected output:
- * - A repeating 3-image slideshow on the e-paper display.
- * - Screen updates every 20 seconds (TIME_TO_SLEEP).
- * - Low power consumption between updates due to deep sleep.
- *
- * Notes:
- * - With deep sleep, the program restarts from setup() after each wake-up.
- * - RAM contents are erased during deep sleep, so partial updates cannot be used.
- * - This example uses 3-bit (grayscale) mode for image rendering.
- * - If using older Inkplate hardware, you may need to isolate GPIO12 to reduce sleep current.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-26
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

@@ -10,37 +10,36 @@
  *              used for fast redraws, with an occasional full refresh when the
  *              rectangle position resets.
  *
+ *              Touch detection uses touchscreen.touchInArea(x, y, w, h), and the
+ *              touchscreen is initialized and powered on with
+ *              touchscreen.init(true). Expected output is the rectangle moving
+ *              when touched inside its bounds, with the touchscreen init status
+ *              printed in the Serial Monitor.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6PLUS.
- * 2) After initialization, a black rectangle appears on the screen.
- * 3) Touch inside the rectangle to move it diagonally across the display.
- * 4) When it reaches the lower area, the rectangle resets to the start and a
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6PLUS"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6PLUS.
+ * 3) After initialization, a black rectangle appears on the screen.
+ * 4) Touch inside the rectangle to move it diagonally across the display.
+ * 5) When it reaches the lower area, the rectangle resets to the start and a
  *    full refresh is performed.
  *
- * Expected output:
- * - Rectangle moves when touched inside its bounds.
- * - Serial Monitor prints touchscreen init status.
- *
- * Notes:
- * - Touch detection uses touchscreen.touchInArea(x, y, w, h).
- * - Partial updates are used for faster movement; a full refresh is used on reset.
- * - Touchscreen is initialized and powered on with touchscreen.init(true).
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)

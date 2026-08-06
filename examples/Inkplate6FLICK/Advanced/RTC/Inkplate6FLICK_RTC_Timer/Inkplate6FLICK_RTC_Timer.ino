@@ -10,40 +10,39 @@
  *              display using partial updates. When the timer expires, a
  *              "Timer!" message is displayed and the timer is cleared.
  *
+ *              Partial update is available only in 1-bit (black & white) mode.
+ *              Avoid partial update immediately after power-on - use a full
+ *              refresh first - and do a full refresh every 5-10 partial
+ *              refreshes to maintain quality. The timer is disabled after firing
+ *              once (disableTimer()); comment that line out if you want the
+ *              timer to be repeatable. Expected output is the time and date
+ *              printed on the display, with "Timer!" shown after the timer
+ *              interval elapses.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Libraries:  Inkplate library (RTC support included)
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) The sketch sets RTC time/date and starts an RTC timer.
- * 3) The display updates with the current time/date.
- * 4) When the timer expires, "Timer!" appears on the screen.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) The sketch sets the RTC time/date and starts an RTC timer.
+ * 4) The display updates with the current time/date.
+ * 5) When the timer expires, "Timer!" appears on the screen.
  *
- * Expected output:
- * - Time and date printed on the e-paper display.
- * - "Timer!" message shown after the timer interval elapses.
- * - Mostly partial updates, with periodic full refreshes.
- *
- * Notes:
- * - Partial update is available only in 1-bit (black & white) mode.
- * - Avoid partial update immediately after power-on; use a full refresh first.
- * - Doing a full refresh every 5–10 partial refreshes helps maintain quality.
- * - The timer is disabled after firing once (disableTimer()); comment that
- *   line if you want the timer to be repeatable.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

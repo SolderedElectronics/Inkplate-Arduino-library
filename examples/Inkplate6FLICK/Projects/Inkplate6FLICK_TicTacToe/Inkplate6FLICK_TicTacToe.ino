@@ -17,47 +17,40 @@
  *
  *              The display runs in 1-bit (BW) mode (INKPLATE_1BIT). A full
  *              refresh is used when switching major screens (menu/game), while
- *              partial updates are used for most UI interactions.
+ *              partial updates are used for most UI interactions; since e-paper
+ *              partial updates can accumulate ghosting, the occasional full
+ *              refresh helps maintain contrast. The touchscreen must initialize
+ *              successfully for interaction, and the example is fully
+ *              interactive - it does not use WiFi or deep sleep.
+ *
+ *              Expected output: a menu UI with selectable options, then a
+ *              Tic-Tac-Toe board with the current turn and game status
+ *              (win/lose/tie), driven by tap moves and menu selections with fast
+ *              partial redraws.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6FLICK
- * - Serial settings: 115200 baud (optional; touchscreen init messages)
- * - Touchscreen: must be initialized successfully for interaction
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Serial:     115200 baud (optional; touchscreen init messages)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) On the menu screen, select:
- *    - Difficulty (or 2 player mode),
- *    - Who plays first (single-player only),
- *    - Whether the first player is X or O.
- * 3) Tap START to begin the game.
- * 4) Tap a board cell to place your mark. In single-player mode, the AI will
- *    respond automatically.
- * 5) Use "Go Back" to return to the menu and start a new game.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) On the menu screen, select the difficulty (or 2 player mode), who plays
+ *    first (single-player only), and whether the first player is X or O.
+ * 4) Tap START to begin the game.
+ * 5) Tap a board cell to place your mark. In single-player mode, the AI responds
+ *    automatically.
+ * 6) Use "Go Back" to return to the menu and start a new game.
  *
- * Expected output:
- * - Display: Menu UI with selectable options, then a Tic-Tac-Toe board with
- *   current turn and game status (win/lose/tie).
- * - Touch interaction: Tap-driven moves and menu selections with fast partial
- *   redraws.
- *
- * Notes:
- * - Display mode is 1-bit (BW). Partial updates are used heavily for UI
- *   responsiveness.
- * - E-paper partial updates can accumulate ghosting; performing a full refresh
- *   occasionally (e.g., when switching screens) helps maintain contrast.
- * - This example is fully interactive and does not use WiFi or deep sleep.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2024-03-15

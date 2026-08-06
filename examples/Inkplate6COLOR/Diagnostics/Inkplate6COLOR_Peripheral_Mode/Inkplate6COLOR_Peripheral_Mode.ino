@@ -18,47 +18,41 @@
  *              for large numbers of low-level pixel commands such as repeated
  *              drawPixel() operations. For image-heavy workflows, it is more
  *              efficient to store bitmap/image files on an SD card and trigger
- *              higher-level drawing operations from there.
+ *              higher-level drawing operations from there. UART-driven
+ *              rendering is slower than native local drawing code.
  *
- *              This firmware is typically preloaded from the factory and can
- *              be extended if additional command functionality is needed.
+ *              This firmware is typically preloaded from the factory, acts as a
+ *              serial command interpreter, continuously processes incoming data
+ *              in loop(), and can be extended if additional command
+ *              functionality is needed.
+ *
+ *              Expected output: "READY" on Serial after successful Peripheral
+ *              Mode initialization, and the display updating according to
+ *              received UART commands.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB-C cable
  * - Extra:      External controller device (optional)
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - UART settings: 115200 baud, standard parity
- * - Line ending: "\n\r" (newline + carriage return)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud, standard parity, line ending "\n\r"
+ *               (newline + carriage return)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6COLOR.
- * 2) Connect to the board over USB serial or directly to the ESP32 UART pins.
- * 3) Configure the serial terminal or host device for 115200 baud with
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6COLOR.
+ * 3) Connect to the board over USB serial or directly to the ESP32 UART pins.
+ * 4) Configure the serial terminal or host device for 115200 baud with
  *    newline + carriage return line endings.
- * 4) Wait for the "READY" message.
- * 5) Send supported Peripheral Mode commands to control the display.
+ * 5) Wait for the "READY" message.
+ * 6) Send supported Peripheral Mode commands to control the display.
  *
- * Expected output:
- * - Serial: "READY" after successful Peripheral Mode initialization.
- * - Display: Updates according to received UART commands.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - Peripheral Mode is convenient for cross-platform display control, but
- *   UART-driven rendering is slower than native local drawing code.
- * - Sending many pixel-level commands is inefficient; prefer higher-level
- *   commands or image loading from SD storage when possible.
- * - This firmware acts as a serial command interpreter and continuously
- *   processes incoming data in loop().
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-10-23

@@ -1,38 +1,58 @@
 /**
  **************************************************
  * @file        Inkplate6FLICK_Factory_Programming_VCOM.ino
+ * @brief       File for programming the Inkplate's VCOM.
  *
- * @brief       File for programming the Inkplate's VCOM
- *
- * @note        !WARNING! VCOM can only be set 100 times, so keep usage to a minimum.
- *
- *              !WARNING! This example uses einkOn() and einkOff() methods that turn 
- *                        on power supply for epaper display. They should only be used
- *                        in these examples, otherwise you risk damaging
- *                        your epaper display permanently!
- *
- *              !WARNING! Use at your own risk!!
- *
- *
- *              Inkplate 6FLICK does not support auto VCOM, it has to be set manually.
+ * @details     Inkplate 6FLICK does not support auto VCOM, it has to be set manually.
  *              The user will be prompted to enter VCOM via serial (baud 115200).
- *              VCOM ranges from 0 to -5.0.
+ *              VCOM ranges from 0.0 to -5.0.
  *
- *              Tests will also be done, to pass all tests:
+ *              Tests will also be done. To pass all tests:
  *              - Edit the WiFi information in test.cpp.
- *              - Connect a slave device via EasyC on address 0x30 (you may change this in test.cpp also).
- *                In the InkplateEasyCTester folder, you can find the code for uploading to Dasduino Core
- *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave device for testing an easyC connector
- *                if you don't have a device with address 0x30.
- *              - Insert a formatted microSD card (doesn't have to be empty)
- *              - Press wake button to finish testing
+ *              - Connect a slave device via EasyC on address 0x30 (you may
+ *                change this in test.cpp also). In the InkplateEasyCTester
+ *                folder, you can find the code for uploading to Dasduino Core
+ *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave
+ *                device for testing an easyC connector if you don't have a
+ *                device with address 0x30.
+ *              - Insert a formatted microSD card (doesn't have to be empty).
+ *              - Press wake button to finish testing.
  *
- *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
- *LICENSE file included with this example. If you have any questions about
- *licensing, please visit https://soldered.com/contact/ Distributed as-is; no
- *warranty is given.
+ * Requirements:
+ * - Board:      Soldered Inkplate 6FLICK
+ * - Hardware:   Inkplate 6FLICK, USB cable, formatted microSD card,
+ *               EasyC slave device on address 0x30
+ * - Serial:     115200 baud
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6FLICK"
+ *    from Tools -> Board.
+ * 2) Edit the WiFi information in test.cpp and connect the EasyC slave device.
+ * 3) Insert a formatted microSD card and upload the sketch to Inkplate 6FLICK.
+ * 4) Open Serial Monitor at 115200 baud and enter the VCOM value when prompted.
+ * 5) Press the wake button to finish testing.
+ *
+ * @warning     VCOM can only be set 100 times, so keep usage to a minimum.
+ * @warning     This example uses einkOn() and einkOff() methods that turn on
+ *              power supply for the e-paper display. They should only be used
+ *              in these examples, otherwise you risk damaging your e-paper
+ *              display permanently!
+ * @warning     Use at your own risk!
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html
+ *              Please review the LICENSE file included with this example. If you
+ *              have any questions about licensing, please visit
+ *              https://soldered.com/contact/ Distributed as-is; no warranty is
+ *              given.
  *
  * @authors     Soldered
+ * @date        2024-04-15
  ***************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

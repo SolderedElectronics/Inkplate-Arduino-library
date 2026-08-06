@@ -1,45 +1,43 @@
 /**
  **************************************************
- * @file        Inkplate10_IO_Expanders.ino
- * @brief       Internal and external IO expander control example for Soldered Inkplate 10.
+ * @file        Inkplate6PLUS_IO_Expanders.ino
+ * @brief       Internal and external IO expander control example for Soldered Inkplate 6PLUS.
  *
  * @details     Demonstrates how to control GPIO pins on both the internal and
- *              external IO expanders available on Inkplate 10. The example
+ *              external IO expanders available on Inkplate 6PLUS. The example
  *              alternates blinking an LED connected to the external IO expander
  *              (IO Expander 2) and an LED connected to the internal IO expander
  *              (IO Expander 1), showing correct usage and addressing for each.
  *
+ *              Expected output: the external IO expander LED blinks for
+ *              5 seconds, then the internal IO expander LED blinks for
+ *              5 seconds, repeating continuously. External IO expander pins are
+ *              all free to use by default. The internal IO expander has
+ *              restrictions: DO NOT use GPA0-GPA7 or GPB0, use only pins 9-15
+ *              (P1-1 to P1-7). Using restricted pins may permanently damage the
+ *              display.
+ *
  * Requirements:
- * - Board:      Soldered Inkplate 10
- * - Hardware:   Inkplate 10, USB cable, 2× LED, 2× 330 Ω resistors
+ * - Board:      Soldered Inkplate 6PLUS
+ * - Hardware:   Inkplate 6PLUS, USB cable, 2x LED, 2x 330 Ohm resistors
  * - Extra:      None
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate10
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
- *
  * How to use:
- * 1) Connect an LED + 330 Ω resistor to P1-7 (GPB7) on IO Expander 2 (external).
- * 2) Connect another LED + 330 Ω resistor to P1-7 (GPB7) on IO Expander 1 (internal).
- * 3) Upload the sketch to Inkplate 10.
- * 4) Observe alternating blinking between external and internal LEDs.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Connect an LED + 330 Ohm resistor to P1-7 (GPB7) on IO Expander 2
+ *    (external).
+ * 3) Connect another LED + 330 Ohm resistor to P1-7 (GPB7) on IO Expander 1
+ *    (internal).
+ * 4) Upload the sketch to Inkplate 6PLUS.
+ * 5) Observe alternating blinking between external and internal LEDs.
  *
- * Expected output:
- * - External IO expander LED blinks for 5 seconds.
- * - Internal IO expander LED blinks for 5 seconds.
- * - Sequence repeats continuously.
- *
- * Notes:
- * - External IO expander pins are all free to use by default.
- * - Internal IO expander has restrictions:
- *   - DO NOT use GPA0–GPA7 or GPB0.
- *   - Use only pins 9–15 (P1-1 to P1-7).
- * - Using restricted pins may permanently damage the display.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-12-05

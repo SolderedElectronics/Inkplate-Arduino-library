@@ -6,7 +6,7 @@
  * @details     Demonstrates drawing graphics primitives on the Inkplate 6FLICK
  *              e-paper display using Adafruit GFX-compatible functions in
  *              3-bit (grayscale) mode. In 3-bit mode, Inkplate supports 8
- *              shades (0–7), where 0 is black, 7 is white, and values in
+ *              shades (0-7), where 0 is black, 7 is white, and values in
  *              between are shades of gray. The example showcases pixels,
  *              lines (including thick and gradient lines), rectangles (outlined
  *              and filled), circles (outlined and filled), rounded rectangles,
@@ -14,42 +14,43 @@
  *              multiple sizes and shades, inverted text colors, and display
  *              rotation.
  *
+ *              Refreshing e-paper too frequently is not recommended, so this
+ *              example uses a 5 s delay between full refreshes (DELAY_MS).
+ *              Partial update is not used here - see the partial update demos
+ *              for BW mode. The helper displayCurrentAction() writes a label at
+ *              the bottom indicating the currently demonstrated feature, and you
+ *              can switch display modes at runtime using selectDisplayMode(mode).
+ *
+ *              Expected output: a sequence of grayscale graphics demos displayed
+ *              one by one, a grayscale bitmap image rendered on the display,
+ *              text shown in multiple sizes and shades (including inverted
+ *              text), and continuous rotated "INKPLATE 6FLICK" text at the end.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) The display will cycle through multiple drawing demonstrations.
- * 3) Each scene is drawn into the framebuffer and shown using display.display().
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) The display cycles through multiple drawing demonstrations, each drawn
+ *    into the framebuffer and shown using display.display().
  * 4) At the end, the example continuously rotates and redraws text.
  *
- * Expected output:
- * - A sequence of grayscale graphics demos displayed one by one.
- * - A grayscale bitmap image rendered on the display.
- * - Text shown in multiple sizes and shades, including inverted text.
- * - Continuous rotated “INKPLATE 6FLICK” text at the end.
- *
- * Notes:
- * - Refreshing e-paper too frequently is not recommended; this example uses a
- *   5 s delay between full refreshes (DELAY_MS).
- * - Partial update is not used in this example; see partial update demos for BW mode.
- * - The helper displayCurrentAction() writes a label at the bottom indicating
- *   the currently demonstrated feature.
- * - You can switch display modes at runtime using selectDisplayMode(mode).
- *
- * Docs:         https://docs.soldered.com/inkplate
- * GFX:          https://learn.adafruit.com/adafruit-gfx-graphics-library
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Adafruit GFX reference:
+ *              https://learn.adafruit.com/adafruit-gfx-graphics-library
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

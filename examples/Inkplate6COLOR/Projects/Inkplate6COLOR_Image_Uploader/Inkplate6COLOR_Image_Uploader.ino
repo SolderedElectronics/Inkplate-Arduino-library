@@ -11,58 +11,50 @@
  *              A client device connects directly to the Inkplate-hosted Wi-Fi
  *              network, opens the local upload page, selects an image, and
  *              sends it to the board. The uploaded JPEG is stored temporarily
- *              in RAM and then drawn from memory onto the display.
+ *              in RAM and then drawn from memory onto the display (not from SD
+ *              storage). Because the board runs as a local access point and web
+ *              server, Internet access is not required.
  *
  *              This workflow is useful for quick local image transfer without
  *              cloud services, external apps, or removable media. Because the
  *              upload buffer is RAM-based, practical image size is limited by
- *              available memory. The image is intended to be resized by the
+ *              available memory: the image is intended to be resized by the
  *              web app / workflow before display, but large uploads may still
- *              fail if memory usage exceeds what the board can hold.
+ *              fail if memory usage exceeds what the board can hold, so smaller
+ *              images are safer for reliable operation. Display mode is Inkplate
+ *              6COLOR colour e-paper mode with full refreshes, which are slower
+ *              than monochrome partial-update workflows on supported boards.
+ *
+ *              Expected output: startup instructions showing the SSID, password
+ *              and local IP address, then the uploaded JPEG image after a
+ *              successful browser upload; the browser serves a local upload page
+ *              and preview endpoint; Serial shows upload progress, buffer
+ *              allocation details and image transfer logs.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      phone / browser
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial Monitor: 115200 baud (optional for debugging)
- * - AP SSID/password can be changed in the sketch
- * - Keep uploaded image sizes reasonable to avoid RAM-related failures
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud (optional for debugging)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6COLOR.
- * 2) After boot, note the Wi-Fi SSID, password, and local IP shown on the
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Change the AP SSID/password in the sketch if needed.
+ * 3) Upload the sketch to Inkplate 6COLOR.
+ * 4) After boot, note the Wi-Fi SSID, password and local IP shown on the
  *    display.
- * 3) Connect a phone or computer to the Inkplate Wi-Fi network.
- * 4) Open a browser and navigate to the IP address shown on the display.
- * 5) Use the upload page to select and send a JPEG image to the board.
- * 6) After the upload finishes, the image is rendered on the Inkplate display.
+ * 5) Connect a phone or computer to the Inkplate Wi-Fi network.
+ * 6) Open a browser and navigate to the IP address shown on the display.
+ * 7) Use the upload page to select and send a JPEG image; after the upload
+ *    finishes, the image is rendered on the Inkplate display.
  *
- * Expected output:
- * - Display: Startup instructions showing SSID, password, and local IP address.
- * - Display: The uploaded JPEG image after a successful browser upload.
- * - Browser: Local upload page and preview endpoint served by Inkplate.
- * - Serial: Upload progress, buffer allocation details, and image transfer logs.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode with full refreshes.
- * - This example is RAM-sensitive because the uploaded image is buffered in
- *   memory before rendering.
- * - JPEG decoding and large uploads can consume substantial RAM; smaller images
- *   are safer for reliable operation.
- * - The board runs as a local access point and web server, so Internet access
- *   is not required.
- * - The image is drawn from a memory buffer, not from SD storage.
- * - Frequent full color refreshes are slower than monochrome partial-update
- *   workflows on supported boards.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

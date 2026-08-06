@@ -10,33 +10,29 @@
  *              and should not be considered highly accurate or suitable for
  *              precise temperature measurements.
  *
+ *              The sensor is not a replacement for a dedicated external
+ *              temperature sensor; its intended use is system monitoring and
+ *              waveform compensation. Expected output is an approximate
+ *              temperature reading reported by the TPS65186 sensor.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Extra:      None
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6PLUS.
- * 2) The program reads the temperature from the onboard PMIC sensor.
- * 3) The measured value can be displayed or printed to Serial.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6PLUS.
+ * 3) The program reads the temperature from the onboard PMIC sensor.
+ * 4) The measured value can be displayed or printed to Serial.
  *
- * Expected output:
- * - Approximate temperature reading reported by the TPS65186 sensor.
- *
- * Notes:
- * - The TPS65186 PMIC includes a basic internal temperature sensor.
- * - This sensor is not ultra-precise and is not a replacement for a
- *   dedicated external temperature sensor.
- * - Intended use is system monitoring and waveform compensation.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-01-23

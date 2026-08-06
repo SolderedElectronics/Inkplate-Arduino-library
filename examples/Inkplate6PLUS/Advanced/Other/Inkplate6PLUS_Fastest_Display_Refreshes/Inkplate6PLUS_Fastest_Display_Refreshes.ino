@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate6PLUS_Faster_Display_Refreshes.ino
+ * @file        Inkplate6PLUS_Fastest_Display_Refreshes.ino
  * @brief       Faster partial refresh demo by keeping the e-paper panel powered on (Inkplate 6PLUS).
  *
  * @details     Demonstrates how to speed up consecutive partial updates by
@@ -15,34 +15,31 @@
  *              power cycling. einkOff() disables the panel power again and should
  *              always be called before long idle periods or deep sleep.
  *
+ *              Partial update is supported only in 1-bit (black & white) mode.
+ *              Keeping the panel powered on increases power consumption.
+ *              Expected output is smooth scrolling text using faster partial
+ *              refreshes.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Extra:      None
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Serial settings: 115200 baud (optional)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - Serial:     115200 baud (optional)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6PLUS.
- * 2) A full refresh is performed once at startup.
- * 3) Text scrolls across the display using fast partial updates.
- * 4) The panel is powered off after the animation completes.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6PLUS.
+ * 3) A full refresh is performed once at startup.
+ * 4) Text scrolls across the display using fast partial updates.
+ * 5) The panel is powered off after the animation completes.
  *
- * Expected output:
- * - Smooth scrolling text using faster partial refreshes.
- *
- * Notes:
- * - Partial update is supported only in 1-bit (black & white) mode.
- * - Keeping the panel powered on increases power consumption.
- * - Always call einkOff() before entering deep sleep.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-09-22

@@ -10,46 +10,44 @@
  *              The maze is generated once at boot and then shown as a static
  *              image.
  *
- *              The maze grid resolution is controlled by cellSize. Internally,
- *              the maze is stored as a 1D array where each cell is either wall
- *              (1) or passage (0). During drawing, the sketch connects adjacent
- *              passage cells with short line segments to visualize the maze.
+ *              The maze grid resolution is controlled by cellSize (smaller =
+ *              more detail, slower drawing). Internally, the maze is stored as a
+ *              1D array where each cell is either wall (1) or passage (0).
+ *              During drawing, the sketch connects adjacent passage cells with
+ *              short line segments to visualize the maze.
  *
  *              The display runs in 1-bit (BW) mode (INKPLATE_1BIT) and performs
- *              a full refresh (display()) after the maze is drawn.
+ *              a full refresh (display()) after the maze is drawn; partial
+ *              updates, touchscreen, WiFi and deep sleep are not used. The random
+ *              seed is initialized at boot, so repeated resets may sometimes
+ *              generate similar mazes depending on the platform time source. If
+ *              you physically mark the e-paper to solve the maze, use only
+ *              dry-erase or soft graphite and avoid permanent markers to prevent
+ *              panel damage.
+ *
+ *              Expected output: a black line maze with a defined entry and exit;
+ *              Serial has no mandatory output (it is initialized only).
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Serial settings: 115200 baud (optional; not required for operation)
- * - Maze density: adjust cellSize (smaller = more detail, slower drawing)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - Serial:     115200 baud (optional; not required for operation)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6PLUS.
- * 2) After boot, a new random maze is generated and displayed.
- * 3) To get a different maze, reset/power-cycle the board.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Optionally adjust cellSize to change maze density.
+ * 3) Upload the sketch to Inkplate 6PLUS.
+ * 4) After boot, a new random maze is generated and displayed.
+ * 5) To get a different maze, reset or power-cycle the board.
  *
- * Expected output:
- * - Display: A black line maze with a defined entry and exit.
- * - Serial Monitor: No mandatory output (Serial is initialized only).
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example draws once and uses a full refresh.
- * - The random seed is initialized at boot; repeated resets may sometimes
- *   generate similar mazes depending on platform time source.
- * - This example does not use partial updates, touchscreen, WiFi, or deep sleep.
- * - If you physically mark the e-paper to solve the maze, use only dry-erase or
- *   soft graphite and avoid permanent markers to prevent panel damage.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2024-03-15

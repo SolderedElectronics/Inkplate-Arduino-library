@@ -14,61 +14,57 @@
  *              listens for incoming Serial commands that can control the
  *              display. This makes the firmware suitable both for production
  *              verification and for preloading a ready-to-use serial control
- *              interface on the device.
+ *              interface on the device. Peripheral Mode relies on Serial command
+ *              parsing and is slower than direct native drawing code for
+ *              high-volume pixel updates.
  *
- *              Test output is sent primarily over Serial because full color
+ *              Test output is sent primarily over Serial because full colour
  *              e-paper refreshes are relatively slow. The production test flow
  *              may require additional hardware such as a microSD card, a device
  *              connected to the EasyC port, valid Wi-Fi credentials inside the
- *              test sources, and user interaction through the wake button.
+ *              test sources, and user interaction through the wake button -
+ *              EasyC/I2C, SD card, Wi-Fi, wake button and EEPROM checks may all
+ *              be part of the production validation path depending on the linked
+ *              test sources.
+ *
+ *              This is factory/support firmware, not a minimal end-user demo.
+ *              3-bit colour mode is used for the splash screen bitmap. EEPROM is
+ *              used to store a marker after the first test/programming pass, so
+ *              avoid repurposing reserved EEPROM locations without reviewing the
+ *              factory workflow.
+ *
+ *              Expected output: factory test progress, pass/fail information and
+ *              diagnostic output from peripheral checks on Serial; a splash
+ *              screen image on the display after initialization/testing; and
+ *              Peripheral Mode command handling over Serial at runtime.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
- * - Extra:      WiFi, microSD card, EasyC slave device, Serial Monitor
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial Monitor: 115200 baud
- * - Edit WiFi credentials in test.cpp before running full tests
- * - Connect an EasyC / I2C slave device on the expected address
- *   (default noted in test.cpp)
- * - Insert a formatted microSD card
- * - Press the wake button when required by the test sequence
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      WiFi credentials in test.cpp, formatted microSD card,
+ *               EasyC/I2C slave device on the expected address (default noted
+ *               in test.cpp)
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Prepare the required test setup: Wi-Fi credentials, EasyC slave device,
- *    formatted microSD card, and Serial Monitor at 115200 baud.
- * 2) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the firmware.
- * 3) On startup, the firmware initializes EEPROM, I2C, and display hardware.
- * 4) The factory test routine checks connected peripherals and reports results
- *    over Serial.
- * 5) After testing, a splash screen is shown on the display.
- * 6) The firmware remains in Peripheral Mode and processes incoming Serial
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Prepare the required test setup: Wi-Fi credentials in test.cpp, EasyC
+ *    slave device, formatted microSD card, and Serial Monitor at 115200 baud.
+ * 3) Upload the firmware to Inkplate 6COLOR.
+ * 4) On startup, the firmware initializes EEPROM, I2C and display hardware.
+ * 5) The factory test routine checks connected peripherals and reports results
+ *    over Serial; press the wake button when required by the test sequence.
+ * 6) After testing, a splash screen is shown on the display.
+ * 7) The firmware remains in Peripheral Mode and processes incoming Serial
  *    commands for display control.
  *
- * Expected output:
- * - Serial: Factory test progress, pass/fail information, and diagnostic
- *   output from peripheral checks.
- * - Display: Splash screen image after initialization/testing.
- * - Runtime: Peripheral Mode command handling over Serial.
- *
- * Notes:
- * - Display mode: 3-bit color mode is used for the splash screen bitmap.
- * - This is factory/support firmware, not a minimal end-user demo.
- * - EEPROM is used to store a marker after the first test/programming pass.
- *   Avoid repurposing reserved EEPROM locations without reviewing the factory
- *   workflow.
- * - Peripheral Mode relies on Serial command parsing and is slower than direct
- *   native drawing code for high-volume pixel updates.
- * - EasyC/I2C, SD card, Wi-Fi, wake button, and EEPROM checks may all be part
- *   of the production validation path depending on the linked test sources.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

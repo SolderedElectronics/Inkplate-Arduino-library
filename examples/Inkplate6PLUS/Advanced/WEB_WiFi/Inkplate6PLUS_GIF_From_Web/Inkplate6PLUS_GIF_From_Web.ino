@@ -8,41 +8,39 @@
  *              e-paper display using partial updates. The whole file is
  *              downloaded into a PSRAM buffer first, then played from there.
  *
+ *              Partial update (and therefore GIF playback) only works in
+ *              INKPLATE_1BIT mode, hence the display object below is created
+ *              with INKPLATE_1BIT. The whole GIF file is held in PSRAM at once
+ *              (like the other drawXFromWeb functions in this library), so make
+ *              sure the file is small enough to fit. e-paper partial refresh
+ *              takes far longer than a typical GIF frame delay, so actual
+ *              playback speed is limited by the panel, not by the file.
+ *              leaveOn (last argument, defaults to true) keeps the panel powered
+ *              between frames instead of power-cycling it on every
+ *              partialUpdate() call; pass false to power the panel down after
+ *              each frame instead. Expected output is the GIF from gifUrl
+ *              playing centered on the display, looping until reset or
+ *              power-cycle.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Extra:      Available WiFi connection
  *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Enter your WiFi credentials in the sketch
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
- *
  * How to use:
- * 1) Enter your WiFi SSID and password in the sketch.
- * 2) Set gifUrl to a direct link to a GIF file (no HTML redirect pages).
- * 3) Upload the sketch to Inkplate 6PLUS.
- * 4) The board connects to WiFi, downloads the GIF, and loops it forever.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Enter your WiFi SSID and password in the sketch.
+ * 3) Set gifUrl to a direct link to a GIF file (no HTML redirect pages).
+ * 4) Upload the sketch to Inkplate 6PLUS.
+ * 5) The board connects to WiFi, downloads the GIF, and loops it forever.
  *
- * Expected output:
- * - The GIF from gifUrl plays on the display, centered on the screen,
- *   looping until reset/power-cycled.
- *
- * Notes:
- * - Partial update (and therefore GIF playback) only works in INKPLATE_1BIT
- *   mode, hence the display object below is created with INKPLATE_1BIT.
- * - The whole GIF file is held in PSRAM at once (like the other drawXFromWeb
- *   functions in this library) - make sure the file is small enough to fit.
- * - e-paper partial refresh takes far longer than a typical GIF frame delay,
- *   so actual playback speed is limited by the panel, not by the file.
- * - leaveOn (last argument, defaults to true) keeps the panel powered between frames
- *   instead of power-cycling it on every partialUpdate() call; pass false to power the
- *   panel down after each frame instead.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026-07-01

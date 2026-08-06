@@ -8,73 +8,60 @@
  *              on Inkplate 6COLOR. The sketch connects to a Wi-Fi network,
  *              synchronizes time using NTP, requests upcoming events from a
  *              public Google Calendar through the Google Calendar API, and
- *              renders the results using a custom GUI on the color e-paper
+ *              renders the results using a custom GUI on the colour e-paper
  *              display.
  *
  *              The currently ongoing event can be highlighted using a selected
- *              Inkplate color. After updating the screen, the ESP32 enters deep
- *              sleep to reduce power consumption and wakes periodically to
- *              refresh the calendar data again.
+ *              Inkplate colour. After updating the screen, the ESP32 enters deep
+ *              sleep to reduce power consumption and wakes every 10 minutes to
+ *              refresh the calendar data again. Deep sleep restarts the ESP32,
+ *              so all application logic runs from setup() and loop() stays
+ *              empty.
  *
  *              This example requires a public Google Calendar and a valid
- *              Google API key. The calendar must be publicly accessible, and
- *              the Google Calendar API must be enabled in the Google Cloud
- *              project associated with the API key. If Wi-Fi fails or calendar
- *              loading fails, an error screen is shown instead.
+ *              Google API key: the calendar must be publicly accessible (private
+ *              calendars require a different authenticated workflow) and the
+ *              Google Calendar API must be enabled in the Google Cloud project
+ *              associated with the API key. A wrong API key, disabled API or
+ *              incorrect calendar ID may cause request failures such as 403 or
+ *              404 errors, and if Wi-Fi or calendar loading fails an error
+ *              screen is shown instead. Network access, API latency and response
+ *              size can affect refresh time and RAM usage. Display mode is
+ *              Inkplate 6COLOR colour e-paper mode with full refreshes.
+ *
+ *              Expected output: a calendar/event overview screen rendered from
+ *              the fetched Google Calendar data, or a Wi-Fi / calendar-loading
+ *              error screen if the request fails, with the board waking every
+ *              10 minutes to refresh and then returning to deep sleep.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
- * - Extra:      WiFi
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial Monitor: 115200 baud (optional for debugging)
- * - Enter your Wi-Fi SSID and password in the sketch
- * - Set the correct timeZone offset for your location
- * - Provide a public Google Calendar ID
- * - Provide a valid Google API key with Google Calendar API enabled
- * - Ensure the target calendar is public, otherwise requests may fail with
- *   permission errors
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      WiFi, public Google Calendar ID, Google API key with the Google
+ *               Calendar API enabled
+ * - Serial:     115200 baud (optional for debugging)
  *
  * How to use:
- * 1) Create or choose a public Google Calendar and copy its Calendar ID from
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Create or choose a public Google Calendar and copy its Calendar ID from
  *    the Google Calendar settings page.
- * 2) Create a Google Cloud project, enable Google Calendar API, and generate
+ * 3) Create a Google Cloud project, enable Google Calendar API, and generate
  *    an API key.
- * 3) Enter the Wi-Fi credentials, calendar ID, API key, and time zone offset
+ * 4) Enter the Wi-Fi credentials, calendar ID, API key and time zone offset
  *    in the sketch.
- * 4) Upload the sketch to Inkplate 6COLOR.
- * 5) On boot, the board connects to Wi-Fi, synchronizes time using NTP, and
+ * 5) Upload the sketch to Inkplate 6COLOR.
+ * 6) On boot, the board connects to Wi-Fi, synchronizes time using NTP, and
  *    requests calendar data from Google.
- * 6) The GUI renders the events on the display and highlights the currently
- *    active event, if one exists.
- * 7) The ESP32 enters deep sleep and wakes again after 10 minutes to refresh
- *    the data.
+ * 7) The GUI renders the events on the display and highlights the currently
+ *    active event, if one exists, then the ESP32 enters deep sleep.
  *
- * Expected output:
- * - Display: A calendar/event overview screen rendered from the fetched Google
- *   Calendar data.
- * - Display: Wi-Fi or calendar-loading error screen if the request fails.
- * - Power behavior: The board wakes every 10 minutes, refreshes calendar data,
- *   then returns to deep sleep.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode with full refreshes.
- * - Deep sleep restarts the ESP32, so all application logic must run from
- *   setup(); loop() should remain empty.
- * - The Google Calendar must be public for this example. Private calendars
- *   require a different authenticated workflow.
- * - A wrong API key, disabled Google Calendar API, or incorrect calendar ID
- *   may cause request failures such as 403 or 404 errors.
- * - Network access, API latency, and response size can affect refresh time and
- *   RAM usage.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025

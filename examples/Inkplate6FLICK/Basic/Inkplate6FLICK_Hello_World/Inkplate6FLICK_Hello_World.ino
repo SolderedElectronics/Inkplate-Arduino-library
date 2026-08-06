@@ -9,35 +9,35 @@
  *              framebuffer using Adafruit GFX-compatible functions, and then
  *              refreshes the screen to show the content.
  *
+ *              clearDisplay() clears only the internal framebuffer, so
+ *              display.display() must be called to refresh the physical e-paper
+ *              panel. Inkplate text functions are fully compatible with Adafruit
+ *              GFX. Expected output is the text "Hello World!" near the top-left
+ *              corner of the display.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Select "Soldered Inkplate 6FLICK" in Tools -> Board.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
  * 2) Upload the sketch to your Inkplate device.
  * 3) After initialization, the text "Hello World!" appears on the display.
  *
- * Expected output:
- * - The e-paper display shows the text "Hello World!" near the top-left corner.
- *
- * Notes:
- * - clearDisplay() clears only the internal framebuffer.
- * - display.display() must be called to refresh the physical e-paper panel.
- * - Inkplate text functions are fully compatible with Adafruit GFX.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * GFX:          https://learn.adafruit.com/adafruit-gfx-graphics-library
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
+ * @note        Adafruit GFX reference:
+ *              https://learn.adafruit.com/adafruit-gfx-graphics-library
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them

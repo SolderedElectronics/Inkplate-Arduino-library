@@ -10,42 +10,45 @@
  *              page contains a text box; submitted text is sent back to the
  *              Inkplate and rendered on the e-paper display.
  *
+ *              The example runs in Access Point mode, so no external router is
+ *              required. Text wrapping is enabled, but very long text may still
+ *              exceed the screen space. The HTML content is stored in htmlCode.h
+ *              and served as a response. This is a basic demo that can be
+ *              expanded with more endpoints/UI.
+ *
+ *              Expected output: the Inkplate shows the Wi-Fi SSID/password and
+ *              the server IP address to open, the web page is served when the
+ *              client opens the IP address, and the submitted text appears under
+ *              "User text:" on the e-paper screen.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
- *
- * Configuration:
- * - Access Point SSID/password set via ssid/pass macros in the sketch
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Extra:      PC / phone / tablet with Wi-Fi and a web browser
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) On the client device, connect to the Wi-Fi network "Inkplate 6FLICK"
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Optionally change the Access Point SSID/password via the ssid/pass macros
+ *    in the sketch.
+ * 3) Upload the sketch to Inkplate 6FLICK.
+ * 4) On the client device, connect to the Wi-Fi network "Inkplate 6FLICK"
  *    (or the SSID defined in the sketch) using the configured password.
- * 3) Open the shown IP address in a web browser (e.g., http://192.168.4.1/).
- * 4) Type text in the web page and press "Send to display".
- * 5) The submitted text appears on the Inkplate e-paper screen.
+ * 5) Open the shown IP address in a web browser (e.g. http://192.168.4.1/).
+ * 6) Type text in the web page and press "Send to display".
+ * 7) The submitted text appears on the Inkplate e-paper screen.
  *
- * Expected output:
- * - Inkplate displays Wi-Fi SSID/password and the server IP address to open.
- * - Web page is served when the client opens the IP address.
- * - Submitted text is displayed under "User text:" on the e-paper screen.
- *
- * Notes:
- * - This example runs in Access Point mode (no external router required).
- * - Text wrapping is enabled; very long text may still exceed screen space.
- * - The HTML content is stored in htmlCode.h and served as a response.
- * - This is a basic demo; you can expand it with more endpoints/UI.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

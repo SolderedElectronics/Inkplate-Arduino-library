@@ -9,43 +9,41 @@
  *              a fixed threshold (no dithering) since dithering noise would
  *              flicker differently frame to frame.
  *
+ *              Partial update (and therefore GIF playback) only works in
+ *              INKPLATE_1BIT mode, hence the display object below is created
+ *              with INKPLATE_1BIT. e-paper partial refresh takes far longer than
+ *              a typical GIF frame delay (tens to hundreds of ms per refresh vs
+ *              ~100 ms/frame in the file), so actual playback speed is limited
+ *              by the panel, not by the GIF itself. The driver forces a full
+ *              refresh every N partial updates (fullRefreshEveryFrames argument,
+ *              defaults to 20 here) to clear partial-update ghosting; pass 0 to
+ *              disable forced full refreshes entirely. leaveOn (last argument,
+ *              defaults to true) keeps the panel powered between frames instead
+ *              of power-cycling it on every partialUpdate() call; pass false to
+ *              power the panel down after each frame instead. Expected output is
+ *              "cat_gif.gif" looping forever, centered on the display.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable, microSD card
  * - Extra:      SD card containing a GIF file named "cat_gif.gif"
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - SD card format: FAT / FAT32
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - SD card:    FAT / FAT32 format
  *
  * How to use:
- * 1) Copy a GIF file to the root of a FAT-formatted SD card and rename it
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Copy a GIF file to the root of a FAT-formatted SD card and rename it
  *    to "cat_gif.gif".
- * 2) Insert the SD card into the Inkplate.
- * 3) Upload the sketch to Inkplate 6PLUS.
- * 4) The GIF plays back on the e-paper screen.
+ * 3) Insert the SD card into the Inkplate.
+ * 4) Upload the sketch to Inkplate 6PLUS.
+ * 5) The GIF plays back on the e-paper screen.
  *
- * Expected output:
- * - "cat_gif.gif" loops forever on the display, centered on the screen.
- *
- * Notes:
- * - Partial update (and therefore GIF playback) only works in INKPLATE_1BIT
- *   mode, hence the display object below is created with INKPLATE_1BIT.
- * - e-paper partial refresh takes far longer than a typical GIF frame delay
- *   (tens to hundreds of ms per refresh vs ~100ms/frame in the file), so
- *   actual playback speed is limited by the panel, not by the GIF itself.
- * - The driver forces a full refresh every N partial updates (fullRefreshEveryFrames
- *   argument, defaults to 20 here) to clear partial-update ghosting; pass 0 to disable
- *   forced full refreshes entirely.
- * - leaveOn (last argument, defaults to true) keeps the panel powered between frames
- *   instead of power-cycling it on every partialUpdate() call; pass false to power the
- *   panel down after each frame instead.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2026-07-01

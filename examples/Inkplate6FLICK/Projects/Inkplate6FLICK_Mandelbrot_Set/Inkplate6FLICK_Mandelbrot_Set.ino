@@ -10,47 +10,41 @@
  *
  *              Rendering is performed entirely on the MCU and is computationally
  *              intensive, so drawing a full frame can take minutes depending on
- *              the chosen view window and iteration limit. Progress is printed
- *              to the Serial Monitor once per rendered row.
+ *              the chosen view window and iteration limit - high MAXITERATIONS
+ *              and wide/zoomed views increase render time significantly.
+ *              Progress is printed to the Serial Monitor once per rendered row.
  *
  *              The display runs in 1-bit (BW) mode (INKPLATE_1BIT) and uses a
- *              full-screen refresh (display()) after all pixels are computed.
+ *              full-screen refresh (display()) only after all pixels are
+ *              computed. The example does not use partial updates, touchscreen,
+ *              WiFi or deep sleep.
+ *
+ *              Expected output: a black/white Mandelbrot rendering for the
+ *              configured coordinate window, with the current row index (j)
+ *              printed on the Serial Monitor during rendering.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6FLICK
- * - Serial settings: 115200 baud (recommended to see row progress)
- * - Mandelbrot view window:
- *   - Adjust xFrom/xTo/yFrom/yTo to explore different regions
- * - Iterations:
- *   - MAXITERATIONS controls detail vs. render time
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Serial:     115200 baud (recommended to see row progress)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) Wait while the frame is computed (this can take a few minutes).
- * 3) After rendering completes, the image is shown on the display.
- * 4) The sketch waits briefly and then recomputes the same view again.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6FLICK"
+ *    from Tools -> Board.
+ * 2) Optionally adjust the Mandelbrot view window (xFrom/xTo/yFrom/yTo) and
+ *    MAXITERATIONS, which controls detail vs. render time.
+ * 3) Upload the sketch to Inkplate 6FLICK.
+ * 4) Wait while the frame is computed (this can take a few minutes).
+ * 5) After rendering completes, the image is shown on the display.
+ * 6) The sketch waits briefly and then recomputes the same view again.
  *
- * Expected output:
- * - Display: A black/white Mandelbrot rendering for the configured coordinate
- *   window.
- * - Serial Monitor: The current row index (j) printed during rendering.
- *
- * Notes:
- * - Display mode is 1-bit (BW). This example performs a full refresh only after
- *   the entire image is computed.
- * - High MAXITERATIONS and wide/zoomed views increase render time significantly.
- * - This example does not use partial updates, touchscreen, WiFi, or deep sleep.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2024-03-15

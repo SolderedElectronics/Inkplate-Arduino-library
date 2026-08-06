@@ -11,44 +11,40 @@
  *              Because the maze is generated programmatically, the layout is
  *              different on each run. Once displayed, the maze can be solved
  *              directly on the screen using a dry-erase whiteboard marker or a
- *              graphite pencil, then cleaned afterward for reuse.
+ *              graphite pencil, then cleaned afterward for reuse - use only
+ *              non-permanent writing tools, never permanent markers.
  *
  *              This example is useful both as an entertaining demo and as a
  *              starting point for grid-based games, puzzle generation, and
- *              other procedural drawing projects on Inkplate.
+ *              other procedural drawing projects on Inkplate. Procedural maze
+ *              generation time depends on the algorithm and maze size, and the
+ *              result is shown with a full refresh in Inkplate 6COLOR colour
+ *              e-paper mode.
+ *
+ *              Expected output: a newly generated random maze filling the screen
+ *              or a large portion of it.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE and upload the sketch.
- * 2) Wait for the maze to be generated and rendered on the display.
- * 3) Solve the maze directly on the screen if desired using a dry-erase marker
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6COLOR.
+ * 3) Wait for the maze to be generated and rendered on the display.
+ * 4) Solve the maze directly on the screen if desired, using a dry-erase marker
  *    or graphite pencil.
- * 4) reset or rerun the sketch to generate a different maze.
+ * 5) Reset or rerun the sketch to generate a different maze.
  *
- * Expected output:
- * - Display: A newly generated random maze filling the screen or a large
- *   portion of it.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - This example likely uses a full refresh after the maze is generated.
- * - Use only non-permanent writing tools if drawing on the display surface.
- *   Do not use permanent markers.
- * - Procedural maze generation time depends on the algorithm and maze size.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2020-07-15

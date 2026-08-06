@@ -16,38 +16,33 @@
  *
  *              The example is useful for testing a newly assembled board,
  *              verifying panel color reproduction, or understanding the
- *              available color set when designing UI layouts.
+ *              available color set when designing UI layouts. It performs a
+ *              single full refresh and does not change afterwards; colour
+ *              e-paper refreshes are slower than monochrome displays and should
+ *              not be refreshed frequently in typical applications.
+ *
+ *              Expected output: full-screen vertical bars showing the Inkplate
+ *              colour palette - black, white, green, blue, red, yellow and
+ *              orange.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
  * 2) Upload the sketch to the board.
- * 3) After initialization, the display is filled with vertical color bars.
+ * 3) After initialization, the display is filled with vertical colour bars.
  *
- * Expected output:
- * - Display: Full-screen vertical bars showing the Inkplate color palette:
- *   black, white, green, blue, red, yellow, and orange.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - The display uses a full refresh to render the color bars.
- * - This example performs a single update and does not change afterward.
- * - Color e-paper refreshes are slower than monochrome displays and should
- *   not be refreshed frequently in typical applications.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-09-27

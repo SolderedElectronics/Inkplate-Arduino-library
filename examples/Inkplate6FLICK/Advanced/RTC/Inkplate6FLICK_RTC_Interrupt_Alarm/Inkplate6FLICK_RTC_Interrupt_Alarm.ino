@@ -11,41 +11,40 @@
  *              and displayed on the Inkplate e-paper display. When the alarm
  *              triggers, a message is shown on the screen.
  *
+ *              The RTC interrupt line is connected to ESP32 GPIO39 and the
+ *              interrupt service routine (ISR) only sets a volatile flag that is
+ *              processed in the main loop. Partial update works only in 1-bit
+ *              (black & white) mode, and it is recommended to perform a full
+ *              refresh every 5-10 partial updates to maintain good display
+ *              quality. Expected output is the current time and date on the
+ *              e-paper screen, with "ALARM" text appearing when the RTC alarm
+ *              interrupt occurs.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Libraries:  Inkplate library
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) The RTC time is set using an epoch timestamp.
- * 3) An alarm is scheduled to trigger shortly after startup.
- * 4) When the RTC alarm fires, the interrupt sets a flag and
- *    the display shows an "ALARM" message.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) The RTC time is set using an epoch timestamp.
+ * 4) An alarm is scheduled to trigger shortly after startup.
+ * 5) When the RTC alarm fires, the interrupt sets a flag and the display shows
+ *    an "ALARM" message.
  *
- * Expected output:
- * - Current time and date displayed on the e-paper screen.
- * - "ALARM" text appears when the RTC alarm interrupt occurs.
- *
- * Notes:
- * - RTC interrupt line is connected to ESP32 GPIO39.
- * - Interrupt Service Routine (ISR) sets a volatile flag that
- *   is processed in the main loop.
- * - Partial update works only in 1-bit (black & white) mode.
- * - It is recommended to perform a full refresh every 5–10
- *   partial updates to maintain good display quality.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

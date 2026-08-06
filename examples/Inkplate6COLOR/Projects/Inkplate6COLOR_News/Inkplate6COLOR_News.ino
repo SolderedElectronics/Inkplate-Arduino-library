@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate6COLOR_News_API.ino
+ * @file        Inkplate6COLOR_News.ino
  * @brief       Connects to Wi-Fi, fetches news articles from News API, and
  *              displays headlines and descriptions on Inkplate 6COLOR.
  *
@@ -14,56 +14,47 @@
  *              dashboards, headline readers, and information panels built on
  *              Inkplate. Because the response is JSON-based, the example relies
  *              on ArduinoJson for parsing and formatting the incoming data
- *              before display.
+ *              before display; parsing consumes RAM, so response size should be
+ *              considered carefully on embedded devices.
  *
  *              To use this example, you must provide valid Wi-Fi credentials,
  *              a News API key, and an appropriate timezone setting if the
- *              project formats times or dates locally.
+ *              project formats times or dates locally. Wi-Fi reliability and API
+ *              rate limits may affect refresh timing and request success. If
+ *              HTTPS is used, certificate handling should be configured
+ *              properly; insecure HTTPS modes such as setInsecure() are suitable
+ *              for demos only and not recommended for production deployments.
+ *              Display mode is Inkplate 6COLOR colour e-paper mode with full
+ *              refreshes.
+ *
+ *              Expected output: news headlines and short article descriptions
+ *              fetched from the configured News API request on the display, plus
+ *              optional debug, connection or API status messages on the Serial
+ *              Monitor.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      WiFi, News API key
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Install ArduinoJson library
- * - Enter your Wi-Fi SSID and password in the sketch
- * - Enter your News API key in the sketch
- * - Adjust timezone settings if needed
- * - Serial settings (if relevant)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Library:    ArduinoJson
  *
  * How to use:
- * 1) Create an account at newsapi.org and generate an API key.
- * 2) Install the ArduinoJson library in Arduino IDE.
- * 3) Enter your Wi-Fi credentials, News API key, and timezone settings in the
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Create an account at newsapi.org and generate an API key.
+ * 3) Install the ArduinoJson library in Arduino IDE.
+ * 4) Enter your Wi-Fi credentials, News API key and timezone settings in the
  *    sketch.
- * 4) Upload the sketch to Inkplate 6COLOR.
- * 5) After connecting to Wi-Fi, the board requests news data from the API.
- * 6) Parsed headlines and descriptions are rendered on the display.
+ * 5) Upload the sketch to Inkplate 6COLOR.
+ * 6) After connecting to Wi-Fi, the board requests news data from the API.
+ * 7) Parsed headlines and descriptions are rendered on the display.
  *
- * Expected output:
- * - Display: News headlines and short article descriptions fetched from the
- *   configured News API request.
- * - Serial Monitor: Optional debug, connection, or API status messages if used
- *   in the sketch.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode with full refreshes.
- * - News API responses are JSON-based, so parsing consumes RAM and response
- *   size should be considered carefully on embedded devices.
- * - Wi-Fi reliability and API rate limits may affect refresh timing and
- *   request success.
- * - If HTTPS is used, certificate handling should be configured properly.
- * - If insecure HTTPS modes such as setInsecure() are used elsewhere in the
- *   sketch, they are suitable for demos only and not recommended for
- *   production deployments.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-04-30

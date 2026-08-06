@@ -12,46 +12,41 @@
  *              - Circle drawing: draws filled circles at touch points.
  *
  *              The display is refreshed using partial updates to allow faster
- *              drawing and improved responsiveness.
+ *              drawing and improved responsiveness. The touchscreen supports up
+ *              to two simultaneous touch points, but this example uses only the
+ *              first detected touch. Touchscreen coordinates are automatically
+ *              adjusted based on display rotation.
+ *
+ *              Expected behaviour: touch events are detected by the touchscreen
+ *              controller, graphics are drawn at the detected coordinates, and
+ *              partial updates refresh only the modified area for faster
+ *              interaction.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  *
- * Configuration:
- * - Select drawing mode by enabling one of the macros:
- *      #define DRAW_LINE
- *      #define DRAW_CIRCLE
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) Touch the screen to draw.
- * 3) In line mode, a continuous line follows your finger.
- * 4) In circle mode, filled circles are drawn where the screen is touched.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Select the drawing mode by enabling one of the macros: #define DRAW_LINE
+ *    or #define DRAW_CIRCLE.
+ * 3) Upload the sketch to Inkplate 6FLICK.
+ * 4) Touch the screen to draw.
+ * 5) In line mode a continuous line follows your finger; in circle mode filled
+ *    circles are drawn where the screen is touched.
  *
- * Expected behavior:
- * - Touch events are detected by the touchscreen controller.
- * - Graphics are drawn at the detected coordinates.
- * - Partial updates refresh only the modified area for faster interaction.
- *
- * Notes:
- * - The touchscreen supports up to two simultaneous touch points, but this
- *   example uses only the first detected touch.
- * - Partial updates significantly improve drawing responsiveness compared to
- *   full display refreshes.
- * - Touchscreen coordinates are automatically adjusted based on display
- *   rotation.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

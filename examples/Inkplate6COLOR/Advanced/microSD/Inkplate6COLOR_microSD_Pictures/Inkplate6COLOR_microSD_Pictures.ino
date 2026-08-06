@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate6COLOR_SD_Pictures.ino
+ * @file        Inkplate6COLOR_microSD_Pictures.ino
  * @brief       Loads and displays image files from an SD card on Inkplate
  *              6COLOR.
  *
@@ -15,61 +15,50 @@
  *
  *              The sketch is intended for displaying bitmap images stored on
  *              removable media and is useful for slideshows, dashboards,
- *              signage, and offline image viewers.
+ *              signage, and offline image viewers. After use, the SD card power
+ *              rail is disabled with sdCardSleep() to reduce power consumption.
  *
- *              Supported file types may include BMP, JPEG, and PNG, but
- *              format support depends on library capabilities and available
- *              RAM. BMP support is the most predictable option for embedded
- *              use. Image dimensions must fit within the 600x448 display
- *              resolution of Inkplate 6COLOR.
+ *              Supported file types may include BMP, JPEG, and PNG, but format
+ *              support depends on library capabilities and available RAM. BMP
+ *              support is the most predictable option for embedded use: use
+ *              uncompressed Windows BMP files with supported bit depths (the
+ *              original example notes 1-bit, 4-bit, 8-bit and 24-bit BMP
+ *              support). Large images and compressed formats can require
+ *              substantial RAM and may fail on memory-constrained workflows.
+ *              Image dimensions must fit within the 600x448 display resolution
+ *              of Inkplate 6COLOR or be otherwise handled by the drawing
+ *              routine. The optional invert parameter may be useful when bitmap
+ *              colours appear reversed due to export settings. Display mode is
+ *              Inkplate 6COLOR colour e-paper mode with full refreshes.
+ *
+ *              Expected output: the first image from image1.bmp, then the second
+ *              image from image2.bmp, with status messages on Serial such as SD
+ *              card init success, image load success, or image/file open errors.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      microSD card formatted as FAT/FAT32 with compatible image files
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial Monitor: 115200 baud
- * - Copy compatible image files to the SD card root directory
- * - Update filenames in the sketch if your files differ from image1.bmp and
- *   image2.bmp
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Format a microSD card using a standard FAT/FAT32 filesystem.
- * 2) Copy compatible image files to the card, including the filenames used
- *    in this example or adjust the sketch to match your files.
- * 3) Insert the card into Inkplate 6COLOR.
- * 4) Upload the sketch and open Serial Monitor at 115200 baud.
- * 5) The sketch initializes the SD card, loads the first image by filename,
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
+ * 2) Format a microSD card using a standard FAT/FAT32 filesystem.
+ * 3) Copy compatible image files to the card root directory, using the
+ *    filenames used in this example (image1.bmp, image2.bmp) or adjusting the
+ *    sketch to match your files.
+ * 4) Insert the card into Inkplate 6COLOR.
+ * 5) Upload the sketch and open Serial Monitor at 115200 baud.
+ * 6) The sketch initializes the SD card, loads the first image by filename,
  *    displays it, then opens a second image through SdFat and displays it.
- * 6) After use, the SD card power rail is disabled with sdCardSleep() to
- *    reduce power consumption.
  *
- * Expected output:
- * - Display: First image from image1.bmp, then second image from image2.bmp.
- * - Serial: Status messages such as SD card init success, image load success,
- *   or image/file open errors.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode with full refreshes.
- * - BMP/JPEG/PNG support is library-dependent; BMP is generally the safest
- *   choice for embedded display workflows.
- * - For BMP files, use uncompressed Windows BMP files with supported bit
- *   depths. The original example specifically notes 1-bit, 4-bit, 8-bit,
- *   and 24-bit BMP support.
- * - Large images and compressed formats can require substantial RAM and may
- *   fail on memory-constrained workflows.
- * - Images must fit the 600x448 panel resolution or be otherwise handled by
- *   the drawing routine.
- * - The optional invert parameter may be useful when bitmap colors appear
- *   reversed due to export settings.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-17

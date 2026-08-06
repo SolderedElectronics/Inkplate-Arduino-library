@@ -1,15 +1,15 @@
 /**
  **************************************************
  * @file        Inkplate6FLICK_TRMNL_BYOS.ino
- * @brief       TRMNL BYOS client example for Soldered Inkplate 6 FLICK.
+ * @brief       TRMNL BYOS client example for Soldered Inkplate 6FLICK.
  *
- * @details     Connects Inkplate 6 FLICK to WiFi, registers with a
- *              TRMNL-compatible BYOS server via /api/setup, then polls
- *              /api/display on a loop, drawing whatever image the server
- *              returns and deep-sleeping between refreshes.
+ * @details     Connects Inkplate 6FLICK to WiFi, registers with a TRMNL-compatible
+ *              BYOS server via /api/setup, then polls /api/display on a loop,
+ *              drawing whatever image the server returns and deep-sleeping
+ *              between refreshes.
  *
  * Requirements:
- * - Board:      Soldered Inkplate 6 FLICK
+ * - Board:      Soldered Inkplate 6FLICK
  * - Library:    ArduinoJson (install via Library Manager)
  * - Server:     Terminus (TRMNL's official BYOS server) running via Docker
  *
@@ -120,6 +120,13 @@
  * unreachable access point can't drain the battery; API errors settle into
  * a 15-minute polling fallback. A 202/500 "not ready" status from the
  * server is re-polled after a minute.
+ *
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11

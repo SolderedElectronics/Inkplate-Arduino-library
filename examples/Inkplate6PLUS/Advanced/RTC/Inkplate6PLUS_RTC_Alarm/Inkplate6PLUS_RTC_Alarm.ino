@@ -8,42 +8,38 @@
  *              to set time and date, configure an alarm, read current time,
  *              and display it on the e-paper screen using partial updates.
  *
+ *              Inkplate 6PLUS uses the PCF85063 RTC chip. Partial update works
+ *              only in 1-bit (black & white) mode and is not recommended for
+ *              the first refresh after power-up; perform a full refresh every
+ *              5-10 partial updates to maintain display quality. Expected
+ *              output is the current date and time on the Inkplate display,
+ *              with the alarm event detectable and handled in the sketch.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Extra:      None
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Serial settings: 115200 baud (optional)
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - Serial:     115200 baud (optional)
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6PLUS.
- * 2) If RTC is not set, initialize time and date in the code.
- * 3) The program configures an RTC alarm.
- * 4) Current time is periodically read and displayed on the screen.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6PLUS.
+ * 3) If RTC is not set, initialize time and date in the code.
+ * 4) The program configures an RTC alarm.
+ * 5) Current time is periodically read and displayed on the screen.
  *
- * Expected output:
- * - Inkplate display shows current date and time.
- * - Alarm event can be detected and handled in the sketch.
- *
- * Notes:
- * - Inkplate 6PLUS uses the PCF85063 RTC chip.
- * - Partial update works only in 1-bit (black & white) mode.
- * - It is not recommended to use partial update on the first refresh after power-up.
- * - Perform a full refresh every 5–10 partial updates to maintain display quality.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-20
  * @license     GNU GPL V3
- * 
- * **************************************************/
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE6PLUS) && !defined(ARDUINO_INKPLATE6PLUSV2)

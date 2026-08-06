@@ -12,38 +12,38 @@
  *              and their coordinates are printed to the serial output.
  *              When all fingers are released, a "Release" message is printed.
  *
+ *              Coordinates are automatically adjusted if the display rotation is
+ *              changed; this example sets the display rotation to orientation
+ *              "2". Expected behaviour: when a finger touches the screen the
+ *              (X,Y) coordinates are printed, if two fingers touch
+ *              simultaneously both coordinates are printed, and when all fingers
+ *              are lifted "Release" is printed.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
- *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Serial:     115200 baud
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) Open Serial Monitor at 115200 baud.
- * 3) Touch the display with one or two fingers.
- * 4) The number of detected fingers and their coordinates will appear in the
- *    Serial Monitor.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) Open Serial Monitor at 115200 baud.
+ * 4) Touch the display with one or two fingers.
+ * 5) The number of detected fingers and their coordinates appear in the Serial
+ *    Monitor.
  *
- * Expected behavior:
- * - When a finger touches the screen, coordinates (X,Y) are printed.
- * - If two fingers touch simultaneously, both coordinates are printed.
- * - When all fingers are lifted, "Release" is printed.
- *
- * Notes:
- * - The touchscreen supports up to two touch points.
- * - Coordinates are automatically adjusted if the display rotation is changed.
- * - This example sets display rotation to orientation "2".
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

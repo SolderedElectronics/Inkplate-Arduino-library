@@ -9,35 +9,35 @@
  *              count on the e-paper display, and prints the wake-up reason
  *              (button press vs. timer wake-up).
  *
+ *              Deep sleep restarts the program from the beginning on every
+ *              wake-up. bootCount is stored in RTC memory (RTC_DATA_ATTR) so it
+ *              persists across deep sleep, and the WakeUp button uses EXT0
+ *              wake-up on GPIO36. Expected output is an incrementing boot count
+ *              on the display together with the wake-up reason (WakeUp button
+ *              or timer).
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
  * - Extra:      None
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate6PLUS
- * - Serial settings: Not required
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6PLUS/quick-start-guide/
+ * - Serial:     Not required
  *
  * How to use:
- * 1) Upload the sketch to Inkplate 6PLUS.
- * 2) After displaying boot info, the board enters deep sleep.
- * 3) Wake the board by pressing the WakeUp button, or wait 30 seconds for timer wake-up.
- * 4) On each wake, the display updates with the new boot count and wake-up reason.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6PLUS.
+ * 3) After displaying boot info, the board enters deep sleep.
+ * 4) Wake the board by pressing the WakeUp button, or wait 30 seconds for timer
+ *    wake-up.
+ * 5) On each wake, the display updates with the new boot count and wake-up
+ *    reason.
  *
- * Expected output:
- * - Inkplate display shows an incrementing boot count.
- * - Wake-up reason is shown as either WakeUp button or timer.
- *
- * Notes:
- * - Deep sleep restarts the program from the beginning on every wake-up.
- * - bootCount is stored in RTC memory (RTC_DATA_ATTR) so it persists across deep sleep.
- * - WakeUp button wake uses EXT0 wake-up on GPIO36.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2022-12-14

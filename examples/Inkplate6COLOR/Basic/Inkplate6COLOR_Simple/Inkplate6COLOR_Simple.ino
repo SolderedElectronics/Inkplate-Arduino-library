@@ -13,47 +13,41 @@
  *              The sketch draws multiple shapes using the supported display
  *              colors, including filled and outlined rectangles, circles,
  *              and triangles. It also prints colored text strings and renders
- *              bitmap graphics from an included image file.
+ *              bitmap graphics from an included image file (logoImg.h).
  *
  *              The example provides a quick overview of the graphics API and
  *              serves as a reference for developers building custom user
  *              interfaces, dashboards, or graphical applications on Inkplate.
+ *              All drawing operations occur in the framebuffer and appear on the
+ *              display only after display() is called. Colour e-paper displays
+ *              require a full refresh for updates, which is slower than
+ *              monochrome partial-update workflows on supported boards. Bitmap
+ *              images must be converted to compatible header arrays before use
+ *              in embedded applications.
+ *
+ *              Expected output: a graphical test screen showing coloured
+ *              rectangles, circles, triangles, repeated text in different
+ *              colours, and multiple instances of the Inkplate logo bitmap.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
- * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Ensure the bitmap header file (logoImg.h) is included in the sketch folder
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Extra:      bitmap header file (logoImg.h) in the sketch folder
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
  * 2) Upload the sketch to the board.
- * 3) The example draws various shapes, colored text, and bitmap graphics in
+ * 3) The example draws various shapes, coloured text and bitmap graphics in
  *    the framebuffer.
  * 4) The display is refreshed once to render the complete graphics demo.
  *
- * Expected output:
- * - Display: A graphical test screen showing colored rectangles, circles,
- *   triangles, repeated text in different colors, and multiple instances of
- *   the Inkplate logo bitmap.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - All drawing operations occur in the framebuffer and appear on the display
- *   only after display() is called.
- * - Color e-paper displays require a full refresh for updates, which is slower
- *   than monochrome partial-update workflows on supported boards.
- * - Bitmap images must be converted to compatible header arrays before use in
- *   embedded applications.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2023-02-17

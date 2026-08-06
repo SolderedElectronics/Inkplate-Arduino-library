@@ -8,36 +8,35 @@
  *              PMIC (Power Management IC) on Inkplate 6FLICK.
  *              The measured temperature is displayed on the e-paper screen.
  *
+ *              The temperature reflects the PMIC/chip temperature, not the
+ *              ambient air temperature, so the readings are not 100% accurate.
+ *              Expected output is the temperature value (degrees C) shown on the
+ *              e-paper display.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
  * - Libraries:  Inkplate library
  *
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
- *
  * How to use:
- * 1) Upload the sketch to Inkplate 6FLICK.
- * 2) After initialization, the measured temperature will be displayed.
- * 3) Screen refresh behavior depends on implementation (full or partial update).
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6FLICK.
+ * 3) After initialization, the measured temperature is displayed.
+ * 4) Screen refresh behaviour depends on the implementation (full or partial
+ *    update).
  *
- * Expected output:
- * - Temperature value (°C) shown on the e-paper display.
- *
- * Notes:
- * - Temperature is read from the TPS65186 PMIC internal sensor.
- * - This temperature reflects the PMIC/chip temperature,
- *   not the ambient air temperature so the readings are not
- *   100% accurate.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-26
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

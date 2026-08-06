@@ -11,45 +11,45 @@
  *              to load an image from a different host while using a certificate
  *              that is not valid for it.
  *
+ *              Certificate validation is host-specific: a certificate that works
+ *              for one domain will not validate a different domain. BMP images
+ *              must be in a supported Windows BMP format (typically
+ *              uncompressed, supported colour depths per library). Keep
+ *              certificates up to date - expired or rotated certificates will
+ *              cause downloads to fail.
+ *
+ *              Expected output: status messages on screen while connecting and
+ *              downloading, the first BMP image successfully downloaded and
+ *              displayed, then a failed second download with an explanatory
+ *              message.
+ *
  * Requirements:
  * - Board:      Soldered Inkplate 6FLICK
  * - Hardware:   Inkplate 6FLICK, USB cable
- *
- * Configuration:
- * - Set ssid/password to your Wi-Fi credentials
- * - Certificate string must match the target HTTPS host
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * - Extra:      Wi-Fi connection, certificate string matching the target HTTPS
+ *               host
  *
  * How to use:
- * 1) Enter your Wi-Fi SSID and password in the sketch.
- * 2) Upload the sketch to Inkplate 6FLICK.
- * 3) The device connects to Wi-Fi and applies the provided certificate.
- * 4) A BMP image is downloaded securely from the certified host and displayed.
- * 5) A second download from a different host is attempted to demonstrate
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6FLICK"
+ *    from Tools -> Board.
+ * 2) Enter your Wi-Fi SSID and password (ssid/password) in the sketch.
+ * 3) Upload the sketch to Inkplate 6FLICK.
+ * 4) The device connects to Wi-Fi and applies the provided certificate.
+ * 5) A BMP image is downloaded securely from the certified host and displayed.
+ * 6) A second download from a different host is attempted to demonstrate
  *    certificate mismatch handling.
  *
- * Expected output:
- * - Status messages on screen while connecting and downloading.
- * - First BMP image successfully downloaded and displayed.
- * - Second image download fails and an explanatory message is shown.
- *
- * Notes:
- * - Certificate validation is host-specific; a certificate that works for one
- *   domain will not validate a different domain.
- * - BMP images must be in a supported Windows BMP format (typically uncompressed,
- *   supported color depths per library).
- * - Ensure you keep certificates up to date; expired/rotated certificates will
- *   cause downloads to fail.
- *
- * Docs:         https://docs.soldered.com/inkplate
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6flick/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered Electronics
  * @date        2026-02-27
  * @license     GNU GPL V3
- **************************************************
- */
+ **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE6FLICK

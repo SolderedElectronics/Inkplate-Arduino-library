@@ -9,8 +9,8 @@
  *              or calling partialUpdate(), preventing interleaved writes
  *              that would corrupt the output.
  *
- *              Left task:  bouncing square on the left half  (x 0..511)
- *              Right task: bouncing square on the right half (x 512..1023)
+ *              Left task:  bouncing square on the left half  (x 0..599)
+ *              Right task: bouncing square on the right half (x 600..1199)
  *
  *              To observe what happens without locking, comment out the
  *              display.displayLock() / displayUnlock() calls.
@@ -18,6 +18,20 @@
  * Requirements:
  * - Board:      Soldered Inkplate 6PLUS
  * - Hardware:   Inkplate 6PLUS, USB cable
+ *
+ * How to use:
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6PLUS"
+ *    from Tools -> Board.
+ * 2) Upload the sketch to Inkplate 6PLUS.
+ * 3) Both squares bounce on their own half of the screen without corrupting
+ *    each other's output.
+ *
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @license     GNU GPL V3

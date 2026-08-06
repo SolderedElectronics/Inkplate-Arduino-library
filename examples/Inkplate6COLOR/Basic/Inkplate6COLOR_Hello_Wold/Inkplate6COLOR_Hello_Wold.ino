@@ -1,6 +1,6 @@
 /**
  **************************************************
- * @file        Inkplate6COLOR_Hello_World.ino
+ * @file        Inkplate6COLOR_Hello_Wold.ino
  * @brief       Displays a simple "Hello World!" message on Inkplate 6COLOR.
  *
  * @details     This example demonstrates the most basic workflow for using the
@@ -17,39 +17,34 @@
  *
  *              This example is intended as a minimal starting point for
  *              beginners who want to verify that their board and software
- *              environment are working correctly.
+ *              environment are working correctly. clearDisplay() only clears the
+ *              internal framebuffer; the physical display updates only when
+ *              display() is called. The sketch performs a single full refresh
+ *              and does not update again - colour e-paper refreshes are slower
+ *              than monochrome displays and should not be triggered
+ *              unnecessarily in real applications.
+ *
+ *              Expected output: the message "Hello World!" printed near the
+ *              top-left corner of the screen using a large font.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      none
- *
- * Configuration:
- * - Boards Manager -> Inkplate Boards -> Soldered Inkplate 6COLOR
- * - Serial settings: not used in this example
- *
- * Don't have Inkplate Boards in Arduino Boards Manager?
- * See https://docs.soldered.com/inkplate/10/quick-start-guide/
+ * - Serial:     not used in this example
  *
  * How to use:
- * 1) Select Soldered Inkplate 6COLOR in Arduino IDE.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
+ *    from Tools -> Board.
  * 2) Upload the sketch to the board.
  * 3) After initialization, the text "Hello World!" appears on the display.
  *
- * Expected output:
- * - Display: The message "Hello World!" printed near the top-left corner of
- *   the screen using a large font.
- *
- * Notes:
- * - Display mode: Inkplate 6COLOR color e-paper mode.
- * - clearDisplay() only clears the internal framebuffer; the physical display
- *   updates only when display() is called.
- * - This example performs a single full refresh and does not update again.
- * - Color e-paper refreshes are slower than monochrome displays and should
- *   not be triggered unnecessarily in real applications.
- *
- * Docs:         https://docs.soldered.com/inkplate
- * Support:      https://forum.soldered.com/
+ * @note        Quick start guide:
+ *              https://docs.soldered.com/inkplate/6color/quick-start-guide/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2025-04-24

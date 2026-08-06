@@ -3,13 +3,13 @@
  * @file        Inkplate6PLUS_TRMNL_BYOS.ino
  * @brief       TRMNL BYOS client example for Soldered Inkplate 6PLUS.
  *
- * @details     Connects Inkplate 6PLUS to WiFi, registers with a
- *              TRMNL-compatible BYOS server via /api/setup, then polls
- *              /api/display on a loop, drawing whatever image the server
- *              returns and deep-sleeping between refreshes.
+ * @details     Connects Inkplate 6PLUS to WiFi, registers with a TRMNL-compatible
+ *              BYOS server via /api/setup, then polls /api/display on a loop,
+ *              drawing whatever image the server returns and deep-sleeping
+ *              between refreshes.
  *
  * Requirements:
- * - Board:      e-radionica Inkplate 6Plus or Soldered Inkplate 6Plus
+ * - Board:      Soldered Inkplate 6PLUS
  * - Library:    ArduinoJson (install via Library Manager)
  * - Server:     Terminus (TRMNL's official BYOS server) running via Docker
  *
@@ -120,6 +120,13 @@
  * unreachable access point can't drain the battery; API errors settle into
  * a 15-minute polling fallback. A 202/500 "not ready" status from the
  * server is re-polled after a minute.
+ *
+ * @note        Quick start guide: Inkplate 6PLUS has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
+ * @note        Want to learn more about Inkplate? Visit
+ *              https://docs.soldered.com/inkplate/
+ * @note        Looking to get support? Write on our community forum:
+ *              https://community.soldered.com/
  *
  * @author      Soldered
  * @date        2021-02-11
