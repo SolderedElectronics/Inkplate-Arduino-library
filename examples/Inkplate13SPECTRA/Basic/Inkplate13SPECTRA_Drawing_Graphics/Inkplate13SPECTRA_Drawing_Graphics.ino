@@ -53,8 +53,8 @@ void setup()
     display.drawRoundRect(290, 60, 240, 80, 16, INKPLATE_BLACK);
 
     // Circles
-    display.drawCircle(160, 220, 60, INKPLATE_BLUE - 1);
-    display.fillCircle(380, 220, 60, INKPLATE_GREEN - 1);
+    display.drawCircle(160, 220, 60, INKPLATE_BLUE);
+    display.fillCircle(380, 220, 60, INKPLATE_GREEN);
     display.drawCircle(380, 220, 60, INKPLATE_BLACK);
 
     // Triangle
@@ -65,8 +65,8 @@ void setup()
     display.drawLine(40, 360, 760, 520, INKPLATE_BLACK);
     display.drawLine(40, 390, 760, 550, INKPLATE_RED);
     display.drawLine(40, 420, 760, 580, INKPLATE_YELLOW);
-    display.drawLine(40, 450, 760, 610, INKPLATE_BLUE - 1);
-    display.drawLine(40, 480, 760, 640, INKPLATE_GREEN - 1);
+    display.drawLine(40, 450, 760, 610, INKPLATE_BLUE);
+    display.drawLine(40, 480, 760, 640, INKPLATE_GREEN);
 
     // Simple text
     display.setTextSize(3);

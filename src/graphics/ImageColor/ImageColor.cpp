@@ -353,8 +353,10 @@ bool ImageColor::getFileExtension(char *_filename, char *_extension)
     if (_extension == NULL || _filename == NULL)
         return false;
 
-    // Find the end of the string
-    int _len = strlen(_filename);
+    // Ignore any URL query string or fragment (e.g. "?color=white&time=19217398") when
+    // locating the extension - the actual file type sits before it.
+    const char *_queryMark = strpbrk(_filename, "?#");
+    int _len = _queryMark != NULL ? (_queryMark - _filename) : strlen(_filename);
 
     // Check the lenth. It must be greater then 4 (one char filename + dot + three chars for the extension).
     if (_len < 5)
@@ -363,14 +365,14 @@ bool ImageColor::getFileExtension(char *_filename, char *_extension)
     // Go from the back to the start and try to extract file extension.
     // Try to find the index where file extension starts.
     int _startIndex;
-    for (_startIndex = _len - 1; (_len >= 0) && (_filename[_startIndex] != '.'); _startIndex--)
+    for (_startIndex = _len - 1; (_startIndex >= 0) && (_filename[_startIndex] != '.'); _startIndex--)
         ;
 
     // Move by one index to the right.
     _startIndex++;
 
     // Check if the extension index is valid.
-    if ((_len - _startIndex) > 4)
+    if (_startIndex <= 0 || (_len - _startIndex) > 4)
         return false;
 
     // Copy extension into _extension array and convert it into lowercase.
