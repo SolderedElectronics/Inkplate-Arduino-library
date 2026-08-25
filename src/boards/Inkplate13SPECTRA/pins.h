@@ -35,7 +35,7 @@ static uint32_t pallete[] = {0x000000, 0xFFFFFF, 0xFFFF00, 0xFF0000, 0x0000FF, 0
 #define INKPLATE_GREEN  5
 
 static uint16_t colorPalette[6] = {INKPLATE_BLACK, INKPLATE_WHITE, INKPLATE_YELLOW,
-                                   INKPLATE_RED,   INKPLATE_BLUE,  INKPLATE_GREEN};
+                                   INKPLATE_RED,   0x05,  0x06};
 
 
 // Screen resolution.
