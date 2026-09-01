@@ -625,7 +625,7 @@ void EPDDriver::pinsAsOutputs()
     setI2S1pin(27, I2S1O_DATA_OUT7_IDX, 0);
 
     // Start sending clock to the EPD.
-    myI2S->conf1.tx_stop_en = 1;
+    myI2S->conf1.tx_stop_en = 0;
 }
 
 /**
