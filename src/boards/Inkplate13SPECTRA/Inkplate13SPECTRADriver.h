@@ -1,3 +1,26 @@
+/**
+ **************************************************
+ *
+ * @file        Inkplate13SPECTRADriver.h
+ * @brief       Low level driver for the Inkplate 13 Spectra 6 e-paper panel
+ *
+ *              The Inkplate 13 uses a 13.3" 1200x1600 Spectra 6 colour e-paper panel. The
+ *              panel is driven by two cascaded controller chips (master and slave), each one
+ *              covering one half of the screen, so every command is addressed to the master,
+ *              the slave, or to both of them at once (see eSpectraChipID).
+ *
+ *              Communication is 4-wire SPI. The frame buffer holds one 4 bit colour index per
+ *              pixel, two pixels per byte, and supports the six Spectra colours: black, white,
+ *              yellow, red, blue and green.
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
+ *
+ * @authors     Josip Šimun Kuči @ Soldered
+ ***************************************************/
+
 #ifndef __INKPLATE13DRIVER_H__
 #define __INKPLATE13DRIVER_H__
 

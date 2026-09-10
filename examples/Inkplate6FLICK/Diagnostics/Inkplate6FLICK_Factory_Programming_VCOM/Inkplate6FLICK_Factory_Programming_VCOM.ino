@@ -27,10 +27,10 @@
  *              - Insert a formatted microSD card (doesn't have to be empty)
  *              - Press wake button to finish testing
  *
- *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
- *LICENSE file included with this example. If you have any questions about
- *licensing, please visit https://soldered.com/contact/ Distributed as-is; no
- *warranty is given.
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
  *
  * @authors     Soldered
  ***************************************************/

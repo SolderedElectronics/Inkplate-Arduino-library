@@ -1,3 +1,27 @@
+/**
+ **************************************************
+ *
+ * @file        Inkplate6PLUSDriver.cpp
+ * @brief       Low level driver for the Inkplate 6 PLUS e-paper panel
+ *
+ *              The Inkplate 6 PLUS uses a 6" 1024x758 monochrome e-paper panel driven over a
+ *              parallel interface. The control lines go through the on board GPIO expanders
+ *              and the TPS65186 PMIC generates the e-paper driving rails - unlike the other
+ *              boards, this driver keeps its own power mode handling and talks to the PMIC at
+ *              a lower level instead of delegating the whole power up and power down sequence.
+ *
+ *              This driver covers both the Inkplate 6 PLUS and the Inkplate 6 PLUS V2. The
+ *              board carries a capacitive touchscreen and a frontlight, and supports both the
+ *              1 bit (partial updates) and 3 bit (8 levels of grey) display modes.
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
+ *
+ * @authors     Josip Šimun Kuči @ Soldered
+ ***************************************************/
+
 #if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
 #include "Inkplate6PLUSDriver.h"
 #include "Inkplate.h"
