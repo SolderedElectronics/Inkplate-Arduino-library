@@ -14,7 +14,7 @@
  * @authors     Soldered
  ***************************************************/
 #pragma once
-#if defined(ARDUINO_INKPLATE13SPECTRA) || defined(ARDUINO_INKPLATE7SPECTRA) || defined(ARDUINO_INKPLATECOLOR) ||            \
+#if defined(ARDUINO_INKPLATE13SPECTRA) || defined(ARDUINO_INKPLATE7SPECTRA) || defined(ARDUINO_INKPLATECOLOR) ||       \
     defined(ARDUINO_INKPLATE2)
 #include "../../../system/defines.h"
 #include "Inkplate.h"
