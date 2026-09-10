@@ -1,3 +1,28 @@
+/**
+ **************************************************
+ *
+ * @file        Inkplate10Driver.h
+ * @brief       Low level driver for the Inkplate 10 e-paper panel
+ *
+ *              The Inkplate 10 uses a 9.7" 1200x825 monochrome e-paper panel driven over a
+ *              parallel interface. The panel data lines are driven directly through the ESP32
+ *              GPIO registers, while the control lines and the peripherals are handled by two
+ *              MCP/PCAL GPIO expanders. The TPS65186 PMIC generates the e-paper driving rails
+ *              and also provides the panel temperature reading.
+ *
+ *              The driver supports both display modes: 1 bit (black and white, with partial
+ *              updates) and 3 bit (8 levels of grey, full updates only). The waveforms used
+ *              for the greyscale refresh are in waveforms.h and are picked based on the
+ *              waveform revision stored in the board EEPROM.
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
+ *
+ * @authors     Josip Šimun Kuči @ Soldered
+ ***************************************************/
+
 #ifndef __INKPLATE10DRIVER_H__
 #define __INKPLATE10DRIVER_H__
 

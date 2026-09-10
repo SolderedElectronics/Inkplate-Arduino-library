@@ -6,11 +6,10 @@
  *              https://github.com/SolderedElectronics/Inkplate-Arduino-library
  *              For more info about the product, please check: https://docs.soldered.com/inkplate/
  *
- *              This code is released under the GNU Lesser General Public
- *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
- *LICENSE file included with this example. If you have any questions about
- *licensing, please contact assistance@soldered.com Distributed as-is; no
- *warranty is given.
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
  *
  * @authors     Soldered
  ***************************************************/
@@ -30,7 +29,8 @@
 #define INKPLATE10_WAVEFORM5    24
 #define INKPLATE6PLUS_WAVEFORM1 40
 
-#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE13SPECTRA)
+#if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE13SPECTRA) &&           \
+    !defined(ARDUINO_INKPLATE7SPECTRA)
 #define BLACK 1
 #define WHITE 0
 #else

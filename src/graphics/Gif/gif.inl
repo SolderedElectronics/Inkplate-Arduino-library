@@ -1074,7 +1074,7 @@ static void DrawCooked(GIFIMAGE *pPage, GIFDRAW *pDraw, void *pDest)
         } // opaque
     }
 } /* DrawCooked() */
-#if (defined (ARDUINO_ESP32S3_DEV) || defined(ARDUINO_ESP32P4_DEV)) && !defined(NO_SIMD)
+#if (defined (ARDUINO_INKPLATE7SPECTRA) || defined(ARDUINO_ESP32P4_DEV)) && !defined(NO_SIMD)
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
@@ -1125,7 +1125,7 @@ void GIF_mergeTransparent(uint8_t *pSrc, uint8_t *pDst, uint8_t ucTrans, int iLe
 //
 void GIF_cookPixels(uint8_t *pSrc, uint8_t *pDst, int iTrans, int iLen, uint32_t *pPalette, uint16_t *pRGB565)
 {
-#if (defined (ARDUINO_ESP32S3_DEV) || defined(ARDUINO_ESP32P4_DEV)) && !defined(NO_SIMD)
+#if (defined (ARDUINO_INKPLATE7SPECTRA) || defined(ARDUINO_ESP32P4_DEV)) && !defined(NO_SIMD)
     uint8_t ucTrans, *pTrans;
     if (iTrans == -1) {
         pTrans = NULL;

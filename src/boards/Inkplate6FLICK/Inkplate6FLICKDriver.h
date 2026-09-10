@@ -1,3 +1,27 @@
+/**
+ **************************************************
+ *
+ * @file        Inkplate6FLICKDriver.h
+ * @brief       Low level driver for the Inkplate 6 FLICK e-paper panel
+ *
+ *              The Inkplate 6 FLICK uses a 6" 1024x758 monochrome e-paper panel driven over a
+ *              parallel interface, clocked out with the ESP32 I2S peripheral (USES_I2S). The
+ *              control lines go through the on board GPIO expanders and the TPS65186 PMIC
+ *              generates the e-paper driving rails.
+ *
+ *              Besides the display, this board carries a capacitive touchscreen and a
+ *              frontlight, both handled by the feature classes from the features folder. Both
+ *              1 bit (black and white, partial updates supported) and 3 bit (8 levels of grey)
+ *              display modes are available, with the waveforms kept in waveforms.h.
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
+ *
+ * @authors     Josip Šimun Kuči @ Soldered
+ ***************************************************/
+
 #ifndef __INKPLATE6FLICKDRIVER_H__
 #define __INKPLATE6FLICKDRIVER_H__
 

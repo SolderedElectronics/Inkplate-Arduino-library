@@ -1,3 +1,27 @@
+/**
+ **************************************************
+ *
+ * @file        Inkplate6Driver.cpp
+ * @brief       Low level driver for the Inkplate 6 e-paper panel
+ *
+ *              The Inkplate 6 uses a 6" 800x600 monochrome e-paper panel driven over a
+ *              parallel interface, clocked out with the ESP32 I2S peripheral (USES_I2S). The
+ *              control lines go through the on board GPIO expanders and the TPS65186 PMIC
+ *              generates the e-paper driving rails and reports the panel temperature.
+ *
+ *              This driver covers both the original Inkplate 6 and the Inkplate 6 V2, which
+ *              differ in the panel waveform. Both 1 bit (black and white, partial updates
+ *              supported) and 3 bit (8 levels of grey) display modes are available, and the
+ *              board also exposes the resistive touchpad buttons.
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
+ *
+ * @authors     Josip Šimun Kuči @ Soldered
+ ***************************************************/
+
 #if defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE6)
 #include "Inkplate6Driver.h"
 #include "Inkplate.h"
@@ -656,7 +680,7 @@ void EPDDriver::pinsAsOutputs()
     setI2S1pin(27, I2S1O_DATA_OUT7_IDX, 0);
 
     // Start sending clock to the EPD.
-    myI2S->conf1.tx_stop_en = 1;
+    myI2S->conf1.tx_stop_en = 0;
 }
 
 /**

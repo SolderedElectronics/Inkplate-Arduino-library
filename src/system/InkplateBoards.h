@@ -17,6 +17,8 @@
 // Board selector. It only includes files for selected board.
 #if defined(ARDUINO_INKPLATE13SPECTRA)
 #include "../boards/Inkplate13SPECTRA/Inkplate13SPECTRADriver.h"
+#elif defined(ARDUINO_INKPLATE7SPECTRA)
+#include "../boards/Inkplate7SPECTRA/Inkplate7SPECTRADriver.h"
 #elif defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE10)
 #include "../boards/Inkplate10/Inkplate10Driver.h"
 #elif defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
