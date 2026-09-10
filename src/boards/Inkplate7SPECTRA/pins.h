@@ -60,42 +60,38 @@ static uint16_t colorPalette[6] = {INKPLATE_BLACK, INKPLATE_WHITE, INKPLATE_YELL
 #define SPECTRA73_REGISTER_BTST3  0x08
 #define SPECTRA73_REGISTER_DTM    0x10
 #define SPECTRA73_REGISTER_DRF    0x12
-#define SPECTRA73_REGISTER_IPC    0x13
 #define SPECTRA73_REGISTER_PLL    0x30
-#define SPECTRA73_REGISTER_TSE    0x41
 #define SPECTRA73_REGISTER_CDI    0x50
 #define SPECTRA73_REGISTER_TCON   0x60
 #define SPECTRA73_REGISTER_TRES   0x61
-#define SPECTRA73_REGISTER_VDCS   0x82
 #define SPECTRA73_REGISTER_T_VDCS 0x84
-#define SPECTRA73_REGISTER_AGID   0x86
-#define SPECTRA73_REGISTER_CCSET  0xE0
 #define SPECTRA73_REGISTER_PWS    0xE3
-#define SPECTRA73_REGISTER_TSSET  0xE6
 #define SPECTRA73_REGISTER_CMDH   0xAA
 
-// Register Values
+// Register Values (from E Ink E6_73 sample code V1.2, 20251224)
 static uint8_t SPECTRA73_REGISTER_CMDH_V[6] = {0x49, 0x55, 0x20, 0x08, 0x09, 0x18};
-static uint8_t SPECTRA73_REGISTER_PWR_V[6] = {0x3F, 0x00, 0x32, 0x2A, 0x0E, 0x2A};
+static uint8_t SPECTRA73_REGISTER_PWR_V[1] = {0x3F};
 static uint8_t SPECTRA73_REGISTER_PSR_V[2] = {0x5F, 0x69};
-static uint8_t SPECTRA73_REGISTER_PFS_V[4] = {0x00, 0x54, 0x00, 0x44};
 static uint8_t SPECTRA73_REGISTER_BTST1_V[4] = {0x40, 0x1F, 0x1F, 0x2C};
-static uint8_t SPECTRA73_REGISTER_BTST2_V[4] = {0x6F, 0x1F, 0x16, 0x25};
 static uint8_t SPECTRA73_REGISTER_BTST3_V[4] = {0x6F, 0x1F, 0x1F, 0x22};
-static uint8_t SPECTRA73_REGISTER_IPC_V[2] = {0x00, 0x04};
-static uint8_t SPECTRA73_REGISTER_PLL_V[1] = {0x02};
-static uint8_t SPECTRA73_REGISTER_TSE_V[1] = {0x00};
-static uint8_t SPECTRA73_REGISTER_CDI_V[1] = {0x3F};
+
+// BTST2 is sent twice: the first setting during the panel init, the second one
+// right before the refresh (DRF) is triggered.
+static uint8_t SPECTRA73_REGISTER_BTST2_V1[4] = {0x6F, 0x1F, 0x17, 0x17};
+static uint8_t SPECTRA73_REGISTER_BTST2_V2[4] = {0x6F, 0x1F, 0x17, 0x49};
+
+static uint8_t SPECTRA73_REGISTER_PFS_V[4] = {0x00, 0x54, 0x00, 0x44};
 static uint8_t SPECTRA73_REGISTER_TCON_V[2] = {0x02, 0x00};
+static uint8_t SPECTRA73_REGISTER_PLL_V[1] = {0x08};
+static uint8_t SPECTRA73_REGISTER_CDI_V[1] = {0x3F};
 static uint8_t SPECTRA73_REGISTER_TRES_V[4] = {0x03, 0x20, 0x01, 0xE0};
-static uint8_t SPECTRA73_REGISTER_VDCS_V[1] = {0x1E};
-static uint8_t SPECTRA73_REGISTER_T_VDCS_V[1] = {0x01};
-static uint8_t SPECTRA73_REGISTER_AGID_V[1] = {0x00};
 static uint8_t SPECTRA73_REGISTER_PWS_V[1] = {0x2F};
-static uint8_t SPECTRA73_REGISTER_CCSET_V[1] = {0x00};
-static uint8_t SPECTRA73_REGISTER_TSSET_V[1] = {0x00};
+static uint8_t SPECTRA73_REGISTER_T_VDCS_V[1] = {0x01};
 static uint8_t SPECTRA73_REGISTER_POF_V[1] = {0x00};
 static uint8_t SPECTRA73_REGISTER_DRF_V[1] = {0x00};
+
+// PSR value used in the power down (VDD off) sequence.
+static uint8_t SPECTRA73_REGISTER_PSR_OFF_V[2] = {0x4F, 0x6E};
 
 #endif
 #endif

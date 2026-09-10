@@ -1,3 +1,30 @@
+/**
+ **************************************************
+ *
+ * @file        Inkplate7SPECTRADriver.cpp
+ * @brief       Low level driver for the Inkplate 7 Spectra 6 e-paper panel
+ *
+ *              The Inkplate 7 uses a 7.3" 800x480 Spectra 6 colour e-paper panel driven by a
+ *              single controller chip over 4-wire SPI (BS0 and BS1 pulled low select that
+ *              interface mode). The panel supply is switched by a MOSFET on the panel power
+ *              enable pin, and the peripherals are handled by the on board GPIO expander.
+ *
+ *              The frame buffer holds one 4 bit colour index per pixel, two pixels per byte,
+ *              and supports the six Spectra colours: black, white, yellow, red, blue and
+ *              green. Only full updates are supported. The register values and the refresh
+ *              sequence follow the panel manufacturer sample code.
+ *
+ *              The panel is mounted rotated by 180 degrees inside the enclosure, so the
+ *              default rotation of the driver compensates for that.
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
+ *
+ * @authors     Josip Šimun Kuči @ Soldered
+ ***************************************************/
+
 // Header guard for the Arduino include
 #ifdef ARDUINO_ESP32S3_DEV
 #include "Inkplate7SPECTRADriver.h"
@@ -135,7 +162,8 @@ void EPDDriver::display(bool _leaveOn)
 {
     displayStart();
 
-    // Power up the screen (if is not already powered on).
+    // Power up the screen (if is not already powered on). This also resets and
+    // initializes the panel if it was off.
     setPanelState(true);
 
     // Send the whole framebuffer to the panel over SPI.
@@ -161,11 +189,25 @@ void EPDDriver::display(bool _leaveOn)
 
     SPI.endTransaction();
     spiEnd();
+
+    // Power on the panel driving voltages. This must be done after the data is
+    // loaded into the panel framebuffer.
+    sendCommand(SPECTRA73_REGISTER_PON, nullptr, 0);
     waitForBusy();
+
+    // BTST2 second setting - must be sent after PON and before the refresh.
+    sendCommand(SPECTRA73_REGISTER_BTST2, SPECTRA73_REGISTER_BTST2_V2, sizeof(SPECTRA73_REGISTER_BTST2_V2));
 
     // Force display command.
     sendCommand(SPECTRA73_REGISTER_DRF, SPECTRA73_REGISTER_DRF_V, sizeof(SPECTRA73_REGISTER_DRF_V));
     waitForBusy();
+
+    // Power off the panel driving voltages.
+    sendCommand(SPECTRA73_REGISTER_POF, SPECTRA73_REGISTER_POF_V, sizeof(SPECTRA73_REGISTER_POF_V));
+    waitForBusy();
+
+    // At least 10ms must pass after the power off command.
+    delay(15ULL);
 
     // Disable power to the display (if needed).
     if (!_leaveOn)
@@ -214,19 +256,26 @@ void EPDDriver::setPanelState(uint8_t state)
 
             // Wait for the panel to be ready after the reset.
             waitForBusy();
+            delay(10ULL);
 
             // Initialze the screen by sending the magic values to the registers provided by the manufacturer.
             screenInit();
-
-            // Power up a screen.
-            sendCommand(SPECTRA73_REGISTER_PON, nullptr, 0);
-            waitForBusy();
         }
         else
         {
-            // Power off the screen.
-            sendCommand(SPECTRA73_REGISTER_POF, SPECTRA73_REGISTER_POF_V, sizeof(SPECTRA73_REGISTER_POF_V));
+            // VDD off sequence - the PSR register has to be set to these values
+            // before the panel supply is cut off.
+            sendCommand(SPECTRA73_REGISTER_PSR, SPECTRA73_REGISTER_PSR_OFF_V, sizeof(SPECTRA73_REGISTER_PSR_OFF_V));
             waitForBusy();
+
+            // Release the SPI peripheral so the MOSI pin can be driven as a GPIO.
+            SPI.end();
+
+            // Pull the communication lines low before removing the supply.
+            digitalWrite(SPECTRA73_CS_PIN, LOW);
+            digitalWrite(SPECTRA73_RST_PIN, LOW);
+            pinMode(SPECTRA73_SPI_MOSI, OUTPUT);
+            digitalWrite(SPECTRA73_SPI_MOSI, LOW);
 
             // Disable power to the screen.
             digitalWrite(SPECTRA73_PWR_EN, LOW);
@@ -237,6 +286,7 @@ void EPDDriver::setPanelState(uint8_t state)
             pinMode(SPECTRA73_RST_PIN, INPUT);
             pinMode(SPECTRA73_BUSYN_PIN, INPUT);
             pinMode(SPECTRA73_PWR_EN, INPUT);
+            pinMode(SPECTRA73_SPI_MOSI, INPUT);
         }
 
         // Update the status variable.
@@ -280,11 +330,14 @@ void EPDDriver::setIO()
  */
 void EPDDriver::resetPanel()
 {
-    // Toggle the reset pin to initialte HW reset.
+    // The panel needs a dual reset, each pulse must be at least 30ms long.
     digitalWrite(SPECTRA73_RST_PIN, LOW);
-    delay(10ULL);
+    delay(35ULL);
     digitalWrite(SPECTRA73_RST_PIN, HIGH);
-    delay(20ULL);
+    delay(35ULL);
+    digitalWrite(SPECTRA73_RST_PIN, LOW);
+    delay(35ULL);
+    digitalWrite(SPECTRA73_RST_PIN, HIGH);
 }
 
 /**
@@ -325,6 +378,10 @@ void EPDDriver::sendCommand(uint8_t _cmd, const uint8_t *_parameters, uint32_t _
 
 /**
  * @brief       screenInit sends init commands to the panel.
+ *
+ * @note        The register order and values follow the E Ink E6_73 sample code
+ *              (V1.2, 20251224) EPD_Init() function. The panel must already be
+ *              reset and out of busy state before calling this.
  */
 void EPDDriver::screenInit()
 {
@@ -332,22 +389,22 @@ void EPDDriver::screenInit()
     sendCommand(SPECTRA73_REGISTER_CMDH, SPECTRA73_REGISTER_CMDH_V, sizeof(SPECTRA73_REGISTER_CMDH_V));
     sendCommand(SPECTRA73_REGISTER_PWR, SPECTRA73_REGISTER_PWR_V, sizeof(SPECTRA73_REGISTER_PWR_V));
     sendCommand(SPECTRA73_REGISTER_PSR, SPECTRA73_REGISTER_PSR_V, sizeof(SPECTRA73_REGISTER_PSR_V));
-    sendCommand(SPECTRA73_REGISTER_PFS, SPECTRA73_REGISTER_PFS_V, sizeof(SPECTRA73_REGISTER_PFS_V));
     sendCommand(SPECTRA73_REGISTER_BTST1, SPECTRA73_REGISTER_BTST1_V, sizeof(SPECTRA73_REGISTER_BTST1_V));
-    sendCommand(SPECTRA73_REGISTER_BTST2, SPECTRA73_REGISTER_BTST2_V, sizeof(SPECTRA73_REGISTER_BTST2_V));
     sendCommand(SPECTRA73_REGISTER_BTST3, SPECTRA73_REGISTER_BTST3_V, sizeof(SPECTRA73_REGISTER_BTST3_V));
-    sendCommand(SPECTRA73_REGISTER_IPC, SPECTRA73_REGISTER_IPC_V, sizeof(SPECTRA73_REGISTER_IPC_V));
-    sendCommand(SPECTRA73_REGISTER_PLL, SPECTRA73_REGISTER_PLL_V, sizeof(SPECTRA73_REGISTER_PLL_V));
-    sendCommand(SPECTRA73_REGISTER_TSE, SPECTRA73_REGISTER_TSE_V, sizeof(SPECTRA73_REGISTER_TSE_V));
-    sendCommand(SPECTRA73_REGISTER_CDI, SPECTRA73_REGISTER_CDI_V, sizeof(SPECTRA73_REGISTER_CDI_V));
+
+    // BTST2 first setting. The second setting is sent just before the refresh.
+    sendCommand(SPECTRA73_REGISTER_BTST2, SPECTRA73_REGISTER_BTST2_V1, sizeof(SPECTRA73_REGISTER_BTST2_V1));
+
+    sendCommand(SPECTRA73_REGISTER_PFS, SPECTRA73_REGISTER_PFS_V, sizeof(SPECTRA73_REGISTER_PFS_V));
     sendCommand(SPECTRA73_REGISTER_TCON, SPECTRA73_REGISTER_TCON_V, sizeof(SPECTRA73_REGISTER_TCON_V));
+
+    // PLL must be set for the version 2 IC.
+    sendCommand(SPECTRA73_REGISTER_PLL, SPECTRA73_REGISTER_PLL_V, sizeof(SPECTRA73_REGISTER_PLL_V));
+
+    sendCommand(SPECTRA73_REGISTER_CDI, SPECTRA73_REGISTER_CDI_V, sizeof(SPECTRA73_REGISTER_CDI_V));
     sendCommand(SPECTRA73_REGISTER_TRES, SPECTRA73_REGISTER_TRES_V, sizeof(SPECTRA73_REGISTER_TRES_V));
-    sendCommand(SPECTRA73_REGISTER_VDCS, SPECTRA73_REGISTER_VDCS_V, sizeof(SPECTRA73_REGISTER_VDCS_V));
-    sendCommand(SPECTRA73_REGISTER_T_VDCS, SPECTRA73_REGISTER_T_VDCS_V, sizeof(SPECTRA73_REGISTER_T_VDCS_V));
-    sendCommand(SPECTRA73_REGISTER_AGID, SPECTRA73_REGISTER_AGID_V, sizeof(SPECTRA73_REGISTER_AGID_V));
     sendCommand(SPECTRA73_REGISTER_PWS, SPECTRA73_REGISTER_PWS_V, sizeof(SPECTRA73_REGISTER_PWS_V));
-    sendCommand(SPECTRA73_REGISTER_CCSET, SPECTRA73_REGISTER_CCSET_V, sizeof(SPECTRA73_REGISTER_CCSET_V));
-    sendCommand(SPECTRA73_REGISTER_TSSET, SPECTRA73_REGISTER_TSSET_V, sizeof(SPECTRA73_REGISTER_TSSET_V));
+    sendCommand(SPECTRA73_REGISTER_T_VDCS, SPECTRA73_REGISTER_T_VDCS_V, sizeof(SPECTRA73_REGISTER_T_VDCS_V));
 }
 
 
@@ -474,6 +531,9 @@ double EPDDriver::readBattery()
  */
 void EPDDriver::waitForBusy()
 {
+    // Give the panel some time to pull the BUSYN pin low after the last command.
+    delay(2ULL);
+
     // Wait until the screen is ready to accept new commads.
     // This will be indicated by pulling the BUSYN pin to high.
     while (!digitalRead(SPECTRA73_BUSYN_PIN))

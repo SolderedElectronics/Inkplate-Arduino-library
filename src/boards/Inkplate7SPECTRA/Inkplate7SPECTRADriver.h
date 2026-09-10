@@ -1,3 +1,30 @@
+/**
+ **************************************************
+ *
+ * @file        Inkplate7SPECTRADriver.h
+ * @brief       Low level driver for the Inkplate 7 Spectra 6 e-paper panel
+ *
+ *              The Inkplate 7 uses a 7.3" 800x480 Spectra 6 colour e-paper panel driven by a
+ *              single controller chip over 4-wire SPI (BS0 and BS1 pulled low select that
+ *              interface mode). The panel supply is switched by a MOSFET on the panel power
+ *              enable pin, and the peripherals are handled by the on board GPIO expander.
+ *
+ *              The frame buffer holds one 4 bit colour index per pixel, two pixels per byte,
+ *              and supports the six Spectra colours: black, white, yellow, red, blue and
+ *              green. Only full updates are supported. The register values and the refresh
+ *              sequence follow the panel manufacturer sample code.
+ *
+ *              The panel is mounted rotated by 180 degrees inside the enclosure, so the
+ *              default rotation of the driver compensates for that.
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
+ *
+ * @authors     Josip Šimun Kuči @ Soldered
+ ***************************************************/
+
 #ifndef __INKPLATE7SPECTRA_DRIVER_H__
 #define __INKPLATE7SPECTRA_DRIVER_H__
 
