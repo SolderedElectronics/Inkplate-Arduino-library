@@ -18,7 +18,7 @@
 */
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_ESP32S3_DEV
+#ifndef ARDUINO_INKPLATE7SPECTRA
 #error "Wrong board selection for this example, please select Soldered Inkplate 7SPECTRA in the boards menu."
 #endif
 

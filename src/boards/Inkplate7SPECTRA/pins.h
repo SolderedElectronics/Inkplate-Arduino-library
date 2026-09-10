@@ -1,7 +1,7 @@
 #ifndef __INKPLATE7SPECTRA_PINS_H__
 #define __INKPLATE7SPECTRA_PINS_H__
 // Header guard for the Arduino include
-#ifdef ARDUINO_ESP32S3_DEV
+#ifdef ARDUINO_INKPLATE7SPECTRA
 #include "soc/gpio_reg.h"
 #include "soc/gpio_struct.h"
 #define IO_INT_ADDR 0x20

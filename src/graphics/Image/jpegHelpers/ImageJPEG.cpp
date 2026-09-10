@@ -14,7 +14,7 @@
  * @authors     Soldered
  ***************************************************/
 #if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE13SPECTRA) &&           \
-    !defined(ARDUINO_ESP32S3_DEV)
+    !defined(ARDUINO_INKPLATE7SPECTRA)
 #include "../../../system/defines.h"
 #include "Inkplate.h"
 #include "../Image.h"

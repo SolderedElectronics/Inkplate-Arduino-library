@@ -26,7 +26,7 @@
  ***************************************************/
 
 // Header guard for the Arduino include
-#ifdef ARDUINO_ESP32S3_DEV
+#ifdef ARDUINO_INKPLATE7SPECTRA
 #include "Inkplate7SPECTRADriver.h"
 #include "Inkplate.h"
 #include "../../system/inkplateSemaphore.h"

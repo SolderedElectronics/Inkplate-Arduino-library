@@ -30,7 +30,7 @@
 #define INKPLATE6PLUS_WAVEFORM1 40
 
 #if !defined(ARDUINO_INKPLATECOLOR) && !defined(ARDUINO_INKPLATE2) && !defined(ARDUINO_INKPLATE13SPECTRA) &&           \
-    !defined(ARDUINO_ESP32S3_DEV)
+    !defined(ARDUINO_INKPLATE7SPECTRA)
 #define BLACK 1
 #define WHITE 0
 #else

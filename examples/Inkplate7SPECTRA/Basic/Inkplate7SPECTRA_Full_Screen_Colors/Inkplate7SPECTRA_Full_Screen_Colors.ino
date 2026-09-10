@@ -13,7 +13,7 @@
 
 #include "Inkplate.h"
 
-#ifndef ARDUINO_ESP32S3_DEV
+#ifndef ARDUINO_INKPLATE7SPECTRA
 #error "Wrong board selection for this example, please select Soldered Inkplate 7SPECTRA in the boards menu."
 #endif
 
