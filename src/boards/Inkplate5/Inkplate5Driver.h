@@ -1,3 +1,26 @@
+/**
+ **************************************************
+ *
+ * @file        Inkplate5Driver.h
+ * @brief       Low level driver for the Inkplate 5 e-paper panel
+ *
+ *              The Inkplate 5 uses a 5.2" 960x540 monochrome e-paper panel driven over a
+ *              parallel interface. The panel data lines are driven directly through the ESP32
+ *              GPIO registers, the control lines go through the on board GPIO expander, and
+ *              the TPS65186 PMIC generates the e-paper driving rails and reports the panel
+ *              temperature.
+ *
+ *              Both 1 bit (black and white, partial updates supported) and 3 bit (8 levels of
+ *              grey) display modes are available. The greyscale waveforms are in waveforms.h.
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
+ *
+ * @authors     Josip Šimun Kuči @ Soldered
+ ***************************************************/
+
 // Header guard for the Arduino include
 #ifdef ARDUINO_INKPLATE5
 

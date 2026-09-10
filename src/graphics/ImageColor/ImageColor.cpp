@@ -6,16 +6,16 @@
  *              https://github.com/SolderedElectronics/Inkplate-Arduino-library
  *              For more info about the product, please check: https://docs.soldered.com/inkplate/
  *
- *              This code is released under the GNU Lesser General Public
- *License v3.0: https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the
- *LICENSE file included with this example. If you have any questions about
- *licensing, please contact assistance@soldered.com Distributed as-is; no
- *warranty is given.
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
  *
  * @authors     Soldered
  ***************************************************/
 #pragma once
-#if defined(ARDUINO_INKPLATE13SPECTRA) || defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE2)
+#if defined(ARDUINO_INKPLATE13SPECTRA) || defined(ARDUINO_ESP32S3_DEV) || defined(ARDUINO_INKPLATECOLOR) ||            \
+    defined(ARDUINO_INKPLATE2)
 #include "Inkplate.h"
 #include "ImageColor.h"
 #include "../Tjpeg/TJpg_Decoder.h"
@@ -178,7 +178,7 @@ bool ImageColor::draw(const char *path, int x, int y, bool dither, bool invert)
  */
 bool ImageColor::draw(const uint8_t *buf, int x, int y, int16_t w, int16_t h, uint8_t c, uint8_t bg)
 {
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE13SPECTRA)
+#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE13SPECTRA) || defined(ARDUINO_ESP32S3_DEV)
     drawBitmap3Bit(x, y, buf, w, h);
     return 1;
 #else

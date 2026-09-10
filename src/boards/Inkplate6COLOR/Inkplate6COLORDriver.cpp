@@ -1,3 +1,26 @@
+/**
+ **************************************************
+ *
+ * @file        Inkplate6COLORDriver.cpp
+ * @brief       Low level driver for the Inkplate 6 COLOR e-paper panel
+ *
+ *              The Inkplate 6 COLOR uses a 5.83" 600x448 seven colour e-paper panel driven
+ *              over SPI. The panel controller generates its own driving voltages, so the
+ *              driver only handles the panel power enable, reset, the busy line and the SPI
+ *              traffic, while the on board GPIO expander takes care of the peripherals.
+ *
+ *              The frame buffer holds one 4 bit colour index per pixel, two pixels per byte,
+ *              and supports the seven panel colours.
+ *              Only full updates are supported. The board also exposes the touchpad buttons.
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
+ *
+ * @authors     Josip Šimun Kuči @ Soldered
+ ***************************************************/
+
 // Header guard for the Arduino include
 #ifdef ARDUINO_INKPLATECOLOR
 #include "Inkplate6COLORDriver.h"

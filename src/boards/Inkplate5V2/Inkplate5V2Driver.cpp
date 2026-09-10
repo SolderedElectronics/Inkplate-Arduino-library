@@ -1,3 +1,26 @@
+/**
+ **************************************************
+ *
+ * @file        Inkplate5V2Driver.cpp
+ * @brief       Low level driver for the Inkplate 5 V2 e-paper panel
+ *
+ *              The Inkplate 5 V2 uses a 5.7" 1280x720 monochrome e-paper panel driven over a
+ *              parallel interface. Because of the higher resolution, the pixel data is clocked
+ *              out using the ESP32 I2S peripheral in parallel mode (USES_I2S) instead of plain
+ *              GPIO writes. The control lines go through the on board GPIO expander and the
+ *              TPS65186 PMIC generates the e-paper driving rails.
+ *
+ *              Both 1 bit (black and white, partial updates supported) and 3 bit (8 levels of
+ *              grey) display modes are available. The greyscale waveforms are in waveforms.h.
+ *
+ *              This code is released under the GNU Lesser General Public License v3.0:
+ *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
+ *              included with this example. If you have any questions about licensing, please
+ *              contact assistance@soldered.com Distributed as-is; no warranty is given.
+ *
+ * @authors     Josip Šimun Kuči @ Soldered
+ ***************************************************/
+
 // Header guard for the Arduino include
 #ifdef ARDUINO_INKPLATE5V2
 #include "Inkplate5V2Driver.h"
