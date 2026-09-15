@@ -2,8 +2,8 @@
  **************************************************
  * @file        Inkplate4TEMPERA_Custom_Diacritics.ino
  * @brief       HOW-TO: add custom Unicode glyphs (German ä ö ü ß Ä Ö Ü here)
- *              to a GFX font, for Soldered Inkplate 4TEMPERA. See
- *              extras/fontconvert/make_font.py to do this for any language.
+ *              to a GFX font, for Soldered Inkplate 4TEMPERA, using the Soldered
+ *              Font Converter tool.
  *
  * @details     THE PROBLEM
  *              ------------
@@ -23,45 +23,34 @@
  *              0xA4, and print() would look up (and draw) two wrong glyphs
  *              at codes 0xC3 and 0xA4 instead of the one you wanted.
  *
- *              THE FIX - ONE COMMAND, ANY LANGUAGE
+ *              THE FIX - THE FONT CONVERTER TOOL
  *              --------------------------------------
- *              extras/fontconvert/make_font.py builds a complete GFXfont
- *              header (7-bit ASCII + whatever extra characters you name)
- *              straight from a .ttf, in one step. Its only dependency is the
- *              "freetype-py" package - no C compiler, no hunting for
- *              FreeType dev headers/libs per platform. Easiest way to run it
- *              (make_font.sh/.bat set up a local, throwaway virtualenv next
- *              to themselves and install freetype-py into THAT, not your
- *              system Python - safe to re-run, nothing global gets touched):
+ *              The Soldered Font Converter builds a complete GFXfont header
+ *              (7-bit ASCII + whatever extra characters you name) straight
+ *              from a .ttf, right in the browser - no install, no compiler.
  *
- *                macOS/Linux:  extras/fontconvert/make_font.sh  FreeSans.ttf ä ö ü ß Ä Ö Ü --size 18 --out FreeSansGerman18pt7b.h --name FreeSansGerman18pt7b
- *                Windows:      extras\fontconvert\make_font.bat FreeSans.ttf ä ö ü ß Ä Ö Ü --size 18 --out FreeSansGerman18pt7b.h --name FreeSansGerman18pt7b
+ *              Tool workflow:
+ *              1. Open the Font Converter at https://tools.soldered.com/tools/font-converter/
+ *              2. Upload a .ttf that contains the characters you need (GNU
+ *                 FreeFont has broad Unicode coverage, including Latin-1
+ *                 Supplement where ä/ö/ü/ß/Ä/Ö/Ü live, and is a good first
+ *                 place to look: https://savannah.gnu.org/projects/freefont/)
+ *              3. Set the size in pt and a header/font name (e.g.
+ *                 FreeSansGerman18pt7b).
+ *              4. In "Extra characters", type the non-ASCII characters to
+ *                 add (here: ä ö ü ß Ä Ö Ü).
+ *              5. Enter sample text to preview, then click Convert.
+ *              6. Download the generated header file (FreeSansGerman18pt7b.h)
+ *                 and place it in the same folder as this sketch.
  *
- *              (or set up the venv yourself and call make_font.py directly -
- *              see its docstring for the manual steps and full option list)
- *
- *              That's the exact command used to generate
- *              FreeSansGerman18pt7b.h in this folder. The script prints the
- *              byte code it assigned each character - that's where the CH_*
- *              #defines below came from. For a different language, swap the
- *              character list (and the .ttf path if you want a different
- *              source font); nothing else changes. See make_font.py's own
- *              docstring for the full algorithm explanation, including the
- *              two rules that matter if you ever want to understand or
- *              hand-edit the output:
- *
- *              1. Every extra character must actually exist in the source
- *                 .ttf - the script errors out loudly (not silently) if one
- *                 is missing.
- *              2. GFXfont requires an entry for EVERY byte code between
- *                 first and last, with nothing skipped - there's no sparse
- *                 lookup, just direct array indexing. Leave a gap and every
- *                 glyph after it silently renders as its neighbour's shape,
- *                 with the very last one reading past the end of the array
- *                 (visual noise on screen). make_font.py sidesteps this by
- *                 always assigning new codes starting right after the last
- *                 ASCII one (0x7E), counting up with zero gaps - here that's
- *                 0x7F through 0x85.
+ *              That's how FreeSansGerman18pt7b.h in this folder was
+ *              generated. The tool assigns each extra character a byte code
+ *              right after the last ASCII one (0x7E), counting up with zero
+ *              gaps - here that's 0x7F through 0x85 - and shows the exact
+ *              CH_* #defines below (and an example sketch using them) so you
+ *              can copy them straight in. For a different language, swap the
+ *              character list (and the .ttf if you want a different source
+ *              font); nothing else changes.
  *
  *              In the sketch, print the extra characters via their assigned
  *              byte codes - either display.write((uint8_t)0x7F), or (used
@@ -71,22 +60,20 @@
  *              text "chzt". Never type the accented character itself into
  *              the string - see "THE PROBLEM" above for why.
  *
- *              GNU FreeFont (the family Fonts/Free*.h were built from) has
- *              broad Unicode coverage, including Latin-1 Supplement (which
- *              is where ä/ö/ü/ß/Ä/Ö/Ü live) and Latin Extended-A (accented
- *              Central/Eastern European letters) - it's a good first place
- *              to look for a source .ttf: https://savannah.gnu.org/projects/freefont/
- *
  * Requirements:
  * - Board:      Soldered Inkplate 4TEMPERA
  * - Hardware:   Inkplate 4TEMPERA, USB cable
- * - Extra:      None
+ * - Extra:      The font header file (FreeSansGerman18pt7b.h) generated by
+ *               the tool
  *
  * How to use:
- * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate4TEMPERA"
+ * 1) Generate FreeSansGerman18pt7b.h using the Font Converter at
+ *    https://tools.soldered.com/tools/font-converter/
+ * 2) Place FreeSansGerman18pt7b.h in the same folder as this sketch.
+ * 3) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate4TEMPERA"
  *    from Tools -> Board.
- * 2) Upload the sketch to Inkplate 4TEMPERA.
- * 3) The German sentence and the full extra-glyph legend appear on screen.
+ * 4) Upload the sketch to Inkplate 4TEMPERA.
+ * 5) The German sentence and the full extra-glyph legend appear on screen.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/4tempera/quick-start-guide/
@@ -94,6 +81,8 @@
  *              https://docs.soldered.com/inkplate/
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
+ * @note        Font converter tool:
+ *              https://tools.soldered.com/tools/font-converter/
  *
  * @author      Soldered Electronics
  * @date        2026-08-27
@@ -107,8 +96,8 @@
 #include "FreeSansGerman18pt7b.h" // FreeSans18pt7b + ä ö ü ß Ä Ö Ü at 0x7F-0x85
 
 // Byte codes the extra glyphs were placed at inside FreeSansGerman18pt7b.h
-// (printed by make_font.py when the font was generated - see header comment
-// above). Used as adjacent string literals, e.g. CH_AE "rger" -> "\x83" "rger".
+// (shown by the Font Converter tool when the font was generated - see header
+// comment above). Used as adjacent string literals, e.g. CH_AE "rger" -> "\x83" "rger".
 #define CH_ae "\x7f" // ä  U+00E4
 #define CH_oe "\x80" // ö  U+00F6
 #define CH_ue "\x81" // ü  U+00FC
