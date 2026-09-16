@@ -15,9 +15,56 @@ const char *WSSID = {""};
 const char *WPASS = {""};
 
 // Change this to your used slave device
-const uint8_t easyCDeviceAddress = 0x76;
+const uint8_t qwiicDeviceAddress = 0x76;
 
 const int TOUCHSCREEN_TIMEOUT = 30;
+
+// Print the result of a single test on the serial in a machine readable format ("NAME:PASS" / "NAME:FAIL").
+void testResult(const char *_testName, bool _passed)
+{
+    Serial.print(_testName);
+    Serial.println(_passed ? ":PASS" : ":FAIL");
+}
+
+// Ask the operator to confirm a visual/audible check over the serial.
+// Prints the result as "NAME:PASS" or "NAME:FAIL". Returns 1 on 'y', 0 on 'n' or on timeout.
+int askOperator(const char *_testName, const char *_question, uint8_t _timeout)
+{
+    // Drop anything left in the serial buffer from a previous test.
+    while (Serial.available())
+        Serial.read();
+
+    Serial.print(_testName);
+    Serial.print(": ");
+    Serial.print(_question);
+    Serial.print(" (y/n, ");
+    Serial.print(_timeout);
+    Serial.println("s)");
+
+    unsigned long _timeoutStart = millis();
+    while ((unsigned long)(millis() - _timeoutStart) < (_timeout * 1000UL))
+    {
+        if (Serial.available())
+        {
+            char _answer = Serial.read();
+            if ((_answer == 'y') || (_answer == 'Y'))
+            {
+                testResult(_testName, true);
+                return 1;
+            }
+            if ((_answer == 'n') || (_answer == 'N'))
+            {
+                testResult(_testName, false);
+                return 0;
+            }
+        }
+        delay(1);
+    }
+
+    // No answer from the operator, treat it as a failed test.
+    testResult(_testName, false);
+    return 0;
+}
 
 void testPeripheral()
 {
@@ -35,10 +82,19 @@ void testPeripheral()
     if (!(Wire.endTransmission() == 0) || !display.isPowerGood()) // Check if there was an error in communication
     {
         Serial.println("- TPS Fail!");
+        testResult("TPS65186", false);
         failHandler();
     }
-    display.println("- TPS65186: OK");
+    display.println("- TPS65186: PASS");
+    testResult("TPS65186", true);
     display.partialUpdate(0, 1);
+
+    // Check if the screen is showing the image properly. There should be a black rectangle around the display area
+    // and 4 small rectangles in every corner of the screen.
+    if (!checkScreenBorder())
+    {
+        failHandler();
+    }
 
     // Check I/O expander internal
     display.printf("- I/O Expander Internal:");
@@ -49,12 +105,14 @@ void testPeripheral()
     if (Wire.endTransmission() ==
         0) // Check if there was an error in communication and print out the results on display.
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("IO_EXP_INT", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("IO_EXP_INT", false);
         failHandler();
     }
 
@@ -68,12 +126,14 @@ void testPeripheral()
     if (Wire.endTransmission() ==
         0) // Check if there was an error in communication and print out the results on display.
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("IO_EXP_EXT", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("IO_EXP_EXT", false);
         failHandler();
     }
 #endif
@@ -87,18 +147,24 @@ void testPeripheral()
     display.println("- Frontlight test (visual check)");
     display.partialUpdate(0, 1);
     delay(1000);
+    if (!askOperator("FRONTLIGHT", "Is the frontlight turned on?"))
+    {
+        failHandler();
+    }
 
     // Check the touchscreen (init and touch)
     display.print("- Touchscreen init: ");
     display.partialUpdate(0, 1);
     if (checkTouch(TOUCHSCREEN_TIMEOUT))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("TOUCHSCREEN", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("TOUCHSCREEN", false);
         failHandler();
     }
 
@@ -109,12 +175,14 @@ void testPeripheral()
     display.partialUpdate(0, 1);
     if (checkMicroSDCard())
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("MICROSD", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("MICROSD", false);
         failHandler();
     }
 
@@ -123,12 +191,14 @@ void testPeripheral()
     display.partialUpdate(0, 1);
     if (checkWiFi(WSSID, WPASS, WTIMEOUT))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("WIFI", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("WIFI", false);
         failHandler();
     }
 
@@ -136,28 +206,32 @@ void testPeripheral()
     display.print("- PCF85063 RTC: ");
     if (rtcCheck())
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("RTC", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("RTC", false);
         failHandler();
     }
 
 
-    // Check I2C (easyc)
-    // A slave must be connected via easyC address (0x30)
-    display.print("- I2C (easyC): ");
+    // Check I2C (Qwiic)
+    // A slave must be connected via Qwiic address (0x30)
+    display.print("- I2C (Qwiic): ");
     display.partialUpdate(0, 1);
-    if (checkI2C(easyCDeviceAddress))
+    if (checkI2C(qwiicDeviceAddress))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("QWIIC", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("QWIIC", false);
         failHandler();
     }
 
@@ -178,6 +252,7 @@ void testPeripheral()
     else
     {
         display.println("FAIL");
+        testResult("TEMPERATURE", false);
         failHandler();
     }
 #else
@@ -186,7 +261,8 @@ void testPeripheral()
     display.partialUpdate(0, 1);
     if (checkBatteryAndTemp(&temperature, &batteryVoltage))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("BATTERY_TEMP", true);
         display.print("- Battery voltage: ");
         display.print(batteryVoltage);
         display.println("V");
@@ -198,6 +274,7 @@ void testPeripheral()
     else
     {
         display.println("FAIL");
+        testResult("TEMPERATURE", false);
         failHandler();
     }
 #endif
@@ -216,6 +293,7 @@ void testPeripheral()
         {
             display.println("WAKEUP not pressed for 30 seconds!");
             display.partialUpdate(0, 1);
+            testResult("WAKEUP", false);
             failHandler();
         }
 
@@ -227,6 +305,7 @@ void testPeripheral()
     }
 
     display.println("WAKEUP button pressed!");
+    testResult("WAKEUP", true);
     display.partialUpdate(0, 1);
 
 
@@ -235,15 +314,45 @@ void testPeripheral()
     // Test Touchpads
     if (touchPads(TOUCHPADS_TIMEOUT))
     {
-        display.println(" OK");
+        display.print(" ");
+        display.println("PASS");
+        testResult("TOUCHPADS", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println(" FAIL");
+        testResult("TOUCHPADS", false);
         failHandler();
     }
 #endif
+}
+
+// Check if the screen is showing the image correctly. The image should not have any shift to the left or right.
+// In the corners of the screen, there should be a small rectangle.
+int checkScreenBorder()
+{
+    // Size of small rectangles in the corners of the screen (minimum is 3, maximum is 7)
+    int _smallRectSize = 6;
+
+    // Display an info message on the screen
+    display.println("Check corners and border (visual check)");
+
+    // Draw a black rectangle from edge to edge of the screen
+    display.drawRect(0, 0, display.width(), display.height(), BLACK);
+
+    // Now draw 4 small rectangles in all four corners of the screen
+    display.drawRect(0, 0, _smallRectSize, _smallRectSize, BLACK);
+    display.drawRect(display.width() - _smallRectSize, 0, _smallRectSize, _smallRectSize, BLACK);
+    display.drawRect(0, display.height() - _smallRectSize, _smallRectSize, _smallRectSize, BLACK);
+    display.drawRect(display.width() - _smallRectSize, display.height() - _smallRectSize, _smallRectSize,
+                     _smallRectSize, BLACK);
+
+    // Send image to the screen
+    display.partialUpdate(false, true);
+
+    // Let the operator confirm the border and the corners over the serial.
+    return askOperator("SCREEN", "Is the border drawn with all 4 corner rectangles?");
 }
 
 int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)
@@ -486,6 +595,9 @@ int checkTouch(uint8_t _tsTimeout)
 // Show a message and stop the code from executing.
 void failHandler(bool printErrorOnSerial)
 {
+    // Report the overall result of the factory test.
+    Serial.println("INKPLATE:FAIL");
+
     if (printErrorOnSerial)
     {
         Serial.println(" -> Test stopped!");

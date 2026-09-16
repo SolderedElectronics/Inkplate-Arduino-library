@@ -7,7 +7,7 @@ const char *WSSID = {"Soldered-testingPurposes"};
 const char *WPASS = {"Testing443"};
 
 // Change this to your used slave device
-const uint8_t easyCDeviceAddress = 0x30;
+const uint8_t qwiicDeviceAddress = 0x30;
 
 const int TOUCHSCREEN_TIMEOUT = 30;
 const int GESTURE_TIMEOUT = 30;
@@ -51,6 +51,53 @@ bool checkGesture(uint8_t *_gesturePtr)
     return false;
 }
 
+// Print the result of a single test on the serial in a machine readable format ("NAME:PASS" / "NAME:FAIL").
+void testResult(const char *_testName, bool _passed)
+{
+    Serial.print(_testName);
+    Serial.println(_passed ? ":PASS" : ":FAIL");
+}
+
+// Ask the operator to confirm a visual/audible check over the serial.
+// Prints the result as "NAME:PASS" or "NAME:FAIL". Returns 1 on 'y', 0 on 'n' or on timeout.
+int askOperator(const char *_testName, const char *_question, uint8_t _timeout)
+{
+    // Drop anything left in the serial buffer from a previous test.
+    while (Serial.available())
+        Serial.read();
+
+    Serial.print(_testName);
+    Serial.print(": ");
+    Serial.print(_question);
+    Serial.print(" (y/n, ");
+    Serial.print(_timeout);
+    Serial.println("s)");
+
+    unsigned long _timeoutStart = millis();
+    while ((unsigned long)(millis() - _timeoutStart) < (_timeout * 1000UL))
+    {
+        if (Serial.available())
+        {
+            char _answer = Serial.read();
+            if ((_answer == 'y') || (_answer == 'Y'))
+            {
+                testResult(_testName, true);
+                return 1;
+            }
+            if ((_answer == 'n') || (_answer == 'N'))
+            {
+                testResult(_testName, false);
+                return 0;
+            }
+        }
+        delay(1);
+    }
+
+    // No answer from the operator, treat it as a failed test.
+    testResult(_testName, false);
+    return 0;
+}
+
 void testPeripheral()
 {
     // Set display for test report
@@ -68,11 +115,13 @@ void testPeripheral()
     {
         // Notify over Serial because the TPS doesn't work
         Serial.println("- TPS Fail!");
+        testResult("TPS65186", false);
         failHandler();
     }
     // For adding a margin to the text, blank spaces are printed in the same line before any text
     ADD_PRINT_MARGIN
-    display.println("- TPS65186: OK");
+    display.println("- TPS65186: PASS");
+    testResult("TPS65186", true);
     display.partialUpdate(0, 1);
 
     // Check I/O expander internal
@@ -85,12 +134,14 @@ void testPeripheral()
     if (Wire.endTransmission() ==
         0) // Check if there was an error in communication and print out the results on display.
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("IO_EXP_INT", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("IO_EXP_INT", false);
         failHandler();
     }
 
@@ -104,12 +155,14 @@ void testPeripheral()
     // Check if there was an error in communication and print out the results on display.
     if (Wire.endTransmission() == 0)
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("IO_EXP_EXT", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("IO_EXP_EXT", false);
         failHandler();
     }
 
@@ -121,6 +174,10 @@ void testPeripheral()
     display.println("- Frontlight test (visual check)");
     display.partialUpdate(0, 1);
     delay(1000);
+    if (!askOperator("FRONTLIGHT", "Is the frontlight turned on?"))
+    {
+        failHandler();
+    }
 
     // Check the touchscreen (init and touch)
     ADD_PRINT_MARGIN
@@ -128,12 +185,14 @@ void testPeripheral()
     display.partialUpdate(0, 1);
     if (checkTouch(TOUCHSCREEN_TIMEOUT))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("TOUCHSCREEN", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("TOUCHSCREEN", false);
         failHandler();
     }
 
@@ -143,12 +202,14 @@ void testPeripheral()
     display.partialUpdate(0, 1);
     if (checkMicroSDCard())
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("MICROSD", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("MICROSD", false);
         failHandler();
     }
     // Great, put it back to sleep to save power
@@ -160,12 +221,14 @@ void testPeripheral()
     display.partialUpdate(0, 1);
     if (checkWiFi(WSSID, WPASS, WTIMEOUT))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("WIFI", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("WIFI", false);
         failHandler();
     }
 
@@ -174,28 +237,32 @@ void testPeripheral()
     display.print("- PCF85063 RTC: ");
     if (rtcCheck())
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("RTC", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("RTC", false);
         failHandler();
     }
 
-    // Check I2C (easyc)
-    // A slave must be connected via easyC address (0x30)
+    // Check I2C (Qwiic)
+    // A slave must be connected via Qwiic address (0x30)
     ADD_PRINT_MARGIN
-    display.print("- I2C (easyC): ");
+    display.print("- I2C (Qwiic): ");
     display.partialUpdate(0, 1);
-    if (checkI2C(easyCDeviceAddress))
+    if (checkI2C(qwiicDeviceAddress))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("QWIIC", true);
         display.partialUpdate(0, 1);
     }
     else
     {
         display.println("FAIL");
+        testResult("QWIIC", false);
         failHandler();
     }
 
@@ -206,7 +273,8 @@ void testPeripheral()
     display.partialUpdate(0, 1);
     if (checkTemp(&temperature))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("TEMPERATURE", true);
         ADD_PRINT_MARGIN
         ADD_PRINT_MARGIN
         display.print("- Temperature: ");
@@ -218,6 +286,7 @@ void testPeripheral()
     {
         ADD_PRINT_MARGIN
         display.println("FAIL");
+        testResult("TEMPERATURE", false);
         failHandler();
     }
 
@@ -228,7 +297,8 @@ void testPeripheral()
     display.partialUpdate(0, 1);
     if (checkBME(&bmeTemp, &bmeHumidity, &bmePres))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("BME688", true);
         ADD_PRINT_MARGIN
         ADD_PRINT_MARGIN
         display.print("- Temperature: ");
@@ -249,6 +319,7 @@ void testPeripheral()
     {
         ADD_PRINT_MARGIN
         display.println("FAIL");
+        testResult("BME688", false);
         failHandler();
     }
     // Put it back to sleep to save power
@@ -261,7 +332,8 @@ void testPeripheral()
     display.partialUpdate(0, 1);
     if (checkFuelGauge(&fuelGaugeSOC, &fuelGaugeVolts))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("FUEL_GAUGE", true);
         ADD_PRINT_MARGIN
         ADD_PRINT_MARGIN
         display.print("- SOC: ");
@@ -276,6 +348,7 @@ void testPeripheral()
     {
         ADD_PRINT_MARGIN
         display.println("FAIL");
+        testResult("FUEL_GAUGE", false);
         failHandler();
     }
     // Put it back to sleep
@@ -289,7 +362,8 @@ void testPeripheral()
     display.partialUpdate(0, 1);
     if (checkGyroscope(&gyroAccX, &gyroAccY, &gyroAccZ))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("GYROSCOPE", true);
         ADD_PRINT_MARGIN
         ADD_PRINT_MARGIN
         display.print("- AccX: ");
@@ -308,6 +382,7 @@ void testPeripheral()
     {
         ADD_PRINT_MARGIN
         display.println("FAIL");
+        testResult("GYROSCOPE", false);
         failHandler();
     }
     // Put it back to sleep
@@ -320,7 +395,8 @@ void testPeripheral()
     String gesture = " ";
     if (checkGestureSensor(GESTURE_TIMEOUT, &gesture))
     {
-        display.println("OK");
+        display.println("PASS");
+        testResult("GESTURE", true);
         ADD_PRINT_MARGIN
         ADD_PRINT_MARGIN
         display.print("- Gesture: ");
@@ -330,6 +406,7 @@ void testPeripheral()
     {
         ADD_PRINT_MARGIN
         display.println("FAIL");
+        testResult("GESTURE", false);
         failHandler();
     }
     // Put it back to sleep
@@ -340,6 +417,10 @@ void testPeripheral()
     display.println("- Check buzzer (audible check): ");
     display.partialUpdate(0, 1);
     checkBuzzer();
+    if (!askOperator("BUZZER", "Did the buzzer beep?"))
+    {
+        failHandler();
+    }
 
     // Text wake up button
     long beginWakeUpTest = millis();
@@ -357,6 +438,7 @@ void testPeripheral()
             ADD_PRINT_MARGIN
             display.println("WAKEUP not pressed for 30 seconds!");
             display.partialUpdate(0, 1);
+            testResult("WAKEUP", false);
             failHandler();
         }
 
@@ -369,6 +451,7 @@ void testPeripheral()
 
     ADD_PRINT_MARGIN
     display.println("WAKEUP button pressed!");
+    testResult("WAKEUP", true);
     display.partialUpdate(0, 1);
 }
 
@@ -732,6 +815,9 @@ int checkGyroscope(float *acX, float *acY, float *acZ)
 // Show a message and stop the code from executing.
 void failHandler(bool printErrorOnSerial)
 {
+    // Report the overall result of the factory test.
+    Serial.println("INKPLATE:FAIL");
+
     if (printErrorOnSerial)
     {
         Serial.println(" -> Test stopped!");

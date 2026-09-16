@@ -1,8 +1,8 @@
 /**
  **************************************************
- * @file        InkplateEasyCTester.ino
+ * @file        InkplateQwiicTester.ino
  * @brief       Sketch for converting a Dasduino board (Dasduino Core or Dasduino
- *              ConnectPlus) into a slave I2C device used for testing the easyC
+ *              ConnectPlus) into a slave I2C device used for testing the Qwiic
  *              connector.
  *
  * @details     It will respond on 0x30 I2C address by I2C ACK and it will also
@@ -14,7 +14,7 @@
  * - Hardware:   Dasduino Core (https://soldered.com/product/dasduino-core/) or
  *               Dasduino ConnectPlus
  *               (https://soldered.com/product/dasduino-connectplus/),
- *               easyC cable (https://soldered.com/product/easyc-cable-20cm/)
+ *               Qwiic cable (https://soldered.com/product/easyc-cable-20cm/)
  * - Library:    Soldered Library For WS2812 LEDs
  *               (https://github.com/SolderedElectronics/Soldered-WS2812-Smart-Leds-Arduino-Library)
  * - Extra:      Dasduino Board Definition installed in Arduino IDE
@@ -23,12 +23,12 @@
  * How to use:
  * 1) Install the Dasduino board definition and the WS2812 library.
  * 2) Select your Dasduino board in Tools -> Board and upload this sketch.
- * 3) Connect the Dasduino to the Inkplate easyC connector with an easyC cable.
+ * 3) Connect the Dasduino to the Inkplate Qwiic connector with a Qwiic cable.
  * 4) The Dasduino answers on I2C address 0x30 and blinks its WS2812 LED green
  *    on every received transfer.
  *
- * @note        Quick start guide:
- *              https://docs.soldered.com/inkplate/5v2/quick-start-guide/
+ * @note        Quick start guide: Inkplate 5 has no dedicated page yet,
+ *              see https://docs.soldered.com/inkplate/
  * @note        Want to learn more about Inkplate? Visit
  *              https://docs.soldered.com/inkplate/
  * @note        Looking to get support? Write on our community forum:
@@ -44,7 +44,7 @@
  ***************************************************/
 
 // Block usage of this code on Inkplate boards.
-#ifndef ARDUINO_INKPLATE5V2
+#ifndef ARDUINO_INKPLATE5
 
 // Include a Wire library (for I2C communication)
 #include "Wire.h"

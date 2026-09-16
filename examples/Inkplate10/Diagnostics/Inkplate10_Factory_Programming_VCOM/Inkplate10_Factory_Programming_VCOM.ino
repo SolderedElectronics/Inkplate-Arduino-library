@@ -9,11 +9,11 @@
  *
  *              Tests will also be done. To pass all tests:
  *              - Edit the WiFi information in test.cpp.
- *              - Connect a slave device via EasyC on address 0x30 (you may
- *                change this in test.cpp also). In the InkplateEasyCTester
+ *              - Connect a slave device via Qwiic on address 0x30 (you may
+ *                change this in test.cpp also). In the InkplateQwiicTester
  *                folder, you can find the code for uploading to Dasduino Core
  *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave
- *                device for testing an easyC connector if you don't have a
+ *                device for testing a Qwiic connector if you don't have a
  *                device with address 0x30.
  *              - Insert a formatted microSD card (doesn't have to be empty).
  *              - Press wake button to finish testing.
@@ -21,13 +21,13 @@
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable, formatted microSD card,
- *               EasyC slave device on address 0x30
+ *               Qwiic slave device on address 0x30
  * - Serial:     115200 baud
  *
  * How to use:
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
  *    from Tools -> Board.
- * 2) Edit the WiFi information in test.cpp and connect the EasyC slave device.
+ * 2) Edit the WiFi information in test.cpp and connect the Qwiic slave device.
  * 3) Insert a formatted microSD card and upload the sketch to Inkplate 10.
  * 4) Open Serial Monitor at 115200 baud and enter the VCOM value when prompted.
  * 5) Press the wake button to finish testing.
@@ -207,6 +207,13 @@ void setup()
         // Splash screen at first startup
         showSplashScreen();
 
+        // Ask the operator to confirm the image on the screen and report the final verdict.
+        if (!askOperator("SPLASH", "Is the image on the screen drawn correctly?"))
+        {
+            failHandler(true);
+        }
+        testResult("INKPLATE", true);
+
         // Stop here; onboarding starts after power-cycle / reset (same behavior as original)
         while (true)
             ;
@@ -365,6 +372,10 @@ int getWaveformFromSerial(int *selectedIndex)
 
     // Ensure we're in grayscale while previewing gradients/UI text
     display.selectDisplayMode(INKPLATE_3BIT);
+
+    // Apply the currently selected waveform without burning it into EEPROM, otherwise every
+    // preview would be drawn with the waveform loaded at boot and all 5 would look the same.
+    display.setWaveform((uint8_t)(*selectedIndex + 1), false);
     showGradient(*selectedIndex);
 
     while (true)

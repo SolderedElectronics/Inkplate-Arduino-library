@@ -894,11 +894,7 @@ bool EPDDriver::writeVCOMToPanelEEPROM(double v)
 
     int check = ((int)rdH_bit0 << 8) | rdL;
 
-    // DEBUG PRINTS
-    Serial.printf("\nraw=%d (0x%03X), vcomL=0x%02X, vcomMSB=%d\n", raw, raw, vcomL, vcomMSB);
-    Serial.printf("readback: rdL=0x%02X, rdHbit0=%d => check=%d (0x%03X)\n", rdL, rdH_bit0, check, check);
-    Serial.printf("reg04 full=0x%02X\n", reg04full);
-    // Turn off TPS/EPD power (your function)
+    // Turn off TPS/EPD power
     einkOff();
     delay(100);
 

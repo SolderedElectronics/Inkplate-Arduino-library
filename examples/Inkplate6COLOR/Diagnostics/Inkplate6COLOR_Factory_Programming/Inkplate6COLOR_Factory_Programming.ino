@@ -21,9 +21,9 @@
  *              Test output is sent primarily over Serial because full colour
  *              e-paper refreshes are relatively slow. The production test flow
  *              may require additional hardware such as a microSD card, a device
- *              connected to the EasyC port, valid Wi-Fi credentials inside the
+ *              connected to the Qwiic port, valid Wi-Fi credentials inside the
  *              test sources, and user interaction through the wake button -
- *              EasyC/I2C, SD card, Wi-Fi, wake button and EEPROM checks may all
+ *              Qwiic/I2C, SD card, Wi-Fi, wake button and EEPROM checks may all
  *              be part of the production validation path depending on the linked
  *              test sources.
  *
@@ -42,14 +42,14 @@
  * - Board:      Soldered Inkplate 6COLOR
  * - Hardware:   Inkplate 6COLOR, USB cable
  * - Extra:      WiFi credentials in test.cpp, formatted microSD card,
- *               EasyC/I2C slave device on the expected address (default noted
+ *               Qwiic/I2C slave device on the expected address (default noted
  *               in test.cpp)
  * - Serial:     115200 baud
  *
  * How to use:
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 6COLOR"
  *    from Tools -> Board.
- * 2) Prepare the required test setup: Wi-Fi credentials in test.cpp, EasyC
+ * 2) Prepare the required test setup: Wi-Fi credentials in test.cpp, Qwiic
  *    slave device, formatted microSD card, and Serial Monitor at 115200 baud.
  * 3) Upload the firmware to Inkplate 6COLOR.
  * 4) On startup, the firmware initializes EEPROM, I2C and display hardware.
@@ -136,6 +136,16 @@ void setup()
     memset(commandBuffer, 0, BUFFER_SIZE);
 
     showSplashScreen();
+
+    // Ask the operator to confirm the image on the screen and report the final verdict.
+    if (isFirstStartup)
+    {
+        if (!askOperator("SPLASH", "Is the image on the screen drawn correctly?"))
+        {
+            failHandler();
+        }
+        testResult("INKPLATE", true);
+    }
 }
 
 void loop()

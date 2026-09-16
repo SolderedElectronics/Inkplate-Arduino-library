@@ -51,7 +51,7 @@
  * Requirements:
  * - Board:      Soldered Inkplate 5v2
  * - Hardware:   Inkplate 5v2, USB cable
- * - Extra:      microSD card (formatted, any content), EasyC I2C slave device
+ * - Extra:      microSD card (formatted, any content), Qwiic I2C slave device
  *               for factory tests, WiFi credentials in test.cpp if the tests
  *               require network
  * - Serial:     115200 baud
@@ -61,9 +61,9 @@
  *    from Tools -> Board.
  * 2) (Factory) Connect required test hardware:
  *    - Insert a formatted microSD card.
- *    - Connect an EasyC I2C slave device at the address expected by test.cpp
+ *    - Connect a Qwiic I2C slave device at the address expected by test.cpp
  *      (0x30 by default). If you don't have one, flash the helper firmware from
- *      the InkplateEasyCTester folder onto a compatible Dasduino board and use
+ *      the InkplateQwiicTester folder onto a compatible Dasduino board and use
  *      it as the I2C slave.
  * 3) Open Serial Monitor at 115200 baud.
  * 4) Upload the sketch. On first startup it will:
@@ -197,6 +197,16 @@ void setup()
 
     // Print the initial image that remains on the screen
     showSplashScreen(vcomVoltage);
+
+    // Ask the operator to confirm the image on the screen and report the final verdict.
+    if (isFirstStartup)
+    {
+        if (!askOperator("SPLASH", "Is the image on the screen drawn correctly?"))
+        {
+            failHandler(true);
+        }
+        testResult("INKPLATE", true);
+    }
 }
 
 void loop()

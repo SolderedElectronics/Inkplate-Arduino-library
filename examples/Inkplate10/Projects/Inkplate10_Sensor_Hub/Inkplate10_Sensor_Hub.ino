@@ -1,7 +1,7 @@
 /**
  **************************************************
  * @file        Inkplate10_Sensor_Hub.ino
- * @brief       Multi-sensor dashboard for Inkplate 10 reading Soldered easyC
+ * @brief       Multi-sensor dashboard for Inkplate 10 reading Soldered Qwiic
  *              sensors over I2C and refreshing a GUI with partial updates.
  *
  * @details     Turns Inkplate 10 into a sensor hub. On boot the sketch starts
@@ -28,7 +28,7 @@
  *
  * Requirements:
  * - Board:      Soldered Inkplate 10
- * - Hardware:   Inkplate 10, USB cable, easyC sensors (INA219, BME280,
+ * - Hardware:   Inkplate 10, USB cable, Qwiic sensors (INA219, BME280,
  *               LSM6DSO, potentiometer, soil, PIR, hall)
  * - Libraries:  INA219-SOLDERED, BME280-SOLDERED, LSM6DSO-SOLDERED
  * - Serial:     115200 baud
@@ -37,7 +37,7 @@
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
  *    from Tools -> Board.
  * 2) Install the INA219, BME280 and LSM6DSO Soldered libraries.
- * 3) Connect the easyC sensors to the Inkplate easyC/I2C connector.
+ * 3) Connect the Qwiic sensors to the Inkplate Qwiic/I2C connector.
  * 4) Upload the sketch and open Serial Monitor at 115200 baud.
  * 5) The dashboard appears on the display and refreshes continuously.
  *

@@ -6,39 +6,84 @@ const char *WSSID = {"Soldered-testingPurposes"};
 const char *WPASS = {"Testing443"};
 
 // Change this to your used slave device
-const uint8_t easyCDeviceAddress = 0x30;
+const uint8_t qwiicDeviceAddress = 0x30;
 
 // Test all peripherals
+// Print the result of a single test on the serial in a machine readable format ("NAME:PASS" / "NAME:FAIL").
+void testResult(const char *_testName, bool _passed)
+{
+    Serial.print(_testName);
+    Serial.println(_passed ? ":PASS" : ":FAIL");
+}
+
+// Ask the operator to confirm a visual/audible check over the serial.
+// Prints the result as "NAME:PASS" or "NAME:FAIL". Returns 1 on 'y', 0 on 'n' or on timeout.
+int askOperator(const char *_testName, const char *_question, uint8_t _timeout)
+{
+    // Drop anything left in the serial buffer from a previous test.
+    while (Serial.available())
+        Serial.read();
+
+    Serial.print(_testName);
+    Serial.print(": ");
+    Serial.print(_question);
+    Serial.print(" (y/n, ");
+    Serial.print(_timeout);
+    Serial.println("s)");
+
+    unsigned long _timeoutStart = millis();
+    while ((unsigned long)(millis() - _timeoutStart) < (_timeout * 1000UL))
+    {
+        if (Serial.available())
+        {
+            char _answer = Serial.read();
+            if ((_answer == 'y') || (_answer == 'Y'))
+            {
+                testResult(_testName, true);
+                return 1;
+            }
+            if ((_answer == 'n') || (_answer == 'N'))
+            {
+                testResult(_testName, false);
+                return 0;
+            }
+        }
+        delay(1);
+    }
+
+    // No answer from the operator, treat it as a failed test.
+    testResult(_testName, false);
+    return 0;
+}
+
 void testPeripheral()
 {
     Serial.println("INKPLATE TEST CHECKLIST:");
 
     // Check the WiFi
-    Serial.print("- WiFi: ");
+    Serial.println("- WiFi:");
     if (checkWiFi(WSSID, WPASS, WTIMEOUT))
     {
-        Serial.println("OK");
+        testResult("WIFI", true);
     }
     else
     {
-        Serial.println("FAIL");
+        testResult("WIFI", false);
         failHandler();
     }
 
-    // Check I2C (easyc)
-    // A slave must be connected via easyC address set in this file
-    Serial.print("- I2C (easyC): ");
-    if (checkI2C(easyCDeviceAddress))
+    // Check I2C (Qwiic)
+    // A slave must be connected via Qwiic address set in this file
+    Serial.println("- I2C (Qwiic):");
+    if (checkI2C(qwiicDeviceAddress))
     {
-        Serial.println("OK");
+        testResult("QWIIC", true);
     }
     else
     {
-        Serial.println("FAIL");
+        testResult("QWIIC", false);
         failHandler();
     }
-
-    Serial.println("Test OK");
 }
 
 // Test I2C
@@ -83,6 +128,9 @@ int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)
 // Show a message and stop the code from executing
 void failHandler()
 {
+    // Report the overall result of the factory test.
+    Serial.println("INKPLATE:FAIL");
+
     Serial.println(" -> Test stopped!");
 
     // Inf. loop... halt the program!

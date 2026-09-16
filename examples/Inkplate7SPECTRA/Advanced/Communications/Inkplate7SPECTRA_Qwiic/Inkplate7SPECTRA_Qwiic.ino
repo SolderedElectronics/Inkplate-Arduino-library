@@ -1,44 +1,24 @@
-/**
- **************************************************
- * @file        Inkplate13SPECTRA_EasyC.ino
- * @brief       Read a BME680 sensor over easyC (I2C) on Soldered Inkplate 13SPECTRA.
- *
- * @details     Shows how to read temperature, humidity and air pressure data
- *              from a BME680 sensor connected to the Inkplate easyC connector.
- *              In order to compile this example successfully, you will also need
- *              to download and install the Soldered BME680 library.
- *
- * Requirements:
- * - Board:      Soldered Inkplate 13SPECTRA
- * - Hardware:   Inkplate 13SPECTRA, micro USB cable,
- *               BME680 sensor with easyC connector
- *               (https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/),
- *               easyC cable (https://soldered.com/product/easyc-cable-20cm/)
- * - Library:    Soldered BME680 library
- *               (https://github.com/SolderedElectronics/Soldered-BME280-BME680-Gas-Sensor-Arduino-Library)
- *
- * How to use:
- * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
- *    from Tools -> Board.
- * 2) Install the Soldered BME680 library.
- * 3) Connect the BME680 breakout to the Inkplate easyC connector.
- * 4) Upload the sketch to Inkplate 13SPECTRA.
- * 5) Temperature, humidity and air pressure readings are shown on the display.
- *
- * @note        Quick start guide:
- *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
- * @note        Want to learn more about Inkplate? Visit
- *              https://docs.soldered.com/inkplate/
- * @note        Looking to get support? Write on our community forum:
- *              https://community.soldered.com/
- *
- * @author      Soldered Electronics
- * @date        2026-01-21
- **************************************************/
+/*
+  Inkplate7SPECTRA_Qwiic example for Soldered Inkplate 7SPECTRA
+  For this example you will need a micro USB cable, Inkplate 7SPECTRA,
+  BME680 sensor with Qwiic connector on it: https://soldered.com/product/enviromental-air-quality-sensor-bme680-breakout/
+  and a Qwiic cable: https://soldered.com/product/easyc-cable-20cm/
+  Select "Soldered Inkplate 7SPECTRA" from Tools -> Board menu.
+  Don't have "Soldered Inkplate 7SPECTRA" option? Follow our tutorial and add it:
+
+  /////////////////////////// INSERT BOARD DEF LINK HERE
+
+  This example will show you how you can read temperature, humidity, and air pressure data from BME680.
+  In order to compile this example successfuly, you will also need to download and install
+  Soldered BME680 library: https://github.com/SolderedElectronics/Soldered-BME280-BME680-Gas-Sensor-Arduino-Library
+
+  Want to learn more about Inkplate? Visit https://docs.soldered.com/inkplate/
+  21 January 2026 by Soldered Electronics
+*/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#ifndef ARDUINO_INKPLATE13SPECTRA
-#error "Wrong board selection for this example, please select Soldered Inkplate 13SPECTRA in the boards menu."
+#ifndef ARDUINO_INKPLATE7SPECTRA
+#error "Wrong board selection for this example, please select Soldered Inkplate 7SPECTRA in the boards menu."
 #endif
 
 #include <BME680-SOLDERED.h> // Soldered library for BME680 Sensor
@@ -47,7 +27,7 @@
 
 Inkplate inkplate; // Create an object on Inkplate library
 BME680 bme680;    // Create an object on Soldered BME680 library (with no arguments sent to constructor, that means we are
-                  // using I2C or easyC communication for BME680 sensor)
+                  // using I2C or Qwiic communication for BME680 sensor)
 
 // Add temperature offset to calibrate the sensor
 const float temperatureOffset = 0.0;
@@ -57,7 +37,7 @@ void setup()
   Serial.begin(115200);
   inkplate.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
   inkplate.clearDisplay(); // Clear frame buffer of display
-  inkplate.setTextSize(2); // Set text scaling to two (text will be two times bigger than normal)
+  inkplate.setTextSize(1); // Set text scaling to one (normal size)
   inkplate.setTextColor(INKPLATE_BLACK);
   inkplate.setCursor(0, 0);
 
@@ -79,7 +59,7 @@ void loop()
   inkplate.clearDisplay();
 
   // Set text size to print big numbers for temperature and humidity
-  inkplate.setTextSize(6);
+  inkplate.setTextSize(5);
 
   // Display the temperature icon and measured value
   inkplate.setCursor(200, 45);
@@ -96,7 +76,7 @@ void loop()
 
 
   // Display the pressure icon and measured value
-  inkplate.setTextSize(5);
+  inkplate.setTextSize(4);
   inkplate.setCursor(200, 315);
   inkplate.print(bme680.readPressure() * 10);
   inkplate.print(" hPa");

@@ -9,22 +9,22 @@
  *
  *              Tests will also be done. To pass all tests:
  *              - Edit the WiFi information in test.cpp.
- *              - Connect a slave device via EasyC on address 0x30 (you may
- *                change this in test.cpp also). In the InkplateEasyCTester
+ *              - Connect a slave device via Qwiic on address 0x30 (you may
+ *                change this in test.cpp also). In the InkplateQwiicTester
  *                folder, you can find the code for uploading to Dasduino Core
  *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave
- *                device for testing an easyC connector if you don't have a
+ *                device for testing a Qwiic connector if you don't have a
  *                device with address 0x30.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 2
- * - Hardware:   Inkplate 2, USB cable, EasyC slave device on address 0x30
+ * - Hardware:   Inkplate 2, USB cable, Qwiic slave device on address 0x30
  * - Serial:     115200 baud
  *
  * How to use:
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate2"
  *    from Tools -> Board.
- * 2) Edit the WiFi information in test.cpp and connect the EasyC slave device.
+ * 2) Edit the WiFi information in test.cpp and connect the Qwiic slave device.
  * 3) Upload the sketch to Inkplate 2.
  * 4) Follow the test output on the Serial Monitor.
  *
@@ -131,6 +131,16 @@ void setup()
     // Draw the image on the screen
     display.image.draw(pictures[i], 0, 0, 212, 104);
     display.display();
+
+    // Ask the operator to confirm the image on the screen and report the final verdict.
+    if (isFirstStartup)
+    {
+        if (!askOperator("SPLASH", "Is the image on the screen drawn correctly?"))
+        {
+            failHandler();
+        }
+        testResult("INKPLATE", true);
+    }
 
     // Go to sleep
     esp_deep_sleep_start();

@@ -6,9 +6,9 @@
  *
  * @note        Tests will also be done, to pass all tests:
  *              - Edit the WiFi information in test.cpp.
- *              - Connect a slave device via EasyC on address 0x76 (you may change this in test.cpp also).
- *                In the InkplateEasyCTester folder, you can find the code for uploading to Dasduino Core 
- *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave device for testing an easyC connector
+ *              - Connect a slave device via Qwiic on address 0x76 (you may change this in test.cpp also).
+ *                In the InkplateQwiicTester folder, you can find the code for uploading to Dasduino Core 
+ *                or Dasduino ConnectPlus to convert Dasduino to an I2C slave device for testing a Qwiic connector
  *                if you don't have a device with address 0x76.
  *              - Insert a formatted microSD card (doesn't have to be empty)
  *              - Press wake button to finish testing
@@ -79,6 +79,16 @@ void setup()
     memset(commandBuffer, 0, sizeof(commandBuffer));
 
     showSplashScreen();
+
+    // Ask the operator to confirm the image on the screen and report the final verdict.
+    if (isFirstStartup)
+    {
+        if (!askOperator("SPLASH", "Is the image on the screen drawn correctly?"))
+        {
+            failHandler();
+        }
+        testResult("INKPLATE", true);
+    }
 }
 
 void loop()

@@ -10,85 +10,132 @@ static const char *WSSID = "Soldered-testingPurposes";
 static const char *WPASS = "Testing443";
 
 // Change this to your used slave device
-static const uint8_t easyCDeviceAddress = 0x30;
+static const uint8_t qwiicDeviceAddress = 0x30;
+
+// Print the result of a single test on the serial in a machine readable format ("NAME:PASS" / "NAME:FAIL").
+void testResult(const char *_testName, bool _passed)
+{
+    Serial.print(_testName);
+    Serial.println(_passed ? ":PASS" : ":FAIL");
+}
+
+// Ask the operator to confirm a visual/audible check over the serial.
+// Prints the result as "NAME:PASS" or "NAME:FAIL". Returns 1 on 'y', 0 on 'n' or on timeout.
+int askOperator(const char *_testName, const char *_question, uint8_t _timeout)
+{
+    // Drop anything left in the serial buffer from a previous test.
+    while (Serial.available())
+        Serial.read();
+
+    Serial.print(_testName);
+    Serial.print(": ");
+    Serial.print(_question);
+    Serial.print(" (y/n, ");
+    Serial.print(_timeout);
+    Serial.println("s)");
+
+    unsigned long _timeoutStart = millis();
+    while ((unsigned long)(millis() - _timeoutStart) < (_timeout * 1000UL))
+    {
+        if (Serial.available())
+        {
+            char _answer = Serial.read();
+            if ((_answer == 'y') || (_answer == 'Y'))
+            {
+                testResult(_testName, true);
+                return 1;
+            }
+            if ((_answer == 'n') || (_answer == 'N'))
+            {
+                testResult(_testName, false);
+                return 0;
+            }
+        }
+        delay(1);
+    }
+
+    // No answer from the operator, treat it as a failed test.
+    testResult(_testName, false);
+    return 0;
+}
 
 void testPeripheral()
 {
     Serial.println("INKPLATE CHECKLIST");
 
     // Check I/O expander
-    Serial.print("- I/O Expander: ");
+    Serial.println("- I/O Expander:");
     Wire.beginTransmission(IO_INT_ADDR);
     if (Wire.endTransmission() == 0)
     {
-        Serial.println("OK");
+        testResult("IO_EXP", true);
     }
     else
     {
-        Serial.println("FAIL");
+        testResult("IO_EXP", false);
         failHandler();
     }
 
     // Check the micro SD card slot
-    Serial.print("- microSD card slot: ");
+    Serial.println("- microSD card slot:");
     if (checkMicroSDCard())
     {
-        Serial.println("OK");
+        testResult("MICROSD", true);
     }
     else
     {
-        Serial.println("FAIL");
+        testResult("MICROSD", false);
         failHandler();
     }
 
     // Check the WiFi
-    Serial.print("- WiFi: ");
+    Serial.println("- WiFi:");
     if (checkWiFi(WSSID, WPASS, WTIMEOUT))
     {
-        Serial.println("OK");
+        testResult("WIFI", true);
     }
     else
     {
-        Serial.println("FAIL");
+        testResult("WIFI", false);
         failHandler();
     }
 
     // Check the RTC
-    Serial.print("- PCF85063 RTC: ");
+    Serial.println("- PCF85063 RTC:");
     if (rtcCheck())
     {
-        Serial.println("OK");
+        testResult("RTC", true);
     }
     else
     {
-        Serial.println("FAIL");
+        testResult("RTC", false);
         failHandler();
     }
 
-    // Check I2C (easyc)
-    Serial.print("- I2C (easyC): ");
-    if (checkI2C(easyCDeviceAddress))
+    // Check I2C (Qwiic)
+    Serial.println("- I2C (Qwiic):");
+    if (checkI2C(qwiicDeviceAddress))
     {
-        Serial.println("OK");
+        testResult("QWIIC", true);
     }
     else
     {
-        Serial.println("FAIL");
+        testResult("QWIIC", false);
         failHandler();
     }
 
     // Check battery
     float batteryVoltage = 0.0f;
-    Serial.print("- Battery: ");
+    Serial.println("- Battery:");
     if (checkBattery(&batteryVoltage))
     {
         Serial.print(batteryVoltage, 2);
-        Serial.print("V ");
-        Serial.println("OK");
+        Serial.println("V ");
+        testResult("BATTERY", true);
     }
     else
     {
-        Serial.println("FAIL");
+        testResult("BATTERY", false);
         failHandler();
     }
 
@@ -103,6 +150,7 @@ void testPeripheral()
         if (now - beginWakeUpTest > 30000UL)
         {
             Serial.println("WAKEUP not pressed for 30 seconds!");
+            testResult("WAKEUP", false);
             failHandler();
         }
 
@@ -113,6 +161,7 @@ void testPeripheral()
         delay(1);
     }
     Serial.println("WAKEUP button pressed!");
+    testResult("WAKEUP", true);
 }
 
 int checkWiFi(const char *_ssid, const char *_pass, uint8_t _wifiTimeout)
@@ -219,6 +268,9 @@ int rtcCheck()
 
 void failHandler()
 {
+    // Report the overall result of the factory test.
+    Serial.println("INKPLATE:FAIL");
+
     Serial.println(" -> Test stopped!");
     while (true)
         delay(1000);
