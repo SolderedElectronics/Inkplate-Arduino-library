@@ -24,7 +24,7 @@
 Image *_imagePtrJpeg = nullptr;
 Image *_imagePtrPng = nullptr;
 
-int16_t (*Image::ditherBuffer)[E_INK_WIDTH + 20] = nullptr;
+int16_t (*Image::ditherBuffer)[Image::ditherRowWidth] = nullptr;
 uint8_t *Image::pixelBuffer = nullptr;
 uint32_t *Image::ditherPalette = nullptr;
 uint8_t *Image::palette = nullptr;
@@ -50,7 +50,7 @@ void Image::begin(Inkplate *inkplateptr)
 
     // Allocate PSRAM buffers. All four are required; a NULL result is reported
     // via Serial and the caller should not attempt to draw images.
-    ditherBuffer = (int16_t(*)[E_INK_WIDTH + 20]) heap_caps_calloc(1, ditherBufferSizeBytes, MALLOC_CAP_SPIRAM);
+    ditherBuffer = (int16_t(*)[ditherRowWidth]) heap_caps_calloc(1, ditherBufferSizeBytes, MALLOC_CAP_SPIRAM);
     pixelBuffer = (uint8_t *)heap_caps_calloc(1, (E_INK_WIDTH * 4 + 5), MALLOC_CAP_SPIRAM);
     ditherPalette = (uint32_t *)heap_caps_calloc(256, sizeof(uint32_t), MALLOC_CAP_SPIRAM);
     palette = (uint8_t *)heap_caps_calloc(128, sizeof(uint8_t), MALLOC_CAP_SPIRAM);

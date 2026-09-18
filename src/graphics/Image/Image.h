@@ -130,8 +130,11 @@ class Image
     static uint8_t *pixelBuffer;
     static const uint8_t ditherRowCount = 4;
     static const uint8_t ditherRowMask = ditherRowCount - 1;
-    static int16_t (*ditherBuffer)[E_INK_WIDTH + 20];
-    static constexpr size_t ditherBufferSizeBytes = ditherRowCount * (E_INK_WIDTH + 20) * sizeof(int16_t);
+    // One error row is only as wide as the panel (plus a small margin for the kernel). Images wider
+    // than this are clipped by the dither, see ditherGetPixelBmp().
+    static constexpr int ditherRowWidth = E_INK_WIDTH + 20;
+    static int16_t (*ditherBuffer)[ditherRowWidth];
+    static constexpr size_t ditherBufferSizeBytes = ditherRowCount * ditherRowWidth * sizeof(int16_t);
     static uint32_t *ditherPalette; // 8 bit colors, in color, 3x8 bit colors
     static uint8_t *palette;        // 2 3 bit colors per byte, _###_###
 

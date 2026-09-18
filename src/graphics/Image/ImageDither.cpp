@@ -43,6 +43,23 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
     if (paletted)
         px = ditherPalette[px];
 
+    // The error rows are only as wide as the panel. An image wider than that (a full size camera
+    // photo, for example) would otherwise write its error past the end of the row and corrupt the
+    // other rows, which shows up as harsh contrast and banding across the whole picture. Columns
+    // beyond the buffer are off screen anyway, so quantise them without diffusing any error.
+    if (i < 0 || i >= ditherRowWidth)
+    {
+        const int16_t clamped = max((int16_t)0, min((int16_t)255, (int16_t)px));
+        if (_inkplate->getDisplayMode() == INKPLATE_1BIT)
+            return (clamped >= 128) ? 7 : 0;
+        return (uint8_t)(((int)clamped * 7 + 127) / 255);
+    }
+
+    // Clamp the diffusion width as well, so the taps to the right of the last usable column are
+    // dropped instead of running past the end of the row.
+    if (w > ditherRowWidth)
+        w = ditherRowWidth;
+
     const int rowIdx = j & ditherRowMask;
     int16_t *row = ditherBuffer[rowIdx];
 
@@ -51,14 +68,29 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
 
     oldPixel = max((int16_t)0, min((int16_t)255, oldPixel));
 
-    // 1-bit: snap to 0x00 or 0xFF so that >>5 produces 0 or 7 (full display range).
-    // 3-bit: quantise to the top 3 bits; >>5 produces 0-7.
-    uint8_t newPixel = (_inkplate->getDisplayMode() == INKPLATE_1BIT) ? ((oldPixel >= 128) ? 0xFF : 0x00)
-                                                                      : ((uint8_t)oldPixel & B11100000);
-    int16_t quantError = oldPixel - newPixel;
+    // Quantise to the nearest level the panel can actually show, and measure the error against the
+    // grey that level really produces. The 8 grey levels are spread evenly over 0-255, so level k is
+    // displayed as k * 255 / 7 (0, 36, 73, 109, 146, 182, 219, 255) and NOT as k * 32. Rounding to
+    // the nearest level (instead of truncating) is what makes the error signed: truncation can only
+    // ever push brightness into the neighbouring pixels, which clumps the dither pattern and leaves
+    // visible contour lines in smooth gradients.
+    uint8_t newLevel;
+    int16_t quantValue;
+    if (_inkplate->getDisplayMode() == INKPLATE_1BIT)
+    {
+        newLevel = (oldPixel >= 128) ? 7 : 0;
+        quantValue = (oldPixel >= 128) ? 255 : 0;
+    }
+    else
+    {
+        newLevel = (uint8_t)(((int)oldPixel * 7 + 127) / 255);
+        quantValue = (int16_t)(((int)newLevel * 255 + 3) / 7);
+    }
+    const int16_t quantError = oldPixel - quantValue;
 
     const int minOffset = max(-currentKernel->x, -i);
     const int maxOffset = min(currentKernel->width - currentKernel->x - 1, w - 1 - i);
+    const int halfCoef = currentKernel->coef / 2;
 
     for (int k = 0; k < currentKernel->height; ++k)
     {
@@ -68,11 +100,17 @@ uint8_t Image::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool paletted
             const int weight = currentKernel->data[k * currentKernel->width + (l + currentKernel->x)];
             if (!weight)
                 continue;
-            nextRow[i + l] += (weight * quantError) / currentKernel->coef;
+
+            // Round the share of the error instead of truncating it towards zero. Truncation throws
+            // away most of a small error, which is exactly what makes smooth gradients band.
+            const int numerator = weight * quantError;
+            const int share = (numerator >= 0) ? ((numerator + halfCoef) / currentKernel->coef)
+                                               : -((-numerator + halfCoef) / currentKernel->coef);
+            nextRow[i + l] += (int16_t)share;
         }
     }
 
-    return newPixel >> 5;
+    return newLevel;
 }
 
 #endif

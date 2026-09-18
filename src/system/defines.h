@@ -54,8 +54,14 @@
 
 #define BOUND(a, b, c) ((a) <= (b) && (b) <= (c))
 
-#define RGB3BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 13)
+// 8-bit luminance of an RGB triplet (Rec.709 weights, 54 + 183 + 19 = 256).
 #define RGB8BIT(r, g, b) ((54UL * (r) + 183UL * (g) + 19UL * (b)) >> 8)
+
+// Nearest of the 8 grey levels the panel can show. The levels are spread evenly over 0-255, so the
+// nearest level of a luminance L is round(L * 7 / 255). Shifting by 13 instead (a plain truncation
+// to the top 3 bits) rounds every pixel down by up to half a level, which darkens the picture and
+// widens the flat steps between levels on undithered images.
+#define RGB3BIT(r, g, b) ((RGB8BIT(r, g, b) * 7UL + 127UL) / 255UL)
 
 #define READ32(c)     (uint32_t)(*(c) | (*((c) + 1) << 8) | (*((c) + 2) << 16) | (*((c) + 3) << 24))
 #define READ16(c)     (uint16_t)(*(c) | (*((c) + 1) << 8))
