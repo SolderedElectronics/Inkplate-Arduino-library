@@ -56,6 +56,8 @@ static const unsigned char _kernelSierraLite[] = {
     0, 0, 2, 1, 1, 0, 0, 0, 0,
 };
 
+// Floyd-Steinberg pattern at ~42% strength (weights sum 11, coef 26).
+// Weak on purpose: more vibrant, more posterized.
 static const unsigned char _kernelReducedDiffusion[] = {
     0, 0, 5, 2, 3, 1,
 };

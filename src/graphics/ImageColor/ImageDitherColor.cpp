@@ -29,38 +29,37 @@ extern ImageColor *_imagePtrJpeg;
  *
  * @return      closest color in pallete array
  */
-uint8_t ImageColor::findClosestPalette(int16_t r, int16_t g, int16_t b)
+uint8_t ImageColor::findClosestPalette(int16_t r, int16_t g, int16_t b, uint8_t tieRotate)
 {
-    int64_t minDistance = INT64_MAX;
-    uint8_t contenderCount = 0;
-    uint8_t contenderList[sizeof pallete / sizeof pallete[0]];
+    constexpr uint8_t paletteSize = sizeof pallete / sizeof pallete[0];
 
-    for (int i = 0; i < sizeof pallete / sizeof pallete[0]; ++i)
+    int32_t minDistance = INT32_MAX;
+    uint8_t tieCount = 0;
+    uint8_t ties[paletteSize];
+
+    for (uint8_t i = 0; i < paletteSize; ++i)
     {
-        int16_t pr = RED8(pallete[i]);
-        int16_t pg = GREEN8(pallete[i]);
-        int16_t pb = BLUE8(pallete[i]);
-
-        int32_t dr = r - pr;
-        int32_t dg = g - pg;
-        int32_t db = b - pb;
+        int32_t dr = r - (int16_t)RED8(pallete[i]);
+        int32_t dg = g - (int16_t)GREEN8(pallete[i]);
+        int32_t db = b - (int16_t)BLUE8(pallete[i]);
 
         int32_t currentDistance = dr * dr + dg * dg + db * db;
 
         if (currentDistance < minDistance)
         {
             minDistance = currentDistance;
-            contenderList[0] = i;
-            contenderCount = 1;
+            ties[0] = i;
+            tieCount = 1;
         }
         else if (currentDistance == minDistance)
         {
-            if (contenderCount < sizeof pallete / sizeof pallete[0])
-                contenderList[contenderCount++] = i;
+            ties[tieCount++] = i;
         }
     }
 
-    return contenderList[0];
+    // Out of gamut colours tie between several inks (cyan: white, green, blue). Rotating through
+    // the tied inks by position mixes them instead of painting the area one flat colour.
+    return ties[tieRotate % tieCount];
 }
 
 
@@ -85,6 +84,14 @@ uint8_t ImageColor::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool pal
     if (paletted)
         px = ditherPalette[px];
 
+    // Columns past the error buffer are off screen, match them without diffusing any error.
+    if (i < 0 || i >= (int)ditherBufferWidth)
+        return findClosestPalette(RED8(px), GREEN8(px), BLUE8(px), (uint8_t)(i + j));
+
+    // Keep the taps inside the error row.
+    if (w > (int)ditherBufferWidth)
+        w = (int)ditherBufferWidth;
+
     const int rowIdx = j & ditherRowMask;
     int16_t *rowR = ditherBuffer[0][rowIdx];
     int16_t *rowG = ditherBuffer[1][rowIdx];
@@ -102,7 +109,7 @@ uint8_t ImageColor::ditherGetPixelBmp(uint32_t px, int i, int j, int w, bool pal
     g = max((int16_t)0, min((int16_t)255, g));
     b = max((int16_t)0, min((int16_t)255, b));
 
-    int closest = findClosestPalette(r, g, b);
+    int closest = findClosestPalette(r, g, b, (uint8_t)(i + j));
 
     int32_t rErr = r - (int32_t)((pallete[closest] >> 16) & 0xFF);
     int32_t gErr = g - (int32_t)((pallete[closest] >> 8) & 0xFF);

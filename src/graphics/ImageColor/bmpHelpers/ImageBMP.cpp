@@ -391,9 +391,10 @@ void ImageColor::displayBmpLine(int16_t x, int16_t y, bitmapHeader *bmpHeader, b
         case 16: {
             uint16_t px = ((uint16_t)pixelBuffer[(j << 1) | 1] << 8) | pixelBuffer[(j << 1)];
 
-            uint8_t r = (px & 0x7C00) >> 7;
-            uint8_t g = (px & 0x3E0) >> 2;
-            uint8_t b = (px & 0x1F) << 3;
+            // RGB555 to RGB888 by replicating the high bits, so saturated colours reach 255.
+            uint8_t r = (uint8_t)(((px & 0x7C00) >> 7) | ((px & 0x7000) >> 12));
+            uint8_t g = (uint8_t)(((px & 0x03E0) >> 2) | ((px & 0x0380) >> 7));
+            uint8_t b = (uint8_t)(((px & 0x001F) << 3) | ((px & 0x001C) >> 2));
 
             uint8_t val;
 

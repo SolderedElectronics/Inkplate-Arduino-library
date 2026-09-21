@@ -58,7 +58,7 @@ class ImageColor
         Burkes,
         Stucki,
         SierraLite,
-        ReducedDiffusion // Floyd-Steinberg pattern at ~69% strength — more vibrant, less washed-out
+        ReducedDiffusion // Floyd-Steinberg pattern at ~42% strength, more vibrant, more posterized
     } DitherKernel;
 
     struct bitmapHeader
@@ -125,7 +125,8 @@ class ImageColor
 
     void getPointsForPosition(const Position &position, const uint16_t imageWidth, const uint16_t imageHeight,
                               const uint16_t screenWidth, const uint16_t screenHeight, uint16_t *posX, uint16_t *posY);
-    uint8_t findClosestPalette(int16_t r, int16_t g, int16_t b);
+    // tieRotate picks between exactly equidistant palette entries, pass the pixel position.
+    uint8_t findClosestPalette(int16_t r, int16_t g, int16_t b, uint8_t tieRotate = 0);
 
     static const uint8_t ditherRowCount = 16;
     static const uint8_t ditherRowMask = ditherRowCount - 1;

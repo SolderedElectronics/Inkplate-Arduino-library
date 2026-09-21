@@ -362,7 +362,7 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
     if (_imagePtrJpeg->jpegMcuH == 0)
         _imagePtrJpeg->jpegMcuH = h;
 
-    // New row of MCU blocks — flush what we have before accepting new data
+    // New row of MCU blocks, flush what we have before accepting new data
     if (_imagePtrJpeg->lastY == -1)
     {
         _imagePtrJpeg->lastY = y;
@@ -391,9 +391,7 @@ bool Image::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t
  */
 void Image::flushJpegRow(int rowY)
 {
-    // Only the part of the row that lands on the panel is worth processing. A photo wider than the
-    // screen used to be dithered across its full width, which both wasted time and pushed the error
-    // diffusion past the end of the error buffer.
+    // Only process the part of the row that lands on the panel.
     int rowWidth = jpegImageWidth;
     if (jpegDrawX + rowWidth > _inkplate->width())
         rowWidth = _inkplate->width() - jpegDrawX;
@@ -406,10 +404,7 @@ void Image::flushJpegRow(int rowY)
         {
             uint32_t rgb = jpegRowBuffer[j * jpegImageWidth + col];
 
-            // The JPEG decoder hands us RGB565. Expand each channel by replicating its high bits
-            // instead of only shifting left, so full-scale input reaches 255 and not 248/252.
-            // Without this, white areas never quite reach white and the dither sprinkles grey
-            // pixels into them.
+            // RGB565 to RGB888 by replicating the high bits, so full scale reaches 255.
             uint8_t r = (uint8_t)(((rgb & 0xF800) >> 8) | ((rgb & 0xE000) >> 13));
             uint8_t g = (uint8_t)(((rgb & 0x07E0) >> 3) | ((rgb & 0x0600) >> 9));
             uint8_t b = (uint8_t)(((rgb & 0x001F) << 3) | ((rgb & 0x001C) >> 2));

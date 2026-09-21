@@ -130,8 +130,7 @@ class Image
     static uint8_t *pixelBuffer;
     static const uint8_t ditherRowCount = 4;
     static const uint8_t ditherRowMask = ditherRowCount - 1;
-    // One error row is only as wide as the panel (plus a small margin for the kernel). Images wider
-    // than this are clipped by the dither, see ditherGetPixelBmp().
+    // Error row width, panel plus a margin for the kernel. Wider images are clipped by the dither.
     static constexpr int ditherRowWidth = E_INK_WIDTH + 20;
     static int16_t (*ditherBuffer)[ditherRowWidth];
     static constexpr size_t ditherBufferSizeBytes = ditherRowCount * ditherRowWidth * sizeof(int16_t);

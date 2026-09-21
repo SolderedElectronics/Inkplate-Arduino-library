@@ -364,7 +364,7 @@ bool ImageColor::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uin
     if (_imagePtrJpeg->jpegMcuH == 0)
         _imagePtrJpeg->jpegMcuH = h;
 
-    // New row of MCU blocks — flush what we have before accepting new data
+    // New row of MCU blocks, flush what we have before accepting new data
     if (_imagePtrJpeg->lastY == -1)
     {
         _imagePtrJpeg->lastY = y;
@@ -393,12 +393,24 @@ bool ImageColor::drawJpegChunk(int16_t x, int16_t y, uint16_t w, uint16_t h, uin
  */
 void ImageColor::flushJpegRow(int rowY)
 {
+    // Only process the part of the row that lands on the panel.
+    int rowWidth = jpegImageWidth;
+    if (jpegDrawX + rowWidth > (int)width)
+        rowWidth = (int)width - jpegDrawX;
+    if (rowWidth <= 0)
+        return;
+
     for (int j = 0; j < jpegMcuH; ++j)
     {
-        for (int col = 0; col < jpegImageWidth; ++col)
+        for (int col = 0; col < rowWidth; ++col)
         {
             uint32_t rgb = jpegRowBuffer[j * jpegImageWidth + col];
-            uint8_t r = _RED(rgb), g = _GREEN(rgb), b = _BLUE(rgb);
+
+            // RGB565 to RGB888 by replicating the high bits, so saturated colours reach 255
+            // and land on the palette entry.
+            uint8_t r = (uint8_t)(((rgb & 0xF800) >> 8) | ((rgb & 0xE000) >> 13));
+            uint8_t g = (uint8_t)(((rgb & 0x07E0) >> 3) | ((rgb & 0x0600) >> 9));
+            uint8_t b = (uint8_t)(((rgb & 0x001F) << 3) | ((rgb & 0x001C) >> 2));
 
             if (jpegInvert)
             {
@@ -409,8 +421,8 @@ void ImageColor::flushJpegRow(int rowY)
 
             uint32_t val;
             if (jpegDither)
-                val = ditherGetPixelBmp(((uint32_t)r << 16) | ((uint32_t)g << 8) | b, col + jpegDrawX, rowY + j, width,
-                                        0);
+                val = ditherGetPixelBmp(((uint32_t)r << 16) | ((uint32_t)g << 8) | b, col + jpegDrawX, rowY + j,
+                                        jpegDrawX + rowWidth, 0);
             else
                 val = findClosestPalette(r, g, b);
 
