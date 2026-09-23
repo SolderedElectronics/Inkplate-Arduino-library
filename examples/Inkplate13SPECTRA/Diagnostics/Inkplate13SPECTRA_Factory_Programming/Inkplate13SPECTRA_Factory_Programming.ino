@@ -135,6 +135,13 @@ void loop()
 void showSplashScreen()
 {
     inkplate.clearDisplay();
-    inkplate.image.drawBitmap3Bit(0, 0, demo_image, demo_image_w, demo_image_h);
+
+    inkplate.image.setDitherKernel(ImageColor::Burkes);
+    
+    // PNG data is memory mapped from flash, so it can be decoded in place
+    if (!inkplate.image.drawPngFromBuffer((uint8_t *)splash_new, sizeof(splash_new), 0, 0, true, false))
+    {
+        Serial.println("Splash PNG decode failed!");
+    }
     inkplate.display();
 }
