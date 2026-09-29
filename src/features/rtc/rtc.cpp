@@ -17,6 +17,7 @@
 
 #include "rtc.h"
 #include "../../system/inkplateSemaphore.h"
+#include <ctime>
 
 
 /**
