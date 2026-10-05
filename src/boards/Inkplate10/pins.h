@@ -11,9 +11,9 @@
 // ---------------------------------------------------------------------------
 // I/O expander pins (PCAL6416 @ IO_INT_ADDR)
 // ---------------------------------------------------------------------------
-#define WAKEUP   IO_PIN_A0 // 0
-#define PWRUP    IO_PIN_A1 // 1
-#define VCOM     IO_PIN_A2 // 2
+#define WAKEUP IO_PIN_A0 // 0
+#define PWRUP  IO_PIN_A1 // 1
+#define VCOM   IO_PIN_A2 // 2
 // TPS65186 INT line. Set to -1 if it is not wired to the expander, the VCOM
 // programming routine then falls back to a fixed delay.
 #define TPS_INT  IO_PIN_A3 // 3
@@ -154,12 +154,11 @@
 #define DATA DATA_LOW
 
 // Data byte -> low register mask. Only D7 lives here.
-#define DATA_TO_LOW(d) (((uint32_t)(d) & 0x80UL) ? DATA_LOW : 0UL)
+#define DATA_TO_LOW(d) (((uint32_t)(d)&0x80UL) ? DATA_LOW : 0UL)
 
 // Data byte -> high register mask. D0-D4 are contiguous at GPIO38-42 and D5/D6
 // at GPIO47/48, so two shifted fields cover the whole thing.
-#define DATA_TO_HIGH(d)                                                                                                \
-    ((((uint32_t)(d) & 0x1FUL) << (EPD_D0 - 32)) | ((((uint32_t)(d) >> 5) & 0x03UL) << (EPD_D5 - 32)))
+#define DATA_TO_HIGH(d) ((((uint32_t)(d)&0x1FUL) << (EPD_D0 - 32)) | ((((uint32_t)(d) >> 5) & 0x03UL) << (EPD_D5 - 32)))
 
 #endif
 #endif

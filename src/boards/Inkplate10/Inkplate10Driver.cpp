@@ -34,9 +34,8 @@
 #include "Inkplate.h"
 
 // Every native GPIO the driver drives, control lines first, then the data bus.
-static const uint8_t epdPins[] = {CL_PIN, SPV_PIN, GMOD_PIN, OE_PIN, CKV_PIN, LE_PIN, SPH_PIN,
-                                  EPD_D0, EPD_D1, EPD_D2,    EPD_D3, EPD_D4,  EPD_D5, EPD_D6,
-                                  EPD_D7};
+static const uint8_t epdPins[] = {CL_PIN, SPV_PIN, GMOD_PIN, OE_PIN, CKV_PIN, LE_PIN, SPH_PIN, EPD_D0,
+                                  EPD_D1, EPD_D2,  EPD_D3,   EPD_D4, EPD_D5,  EPD_D6, EPD_D7};
 
 /**
  *
