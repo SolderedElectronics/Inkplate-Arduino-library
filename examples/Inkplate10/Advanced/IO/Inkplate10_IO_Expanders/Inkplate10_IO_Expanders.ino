@@ -44,7 +44,7 @@
  * @license     GNU GPL V3
  **************************************************/
 
-#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
+#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_ESP32S3_DEV)
 #error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
 #endif
 

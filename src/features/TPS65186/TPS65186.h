@@ -6,7 +6,11 @@
 #include "../../system/ExpanderSelect.h"
 #include "../../system/defines.h"
 
+// Boards may override this from their pins.h, which is pulled in through the
+// driver header before this file.
+#ifndef TPS65186_I2C_ADDR
 #define TPS65186_I2C_ADDR 0x48
+#endif
 
 #define TPS65186_REG_TEMP    0x00
 #define TPS65186_REG_ENABLE  0x01

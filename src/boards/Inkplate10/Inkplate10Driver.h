@@ -2,13 +2,17 @@
  **************************************************
  *
  * @file        Inkplate10Driver.h
- * @brief       Low level driver for the Inkplate 10 e-paper panel
+ * @brief       Low level driver for the Inkplate 10 e-paper panel, ESP32-S3 breakout version
  *
- *              The Inkplate 10 uses a 9.7" 1200x825 monochrome e-paper panel driven over a
- *              parallel interface. The panel data lines are driven directly through the ESP32
- *              GPIO registers, while the control lines and the peripherals are handled by two
- *              MCP/PCAL GPIO expanders. The TPS65186 PMIC generates the e-paper driving rails
+ *              The panel is a 9.7" 1200x825 monochrome e-paper driven over a parallel
+ *              interface. The data lines are driven directly through the ESP32-S3 GPIO
+ *              output registers, the slow control lines through native GPIOs as well, and
+ *              the PMIC control lines (WAKEUP, PWRUP, VCOM, PWR_GOOD) through a single
+ *              PCAL6416 expander. The TPS65186 PMIC generates the e-paper driving rails
  *              and also provides the panel temperature reading.
+ *
+ *              This breakout build has no RTC, no microSD card, no touchpad, no battery
+ *              divider and no second I/O expander.
  *
  *              The driver supports both display modes: 1 bit (black and white, with partial
  *              updates) and 3 bit (8 levels of grey, full updates only). The waveforms used
@@ -27,7 +31,7 @@
 #define __INKPLATE10DRIVER_H__
 
 // Header guard for the Arduino include
-#if defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE10)
+#if defined(ARDUINO_ESP32S3_DEV)
 
 // Inkplate Board name.
 #define INKPLATE_BOARD_NAME "Inkplate 10"
@@ -45,15 +49,15 @@
 // Include waveforms for EPD
 #include "waveforms.h"
 
-#include "../../graphics/Image/Image.h"
 #include "../../graphics/Gif/Gif.h"
+#include "../../graphics/Image/Image.h"
 
 #include "Wire.h"
 
 #include "../../graphics/GraphicsDefs.h"
 
-#include "../../features/featureSelect.h"
 #include "../../features/TPS65186/TPS65186.h"
+#include "../../features/featureSelect.h"
 
 #include "../../system/defines.h"
 
@@ -86,19 +90,13 @@ class EPDDriver
     int einkOn();
     void einkOff();
 
-    void setSdCardOk(int16_t s);
+    // No microSD on this board. The stub keeps the Image class, which checks the card
+    // before drawing from a path, compiling and taking the no-card branch.
     int16_t getSdCardOk();
-    int16_t sdCardInit();
-    void sdCardSleep();
-    SdFat &getSdFat();
-    SPIClass *getSPIptr();
 
     int8_t readTemperature();
 
-    double readBattery();
-
     void burnInClean(uint8_t clear_cycles, uint16_t cycles_delay);
-
 
     bool isPowerGood();
 
@@ -109,15 +107,8 @@ class EPDDriver
     bool setWaveform(uint8_t waveformNumber, bool burnToEEPROM = true);
 
     IOExpander expander1;
-    IOExpander expander2;
 
     TPS65186 pmic;
-
-    RTC rtc;
-
-#ifdef ARDUINO_INKPLATE10
-    Touchpad touchpad;
-#endif
 
     Image image;
     Gif gif;
@@ -125,10 +116,14 @@ class EPDDriver
     uint8_t _beginDone = 0;
     uint8_t _displayMode;
 
-
+    // Data byte to GPIO register masks. Two tables because the data bus is split
+    // across the low and the high GPIO output register.
     uint32_t pinLUT[256];
+    uint32_t pinLUTH[256];
     uint32_t *GLUT;
     uint32_t *GLUT2;
+    uint32_t *GLUTH;
+    uint32_t *GLUT2H;
     uint8_t *DMemoryNew;
     uint8_t *_partial;
     uint8_t *DMemory4Bit;
@@ -155,7 +150,7 @@ class EPDDriver
     void setPanelState(uint8_t state);
     void clean(uint8_t c, uint8_t rep);
     void vscan_start();
-    void hscan_start(uint32_t _d);
+    void hscan_start(uint32_t _dLow, uint32_t _dHigh);
     void vscan_end();
     uint8_t _panelState = 0;
     Inkplate *_inkplate;

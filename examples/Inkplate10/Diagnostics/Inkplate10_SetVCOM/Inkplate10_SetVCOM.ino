@@ -52,7 +52,7 @@
  * @license     GNU GPL V3
  **************************************************/
 
- #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
+ #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_ESP32S3_DEV)
 #error "Select Inkplate10 board"
 #endif
 

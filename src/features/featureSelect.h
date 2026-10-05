@@ -1,8 +1,12 @@
 #ifndef _FEATURE_SELECT_H
 #define _FEATURE_SELECT_H
 
-#if defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE5V2) || defined(ARDUINO_INKPLATE13SPECTRA) ||              \
-    defined(ARDUINO_INKPLATE7SPECTRA) || defined(ARDUINO_INKPLATE5) || defined(ARDUINO_INKPLATE10V2)
+#if defined(ARDUINO_ESP32S3_DEV)
+// ESP32-S3 Inkplate 10 breakout: no RTC and no microSD on the board. SdFat is still
+// pulled in because the Image class API is declared in terms of SdFile.
+#include "SdFat/SdFat.h"
+#elif defined(ARDUINO_INKPLATE6V2) || defined(ARDUINO_INKPLATE5V2) || defined(ARDUINO_INKPLATE13SPECTRA) ||            \
+    defined(ARDUINO_INKPLATE7SPECTRA) || defined(ARDUINO_INKPLATE5)
 #include "SdFat/SdFat.h"
 #include "rtc/rtc.h"
 #elif defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE6) || defined(ARDUINO_INKPLATE10)

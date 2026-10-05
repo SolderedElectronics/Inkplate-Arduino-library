@@ -2,13 +2,17 @@
  **************************************************
  *
  * @file        Inkplate10Driver.cpp
- * @brief       Low level driver for the Inkplate 10 e-paper panel
+ * @brief       Low level driver for the Inkplate 10 e-paper panel, ESP32-S3 breakout version
  *
- *              The Inkplate 10 uses a 9.7" 1200x825 monochrome e-paper panel driven over a
- *              parallel interface. The panel data lines are driven directly through the ESP32
- *              GPIO registers, while the control lines and the peripherals are handled by two
- *              MCP/PCAL GPIO expanders. The TPS65186 PMIC generates the e-paper driving rails
+ *              The panel is a 9.7" 1200x825 monochrome e-paper driven over a parallel
+ *              interface. The data lines are driven directly through the ESP32-S3 GPIO
+ *              output registers, the slow control lines through native GPIOs as well, and
+ *              the PMIC control lines (WAKEUP, PWRUP, VCOM, PWR_GOOD) through a single
+ *              PCAL6416 expander. The TPS65186 PMIC generates the e-paper driving rails
  *              and also provides the panel temperature reading.
+ *
+ *              This breakout build has no RTC, no microSD card, no touchpad, no battery
+ *              divider and no second I/O expander.
  *
  *              The driver supports both display modes: 1 bit (black and white, with partial
  *              updates) and 3 bit (8 levels of grey, full updates only). The waveforms used
@@ -24,13 +28,15 @@
  ***************************************************/
 
 // Header guard for the Arduino include
-#if defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE10)
+#if defined(ARDUINO_ESP32S3_DEV)
 #include "Inkplate10Driver.h"
-#include "Inkplate.h"
 #include "../../system/inkplateSemaphore.h"
+#include "Inkplate.h"
 
-SPIClass spi2(2);
-SdFat sd;
+// Every native GPIO the driver drives, control lines first, then the data bus.
+static const uint8_t epdPins[] = {CL_PIN, SPV_PIN, GMOD_PIN, OE_PIN, CKV_PIN, LE_PIN, SPH_PIN,
+                                  EPD_D0, EPD_D1, EPD_D2,    EPD_D3, EPD_D4,  EPD_D5, EPD_D6,
+                                  EPD_D7};
 
 /**
  *
@@ -91,11 +97,6 @@ void EPDDriver::writePixelInternal(int16_t x, int16_t y, uint16_t color)
  * @brief       begin function initialize Inkplate object with predefined
  * settings
  *
- * @param       uint8_t lightWaveform
- *              if inkplate doesn't work well or if it is fading after turning off
- *              lightWaveform should be set to 1 in order to fix that, but older boards
- *              may not support it
- *
  * @return      True if initialization is successful, false if failed or already
  * initialized
  */
@@ -149,6 +150,9 @@ int EPDDriver::initDriver(Inkplate *_inkplatePtr)
 /**
  * @brief       Calculates the values of the lookup table to
  *              speed up rendering
+ *
+ * @note        Two tables per LUT, one for each GPIO output register, because the
+ *              data bus is split between GPIO21 and GPIO38-48.
  */
 void EPDDriver::calculateLUTs()
 {
@@ -157,11 +161,11 @@ void EPDDriver::calculateLUTs()
         for (uint32_t i = 0; i < 256; ++i)
         {
             uint8_t z = (waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j]);
-            GLUT[j * 256 + i] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
-                                (((z & B00010000) >> 4) << 23) | (((z & B11100000) >> 5) << 25);
+            GLUT[j * 256 + i] = DATA_TO_LOW(z);
+            GLUTH[j * 256 + i] = DATA_TO_HIGH(z);
             z = ((waveform3Bit[i & 0x07][j] << 2) | (waveform3Bit[(i >> 4) & 0x07][j])) << 4;
-            GLUT2[j * 256 + i] = ((z & B00000011) << 4) | (((z & B00001100) >> 2) << 18) |
-                                 (((z & B00010000) >> 4) << 23) | (((z & B11100000) >> 5) << 25);
+            GLUT2[j * 256 + i] = DATA_TO_LOW(z);
+            GLUT2H[j * 256 + i] = DATA_TO_HIGH(z);
         }
     }
 }
@@ -287,28 +291,45 @@ void IRAM_ATTR EPDDriver::display3b(bool leaveOn)
 
         for (int i = 0; i < E_INK_HEIGHT; i++)
         {
-            uint32_t t = GLUT2[k * 256 + (*(--dp))];
-            t |= GLUT[k * 256 + (*(--dp))];
-            hscan_start(t);
-            t = GLUT2[k * 256 + (*(--dp))];
-            t |= GLUT[k * 256 + (*(--dp))];
-            GPIO.out_w1ts = t | CL;
-            GPIO.out_w1tc = DATA | CL;
+            uint8_t b1 = *(--dp);
+            uint8_t b0 = *(--dp);
+            uint32_t tl = GLUT2[k * 256 + b1] | GLUT[k * 256 + b0];
+            uint32_t th = GLUT2H[k * 256 + b1] | GLUTH[k * 256 + b0];
+            hscan_start(tl, th);
+
+            b1 = *(--dp);
+            b0 = *(--dp);
+            tl = GLUT2[k * 256 + b1] | GLUT[k * 256 + b0];
+            th = GLUT2H[k * 256 + b1] | GLUTH[k * 256 + b0];
+            GPIO.out1_w1ts.val = th;
+            GPIO.out_w1ts = tl | CL;
+            GPIO.out1_w1tc.val = DATA_HIGH;
+            GPIO.out_w1tc = DATA_LOW | CL;
 
             for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); j++)
             {
-                t = GLUT2[k * 256 + (*(--dp))];
-                t |= GLUT[k * 256 + (*(--dp))];
-                GPIO.out_w1ts = t | CL;
-                GPIO.out_w1tc = DATA | CL;
-                t = GLUT2[k * 256 + (*(--dp))];
-                t |= GLUT[k * 256 + (*(--dp))];
-                GPIO.out_w1ts = t | CL;
-                GPIO.out_w1tc = DATA | CL;
+                b1 = *(--dp);
+                b0 = *(--dp);
+                tl = GLUT2[k * 256 + b1] | GLUT[k * 256 + b0];
+                th = GLUT2H[k * 256 + b1] | GLUTH[k * 256 + b0];
+                GPIO.out1_w1ts.val = th;
+                GPIO.out_w1ts = tl | CL;
+                GPIO.out1_w1tc.val = DATA_HIGH;
+                GPIO.out_w1tc = DATA_LOW | CL;
+
+                b1 = *(--dp);
+                b0 = *(--dp);
+                tl = GLUT2[k * 256 + b1] | GLUT[k * 256 + b0];
+                th = GLUT2H[k * 256 + b1] | GLUTH[k * 256 + b0];
+                GPIO.out1_w1ts.val = th;
+                GPIO.out_w1ts = tl | CL;
+                GPIO.out1_w1tc.val = DATA_HIGH;
+                GPIO.out_w1tc = DATA_LOW | CL;
             }
 
             GPIO.out_w1ts = CL;
-            GPIO.out_w1tc = DATA | CL;
+            GPIO.out1_w1tc.val = DATA_HIGH;
+            GPIO.out_w1tc = DATA_LOW | CL;
             vscan_end();
         }
         delayMicroseconds(230);
@@ -359,24 +380,31 @@ void EPDDriver::display1b(bool _leaveOn)
         {
             dram = (*(DMemoryNew + _pos));
             data = LUTB[(dram >> 4) & 0x0F];
-            hscan_start(pinLUT[data]);
+            hscan_start(pinLUT[data], pinLUTH[data]);
             data = LUTB[dram & 0x0F];
+            GPIO.out1_w1ts.val = pinLUTH[data];
             GPIO.out_w1ts = pinLUT[data] | CL;
-            GPIO.out_w1tc = DATA | CL;
+            GPIO.out1_w1tc.val = DATA_HIGH;
+            GPIO.out_w1tc = DATA_LOW | CL;
             _pos--;
             for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); j++)
             {
                 dram = (*(DMemoryNew + _pos));
                 data = LUTB[(dram >> 4) & 0x0F];
+                GPIO.out1_w1ts.val = pinLUTH[data];
                 GPIO.out_w1ts = pinLUT[data] | CL;
-                GPIO.out_w1tc = DATA | CL;
+                GPIO.out1_w1tc.val = DATA_HIGH;
+                GPIO.out_w1tc = DATA_LOW | CL;
                 data = LUTB[dram & 0x0F];
+                GPIO.out1_w1ts.val = pinLUTH[data];
                 GPIO.out_w1ts = pinLUT[data] | CL;
-                GPIO.out_w1tc = DATA | CL;
+                GPIO.out1_w1tc.val = DATA_HIGH;
+                GPIO.out_w1tc = DATA_LOW | CL;
                 _pos--;
             }
             GPIO.out_w1ts = CL;
-            GPIO.out_w1tc = DATA | CL;
+            GPIO.out1_w1tc.val = DATA_HIGH;
+            GPIO.out_w1tc = DATA_LOW | CL;
             vscan_end();
         }
         delayMicroseconds(230);
@@ -431,7 +459,6 @@ uint32_t EPDDriver::partialUpdate(bool _forced, bool leaveOn)
     }
 
     uint32_t _pos = (E_INK_WIDTH * E_INK_HEIGHT / 8) - 1;
-    uint32_t _send;
     uint8_t data = 0;
     uint8_t diffw, diffb;
     uint32_t n = (E_INK_WIDTH * E_INK_HEIGHT / 4) - 1;
@@ -474,19 +501,21 @@ uint32_t EPDDriver::partialUpdate(bool _forced, bool leaveOn)
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
             data = *(_pBuffer + n);
-            _send = pinLUT[data];
-            hscan_start(_send);
+            hscan_start(pinLUT[data], pinLUTH[data]);
             n--;
             for (int j = 0; j < ((E_INK_WIDTH / 4) - 1); ++j)
             {
                 data = *(_pBuffer + n);
-                _send = pinLUT[data];
-                GPIO.out_w1ts = _send | CL;
-                GPIO.out_w1tc = DATA | CL;
+                GPIO.out1_w1ts.val = pinLUTH[data];
+                GPIO.out_w1ts = pinLUT[data] | CL;
+                GPIO.out1_w1tc.val = DATA_HIGH;
+                GPIO.out_w1tc = DATA_LOW | CL;
                 n--;
             }
-            GPIO.out_w1ts = _send | CL;
-            GPIO.out_w1tc = DATA | CL;
+            GPIO.out1_w1ts.val = pinLUTH[data];
+            GPIO.out_w1ts = pinLUT[data] | CL;
+            GPIO.out1_w1tc.val = DATA_HIGH;
+            GPIO.out_w1tc = DATA_LOW | CL;
             vscan_end();
         }
         delayMicroseconds(230);
@@ -552,6 +581,10 @@ int EPDDriver::einkOn()
 
     if (!pmic.powerUp())
     {
+        // log_e goes to the same place the core I2C errors do, so this shows up even
+        // in sketches that never call Serial.begin().
+        log_e("PMIC power-up failed, PWR_GOOD reg = 0x%02X (want 0x%02X), PWR_GOOD pin = %d", pmic.readPowerGood(),
+              PWR_GOOD_OK, expander1.digitalRead(PWR_GOOD, true));
         einkOff();
         return 0;
     }
@@ -570,7 +603,8 @@ void EPDDriver::einkOff()
         return;
     OE_CLEAR;
     GMOD_CLEAR;
-    GPIO.out &= ~(DATA | LE | CL);
+    GPIO.out_w1tc = DATA_LOW | LE | CL;
+    GPIO.out1_w1tc.val = DATA_HIGH;
     CKV_CLEAR;
     SPH_CLEAR;
     SPV_CLEAR;
@@ -589,25 +623,12 @@ void EPDDriver::pmicBegin()
 
 
 /**
- * @brief       pinsAsOutputs sets all tps pins as outputs
+ * @brief       pinsAsOutputs sets all panel control and data pins as outputs
  */
 void EPDDriver::pinsAsOutputs()
 {
-    pinMode(2, OUTPUT);
-    pinMode(32, OUTPUT);
-    pinMode(33, OUTPUT);
-    expander1.pinMode(OE, OUTPUT, true);
-    expander1.pinMode(GMOD, OUTPUT, true);
-    expander1.pinMode(SPV, OUTPUT, true);
-    pinMode(0, OUTPUT);
-    pinMode(4, OUTPUT);
-    pinMode(5, OUTPUT);
-    pinMode(18, OUTPUT);
-    pinMode(19, OUTPUT);
-    pinMode(23, OUTPUT);
-    pinMode(25, OUTPUT);
-    pinMode(26, OUTPUT);
-    pinMode(27, OUTPUT);
+    for (uint8_t i = 0; i < sizeof(epdPins); i++)
+        pinMode(epdPins[i], OUTPUT);
 }
 
 /**
@@ -644,36 +665,28 @@ uint8_t EPDDriver::readPowerGood()
  * @brief       isPowerGood checks if power good status is ok for all rails
  *
  * @return      true if power good status is ok for all rails, false otherwise
+ *
+ * @note        The hardware PWR_GOOD line of the TPS65186 is wired to pin 4 of the
+ *              expander, so the rails are checked there first. The status register is
+ *              still read afterwards because it tells which rail is failing.
  */
 bool EPDDriver::isPowerGood()
 {
+    if (!expander1.digitalRead(PWR_GOOD, true))
+        return false;
+
     return pmic.isPowerGood();
 }
 
 /**
- * @brief       pinsZstate sets all tps pins at high z state
+ * @brief       pinsZstate sets all panel control and data pins to high Z state
  *
  * @note        this is used only when turning off epaper
  */
 void EPDDriver::pinsZstate()
 {
-    pinMode(2, INPUT);
-    pinMode(32, INPUT);
-    pinMode(33, INPUT);
-    expander1.pinMode(OE, INPUT, true);
-    expander1.pinMode(GMOD, INPUT, true);
-    expander1.pinMode(SPV, INPUT, true);
-
-    // Set up the EPD Data and CL pins for I2S .
-    pinMode(0, INPUT);
-    pinMode(4, INPUT);
-    pinMode(5, INPUT);
-    pinMode(18, INPUT);
-    pinMode(19, INPUT);
-    pinMode(23, INPUT);
-    pinMode(25, INPUT);
-    pinMode(26, INPUT);
-    pinMode(27, INPUT);
+    for (uint8_t i = 0; i < sizeof(epdPins); i++)
+        pinMode(epdPins[i], INPUT);
 }
 
 /**
@@ -704,14 +717,16 @@ void EPDDriver::clean(uint8_t c, uint8_t rep)
     else if (c == 3)
         data = B11111111;
 
-    uint32_t _send = pinLUT[data];
+    uint32_t _sendLow = pinLUT[data];
+    uint32_t _sendHigh = pinLUTH[data];
     for (int k = 0; k < rep; ++k)
     {
         vscan_start();
         for (int i = 0; i < E_INK_HEIGHT; ++i)
         {
-            hscan_start(_send);
-            GPIO.out_w1ts = (_send) | CL;
+            hscan_start(_sendLow, _sendHigh);
+            GPIO.out1_w1ts.val = _sendHigh;
+            GPIO.out_w1ts = _sendLow | CL;
             GPIO.out_w1tc = CL;
             for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); ++j)
             {
@@ -731,14 +746,18 @@ void EPDDriver::clean(uint8_t c, uint8_t rep)
 /**
  * @brief       hscan_start starts writing data into current row
  *
- * @param       uint32_t _d
- *              data to be written into current row
+ * @param       uint32_t _dLow
+ *              data bits belonging to the low GPIO output register
+ * @param       uint32_t _dHigh
+ *              data bits belonging to the high GPIO output register
  */
-void EPDDriver::hscan_start(uint32_t _d)
+void EPDDriver::hscan_start(uint32_t _dLow, uint32_t _dHigh)
 {
     SPH_CLEAR;
-    GPIO.out_w1ts = (_d) | CL;
-    GPIO.out_w1tc = DATA | CL;
+    GPIO.out1_w1ts.val = _dHigh;
+    GPIO.out_w1ts = _dLow | CL;
+    GPIO.out1_w1tc.val = DATA_HIGH;
+    GPIO.out_w1tc = DATA_LOW | CL;
     SPH_SET;
     CKV_SET;
 }
@@ -754,93 +773,38 @@ uint8_t EPDDriver::getDisplayMode()
 }
 
 /**
- * @brief       Initializes the internal and external IO expanders,
- *              Configures all of the data and control pins for the
- *              EPD Driver.
+ * @brief       Initializes the IO expander, the PMIC and all of the data and
+ *              control pins of the EPD driver.
  */
 void EPDDriver::gpioInit()
 {
-    expander1.begin(IO_INT_ADDR);
-    expander2.begin(IO_EXT_ADDR);
-
-    expander1.digitalWrite(9, LOW);
+    if (!expander1.begin(IO_INT_ADDR))
+        log_e("I/O expander not found at 0x%02X", IO_INT_ADDR);
 
     expander1.pinMode(VCOM, OUTPUT, true);
     expander1.pinMode(PWRUP, OUTPUT, true);
     expander1.pinMode(WAKEUP, OUTPUT, true);
-    expander1.pinMode(GPIO0_ENABLE, OUTPUT);
-    expander1.digitalWrite(GPIO0_ENABLE, 1);
+    expander1.digitalWrite(VCOM, LOW, true);
+    expander1.digitalWrite(PWRUP, LOW, true);
+    expander1.digitalWrite(WAKEUP, LOW, true);
+
+    // PWR_GOOD and INT are open-drain outputs of the TPS65186, so they need the
+    // expander pull-up or they read low forever.
+    expander1.pinMode(PWR_GOOD, INPUT_PULLUP, true);
+#if TPS_INT >= 0
+    expander1.pinMode(TPS_INT, INPUT_PULLUP, true);
+#endif
 
     pmicBegin();
 
-    // For same reason, unused pins of first I/O expander have to be also set as
-    // outputs, low.
-    expander1.pinMode(14, OUTPUT);
-    expander1.pinMode(15, OUTPUT);
-    expander1.digitalWrite(14, LOW);
-    expander1.digitalWrite(15, LOW);
-#if defined(ARDUINO_INKPLATE10V2)
-    // Set SPI pins to input to reduce power consumption in deep sleep
-    pinMode(12, INPUT);
-    pinMode(13, INPUT);
-    pinMode(14, INPUT);
-    pinMode(15, INPUT);
+    // Panel control and data lines.
+    pinsAsOutputs();
 
-    // And also disable uSD card supply
-    expander1.pinMode(SD_PMOS_PIN, INPUT);
-#else
-    expander1.pinMode(12, OUTPUT);
-    expander1.digitalWrite(12, LOW);
-#endif
-    // CONTROL PINS
-    pinMode(0, OUTPUT);
-    pinMode(2, OUTPUT);
-    pinMode(32, OUTPUT);
-    pinMode(33, OUTPUT);
-    expander1.pinMode(OE, OUTPUT, true);
-    expander1.pinMode(GMOD, OUTPUT, true);
-    expander1.pinMode(SPV, OUTPUT, true);
-
-    // DATA PINS
-    pinMode(4, OUTPUT); // D0
-    pinMode(5, OUTPUT);
-    pinMode(18, OUTPUT);
-    pinMode(19, OUTPUT);
-    pinMode(23, OUTPUT);
-    pinMode(25, OUTPUT);
-    pinMode(26, OUTPUT);
-    pinMode(27, OUTPUT); // D7
-
-#if defined(ARDUINO_INKPLATE10V2)
-    expander1.pinMode(10, OUTPUT);
-    expander1.pinMode(11, OUTPUT);
-    expander1.pinMode(12, OUTPUT);
-    expander1.digitalWrite(10, LOW);
-    expander1.digitalWrite(11, LOW);
-    expander1.digitalWrite(12, LOW);
-#else
-    // Initialize the touchpad class
-    touchpad.begin(_inkplate);
-    expander1.pinMode(10, INPUT);
-    expander1.pinMode(11, INPUT);
-    expander1.pinMode(12, INPUT);
-#endif
-    // Battery voltage Switch MOSFET
-    expander1.pinMode(9, OUTPUT);
-    expander1.digitalWrite(9, LOW);
-
-    // Set all pins of seconds I/O expander to outputs, low.
-    // For some reason, it draw more current in deep sleep when pins are set as
-    // inputs...
-
+    // Data byte to GPIO register masks, one table per output register.
     for (uint32_t i = 0; i < 256; ++i)
-        pinLUT[i] = ((i & B00000011) << 4) | (((i & B00001100) >> 2) << 18) | (((i & B00010000) >> 4) << 23) |
-                    (((i & B11100000) >> 5) << 25);
-
-    for (int i = 0; i < 15; i++)
     {
-        expander2.pinMode(i, OUTPUT);
-        expander2.digitalWrite(i, LOW);
+        pinLUT[i] = DATA_TO_LOW(i);
+        pinLUTH[i] = DATA_TO_HIGH(i);
     }
 }
 
@@ -859,8 +823,10 @@ uint8_t EPDDriver::initializeFramebuffers()
     DMemory4Bit = (uint8_t *)ps_malloc(E_INK_WIDTH * E_INK_HEIGHT / 2);
     GLUT = (uint32_t *)malloc(256 * 9 * sizeof(uint32_t));
     GLUT2 = (uint32_t *)malloc(256 * 9 * sizeof(uint32_t));
+    GLUTH = (uint32_t *)malloc(256 * 9 * sizeof(uint32_t));
+    GLUT2H = (uint32_t *)malloc(256 * 9 * sizeof(uint32_t));
     if (DMemoryNew == NULL || _partial == NULL || _pBuffer == NULL || DMemory4Bit == NULL || GLUT == NULL ||
-        GLUT2 == NULL)
+        GLUT2 == NULL || GLUTH == NULL || GLUT2H == NULL)
     {
         return 0;
     }
@@ -874,121 +840,13 @@ uint8_t EPDDriver::initializeFramebuffers()
 }
 
 /**
- * @brief       sdCardInit initializes sd card trough SPI
+ * @brief       getSdCardOk reports the microSD card status
  *
- * @return      0 if failed to initialise, 1 if successful
- */
-int16_t EPDDriver::sdCardInit()
-{
-    expander1.pinMode(SD_PMOS_PIN, OUTPUT);
-    expander1.digitalWrite(SD_PMOS_PIN, LOW);
-    delay(50);
-    spi2.begin(14, 12, 13, 15);
-    setSdCardOk(sd.begin(SdSpiConfig(15, SHARED_SPI, SD_SCK_MHZ(25), &spi2)));
-    return getSdCardOk();
-}
-
-/**
- * @brief       sdCardSleep turns off the P-MOS which powers the sd card to save energy in deep sleep
- */
-void EPDDriver::sdCardSleep()
-{
-    // Set SPI pins to input to reduce power consumption in deep sleep
-    pinMode(12, INPUT);
-    pinMode(13, INPUT);
-    pinMode(14, INPUT);
-    pinMode(15, INPUT);
-
-    // And also disable uSD card supply
-    expander1.pinMode(SD_PMOS_PIN, INPUT);
-}
-
-/**
- * @brief       getSdFat gets sd card object
- *
- * @return      sd card class object
- */
-SdFat &EPDDriver::getSdFat()
-{
-    return sd;
-}
-
-/**
- * @brief       getSPIptr gets SPI class object pointer
- *
- * @return      SPI class object
- */
-SPIClass *EPDDriver::getSPIptr()
-{
-    return &spi2;
-}
-
-/**
- * @brief       setSdCardOk sets sd card OK status
- *
- * @param       int16_t s
- *              sd card OK status, can be 1 or 0
- */
-void EPDDriver::setSdCardOk(int16_t s)
-{
-    _sdCardOk = s;
-}
-
-
-/**
- * @brief       setSdCardOk gets sd card OK status
- *
- * @return      sd card OK status, can be 1 or 0
+ * @return      always 0, this board has no microSD card slot
  */
 int16_t EPDDriver::getSdCardOk()
 {
-    return _sdCardOk;
-}
-
-
-/**
- * @brief       readBattery reads voltage of the battery
- *
- * @return      returns battery voltage value
- */
-double EPDDriver::readBattery()
-{
-    // Read the pin on the battery MOSFET. If is high, that means is older version of the board
-    // that uses PMOS only. If it's low, newer board with both PMOS and NMOS.
-    expander1.pinMode(9, INPUT);
-    int state = expander1.digitalRead(9);
-    expander1.pinMode(9, OUTPUT);
-
-    // If the input is pulled high, it's PMOS only.
-    // If it's pulled low, it's PMOS and NMOS.
-    if (state)
-    {
-        expander1.digitalWrite(9, LOW);
-    }
-    else
-    {
-        expander1.digitalWrite(9, HIGH);
-    }
-
-    // Wait a little bit after a MOSFET enable.
-    delay(5);
-
-    // Set to the highest resolution and read the voltage.
-    analogReadResolution(12);
-    int adc = analogReadMilliVolts(35);
-
-    // Turn off the MOSFET (and voltage divider).
-    if (state)
-    {
-        expander1.digitalWrite(9, HIGH);
-    }
-    else
-    {
-        expander1.digitalWrite(9, LOW);
-    }
-
-    // Calculate the voltage at the battery terminal (voltage is divided in half by voltage divider).
-    return (double(adc) * 2.0 / 1000);
+    return 0;
 }
 
 /**
@@ -1063,7 +921,6 @@ bool EPDDriver::setVCOM(double vcom)
  */
 bool EPDDriver::writeVCOMToPanelEEPROM(double v)
 {
-    expander1.pinMode(6, INPUT_PULLUP);
     int raw = abs((int)(v * 100.0)) & 0x1FF;
 
     uint8_t vcomL = (uint8_t)(raw & 0xFF);
@@ -1088,12 +945,18 @@ bool EPDDriver::writeVCOMToPanelEEPROM(double v)
     // Strobe "program to EEPROM" (bit6 = 1)
     writeReg(0x04, (uint8_t)(r4 | (1 << 6)));
 
-    // Wait until EEPROM has been programmed (INT goes LOW)
-    // Make sure INT pin is configured correctly elsewhere (usually input pullup).
-    while (expander1.digitalRead(6))
+#if TPS_INT >= 0
+    // Wait until EEPROM has been programmed (INT goes LOW), with a timeout so a
+    // missing INT connection cannot hang the call forever.
+    unsigned long _timer = millis();
+    while (expander1.digitalRead(TPS_INT, true) && (millis() - _timer) < 1000)
     {
         delay(1);
     }
+#else
+    // INT is not wired to the expander on this board, programming takes well under 100 ms.
+    delay(100);
+#endif
 
     // Clear interrupt flag by reading INT1 register
     (void)readReg(0x07);
@@ -1101,20 +964,13 @@ bool EPDDriver::writeVCOMToPanelEEPROM(double v)
 
     // Read back registers for verification
     uint8_t rdL = readReg(0x03);
-    // uint8_t rdH_bit0 = readReg(0x04) & 0x01;
     uint8_t reg04full = readReg(0x04);
     uint8_t rdH_bit0 = reg04full & 0x01;
 
     int check = ((int)rdH_bit0 << 8) | rdL;
 
-    // DEBUG PRINTS
-    Serial.printf("\nraw=%d (0x%03X), vcomL=0x%02X, vcomMSB=%d\n", raw, raw, vcomL, vcomMSB);
-    Serial.printf("readback: rdL=0x%02X, rdHbit0=%d => check=%d (0x%03X)\n", rdL, rdH_bit0, check, check);
-    Serial.printf("reg04 full=0x%02X\n", reg04full);
-    // Turn off TPS/EPD power (your function)
     einkOff();
     delay(100);
-
 
     return (check == raw);
 }
@@ -1190,9 +1046,7 @@ void EPDDriver::blockGpioPins()
     expander1.blockPinUsage(WAKEUP);
     expander1.blockPinUsage(PWRUP);
     expander1.blockPinUsage(VCOM);
-    expander1.blockPinUsage(OE);
-    expander1.blockPinUsage(GMOD);
-    expander1.blockPinUsage(SPV);
+    expander1.blockPinUsage(PWR_GOOD);
 }
 
 /**

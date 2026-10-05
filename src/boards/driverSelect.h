@@ -20,7 +20,7 @@
 #elif defined(ARDUINO_INKPLATE7SPECTRA)
 #define USE_COLOR_IMAGE
 #include "boards/Inkplate7SPECTRA/Inkplate7SPECTRADriver.h"
-#elif defined(ARDUINO_INKPLATE10V2) || defined(ARDUINO_INKPLATE10)
+#elif defined(ARDUINO_ESP32S3_DEV)
 #define MULTIPLE_DISPLAY_MODES
 #include "boards/Inkplate10/Inkplate10Driver.h"
 #elif defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)

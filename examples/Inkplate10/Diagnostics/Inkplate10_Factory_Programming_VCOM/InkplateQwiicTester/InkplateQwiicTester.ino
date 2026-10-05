@@ -44,7 +44,7 @@
  ***************************************************/
 
 // Block usage of this code on Inkplate boards.
-#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
+#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_ESP32S3_DEV)
 
 // Include a Wire library (for I2C communication)
 #include "Wire.h"
