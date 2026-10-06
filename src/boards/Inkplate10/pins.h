@@ -160,5 +160,61 @@
 // at GPIO47/48, so two shifted fields cover the whole thing.
 #define DATA_TO_HIGH(d) ((((uint32_t)(d)&0x1FUL) << (EPD_D0 - 32)) | ((((uint32_t)(d) >> 5) & 0x03UL) << (EPD_D5 - 32)))
 
+// ---------------------------------------------------------------------------
+// Bus timing.
+//
+// The bare register writes give CL and LE pulses only one store wide, which is
+// too short for the panel on the S3 breakout (vertical streaks, missing columns).
+// Two separate waits, in CPU cycles (240 MHz -> ~4.17 ns per cycle). Setting
+// either one to 0 removes that wait completely.
+//
+// EPD_CL_DELAY_CYCLES: CL high time and CL low time, paid on every data byte.
+// EPD_LE_DELAY_CYCLES: around the LE and SPH edges, paid once per row.
+// ---------------------------------------------------------------------------
+#ifndef EPD_CL_DELAY_CYCLES
+#define EPD_CL_DELAY_CYCLES 60 // ~250 ns, 2x the lowest working value (30) on the breakout
+#endif
+
+#ifndef EPD_LE_DELAY_CYCLES
+#define EPD_LE_DELAY_CYCLES 0 // not needed on the breakout
+#endif
+
+static inline __attribute__((always_inline)) void epdDelayCycles(uint32_t n)
+{
+    uint32_t start, now;
+    __asm__ __volatile__("rsr %0, ccount" : "=a"(start));
+    do
+    {
+        __asm__ __volatile__("rsr %0, ccount" : "=a"(now));
+    } while ((now - start) < n);
+}
+
+#define EPD_CL_DELAY()                                                                                                 \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (EPD_CL_DELAY_CYCLES > 0)                                                                                   \
+            epdDelayCycles(EPD_CL_DELAY_CYCLES);                                                                       \
+    } while (0)
+
+#define EPD_LE_DELAY()                                                                                                 \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (EPD_LE_DELAY_CYCLES > 0)                                                                                   \
+            epdDelayCycles(EPD_LE_DELAY_CYCLES);                                                                       \
+    } while (0)
+
+// Send one data byte. The panel samples on the CL rising edge, so D7 can rise
+// together with CL. With EPD_CL_DELAY_CYCLES at 0 this is the plain 4-store write.
+#define EPD_SEND(lo, hi)                                                                                               \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        GPIO.out1_w1ts.val = (hi);                                                                                     \
+        GPIO.out_w1ts = (lo) | CL;                                                                                     \
+        EPD_CL_DELAY();                                                                                                \
+        GPIO.out1_w1tc.val = DATA_HIGH;                                                                                \
+        GPIO.out_w1tc = DATA_LOW | CL;                                                                                 \
+        EPD_CL_DELAY();                                                                                                \
+    } while (0)
+
 #endif
 #endif

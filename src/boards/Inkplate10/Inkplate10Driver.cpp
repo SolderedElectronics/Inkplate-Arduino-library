@@ -205,8 +205,11 @@ void EPDDriver::vscan_start()
 void EPDDriver::vscan_end()
 {
     CKV_CLEAR;
+    EPD_LE_DELAY();
     LE_SET;
+    EPD_LE_DELAY();
     LE_CLEAR;
+    EPD_LE_DELAY();
     delayMicroseconds(0);
 }
 
@@ -300,10 +303,7 @@ void IRAM_ATTR EPDDriver::display3b(bool leaveOn)
             b0 = *(--dp);
             tl = GLUT2[k * 256 + b1] | GLUT[k * 256 + b0];
             th = GLUT2H[k * 256 + b1] | GLUTH[k * 256 + b0];
-            GPIO.out1_w1ts.val = th;
-            GPIO.out_w1ts = tl | CL;
-            GPIO.out1_w1tc.val = DATA_HIGH;
-            GPIO.out_w1tc = DATA_LOW | CL;
+            EPD_SEND(tl, th);
 
             for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); j++)
             {
@@ -311,24 +311,16 @@ void IRAM_ATTR EPDDriver::display3b(bool leaveOn)
                 b0 = *(--dp);
                 tl = GLUT2[k * 256 + b1] | GLUT[k * 256 + b0];
                 th = GLUT2H[k * 256 + b1] | GLUTH[k * 256 + b0];
-                GPIO.out1_w1ts.val = th;
-                GPIO.out_w1ts = tl | CL;
-                GPIO.out1_w1tc.val = DATA_HIGH;
-                GPIO.out_w1tc = DATA_LOW | CL;
+                EPD_SEND(tl, th);
 
                 b1 = *(--dp);
                 b0 = *(--dp);
                 tl = GLUT2[k * 256 + b1] | GLUT[k * 256 + b0];
                 th = GLUT2H[k * 256 + b1] | GLUTH[k * 256 + b0];
-                GPIO.out1_w1ts.val = th;
-                GPIO.out_w1ts = tl | CL;
-                GPIO.out1_w1tc.val = DATA_HIGH;
-                GPIO.out_w1tc = DATA_LOW | CL;
+                EPD_SEND(tl, th);
             }
 
-            GPIO.out_w1ts = CL;
-            GPIO.out1_w1tc.val = DATA_HIGH;
-            GPIO.out_w1tc = DATA_LOW | CL;
+            EPD_SEND(0, 0);
             vscan_end();
         }
         delayMicroseconds(230);
@@ -381,29 +373,18 @@ void EPDDriver::display1b(bool _leaveOn)
             data = LUTB[(dram >> 4) & 0x0F];
             hscan_start(pinLUT[data], pinLUTH[data]);
             data = LUTB[dram & 0x0F];
-            GPIO.out1_w1ts.val = pinLUTH[data];
-            GPIO.out_w1ts = pinLUT[data] | CL;
-            GPIO.out1_w1tc.val = DATA_HIGH;
-            GPIO.out_w1tc = DATA_LOW | CL;
+            EPD_SEND(pinLUT[data], pinLUTH[data]);
             _pos--;
             for (int j = 0; j < ((E_INK_WIDTH / 8) - 1); j++)
             {
                 dram = (*(DMemoryNew + _pos));
                 data = LUTB[(dram >> 4) & 0x0F];
-                GPIO.out1_w1ts.val = pinLUTH[data];
-                GPIO.out_w1ts = pinLUT[data] | CL;
-                GPIO.out1_w1tc.val = DATA_HIGH;
-                GPIO.out_w1tc = DATA_LOW | CL;
+                EPD_SEND(pinLUT[data], pinLUTH[data]);
                 data = LUTB[dram & 0x0F];
-                GPIO.out1_w1ts.val = pinLUTH[data];
-                GPIO.out_w1ts = pinLUT[data] | CL;
-                GPIO.out1_w1tc.val = DATA_HIGH;
-                GPIO.out_w1tc = DATA_LOW | CL;
+                EPD_SEND(pinLUT[data], pinLUTH[data]);
                 _pos--;
             }
-            GPIO.out_w1ts = CL;
-            GPIO.out1_w1tc.val = DATA_HIGH;
-            GPIO.out_w1tc = DATA_LOW | CL;
+            EPD_SEND(0, 0);
             vscan_end();
         }
         delayMicroseconds(230);
@@ -505,16 +486,10 @@ uint32_t EPDDriver::partialUpdate(bool _forced, bool leaveOn)
             for (int j = 0; j < ((E_INK_WIDTH / 4) - 1); ++j)
             {
                 data = *(_pBuffer + n);
-                GPIO.out1_w1ts.val = pinLUTH[data];
-                GPIO.out_w1ts = pinLUT[data] | CL;
-                GPIO.out1_w1tc.val = DATA_HIGH;
-                GPIO.out_w1tc = DATA_LOW | CL;
+                EPD_SEND(pinLUT[data], pinLUTH[data]);
                 n--;
             }
-            GPIO.out1_w1ts.val = pinLUTH[data];
-            GPIO.out_w1ts = pinLUT[data] | CL;
-            GPIO.out1_w1tc.val = DATA_HIGH;
-            GPIO.out_w1tc = DATA_LOW | CL;
+            EPD_SEND(pinLUT[data], pinLUTH[data]);
             vscan_end();
         }
         delayMicroseconds(230);
@@ -753,11 +728,10 @@ void EPDDriver::clean(uint8_t c, uint8_t rep)
 void EPDDriver::hscan_start(uint32_t _dLow, uint32_t _dHigh)
 {
     SPH_CLEAR;
-    GPIO.out1_w1ts.val = _dHigh;
-    GPIO.out_w1ts = _dLow | CL;
-    GPIO.out1_w1tc.val = DATA_HIGH;
-    GPIO.out_w1tc = DATA_LOW | CL;
+    EPD_LE_DELAY();
+    EPD_SEND(_dLow, _dHigh);
     SPH_SET;
+    EPD_LE_DELAY();
     CKV_SET;
 }
 
