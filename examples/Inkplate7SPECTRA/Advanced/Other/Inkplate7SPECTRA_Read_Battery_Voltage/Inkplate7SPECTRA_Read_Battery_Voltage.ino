@@ -22,7 +22,7 @@
 #endif
 
 #include "Inkplate.h"   // Include Inkplate library to the sketch
-#include "batterySymbol.h" // Include the battery voltage bitmap
+#include "battSymbol.h" // Include the battery voltage bitmap
 // It is in same folder as this sketch. You can even open it (read it) by clicking on battSymbol.h tab in Arduino IDE
 Inkplate display; // Create an object on Inkplate library
 

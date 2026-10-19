@@ -29,7 +29,7 @@ extern char ssid[];
 extern char pass[];
 
 // Get our Inkplate object from main file to draw debug info on
-extern Inkplate display;
+extern Inkplate inkplate;
 
 // Static Json from ArduinoJson library
 ArduinoJson::StaticJsonDocument<30000> doc; // Still technically deprecated, but clarifies the source
@@ -42,25 +42,25 @@ void NetworkUtils::begin()
     WiFi.begin(ssid, pass);
 
     int cnt = 0;
-    display.print(F("Waiting for WiFi to connect..."));
-    display.display();
+    inkplate.print(F("Waiting for WiFi to connect..."));
+    inkplate.display();
     while ((WiFi.status() != WL_CONNECTED))
     {
-        display.print(F("."));
-        display.display();
+        inkplate.print(F("."));
+        inkplate.display();
         delay(1000);
         ++cnt;
 
         if (cnt == 20)
         {
-            display.println("Can't connect to WIFI, restarting");
-            display.display();
+            inkplate.println("Can't connect to WIFI, restarting");
+            inkplate.display();
             delay(100);
             ESP.restart();
         }
     }
-    display.println(F(" connected"));
-    display.display();
+    inkplate.println(F(" connected"));
+    inkplate.display();
 
 }
 
@@ -76,7 +76,7 @@ bool NetworkUtils::getData(char* text, char* auth)
         delay(5000);
 
         int cnt = 0;
-        display.println(F("Waiting for WiFi to reconnect..."));
+        inkplate.println(F("Waiting for WiFi to reconnect..."));
         while ((WiFi.status() != WL_CONNECTED))
         {
             // Prints a dot every second that wifi isn't connected
@@ -150,11 +150,11 @@ bool NetworkUtils::getData(char* text, char* auth)
     else if (httpCode == 404)
     {
         // Coin id not found
-        display.clearDisplay();
-        display.setCursor(50, 230);
-        display.setTextSize(2);
-        display.println(F("Info has not been found!"));
-        display.display();
+        inkplate.clearDisplay();
+        inkplate.setCursor(50, 230);
+        inkplate.setTextSize(2);
+        inkplate.println(F("Info has not been found!"));
+        inkplate.display();
         while (1)
             ;
     }
