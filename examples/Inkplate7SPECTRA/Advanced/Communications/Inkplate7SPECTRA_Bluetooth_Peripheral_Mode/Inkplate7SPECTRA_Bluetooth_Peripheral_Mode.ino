@@ -17,7 +17,7 @@
 
 // Include Inkplate and BLE libraries to the sketch
 #include "Inkplate.h"
-#include "BLESerial.h"
+#include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
 #include <BLE2902.h>
@@ -124,7 +124,7 @@ void setup() // Initialize everything
   } 
   else 
   {
-    Serial.println("The device started, now you can pair it with Bluetooth and send commands.")
+    Serial.println("The device started, now you can pair it with Bluetooth and send commands.");
   }
 }
 

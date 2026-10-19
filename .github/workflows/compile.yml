@@ -43,6 +43,22 @@ jobs:
               fqbn: soldered-inkplate-boards:esp32:Inkplate6Flick
             additional-sketch-paths: |
               - examples/Inkplate6FLICK
+          - board:
+              fqbn: soldered-inkplate-boards:esp32:Inkplate6COLOR
+            additional-sketch-paths: |
+              - examples/Inkplate6COLOR
+          - board:
+              fqbn: soldered-inkplate-boards:esp32:Inkplate2
+            additional-sketch-paths: |
+              - examples/Inkplate2
+          - board:
+              fqbn: soldered-inkplate-boards:esp32:Inkplate7SPECTRA
+            additional-sketch-paths: |
+              - examples/Inkplate7SPECTRA
+          - board:
+              fqbn: soldered-inkplate-boards:esp32:Inkplate13SPECTRA
+            additional-sketch-paths: |
+              - examples/Inkplate13SPECTRA
 
 
     steps:
@@ -70,7 +86,6 @@ jobs:
             - source-url: https://github.com/SolderedElectronics/Soldered-BME280-BME680-Gas-Sensor-Arduino-Library.git
             - source-url: https://github.com/SolderedElectronics/Soldered-INA219-Current-Sensor-Arduino-Library.git
             - source-url: https://github.com/SolderedElectronics/Soldered-LSM6DSO-Arduino-Library.git
-            - source-url: https://github.com/SolderedElectronics/Soldered-BME280-BME680-Gas-Sensor-Arduino-Library.git
           sketch-paths: |
             ${{ matrix.additional-sketch-paths }}
           cli-compile-flags: |

@@ -34,10 +34,11 @@
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA
-#error "Wrong board selection for this example, please select Soldered Inkplate 6COLOR in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 13SPECTRA in the boards menu."
 #endif
 
 #include "Inkplate.h"   // Include Inkplate library to the sketch
+#include "battSymbol.h" // Include the battery voltage bitmap
 // It is in same folder as this sketch. You can even open it (read it) by clicking on battSymbol.h tab in Arduino IDE
 Inkplate display; // Create an object on Inkplate library
 
@@ -50,7 +51,7 @@ void setup()
 void loop()
 {
     float voltage = display.readBattery(); // Read battery voltage
-    /*display.clearDisplay();                // Clear everything in frame buffer of e-paper display
+    display.clearDisplay();                // Clear everything in frame buffer of e-paper display
     display.drawBitmap(100, 100, battSymbol, battSymbol_w, battSymbol_h,
                        INKPLATE_BLUE); // Draw battery symbol at position X=100 Y=100
     display.setCursor(210, 120);
@@ -58,7 +59,7 @@ void loop()
     display.setTextSize(3);
     display.print(voltage, 2); // Print battery voltage
     display.print('V');
-    display.display(); // Send everything to display (refresh the screen)*/
-    Serial.printf("Voltage: %dV\n", voltage);
+    display.display(); // Send everything to display (refresh the screen)
+    Serial.printf("Voltage: %.2fV\n", voltage);
     delay(10000);      // Wait 10 seconds before new measurement
 }
