@@ -1021,9 +1021,6 @@ void PeripheralMode::parseCommand(int _command, int _repeat, int _payloadSize, c
         }
         case CMD_GET_MODE:
         {
-            char response[1];
-            itoa(_display->getDisplayMode(), response, 10);
-            sendResponse(CMD_GET_MODE, strlen(response), response);
             break;
         }
         case CMD_CLEAR_DISPLAY:

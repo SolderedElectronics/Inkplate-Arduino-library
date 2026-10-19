@@ -101,8 +101,6 @@
 // #define CMD_                            0x0045
 // #define CMD_                            0x0046
 // #define CMD_                            0x0047
-
-#endif
 #define CMD_CLEAR_DISPLAY               0x0025
 #define CMD_DISPLAY                     0x0026
 #define CMD_PARTIAL_UPDATE              0x0027
