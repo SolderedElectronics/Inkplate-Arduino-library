@@ -158,6 +158,8 @@ int getFileCount()
 
         // Go to deep sleep and do nothing
         deepSleep();
+
+        return 0;
     }
     else
     {
