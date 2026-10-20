@@ -1009,14 +1009,6 @@ void PeripheralMode::parseCommand(int _command, int _repeat, int _payloadSize, c
         }
         case CMD_SET_MODE:
         {
-            // Check the number of arguments.
-            if (_numberOfArgs != 1) return;
-
-            // Get the argument.
-            char *_arg1;
-            _arg1 = getArgument(_payload, _payloadSize, _numberOfArgs, 0, NULL);
-
-            _display->selectDisplayMode(atol(_arg1));
             break;
         }
         case CMD_GET_MODE:
@@ -1057,25 +1049,6 @@ void PeripheralMode::parseCommand(int _command, int _repeat, int _payloadSize, c
         }
         case CMD_EINK_PMIC:
         {
-            // Check the number of arguments.
-            if (_numberOfArgs != 1) return;
-
-            // Get the argument.
-            char *_arg1; // H
-
-            _arg1 = getArgument(_payload, _payloadSize, _numberOfArgs, 0, NULL);
-
-            // Check if they are valid.
-            if (_arg1 == NULL) return;
-
-            if(atoi(_arg1) == 0)
-            {
-                _display->einkOff();
-            }
-            else
-            {
-                _display->einkOn();
-            }
 
             break;
         }
