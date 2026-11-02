@@ -3,3 +3,6 @@ build/
 Build/
 examples/.DS_Store
 .DS_Store
+
+# Ignore actual credentials files (use credentials.template.h instead)
+**/credentials.h
