@@ -1,32 +1,29 @@
 /**
  **************************************************
  * @file        Inkplate10_RTC_Simple.ino
- * @brief       Basic RTC time and date example for Soldered Inkplate 10.
+ * @brief       Basic RTC clock example for Soldered Inkplate 10.
  *
- * @details     Demonstrates basic usage of the PCF85063A real-time clock (RTC)
- *              integrated on the Inkplate 10 board. The example shows how to
- *              set the current time and date, read the RTC values, and display
- *              the time on the e-paper screen using partial updates.
+ * @details     Shows a clock on the Inkplate 10 using the PCF85063A
+ *              real-time clock (RTC) on the board. The RTC is set to
+ *              the time at which the sketch was compiled, and the
+ *              time is then redrawn with partial updates.
  *
- *              Inkplate 10 uses the PCF85063A RTC chip. Partial update works
- *              only in 1-bit (black & white) mode and is not recommended for
- *              the first refresh after power-up; perform a full refresh every
- *              5-10 partial updates to maintain display quality. Expected
- *              output is the current date and time on the Inkplate display.
+ *              Partial update works only in 1-bit (black & white)
+ *              mode; perform a full refresh every 5-10 partial
+ *              updates to maintain display quality. Expected output
+ *              is a clock on the Inkplate display.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable
- * - Extra:      None
- * - Serial:     115200 baud (optional)
+ * - Extra:      SourceSans3_24.h font file in the sketch folder
+ * - Serial:     Not required
  *
  * How to use:
- * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
- *    from Tools -> Board.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered
+ *    Inkplate10" from Tools -> Board.
  * 2) Upload the sketch to Inkplate 10.
- * 3) Set the initial RTC time and date in the code if not already configured.
- * 4) The current time is periodically read from the RTC.
- * 5) Time and date are displayed on the Inkplate screen.
+ * 3) The current time appears on the display and updates.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/10/quick-start-guide/
@@ -35,104 +32,93 @@
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
  *
- * @author      Soldered
- * @date        2021-11-12
+ * @author      Borna Zelenika @ soldered.com
+ * @date        2026-11-05
  * @license     GNU GPL V3
  **************************************************/
 
-// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
-#endif
+// Pull in the Inkplate library, then the font file that sits next to this sketch
+#include "Inkplate.h"
+#include "SourceSans3_24.h"
 
-#include "Inkplate.h"            // Include Inkplate library to the sketch
-Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
+// The time library, to turn the compile date and time into numbers
+#include <time.h>
 
-#define REFRESH_DELAY 1000 // Delay between refreshes
-unsigned long time1;       // Time for measuring refresh in millis
+// Partial update works in black and white mode only
+Inkplate display(INKPLATE_1BIT);
 
-// Set clock
-uint8_t hour = 12;
-uint8_t minutes = 50;
-uint8_t seconds = 30;
+// The names of the weekdays, in the same order as the numbers: 0 is Sunday
+const char *weekdayNames[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
-// Set date and weekday (NOTE: In weekdays 0 means Sunday, 1 means Monday, ...)
-uint8_t weekday = 4;
-uint8_t day = 11;
-uint8_t month = 11;
-uint8_t year = 21;
+// setup() runs once, right after the board powers on or resets
+void setup() {
+  display.begin();
+  display.clearDisplay();
+  display.display();
 
-void setup()
-{
-    display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay(); // Clear frame buffer of display
-    display.display();      // Put clear image on display
-    display.setTextSize(5); // Set text to be 5 times bigger than classic 5x7 px text
+  // Black text on a white background, in the font from T1, five times its normal size
+  display.setFont(&SourceSans3_24);
+  display.setTextColor(BLACK, WHITE);
+  display.setTextSize(5);
 
-    display.rtc.setTime(hour, minutes, seconds);    // Send time to RTC
-    display.rtc.setDate(weekday, day, month, year); // Send date to RTC
+  // Make every sixtieth update a full refresh, about once a minute, to clear the leftovers
+  display.setFullUpdateThreshold(59);
+
+  // The compiler fills __DATE__ and __TIME__ with the moment the sketch was compiled,
+  // for example "Nov  2 2026" and "14:05:09". Turn them into numbers.
+  struct tm compiled;
+  strptime(__DATE__ " " __TIME__, "%b %d %Y %H:%M:%S", &compiled);
+
+  // mktime() works out the weekday from the date
+  mktime(&compiled);
+
+  // Send the time and the date to the RTC. The year is the last two digits.
+  display.rtc.setTime(compiled.tm_hour, compiled.tm_min, compiled.tm_sec);
+  display.rtc.setDate(compiled.tm_wday, compiled.tm_mday, compiled.tm_mon + 1, compiled.tm_year - 100);
 }
 
-// Variable that keeps count on how much screen has been partially updated
-int n = 0;
-void loop()
-{
-    if ((unsigned long)(millis() - time1) > REFRESH_DELAY)
-    {
-        display.rtc.getRtcData();           // Get the time and date from RTC
-        seconds = display.rtc.getSecond();  // Store senconds in a variable
-        minutes = display.rtc.getMinute();  // Store minutes in a variable
-        hour = display.rtc.getHour();       // Store hours in a variable
-        day = display.rtc.getDay();         // Store day of month in a variable
-        weekday = display.rtc.getWeekday(); // Store day of week in a variable
-        month = display.rtc.getMonth();     // Store month in a variable
-        year = display.rtc.getYear();       // Store year in a variable
+// loop() runs over and over
+void loop() {
+  // Read the time and date back from the RTC
+  display.rtc.getRtcData();
 
-        display.clearDisplay();                                       // Clear content in frame buffer
-        display.setCursor(100, 300);                                  // Set position of the text
-        printTime(hour, minutes, seconds, day, weekday, month, year); // Print the time on screen
+  display.clearDisplay();
 
-        if (n > 9) // Check if you need to do full refresh or you can do partial update
-        {
-            display.display(true); // Do a full refresh
-            n = 0;
-        }
-        else
-        {
-            display.partialUpdate(false, true); // Do partial update and keep e-papr power supply on
-            n++;                                // Keep track on how many times screen has been partially updated
-        }
+  // The time
+  display.setCursor(100, 200);
+  printTwoDigits(display.rtc.getHour());
+  display.print(':');
+  printTwoDigits(display.rtc.getMinute());
+  display.print(':');
+  printTwoDigits(display.rtc.getSecond());
 
-        time1 = millis(); // Store current millis
-    }
+  // The weekday
+  display.setCursor(100, 340);
+  display.print(weekdayNames[display.rtc.getWeekday()]);
+
+  // The date
+  display.setCursor(100, 480);
+  printTwoDigits(display.rtc.getDay());
+  display.print('.');
+  printTwoDigits(display.rtc.getMonth());
+  display.print(".20");
+  printTwoDigits(display.rtc.getYear());
+
+  // Send only what changed
+  display.partialUpdate(false, true);
+
+  // An update takes a fraction of a second, so a fixed delay would let the clock drift
+  // and skip seconds. Instead, keep asking the RTC until the second has changed.
+  int shownSecond = display.rtc.getSecond();
+  while (display.rtc.getSecond() == shownSecond) {
+    display.rtc.getRtcData();
+  }
 }
 
-void printTime(uint8_t _hour, uint8_t _minutes, uint8_t _seconds, uint8_t _day, uint8_t _weekday, uint8_t _month,
-               uint16_t _year)
-{
-    // Write time and date info on screen
-    char *wday[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-
-    print2Digits(_hour);
-    display.print(':');
-    print2Digits(_minutes);
-    display.print(':');
-    print2Digits(_seconds);
-
-    display.print(' ');
-
-    display.print(wday[_weekday]);
-    display.print(", ");
-    print2Digits(_day);
-    display.print('/');
-    print2Digits(_month);
-    display.print('/');
-    display.print(_year, DEC);
-}
-
-void print2Digits(uint8_t _d)
-{
-    if (_d < 10)
-        display.print('0');
-    display.print(_d, DEC);
+// Print a number with a leading zero, so 7 shows as 07
+void printTwoDigits(uint8_t value) {
+  if (value < 10) {
+    display.print('0');
+  }
+  display.print(value);
 }
