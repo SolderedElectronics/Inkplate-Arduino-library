@@ -16,12 +16,12 @@
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable
- * - Extra:      SourceSans3_24.h font file in the sketch folder
+ * - Extra:      None
  * - Serial:     Not required
  *
  * How to use:
- * 1) In Boards Manager -> Inkplate Boards, select "Soldered
- *    Inkplate10" from Tools -> Board.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 10"
+ *    from Tools -> Board.
  * 2) Upload the sketch to Inkplate 10.
  * 3) The current time appears on the display and updates.
  *
@@ -36,6 +36,11 @@
  * @date        2026-11-05
  * @license     GNU GPL V3
  **************************************************/
+
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
+#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
+#error "Wrong board selection for this example, please select Soldered Inkplate 10 in the boards menu."
+#endif
 
 // Pull in the Inkplate library, then the font file that sits next to this sketch
 #include "Inkplate.h"
