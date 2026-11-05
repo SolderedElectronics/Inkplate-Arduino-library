@@ -61,7 +61,7 @@ void setup()
     display.begin();                                  // Init Inkplate library (you should call this function ONLY ONCE)
     display.clearDisplay();                           // Clear frame buffer of display
     display.display();                                // Put clear image on display
-    display.setTextSize(2);                           // Set text scaling to two (text will be two times bigger)
+    display.setTextSize(4);                           // Set text scaling to four (text will be four times bigger, so it is easy to read)
     display.setCursor(0, 0);                          // Set print position
     display.setTextColor(BLACK, WHITE);               // Set text color to black and background color to white
     display.println("Scanning for WiFi networks..."); // Write text
@@ -86,6 +86,7 @@ void setup()
             display.print((WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? 'O' : '*');
             display.print('\n');
             display.print(WiFi.RSSI(i), DEC);
+            display.print('\n');
         }
         display.partialUpdate(); //(Partial) refresh thescreen
     }
@@ -106,13 +107,12 @@ void setup()
     display.partialUpdate();
 
     HTTPClient http;
-    if (http.begin("http://example.com/index.html"))
+    if (http.begin("http://example.com/"))
     { // Now try to connect to some web page (in this example www.example.com. And yes, this is a valid Web page :))
         if (http.GET() > 0)
         { // If connection was successful, try to read content of the Web page and display it on screen
             String htmlText;
             htmlText = http.getString();
-            display.setTextSize(1); // Set smaller text size, so everything can fit on screen
             display.clearDisplay();
             display.setCursor(0, 0);
             display.print(htmlText);
