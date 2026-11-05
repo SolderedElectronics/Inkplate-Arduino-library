@@ -1,33 +1,32 @@
 /**
  **************************************************
  * @file        Inkplate10_microSD_TXT_Write.ino
- * @brief       Write text file to SD card on Soldered Inkplate 10.
+ * @brief       Write and read a log file on the microSD card with
+ *              Soldered Inkplate 10.
  *
- * @details     Demonstrates how to initialize the SD card, create a .txt file,
- *              write data into it, and properly close the file using the
- *              Inkplate SD card interface. The example writes a short text
- *              string into "test.txt" stored on a FAT-formatted SD card.
+ * @details     Adds a line to a log file on the microSD card every
+ *              time the board starts, then shows how many lines the
+ *              file has, how big the card is and which files are on
+ *              it. It shows how to initialize the card, append to and
+ *              read a text file, and list the card contents.
  *
- *              The SD card must be properly formatted (FAT/FAT32). Always close
- *              files after writing to prevent corruption. The SD card is put
- *              into sleep mode after the operation to reduce power consumption.
- *              Expected output is status messages on the Inkplate display and a
- *              "test.txt" file created on the SD card with the written content.
+ *              The SD card must be formatted as FAT32. Always close
+ *              files after writing to prevent corruption. Expected
+ *              output is the line count, the card size and the file
+ *              list on the Inkplate display.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable, microSD card
- * - Extra:      None
- * - SD card:    FAT / FAT32 format
+ * - Extra:      SourceSans3_24.h font file in the sketch folder
+ * - Serial:     Not required
  *
  * How to use:
- * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
- *    from Tools -> Board.
- * 2) Insert a FAT-formatted SD card into the Inkplate.
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered
+ *    Inkplate10" from Tools -> Board.
+ * 2) Insert a FAT32 formatted microSD card into the slot.
  * 3) Upload the sketch to Inkplate 10.
- * 4) The program initializes the SD card.
- * 5) A file named "test.txt" is created (or appended if it exists).
- * 6) The text string defined in the code is written into the file.
+ * 4) The file information appears on the display.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/10/quick-start-guide/
@@ -36,69 +35,105 @@
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
  *
- * @author      Soldered
- * @date        2023-01-23
+ * @author      Borna Zelenika @ soldered.com
+ * @date        2026-11-05
  * @license     GNU GPL V3
  **************************************************/
 
-// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
-#if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
-#endif
+// Pull in the Inkplate library, then the font file that sits next to this sketch
+#include "Inkplate.h"
+#include "SourceSans3_24.h"
 
-#include "Inkplate.h"            // Include Inkplate library to the sketch
-Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
-SdFile file;                     // Create SdFile object used for accessing files on SD card
+// Black and white mode: a colour is BLACK or WHITE
+Inkplate display(INKPLATE_1BIT);
 
-char *fileName = "test.txt"; // The name of a file with the extension.
+// One object for the log file, and one for the root folder of the card
+SdFile file;
+SdFile root;
 
-// The text you want to write in the file
-char *dataToWrite = "Hello! This is the file writing example for Inkplate 10.\n"; // "\n" represents a new line
+// The name of the log file and the line added to it on every start
+const char *fileName = "example.txt";
+const char *logLine = "Hello from Inkplate!\n";
 
-void setup()
-{
-    display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay(); // Clear frame buffer of display
-    display.display();      // Put clear image on display
-    display.setTextSize(5);
-
-    // Init SD card. Display if SD card is init propery or not.
-    if (display.sdCardInit())
-    {
-        display.println("SD Card ok!");
-        display.partialUpdate();
-
-        // Try to create text.txt file.
-        if (!file.open(fileName, FILE_WRITE))
-        { // If it fails to create, send an error message to display, otherwise write to file.
-            display.println("Error while creating the file!");
-            display.partialUpdate();
-            display.sdCardSleep();
-        }
-        else
-        {
-            display.println("Writing in the file...");
-            display.partialUpdate();
-            file.write(dataToWrite); // Write data string in the file
-            display.println("Data has been written successfully!");
-            display.partialUpdate();
-            file.close();          // Close the file
-            display.sdCardSleep(); // Put sd card in sleep mode
-        }
-    }
-    else
-    { // If card init was not successful, display error on screen, put sd card in sleep mode, and stop the program
-      // (using infinite loop)
-        display.println("SD Card error!");
-        display.partialUpdate();
-        display.sdCardSleep();
-        while (true)
-            ;
-    }
+// Stop with a message on the screen, and put the card to sleep
+void fail(const char *message) {
+  display.println(message);
+  display.display();
+  display.sdCardSleep();
+  while (true);
 }
 
-void loop()
-{
-    // Nothing...
+// setup() runs once, right after the board powers on or resets
+void setup() {
+  display.begin();
+  display.clearDisplay();
+  display.setFont(&SourceSans3_24);
+  display.setTextColor(BLACK, WHITE);
+  display.setTextSize(2);
+  display.setCursor(50, 50);
+
+  // Start the card. If it fails, say so, and stop.
+  if (!display.sdCardInit()) {
+    fail("SD card error!");
+  }
+
+  // Open the file for writing. O_APPEND adds to the end instead of starting over, and
+  // O_CREAT creates the file the first time.
+  if (!file.open(fileName, O_WRONLY | O_CREAT | O_APPEND)) {
+    fail("Could not open the file!");
+  }
+  file.write(logLine);
+  file.close();  // close it, so the data reaches the card
+
+  // Open the file again for reading, and count the lines by counting the line ends
+  if (!file.open(fileName, O_RDONLY)) {
+    fail("Could not read the file!");
+  }
+  int lines = 0;
+  while (file.available()) {
+    if (file.read() == '\n') {
+      lines++;
+    }
+  }
+  int bytes = file.fileSize();
+  file.close();
+
+  // The size of the card: sectors of 512 bytes, shown in megabytes
+  uint32_t cardMegabytes = display.getSdFat().card()->sectorCount() / 2048;
+
+  // Show the results
+  display.print("Card size: ");
+  display.print(cardMegabytes);
+  display.println(" MB");
+  display.print(fileName);
+  display.print(": ");
+  display.print(lines);
+  display.print(" lines, ");
+  display.print(bytes);
+  display.println(" bytes");
+  display.println();
+  display.println("Files on the card:");
+
+  // Go through the root folder, one entry at a time
+  root.open("/");
+  SdFile entry;
+  while (entry.openNext(&root, O_RDONLY)) {
+    char name[40];
+    entry.getName(name, sizeof(name));
+    display.print("  ");
+    display.print(name);
+    display.print("  ");
+    display.print(entry.fileSize());
+    display.println(" bytes");
+    entry.close();
+  }
+  root.close();
+
+  // Send the frame buffer to the screen, then let the card sleep
+  display.display();
+  display.sdCardSleep();
+}
+
+// loop() runs over and over. This sketch has nothing to repeat.
+void loop() {
 }
