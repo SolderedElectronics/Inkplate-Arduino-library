@@ -36,7 +36,7 @@
  * @note        Adafruit GFX reference:
  *              https://learn.adafruit.com/adafruit-gfx-graphics-library
  *
- * @author      Borna Zelenika @ soldered.com
+ * @author      Josip Šimun Kuči @ soldered.com
  * @date        2026-11-05
  * @license     GNU GPL V3
  **************************************************/

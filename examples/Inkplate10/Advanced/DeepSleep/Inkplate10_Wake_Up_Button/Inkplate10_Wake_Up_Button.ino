@@ -36,7 +36,7 @@
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
  *
- * @author      Borna Zelenika @ soldered.com
+ * @author      Josip Šimun Kuči @ soldered.com
  * @date        2026-11-05
  * @license     GNU GPL V3
  **************************************************/

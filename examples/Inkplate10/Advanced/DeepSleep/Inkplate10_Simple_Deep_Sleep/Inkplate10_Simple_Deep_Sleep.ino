@@ -37,7 +37,7 @@
  * @note        Image converter tool:
  *              https://tools.soldered.com/tools/image-converter/
  *
- * @author      Borna Zelenika @ soldered.com
+ * @author      Josip Šimun Kuči @ soldered.com
  * @date        2026-11-05
  * @license     GNU GPL V3
  **************************************************/
