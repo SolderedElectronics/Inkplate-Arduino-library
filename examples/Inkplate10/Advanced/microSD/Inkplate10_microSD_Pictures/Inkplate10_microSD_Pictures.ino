@@ -1,33 +1,33 @@
 /**
  **************************************************
  * @file        Inkplate10_microSD_Pictures.ino
- * @brief       Display images from SD card on Soldered Inkplate 10.
+ * @brief       Show a picture from the microSD card on Soldered
+ *              Inkplate 10.
  *
- * @details     Demonstrates how to load image files from an SD card and display
- *              them on the Inkplate 10 e-paper display. The example shows how to
- *              read supported image formats from a FAT-formatted SD card and
- *              render them using the Inkplate graphics library.
+ * @details     Shows a picture from the microSD card on the Inkplate
+ *              10 in eight levels of gray. The picture cosmic-
+ *              cliffs.jpg (1200 x 825 pixels, NASA / ESA / CSA /
+ *              STScI, public domain) is drawn at the top left corner
+ *              of the screen.
  *
- *              Supported formats include BMP, JPEG and PNG (with library
- *              limitations) in 1-bit (BW), 4-bit, 8-bit and 24-bit color depth.
- *              Maximum supported resolution is 1200 x 825 pixels; images larger
- *              than the display resolution will not fit on screen. Expected
- *              output is the selected image from the SD card shown on the
- *              Inkplate display.
+ *              Copy cosmic-cliffs.jpg from this example folder to the
+ *              root of a FAT32 formatted microSD card. Maximum
+ *              supported resolution is 1200 x 825 pixels. Expected
+ *              output is the picture on the Inkplate display.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 10
  * - Hardware:   Inkplate 10, USB cable, microSD card
- * - Extra:      SD card with compatible image files
- * - SD card:    FAT / FAT32 format
+ * - Extra:      cosmic-cliffs.jpg on the microSD card
+ * - Serial:     Not required
  *
  * How to use:
- * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate10"
+ * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 10"
  *    from Tools -> Board.
- * 2) Copy supported image files to a FAT-formatted SD card.
- * 3) Insert the SD card into the Inkplate.
- * 4) Upload the sketch to Inkplate 10.
- * 5) The image is read from the SD card and displayed on the e-paper screen.
+ * 2) Copy cosmic-cliffs.jpg to the microSD card and insert the card
+ *    into the slot.
+ * 3) Upload the sketch to Inkplate 10.
+ * 4) The picture appears on the display.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/10/quick-start-guide/
@@ -36,84 +36,52 @@
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
  *
- * @author      Soldered
- * @date        2023-02-17
+ * @author      Josip Šimun Kuči @ soldered.com
+ * @date        2026-11-05
  * @license     GNU GPL V3
  **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_INKPLATE10) && !defined(ARDUINO_INKPLATE10V2)
-#error "Wrong board selection for this example, please select e-radionica Inkplate10 or Soldered Inkplate10 in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 10 in the boards menu."
 #endif
 
-#include "Inkplate.h"            // Include Inkplate library to the sketch
-Inkplate display(INKPLATE_3BIT); // Create an object on Inkplate library and also set library into 3 Bit mode
-SdFile file;                     // Create SdFile object used for accessing files on SD card
+// Pull in the Inkplate library, then the font file that sits next to this sketch
+#include "Inkplate.h"
+#include "SourceSans3_24.h"
 
-void setup()
-{
-    display.begin();             // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay();      // Clear frame buffer of display
-    display.setTextColor(BLACK); // Set text color to black
-    display.setTextSize(3);      // Set font size to 3
+// Gray mode: eight levels, 0 (black) to 7 (white). Pictures need it to look right.
+Inkplate display(INKPLATE_3BIT);
 
-    // Init SD card. Display if SD card is init propery or not.
-    if (display.sdCardInit())
-    {
-        display.println("SD Card OK! Reading image...");
-        display.display();
+// The name of the picture on the card. It can be a JPG, PNG or BMP file.
+const char *pictureName = "cosmic-cliffs.jpg";
 
-        // If card is properly init, try to load image and display it on e-paper at position X=0, Y=0
-        // NOTE: Both drawImage methods allow for an optional fifth "invert" parameter. Setting this parameter
-        // to true will flip all colors on the image, making black white and white black. This may be necessary when
-        // exporting bitmaps from certain softwares.
-        if (!display.image.draw("image1.bmp", 0, 0, 1))
-        {
-            // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-            // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no
-            // compression! You can turn of dithering for somewhat faster image load by changing the last 1 to 0, or
-            // removing the 1 argument completely
-            display.println("Image open error");
-        }
-        display.display();
-        delay(5000);
+// setup() runs once, right after the board powers on or resets
+void setup() {
+  display.begin();
+  display.clearDisplay();
+  display.setFont(&SourceSans3_24);
+  display.setTextColor(BLACK);
+  display.setTextSize(2);
+  display.setCursor(50, 50);
 
-        // Now try to load image using SdFat library class (for more advanced users) and display image on epaper.
-        display.clearDisplay();
-        if (file.open("image2.bmp", O_RDONLY))
-        {
-            display.image.drawBitmapFromSd(&file, 0, 0);
-        }
-        else
-        {
-            display.println("Image open error");
-        }   
-        display.display();
-        delay(5000);
-    
-        // Now draw a JPEG
-        display.clearDisplay();
-        if (!display.image.draw("pyramid.jpg", 100, 0, true, false))
-        {
-            // If is something failed (wrong filename or wrong format), write error message on the screen.
-            // You can turn off dithering for somewhat faster image load by changing the fifth parameter to false, or
-            // removing the parameter completely
-            display.println("Image open error");
-        }       
-        display.display();
-    }
-    else
-    {
-        // If SD card init not success, display error on screen
-        display.println("SD Card error!");        
-        display.display();
-    }
+  // Start the card. If it fails, say so.
+  if (!display.sdCardInit()) {
+    display.println("SD card error!");
+  }
+  // Draw the picture with its top left corner at 0, 0, which fills the screen, because the
+  // picture is 1200 x 825 pixels. The last value, true, turns on dithering, which makes the grays look
+  // smoother. If this fails, say so.
+  else if (!display.image.draw(pictureName, 0, 0, true)) {
+    display.print("Could not open ");
+    display.println(pictureName);
+  }
 
-    // Turn off the MOSFET that powers the SD card
-    display.sdCardSleep();
+  // Send the frame buffer to the screen, then let the card sleep
+  display.display();
+  display.sdCardSleep();
 }
 
-void loop()
-{
-    // Nothing...
+// loop() runs over and over. This sketch has nothing to repeat.
+void loop() {
 }
