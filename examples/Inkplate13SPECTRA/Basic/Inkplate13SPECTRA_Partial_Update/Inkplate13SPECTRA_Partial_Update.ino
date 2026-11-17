@@ -1,29 +1,23 @@
 /**
  **************************************************
  * @file        Inkplate13SPECTRA_Partial_Update.ino
- * @brief       Partial screen update example for Soldered Inkplate 13SPECTRA.
+ * @brief       Scroll a line of text across a strip of the Inkplate 13 with
+ *              partial updates.
  *
- * @details     Demonstrates partial screen updates on the Inkplate 13SPECTRA.
- *              It draws a grid of 100x100 pixel coloured squares covering the
- *              entire screen, then continuously picks a random square and
- *              updates only that square with a new colour using
- *              displayPartial(), leaving the rest of the screen untouched.
- *
- *              displayPartial(x, y, w, h) accepts coordinates in the same user
- *              space as all drawing functions (rotation = 1: 1600 px wide,
- *              1200 px tall).
+ * @details     Connection: none, the screen is on the board. Power and upload
+ *              over USB-C.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 13SPECTRA
  * - Hardware:   Inkplate 13SPECTRA, USB cable
  * - Extra:      None
+ * - Serial:     Not required
  *
  * How to use:
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
  *    from Tools -> Board.
  * 2) Upload the sketch to Inkplate 13SPECTRA.
- * 3) The grid of coloured squares is drawn, then single squares keep changing
- *    colour via partial updates.
+ * 3) The sketch runs as described above.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
@@ -32,90 +26,77 @@
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
  *
- * @author      Soldered
- * @date        2026-03-24
+ * @author      Borna Zelenika @ soldered.com
+ * @date        2026-11-11
+ * @license     GNU GPL V3
  **************************************************/
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA
 #error "Wrong board selection for this example, please select Soldered Inkplate 13SPECTRA in the boards menu."
 #endif
 
+// Pull in the Inkplate library, then the font file that sits next to this sketch
 #include "Inkplate.h"
+#include "SourceSans3_24.h"
 
+// The display object
 Inkplate display;
 
-// Display dimensions at rotation=1
-#define DISPLAY_W 1600
-#define DISPLAY_H 1200
+// The text that scrolls
+const char text[] = "Partial updates!";
 
-// Square size and grid dimensions
-#define SQUARE_SIZE 200
-#define GRID_COLS   (DISPLAY_W / SQUARE_SIZE) // 8
-#define GRID_ROWS   (DISPLAY_H / SQUARE_SIZE) // 6
+// The strip of the screen that changes: top left corner, width and height
+const int stripX = 0;
+const int stripY = 540;
+const int stripWidth = 1600;
+const int stripHeight = 120;
 
-// Available colours (indices 0-5 map to: black, white, yellow, red, blue, green)
-static const uint8_t COLORS[] = {0, 1, 2, 3, 4, 5};
-#define COLOR_COUNT 6
+// Where the text starts on the x axis. It begins left of the screen and slides in.
+int offset = -420;
 
-// Tracks the current colour of every square so we can pick a different one
-uint8_t squareColor[GRID_COLS][GRID_ROWS];
+// How many updates have been sent so far
+int updates = 0;
 
-void setup()
-{
-    Serial.begin(115200);
+void setup() {
+  display.begin();
 
-    display.begin();
-    display.clearDisplay();
+  // Start from a clean, fully refreshed screen
+  display.clearDisplay();
+  display.display();
 
-    // Fill each square with an initial colour, cycling through the palette
-    for (int col = 0; col < GRID_COLS; col++)
-    {
-        for (int row = 0; row < GRID_ROWS; row++)
-        {
-            uint8_t color = COLORS[(col + row) % COLOR_COUNT];
-            squareColor[col][row] = color;
-            display.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE,
-                             SQUARE_SIZE, SQUARE_SIZE, color);
-        }
-    }
+  // Black letters in the font from T1, twice its normal size
+  display.setFont(&SourceSans3_24);
+  display.setTextColor(INKPLATE_BLACK);
+  display.setTextSize(2);
 
-    display.display();
-
-    Serial.println("Initial grid drawn. Waiting 5 seconds before partial updates begin.");
-    delay(5000);
+  // Do not wrap text onto the next line when it reaches the edge
+  display.setTextWrap(false);
 }
 
-void loop()
-{
-    // Pick a random square
-    int col   = random(GRID_COLS);
-    int row   = random(GRID_ROWS);
+void loop() {
+  // Clear the strip, then draw the text in its new place
+  display.fillRect(stripX, stripY, stripWidth, stripHeight, INKPLATE_WHITE);
+  display.setCursor(offset, stripY + 30);
+  display.print(text);
 
-    // Pick a different colour than the current one
-    uint8_t current = squareColor[col][row];
-    uint8_t newColor;
-    do
-    {
-        newColor = COLORS[random(COLOR_COUNT)];
-    } while (newColor == current);
+  // Every 20th update is a full refresh. The others send only the strip.
+  updates++;
+  if (updates % 20 == 0) {
+    display.display();
+  } else {
+    // The last value keeps the screen's power supply on between updates
+    display.displayPartial(stripX, stripY, stripWidth, stripHeight, true);
+  }
 
-    squareColor[col][row] = newColor;
+  // Move the text 40 pixels to the right for the next round
+  offset += 40;
 
-    // Update the framebuffer for just this square
-    display.fillRect(col * SQUARE_SIZE, row * SQUARE_SIZE,
-                     SQUARE_SIZE, SQUARE_SIZE, newColor);
+  // When it has left the screen, bring it back to the left
+  if (offset > 1600) {
+    offset = -420;
+  }
 
-    // Refresh only the changed square; pass true to keep panel on for next call.
-    display.displayPartial(col * SQUARE_SIZE, row * SQUARE_SIZE,
-                           SQUARE_SIZE, SQUARE_SIZE, true);
-
-    Serial.print("Updated square (");
-    Serial.print(col);
-    Serial.print(", ");
-    Serial.print(row);
-    Serial.print(") to colour ");
-    Serial.println(newColor);
-
-    // 3 second delay between refreshes
-    delay(3000);
+  // Wait half a second between updates
+  delay(500);
 }

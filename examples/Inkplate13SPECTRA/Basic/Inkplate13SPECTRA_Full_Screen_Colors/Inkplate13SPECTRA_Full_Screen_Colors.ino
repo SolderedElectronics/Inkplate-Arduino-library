@@ -1,20 +1,23 @@
 /**
  **************************************************
  * @file        Inkplate13SPECTRA_Full_Screen_Colors.ino
- * @brief       Full screen colour example for Soldered Inkplate 13SPECTRA.
+ * @brief       Fill the whole Inkplate 13 screen with its six colours, as six
+ *              vertical bars.
  *
- * @details     Simple Inkplate example showing all colours of the Inkplate.
+ * @details     Connection: none, the screen is on the board. Power and upload
+ *              over USB-C.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 13SPECTRA
  * - Hardware:   Inkplate 13SPECTRA, USB cable
  * - Extra:      None
+ * - Serial:     Not required
  *
  * How to use:
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
  *    from Tools -> Board.
  * 2) Upload the sketch to Inkplate 13SPECTRA.
- * 3) Each colour of the Spectra 6 palette is shown full screen in turn.
+ * 3) The sketch runs as described above.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
@@ -23,38 +26,39 @@
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
  *
- * @author      Soldered
- * @date        2026-01-23
+ * @author      Borna Zelenika @ soldered.com
+ * @date        2026-11-11
+ * @license     GNU GPL V3
  **************************************************/
 
-#include "Inkplate.h"
-
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA
-#error "Wrong board selection for this example, please select Soldered Inkplate Inkplate 13SPECTRA in the boards menu."
+#error "Wrong board selection for this example, please select Soldered Inkplate 13SPECTRA in the boards menu."
 #endif
 
-// Declare Inkplate object
+// Pull in the Inkplate library
+#include "Inkplate.h"
+
+// The display object
 Inkplate display;
 
-void setup()
-{
-    // Initialize Inkplate
-    display.begin();
+// setup() runs once, right after the board powers on or resets
+void setup() {
+  display.begin();
+  display.clearDisplay();
 
-    display.clearDisplay();
-    // Draw a full screen of all colors
-    display.fillRect(0, 0, 1600 / 6 + 2, 1200, INKPLATE_BLACK);
-    display.fillRect(1 * 1600 / 6, 0, 1600 / 6 + 2, 1200, INKPLATE_WHITE);
-    display.fillRect(2 * 1600 / 6, 0, 1600 / 6 + 2, 1200, INKPLATE_YELLOW);
-    display.fillRect(3 * 1600 / 6, 0, 1600 / 6 + 2, 1200, INKPLATE_RED);
-    display.fillRect(4 * 1600 / 6, 0, 1600 / 6 + 2, 1200, INKPLATE_BLUE);
-    display.fillRect(5 * 1600 / 6, 0, 1600 / 6 + 2, 1200, INKPLATE_GREEN);
+  // One bar for each colour. The colours have the numbers 0 to 5: black, white,
+  // yellow, red, blue and green.
+  for (int colour = 0; colour < 6; colour++) {
+    // A solid rectangle: left edge, top edge, width, height, then the colour number.
+    // Every bar is a sixth of the screen wide, plus 2 pixels so that no gap is left.
+    display.fillRect(colour * 1600 / 6, 0, 1600 / 6 + 2, 1200, colour);
+  }
 
-    // Show the Image on the screen
-    display.display();
+  // Send the frame buffer to the screen
+  display.display();
 }
 
-void loop()
-{
-    // Loop forever
+// loop() runs over and over. This sketch has nothing to repeat.
+void loop() {
 }
