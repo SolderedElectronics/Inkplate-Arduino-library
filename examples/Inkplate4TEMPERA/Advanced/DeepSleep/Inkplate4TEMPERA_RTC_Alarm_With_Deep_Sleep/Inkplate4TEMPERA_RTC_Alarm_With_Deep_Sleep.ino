@@ -66,7 +66,7 @@ void setup()
         //  display.setTime(hour, minute, sec);
         display.rtc.setTime(13, 30, 00); // 24H mode, ex. 13:30:00
         //  display.setDate(weekday, day, month, yr);
-        display.rtc.setDate(0, 17, 7, 2023); // 0 for Monday, ex. Monday, 17.7.2023.
+        display.rtc.setDate(1, 17, 7, 2023); // 1 for Monday (0 is Sunday), ex. Monday, 17.7.2023.
 
         // display.rtc.setEpoch(1589610300); // Or use epoch for setting the time and date
     }
