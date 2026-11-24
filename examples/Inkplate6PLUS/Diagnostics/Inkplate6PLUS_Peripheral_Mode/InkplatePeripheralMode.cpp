@@ -82,10 +82,12 @@ bool PeripheralMode::getDataFromSerial(unsigned long _timeout)
 
                 // reset the counter.
                 _serialBufferIndex = 0;
-
-                // Go to the next command by advancing to the next index.
-                _commandEndPosition++;
             }
+
+            // Step past this packet, valid or not: on a bad one checkPacket() leaves the
+            // position on the same "TS", and the loop would check it forever.
+            if (_commandEndPosition != NULL)
+                _commandEndPosition++;
         }
     }
 
