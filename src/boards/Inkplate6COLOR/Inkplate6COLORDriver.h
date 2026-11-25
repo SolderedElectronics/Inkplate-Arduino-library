@@ -11,7 +11,7 @@
  *
  *              The frame buffer holds one 4 bit colour index per pixel, two pixels per byte,
  *              and supports the seven panel colours.
- *              Only full updates are supported. The board also exposes the touchpad buttons.
+ *              Only full updates are supported.
  *
  *              This code is released under the GNU Lesser General Public License v3.0:
  *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
@@ -79,8 +79,6 @@ class EPDDriver
     IOExpander expander1;
 
     RTC rtc;
-
-    Touchpad touchpad;
 
     ImageColor image;
 

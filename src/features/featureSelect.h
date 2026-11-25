@@ -5,7 +5,10 @@
     defined(ARDUINO_INKPLATE7SPECTRA) || defined(ARDUINO_INKPLATE5) || defined(ARDUINO_INKPLATE10V2)
 #include "SdFat/SdFat.h"
 #include "rtc/rtc.h"
-#elif defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE6) || defined(ARDUINO_INKPLATE10)
+#elif defined(ARDUINO_INKPLATECOLOR)
+#include "SdFat/SdFat.h"
+#include "rtc/rtc.h"
+#elif defined(ARDUINO_INKPLATE6) || defined(ARDUINO_INKPLATE10)
 #include "SdFat/SdFat.h"
 #include "rtc/rtc.h"
 #include "touchpad/touchpad.h"

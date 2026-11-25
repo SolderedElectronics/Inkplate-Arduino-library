@@ -11,7 +11,7 @@
  *
  *              The frame buffer holds one 4 bit colour index per pixel, two pixels per byte,
  *              and supports the seven panel colours.
- *              Only full updates are supported. The board also exposes the touchpad buttons.
+ *              Only full updates are supported.
  *
  *              This code is released under the GNU Lesser General Public License v3.0:
  *              https://www.gnu.org/licenses/lgpl-3.0.en.html Please review the LICENSE file
@@ -447,7 +447,8 @@ void EPDDriver::setIOExpanderForLowPower()
     Wire.begin();
     expander1.begin(IO_INT_ADDR);
 
-    // TOUCHPAD PINS
+    // B2 switches microSD power (SD_PMOS_PIN); B3 and B4 are free GPIO header pins.
+    // This board has no touchpads.
     expander1.pinMode(IO_PIN_B2, INPUT);
     expander1.pinMode(IO_PIN_B3, INPUT);
     expander1.pinMode(IO_PIN_B4, INPUT);

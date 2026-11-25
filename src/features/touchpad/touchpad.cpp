@@ -1,4 +1,4 @@
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE6) || defined(ARDUINO_INKPLATE10)
+#if defined(ARDUINO_INKPLATE6) || defined(ARDUINO_INKPLATE10)
 #include "Inkplate.h"
 #include "touchpad.h"
 

@@ -15,7 +15,7 @@
  *
  * @authors     Soldered
  ***************************************************/
-#if defined(ARDUINO_INKPLATECOLOR) || defined(ARDUINO_INKPLATE6) || defined(ARDUINO_INKPLATE10)
+#if defined(ARDUINO_INKPLATE6) || defined(ARDUINO_INKPLATE10)
 #pragma once
 #include "Arduino.h"
 
