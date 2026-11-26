@@ -1,21 +1,22 @@
 /**
  **************************************************
  * @file        Inkplate13SPECTRA_Drawing_Graphics.ino
- * @brief       Graphics drawing example for Soldered Inkplate 13SPECTRA.
+ * @brief       Draw the ten basic shapes on the Inkplate 13, in colour.
  *
- * @details     Shows how to draw shapes, lines and text using the Adafruit GFX
- *              functions built into the Inkplate library.
+ * @details     Connection: none, the screen is on the board. Power and upload
+ *              over USB-C.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 13SPECTRA
- * - Hardware:   Inkplate 13SPECTRA, micro USB cable
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
  * - Extra:      None
+ * - Serial:     Not required
  *
  * How to use:
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
  *    from Tools -> Board.
  * 2) Upload the sketch to Inkplate 13SPECTRA.
- * 3) The shapes, lines and text are drawn and the display refreshes.
+ * 3) The sketch runs as described above.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
@@ -24,65 +25,67 @@
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
  *
- * @author      Soldered Electronics
- * @date        2026-01-23
+ * @author      Borna Zelenika @ soldered.com
+ * @date        2026-11-11
+ * @license     GNU GPL V3
  **************************************************/
 
+// Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #ifndef ARDUINO_INKPLATE13SPECTRA
 #error "Wrong board selection for this example, please select Soldered Inkplate 13SPECTRA in the boards menu."
 #endif
 
+// Pull in the Inkplate library
 #include "Inkplate.h"
 
-// Declare Inkplate object
+// The display object
 Inkplate display;
 
-void setup()
-{
-    // Initialize Inkplate
-    display.begin();
+// setup() runs once, right after the board powers on or resets
+void setup() {
+  // Start the display. Call this once, at the start.
+  display.begin();
 
-    display.clearDisplay();
-    display.fillScreen(INKPLATE_WHITE);
+  // Empty the frame buffer
+  display.clearDisplay();
 
-    // Rectangles
-    display.drawRect(40, 40, 520, 240, INKPLATE_BLACK);
-    display.fillRect(60, 60, 200, 80, INKPLATE_YELLOW);
-    display.drawRect(60, 60, 200, 80, INKPLATE_BLACK);
-    display.fillRoundRect(290, 60, 240, 80, 16, INKPLATE_RED);
-    display.drawRoundRect(290, 60, 240, 80, 16, INKPLATE_BLACK);
+  // Row 1, the outlines. Every shape sits in its own column, and the middle of
+  // each one is on the line y = 330.
 
-    // Circles
-    display.drawCircle(160, 220, 60, INKPLATE_BLUE);
-    display.fillCircle(380, 220, 60, INKPLATE_GREEN);
-    display.drawCircle(380, 220, 60, INKPLATE_BLACK);
+  // drawRect(x, y, width, height, colour): x, y is the top left corner.
+  display.drawRect(60, 230, 200, 200, INKPLATE_BLACK);
 
-    // Triangle
-    display.fillTriangle(520, 320, 640, 160, 760, 320, INKPLATE_YELLOW);
-    display.drawTriangle(520, 320, 640, 160, 760, 320, INKPLATE_BLACK);
+  // drawCircle(x, y, radius, colour): x, y is the centre.
+  display.drawCircle(480, 330, 100, INKPLATE_RED);
 
-    // Lines
-    display.drawLine(40, 360, 760, 520, INKPLATE_BLACK);
-    display.drawLine(40, 390, 760, 550, INKPLATE_RED);
-    display.drawLine(40, 420, 760, 580, INKPLATE_YELLOW);
-    display.drawLine(40, 450, 760, 610, INKPLATE_BLUE);
-    display.drawLine(40, 480, 760, 640, INKPLATE_GREEN);
+  // drawRoundRect(x, y, width, height, radius, colour): a rectangle with round corners.
+  display.drawRoundRect(700, 230, 200, 200, 40, INKPLATE_BLUE);
 
-    // Simple text
-    display.setTextSize(3);
-    display.setTextColor(INKPLATE_BLACK);
-    display.setCursor(40, 760);
-    display.print("Inkplate 13SPECTRA");
+  // drawTriangle(x1, y1, x2, y2, x3, y3, colour): joins three points.
+  display.drawTriangle(1120, 230, 1020, 430, 1220, 430, INKPLATE_GREEN);
 
-    display.setTextSize(2);
-    display.setCursor(40, 800);
-    display.print("Adafruit_GFX shapes & colors");
+  // drawLine(x1, y1, x2, y2, colour): joins two points.
+  display.drawLine(1340, 430, 1540, 230, INKPLATE_BLACK);
 
-    // Update e-paper
-    display.display();
+  // Row 2, the solid shapes. They have the same sizes as the outlines above,
+  // and the middle of each one is on the line y = 800.
+  display.fillRect(60, 700, 200, 200, INKPLATE_YELLOW);
+  display.fillCircle(480, 800, 100, INKPLATE_RED);
+  display.fillRoundRect(700, 700, 200, 200, 40, INKPLATE_BLUE);
+  display.fillTriangle(1120, 700, 1020, 900, 1220, 900, INKPLATE_GREEN);
+
+  // drawPixel(x, y, colour) sets a single pixel, which is tiny, so five of them
+  // make a small plus.
+  display.drawPixel(1440, 800, INKPLATE_BLACK);
+  display.drawPixel(1432, 800, INKPLATE_BLACK);
+  display.drawPixel(1448, 800, INKPLATE_BLACK);
+  display.drawPixel(1440, 792, INKPLATE_BLACK);
+  display.drawPixel(1440, 808, INKPLATE_BLACK);
+
+  // Send the frame buffer to the screen
+  display.display();
 }
 
-void loop()
-{
-    // Loop forever
+// loop() runs over and over. This sketch has nothing to repeat.
+void loop() {
 }
