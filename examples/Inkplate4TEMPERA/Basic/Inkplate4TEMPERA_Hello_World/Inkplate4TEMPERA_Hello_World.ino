@@ -52,7 +52,7 @@
 #endif
 
 #include "Inkplate.h" // Include the Inkplate library
-Inkplate display(INKPLATE_3BIT); // Create an Inkplate object for Inkplate6 FLICK
+Inkplate display(INKPLATE_3BIT); // Create an Inkplate object for Inkplate 4TEMPERA
 
 void setup() {
     display.begin();             // Initialize the display hardware
