@@ -1,31 +1,27 @@
 /**
  **************************************************
  * @file        Inkplate6_Show_Pictures_From_Web.ino
- * @brief       Download and display BMP images from the web (Inkplate 6).
+ * @brief       Picture from the web example for Soldered
+ *              Inkplate 6.
  *
- * @details     Demonstrates how to connect Inkplate 6 to a WiFi network,
- *              download a BMP image from a web URL (HTTP/HTTPS depending on
- *              the sketch implementation), and render it on the e-paper display
- *              using the Inkplate image drawing functions.
- *
- *              Supported BMP formats are Windows BMP with 1/4/8/24-bit color
- *              depth. Images must fit the display; large images may not render
- *              properly. Make sure the URL points directly to the BMP file (no
- *              HTML redirect pages). Expected output is the downloaded BMP image
- *              shown on the Inkplate screen.
+ * @details     Download a picture from the web and show it on
+ *              the Inkplate 6, in eight levels of gray.
+ *              Connection: none. Needs a Wi-Fi network.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6
- * - Hardware:   Inkplate 6, USB cable
- * - Extra:      Available WiFi connection
+ * - Hardware:   Inkplate 6, USB cable, Wi-Fi network
+ * - Extra:      Wi-Fi network
+ * - Serial:     Not required
  *
  * How to use:
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
  *    from Tools -> Board.
- * 2) Enter your WiFi SSID and password in the sketch.
- * 3) Set the image URL to a compatible BMP file.
- * 4) Upload the sketch to Inkplate 6.
- * 5) The board connects to WiFi, downloads the image, and displays it.
+ * 2) Enter the name and the password of your Wi-Fi network in the
+ *    ssid and pass lines at the top of the sketch.
+ * 3) Upload the sketch to Inkplate 6.
+ * 4) The picture appears on the display in eight levels of
+ *    gray.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/6/quick-start-guide/
@@ -34,8 +30,8 @@
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
  *
- * @author      Soldered
- * @date        2021-02-11
+ * @author      Borna Zelenika @ soldered.com
+ * @date        2026-11-26
  * @license     GNU GPL V3
  **************************************************/
 
@@ -44,110 +40,51 @@
 #error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
 #endif
 
-#include "HTTPClient.h"          //Include library for HTTPClient
-#include "Inkplate.h"            //Include Inkplate library to the sketch
-#include "WiFi.h"                //Include library for WiFi
-Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1 Bit mode (BW)
+// Pull in the libraries: Inkplate, the font file that sits next to this sketch, and Wi-Fi
+#include "Inkplate.h"
+#include "SourceSans3_24.h"
+#include <WiFi.h>
 
-const char ssid[] = "";    // Your WiFi SSID
-const char *password = ""; // Your WiFi password
+// The name and the password of your Wi-Fi network
+#define ssid ""
+#define pass ""
 
-void setup()
-{
-    display.begin();        // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay(); // Clear frame buffer of display
-    display.display();      // Put clear image on display
+// The web address of the picture. It has to point straight at a JPG, PNG or BMP file.
+const char *pictureUrl = "https://learn.soldered.com/inkplate-6/files/coastal-town.jpg";
 
-    display.print("Connecting to WiFi...");
-    display.partialUpdate();
+// Gray mode: eight levels, 0 (black) to 7 (white). Pictures need it to look right.
+Inkplate display(INKPLATE_3BIT);
 
-    // Connect to the WiFi network.
-    WiFi.mode(WIFI_MODE_STA);
-    WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        delay(500);
-        display.print(".");
-        display.partialUpdate();
-    }
-    display.println("\nWiFi OK! Downloading...");
-    display.partialUpdate();
+// setup() runs once, right after the board powers on or resets
+void setup() {
+  display.begin();
+  display.clearDisplay();
+  display.setFont(&SourceSans3_24);
+  display.setTextColor(BLACK);
+  display.setTextSize(2);
+  display.setCursor(50, 50);
 
-    // Draw the first image from web.
-    // Monochromatic bitmap with 1 bit depth. Images like this load quickest.
-    // NOTE: Both drawImage methods allow for an optional fifth "invert" parameter. Setting this parameter to true
-    // will flip all colors on the image, making black white and white black. This may be necessary when exporting
-    // bitmaps from certain softwares. Forth parameter will dither the image. Photo taken by: Roberto Fernandez
-    if (!display.image.draw("https://varipass.org/neowise_mono.bmp", 0, 0, false, true))
-    {
-        // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-        // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no compression!
-        display.println("Image open error");
-        display.display();
-    }
-    display.display();
+  // Join the Wi-Fi network
+  WiFi.begin(ssid, pass);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+  }
 
-    // Draw the second image from web, this time using a HTTPClient to fetch the response manually.
-    // Full color 24 bit images are large and take a long time to load, will take around 20 secs.
-    HTTPClient http;
-    // Set parameters to speed up the download process.
-    http.getStream().setNoDelay(true);
-    http.getStream().setTimeout(1);
+  // Give the connection a moment to settle before the download
+  delay(2000);
 
-    // Photo taken by: Roberto Fernandez
-    http.begin("https://varipass.org/neowise.bmp");
+  // Download the picture and draw it with its top left corner at 0, 0, which fills the screen,
+  // because the picture is 800 x 600 pixels. The last value, true, turns on dithering. If the
+  // download or the drawing fails, say so.
+  if (!display.image.draw(pictureUrl, 0, 0, true)) {
+    display.println("Could not download the picture");
+  }
 
-    // Check response code.
-    int httpCode = http.GET();
-    if (httpCode == 200)
-    {
-        // Get the response length and make sure it is not 0.
-        int32_t len = http.getSize();
-        if (len > 0)
-        {
-            if (!display.image.drawBitmapFromWeb(http.getStreamPtr(), 0, 0, len))
-            {
-                // If is something failed (wrong filename or wrong bitmap format), write error message on the screen.
-                // REMEMBER! You can only use Windows Bitmap file with color depth of 1, 4, 8 or 24 bits with no
-                // compression!
-                display.println("Image open error");
-                display.display();
-            }
-            display.display();
-        }
-        else
-        {
-            display.println("Invalid response length");
-            display.display();
-        }
-    }
-    else
-    {
-        display.println("HTTP error");
-        display.display();
-    }
-
-    display.clearDisplay();
-    delay(3000);
-
-    // Try to load image and display it on e-paper at position X=0, Y=100
-    // NOTE: Both drawJpegFromWeb methods allow for an optional fifth "invert" parameter. Setting this parameter to
-    // true will flip all colors on the image, making black white and white black. forth parameter will dither the
-    // image.
-    if (!display.image.draw("https://varipass.org/destination.jpg", 0, 100, true, false))
-    {
-        // If is something failed (wrong filename or format), write error message on the screen.
-        display.println("Image open error");
-        display.display();
-    }
-    display.display();
-
-    http.end();
-
-    WiFi.mode(WIFI_OFF);
+  // Send the frame buffer to the screen, then turn the Wi-Fi off to save power
+  display.display();
+  WiFi.mode(WIFI_OFF);
 }
 
-void loop()
-{
-    // Nothing...
+// loop() runs over and over. This sketch has nothing to repeat.
+void loop() {
 }

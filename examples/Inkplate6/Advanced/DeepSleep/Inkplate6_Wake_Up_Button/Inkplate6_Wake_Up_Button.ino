@@ -1,20 +1,14 @@
 /**
  **************************************************
  * @file        Inkplate6_Wake_Up_Button.ino
- * @brief       Wake-up button and timer deep sleep example for Soldered Inkplate 6.
+ * @brief       Deep sleep with a timer or button wake-up for
+ *              Soldered Inkplate 6.
  *
- * @details     Demonstrates how to wake the ESP32 from deep sleep on Inkplate 6
- *              using an external interrupt (WakeUp button) and a fallback timer.
- *              The example stores a boot counter in RTC memory, shows the boot
- *              count on the e-paper display, and prints the wake-up reason
- *              (button press vs. timer wake-up).
- *
- *              Deep sleep restarts the program from the beginning on every
- *              wake-up. bootCount is stored in RTC memory (RTC_DATA_ATTR) so it
- *              persists across deep sleep, and the WakeUp button uses EXT0
- *              wake-up on GPIO36. Expected output is an incrementing boot count
- *              on the display together with the wake-up reason (WakeUp button
- *              or timer).
+ * @details     Show the wake-up count and reason on the
+ *              Inkplate 6, then sleep. Wakes on a 30 second
+ *              timer or when the WakeUp button is pressed.
+ *              Connection: none, the button is on the board.
+ *              Power and upload over USB-C.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6
@@ -26,11 +20,8 @@
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
  *    from Tools -> Board.
  * 2) Upload the sketch to Inkplate 6.
- * 3) After displaying boot info, the board enters deep sleep.
- * 4) Wake the board by pressing the WakeUp button, or wait 30 seconds for timer
- *    wake-up.
- * 5) On each wake, the display updates with the new boot count and wake-up
- *    reason.
+ * 3) The count and the reason for the wake-up appear on the
+ *    display.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/6/quick-start-guide/
@@ -39,86 +30,76 @@
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
  *
- * @author      Soldered
- * @date        2022-12-14
+ * @author      Borna Zelenika @ soldered.com
+ * @date        2026-11-26
  * @license     GNU GPL V3
  **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
 #endif
 
-#include <Inkplate.h>
+// Pull in the Inkplate library, then the font file that sits next to this sketch
+#include "Inkplate.h"
+#include "SourceSans3_24.h"
 
-// Conversion factor for micro seconds to seconds
+// Microseconds in one second
 #define uS_TO_S_FACTOR 1000000ULL
-// Time ESP32 will go to sleep (in seconds)
+
+// Seconds to sleep if nobody presses the button
 #define TIME_TO_SLEEP 30
 
-// Initiate Inkplate object
 Inkplate display(INKPLATE_1BIT);
 
-// Store int in rtc data, to remain persistent during deep sleep
-RTC_DATA_ATTR int bootCount = 0;
+// Survives deep sleep, like in T9
+RTC_DATA_ATTR int wakeCount = 0;
 
-void setup()
-{
-    display.begin();
+void setup() {
+  display.begin();
+  wakeCount++;
 
-    ++bootCount;
+  // Draw the count and the reason
+  showInfo();
 
-    // Our function declared below
-    displayInfo();
+  // Wake after 30 seconds...
+  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 
-    // Go to sleep for TIME_TO_SLEEP seconds
-    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+  // ...or when GPIO 36, the WakeUp button, goes LOW
+  esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
 
-    // Enable wakeup from deep sleep on gpio 36 (wake button)
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_36, LOW);
-
-    // Go to sleep
-    esp_deep_sleep_start();
+  // Go to sleep. The sketch ends here.
+  esp_deep_sleep_start();
 }
 
-void loop()
-{
-    // Never here! If you use deep sleep, the whole program should be in setup() because the board restarts each
-    // time. loop() must be empty!
+void loop() {
 }
 
-// Function that will write number of boots and boot reason to screen
-void displayInfo()
-{
-    // First, lets delete everything from frame buffer
-    display.clearDisplay();
+// Write the wake-up count and the reason onto the screen
+void showInfo() {
+  display.clearDisplay();
+  display.setFont(&SourceSans3_24);
+  display.setTextSize(2);
 
-    // Set text cursor and size
-    display.setCursor(10, 280);
-    display.setTextSize(2);
+  display.setCursor(100, 240);
+  display.print("Wake-up number ");
+  display.println(wakeCount);
 
-    display.print(F("Boot count: "));
-    display.println(bootCount, DEC); // Print the number
+  display.setCursor(100, 300);
+  display.print("Woken by: ");
 
-    // Set next line cursor position
-    display.setCursor(10, 320);
+  // Ask the ESP32 what woke it up
+  esp_sleep_wakeup_cause_t reason = esp_sleep_get_wakeup_cause();
 
-    // Display wake up reason
-    esp_sleep_wakeup_cause_t wakeup_reason;
-    wakeup_reason = esp_sleep_get_wakeup_cause();
-    switch (wakeup_reason)
-    {
-    case ESP_SLEEP_WAKEUP_EXT0:
-        display.println("Wakeup caused by WakeUp button");
-        break;
-    case ESP_SLEEP_WAKEUP_TIMER:
-        display.println("Wakeup caused by timer");
-        break;
-    default:
-        display.println("Wakeup was not caused by deep sleep");
-        break;
-    }
+  if (reason == ESP_SLEEP_WAKEUP_EXT0) {
+    display.print("WakeUp button");
+  } else if (reason == ESP_SLEEP_WAKEUP_TIMER) {
+    display.print("timer");
+  } else {
+    // The first power-up is not a wake-up from sleep
+    display.print("power-up");
+  }
 
-    display.display();
+  // A full refresh
+  display.display();
 }

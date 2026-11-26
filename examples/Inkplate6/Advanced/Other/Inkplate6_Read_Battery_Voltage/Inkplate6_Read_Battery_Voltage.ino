@@ -1,31 +1,25 @@
 /**
  **************************************************
  * @file        Inkplate6_Read_Battery_Voltage.ino
- * @brief       Battery voltage reading example for Soldered Inkplate 6.
+ * @brief       Battery voltage example for Soldered Inkplate
+ *              6.
  *
- * @details     Demonstrates how to read the connected Li-ion/Li-Po battery
- *              voltage using Inkplate's built-in battery measurement circuitry.
- *              The example shows how to obtain the battery voltage value in
- *              software and display or process it as needed.
- *
- *              Battery voltage reading is enabled through the onboard
- *              circuitry, and typically requires enabling the battery
- *              measurement path in hardware (see Inkplate documentation).
- *              Accuracy depends on battery condition and load. Expected output
- *              is the measured battery voltage value reported by the program.
+ * @details     Show the battery voltage of the Inkplate 6 in
+ *              big text, next to a battery picture.
+ *              Connection: none. The measurement is on the
+ *              board. A battery is optional.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6
- * - Hardware:   Inkplate 6, USB cable, 3.6-4.2 V Li-ion/Li-Po battery (JST connector)
- * - Extra:      None
+ * - Hardware:   Inkplate 6, USB cable
+ * - Extra:      None, a battery is optional
+ * - Serial:     Not required
  *
  * How to use:
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
  *    from Tools -> Board.
- * 2) Connect a supported Li-ion/Li-Po battery to the Inkplate battery
- *    connector.
- * 3) Upload the sketch to Inkplate 6.
- * 4) The battery voltage is read and can be displayed or logged by the sketch.
+ * 2) Upload the sketch to Inkplate 6.
+ * 3) The battery voltage appears next to the battery picture.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/6/quick-start-guide/
@@ -33,42 +27,58 @@
  *              https://docs.soldered.com/inkplate/
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
- * @note        Image converter tool:
- *              https://tools.soldered.com/tools/image-converter/
  *
- * @author      Soldered
- * @date        2023-01-23
+ * @author      Borna Zelenika @ soldered.com
+ * @date        2026-11-26
  * @license     GNU GPL V3
  **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
 #endif
 
-#include "Inkplate.h"   //Include Inkplate library to the sketch
-#include "battSymbol.h" //Include .h file that contains byte array for battery symbol.
-// It is in same folder as this sketch. You can even open it (read it) by clicking on battSymbol.h tab in Arduino IDE
-Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
+// Pull in the Inkplate library, then the font and the picture files that sit next to this sketch
+#include "Inkplate.h"
+#include "SourceSans3_24.h"
+#include "battSymbol.h"
 
-void setup()
-{
-    display.begin();                    // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay();             // Clear frame buffer of display
-    display.display();                  // Put clear image on display
-    display.setTextSize(2);             // Scale text to be two times bigger then original (5x7 px)
-    display.setTextColor(BLACK, WHITE); // Set text color to black and background color to white
+// Partial update works in black and white mode only
+Inkplate display(INKPLATE_1BIT);
+
+// setup() runs once, right after the board powers on or resets
+void setup() {
+  display.begin();
+
+  // Start from a clean, fully refreshed screen
+  display.clearDisplay();
+  display.display();
+
+  // Black text on a white background, in the font from T1, four times its normal size
+  display.setFont(&SourceSans3_24);
+  display.setTextColor(BLACK, WHITE);
+  display.setTextSize(4);
+
+  // Make every tenth update a full refresh, to clear the leftovers
+  display.setFullUpdateThreshold(9);
 }
 
-void loop()
-{
-    float voltage = display.readBattery();                   // Read battery voltage
-    display.clearDisplay();                                  // Clear everything in frame buffer of e-paper display
-    display.image.draw(battSymbol, 100, 100, 106, 45, BLACK); // Draw battery symbol at position X=100 Y=100
-    display.setCursor(210, 120);
-    display.print(voltage, 2); // Print battery voltage
-    display.print('V');
-    display.display(); // Send everything to display (refresh the screen)
-    delay(10000);      // Wait 10 seconds before new measurement
+// loop() runs over and over
+void loop() {
+  // Take the measurement
+  float voltage = display.readBattery();
+
+  // Redraw the screen: the picture, then the number to the right of it
+  display.clearDisplay();
+
+  display.image.draw(battSymbol, 151, 255, 212, 90, BLACK);
+  display.setCursor(413, 252);
+  display.print(voltage, 2);  // two decimals
+  display.print(" V");
+
+  // Send only what changed
+  display.partialUpdate(false, true);
+
+  // Wait 10 seconds before the next measurement
+  delay(10000);
 }

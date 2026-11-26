@@ -1,31 +1,24 @@
 /**
  **************************************************
  * @file        Inkplate6_Read_Temperature.ino
- * @brief       On-board temperature sensor reading example for Soldered Inkplate 6.
+ * @brief       Temperature sensor example for Soldered
+ *              Inkplate 6.
  *
- * @details     Demonstrates how to read temperature data from the on-board
- *              temperature sensor integrated inside the TPS65186 e-paper PMIC.
- *              This sensor is intended primarily for internal compensation
- *              and basic monitoring. It is a simple (basic) temperature sensor
- *              and should not be considered highly accurate or suitable for
- *              precise temperature measurements.
- *
- *              The sensor is not a replacement for a dedicated external
- *              temperature sensor; its intended use is system monitoring and
- *              waveform compensation. Expected output is an approximate
- *              temperature reading reported by the TPS65186 sensor.
+ * @details     Show the temperature of the Inkplate 6 in big
+ *              text, next to a thermometer picture.
+ *              Connection: none. The sensor is on the board.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6
  * - Hardware:   Inkplate 6, USB cable
  * - Extra:      None
+ * - Serial:     Not required
  *
  * How to use:
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
  *    from Tools -> Board.
  * 2) Upload the sketch to Inkplate 6.
- * 3) The program reads the temperature from the onboard PMIC sensor.
- * 4) The measured value can be displayed or printed to Serial.
+ * 3) The temperature appears next to the thermometer picture.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/6/quick-start-guide/
@@ -34,38 +27,57 @@
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
  *
- * @author      Soldered
- * @date        2023-01-23
+ * @author      Borna Zelenika @ soldered.com
+ * @date        2026-11-26
  * @license     GNU GPL V3
  **************************************************/
+
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
 #endif
 
-#include "Inkplate.h"   // Include Inkplate library to the sketch
-#include "tempSymbol.h" // Include .h file that contains byte array for temperature symbol.
-// It is in same folder as this sketch. You can even open it (read it) by clicking on tempSymbol.h tab in Arduino IDE
-Inkplate display(INKPLATE_1BIT); // Create an object on Inkplate library and also set library into 1-bit mode (BW)
+// Pull in the Inkplate library, then the font and the picture files that sit next to this sketch
+#include "Inkplate.h"
+#include "SourceSans3_24.h"
+#include "tempSymbol.h"
 
-void setup()
-{
-    display.begin();                    // Init Inkplate library (you should call this function ONLY ONCE)
-    display.clearDisplay();             // Clear frame buffer of display
-    display.display();                  // Put clear image on display
-    display.setTextSize(2);             // Scale text to be two times bigger then original (5x7 px)
-    display.setTextColor(BLACK, WHITE); // Set text color to black and background color to white
+// Partial update works in black and white mode only
+Inkplate display(INKPLATE_1BIT);
+
+// setup() runs once, right after the board powers on or resets
+void setup() {
+  display.begin();
+
+  // Start from a clean, fully refreshed screen
+  display.clearDisplay();
+  display.display();
+
+  // Black text on a white background, in the font from T1, four times its normal size
+  display.setFont(&SourceSans3_24);
+  display.setTextColor(BLACK, WHITE);
+  display.setTextSize(4);
+
+  // Make every tenth update a full refresh, to clear the leftovers
+  display.setFullUpdateThreshold(9);
 }
 
-void loop()
-{
-    int temperature = display.readTemperature();            // Read temperature from on-board temperature sensor
-    display.clearDisplay();                                 // Clear everything in frame buffer of e-paper display
-    display.image.draw(tempSymbol, 100, 100, 38, 79, BLACK); // Draw temperature symbol at position X=100, Y=200
-    display.setCursor(150, 125);
-    display.print(temperature, DEC); // Print temperature
-    display.print('C');
-    display.display(); // Send everything to display (refresh the screen)
-    delay(10000);      // Wait 10 seconds before new measurement
+// loop() runs over and over
+void loop() {
+  // Take the measurement
+  int temperature = display.readTemperature();
+
+  // Redraw the screen: the picture, then the number to the right of it
+  display.clearDisplay();
+
+  display.image.draw(tempSymbol, 219, 221, 76, 158, BLACK);
+  display.setCursor(413, 252);
+  display.print(temperature);
+  display.print(" C");
+
+  // Send only what changed
+  display.partialUpdate(false, true);
+
+  // Wait 10 seconds before the next measurement
+  delay(10000);
 }
