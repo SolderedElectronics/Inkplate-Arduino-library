@@ -117,7 +117,9 @@ void setup()
     // Here we setting internal capacitor value (7 pF):
     // display.rtc.setInternalCapacitor(RTC_7PF); 
     // Another option is 12.5 pF:
-    display.rtc.setInternalCapacitor(RTC_12_5PF);
+    // display.rtc.setInternalCapacitor(RTC_12_5PF);
+    // Inkplate 4TEMPERA ships with the two 12 pF external load capacitors fitted,
+    // so both lines above stay commented out unless you remove those capacitors.
 
     // Set offset for RTC crystal
     // The first argument is a mode (0 or 1):
