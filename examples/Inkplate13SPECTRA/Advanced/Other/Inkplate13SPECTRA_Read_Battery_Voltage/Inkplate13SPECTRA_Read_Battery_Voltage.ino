@@ -1,22 +1,23 @@
 /**
  **************************************************
  * @file        Inkplate13SPECTRA_Read_Battery_Voltage.ino
- * @brief       Battery voltage reading example for Soldered Inkplate 13SPECTRA.
+ * @brief       Show the battery voltage of the Inkplate 13 in big text, next to a
+ *              battery picture.
  *
- * @details     Shows how to read the voltage of the connected battery.
+ * @details     Connection: none. The measurement is on the board. A battery is
+ *              optional.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 13SPECTRA
- * - Hardware:   Inkplate 13SPECTRA, USB cable, Lithium battery (3.6 V) with a
- *               two pin JST connector
+ * - Hardware:   Inkplate 13SPECTRA, USB cable
  * - Extra:      None
+ * - Serial:     Not required
  *
  * How to use:
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate 13SPECTRA"
  *    from Tools -> Board.
- * 2) Connect the battery to the Inkplate battery connector.
- * 3) Upload the sketch to Inkplate 13SPECTRA.
- * 4) The measured battery voltage is shown on the display.
+ * 2) Upload the sketch to Inkplate 13SPECTRA.
+ * 3) The sketch runs as described above.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/13spectra/quick-start-guide/
@@ -24,12 +25,10 @@
  *              https://docs.soldered.com/inkplate/
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
- * @note        In order to convert your images into a format compatible with
- *              Inkplate, use the Soldered Image Converter available at
- *              https://github.com/SolderedElectronics/Soldered-Image-Converter/releases
  *
- * @author      Soldered
- * @date        2023-01-23
+ * @author      Borna Zelenika @ soldered.com
+ * @date        2026-11-11
+ * @license     GNU GPL V3
  **************************************************/
 
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
@@ -37,29 +36,57 @@
 #error "Wrong board selection for this example, please select Soldered Inkplate 13SPECTRA in the boards menu."
 #endif
 
-#include "Inkplate.h"   // Include Inkplate library to the sketch
-#include "battSymbol.h" // Include the battery voltage bitmap
-// It is in same folder as this sketch. You can even open it (read it) by clicking on battSymbol.h tab in Arduino IDE
-Inkplate display; // Create an object on Inkplate library
+// Pull in the Inkplate library, then the font and the picture files that sit next to this sketch
+#include "Inkplate.h"
+#include "SourceSans3_24.h"
+#include "battSymbol.h"
 
-void setup()
-{
-    display.begin(); // Init Inkplate library (you should call this function ONLY ONCE)
-    Serial.begin(115200);
+// The display object
+Inkplate display;
+
+// The strip of the screen that shows the voltage: top left corner, width and height
+const int stripX = 0;
+const int stripY = 500;
+const int stripWidth = 1600;
+const int stripHeight = 200;
+
+// How many measurements have been shown so far
+int updates = 0;
+
+// setup() runs once, right after the board powers on or resets
+void setup() {
+  display.begin();
+
+  // Start from a clean, fully refreshed screen
+  display.clearDisplay();
+  display.display();
+
+  // Black text in the font from T1, four times its normal size
+  display.setFont(&SourceSans3_24);
+  display.setTextColor(INKPLATE_BLACK);
+  display.setTextSize(4);
 }
 
-void loop()
-{
-    float voltage = display.readBattery(); // Read battery voltage
-    display.clearDisplay();                // Clear everything in frame buffer of e-paper display
-    display.drawBitmap(100, 100, battSymbol, battSymbol_w, battSymbol_h,
-                       INKPLATE_BLUE); // Draw battery symbol at position X=100 Y=100
-    display.setCursor(210, 120);
-    display.setTextColor(INKPLATE_BLUE);
-    display.setTextSize(3);
-    display.print(voltage, 2); // Print battery voltage
-    display.print('V');
-    display.display(); // Send everything to display (refresh the screen)
-    Serial.printf("Voltage: %.2fV\n", voltage);
-    delay(10000);      // Wait 10 seconds before new measurement
+// loop() runs over and over
+void loop() {
+  // Take the measurement
+  float voltage = display.readBattery();
+
+  // Clear the strip, then draw the picture and write the voltage to the right of it
+  display.fillRect(stripX, stripY, stripWidth, stripHeight, INKPLATE_WHITE);
+  display.drawBitmap(554, 555, battSymbol, 212, 90, INKPLATE_BLACK);
+  display.setCursor(810, stripY + 60);
+  display.print(voltage, 2);  // two decimals
+  display.print(" V");
+
+  // Every 10th update is a full refresh. The others send only the strip.
+  updates++;
+  if (updates % 10 == 0) {
+    display.display();
+  } else {
+    display.displayPartial(stripX, stripY, stripWidth, stripHeight, true);
+  }
+
+  // Wait 10 seconds before the next measurement
+  delay(10000);
 }

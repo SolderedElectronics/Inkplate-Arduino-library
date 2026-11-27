@@ -423,18 +423,23 @@ bool Touch::available()
  */
 void Touch::power(bool _pwr)
 {
+#ifdef ARDUINO_INKPLATE4TEMPERA
+    IOExpander &io = _inkplate->expander2;
+#else
+    IOExpander &io = _inkplate->expander1;
+#endif
     if (_pwr)
     {
-        _inkplate->expander1.digitalWrite(TOUCHSCREEN_EN, LOW);
+        io.digitalWrite(TOUCHSCREEN_EN, LOW);
         delay(50);
-        _inkplate->expander1.digitalWrite(TOUCHSCREEN_RST, HIGH);
+        io.digitalWrite(TOUCHSCREEN_RST, HIGH);
         delay(50);
     }
     else
     {
-        _inkplate->expander1.digitalWrite(TOUCHSCREEN_EN, HIGH);
+        io.digitalWrite(TOUCHSCREEN_EN, HIGH);
         delay(50);
-        _inkplate->expander1.digitalWrite(TOUCHSCREEN_RST, LOW);
+        io.digitalWrite(TOUCHSCREEN_RST, LOW);
     }
 }
 
