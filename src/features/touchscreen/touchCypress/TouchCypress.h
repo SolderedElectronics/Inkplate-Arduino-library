@@ -58,16 +58,16 @@
 #define CYPRESS_TOUCH_TCH_TMOUT_DFLT 0xFF /* ms */
 
 // Init timing (ms). Reset values follow mainline Linux cyttsp.
-#define CYPRESS_TOUCH_OFF_TIME_MS   1000 // Touch VDD off time before power-on (clean POR)
-#define CYPRESS_TOUCH_PWR_SETTLE_MS 50   // After VDD on, before reset release
-#define CYPRESS_TOUCH_RST_LOW_MS    20   // Reset pulse width
-#define CYPRESS_TOUCH_RST_WAIT_MS   100  // After reset release
-#define CYPRESS_TOUCH_EXIT_BL_MS    500  // After bootloader exit command
-#define CYPRESS_TOUCH_MODE_WAIT_MS  50   // After host mode change
+#define CYPRESS_TOUCH_OFF_TIME_MS        1000 // Touch VDD off time before power-on (clean POR)
+#define CYPRESS_TOUCH_PWR_SETTLE_MS      50   // After VDD on, before reset release
+#define CYPRESS_TOUCH_RST_LOW_MS         20   // Reset pulse width
+#define CYPRESS_TOUCH_RST_WAIT_MS        100  // After reset release
+#define CYPRESS_TOUCH_EXIT_BL_MS         500  // After bootloader exit command
+#define CYPRESS_TOUCH_MODE_WAIT_MS       50   // After host mode change
 #define CYPRESS_TOUCH_SYSINFO_TIMEOUT_MS 1000 // Max wait for a valid sysinfo block
 #define CYPRESS_TOUCH_SYSINFO_POLL_MS    20   // Sysinfo poll interval
-#define CYPRESS_TOUCH_I2C_TIMEOUT   50   // I2C read timeout
-#define CYPRESS_TOUCH_INIT_RETRIES  3    // Full power cycle + init attempts
+#define CYPRESS_TOUCH_I2C_TIMEOUT        50   // I2C read timeout
+#define CYPRESS_TOUCH_INIT_RETRIES       3    // Full power cycle + init attempts
 
 // Max X and Y sizes reported by the TSC.
 #define CYPRESS_TOUCH_MAX_X 682
