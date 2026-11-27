@@ -1,37 +1,27 @@
 /**
  **************************************************
  * @file        Inkplate6_HTTPS_POST_Request.ino
- * @brief       HTTPS POST request example for Soldered Inkplate 6.
+ * @brief       HTTPS POST request example for Soldered
+ *              Inkplate 6.
  *
- * @details     Demonstrates how to connect Inkplate 6 to a WiFi network and
- *              send an HTTPS POST request with a JSON payload. The example uses
- *              the JSONPlaceholder fake REST API to test request/response flow
- *              and prints the HTTP status code and response body to the Serial
- *              Monitor.
- *
- *              The example uses HTTPS without certificate validation via
- *              client.setInsecure(), which is convenient for demos and testing
- *              but not recommended for production use. JSONPlaceholder is a fake
- *              API: the response looks real, but data is not persisted. For real
- *              APIs you may need authentication headers (API keys, tokens) and
- *              additional fields. Expected output is a short message on the
- *              display prompting you to open the Serial Monitor, where the WiFi
- *              connection status, HTTP status code and response body are shown.
+ * @details     Send the temperature of the Inkplate 6 to a
+ *              test server in a POST request, and show the
+ *              answer. Connection: none. Needs a Wi-Fi
+ *              network.
  *
  * Requirements:
  * - Board:      Soldered Inkplate 6
- * - Hardware:   Inkplate 6, USB cable
- * - Extra:      Stable WiFi Internet connection
- * - Serial:     115200 baud
+ * - Hardware:   Inkplate 6, USB cable, Wi-Fi network
+ * - Extra:      Wi-Fi network and the ArduinoJson library
+ * - Serial:     Not required
  *
  * How to use:
  * 1) In Boards Manager -> Inkplate Boards, select "Soldered Inkplate6"
  *    from Tools -> Board.
- * 2) Enter your WiFi SSID and password (ssid, pass) in the sketch.
+ * 2) Enter the name and the password of your Wi-Fi network in the
+ *    ssid and pass lines at the top of the sketch.
  * 3) Upload the sketch to Inkplate 6.
- * 4) Open Serial Monitor (115200 baud).
- * 5) The board connects to WiFi and periodically sends an HTTPS POST request.
- * 6) Observe the returned status code and response payload in Serial Monitor.
+ * 4) The answer of the server appears on the display.
  *
  * @note        Quick start guide:
  *              https://docs.soldered.com/inkplate/6/quick-start-guide/
@@ -40,113 +30,115 @@
  * @note        Looking to get support? Write on our community forum:
  *              https://community.soldered.com/
  *
- * @author      Soldered
- * @date        2023-02-02
+ * @author      Borna Zelenika @ soldered.com
+ * @date        2026-11-26
  * @license     GNU GPL V3
  **************************************************/
+
 // Next 3 lines are a precaution, you can ignore those, and the example would also work without them
 #if !defined(ARDUINO_ESP32_DEV) && !defined(ARDUINO_INKPLATE6V2)
-#error                                                                                                                 \
-    "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
+#error "Wrong board selection for this example, please select e-radionica Inkplate6 or Soldered Inkplate6 in the boards menu."
 #endif
 
-// Include needed libraries
-#include "ArduinoJson.h"
-#include "HTTPClient.h"
+// Pull in the libraries: Inkplate, the font file that sits next to this sketch, Wi-Fi, web requests and JSON
 #include "Inkplate.h"
-#include "WiFi.h"
+#include "SourceSans3_24.h"
+#include <WiFi.h>
 #include <WiFiClientSecure.h>
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
 
-// Enter your WiFi credentials
-const char *ssid = "";
-const char *pass = "";
+// The name and the password of your Wi-Fi network
+#define ssid ""
+#define pass ""
 
-// Specify the API URL to send a POST request
-const char *apiUrl = "https://jsonplaceholder.typicode.com/posts";
+// The test server. It accepts what you send and answers as if it had saved it, but it keeps nothing.
+const char *serverUrl = "https://jsonplaceholder.typicode.com/posts";
 
-// Specify the delay time between 2 POST requests in milliseconds
-#define DELAY_BETWEEN_REQUESTS 10000
+// Black and white mode: a colour is BLACK or WHITE
+Inkplate display(INKPLATE_1BIT);
 
-// Create objects from included libraries
-WiFiClientSecure client;
-HTTPClient http;
-Inkplate display(INKPLATE_1BIT); // Create object on Inkplate library and set library to work in monochrome mode
-
-void setup()
-{
-    // Init serial communication
-    Serial.begin(115200);
-
-    // Init the display
-    display.begin();
-
-    // Clear the display and print message
-    display.clearDisplay();
-    display.setTextColor(BLACK);
-    display.setTextSize(6);
-    display.printf("HTTPS POST \nRequest example\n");
-
-    display.setTextSize(4);
-    display.printf("\nOpen Serial Monitor at \n115200 baud rate to see \nwhat's happening");
-    display.display();
-
-    // Connect to WiFi
-    WiFi.begin(ssid, pass);
-    Serial.println("Connecting to WiFi");
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        Serial.print(".");
-        delay(500);
-    }
-    Serial.println();
-    Serial.print("Connected to WiFi with IP address ");
-    Serial.println(WiFi.localIP());
-
-    // Use https but don't use a certificate
-    client.setInsecure();
+// Stop with a message on the screen
+void fail(const char *message) {
+  display.println(message);
+  display.display();
+  while (true);
 }
 
-void loop()
-{
-    // Init HTTP client with secure wifi client and the API URL
-    http.begin(client, apiUrl);
+// setup() runs once, right after the board powers on or resets
+void setup() {
+  display.begin();
+  display.clearDisplay();
+  display.setFont(&SourceSans3_24);
+  display.setTextColor(BLACK, WHITE);
+  display.setTextSize(2);
+  display.setCursor(50, 50);
 
-    // Add header. In your case maybe you must add more depending on your API
-    http.addHeader("Content-Type", "application/json");
+  // Join the Wi-Fi network
+  WiFi.begin(ssid, pass);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+  }
 
-    // Create a JSON document for serializing data
-    const size_t CAPACITY = JSON_OBJECT_SIZE(1);
-    StaticJsonDocument<CAPACITY> doc;
+  // Read the temperature of the board. It is a whole number of degrees Celsius.
+  int temperature = display.readTemperature();
 
-    // Convert the JSON document to a JSON object in order to add data
-    JsonObject object = doc.to<JsonObject>();
+  // Build the message to send: a JSON document with two names and their values
+  JsonDocument message;
+  message["title"] = "Inkplate temperature";
+  message["body"] = String(temperature) + " C";
+  String json;
+  serializeJson(message, json);
 
-    // Add data in the JSON object
-    object["title"] = "Hello Inkplate";
+  // Send it with a POST request. The header tells the server that the body is JSON.
+  // setInsecure() skips checking the server's certificate, which is fine for a test server
+  // but wrong for anything private.
+  WiFiClientSecure client;
+  client.setInsecure();
+  HTTPClient http;
+  http.begin(client, serverUrl);
+  http.addHeader("Content-Type", "application/json");
+  int status = http.POST(json);
 
-    // Serialize the JSON object with your data to a JSON document for sending
-    char jsonOutput[128];
-    serializeJson(doc, jsonOutput);
+  // A status code below 0 means the request never reached the server
+  if (status < 0) {
+    http.end();
+    fail("Could not reach the server");
+  }
 
-    // Send the POST request and save returned code
-    int httpCode = http.POST(String(jsonOutput));
+  // Read the answer: the server sends back what it received, and adds an id of its own
+  JsonDocument answer;
+  DeserializationError error = deserializeJson(answer, http.getString());
+  http.end();
+  if (error) {
+    fail("The answer was not JSON");
+  }
+  int id = answer["id"];
 
-    // If the code is smaller than 0, something went wrong
-    if (httpCode > 0)
-    {
-        // Get the string returned by the HTTPS request and print the response
-        String payload = http.getString();
-        Serial.println("Status code: " + String(httpCode));
-        Serial.println(payload);
+  // Draw the result: one line for each value, all in the same size
+  display.clearDisplay();
+  display.setTextSize(3);
 
-        // End connection
-        http.end();
-    }
-    else
-    {
-        Serial.println("Error on HTTPS request");
-    }
+  display.setCursor(60, 100);
+  display.print("POST request");
 
-    // Wait for sending next request
-    delay(DELAY_BETWEEN_REQUESTS);
+  display.setCursor(60, 200);
+  display.print("Sent: ");
+  display.print(temperature);
+  display.print(" C");
+
+  display.setCursor(60, 300);
+  display.print("Status: ");
+  display.print(status);
+
+  display.setCursor(60, 400);
+  display.print("Server id: ");
+  display.print(id);
+
+  // Send the frame buffer to the screen
+  display.display();
+}
+
+// loop() runs over and over. This sketch has nothing to repeat.
+void loop() {
 }
