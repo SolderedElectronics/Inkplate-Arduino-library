@@ -158,6 +158,41 @@ void IOExpander::pinMode(uint8_t _pin, uint8_t _mode, bool _bypassCheck)
 }
 
 /**
+ * @brief       pinModeOutput sets pin as output with a given initial state.
+ *              Output latch is set before the pin is switched to output, so
+ *              there is no glitch on active low enable lines.
+ *
+ * @param       uint8_t _pin
+ *              pin to set as output
+ * @param       uint8_t _initState
+ *              initial output state (0 or 1)
+ * @param       bool _bypassCheck
+ *              Setting this to true will bypass user block on this GPIO pin.
+ */
+void IOExpander::pinModeOutput(uint8_t _pin, uint8_t _initState, bool _bypassCheck)
+{
+    if (_pin > 15)
+        return;
+
+    // If the usage of the pin is blocked, return without register modify.
+    if (checkForBlockedPins(_pin) && !_bypassCheck)
+        return;
+
+    uint8_t _port = _pin / 8;
+    uint8_t _p = _pin % 8;
+
+    // Set output latch first, then switch the pin to output
+    if (_initState & 1)
+        _ioExpanderRegs[PCAL6416A_OUTPORT0_ARRAY + _port] |= (1 << _p);
+    else
+        _ioExpanderRegs[PCAL6416A_OUTPORT0_ARRAY + _port] &= ~(1 << _p);
+    updatePCALRegister(PCAL6416A_OUTPORT0_ARRAY + _port, _ioExpanderRegs[PCAL6416A_OUTPORT0_ARRAY + _port]);
+
+    _ioExpanderRegs[PCAL6416A_CFGPORT0_ARRAY + _port] &= ~(1 << _p);
+    updatePCALRegister(PCAL6416A_CFGPORT0_ARRAY + _port, _ioExpanderRegs[PCAL6416A_CFGPORT0_ARRAY + _port]);
+}
+
+/**
  * @brief       digitalWriteIO sets internal output pin state (1 or 0)
  *
  * @param       uint8_t _pin

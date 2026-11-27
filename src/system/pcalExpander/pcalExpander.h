@@ -96,6 +96,7 @@ class IOExpander
   public:
     bool begin(uint8_t _addr);
     void pinMode(uint8_t _pin, uint8_t _mode, bool _bypassCheck = false);
+    void pinModeOutput(uint8_t _pin, uint8_t _initState, bool _bypassCheck = false);
     void digitalWrite(uint8_t _pin, uint8_t _state, bool _bypassCheck = false);
     uint8_t digitalRead(uint8_t _pin, bool _bypassCheck = false);
     void setIntPin(uint8_t _pin, uint8_t _mode = CHANGE);

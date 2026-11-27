@@ -848,20 +848,18 @@ void EPDDriver::gpioInit()
     expander1.pinMode(INT1_LSM, INPUT);
 
     // Turn off the buzzer so it doesn't beep
-    expander1.pinMode(BUZZ_EN, OUTPUT);
-    expander1.digitalWrite(BUZZ_EN, HIGH);
+    // BUZZ_EN is active low, set it HIGH before switching to output to avoid a pop
+    expander1.pinModeOutput(BUZZ_EN, HIGH);
 
     // Disable microSD card.
-    expander1.pinMode(SD_PMOS_PIN, OUTPUT);
-    expander1.digitalWrite(SD_PMOS_PIN, HIGH);
+    expander1.pinModeOutput(SD_PMOS_PIN, HIGH);
 
     // Disable frontlight at start.
     expander1.pinMode(FRONTLIGHT_EN, OUTPUT);
     expander1.digitalWrite(FRONTLIGHT_EN, LOW);
 
     // Disable touchscreen.
-    expander2.pinMode(TOUCHSCREEN_EN, OUTPUT);
-    expander2.digitalWrite(TOUCHSCREEN_EN, HIGH);
+    expander2.pinModeOutput(TOUCHSCREEN_EN, HIGH);
 
     // Set Fuel Gauge GPOUT to input with pull up enabled.
     expander1.pinMode(FG_GPOUT, INPUT_PULLUP);
