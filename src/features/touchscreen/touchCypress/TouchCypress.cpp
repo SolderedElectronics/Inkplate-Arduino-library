@@ -22,6 +22,7 @@
 
 // Macro helpers.
 #define TS_GET_BOOTLOADERMODE(reg) (((reg)&0x10) >> 4)
+#define TS_IS_VALID_APP(reg)       ((reg)&0x01)
 
 // Interrupt function callback for Touch Interruput event.
 static volatile bool _tsFlag = false;
@@ -108,40 +109,24 @@ bool Touch::init(uint8_t _pwrState)
     // Check power state.
     if (_pwrState)
     {
-        // Enable the power to the touch.
-        power(_pwrState);
+        bool _started = false;
+        for (int i = 0; i < CYPRESS_TOUCH_INIT_RETRIES && !_started; i++)
+        {
+            // Full power cycle on every attempt. The IO expander keeps its state across
+            // ESP32 resets, so without this the IC may never see a clean power-on reset.
+            power(false);
+            delay(CYPRESS_TOUCH_OFF_TIME_MS);
+            power(true);
 
-        // Do a HW reset.
-        reset();
+            _started = startController();
+        }
 
-        // Try to ping it.
-        if (!ping(5))
+        // All attempts failed, leave the IC unpowered with RST low.
+        if (!_started)
+        {
+            power(false);
             return false;
-
-        // Issue a SW reset.
-        sendCommand(0x01);
-
-        // Read bootloader data.
-        loadBootloaderRegs(&_blData);
-
-        // Exit bootloader mode. - Does not exit bootloader propery!
-        if (!exitBootLoaderMode())
-            return false;
-
-        // Set mode to system info mode.
-        if (!setSysInfoMode(&_sysData))
-            return false;
-
-        // Set system info regs.
-        if (!setSysInfoRegs(&_sysData))
-            return false;
-
-        // Switch it into operate mode (also can be in deep sleep mode as well as low power mode).
-        sendCommand(CYPRESS_TOUCH_OPERATE_MODE);
-
-        // Set dist value for detection?
-        uint8_t _distDefaultValue = 0xF8;
-        writeI2CRegs(0x1E, &_distDefaultValue, 1);
+        }
 
         // Add interrupt callback.
         pinMode(TOUCHSCREEN_INT, INPUT);
@@ -163,6 +148,53 @@ bool Touch::init(uint8_t _pwrState)
     }
 
     // Everything went ok? Return 1 for success.
+    return true;
+}
+
+/**
+ * @brief       One init attempt on a freshly powered and reset IC. Follows mainline
+ *              cyttsp_power_on(), without the soft reset.
+ *
+ * @return      true if the IC is in operate mode with valid sysinfo, false otherwise.
+ */
+bool Touch::startController()
+{
+    // IC must answer on I2C.
+    if (!ping(5))
+        return false;
+
+    // Read bootloader block, never decode a failed read.
+    if (!loadBootloaderRegs(&_blData))
+        return false;
+
+    if (TS_GET_BOOTLOADERMODE(_blData.bl_status))
+    {
+        // App checksum invalid, the IC stays in bootloader by design. Do not send the exit command.
+        if (!TS_IS_VALID_APP(_blData.bl_status))
+            return false;
+
+        // Exit bootloader mode.
+        if (!exitBootLoaderMode())
+            return false;
+    }
+
+    // Set mode to system info mode.
+    if (!setSysInfoMode(&_sysData))
+        return false;
+
+    // Set system info regs.
+    if (!setSysInfoRegs(&_sysData))
+        return false;
+
+    // Switch it into operate mode (also can be in deep sleep mode as well as low power mode).
+    if (!sendCommand(CYPRESS_TOUCH_OPERATE_MODE))
+        return false;
+    delay(CYPRESS_TOUCH_MODE_WAIT_MS);
+
+    // Set dist value for detection?
+    uint8_t _distDefaultValue = 0xF8;
+    writeI2CRegs(0x1E, &_distDefaultValue, 1);
+
     return true;
 }
 
@@ -473,28 +505,25 @@ void Touch::power(bool _pwr)
 {
     if (_pwr)
     {
+        // Hold RST low while VDD ramps up.
+        _inkplate->expander1.digitalWrite(TOUCHSCREEN_RST, LOW);
+
         // Enable the power MOSFET.
         _inkplate->expander1.digitalWrite(TOUCHSCREEN_EN, HIGH);
 
-        // Wait a little bit before proceeding any further.
-        delay(50);
+        // Let VDD settle.
+        delay(CYPRESS_TOUCH_PWR_SETTLE_MS);
 
-        // Set reset pin to high.
-        _inkplate->expander1.digitalWrite(TOUCHSCREEN_RST, HIGH);
-
-        // Wait a little bit.
-        delay(50);
+        // Reset pulse and release.
+        reset();
     }
     else
     {
+        // RST low first, so it does not back-power the IC once VDD is off.
+        _inkplate->expander1.digitalWrite(TOUCHSCREEN_RST, LOW);
+
         // Disable the power MOSFET switch.
         _inkplate->expander1.digitalWrite(TOUCHSCREEN_EN, LOW);
-
-        // Wait a bit to discharge caps.
-        delay(50);
-
-        // Set reset pin to low.
-        _inkplate->expander1.digitalWrite(TOUCHSCREEN_RST, LOW);
     }
 }
 
@@ -525,13 +554,11 @@ void Touch::end()
  */
 void Touch::reset()
 {
-    // Toggle RST line. Loggic low must be at least 1ms, re-init after reset not specified, 10 ms (from Linux kernel).
-    _inkplate->expander1.digitalWrite(TOUCHSCREEN_RST, HIGH);
-    delay(10);
+    // RST low 20 ms, then wait 100 ms after release (mainline cyttsp).
     _inkplate->expander1.digitalWrite(TOUCHSCREEN_RST, LOW);
-    delay(2);
+    delay(CYPRESS_TOUCH_RST_LOW_MS);
     _inkplate->expander1.digitalWrite(TOUCHSCREEN_RST, HIGH);
-    delay(10);
+    delay(CYPRESS_TOUCH_RST_WAIT_MS);
 }
 
 /**
@@ -596,15 +623,17 @@ bool Touch::exitBootLoaderMode()
     };
 
     // Write bootloader settings.
-    writeI2CRegs(CYPRESS_TOUCH_BASE_ADDR, _blCommandArry, sizeof(_blCommandArry));
+    if (!writeI2CRegs(CYPRESS_TOUCH_BASE_ADDR, _blCommandArry, sizeof(_blCommandArry)))
+        return false;
 
     // Wait a little bit - Must be long delay, otherwise setSysInfoMode will fail!
     // Delay of 150ms will fail - tested!
-    delay(500);
+    delay(CYPRESS_TOUCH_EXIT_BL_MS);
 
     // Get bootloader data.
     struct cyttspBootloaderData _bootloaderData;
-    loadBootloaderRegs(&_bootloaderData);
+    if (!loadBootloaderRegs(&_bootloaderData))
+        return false;
 
     // Check for validity.
     if (TS_GET_BOOTLOADERMODE(_bootloaderData.bl_status))
@@ -629,34 +658,42 @@ bool Touch::exitBootLoaderMode()
 bool Touch::setSysInfoMode(struct cyttspSysinfoData *_sysDataPtr)
 {
     // Change mode to system info.
-    sendCommand(CYPRESS_TOUCH_SYSINFO_MODE);
+    if (!sendCommand(CYPRESS_TOUCH_SYSINFO_MODE))
+        return false;
 
     // Wait a bit.
-    delay(20);
+    delay(CYPRESS_TOUCH_MODE_WAIT_MS);
 
-    // Buffer for the system info data.
+    // Some ICs take a few hundred ms to fill the sysinfo block (reads return zeros or a
+    // partly filled block until then). Poll until tts_ver is non-zero and two reads in a
+    // row match.
     uint8_t _sysInfoArray[32];
-
-    // Read the registers.
-    if (!readI2CRegs(CYPRESS_TOUCH_BASE_ADDR, _sysInfoArray, sizeof(_sysInfoArray)))
+    uint8_t _prevArray[32];
+    bool _havePrev = false;
+    unsigned long _t = millis();
+    while ((millis() - _t) < CYPRESS_TOUCH_SYSINFO_TIMEOUT_MS)
     {
-        return false;
+        if (readI2CRegs(CYPRESS_TOUCH_BASE_ADDR, _sysInfoArray, sizeof(_sysInfoArray)))
+        {
+            // tts_verh / tts_verl are bytes 17 and 18.
+            bool _valid = _sysInfoArray[17] || _sysInfoArray[18];
+            if (_valid && _havePrev && !memcmp(_sysInfoArray, _prevArray, sizeof(_sysInfoArray)))
+            {
+                // Copy into struct typedef.
+                memcpy(_sysDataPtr, _sysInfoArray, sizeof(_sysInfoArray));
+
+                // Do a handshake!
+                handshake();
+                return true;
+            }
+            memcpy(_prevArray, _sysInfoArray, sizeof(_sysInfoArray));
+            _havePrev = _valid;
+        }
+        delay(CYPRESS_TOUCH_SYSINFO_POLL_MS);
     }
 
-    // Copy into struct typedef.
-    memcpy(_sysDataPtr, _sysInfoArray, sizeof(_sysInfoArray));
-
-    // Do a handshake!
-    handshake();
-
-    // Check TTS version. If is zero, something went wrong.
-    if (!_sysDataPtr->tts_verh && !_sysDataPtr->tts_verl)
-    {
-        return false;
-    }
-
-    // Everything went ok? Return true for success.
-    return true;
+    // Sysinfo never became valid.
+    return false;
 }
 
 /**
@@ -760,12 +797,12 @@ bool Touch::sendCommand(uint8_t _cmd)
     // Write command.
     Wire.write(_cmd);
 
-    // Wait a little bit.
-    delay(20);
-
-    // Send to I2C!
+    // Send to I2C! Wire only puts bytes on the bus here.
     bool result = Wire.endTransmission() == 0 ? true : false;
     i2cEnd();
+
+    // Give the IC time to process the command.
+    delay(20);
     return result;
 }
 
@@ -809,12 +846,23 @@ bool Touch::readI2CRegs(uint8_t _cmd, uint8_t *_buffer, int _len)
         // Check for the size of the remaining buffer.
         int _i2cLen = _len > 32 ? 32 : _len;
 
-        // Read the bytes from the I2C.
-        Wire.requestFrom(CYPRESS_TOUCH_I2C_ADDR, _i2cLen);
+        // Read the bytes from the I2C. Short read or NACK means failure.
+        if (Wire.requestFrom(CYPRESS_TOUCH_I2C_ADDR, _i2cLen) != _i2cLen)
+        {
+            i2cEnd();
+            return false;
+        }
 
-        // Wait packets to arrive.
-        while (Wire.available() != _i2cLen)
-            ;
+        // Wait packets to arrive, with timeout instead of hanging forever.
+        unsigned long _t = millis();
+        while (Wire.available() < _i2cLen)
+        {
+            if ((millis() - _t) > CYPRESS_TOUCH_I2C_TIMEOUT)
+            {
+                i2cEnd();
+                return false;
+            }
+        }
 
         Wire.readBytes(_buffer + _index, _i2cLen);
 

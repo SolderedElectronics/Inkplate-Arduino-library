@@ -29,8 +29,8 @@ struct cyttspBootloaderData
 struct cyttspSysinfoData
 {
     uint8_t hst_mode;
-    uint8_t mfg_stat;
     uint8_t mfg_cmd;
+    uint8_t mfg_stat;
     uint8_t cid[3];
     uint8_t tt_undef1;
     uint8_t uid[8];
