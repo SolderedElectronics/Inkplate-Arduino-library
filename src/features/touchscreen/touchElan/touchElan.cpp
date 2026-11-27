@@ -21,6 +21,24 @@
 uint16_t _tsXResolution;
 uint16_t _tsYResolution;
 
+#ifdef ARDUINO_INKPLATE4TEMPERA
+// Measured raw range at the glass edges, reported resolution (1152) is not reachable
+#define TS_RAW_X_MIN 0
+#define TS_RAW_X_MAX 1112
+#define TS_RAW_Y_MIN 20
+#define TS_RAW_Y_MAX 1128
+#endif
+
+// Map raw touch value from [rawMin, rawMax] to [0, size - 1], clamped
+static uint16_t tsMapAxis(uint16_t raw, uint16_t rawMin, uint16_t rawMax, uint16_t size)
+{
+    if (rawMax <= rawMin || raw <= rawMin)
+        return 0;
+    if (raw >= rawMax)
+        return size - 1;
+    return (uint32_t)(raw - rawMin) * (size - 1) / (rawMax - rawMin);
+}
+
 // Interrupt function callback for Touch Interruput event.
 static volatile bool _tsFlag = false;
 static void IRAM_ATTR tsInt()
@@ -56,8 +74,8 @@ bool Touch::touchInArea(int16_t x1, int16_t y1, int16_t w, int16_t h)
         {
             touchT = millis();
             touchN = n;
-            memcpy(touchX, x, 2);
-            memcpy(touchY, y, 2);
+            memcpy(touchX, x, sizeof(touchX));
+            memcpy(touchY, y, sizeof(touchY));
         }
     }
 
@@ -288,47 +306,51 @@ uint8_t Touch::getData(uint16_t *xPos, uint16_t *yPos)
 
 // Default touchscreen rotation
 #if defined(ARDUINO_INKPLATE6PLUS) || defined(ARDUINO_INKPLATE6PLUSV2)
+        uint16_t xh = tsMapAxis(xRaw[i], 0, _tsXResolution, E_INK_HEIGHT);
+        uint16_t yw = tsMapAxis(yRaw[i], 0, _tsYResolution, E_INK_WIDTH);
 
         switch (_inkplate->getRotation())
         {
         case 0:
-            yPos[i] = ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
-            xPos[i] = E_INK_WIDTH - 1 - ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            yPos[i] = xh;
+            xPos[i] = E_INK_WIDTH - 1 - yw;
             break;
         case 1:
-            xPos[i] = ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
-            yPos[i] = ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            xPos[i] = xh;
+            yPos[i] = yw;
             break;
         case 2:
-            yPos[i] = E_INK_HEIGHT - 1 - ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
-            xPos[i] = ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            yPos[i] = E_INK_HEIGHT - 1 - xh;
+            xPos[i] = yw;
             break;
         case 3:
-            xPos[i] = E_INK_HEIGHT - 1 - ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
-            yPos[i] = E_INK_WIDTH - 1 - ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            xPos[i] = E_INK_HEIGHT - 1 - xh;
+            yPos[i] = E_INK_WIDTH - 1 - yw;
             break;
         }
 
 // For Inkplate 4TEMPERA, both X and Y are mirrored for the touchscreen
 #elif defined(ARDUINO_INKPLATE4TEMPERA)
+        uint16_t xh = tsMapAxis(xRaw[i], TS_RAW_X_MIN, TS_RAW_X_MAX, E_INK_HEIGHT);
+        uint16_t yw = tsMapAxis(yRaw[i], TS_RAW_Y_MIN, TS_RAW_Y_MAX, E_INK_WIDTH);
 
         switch (_inkplate->getRotation())
         {
         case 0:
-            yPos[i] = E_INK_HEIGHT - 1 - ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
-            xPos[i] = ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            yPos[i] = E_INK_HEIGHT - 1 - xh;
+            xPos[i] = yw;
             break;
         case 1:
-            xPos[i] = E_INK_HEIGHT - 1 - ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
-            yPos[i] = E_INK_WIDTH - 1 - ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            xPos[i] = E_INK_HEIGHT - 1 - xh;
+            yPos[i] = E_INK_WIDTH - 1 - yw;
             break;
         case 2:
-            yPos[i] = ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
-            xPos[i] = E_INK_WIDTH - 1 - ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            yPos[i] = xh;
+            xPos[i] = E_INK_WIDTH - 1 - yw;
             break;
         case 3:
-            xPos[i] = ((xRaw[i] * E_INK_HEIGHT - 1) / _tsXResolution);
-            yPos[i] = ((yRaw[i] * E_INK_WIDTH - 1) / _tsYResolution);
+            xPos[i] = xh;
+            yPos[i] = yw;
             break;
         }
 
